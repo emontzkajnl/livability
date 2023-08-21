@@ -1,0 +1,14 @@
+{
+  "apiVersion": 2,
+  "name": "jci-blocks/city-301",
+  "version": "0.1.0",
+  "title": "City 301",
+  "category": "jci-category",
+  "icon": "admin-links",
+  "description": "Message for city redirects from old livability. Use on state pages only. Links to city list block.",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "jci-blocks",
+  "editorScript": "file:./index.js"
+}

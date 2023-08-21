@@ -1,0 +1,14 @@
+{
+  "apiVersion": 2,
+  "name": "jci-blocks/featured-image",
+  "version": "0.1.0",
+  "title": "Featured Image",
+  "category": "jci-category",
+  "icon": "admin-links",
+  "description": "Pulls featured image",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "jci-blocks",
+  "editorScript": "file:./index.js"
+}

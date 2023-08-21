@@ -1,0 +1,37 @@
+@import "overrides";
+@import "fonts";
+@import "typography";
+@import "layout";
+@import "buttons";
+
+.container {
+  width: 100%;
+  padding: 0 15px;
+}
+a:hover {
+  text-decoration-style: solid;
+}
+.site a:focus:not(.wp-block-button__link):not(.wp-block-file__button) {
+  text-decoration-style: solid;
+}
+.site-main {
+  padding-top: 0;
+  // overflow-x: hidden;
+}
+.text-overlay {
+  background-image: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 50%,
+      rgba(0, 0, 0, 1) 100%
+    ),
+    url();
+}
+.hidden {
+  display: none !important;
+}
+
+@media all and (min-width: 1390px) {
+  .container {
+    padding: 0;
+  }
+}

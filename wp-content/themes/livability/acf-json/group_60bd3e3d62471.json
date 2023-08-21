@@ -1,0 +1,48 @@
+{
+    "key": "group_60bd3e3d62471",
+    "title": "Magazine Link",
+    "fields": [
+        {
+            "key": "field_60bd3ea6c7229",
+            "label": "Magazine Link",
+            "name": "magazine_link",
+            "aria-label": "",
+            "type": "post_object",
+            "instructions": "If no magazine selected, magazines will be queried for a link.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "liv_magazine"
+            ],
+            "taxonomy": "",
+            "allow_null": 0,
+            "multiple": 0,
+            "return_format": "id",
+            "ui": 1
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf\/full-width-magazine-link"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1675890994
+}

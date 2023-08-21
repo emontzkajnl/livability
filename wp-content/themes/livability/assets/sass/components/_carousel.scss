@@ -1,0 +1,112 @@
+.list-carousel {
+	margin: 0 auto;
+	max-width: 1175px;
+  padding-left: 0;
+}
+
+.list-carousel-button {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  a {
+    text-transform: uppercase;
+    color: #fff;
+  }
+  &:hover {
+    background-color: black !important;
+    color: white;
+    a {
+      background-color: inherit !important;
+      color: white !important;
+    }
+  }
+}
+
+
+.lc-slide {
+  //   position: relative;
+  // height: 0;
+
+  transition: all 0.7s;
+  margin-top: 100px;
+  margin-bottom: 100px;
+  z-index: 0;
+  //   transform: scale(1);
+  position: static;
+  //   opacity: 0.7;
+  .lc-slide-content {
+    // z-index: 0;
+    transition: all 0.7s;
+  }
+  &.slick-center {
+    .lc-slide-inner {
+      position: relative;
+    }
+    .lc-slide-content {
+      opacity: 1;
+      z-index: 10;
+      transform: scale(1.1);
+      overflow: visible;
+      -webkit-box-shadow: 0px 0px 24px 0px rgba(125, 125, 125, 0.2);
+      -moz-box-shadow: 0px 0px 24px 0px rgba(125, 125, 125, 0.2);
+      box-shadow: 0px 0px 24px 0px rgba(125, 125, 125, 0.2);
+    }
+  }
+}
+.lc-slide-inner {
+  padding-top: 95%;
+  position: relative;
+  //   position: absolute;
+  //   height: 100%;
+  //   width: 100%;
+  //   top: 0;
+  //   left: 0;
+}
+.lc-slide-content {
+  background-color: #f4f4f4;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+}
+.lc-slide-img {
+  height: calc(100% - 80px);
+  //   height: 90%;
+  position: relative;
+  background-repeat: no-repeat;
+  background-size: cover;
+  text-align: center;
+}
+.slide-count {
+  position: absolute;
+  bottom: -17px;
+  //   width: 100%;
+  background-color: $green;
+  padding: 9px 0 0;
+  right: calc(50% - 15px);
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  color: white;
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+	line-height: 1.1rem;
+  font-weight: bold;
+}
+.city-state {
+  text-align: center;
+  padding-top: 7%;
+}
+.slick-prev:before,
+.slick-next:before {
+  color: black !important;
+  font-family: "Font Awesome 5 Free";
+  font-size: 40px;
+}
+.slick-prev:before {
+  // content: "/f054";
+  // content: "<i class=" fas fa-chevron-right "></i>";
+  // font: 40px/1 "FontAwesome";
+}

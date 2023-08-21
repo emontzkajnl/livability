@@ -1,0 +1,14 @@
+{
+  "apiVersion": 2,
+  "name": "jci-blocks/ad-area-three",
+  "version": "0.1.0",
+  "title": "Ad Area Three",
+  "category": "jci-category",
+  "icon": "admin-links",
+  "description": "Ad space appearing in middle of page",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "jci-blocks",
+  "editorScript": "file:./index.js"
+}

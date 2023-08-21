@@ -1,0 +1,13 @@
+{
+	"apiVersion": 2,
+	"name": "jci-blocks/link-to-2023-best-place",
+	"version": "0.1.0",
+	"title": "Link City to 2023 Best Place",
+	"category": "jci-category",
+	"icon": "admin-links",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "jci-blocks",
+	"editorScript": "file:./index.js"
+}

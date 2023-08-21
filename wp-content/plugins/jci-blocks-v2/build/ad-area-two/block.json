@@ -1,0 +1,15 @@
+{
+  "apiVersion": 2,
+  "name": "jci-blocks/ad-area-two",
+  "version": "0.1.0",
+  "title": "Ad Area Two",
+  "category": "jci-category",
+  "icon": "admin-links",
+  "description": "Ad space appearing in right sidebar",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "jci-blocks",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./style.css"
+}

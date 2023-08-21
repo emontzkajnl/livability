@@ -1,0 +1,15 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "jci-blocks/ad-area-one",
+	"version": "0.1.0",
+	"title": "Ad Area One",
+	"category": "jci-category",
+	"icon": "admin-links",
+	"description": "Ad space appearing at top of page",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "jci-blocks",
+	"editorScript": "file:./index.js"
+}

@@ -1,0 +1,14 @@
+{
+	"apiVersion": 2,
+	"name": "jci-blocks/magazine-articles",
+	"version": "0.1.0",
+	"title": "Magazine Articles",
+	"category": "jci-category",
+	"icon": "admin-links",
+	"description": "Used with magazine post type. Lists articles related to magazine.",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "jci-blocks",
+	"editorScript": "file:./index.js"
+}

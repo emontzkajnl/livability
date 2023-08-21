@@ -1,0 +1,13 @@
+{
+  "apiVersion": 2,
+  "name": "jci-blocks/onehundred-list",
+  "version": "0.1.0",
+  "title": "One Hundred List",
+  "category": "jci-category",
+  "icon": "admin-links",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "jci-blocks",
+  "editorScript": "file:./index.js"
+}

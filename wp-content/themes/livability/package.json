@@ -1,0 +1,22 @@
+{
+  "name": "livablity",
+  "version": "1.0.0",
+  "description": "== Description ==",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.13.14",
+    "@babel/register": "^7.6.2",
+    "autoprefixer": "^10.2.5",
+    "chokidar-cli": "^2.1.0",
+    "npm-run-all": "^4.1.2",
+    "sass": "^1.32.8"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:style": "sass assets/sass/styles.scss:compressed-style.css --style=compressed --source-map",
+    "build": "run-s \"build:*\"",
+    "watch": "chokidar \"**/*.scss\" -c \"npm run build\" --initial"
+  },
+  "main": "__gulpfile.babel.js"
+}

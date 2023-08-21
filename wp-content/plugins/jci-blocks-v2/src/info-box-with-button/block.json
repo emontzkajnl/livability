@@ -1,0 +1,45 @@
+{
+	"apiVersion": 2,
+	"name": "jci-blocks/info-box-with-button",
+	"version": "0.1.1",
+	"title": "Info Box with Button",
+	"category": "jci-category",
+	"icon": "admin-links",
+	"attributes": {
+		"text": {
+			"type": "string",
+			"source": "html",
+			"selector": "p"
+		},
+		"name": {
+			"type": "string",
+			"source": "html",
+			"selector": ".info-box-name"
+		},
+		"position": {
+			"type": "string",
+			"source": "html",
+			"selector": ".info-box-position"
+		},
+		"icon": {
+			"type": "string",
+			"default": "quotes"
+		},
+		"buttonText": {
+			"type": "string",
+			"source": "text",
+			"selector": "a"
+		},
+		"buttonLink": {
+			"type": "string",
+			"source": "attribute",
+			"attribute": "href",
+			"selector": "a"
+		}
+	},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "jci-blocks",
+	"editorScript": "file:./index.js"
+}

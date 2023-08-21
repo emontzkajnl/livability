@@ -1,0 +1,14 @@
+{
+	"apiVersion": 2,
+	"name": "jci-blocks/city-map",
+	"version": "0.1.0",
+	"title": "City Map",
+	"category": "jci-category",
+	"icon": "admin-links",
+	"description": "Display google map for city",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "jci-blocks",
+	"editorScript": "file:./index.js"
+}

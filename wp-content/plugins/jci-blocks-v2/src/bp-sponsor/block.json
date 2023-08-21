@@ -1,0 +1,14 @@
+{
+	"apiVersion": 2,
+	"name": "jci-blocks/bp-sponsor",
+	"version": "0.1.0",
+	"title": "BP Sponsor",
+	"category": "jci-category",
+	"icon": "admin-links",
+	"description": "Displays best place sponsor only if one is added to acf on page",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "jci-blocks",
+	"editorScript": "file:./index.js"
+}

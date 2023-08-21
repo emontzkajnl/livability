@@ -1,0 +1,14 @@
+{
+  "apiVersion": 2,
+  "name": "jci-blocks/suggested-posts-404",
+  "version": "0.1.0",
+  "title": "Suggested Posts 404",
+  "category": "jci-category",
+  "icon": "admin-links",
+  "description": "Suggest posts based on last segment of URL",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "jci-blocks",
+  "editorScript": "file:./index.js"
+}

@@ -1,0 +1,14 @@
+{
+	"apiVersion": 2,
+	"name": "jci-blocks/city-list",
+	"version": "0.1.0",
+	"title": "City List",
+	"category": "jci-category",
+	"icon": "admin-links",
+	"description": "List all child cities with links on state page",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "jci-blocks",
+	"editorScript": "file:./index.js"
+}

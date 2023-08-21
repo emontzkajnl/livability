@@ -1,0 +1,14 @@
+{
+  "apiVersion": 2,
+  "name": "jci-blocks/madlib",
+  "version": "0.1.0",
+  "title": "Madlib",
+  "category": "jci-category",
+  "icon": "admin-links",
+  "description": "Filler content for non-client places",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "jci-blocks",
+  "editorScript": "file:./index.js"
+}

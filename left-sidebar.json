@@ -1,0 +1,5 @@
+{
+  "__file": "wp_block",
+  "title": "left sidebar",
+  "content": "<!-- wp:group -->\n<div class=\"wp-block-group\"><div class=\"wp-block-group__inner-container\"><!-- wp:shortcode -->\n[addtoany]\n<!-- /wp:shortcode -->\n\n<!-- wp:jci-blocks/term-list /--></div></div>\n<!-- /wp:group -->"
+}

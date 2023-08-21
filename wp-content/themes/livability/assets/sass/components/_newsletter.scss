@@ -1,0 +1,121 @@
+.newsletter {
+  background: #f8f8f8;
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+.nl-inner-container {
+  width: 81%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}
+.nl-text-area {
+  margin-left: 0;
+  margin-bottom: 0;
+  text-align: center;
+}
+#gform_wrapper_1 {
+  // margin-right: 0;
+  #gform_1 {
+    // display: flex;
+    // flex-direction: row;
+    // justify-content: center;
+    // align-items: flex-end;
+    display: block;
+
+    .gform_body {
+      width: 300px !important;
+    }
+    ul.gform_fields {
+      li.gfield {
+        padding-right: 0;
+      }
+    }
+    #input_1_1 {
+      width: 100%;
+      font-family: "Jost";
+      font-weight: 600;
+      font-size: 1.125rem;
+      border: none;
+      // width: 270px;
+      width: 100%;
+      height: 45px;
+      margin-top: 0;
+    }
+    .gform_footer {
+      padding-bottom: 0;
+    }
+    #gform_submit_button_1 {
+      font-family: "Jost";
+      font-weight: 600;
+      font-size: 1.125rem;
+      background-color: $green !important;
+      border: none !important;
+      padding: 5px 30px;
+      // width: 170px;
+      width: 100%;
+      height: 45px;
+    }
+  }
+}
+@media all and (min-width: 660px) {
+  #gform_wrapper_1 {
+    #gform_1 {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-end;
+    }
+  }
+  #input_1_1 {
+    width: 270px;
+  }
+  #gform_submit_button_1 {
+    width: 170px;
+  }
+
+}
+
+body {
+  .gform_wrapper#gform_wrapper_1 {
+    ul {
+      li.gfield {
+        margin-top: 0;
+      }
+    }
+    .top_label {
+      div.ginput_container {
+        margin-top: 0;
+      }
+    }
+  }
+  .gform_footer {
+    padding: 0;
+    margin: 0;
+  }
+}
+// Newsletter heading: 35px Semibold
+// Newsletter paragraph: 22px
+// Newsletter field: Jost 18px Regular, #a6a6a6
+
+@media all and (min-width: 768px) {
+  .nl-inner-container {
+    width: 100%;
+  }
+}
+@media all and (min-width: 1000px) {
+  .nl-inner-container {
+    // flex-direction: column;
+    // justify-content: center;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .nl-text-area {
+    text-align: left;
+  }
+  #gform_wrapper_1 {
+    margin-right: 0;
+  }
+}

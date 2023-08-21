@@ -1,0 +1,14 @@
+{
+  "apiVersion": 2,
+  "name": "jci-blocks/magazine",
+  "version": "0.1.0",
+  "title": "Magazine",
+  "category": "jci-category",
+  "icon": "admin-links",
+  "description": "The magazine itself, in magazine post type, pulling calameo id.",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "jci-blocks",
+  "editorScript": "file:./index.js"
+}

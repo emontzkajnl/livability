@@ -1,0 +1,123 @@
+@media only screen and (min-width: 769px) {
+	.mm38 {
+		max-width: 37% !important;
+		padding-right:80px !important;
+	}
+	.mm38 h4 {
+		margin-top:30px !important;
+	}
+	h4.mega-block-title {
+		margin-top:0px !important;
+	}
+	.mm-article-bgd {
+		background:#fff;
+		box-shadow:0px 0px 8px #ddd;
+	}
+	.mm-article-bgd a {
+		margin:0 !important;
+		padding:0px !important;
+		font-weight: 600 !important;
+	}
+	.mm-article-bgd a:hover {
+		text-decoration:none !important;
+	}
+	.mm-featured-title {
+		padding:14px;
+		font-family: Jost;
+	}
+	.mm38 .search-form .search-field {
+		border:#111 1px solid;
+		margin: 0;
+		padding: 2px 10px;
+		margin-bottom:0 !important;
+	}
+	.mm38 .search-form {
+		box-shadow:none !important;
+		margin-bottom:20px !important;
+		margin-top:16px !important;
+	}
+	.mm38 .widget_search > .search-form .search-submit {
+		background:#7dc245 !important;
+		width:100px;
+		height:40px;
+		margin:0;
+		border:#111 1px solid;	
+	}
+	.mm38 .fa-search:before {
+		content:"SEARCH";
+		font-family:Jost;
+		font-weight:300;
+		color:#fff;
+		font-size:14px;
+	}
+	.mm38 button,
+	.widget_jci_mm_bp_widget button {
+		position: relative;
+		line-height: 1;
+		font-size: 0.7rem;
+		margin:30px 8px 0px;
+	}
+	.mm38 button.white {
+		background:#fff !important;
+		border:1px solid #7dc245;
+	}
+	.mm38 button a,
+	.widget_jci_mm_bp_widget button a {
+		font-family:Jost;
+		color:#fff !important;
+		font-size:14px;
+		font-weight: 600;
+		padding:0;
+	}
+	.mm38 button.white a {
+		color:#7dc245 !important;
+	}
+	.small-articles.mm {
+		display:inline-block;
+		min-width: 395px;
+		max-width: 395px;
+		padding-right: 5px;
+		margin-bottom:0px;
+		padding-bottom:0px;
+		margin-top:12px;
+	}
+	.small-articles.mm col2 {
+		padding-right: 0px;
+	}
+	.small-articles.mm .article-card .article-text {
+		min-height:104px;
+		font-family: Jost;
+		line-height:1.3em;
+		font-size:16px;
+		font-weight:600;
+		margin-left:37%;
+	}
+	.small-articles.mm .article-card .article-img {
+		width: 40%;
+	}
+	.small-articles.mm a {
+		margin-bottom:0;
+		text-decoration: none !important;
+		padding:0 0 16px 0;
+	}
+	.small-articles.mm.series {
+		min-width: 395px;
+		padding-right: 8px;
+		margin-bottom:0px;
+		padding-bottom:0px;
+		margin-top:15px;
+	}
+	.small-articles.mm.series .article-card .article-img {
+		width: 30%;
+	}
+	.small-articles.mm.series .article-card .article-text {
+    	min-height: 60px;
+    	margin-left:28%;
+    	width:70%;
+    }
+	.small-articles.mm.series a {
+		margin-bottom:0;
+		text-decoration: none !important;
+		padding:0 0 10px 0;
+	}
+}

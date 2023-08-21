@@ -1,0 +1,6 @@
+#masthead, .newsletter, #colophon, #wpadminbar   {
+    display: none !important;
+}
+.site-content {
+    padding-top: 0 !important;
+}

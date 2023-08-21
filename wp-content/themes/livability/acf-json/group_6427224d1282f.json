@@ -1,0 +1,52 @@
+{
+    "key": "group_6427224d1282f",
+    "title": "Internal Promotion",
+    "fields": [
+        {
+            "key": "field_6427224d9e683",
+            "label": "Promote Internally?",
+            "name": "promote",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Add this article or city to an eligible pool for promotion on high-traffic articles in the left sidebar.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "ui": 1
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "post"
+            }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "liv_place"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "side",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1687482531
+}

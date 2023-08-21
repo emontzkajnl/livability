@@ -1,0 +1,1 @@
+/chroot/home/ad5f3796/20a2659177.nxcli.io/html/wp-content/plugins/query-monitor/wp-content/db.php

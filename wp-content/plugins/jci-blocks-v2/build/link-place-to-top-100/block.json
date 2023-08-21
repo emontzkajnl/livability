@@ -1,0 +1,13 @@
+{
+  "apiVersion": 2,
+  "name": "jci-blocks/link-place-to-top-100",
+  "version": "0.1.0",
+  "title": "Link Place to Top 100",
+  "category": "jci-category",
+  "icon": "admin-links",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "jci-blocks",
+  "editorScript": "file:./index.js"
+}

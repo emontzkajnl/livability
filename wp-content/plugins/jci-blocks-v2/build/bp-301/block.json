@@ -1,0 +1,14 @@
+{
+  "apiVersion": 2,
+  "name": "jci-blocks/bp-301",
+  "version": "0.1.0",
+  "title": "Best Places 301",
+  "category": "jci-category",
+  "icon": "admin-links",
+  "description": "Message for old best places redirecting to best places homepage",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "jci-blocks",
+  "editorScript": "file:./index.js"
+}

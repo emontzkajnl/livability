@@ -1,0 +1,24 @@
+button,
+[type="button"],
+[type="submit"],
+.info-box-button {
+  border: none;
+  border-radius: 0;
+  background-color: $green;
+  color: white;
+  padding: 5px 30px;
+  font-family: "Jost";
+  font-weight: 600;
+  font-size: 1.125rem;
+  min-height: 45px;
+  &.centered {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+}
+.info-box-button {
+  margin-top: 30px;
+  display: inline-block;
+  padding: 10px 30px;
+}

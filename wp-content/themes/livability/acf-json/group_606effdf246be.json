@@ -1,0 +1,97 @@
+{
+    "key": "group_606effdf246be",
+    "title": "Curated Posts 3",
+    "fields": [
+        {
+            "key": "field_606effdf31383",
+            "label": "Post 1",
+            "name": "curated_posts_3_1",
+            "type": "post_object",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "40",
+                "class": "curated-posts-3-1",
+                "id": ""
+            },
+            "post_type": [
+                "post",
+                "liv_place",
+                "best_places"
+            ],
+            "taxonomy": "",
+            "allow_null": 0,
+            "multiple": 0,
+            "return_format": "object",
+            "ui": 1
+        },
+        {
+            "key": "field_606effdf313c1",
+            "label": "Post 2",
+            "name": "curated_posts_3_2",
+            "type": "post_object",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "curated-posts-2-2",
+                "id": ""
+            },
+            "post_type": [
+                "post",
+                "liv_place",
+                "best_places"
+            ],
+            "taxonomy": "",
+            "allow_null": 0,
+            "multiple": 0,
+            "return_format": "object",
+            "ui": 1
+        },
+        {
+            "key": "field_606f0006a45c8",
+            "label": "Post 3",
+            "name": "curated_posts_3_3",
+            "type": "post_object",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "curated-posts-3-3",
+                "id": ""
+            },
+            "post_type": [
+                "post",
+                "liv_place",
+                "best_places"
+            ],
+            "taxonomy": "",
+            "allow_null": 0,
+            "multiple": 0,
+            "return_format": "object",
+            "ui": 1
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf\/curated-blocks-3"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1651851378
+}

@@ -1,0 +1,49 @@
+{
+    "key": "group_606e06a29bd45",
+    "title": "Curated Posts 1",
+    "fields": [
+        {
+            "key": "field_606e072078cf8",
+            "label": "Post 1",
+            "name": "curated_posts_1",
+            "type": "post_object",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "100",
+                "class": "curated-posts-1",
+                "id": ""
+            },
+            "post_type": [
+                "post",
+                "liv_place",
+                "best_places"
+            ],
+            "taxonomy": "",
+            "allow_null": 0,
+            "multiple": 0,
+            "return_format": "object",
+            "ui": 1
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf\/curated-blocks-1"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1651851372
+}

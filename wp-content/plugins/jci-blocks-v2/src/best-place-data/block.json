@@ -1,0 +1,14 @@
+{
+	"apiVersion": 2,
+	"name": "jci-blocks/best-place-data",
+	"version": "0.1.0",
+	"title": "Best Place Data",
+	"category": "jci-category",
+	"icon": "admin-links",
+	"description": "FOR BEST PLACES CHILDREN ONLY - displays data about place",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "jci-blocks",
+	"editorScript": "file:./index.js"
+}

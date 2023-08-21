@@ -1,0 +1,296 @@
+// for places only
+.single-liv_place {
+  .hero-section {
+    > .hero-flex {
+      display: block;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      // justify-content: space-between;
+      // align-items: center;
+    }
+  }
+}
+
+.home {
+  .hero-section {
+    margin-bottom: 30px;
+  }
+}
+.hero-section {
+  background-color: #333;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  color: $white;
+  position: relative;
+  > img {
+    position: absolute;
+    height: 100% !important;
+    width: 100% !important;
+    left: 0;
+    top: 0;
+    object-fit: cover;
+    max-width: none !important;
+  }
+  
+  li {
+    color: $green;
+    a {
+      color: $white;
+    }
+  }
+}
+.hero-text {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 30px;
+  position: relative;
+  text-align: center;
+  p {
+    font-family: "Jost", Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 1.625rem;
+    margin-top: 0.5rem;
+  }
+  h5 {
+    font-family: "Jost", Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: $green;
+    text-transform: uppercase;
+    line-height: 1.8em;
+  }
+  h2.h1 {
+  	text-transform: uppercase;
+    margin-top: 0;
+  }
+}
+.hero-links {
+  li {
+    font-family: "Jost", Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    margin: 40px 0;
+  }
+}
+.hero-section {
+  // &.page-hero {
+  //   margin-bottom: 30px;
+  //   > .container {
+  //     min-height: 225px;
+  //   }
+  // }
+  // &:not(.page-hero) {
+  //   > .container {
+  //     min-height: 550px;
+  //   }
+  // }
+  position: relative;
+  overflow: hidden;
+  .video-wrap {
+    margin-top: -50px;
+    height: 100%; 
+    width:100%; 
+    position:absolute; 
+    left:0; 
+    overflow:hidden; 
+    top:0; 
+    padding-bottom: 56.5%;
+    // display: none;
+    // opacity: 0;
+  }
+  iframe, #player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    // bottom: 0;
+    // right: 0;
+    width: 100%;
+    height: 100%;
+  }
+   .container {
+    min-height: 550px;
+    position: relative;
+  }
+}
+.home {
+  .hero-section {
+    height: 225px !important;
+    .container {
+      height: 225px;
+      min-height: none;
+      .hero-title-area {
+        height: 225px;
+        min-height: 225px !important;
+      }
+    }
+  }
+}
+.single-post {
+  .hero-section {
+    min-height: 350px;
+    // margin-bottom: 30px;
+  }
+}
+.hero-title-area {
+  text-align: center;
+  // min-height: 225px;
+  min-height: 550px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  h2 {
+    // font-size: 3rem;
+    font-size: 1.8rem;
+    text-shadow: 3px 0px 5px #000000;
+  }
+}
+.bp-title-area {
+  text-align: center;
+  top: 50%;
+  transform: translateY(-50%);
+  a {
+    color: white;
+    display: inline-block;
+    margin: 30px 20px 0;
+  }
+}
+.list-parent {
+  > .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+.bp-text-area {
+	background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  bottom: 60px;
+  left: 0;
+  max-width: 100%;
+  padding: 25px 20px 15px 110px;
+  .green-circle {
+    position: absolute;
+    left: 20px;
+    bottom: 25px;
+    z-index: 5;
+  }
+  h3 {
+    margin-top: 0;
+  }
+}
+.single-best_places {
+	.hero-section {
+    height: 400px;
+    width: 100%;
+    .container {
+      min-height: 400px;
+    }
+		.bp-text-area {
+			h3 {
+				font-size: 2.35rem;
+			}
+			h5 {
+				font-size: 1.25rem;
+			}
+      a {
+        text-decoration: none;
+      }
+      .bp-child-title {
+        font-size: 1.25rem;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        span {
+          font-size: 2.35rem;
+          display: block;
+          color: $white;
+          text-transform: none;
+        }
+      }
+		}
+	}
+}
+.hero-badge {
+  position: absolute;
+  max-width: 150px;
+  top: 20px;
+  right: 20px;
+}
+.hero-byline {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+}
+
+// overwriting hero margin for homepage
+.home .site-main article:nth-child(2) {
+  margin-top: 0;
+}
+
+
+
+@media all and (max-width: 1030px) {
+  .has-badge > .container {
+    padding-top: 220px;
+  }
+}
+@media all and (min-width: 560px) {
+  .single-best_places {
+    .hero-section {
+      height: 550px;
+      .container {
+        min-height: 550px;
+      }
+    }
+    .hero-badge {
+      top: 60px;
+    }
+  }
+}
+@media all and (min-width: 768px) {
+  .bp-text-area {
+    left: 50px;
+  }
+}
+@media all and (min-width: 960px) {
+  .single-liv_place {
+    .hero-section {
+      > .hero-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+    }
+  }
+  .hero-text {
+    text-align: left;
+    margin-bottom: 0;
+    margin-top: 0;
+		padding-bottom: 50px;
+		padding-left: 30px;
+		padding-top: 50px;
+    p {
+      max-width: 650px;
+    }
+    &:before {
+      content: "";
+      position: absolute;
+      display: block;
+      background: inherit;
+      height: 100%;
+      width: 1000px;
+      top: 0;
+      left: -1000px;
+      overflow-x: hidden;
+    }
+  }
+  .hero-title-area {
+    h2 {
+      font-size: 3rem;
+    }
+  }
+  .hero-badge {
+    max-width: 200px;
+  }
+}

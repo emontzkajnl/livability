@@ -1,0 +1,100 @@
+html {
+  font-size: 16px;
+}
+body {
+  font-family: "Crimson Text", "Times New Roman", Times, serif;
+  font-size: 1.25rem;
+  line-height: 1.35;
+  color: #000;
+  a {
+    color: $green;
+  }
+}
+.entry-content,
+.entry-summary {
+  font-family: "Crimson Text", "Times New Roman", Times, serif;
+}
+.entry-content {
+  p {
+    margin-top: 1.4rem;
+  }
+  a {
+    text-decoration: none;
+  }
+  h2, .h2, h3, .h3 {
+    margin-top: 30px;
+  }
+}
+h1,
+.h1 {
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  font-size: 1.7rem; //54pt
+  font-weight: 600;
+}
+h2,
+.h2 {
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  font-size: 1.2rem; //30pt
+  font-weight: 600;
+  margin-top: 30px;
+}
+h3,
+.h3 {
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  font-size: 1.625rem; //26pt
+  font-weight: 600;
+  margin-top: 30px;
+}
+h4,
+.h4 {
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+h5,
+.h5 {
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.code-font {
+  font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Ubuntu Mono", "Roboto Mono", Menlo, Monaco, Consolas, monospace; 
+  font-size: .8rem;
+  max-width: 768px !important;
+}
+
+
+
+.green-line {
+	color: #111;
+  position: relative;
+  margin-bottom: 70px !important;
+  margin-top: 80px;
+  &:after {
+    content: "";
+    width: 50px;
+    height: 4px;
+    bottom: -25px;
+    left: 0;
+    position: absolute;
+    background-color: $green;
+  }
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+@media all and (min-width: 768px) {
+  h1, .h1 {
+    font-size: 3.375rem;
+  } 
+    h2, .h2 {
+    font-size: 1.6rem; //30pt
+  }
+}

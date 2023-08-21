@@ -1,0 +1,13 @@
+{
+  "apiVersion": 2,
+  "name": "jci-blocks/sponsored-by",
+  "version": "0.1.0",
+  "title": "Sponsored By",
+  "category": "jci-category",
+  "icon": "admin-links",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "jci-blocks",
+  "editorScript": "file:./index.js"
+}

@@ -1,0 +1,45 @@
+{
+    "key": "group_64d63d5690a7b",
+    "title": "Article Announcement",
+    "fields": [
+        {
+            "key": "field_64d63d578f22e",
+            "label": "Article Announcement",
+            "name": "article_announcement",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "Adds announcement to first article loaded (not ajaxed articles)",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "acf-options-article-announcement"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1691762101
+}

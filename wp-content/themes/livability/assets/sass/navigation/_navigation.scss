@@ -1,0 +1,72 @@
+.menu-item {
+  list-style: none;
+  a {
+    font-family: "Jost", Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    text-decoration: none;
+    &:hover {
+      text-decoration: solid underline;
+    }
+  }
+}
+
+
+
+#crumbs {
+  color: $gray;
+  font-size: 1rem;
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  margin-bottom: 20px;
+  a {
+    color: $green;
+    text-decoration: none;
+  }
+}
+
+@media all and (max-width: 485px) {
+  .primary-navigation {
+    top: 20px;
+  }
+}
+
+@media all and (max-width: 727px) {
+  #mega-menu-wrap-primary {
+    #mega-toggle-block-2 {
+      display: none;
+    }
+    #mega-menu-primary {
+      #mega-menu-84-0, #mega-menu-84-1-0, .mm-featured-image,  h4.mega-block-title, .article-img {
+        display: none !important;
+      }
+      .mm-featured-title {
+        font-family: Jost;
+      }
+      button {
+        display: block;
+        width: 100%;
+        margin-bottom: 15px;
+        a {
+          font-family: Jost;
+          color: $white;
+
+        }
+ 
+      }
+      .article-card {
+        background-color: transparent;
+        .article-text {
+          min-height: 0;
+          padding: 0 20px;
+          font-family: Jost;
+        }
+      }
+      .small-articles {
+        a {
+          font-family: Jost;
+        }
+      }
+    }
+  }
+  
+}
