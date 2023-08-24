@@ -1,6 +1,7 @@
-name: liv10
-recipe: pantheon
+name: livability
+recipe: wordpress
 config:
   framework: wordpress
   site: liv10
   id: d3fb124c-2593-4e06-9697-1f8b2ba27d9f
+  webroot: .
