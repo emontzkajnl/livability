@@ -1555,7 +1555,7 @@ justify-content: space-between;
   margin-top: 10px;
 }
 .wp-ultimate-csv-importer .switch-ios.inline {
-  display: inline-block;
+  display: none;
   margin-left: 60px;
 }
 .wp-ultimate-csv-importer .fieldset input[type=checkbox] {
@@ -3373,5 +3373,15 @@ justify-content: space-between;
 }
 #upload_csv button.close{
   margin-top:0px !important;
+}
+.prevent_action .action-icon:active{
+  pointer-events: none;
+  opacity: 0.5;
+}
+.prevent_action .action-icon{
+  opacity: 0.5;
+}
+.switch-ios.inline{
+  display: none;
 }
 /*# sourceMappingURL=style.css.map */

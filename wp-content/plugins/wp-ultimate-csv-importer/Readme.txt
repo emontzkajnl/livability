@@ -1,9 +1,9 @@
 === Import All Pages, Post types, Products, Orders, and Users as XML & CSV ===
 Contributors: smackcoders, smacksupport
 Requires at least: 5.0
-Tested up to: 6.2
-Stable tag: 7.9.6
-Version: 7.9.6
+Tested up to: 6.3
+Stable tag: 7.9.10.2
+Version: 7.9.10.2
 Requires PHP: 5.2.4
 Author: smackcoders
 Author URI: https://www.smackcoders.com/wp-ultimate-csv-importer-pro.html
@@ -379,6 +379,29 @@ It is as simple as installing any other WordPress plugin. There are two general 
 
 
 == Changelog ==
+= 7.9.10.2 =
+* Added : Support for CFS loop fields import
+
+= 7.9.10.1 =
+* Added : WP Version 6.3 compatibility
+* Fixed : CFS Import issue
+
+= 7.9.10 =
+* Fixed : Delete from wordpress - xml limit issue
+* Fixed : 500 issues
+
+= 7.9.9 = 
+* Added: Yoast SEO Free import and export support
+* Updated: Security fix - Restriction in import folder indexing
+* Removed: Author/Editor import option from settings for security reasons
+
+= 7.9.8 =
+* Fixed: Restricted advanced manipulation options for author role 
+* Updated: Security fix - Restriction in export folder indexing
+
+= 7.9.7 =
+* Fixed: JetEngine default time import
+
 = 7.9.6 = 
 * Added: ACF Basic Fields under Taxonomies 
 
@@ -1023,6 +1046,24 @@ It is as simple as installing any other WordPress plugin. There are two general 
 * Initial release version. Tested and found works well without any issues.
 
 == Upgrade Notice ==
+= 7.9.10.2 =
+* upgrade to get newly added features.
+
+= 7.9.10.1 =
+* upgrade to get WP 6.3 compatibility.
+
+= 7.9.10 =
+* upgrade to get minor changes.
+
+= 7.9.9 =
+* upgrade to get newly added features.
+
+= 7.9.8 =
+* upgrade to get security fixes.
+
+= 7.9.7 =
+* upgrade now to get latest changes.
+
 = 7.9.6 =
 * upgrade now to get latest changes.
 

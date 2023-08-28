@@ -160,7 +160,9 @@ class CoreFieldsImport {
 
 		}
 		else{
-
+			$current_user = wp_get_current_user();
+		    $current_user_role = $current_user->roles[0];
+			if($current_user_role == 'administrator'){
 			$post_values = [];
 			$get_result = null;
 			$post_values['post_content'] = '';
@@ -186,7 +188,7 @@ class CoreFieldsImport {
 					$map[$header_trim] = $value;
 				}
 			}
-
+		
 			foreach($map as $key => $value){
 				$csv_value= trim($map[$key]);
 				$extension_object = new ExtensionHandler;
@@ -563,7 +565,7 @@ class CoreFieldsImport {
 					$attach_id = CoreFieldsImport::$media_instance->media_handling( $featured_image , $post_id ,$post_values,$type,$image_type,$hash_key,$header_array,$value_array);	
 				}
 			}
-
+		}
 			return $post_id;
 		}
 	}

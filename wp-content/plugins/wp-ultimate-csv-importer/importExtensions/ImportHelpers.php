@@ -203,7 +203,9 @@ class ImportHelpers {
 	}
 
 	public function get_header_values($map , $header_array , $value_array){
-
+		$current_user = wp_get_current_user();
+		$current_user_role = $current_user->roles[0];
+		if($current_user_role == 'administrator'){
 		$post_values = [];
 		$trim_content = array(
 			'->static' => '', 
@@ -306,7 +308,7 @@ class ImportHelpers {
 				}
 			}
 		}
-		
+		}	
 		return $post_values;
 	}
 

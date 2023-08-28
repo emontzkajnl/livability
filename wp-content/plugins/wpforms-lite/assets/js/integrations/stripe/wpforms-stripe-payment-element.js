@@ -60,9 +60,9 @@ var WPFormsStripePaymentElement = window.WPFormsStripePaymentElement || ( functi
 				}
 			);
 
-			app.initializeFormsDefaultObject();
-
 			$( document ).on( 'wpformsReady', function() {
+
+				app.initializeFormsDefaultObject();
 
 				$( '.wpforms-stripe form' ).each( app.setupStripeForm );
 

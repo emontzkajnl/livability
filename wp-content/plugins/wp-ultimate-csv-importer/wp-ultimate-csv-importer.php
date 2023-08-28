@@ -10,7 +10,7 @@
  *
  * @wordpress-plugin
  * Plugin Name: WP Ultimate CSV Importer
- * Version:     7.9.6
+ * Version:     7.9.10.2
  * Plugin URI:  https://www.smackcoders.com/wp-ultimate-csv-importer-pro.html
  * Description: Seamlessly create posts, custom posts, pages, media, SEO and more from your CSV data with ease.
  * Author:      Smackcoders
@@ -81,7 +81,7 @@ class SmackCSV{
 	private static $persian_instance = null;
 	private static $chinese_instance = null;
 	private static $addon_instance = null;
-	public $version = '7.9.6';
+	public $version = '7.9.10.2';
 
 	public function __construct(){ 
 
@@ -111,10 +111,6 @@ class SmackCSV{
 		
 			if ( is_user_logged_in() &&  current_user_can('manage_options') ) {
 				add_action('admin_menu',array(__CLASS__,'testing_function'));
-			}
-		}else{
-			if ( is_user_logged_in() && ( current_user_can( 'edit_published_posts')) && (in_array('editor',$role) || in_array('author',$role)) && $ucisettings['author_editor_access'] == "true" ) {	
-				add_action('admin_menu',array(__CLASS__,'editor_menu'));
 			}
 		}
 
@@ -385,26 +381,41 @@ class SmackCSV{
 
 		$upload = wp_upload_dir();
 		$upload_dir = $upload['basedir'];
-		if(!is_dir($upload_dir)){
-			return false;
-		}else{
-			$upload_dir = $upload_dir . '/smack_uci_uploads/imports/';	
-			if (!is_dir($upload_dir)) {
-				wp_mkdir_p( $upload_dir);
-			}
+			if(!is_dir($upload_dir)){
+				return false;
+			}else{
+				$upload_dir = $upload_dir . '/smack_uci_uploads/imports/';
+				if (!is_dir($upload_dir)) {
+					wp_mkdir_p($upload_dir);
+					chmod($upload_dir, 0755);
+
+					$index_php_file = $upload_dir . 'index.php';
+					if (!file_exists($index_php_file)) {
+						$file_content = '<?php' . PHP_EOL . '?>';
+						file_put_contents($index_php_file, $file_content);
+					}
+				}
 			if($mode != 'CLI')
             {
-                chmod($upload_dir, 0777);
-            }			
+				chmod($upload_dir, 0777);
+			}
+
+			$exports_dir = $upload['basedir'] . '/smack_uci_uploads/exports/';
+      	  if (!is_dir($exports_dir)) {
+            wp_mkdir_p($exports_dir);
+            chmod($exports_dir, 0755);
+
+            $index_php_file = $exports_dir . 'index.php';
+            if (!file_exists($index_php_file)) {
+                $file_content = '<?php' . PHP_EOL . '?>';
+                file_put_contents($index_php_file, $file_content);
+            }
+		}
+
 			return $upload_dir;
 		}
-		if($mode != 'CLI')
-        {
-            chmod($upload_dir, 0777);
-        }			
-		return $upload_dir;
 	}
-
+	
 	public function delete_image_schedule()
 	{
 
@@ -494,10 +505,6 @@ function onpluginsload(){
 	} 
 		if(!empty($role) && in_array( 'administrator' , $role ) ){
 		if ( is_user_logged_in() &&  current_user_can('manage_options') ) {
-			loadbasic();
-		}
-	}else{
-		if ( is_user_logged_in() && ( current_user_can( 'edit_published_posts')) && (in_array('editor',$role) || in_array('author',$role)) && $ucisettings['author_editor_access'] == "true" ) {
 			loadbasic();
 		}
 	}

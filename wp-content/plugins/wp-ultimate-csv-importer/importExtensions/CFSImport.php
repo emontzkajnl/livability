@@ -59,7 +59,7 @@ class CFSImport {
 					}else{
 						$darray[$cfs_data['CFS'][$dkey]['name']] = $dvalue;
 					}
-				}elseif($cfs_data['CFS'][$dkey]['type'] == 'relationship'){
+				}elseif($cfs_data['CFS'][$dkey]['type'] == 'relationship' && $cfs_data['CFS'][$dkey]['parent_id'] == 0){
 					$relations = explode(',', $dvalue);
 					foreach($relations as $rk => $rv){
 						$relationid = $wpdb->get_col($wpdb->prepare("select ID from {$wpdb->prefix}posts where post_title = %s and post_type != %s",$rv,'revision'));
@@ -83,11 +83,104 @@ class CFSImport {
 						$this->insert_cfs_values($cfs_data,$pID,$meta_id,$cfs_data['CFS'][$dkey]['name']);
 					}
 				}
-				else{
+				else if($cfs_data['CFS'][$dkey]['type'] != 'loop' && $cfs_data['CFS'][$dkey]['parent_id'] == 0){
 					$darray[$dkey] = $dvalue;
+				}
+				
+			
+				global $wpdb;
+				$csfFields = $cfs_data['CFS'];
+				foreach($csfFields  as $values){
+					if($values['type'] == 'loop'){
+						$parentLoopId = $values['fieldid'];
+						$parentLoopName = $values['name'];
+					}
+					if(!empty($parentLoopId)){
+						if($parentLoopId == $cfs_data['CFS'][$dkey]['parent_id'] && $values['parent_id'] != 0){
+							$childKeyName = $values['name'];
+							$childFieldname = $values['type'];
+							$childParentId = $values['parent_id'];
+
+
+
+							$childFieldId = $values['fieldid'];
+							if(!empty($childKeyName)){
+							   if($cfs_data['CFS'][$dkey]['type'] == $childFieldname){
+								   if($childFieldname =='relationship'){
+									   $dataArray = explode('|', $dvalue);
+									   $increment = 0;
+									   foreach ($dataArray as $relationshipData) {
+										   $relatedSingle = explode(',', $relationshipData);
+										   foreach ($relatedSingle as $relate) {
+											   $meta_id = add_post_meta($pID, $childKeyName, $relate);
+											   $hierarchy = $parentLoopId . ':' . $increment . ':' . $childFieldId;
+											   
+											   $this->insert_cfs_loop_values($childFieldId, $meta_id, $pID, $parentLoopId, $hierarchy);
+										   }
+										   $increment++; // Increment after each set of $relationshipData
+									   }
+								   }else if($childFieldname =='textarea'){
+									   $dataArray = explode('|', $dvalue);
+									   $increment = 0;
+									   foreach($dataArray as $metaValue => $meta){
+										   $meta_id = add_post_meta($pID, $childKeyName, $meta);
+										   $hierarchy = $parentLoopId.':'.$increment.':'.$childFieldId;
+										   $increment++;
+										   $this->insert_cfs_loop_values($childFieldId, $meta_id, $pID, $parentLoopId, $hierarchy);
+									   }
+								   }
+								   else if($childFieldname =='hyperlink'){
+									   $dataArray = explode(',', $dvalue);
+									   $increment = 0;
+									   foreach($dataArray as $metaValue => $meta){
+										   $urlArray = explode('|', $meta);
+										   $linksarr['url'] = $urlArray[0];
+										   $linksarr['text'] = $urlArray[1];
+										   $linksarr['target'] = $urlArray[2];
+										   $meta_id = add_post_meta($pID, $childKeyName, $linksarr);
+										   $hierarchy = $parentLoopId.':'.$increment.':'.$childFieldId;
+										   $increment++;
+										   $this->insert_cfs_loop_values($childFieldId, $meta_id, $pID, $parentLoopId, $hierarchy);
+									   }
+								   }else if($childFieldname =='date'){
+									   $dataArray = explode('|', $dvalue);
+									   $increment = 0;
+									   foreach($dataArray as $metaValue => $meta){
+									   $convertedDate = date('Y-m-d', strtotime($meta));
+									   $meta_id = add_post_meta($pID, $childKeyName, $convertedDate);
+									   $hierarchy = $parentLoopId.':'.$increment.':'.$childFieldId;
+									   $increment++;
+									   $this->insert_cfs_loop_values($childFieldId, $meta_id, $pID, $parentLoopId, $hierarchy);
+									   }
+								   }else if($childFieldname =='color' || $childFieldname =='true_false' || $childFieldname =='select' || $childFieldname =='term' || $childFieldname =='user'){
+									   $dataArray = explode('|', $dvalue);
+									   $increment = 0;
+									   foreach($dataArray as $metaValue => $meta){
+
+										   $meta_id = add_post_meta($pID, $childKeyName, $meta);
+										   $hierarchy = $parentLoopId.':'.$increment.':'.$childFieldId;
+										   $increment++;
+										   $this->insert_cfs_loop_values($childFieldId, $meta_id, $pID, $parentLoopId, $hierarchy);
+									   }
+								   }else if ($childFieldname == 'text'){
+									   $dataArray = explode('|', $dvalue);
+									   $increment = 0;
+									   foreach($dataArray as $metaValue => $meta){
+										   $meta_id = add_post_meta($pID, $childKeyName, $meta);
+										   $hierarchy = $parentLoopId.':'.$increment.':'.$childFieldId;
+										   $increment++;
+										   $this->insert_cfs_loop_values($childFieldId, $meta_id, $pID, $parentLoopId, $hierarchy);
+									   }
+								   }
+							   }
+						   }
+					   }
+					}
+			
 				}
 			}
 		}
+		
 		if($darray){
 			foreach($darray as $mkey => $mval){
 				$metaid = update_post_meta($pID, $mkey, $mval);
@@ -96,6 +189,19 @@ class CFSImport {
 				}
 		}
 
+	}
+
+	public function insert_cfs_loop_values($childFieldId, $meta_id, $pID, $parentLoopId, $hierarchy){
+		global $wpdb;
+		$wpdb->insert($wpdb->prefix.'cfs_values',
+			array('field_id' => $childFieldId,
+				  'meta_id' => $meta_id,
+				  'post_id' => $pID,
+				  'hierarchy' => $hierarchy,
+				  'base_field_id' => $parentLoopId
+			),   
+			array('%s','%s','%s')
+		);
 	}
 
 	public function insert_cfs_values($cfs_data,$pID,$metaid,$mkey) {
@@ -112,7 +218,7 @@ class CFSImport {
 	public function CFSFields(){
 		global $wpdb;
 		$customFields = $cfs_field = array();
-		$get_cfs_groups = $wpdb->get_results($wpdb->prepare("select ID from {$wpdb->prefix}posts where post_type = %s and post_status = %s", 'cfs', 'publish'),ARRAY_A);
+		$get_cfs_groups = $wpdb->get_results($wpdb->prepare("select ID from {$wpdb->prefix}posts where post_type = %s and post_status = %s", 'cfs', 'publish'),ARRAY_A);	
 		$group_id_arr = '';
 		foreach ( $get_cfs_groups as $item => $group_rules ) {
 			$get_id[] = $group_rules['ID'];			
@@ -131,6 +237,7 @@ class CFSImport {
 					$customFields["CFS"][$fv['name']]['name'] = $fv['name'];
 					$customFields["CFS"][$fv['name']]['type'] = $fv['type'];
 					$customFields["CFS"][$fv['name']]['fieldid'] = $fv['id'];
+					$customFields["CFS"][$fv['name']]['parent_id'] = $fv['parent_id'];
 					$cfs_field[] = $fv['name'];
 				}
 			}

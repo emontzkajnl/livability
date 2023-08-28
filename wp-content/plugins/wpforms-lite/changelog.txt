@@ -1,5 +1,8 @@
 == Changelog ==
 
+= 1.8.3.1 =
+- Fixed: There were situations when Stripe Credit Card field wasn't working properly in Elementor.
+
 = 1.8.3 =
 - Added: New `{site_name}` smart tag.
 - Added: Fields in the Form Builder can now be searched by name or related keywords.

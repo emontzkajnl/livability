@@ -54,6 +54,9 @@ class MappingExtension{
 		global $wpdb;
 
 		$response = [];
+		$current_user = wp_get_current_user();
+		$current_user_role = $current_user->roles[0];
+		$response['currentuser']=$current_user_role;
 		$details = [];
 		$info = [];
 
@@ -70,7 +73,6 @@ class MappingExtension{
 		$template_table_name = $wpdb->prefix."ultimate_csv_importer_mappingtemplate";
 		$smackcsv_instance = SmackCSV::getInstance();
 		$upload_dir = $smackcsv_instance->create_upload_dir();
-		$response = [];
 		if($file_extension == 'csv' || $file_extension == 'txt'){
 			ini_set("auto_detect_line_endings", true);
 			$info = [];

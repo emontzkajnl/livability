@@ -1816,7 +1816,7 @@ class WooCommerceMetaImport {
 					$attrordr = 'menu_order';
 					$attr_data = $attrVal['value'];
 					$get_transistent_atrributes = get_option('_transient_wc_attribute_taxonomies');
-					$get_count_transistent_attr = count($get_transistent_atrributes);
+					$get_count_transistent_attr = is_array($get_transistent_atrributes) ? count($get_transistent_atrributes) : 0;
 					$count_transistent_attr = $get_count_transistent_attr + 1;
 
 					if(!empty($get_transistent_atrributes)){
@@ -1865,7 +1865,7 @@ class WooCommerceMetaImport {
 					$attrordr = 'menu_order';
 					$attr_data = $attrVal['value'];
 					$get_transistent_atrributes = get_option('_transient_wc_attribute_taxonomies');
-					$get_count_transistent_attr = count($get_transistent_atrributes);
+					$get_count_transistent_attr = is_array($get_transistent_atrributes) ? count($get_transistent_atrributes) : 0;
 					$count_transistent_attr = $get_count_transistent_attr + 1;
 
 					if(!empty($get_transistent_atrributes)){

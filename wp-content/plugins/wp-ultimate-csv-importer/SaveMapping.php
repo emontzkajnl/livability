@@ -555,6 +555,10 @@ class SaveMapping{
 								$fifu_instance = FIFUImport::getInstance();
 								$fifu_instance->set_fifu_values($header_array, $value_array, $map['FIFUPAGE'], $post_id, $selected_type, $get_mode);
 								break;
+							case 'YOASTSEO':
+								$yoast_instance = YoastSeoImport::getInstance();
+								$yoast_instance->set_yoast_values($header_array, $value_array, $map['YOASTSEO'], $post_id, $selected_type, $hash_key,$gmode,$templatekey);
+								break;		
 							}
 						}
 						$helpers_instance->get_post_ids($post_id ,$hash_key);
@@ -704,7 +708,9 @@ class SaveMapping{
 				if($import_type_value == 'category' || $import_type_value == 'post_tag' || $import_type_value == 'product_cat' || $import_type_value == 'product_tag'){
 
 					$get_total_row_count =  $wpdb->get_col("SELECT term_id FROM {$wpdb->prefix}term_taxonomy WHERE taxonomy = '$import_type_value'");
-					$unmatched_id=array_diff($get_total_row_count,$entries_array);
+					if(is_array($entries_array)){
+					 $unmatched_id=array_diff($get_total_row_count,$entries_array);
+					}
 
 					foreach($unmatched_id as $keys => $values){
 						$wpdb->get_results("DELETE FROM {$wpdb->prefix}terms WHERE `term_id` = '$values' ");
@@ -713,8 +719,9 @@ class SaveMapping{
 				if($import_type_value == 'post' || $import_type_value == 'product' || $import_type_value == 'page' || $import_name_as == 'CustomPosts'){
 
 					$get_total_row_count =  $wpdb->get_col("SELECT DISTINCT ID FROM {$wpdb->prefix}posts WHERE post_type = '{$import_type_value}' AND post_status != 'trash' ");
-					$unmatched_id=array_diff($get_total_row_count,$entries_array);
-
+					if(is_array($entries_array)){
+					 $unmatched_id=array_diff($get_total_row_count,$entries_array);
+					}
 					foreach($unmatched_id as $keys => $values){
 						$wpdb->get_results("DELETE FROM {$wpdb->prefix}posts WHERE `ID` = '$values' ");
 					}
@@ -1215,6 +1222,10 @@ class SaveMapping{
 				$fifu_instance = FIFUImport::getInstance();
 				$fifu_instance->set_fifu_values($header_array, $value_array, $map['FIFUPAGE'], $post_id, $selected_type, $get_mode);
 				break;
+			case 'YOASTSEO':
+				$yoast_instance = YoastSeoImport::getInstance();
+				$yoast_instance->set_yoast_values($header_array, $value_array, $map['YOASTSEO'], $post_id, $selected_type, $hash_key,$gmode,$templatekey);
+				break;	
 			}
 		}
 		$return_arr['id'] = $post_id;
