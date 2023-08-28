@@ -45,33 +45,23 @@ add_filter( 'alm_progress_css', 'alm_progress_css', 10, 3 );
 function alm_css_disabled( $setting ) {
 	$options  = get_option( 'alm_settings' );
 	$disabled = true;
-	if ( ! isset( $options[ $setting ] ) || $options[ $setting ] !== '1' ) {
-		$disabled = false;
-	}
-	return $disabled;
+	return ! isset( $options[ $setting ] ) || $options[ $setting ] !== '1' ? false : true;
 }
 
 /**
  * Load ALM CSS inline.
  *
  * @param string $setting The name of the setting field.
- * @return boolean         Is it inline or in a file.
+ * @return boolean        Is it inline or in a file.
  * @since 3.3.1
  */
 function alm_do_inline_css( $setting ) {
-	if ( defined( 'REST_REQUEST' ) ) {
+	if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
 		// Exit if this is a REST API request.
-		if ( REST_REQUEST ) {
-			return false;
-		}
+		return false;
 	}
-
 	$options = get_option( 'alm_settings' );
-	$inline  = false;
-	if ( ! isset( $options[ $setting ] ) || $options[ $setting ] === '1' ) {
-		$inline = true;
-	}
-	return $inline;
+	return ! isset( $options[ $setting ] ) || $options[ $setting ] === '1' ? true : false;
 }
 
 /**
@@ -120,7 +110,6 @@ function alm_loop( $repeater, $type, $theme_repeater, $alm_found_posts = '', $al
  * @since 2.5.0
  */
 function alm_get_current_repeater( $repeater, $type ) {
-
 	$template = $repeater;
 	$include  = '';
 
@@ -169,7 +158,6 @@ function alm_get_current_repeater( $repeater, $type ) {
  * @since 2.5.0
  */
 function alm_get_default_repeater() {
-
 	global $wpdb;
 	$file         = null;
 	$template_dir = apply_filters( 'alm_template_path', 'alm_templates' );
@@ -387,7 +375,8 @@ function alm_get_repeater_type( $repeater ) {
  */
 function alm_get_canonical_url() {
 
-	$canonical_url = '';
+	$canonical_url   = '';
+	$frontpage_slash = apply_filters( 'alm_canonical_frontpage_trailing_slash', true ) ? '/' : ''; // e.g. add_filter('alm_canonical_frontpage_trailing_slash', '__return_false').
 
 	if ( is_date() ) {
 		// Date Archive.
@@ -408,8 +397,7 @@ function alm_get_canonical_url() {
 		if ( function_exists( 'pll_home_url' ) ) { // Polylang support.
 			$canonical_url = pll_home_url();
 		} else {
-			$canonical_url = get_home_url() . apply_filters( 'alm_canonical_frontpage_trailing_slash', true ) ? '/' : '';
-			// e.g. add_filter('alm_canonical_frontpage_trailing_slash', '__return_false').
+			$canonical_url = get_home_url() . $frontpage_slash;
 		}
 	} elseif ( is_home() ) {
 		// Home (Blog Default).
@@ -443,7 +431,7 @@ function alm_get_canonical_url() {
 
 	} elseif ( is_search() ) {
 		// Search.
-		$canonical_url = get_home_url() . apply_filters( 'alm_canonical_frontpage_trailing_slash', true ) ? '/' : '';
+		$canonical_url = get_home_url() . $frontpage_slash;
 
 	} else {
 		// Fallback.

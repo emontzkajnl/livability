@@ -82,6 +82,6 @@ if (! isset($showUnloadOnThisPageCheckUncheckAll, $showLoadItOnThisPageCheckUnch
                href="#">Expand</a>
             All Assets
         </div>
-        <div class="wpacu-clearfix"></div>
+        <div class="wpacu_clearfix"></div>
     </div>
 </div>

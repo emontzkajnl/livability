@@ -685,7 +685,7 @@ body:not(.wp-admin) #wpacu_wrap_assets code {
   width: auto !important;
   margin-right: 4px !important;
 }
-#wpacu_wrap_assets img:not(.wpacu-ajax-loader) {
+#wpacu_wrap_assets img:not(.wpacu_ajax_loader) {
   display: inline-block !important;
 }
 #wpacu_wrap_assets p {
@@ -2164,6 +2164,28 @@ body.wp-admin .go-pro-link-no-style .wpacu-tooltip {
   color: #52af00;
   font: normal 24px/1 dashicons;
 }
+.wpacu-form-table .wpacu-fancy-radio.wpacu-locked input[type=radio] {
+  opacity: 0.3;
+}
+.wpacu-form-table .wpacu-fancy-radio.wpacu-locked input[type=radio]:before {
+  content: "";
+  font-family: "Dashicons", Arial, "Times New Roman", "Bitstream Charter", Times, serif;
+  position: absolute;
+  font-size: 17px;
+  top: 2px;
+  right: 0;
+  z-index: 1000;
+}
+.wpacu-form-table .wpacu-fancy-radio.wpacu-disabled-status input[type=radio]:checked {
+  border: 1px solid #cc0000;
+}
+.wpacu-form-table .wpacu-fancy-radio.wpacu-disabled-status input[type=radio]:checked:before {
+  background: #cc0000;
+  color: #cc0000;
+}
+.wpacu-form-table .wpacu-fancy-radio.wpacu-disabled-status input[type=radio]:hover {
+  border: 1px solid #cc0000;
+}
 .wpacu-form-table .wpacu-fancy-radio input[type=radio] {
   -webkit-border-radius: 50%;
   /* Chrome, Safari, Opera */
@@ -2174,6 +2196,18 @@ body.wp-admin .go-pro-link-no-style .wpacu-tooltip {
   height: 20px;
   width: 20px;
   margin: 2px 0 0 0;
+}
+.wpacu-form-table .wpacu-fancy-radio input[type=radio].wpacu-locked {
+  opacity: 0.3;
+}
+.wpacu-form-table .wpacu-fancy-radio input[type=radio].wpacu-locked:before {
+  content: "";
+  font-family: "Dashicons", Arial, "Times New Roman", "Bitstream Charter", Times, serif;
+  position: absolute;
+  font-size: 17px;
+  top: 2px;
+  right: 0;
+  z-index: 1000;
 }
 .wpacu-form-table .wpacu-fancy-radio input[type=radio].wpacu-disabled-status:checked {
   border: 1px solid #cc0000;
@@ -2812,13 +2846,13 @@ body.wp-admin tr.wpacu_asset_row > td[data-wpacu-row-status=contracted] .wpacu_h
   left: 20px;
   top: -2px;
 }
-body.wp-admin tr.wpacu_asset_row.wpacu-loading {
+body.wp-admin tr.wpacu_asset_row.wpacu_loading {
   position: relative;
 }
-body.wp-admin tr.wpacu_asset_row.wpacu-loading .wpacu-ajax-loader {
+body.wp-admin tr.wpacu_asset_row.wpacu_loading .wpacu_ajax_loader {
   display: block !important;
 }
-body.wp-admin tr.wpacu_asset_row .wpacu-ajax-loader {
+body.wp-admin tr.wpacu_asset_row .wpacu_ajax_loader {
   display: none;
   width: 58px;
   height: 58px;
@@ -3076,39 +3110,39 @@ body.wp-admin tr.wpacu_asset_row .wpacu-ajax-loader {
   float: right;
 }
 
-.wpacu-clearfix {
+.wpacu_clearfix {
   clear: both;
   height: 0;
 }
-.wpacu-clearfix:before {
+.wpacu_clearfix:before {
   content: "";
   display: table;
 }
-.wpacu-clearfix:after {
+.wpacu_clearfix:after {
   content: "";
   display: table;
   clear: both;
 }
 
-body.wp-admin .wpacu-wp-button {
+body.wp-admin .wpacu_wp_button {
   font-size: 13px;
   line-height: 26px;
   height: 28px;
 }
 
-.wpacu-wp-button {
+.wpacu_wp_button {
   color: #555 !important;
   border-color: #ccc !important;
   background: #f7f7f7 !important;
   box-shadow: 0 1px 0 #ccc;
   vertical-align: top;
 }
-.wpacu-wp-button:hover {
+.wpacu_wp_button:hover {
   background: #fafafa !important;
   border-color: #999 !important;
   color: #23282d !important;
 }
-.wpacu-wp-button.wpacu-wp-button-secondary {
+.wpacu_wp_button.wpacu_wp_button_secondary {
   display: inline-block;
   text-decoration: none;
   height: auto;
@@ -3690,13 +3724,13 @@ body.logged-in:not(.wp-admin) .wpacu-view-more-code:active {
   top: 1px;
 }
 
-.wpacu-page-options .wpacu-assets-collapsible-content.wpacu-loading {
+.wpacu-page-options .wpacu-assets-collapsible-content.wpacu_loading {
   position: relative;
 }
-.wpacu-page-options .wpacu-assets-collapsible-content.wpacu-loading .wpacu-ajax-loader {
+.wpacu-page-options .wpacu-assets-collapsible-content.wpacu_loading .wpacu_ajax_loader {
   display: block !important;
 }
-.wpacu-page-options .wpacu-assets-collapsible-content .wpacu-ajax-loader {
+.wpacu-page-options .wpacu-assets-collapsible-content .wpacu_ajax_loader {
   display: none;
   width: 58px;
   height: 58px;
@@ -4596,6 +4630,27 @@ img.wpacu-emoji {
   box-shadow: none !important;
 }
 
+@keyframes wpacu-input-horizontal-shaking {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(5px);
+  }
+  50% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+.wpacu-shake-horizontal {
+  animation: wpacu-input-horizontal-shaking 0.3s ease-in-out 0s 2;
+}
+
 .wpacu-list-table.plugins {
   width: 98%;
   -webkit-border-radius: 5px;
@@ -4605,9 +4660,68 @@ img.wpacu-emoji {
   border-radius: 5px;
 }
 
+#wpacu-plugins-manage-front-notice-top, #wpacu-plugins-manage-dash-notice-top {
+  border-radius: 5px;
+  line-height: 20px;
+  background: white;
+  padding: 8px;
+  margin-bottom: 30px;
+  width: 95%;
+  border-left: 2px solid #004567;
+  border-top: 1px solid #e7e7e7;
+  border-right: 1px solid #e7e7e7;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+#wpacu-plugins-load-manager-wrap {
+  /* [START] Expand / Contract Plugins Area (all plugins from the list) For "Plugins Manager" */
+  /* [END] Expand / Contract Plugins Area (all plugins from the list) For "Plugins Manager" */
+}
+#wpacu-plugins-load-manager-wrap .chosen-container.chosen-container-multi {
+  max-width: 400px;
+}
 #wpacu-plugins-load-manager-wrap .help_link {
   text-decoration: none;
   color: inherit;
+  vertical-align: middle;
+}
+#wpacu-plugins-load-manager-wrap .wpacu_contract_expand_plugins_area {
+  width: 98%;
+  margin: 20px 0 10px;
+}
+#wpacu-plugins-load-manager-wrap .wpacu_contract_expand_plugins_area .wpacu_col_left {
+  float: left;
+}
+#wpacu-plugins-load-manager-wrap .wpacu_contract_expand_plugins_area .wpacu_col_left h3 {
+  margin: 0;
+}
+#wpacu-plugins-load-manager-wrap .wpacu_contract_expand_plugins_area .wpacu_col_right {
+  float: right;
+}
+#wpacu-plugins-load-manager-wrap .wpacu_contract_expand_plugins_area .wpacu_plugins_groups_change_state_area {
+  margin-bottom: 6px;
+  margin-top: -9px;
+}
+#wpacu-plugins-load-manager-wrap .wpacu_contract_expand_plugins_area .wpacu_plugins_groups_change_state_area .wpacu_plugins_contract_expand_all {
+  font-size: 11px;
+  line-height: 30px;
+  height: 32px;
+  padding: 0 6px 1px;
+}
+#wpacu-plugins-load-manager-wrap .wpacu_contract_expand_plugins_area .wpacu_plugins_groups_change_state_area .wpacu_plugins_contract_expand_all:disabled {
+  opacity: 0.85;
+}
+#wpacu-plugins-load-manager-wrap .wpacu_contract_expand_plugins_area .wpacu_plugins_groups_change_state_area .wpacu_plugins_contract_expand_all.wpacu_plugins_contract_all {
+  margin: 0 4px 0 0;
+}
+#wpacu-plugins-load-manager-wrap .wpacu_contract_expand_plugins_area .wpacu_plugins_groups_change_state_area .wpacu_plugins_expand_all {
+  margin-right: 0;
+}
+#wpacu-plugins-load-manager-wrap .wpacu_contract_expand_plugins_area .wpacu_plugins_groups_change_state_area .wpacu_ajax_loader {
+  width: 18px;
+  height: 18px;
+  opacity: 0.75;
+  margin: 0 2px;
   vertical-align: middle;
 }
 #wpacu-plugins-load-manager-wrap table td {
@@ -4622,7 +4736,6 @@ img.wpacu-emoji {
 }
 #wpacu-plugins-load-manager-wrap table .wpacu_plugin_icon > div {
   background: #efefef;
-  border: #cdcdcd;
   border-radius: 3px;
   width: 40px;
   height: 40px;
@@ -4643,8 +4756,40 @@ img.wpacu-emoji {
 }
 #wpacu-plugins-load-manager-wrap table td.wpacu_plugin_details {
   vertical-align: middle;
-  padding: 14px 20px 14px 8px;
+  padding: 14px 14px 14px 8px;
   min-width: 360px;
+}
+#wpacu-plugins-load-manager-wrap table td.wpacu_plugin_details > div.wpacu_plugin_details_top_area {
+  min-height: 32px;
+}
+#wpacu-plugins-load-manager-wrap table td.wpacu_plugin_details > div.wpacu_plugin_details_top_area .wpacu_plugin_expand_contract_area {
+  float: right;
+}
+#wpacu-plugins-load-manager-wrap table td.wpacu_plugin_details > div.wpacu_plugin_details_top_area .wpacu_plugin_expand_contract_area > .wpacu_wp_button {
+  margin-right: 0;
+  padding: 5px;
+  width: 28px;
+  height: 28px;
+}
+#wpacu-plugins-load-manager-wrap table td.wpacu_plugin_details > div.wpacu_plugin_details_top_area .wpacu_plugin_expand_contract_area > .wpacu_wp_button:disabled {
+  opacity: 0.85;
+}
+#wpacu-plugins-load-manager-wrap table td.wpacu_plugin_details > div.wpacu_plugin_details_top_area .wpacu_plugin_expand_contract_area > .wpacu_wp_button > .wpacu_ajax_loader:not(.wpacu_hide) + span:before {
+  content: "";
+}
+#wpacu-plugins-load-manager-wrap table td.wpacu_plugin_details > div.wpacu_plugin_details_top_area .wpacu_plugin_expand_contract_area > .wpacu_wp_button span {
+  font-size: 15px;
+  width: 14px;
+  height: 14px;
+}
+#wpacu-plugins-load-manager-wrap table td.wpacu_plugin_details[data-wpacu-status-area=contracted] > div[data-wpacu-plugin-path] {
+  display: none;
+}
+#wpacu-plugins-load-manager-wrap table td.wpacu_plugin_details[data-wpacu-status-area=contracted] > div.wpacu_plugin_details_top_area > div.wpacu_plugin_expand_contract_area > .wpacu_wp_button > span:before {
+  content: "";
+}
+#wpacu-plugins-load-manager-wrap table td.wpacu_plugin_details:not([data-wpacu-status-area=contracted]) > div.wpacu_plugin_details_top_area > div.wpacu_plugin_expand_contract_area > .wpacu_wp_button > span:before {
+  content: "";
 }
 #wpacu-plugins-load-manager-wrap table td.wpacu_plugin_details .wpacu_plugin_title {
   font-size: 1.2em;
@@ -4661,6 +4806,9 @@ img.wpacu-emoji {
 }
 #wpacu-plugins-load-manager-wrap table div.wpacu_plugin_icon {
   padding: 0 4px;
+}
+#wpacu-plugins-load-manager-wrap .wpacu_plugin_unload_rules_options_wrap.wpacu_contracted {
+  display: none;
 }
 #wpacu-plugins-load-manager-wrap .wpacu_plugin_unload_rules_options_wrap .wpacu_plugin_rules_wrap {
   flex-grow: 1;
@@ -4708,6 +4856,9 @@ img.wpacu-emoji {
 #wpacu-plugins-load-manager-wrap .wpacu_plugin_load_exception_options_wrap {
   padding-top: 5px;
   width: auto;
+}
+#wpacu-plugins-load-manager-wrap .wpacu_plugin_load_exception_options_wrap.wpacu_contracted {
+  display: none;
 }
 #wpacu-plugins-load-manager-wrap .wpacu_plugin_load_exception_options_wrap .wpacu_plugin_rules_wrap {
   margin: 0 16px 0 0 !important;

@@ -275,7 +275,24 @@ class OwnAssets
             /*
              * Whether to clear Autoptimize Cache or not (if the plugin is enabled)
              */
-            $wpacu_object_data['clear_autoptimize_cache'] = assetCleanUpClearAutoptimizeCache() ? 'true' : 'false';
+            if ( ! Misc::isPluginActive('autoptimize/autoptimize.php') ) {
+	            $wpacu_object_data['autoptimize_not_active'] = 1;
+            } else {
+	            $wpacu_object_data['clear_autoptimize_cache'] = assetCleanUpClearAutoptimizeCache() ? 'true' : 'false';
+            }
+
+		    /*
+			 * Whether to clear "Cache Enabler" Cache or not (if the plugin is enabled)
+			 */
+		    if ( ! Misc::isPluginActive('cache-enabler/cache-enabler.php') ) {
+			    $wpacu_object_data['cache_enabler_not_active'] = 1;
+		    } else {
+			    $wpacu_object_data['clear_cache_enabler_cache'] = assetCleanUpClearCacheEnablerCache() ? 'true' : 'false';
+
+                if (assetCleanUpClearCacheEnablerCache()) {
+	                $wpacu_object_data['wpacu_ajax_clear_cache_enabler_cache_nonce'] = wp_create_nonce( 'wpacu_ajax_clear_cache_enabler_cache_nonce' );
+                }
+		    }
 
 		    return $wpacu_object_data;
         });

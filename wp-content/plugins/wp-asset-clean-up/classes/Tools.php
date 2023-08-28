@@ -238,6 +238,9 @@ class Tools
 	    $return .= 'WP_CONTENT_URL:            ' . ( defined( 'WP_CONTENT_URL' ) ? (WP_CONTENT_URL ? WP_CONTENT_URL : 'Disabled') : 'Not set' ) . "\n";
 	    $return .= 'UPLOADS:                   ' . ( defined( 'UPLOADS' ) ? (UPLOADS ? UPLOADS : 'Disabled') : 'Not set' ) . "\n";
 
+        $return .= 'FS_CHMOD_DIR:               '  . FS_CHMOD_DIR . "\n";
+	    $return .= 'FS_CHMOD_FILE:              '  . FS_CHMOD_FILE . "\n";
+
 	    $uploads_dir = wp_upload_dir();
 
 	    $return .= 'wp_uploads_dir() path:     ' . $uploads_dir['path'] . "\n";
@@ -616,11 +619,15 @@ SQL;
 				    foreach ($wpacuMetaKeys as $postMetaKey) {
 					    delete_post_meta_by_key($postMetaKey);
 				    }
-                } elseif ($tableBaseName === 'usermeta') { // User Meta: Pro version (if used)
+                }
+
+                if ($tableBaseName === 'usermeta') { // User Meta: Pro version (if used)
 					foreach ($wpacuMetaKeys as $userMetaKey) {
 						delete_metadata('user', 0, $userMetaKey, '', true);
 					}
-                } elseif ($tableBaseName === 'termmeta') { // e.g. Taxonomy: Pro version (if used)
+                }
+
+                if ($tableBaseName === 'termmeta') { // e.g. Taxonomy: Pro version (if used)
 					foreach ($wpacuMetaKeys as $termMetaKey) {
 						delete_metadata('term', 0, $termMetaKey, '', true);
 					}

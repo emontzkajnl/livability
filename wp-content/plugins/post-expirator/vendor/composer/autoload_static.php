@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitcfb36899a2d124d5a62d0b38efdfa526
+class ComposerStaticInitcde2482e1b9d3bd733fcac83497337a7
 {
     public static $files = array (
         'f8bfd4c5c7018cdd6b24a61a7f6491de' => __DIR__ . '/..' . '/publishpress/vendor-locator-future/includes.php',
@@ -49,10 +49,10 @@ class ComposerStaticInitcfb36899a2d124d5a62d0b38efdfa526
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitcfb36899a2d124d5a62d0b38efdfa526::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitcfb36899a2d124d5a62d0b38efdfa526::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitcfb36899a2d124d5a62d0b38efdfa526::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitcfb36899a2d124d5a62d0b38efdfa526::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitcde2482e1b9d3bd733fcac83497337a7::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitcde2482e1b9d3bd733fcac83497337a7::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitcde2482e1b9d3bd733fcac83497337a7::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitcde2482e1b9d3bd733fcac83497337a7::$classMap;
 
         }, null, ClassLoader::class);
     }

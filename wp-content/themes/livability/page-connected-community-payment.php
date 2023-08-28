@@ -32,7 +32,7 @@ if ($hero_section) {
 while ( have_posts() ) :
 	the_post();
 
-
+	echo '<div style="height: 100px;"></div>';
 	get_template_part( 'template-parts/content/content-cc-thank-you' );
 
 

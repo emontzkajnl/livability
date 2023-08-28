@@ -32,11 +32,6 @@
             "MatthiasMullie\\Minify\\": "src/"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "MatthiasMullie\\Minify\\Tests\\": "tests/"
-        }
-    },
     "bin": [
         "bin/minifycss",
         "bin/minifyjs"

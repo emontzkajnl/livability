@@ -503,7 +503,7 @@ class Permalink_Manager_Pro_Functions {
 	 * @param string $native_uri The native permalink
 	 * @param string $default_uri The default custom permalink
 	 */
-	public function save_redirects( $element_id, $new_uri, $old_uri, $native_uri, $default_uri ) {
+	public function save_redirects( $element_id, $new_uri, $old_uri, $native_uri = '', $default_uri = '' ) {
 		global $permalink_manager_options, $permalink_manager_redirects;
 
 		// Do not trigger if "Extra redirects" option is turned off
@@ -579,6 +579,10 @@ class Permalink_Manager_Pro_Functions {
 	 */
 	public static function save_external_redirect( $url, $element_id ) {
 		global $permalink_manager_external_redirects;
+
+		if ( empty( $url ) ) {
+			return;
+		}
 
 		$url = filter_var( $url, FILTER_SANITIZE_URL );
 

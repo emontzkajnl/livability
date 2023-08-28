@@ -91,11 +91,11 @@ class Misc
 			return false;
 		}
 
-		return (substr_compare(
+		return substr_compare(
 			        $string,
 			        $endsWithString,
 			        $stringLen - $endsWithStringLen, $endsWithStringLen
-		        ) === 0);
+		        ) === 0;
 	}
 
 	/**

@@ -91,10 +91,6 @@
     
     <form action="" method="POST">
     <table style="max-width: 550px; margin: 0 auto;"><tbody>  
-    <tr>    
-        <td><label for="post-id">Post ID:</label></td>
-        <td><input type="text"  id="post-id" value="<?php echo $Post_ID; ?>"></td>
-    </tr>
     <tr>
     <td><label for="payment">Payment Amount:</label></td>
         <td><input type="number" name="payment" id="payment" required="" value="10"></td>

@@ -217,8 +217,9 @@ class A2A_Follow_Widget extends WP_Widget {
 		</p>
 <?php foreach ( $services as $code => $service ) : 
 		$code_id = $code . '_id';
+		$id_accepted = false !== strpos( $service['href'], '${id}' );
 		$id_value = ! empty( $instance[ $code_id ] ) ? $instance[ $code_id ] : '';
-		$label_text = 'feed' == $code ? sprintf( __('%s URL:'), $service['name'] ) : sprintf( __('%s ID:'), $service['name'] );
+		$label_text = $id_accepted ? sprintf( __('%s ID:'), $service['name'] ) : sprintf( __('%s URL:'), $service['name'] );
 ?>
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( $code_id ) ); ?>"><?php echo esc_attr( $label_text ); ?></label>

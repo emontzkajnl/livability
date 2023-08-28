@@ -170,11 +170,13 @@ function postexpirator_show_value($column_name)
     $container = Container::getInstance();
     $factory = $container->get(ServicesAbstract::EXPIRABLE_POST_MODEL_FACTORY);
     $postModel = $factory($post->ID);
+    $settings = $container->get(ServicesAbstract::SETTINGS);
 
     PostExpirator_Display::getInstance()->render_template('expire-column', [
         'id' => $post->ID,
         'post_type' => $post->post_type,
-        'attributes' => $postModel->getExpirationDataAsArray()
+        'attributes' => $postModel->getExpirationDataAsArray(),
+        'column_style' => $settings->getColumnStyle(),
     ]);
 }
 
@@ -360,7 +362,7 @@ function postexpirator_meta_box($post)
     $factory = $container->get(ServicesAbstract::EXPIRABLE_POST_MODEL_FACTORY);
     $postModel = $factory($post->ID);
 
-    $postMetaDate = $postModel->getExpirationDate();
+    $postMetaDate = $postModel->getExpirationDateAsUnixTime();
 
     $expireType = $default = $enabled = '';
 
@@ -384,11 +386,13 @@ function postexpirator_meta_box($post)
             $expireType = $defaultsOption['expireType'];
         }
     } else {
-        $defaultMonth = get_date_from_gmt(gmdate('Y-m-d H:i:s', $postMetaDate), 'm');
-        $defaultDay = get_date_from_gmt(gmdate('Y-m-d H:i:s', $postMetaDate), 'd');
-        $defaultYear = get_date_from_gmt(gmdate('Y-m-d H:i:s', $postMetaDate), 'Y');
-        $defaultHour = get_date_from_gmt(gmdate('Y-m-d H:i:s', $postMetaDate), 'H');
-        $defaultMinute = get_date_from_gmt(gmdate('Y-m-d H:i:s', $postMetaDate), 'i');
+        $gmDate = gmdate('Y-m-d H:i:s', $postMetaDate);
+
+        $defaultMonth = get_date_from_gmt($gmDate, 'm');
+        $defaultDay = get_date_from_gmt($gmDate, 'd');
+        $defaultYear = get_date_from_gmt($gmDate, 'Y');
+        $defaultHour = get_date_from_gmt($gmDate, 'H');
+        $defaultMinute = get_date_from_gmt($gmDate, 'i');
 
         $attributes = $postModel->getExpirationDataAsArray();
         $expireType = $attributes['expireType'];
@@ -449,53 +453,6 @@ function postexpirator_set_default_meta_for_post($postId, $post, $update)
 
     do_action(ExpiratorHooks::ACTION_SCHEDULE_POST_EXPIRATION, $postId, $defaultExpire['ts'], $opts);
 }
-
-/**
- * Add's ajax javascript.
- *
- * @internal
- *
- * @access private
- */
-function postexpirator_js_admin_header()
-{
-    $facade = PostExpirator_Facade::getInstance();
-
-    if (! $facade->current_user_can_expire_posts()) {
-        return;
-    }
-    ?>
-    <script type="text/javascript">
-        //<![CDATA[
-        (function ($) {
-            $(document).ready(function () {
-                init();
-            });
-
-            function init() {
-                $('#enable-expirationdate').on('click', function (e) {
-                    if ($(this).is(':checked')) {
-                        $('.pe-classic-fields').show();
-                    } else {
-                        $('.pe-classic-fields').hide();
-                    }
-                });
-
-                $('.pe-howtoexpire').on('change', function (e) {
-                    if ($(this).val().indexOf('category') !== -1) {
-                        $('#expired-category-selection').show();
-                    } else {
-                        $('#expired-category-selection').hide();
-                    }
-                });
-            }
-        })(jQuery);
-        //]]>
-    </script>
-    <?php
-}
-
-add_action('admin_head', 'postexpirator_js_admin_header');
 
 /**
  * Called when post is saved - stores expiration-date meta value
@@ -642,7 +599,7 @@ function postexpirator_update_post_meta($id)
                 if (isset($payload['meta'][PostMetaAbstract::EXPIRATION_TIMESTAMP])) {
                     $ts = sanitize_text_field($payload['meta'][PostMetaAbstract::EXPIRATION_TIMESTAMP]);
                 } else {
-                    $ts = $postModel->getExpirationDate();
+                    $ts = $postModel->getExpirationDateAsUnixTime();
                 }
 
                 if (isset($payload['meta'][PostMetaAbstract::EXPIRATION_TYPE])) {
@@ -666,7 +623,7 @@ function postexpirator_update_post_meta($id)
             $shouldSchedule = $postModel->isExpirationEnabled();
 
             if ($shouldSchedule) {
-                $ts = $postModel->getExpirationDate();
+                $ts = $postModel->getExpirationDateAsUnixTime();
 
                 $opts['expireType'] = $postModel->getExpirationType();
                 $opts['category'] = (array)$postModel->getExpirationCategoryIDs();
@@ -703,7 +660,7 @@ function postexpirator_shortcode($attrs)
     $postModel = $factory($post->ID);
 
     $enabled = $postModel->isExpirationEnabled();
-    $expirationDateTs = $postModel->getExpirationDate();
+    $expirationDateTs = $postModel->getExpirationDateAsUnixTime();
     if (! $enabled || empty($expirationDateTs)) {
         return false;
     }
@@ -764,7 +721,7 @@ function postexpirator_get_footer_text($useDemoText =  false)
         $factory = $container->get(ServicesAbstract::EXPIRABLE_POST_MODEL_FACTORY);
         $postModel = $factory($post->ID);
 
-        $expirationDate = $postModel->getExpirationDate();
+        $expirationDate = $postModel->getExpirationDateAsUnixTime();
     }
 
     $dateformat = get_option('expirationdateDefaultDateFormat', POSTEXPIRATOR_DATEFORMAT);
@@ -830,7 +787,7 @@ function postexpirator_add_footer($text)
         return $text;
     }
 
-    $expirationDate = $postModel->getExpirationDate();
+    $expirationDate = $postModel->getExpirationDateAsUnixTime();
     if (! is_numeric($expirationDate)) {
         return $text;
     }
@@ -977,9 +934,10 @@ function postexpirator_upgrade()
         }
 
         if (version_compare($version, '3.0.0') === -1) {
-            $container->get(ServicesAbstract::CRON)->enqueueAsyncAction(V30000WPCronToActionsScheduler::HOOK, [], true);
+            // TODO: DB migration should probably check a database version option and not the plugin version.
             $container->get(ServicesAbstract::HOOKS)->doAction(V30000ActionArgsSchema::HOOK);
             $container->get(ServicesAbstract::HOOKS)->doAction(V30000ReplaceFooterPlaceholders::HOOK);
+            $container->get(ServicesAbstract::CRON)->enqueueAsyncAction(V30000WPCronToActionsScheduler::HOOK, [], true);
         }
 
         if (version_compare($version, '3.0.1') === -1) {
@@ -1337,7 +1295,7 @@ function postexpirator_date_save_bulk_edit()
         $factory = $container->get(ServicesAbstract::EXPIRABLE_POST_MODEL_FACTORY);
         $postModel = $factory($postId);
 
-        $postExpirationDate = $postModel->getExpirationDate();
+        $postExpirationDate = $postModel->getExpirationDateAsUnixTime();
 
         if ($status === 'remove-only') {
             do_action(ExpiratorHooks::ACTION_UNSCHEDULE_POST_EXPIRATION, $postId);

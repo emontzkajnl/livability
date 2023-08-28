@@ -40,6 +40,6 @@ if (! isset($data)) {
 			</ul>
 		</fieldset>
 	</div>
-	<div class="wpacu-clearfix"></div>
+	<div class="wpacu_clearfix"></div>
 </div>
 <!-- [End] Unload Rules -->
