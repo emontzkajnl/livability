@@ -1,32 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ACA\WC\Service;
 
-use AC\ListScreenFactory;
 use AC\Registerable;
-use ACA\WC\ListScreenFactory\ProductCategoryFactory;
-use ACA\WC\ListScreenFactory\ProductFactory;
-use ACA\WC\ListScreenFactory\ProductVariationFactory;
-use ACA\WC\ListScreenFactory\ShopCouponFactory;
-use ACA\WC\ListScreenFactory\ShopOrderFactory;
+use AC\Table\ListKeyCollection;
+use AC\Type\ListKey;
 
-class ListScreens implements Registerable {
+class Listscreens implements Registerable
+{
 
-	private $use_product_variations;
+    public function register(): void
+    {
+        add_action('ac/list_keys', [$this, 'add_key']);
+        add_filter('ac/post_types', [$this, 'deregister_shop_order']);
+    }
 
-	public function __construct( bool $use_product_variations ) {
-		$this->use_product_variations = $use_product_variations;
-	}
+    public function add_key(ListKeyCollection $keys): void
+    {
+        $keys->add(new ListKey('wc_order'));
+        $keys->add(new ListKey('wc_order_subscription'));
+    }
 
-	public function register() {
-		ListScreenFactory::add( new ProductFactory() );
-		ListScreenFactory::add( new ShopCouponFactory() );
-		ListScreenFactory::add( new ShopOrderFactory() );
-		ListScreenFactory::add( new ProductCategoryFactory() );
+    public function deregister_shop_order(array $post_types): array
+    {
+        unset($post_types['shop_order']);
 
-		if ( $this->use_product_variations ) {
-			ListScreenFactory::add( new ProductVariationFactory() );
-		}
-	}
+        return $post_types;
+    }
 
 }
