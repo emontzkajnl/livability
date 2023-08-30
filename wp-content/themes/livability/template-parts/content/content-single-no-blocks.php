@@ -40,7 +40,12 @@
         require(get_stylesheet_directory(  ).'/assets/lib/state_abbv.php');
         $override = get_field('override_featured_image'); 
         $megahero_height = get_field('megahero_height');
-        $article_thumb_url = $override ? wp_get_attachment_image_url( $override['id'], 'post_thumbnail' ) :  get_the_post_thumbnail_url( $ID, 'post_thumbnail');
+        if ( is_mobile() ) {
+            $size = 'medium_large';
+        } else {
+            $size = 'full';
+        }
+        $article_thumb_url = $override ? wp_get_attachment_image_url( $override['id'], $size ) :  get_the_post_thumbnail_url( $ID, $size);
         $mega_title = get_field('custom_title_override') ? get_field('custom_title_override') : get_the_title(); 
         $megacat = get_the_category( ); 
         $uriSegments = explode("/", parse_url(get_the_permalink( ), PHP_URL_PATH)); 
