@@ -47,7 +47,7 @@ if ($cities) {
         <ul class="cc-list">
         <?php foreach($state_array as $key => $st) {
             // echo 'st is '.$st;
-            echo '<li><a href="'.$site_url.'/'.$st.'/connected-communities">'.ucfirst(strtolower($us_state_abbrevs_names[$st])).'</a></li>';
+            echo '<li><a href="'.$site_url.'/'.$st.'/connected-communities">'.ucwords(strtolower($us_state_abbrevs_names[$st])).'</a></li>';
         } ?>
         </ul>
     </div>
