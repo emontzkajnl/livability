@@ -61,8 +61,8 @@
         ?>
         <div class="mega-hero alignfull" style="background-image: url('<?php echo $article_thumb_url; ?>'); height: <?php echo $megahero_height; ?>vh">
             <div class="mega-hero-text-area">
-                <h6><?php // echo $subtitlePlace.$megacat[0]->name;  ?><?php echo $megacat[0]->name; ?></h6>
-                <?php echo '<h2>'.$mega_title.'</h2>'; ?>
+                <p class="mega-hero__subheader"><?php // echo $subtitlePlace.$megacat[0]->name;  ?><?php echo $megacat[0]->name; ?></p>
+                <?php echo '<p class="mega-hero__header">'.$mega_title.'</p>'; ?>
             </div>
         </div>
 
