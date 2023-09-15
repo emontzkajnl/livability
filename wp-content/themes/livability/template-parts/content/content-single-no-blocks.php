@@ -40,6 +40,7 @@
         require(get_stylesheet_directory(  ).'/assets/lib/state_abbv.php');
         $override = get_field('override_featured_image'); 
         $megahero_height = get_field('megahero_height');
+        $megahero_vertical = get_field('vertical_position') ? get_field('vertical_position') : 'center';
         if ( is_mobile() ) {
             $size = 'medium_large';
         } else {
@@ -59,7 +60,7 @@
             $subtitlePlace = $uriSegments[2].' ';
         }
         ?>
-        <div class="mega-hero alignfull" style="background-image: url('<?php echo $article_thumb_url; ?>'); height: <?php echo $megahero_height; ?>vh">
+        <div class="mega-hero alignfull" style="background-image: url('<?php echo $article_thumb_url; ?>'); height: <?php echo $megahero_height; ?>vh; background-position-y: <?php echo $megahero_vertical; ?>;">
             <div class="mega-hero-text-area">
                 <p class="mega-hero__subheader"><?php // echo $subtitlePlace.$megacat[0]->name;  ?><?php echo $megacat[0]->name; ?></p>
                 <?php echo '<p class="mega-hero__header">'.$mega_title.'</p>'; ?>
