@@ -326,6 +326,7 @@ div.asl_m .probox .proclose .innericon {
     text-align: center;
     overflow: hidden;
     line-height: initial;
+    display: block;
 }
 
 div.asl_m .probox .promagnifier .innericon svg,

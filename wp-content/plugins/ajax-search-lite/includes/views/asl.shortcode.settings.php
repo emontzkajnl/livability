@@ -59,7 +59,7 @@ if ( function_exists('qtranxf_getLanguage') ) {
 
 	<fieldset class="asl_sett_scroll">
 		<legend style="display: none;">Generic selectors</legend>
-		<div class="asl_option<?php echo(($style['showexactmatches'] != 1) ? " hiddend" : ""); ?>">
+		<div class="asl_option<?php echo(($style['showexactmatches'] != 1) ? " hiddend" : ""); ?>" tabindex="0">
 			<div class="asl_option_inner">
 				<input type="checkbox" value="exact"
 					   aria-label="<?php echo esc_attr(asl_icl_t('Exact matches filter', $style['exactmatchestext'])); ?>"
@@ -70,7 +70,7 @@ if ( function_exists('qtranxf_getLanguage') ) {
 				<?php echo asl_icl_t('Exact matches filter', $style['exactmatchestext']); ?>
 			</div>
 		</div>
-		<div class="asl_option<?php echo(($style['showsearchintitle'] != 1) ? " hiddend" : ""); ?>">
+		<div class="asl_option<?php echo(($style['showsearchintitle'] != 1) ? " hiddend" : ""); ?>" tabindex="0">
 			<div class="asl_option_inner">
 				<input type="checkbox" value="title"
 					   aria-label="<?php echo esc_attr(asl_icl_t('Search in title filter', $style['searchintitletext'], true)); ?>"
@@ -81,7 +81,7 @@ if ( function_exists('qtranxf_getLanguage') ) {
 				<?php echo asl_icl_t('Search in title filter', $style['searchintitletext']); ?>
 			</div>
 		</div>
-		<div class="asl_option<?php echo(($style['showsearchincontent'] != 1) ? " hiddend" : ""); ?>">
+		<div class="asl_option<?php echo(($style['showsearchincontent'] != 1) ? " hiddend" : ""); ?>" tabindex="0">
 			<div class="asl_option_inner">
 				<input type="checkbox" value="content"
 					   aria-label="<?php echo esc_attr(asl_icl_t('Search in content filter', $style['searchincontenttext'], true)); ?>"
@@ -115,7 +115,7 @@ if ( function_exists('qtranxf_getLanguage') ) {
 			$hidden = "";
 			$shown_types[] = $v[0];
 			?>
-			<div class="asl_option">
+			<div class="asl_option" tabindex="0">
 				<div class="asl_option_inner">
 					<input type="checkbox" value="<?php echo $v[0]; ?>"
 						   aria-label="<?php echo esc_attr(asl_icl_t('Search filter for post type: ' . $v[1], $v[1], true)); ?>"
@@ -174,7 +174,7 @@ if ( function_exists('qtranxf_getLanguage') ) {
 						$hidden = ' hiddend';
 					}
 					?>
-					<div class="asl_option<?php echo $hidden; ?>">
+					<div class="asl_option<?php echo $hidden; ?>" tabindex="0">
 						<div class="asl_option_inner">
 							<input type="checkbox" value="<?php echo $v; ?>"
 								   aria-label="<?php echo esc_attr(asl_icl_t('Search filter for category: ' . $val, $val, true)); ?>"

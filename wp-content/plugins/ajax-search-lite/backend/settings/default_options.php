@@ -335,8 +335,8 @@ function asl_do_init_options() {
 		'aria_search_form_label' => 'Search form',
 		'aria_settings_form_label' => 'Search settings form',
 		'aria_search_input_label' => 'Search input',
-		'aria_search_autocomplete_label' => 'Search autocomplete input',
-		'aria_magnifier_label' => 'Search magnifier button',
+		'aria_search_autocomplete_label' => 'Search autocomplete',
+		'aria_magnifier_label' => 'Search magnifier',
     );
 }
 

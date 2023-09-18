@@ -465,7 +465,11 @@ if (!class_exists("ASL_Helpers")) {
 							$price = $p->get_regular_price();
 							break;
 						case '_sale_price':
-							$price = $p->get_sale_price();
+							if ( $p->is_on_sale() ) {
+								$price = $p->get_sale_price();
+							} else {
+								$price = '';
+							}
 							break;
 						case '_tax_price':
 							$price = $p->get_price_including_tax();
@@ -783,7 +787,7 @@ if (!class_exists("ASL_Helpers")) {
 			// X. MISC FIXES
 			// ----------------------------------------------------------------
 			$args["woo_currency"] = isset($o['woo_currency']) ? $o['woo_currency'] : ( function_exists('get_woocommerce_currency') ? get_woocommerce_currency() : '' );
-			$args['_page_id'] = isset($o['current_page_id']) ? $o['current_page_id'] : $args['_page_id'];
+			$args['_page_id'] = isset($o['current_page_id']) ? intval($o['current_page_id']) : $args['_page_id'];
 			// Reset search type and post types for WooCommerce search results page
 			if ( isset($_GET['post_type']) && $_GET['post_type'] == "product") {
 				$old_ptype = $args['post_type'];
@@ -795,6 +799,12 @@ if (!class_exists("ASL_Helpers")) {
 					$args['post_type'][] = "product_variation";
 				}
 			}
+
+			// Restrict to parent posts from SHORTCODE arguments
+			if ( isset($o['post_parent']) && is_array($o['post_parent']) ) {
+				$args['post_parent'] = array_map( 'intval', array_filter( $o['post_parent'], 'is_numeric' ) );
+			}
+
 			// ----------------------------------------------------------------
 			return $args;
 		}
@@ -844,7 +854,7 @@ if (!class_exists("ASL_Helpers")) {
 				$ret[] = array(
 					'taxonomy' => 'category',
 					'include' => array(),
-					'exclude' => $exclude_terms,
+					'exclude' => array_map('intval', $exclude_terms),
 					'logic' => $term_logic,
 					'_termset' => isset($o['categoryset']) ? $o['categoryset'] : array(),
 					'_is_checkbox' => true

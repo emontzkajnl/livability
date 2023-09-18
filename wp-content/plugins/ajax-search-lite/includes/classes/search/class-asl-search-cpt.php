@@ -46,9 +46,6 @@ if ( ! class_exists( 'ASL_Search_CPT' ) ) {
 			else
 				$sd = array();
 
-			// General variables
-			$postmeta_join   = "";
-
 			// Prefixes and suffixes
 			$pre_field = $this->pre_field;
 			$suf_field = $this->suf_field;
@@ -406,7 +403,6 @@ if ( ! class_exists( 'ASL_Search_CPT' ) ) {
                 $custom_field_selectp as customfp,
                 $custom_field_selects as customfs
             FROM $wpdb->posts
-                {postmeta_join}
                 $term_join
                 $add_join
                 {args_join}
@@ -592,32 +588,22 @@ if ( ! class_exists( 'ASL_Search_CPT' ) ) {
 					$args['post_custom_fields'] = array("all");
 
 				if ( count($args['post_custom_fields']) > 0 ) {
-					$postmeta_join   = "LEFT JOIN $wpdb->postmeta ON $wpdb->postmeta.post_id = $wpdb->posts.ID";
+					$cf_parts = array();
 					foreach ( $args['post_custom_fields'] as $cfield ) {
 						$key_part = $args['post_custom_fields_all'] == 1 ? "" : "$wpdb->postmeta.meta_key='$cfield' AND ";
 
 						if ( $kw_logic == 'or' || $kw_logic == 'and' || $is_exact ) {
-							$parts[] = "( $key_part " . $pre_field . $wpdb->postmeta . ".meta_value" . $suf_field . " LIKE $pre_like'$wcl" . $word . "$wcr'$suf_like )";
+							$cf_parts[] = "( $key_part " . $pre_field . $wpdb->postmeta . ".meta_value" . $suf_field . " LIKE $pre_like'$wcl" . $word . "$wcr'$suf_like )";
 						} else {
-							$parts[] = "( $key_part 
-                           (" . $pre_field . $wpdb->postmeta . ".meta_value" . $suf_field . " LIKE $pre_like'% " . $word . " %'$suf_like
-                        OR  " . $pre_field . $wpdb->postmeta . ".meta_value" . $suf_field . " LIKE $pre_like'" . $word . " %'$suf_like
-                        OR  " . $pre_field . $wpdb->postmeta . ".meta_value" . $suf_field . " LIKE $pre_like'% " . $word . "'$suf_like
-                        OR  " . $pre_field . $wpdb->postmeta . ".meta_value" . $suf_field . " = '" . $word . "') )";
+							$cf_parts[] = "( $key_part 
+							(" . $pre_field . $wpdb->postmeta . ".meta_value" . $suf_field . " LIKE $pre_like'% " . $word . " %'$suf_like
+							OR  " . $pre_field . $wpdb->postmeta . ".meta_value" . $suf_field . " LIKE $pre_like'" . $word . " %'$suf_like
+							OR  " . $pre_field . $wpdb->postmeta . ".meta_value" . $suf_field . " LIKE $pre_like'% " . $word . "'$suf_like
+							OR  " . $pre_field . $wpdb->postmeta . ".meta_value" . $suf_field . " = '" . $word . "') )";
 						}
-						if ( !$relevance_added ) {
-							if ($cfield == 'author_field_name')
-								$relevance_parts[] = "(case when
-                            (EXISTS (SELECT 1 FROM $wpdb->postmeta as cfre WHERE cfre.post_id = $wpdb->posts.ID AND cfre.meta_key = '$cfield' AND 
-							(cfre.meta_value" . $suf_field . " LIKE '%" . $s . "%')))
-                             then 100 else 0 end)";
-							if ($cfield == 'fulltext_field_name')
-								$relevance_parts[] = "(case when
-                            (EXISTS (SELECT 1 FROM $wpdb->postmeta as cfre WHERE cfre.post_id = $wpdb->posts.ID AND cfre.meta_key = '$cfield' AND 
-							(cfre.meta_value" . $suf_field . " LIKE '%" . $s . "%')))
-                             then 10 else 0 end)";
-						}
+						
 					}
+					$parts[] = "( EXISTS (SELECT 1 FROM $wpdb->postmeta WHERE (".implode(' OR ', $cf_parts).") AND $wpdb->posts.ID = $wpdb->postmeta.post_id) )";
 				}
 				/*---------------------------------------------------------------*/
 
@@ -629,9 +615,6 @@ if ( ! class_exists( 'ASL_Search_CPT' ) ) {
 				$this->parts[] = array( $parts, $relevance_parts );
 				$relevance_added = true;
 			}
-
-			// Add the meta join if needed..
-			$this->query = str_replace( '{postmeta_join}', $postmeta_join, $this->query );
 
 			$querystr = $this->build_query( $this->parts );
 			$querystr = apply_filters('asl_query_cpt', $querystr, $args, $args['_id'], $args['_ajax_search']);

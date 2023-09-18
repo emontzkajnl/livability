@@ -1,22 +1,5 @@
 <div class="probox">
 
-	<?php do_action('asl_layout_before_magnifier', $id); ?>
-
-	<button class='promagnifier' aria-label="<?php echo esc_attr(asl_icl_t('Search magnifier button aria-Label', $style['aria_magnifier_label'])); ?>">
-		<?php do_action('asl_layout_in_magnifier', $id); ?>
-		<div class='innericon'>
-			<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="22" height="22" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
-					<path d="M460.355,421.59L353.844,315.078c20.041-27.553,31.885-61.437,31.885-98.037
-						C385.729,124.934,310.793,50,218.686,50C126.58,50,51.645,124.934,51.645,217.041c0,92.106,74.936,167.041,167.041,167.041
-						c34.912,0,67.352-10.773,94.184-29.158L419.945,462L460.355,421.59z M100.631,217.041c0-65.096,52.959-118.056,118.055-118.056
-						c65.098,0,118.057,52.959,118.057,118.056c0,65.096-52.959,118.056-118.057,118.056C153.59,335.097,100.631,282.137,100.631,217.041
-						z"/>
-				</svg>
-		</div>
-	</button>
-
-	<?php do_action('asl_layout_after_magnifier', $id); ?>
-
 	<?php do_action('asl_layout_before_settings', $id); ?>
 
 	<div class='prosettings' <?php echo($settingsHidden ? "style='display:none;'" : ""); ?> data-opened=0>
@@ -37,6 +20,7 @@
 			  aria-label="<?php echo esc_attr(asl_icl_t('Search form aria-Label', $style['aria_search_form_label'])); ?>">
 			<input aria-label="<?php echo esc_attr(asl_icl_t('Search input aria-Label', $style['aria_search_input_label'])); ?>"
 				   type='search' class='orig'
+				   tabindex="0"
 				   name='phrase'
 				   placeholder='<?php echo asl_icl_t( "Search bar placeholder text", w_isset_def($style['defaultsearchtext'], '') ); ?>'
 				   value='<?php echo apply_filters('asl_print_search_query', get_search_query()); ?>'
@@ -53,6 +37,23 @@
 	</div>
 
 	<?php do_action('asl_layout_after_input', $id); ?>
+
+	<?php do_action('asl_layout_before_magnifier', $id); ?>
+
+	<button class='promagnifier' tabindex="0" aria-label="<?php echo esc_attr(asl_icl_t('Search magnifier button aria-Label', $style['aria_magnifier_label'])); ?>">
+		<?php do_action('asl_layout_in_magnifier', $id); ?>
+		<span class='innericon' style="display:block;">
+			<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="22" height="22" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+					<path d="M460.355,421.59L353.844,315.078c20.041-27.553,31.885-61.437,31.885-98.037
+						C385.729,124.934,310.793,50,218.686,50C126.58,50,51.645,124.934,51.645,217.041c0,92.106,74.936,167.041,167.041,167.041
+						c34.912,0,67.352-10.773,94.184-29.158L419.945,462L460.355,421.59z M100.631,217.041c0-65.096,52.959-118.056,118.055-118.056
+						c65.098,0,118.057,52.959,118.057,118.056c0,65.096-52.959,118.056-118.057,118.056C153.59,335.097,100.631,282.137,100.631,217.041
+						z"/>
+				</svg>
+		</span>
+	</button>
+
+	<?php do_action('asl_layout_after_magnifier', $id); ?>
 
 	<?php do_action('asl_layout_before_loading', $id); ?>
 

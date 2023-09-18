@@ -47,9 +47,9 @@ if (!class_exists("WD_ASL_Search_Shortcode")) {
             self::$instanceCount++;
 
             extract(shortcode_atts(array(
-                'id' => 'something'
+                'id' => 'something',
+                'post_parent' => ''
             ), $atts));
-
 
             $inst = wd_asl()->instances->get(0);
             $style = $inst['data'];
@@ -70,6 +70,19 @@ if (!class_exists("WD_ASL_Search_Shortcode")) {
 				$style['auto_populate_phrase'] = $_GET['asl_s'];
 				$style['auto_populate_count'] = intval($style['maxresults']);
 			}
+
+            if ( $post_parent != '' ) {
+                $post_parent = array_unique( 
+                    array_map( 'intval', array_filter( explode(',', $post_parent), 'is_numeric' ) )
+                );
+                if ( !empty($post_parent) ) {
+                    add_action( 'asl_layout_in_form', function() use ($post_parent) {
+                        foreach( $post_parent as $pid ) {
+                            echo "<input type='hidden' name='post_parent[]' value='$pid'>";
+                        }
+                    });
+                }
+            }
 
             do_action('asl_layout_before_shortcode', $id);
 

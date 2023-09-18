@@ -3,8 +3,9 @@ Contributors: wpdreams
 Donate link: http://wp-dreams.com
 Tags: search, better wordpress search, search plugin, relevance search, widget, Post, ajax search, search filter, wp ajax search, custom fields search, better search, ajax search plugin, wp search, wp search plugin, filter, relevant search plugin, wordpress search, Live Search, shortcode, google, autocomplete, suggest, woocommerce, woocommerce search, product, product search, custom search, ajax, suggest, autosuggest, search autocomplete, live, plugin, sidebar, product tag search, products, woocommerce tag search, WooCommerce Plugin, shop, search by sku, relevant search, highlight, term, image, custom search, ecommerce, Predictive Search, search product, shop, typehead, suggest, instant-search
 Requires at least: 3.5
-Tested up to: 6.2
-Stable tag: 4.11.2
+Requires PHP: 7.0
+Tested up to: 6.3
+Stable tag: 4.11.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -105,6 +106,18 @@ and will let you know what to do.
 2. Administrator area - nice and smooth
 
 == Changelog ==
+= 4.11.4 =
+* Fixed a layout issue with the magnifier icon
+
+= 4.11.3 =
+* New shortcode argument: post_parent="1,2,3" - where the search results can be restricted to the list of parent posts (or any other post type IDs). Ex: `[wpdreams_ajaxsearchlite post_parent="1, 2, 3, 4"]`
+* Added tabindexes (tabindex=0) to the filters for better navigation
+* Moved the magnifier button in the DOM to after the input field
+* Greatly improved the custom field search logic and performance
+* Changed the default texts in some ARIA labels
+* Using the {_sale_price} pseudo variable in [advanced title and content fields](https://documentation.ajaxsearchlite.com/advanced-options/advanced-title-and-content-fields) will check if the item is on sale
+* Changed the button inner div tag to a span for validation
+
 = 4.11.2 =
 * Fixed an issue with duplicated filter checkbox IDs (label removed, replaced with aria-label) for accessibility
 * Changed the "more results" element from an anchor to a span for better compatibility with menu positions
