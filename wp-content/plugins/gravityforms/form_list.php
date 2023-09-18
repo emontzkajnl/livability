@@ -205,7 +205,6 @@ class GFFormList {
                     <?php $table->display(); ?>
                     </form>
                 </div>
-				<div data-js="gf-template-library"></div>
 	<?php
 		GFForms::admin_footer();
 	}
@@ -726,7 +725,7 @@ class GF_Form_List_Table extends WP_List_Table {
 		if ( rgget( 's' ) ) {
 			printf(
 				esc_html__( "No forms were found for your search query. %sView all forms%s.", 'gravityforms' ),
-				'<a href="' . remove_query_arg( 's' ) . '">',
+				'<a href="' . esc_url( remove_query_arg( 's' ) ) . '">',
 				'</a>'
 			);
 		} else if ( $this->filter == 'trash' ) {

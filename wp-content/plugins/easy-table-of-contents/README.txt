@@ -3,9 +3,9 @@ Contributors: magazine3
 Donate link: https://tocwp.com/
 Tags: table of contents, toc
 Requires at least: 5.0
-Tested up to: 6.2
+Tested up to: 6.3
 Requires PHP: 5.6.20
-Stable tag: 2.0.53
+Stable tag: 2.0.55
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,29 @@ Easy Table Contents is a fork of the excellent [Table of Contents Plus](https://
 4. Activate the plugin on the Plugins admin page.
 
 == Changelog ==
+
+= 2.0.55 04/09/2023 =
+* New: Option to set position for sticky TOC toggle. #576
+* New: Compatibility with TravelTour theme builder. #574
+* BUG: CLS issue due to TOC #572
+* BUG: Double Border Display Issue on TOC for Pages #573
+
+= 2.0.54.1 30/08/2023 =
+* BUG: E_PARSE error in PHP 7.2 after recent update  #579
+* BUG: Links Not Working issue  #579
+* BUG: Alignment top Issue with TOC Title Height #571
+
+= 2.0.54 29/08/2023 =
+* TWEAK: The sticky toggle TOC is not showing as the primary TOC. #538
+* BUG: Headings miss their anchor If a title contains an apostrophe #529
+* New: Added option for Initial View in Sticky. Toggle #537
+* New: Added option for select title tag in TOC #514
+* BUG: Sticky TOC is visible on post/page without heading #555
+* BUG: An issue has occured in the update with the theme Kadence #562
+* BUG: If the alignment is set to a specific position, the margin becomes 0 #558
+* BUG: Heading links does not work if added using a shortcode in a template of usSolution core plugin by impreza theme #567
+* BUG: ID is not getting added to headings using Guttenberg templates #570
+* BUG: SEO score issue fix for sticky toggle #575
 
 = 2.0.53 08/08/2023 =
 * BUG: The TOC Toogle button issue with the Chamomile theme #531

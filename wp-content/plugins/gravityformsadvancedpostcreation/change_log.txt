@@ -1,5 +1,7 @@
-### 1.3.1
+### 1.4.0 | 2023-09-14
 - Added support for async (background) feed processing to improve form submission performance.
+- Added the [gform_advancedpostcreation_post_update_post](https://docs.gravityforms.com/gform_advancedpostcreation_post_update_post/) action.
+- Fixed an issue to allow File Upload fields that have been extended by a developer to be processed when creating posts. Credit: Gravity PDF
 
 ### 1.3 | 2022-11-16
 - Added the [gform_advancedpostcreation_taxonomy_mapping_field](https://docs.gravityforms.com/gform_advancedpostcreation_taxonomy_mapping_field/) filter.

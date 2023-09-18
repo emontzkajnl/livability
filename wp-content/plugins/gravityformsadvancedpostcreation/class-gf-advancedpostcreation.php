@@ -2011,7 +2011,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 				$field_object = GFAPI::get_field( $form, $input_id );
 
 				// If field is not a file upload field, skip.
-				if ( ! $field_object || 'fileupload' !== $field_object->type ) {
+				if ( ! $field_object || 'fileupload' !== $field_object->get_input_type() ) {
 					continue;
 				}
 
