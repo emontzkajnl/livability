@@ -181,7 +181,6 @@ class WooCommerceCoreImport {
 					
 				}
 			}
-			//$variation_data=isset($variation_data)?$variation_data:'';
 			$variationid = wp_insert_post($variation_data);					
 			if(empty($variation_count)){
 				$core_instance->detailed_log[$line_number]['Message'] = 'Inserted Variation ID: ' . $variationid;

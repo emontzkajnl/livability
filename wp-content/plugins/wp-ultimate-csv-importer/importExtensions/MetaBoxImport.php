@@ -129,7 +129,6 @@ class MetaBoxImport {
 						$get_post_id = $wpdb->get_var("SELECT ID FROM {$wpdb->prefix}users WHERE user_login = '$data_value' ");
 					}
 					elseif($field_type == 'taxonomy'){
-						//$get_post_id = $wpdb->get_var("SELECT term_id FROM {$wpdb->prefix}terms WHERE name = '$data_value' ");
 						$term_fd = explode('|',$data_value);
 						foreach($term_fd as $value){						
 							$taxonomy = $get_metabox_fields[$data_key]['taxonomy']['0'];

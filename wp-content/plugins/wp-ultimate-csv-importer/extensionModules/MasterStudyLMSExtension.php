@@ -28,10 +28,9 @@ class MasterStudyLMSExtension extends ExtensionHandler{
         $import_type = $data;
 
         $response = [];
-        //$import_type = $this->import_type_as($import_type);
         if(is_plugin_active('masterstudy-lms-learning-management-system/masterstudy-lms-learning-management-system.php')){   
             if($import_type == 'stm-courses'){
-                $masterstudy_meta_fields = array(
+                $masterstudyMetaFields = array(
                     'Duration Info' => 'duration_info',
                     'Features' => 'featured',
                     'Views' => 'views',
@@ -72,7 +71,7 @@ class MasterStudyLMSExtension extends ExtensionHandler{
            }
 
             if($import_type == 'stm-lessons'){            
-                $masterstudy_meta_fields = array(
+                $masterstudyMetaFields = array(
                             'Type' => 'type',
                             'Duration' => 'duration',  
                             'Preview' => 'preview', 
@@ -95,7 +94,7 @@ class MasterStudyLMSExtension extends ExtensionHandler{
 
             }
             if($import_type == 'stm-quizzes'){            
-                $masterstudy_meta_fields = array(
+                $masterstudyMetaFields = array(
                             'Duration' => 'duration',
                             'Thumbnail_id ' => 'thumbnail_id ',
                             'Lesson Excerpt' => 'lesson_excerpt',
@@ -108,11 +107,11 @@ class MasterStudyLMSExtension extends ExtensionHandler{
                         );
 
                 if($mode == 'Insert'){
-                    unset($masterstudy_meta_fields['Question Id']);
+                    unset($masterstudyMetaFields['Question Id']);
                 }
             }
             if($import_type == 'stm-questions'){           
-                $masterstudy_meta_fields = array(
+                $masterstudyMetaFields = array(
                             'Type' => 'type',
                             'Answers' => 'answers',
                             'Question explanation' => 'question_explanation',
@@ -124,35 +123,35 @@ class MasterStudyLMSExtension extends ExtensionHandler{
 
             }
             if($import_type == 'stm-orders'){
-                $masterstudy_meta_fields = array(
+                $masterstudyMetaFields = array(
                     'Status' => 'status',     
     
                 );
 
             }
         }
-        $masterstudy_meta_fields_line = $this->convert_static_fields_to_array($masterstudy_meta_fields);
+        $masterstudyMetaFields_line = $this->convert_static_fields_to_array($masterstudyMetaFields);
 
         if($data == 'stm-courses'){
             $masterstudy_section_meta_fields_line = $this->convert_static_fields_to_array($masterstudy_section_meta_fields);
 
-            $response['course_settings_fields_stm'] = $masterstudy_meta_fields_line; 
+            $response['course_settings_fields_stm'] = $masterstudyMetaFields_line; 
 
             $response['curriculum_settings_fields_stm'] = $masterstudy_section_meta_fields_line;  
 
 
         }
         if($data == 'stm-lessons'){
-            $response['lesson_settings_fields_stm'] = $masterstudy_meta_fields_line; 
+            $response['lesson_settings_fields_stm'] = $masterstudyMetaFields_line; 
         }
         if($data == 'stm-quizzes'){
-            $response['quiz_settings_fields_stm'] = $masterstudy_meta_fields_line; 
+            $response['quiz_settings_fields_stm'] = $masterstudyMetaFields_line; 
         }  
         if($data == 'stm-questions'){
-            $response['question_settings_fields_stm'] = $masterstudy_meta_fields_line; 
+            $response['question_settings_fields_stm'] = $masterstudyMetaFields_line; 
         }  
         if($data == 'stm-orders'){
-            $response['order_settings_fields_stm'] = $masterstudy_meta_fields_line; 
+            $response['order_settings_fields_stm'] = $masterstudyMetaFields_line; 
 
         } 
 		return $response;

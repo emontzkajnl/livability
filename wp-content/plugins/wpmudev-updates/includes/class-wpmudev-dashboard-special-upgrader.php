@@ -67,7 +67,7 @@ class WPMUDEV_Dashboard_Special_Upgrader {
 		add_filter( 'install_plugin_complete_actions', array( $this, 'hide_activation_button' ), 10, 3 );
 
 		// Filter plugin data.
-		add_filter( 'wpmudev_dashboard_upgrader_get_plugin_data', array( $this, 'set_plugin_data' ), 10, 2 );
+		add_filter( 'wpmudev_dashboard_upgrader_get_plugin_data', array( $this, 'set_plugin_data' ), 10, 2 );	    	   		 	 				   
 	}
 
 	/**

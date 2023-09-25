@@ -519,7 +519,19 @@ class WPMUDEV_Dashboard_Ui {
 			$url_changelog
 		);
 
-		if ( WPMUDEV_Dashboard::$upgrader->user_can_install( $project_id ) ) {
+		$item = WPMUDEV_Dashboard::$site->get_project_info( $project_id );
+		// Is compatible.
+		$is_compatible = WPMUDEV_Dashboard::$upgrader->is_project_compatible( $project_id, $reason );
+
+		if ( ! $is_compatible ) {
+			if ( 'php' === $reason ) {
+				// Incompatible PHP version.
+				$row_text = __( 'There is a new version of %1$s available, but it is not compatible with your current PHP version. To update to the latest %1$s version, please upgrade your PHP to version %6$s or above. <a href="%2$s" title="%3$s" class="thickbox open-plugin-details-modal">View version %4$s details</a>.', 'wpmudev' );
+			} else {
+				// Other incompatibilities.
+				$row_text = __( 'There is a new version of %1$s available, but it is not compatible. <a href="%2$s" title="%3$s" class="thickbox open-plugin-details-modal">View version %4$s details</a>.', 'wpmudev' );
+			}
+		} elseif ( WPMUDEV_Dashboard::$upgrader->user_can_install( $project_id ) ) {
 			// Current user is logged in and has permission for this plugin.
 			if ( $autoupdate ) {
 				// All clear: One-Click-Update is available for this plugin!
@@ -558,9 +570,9 @@ class WPMUDEV_Dashboard_Ui {
 
 		?>
 		<tr class="plugin-update-tr<?php echo esc_attr( $active_class ); ?>"
-			id="<?php echo esc_attr( dirname( $filename ) ); ?>-update"
-			data-slug="<?php echo esc_attr( dirname( $filename ) ); ?>"
-			data-plugin="<?php echo esc_attr( $filename ); ?>">
+		    id="<?php echo esc_attr( dirname( $filename ) ); ?>-update"
+		    data-slug="<?php echo esc_attr( dirname( $filename ) ); ?>"
+		    data-plugin="<?php echo esc_attr( $filename ); ?>">
 			<td colspan="4" class="plugin-update colspanchange">
 				<div class="update-message notice inline notice-warning notice-alt">
 					<p>
@@ -571,7 +583,8 @@ class WPMUDEV_Dashboard_Ui {
 							esc_url( $url_changelog ),
 							esc_attr( $plugin_name ),
 							esc_html( $version ),
-							esc_url( $url_action )
+							esc_url( $url_action ),
+							$item->requires_min_php
 						);
 						?>
 					</p>
@@ -579,11 +592,12 @@ class WPMUDEV_Dashboard_Ui {
 					/**
 					 * Append content to an update notice (Only for Pro plugins).
 					 *
-					 * @param string $project_id Plugin ID.
+					 * @since 4.11.13
+					 *
 					 * @param string $version    New version.
 					 * @param array  $project    Project data (Will be empty if Dashboard plugin is not active).
 					 *
-					 * @since 4.11.13
+					 * @param string $project_id Plugin ID.
 					 */
 					do_action( 'wpmudev_dashboard_after_update_row_message', $project_id, $version, $project );
 					?>
@@ -592,14 +606,21 @@ class WPMUDEV_Dashboard_Ui {
 				/**
 				 * Add content after a plugin update notice (Only for Pro plugins).
 				 *
-				 * @param string $project_id Plugin ID.
+				 * @since 4.11.13
+				 *
 				 * @param string $version    New version.
 				 * @param array  $project    Project data (Will be empty if Dashboard plugin is not active).
 				 *
-				 * @since 4.11.13
+				 * @param string $project_id Plugin ID.
 				 */
 				do_action( 'wpmudev_dashboard_after_update_row_content', $project_id, $version, $project );
 				?>
+				<?php if ( ! $is_compatible ) : ?>
+					<script>
+						let checkbox = jQuery('input:checkbox[value="<?php echo esc_attr( $filename ); ?>"]');
+						checkbox.prop('disabled', true).prop('checked', false).attr('name', '').addClass('disabled');
+					</script>
+				<?php endif; ?>
 			</td>
 		</tr>
 		<?php
@@ -634,9 +655,16 @@ class WPMUDEV_Dashboard_Ui {
 				if ( ! $is_logged_in ) {
 					// translators: %s link to dashboard.
 					$action_html = sprintf( __( '<a href="%s">Login to WPMU DEV Dashboard</a> to update', 'wpmudev' ), esc_url( $this->page_urls->dashboard_url ) );
-				} elseif ( $allowed_user ) {
+				} elseif ( ! $allowed_user ) {
 					// If auto update is disabled.
 					$action_html = __( 'Auto-update not possible.', 'wpmudev' );
+					if ( ! empty( $item->url->infos ) ) {
+						// translators: %s link to dashboard.
+						$action_html = $action_html . ' ' . sprintf( __( '<a href="%s">More info &raquo;</a>', 'wpmudev' ), esc_url( $item->url->infos ) );
+					}
+				} elseif ( ! $item->is_compatible && ! empty( $item->incompatible_reason ) ) {
+					// If auto update is disabled.
+					$action_html = sprintf( __( 'Update not possible: %s.', 'wpmudev' ), $item->incompatible_reason );
 					if ( ! empty( $item->url->infos ) ) {
 						// translators: %s link to dashboard.
 						$action_html = $action_html . ' ' . sprintf( __( '<a href="%s">More info &raquo;</a>', 'wpmudev' ), esc_url( $item->url->infos ) );
@@ -648,7 +676,7 @@ class WPMUDEV_Dashboard_Ui {
 					'pid'         => $item->pid,
 					'file'        => $item->filename,
 					'name'        => $item->name,
-					'disabled'    => ! $item->can_update || ! $item->can_autoupdate,
+					'disabled'    => ! $item->can_update || ! $item->can_autoupdate || ! $item->is_compatible,
 					'action_html' => empty( $action_html ) ? '' : '<div class="wpmudev-info" style="font-style: italic;">' . $action_html . '</div>',
 				);
 			}

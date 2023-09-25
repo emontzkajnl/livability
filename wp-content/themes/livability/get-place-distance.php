@@ -1,15 +1,15 @@
 <?php 
-function get_place_distance($lat1, $lon1, $lat2, $lon2) {
+// function get_place_distance($lat1, $lon1, $lat2, $lon2) {
 
-    $theta = $lon1 - $lon2;
-    $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
-    $dist = acos($dist);
-    $dist = rad2deg($dist);
-    $miles = $dist * 60 * 1.1515;
+//     $theta = $lon1 - $lon2;
+//     $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+//     $dist = acos($dist);
+//     $dist = rad2deg($dist);
+//     $miles = $dist * 60 * 1.1515;
 
-    return $miles;
+//     return $miles;
     
-  }
+//   }
 
 // echo get_place_distance(34.03, -118.24, 40.71, -74.08);
 
@@ -28,4 +28,4 @@ function make_places_csv() {
     endif;
 
 }
-add_action( 'init', 'make_places_csv');
+// add_action( 'init', 'make_places_csv');

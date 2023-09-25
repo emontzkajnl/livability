@@ -428,8 +428,18 @@ class WPMUDEV_Dashboard_Api {
 			if ( ! defined( 'WPMUDEV_API_DEBUG_CRAZY' ) ) {
 				$req_body = isset( $options['body'] ) ? $options['body'] : '';
 				if ( isset( $req_body['projects'] ) ) {
+					/**
+					 * this contains 2 keys: plugins and themes
+					 *
+					 * @see self::get_repo_updates_infos()
+					 */
+					$repo_updates = json_decode( $req_body['repo_updates'], true );
 					$req_body['projects']     = count( (array) json_decode( $req_body['projects'] ) ) . ' PROJECTS';
-					$req_body['repo_updates'] = count( (array) json_decode( $req_body['repo_updates'] ) ) . ' REPO_UPDATES';
+					// TODO: subject for code/implementation improvement
+					$req_body['repo_updates'] = array(
+						'plugins' => ( isset( $repo_updates['plugins'] ) && $repo_updates['plugins'] ) ? count( $repo_updates['plugins'] ) : 0,
+						'themes'  => ( isset( $repo_updates['themes'] ) && $repo_updates['themes'] ) ? count( $repo_updates['themes'] ) : 0,
+					);
 					$packages                 = (object) json_decode( $req_body['packages'] );
 					$packages->plugins        = count( (array) $packages->plugins ) . ' PLUGINS';
 					$packages->themes         = count( (array) $packages->themes ) . ' THEMES';
@@ -955,6 +965,7 @@ class WPMUDEV_Dashboard_Api {
 					'version'           => '1.0.0',
 					'autoupdate'        => 1,
 					'requires'          => 'wp',
+					'requires_min_php'  => '5.6',
 					'compatible'        => '',
 					'url'               => '',
 					'thumbnail'         => '',
@@ -1817,8 +1828,15 @@ class WPMUDEV_Dashboard_Api {
 
 		// return from cache if possible. Get locale baset cache.
 		$cached = WPMUDEV_Dashboard::$settings->get_transient( 'translations_all_' . $locale );
-
+		// Return from cache.
 		if ( false !== $cached && ! $force ) {
+			return $cached;
+		}
+
+		// Get last check time.
+		$last_checked = WPMUDEV_Dashboard::$settings->get( 'last_run_translation', 'general', 0 );
+		// Already checked in within last 12 hours. Skip API call.
+		if ( false !== $cached && ! empty( $last_checked ) && $last_checked > ( time() - DAY_IN_SECONDS ) ) {
 			return $cached;
 		}
 
@@ -1856,11 +1874,9 @@ class WPMUDEV_Dashboard_Api {
 			$res = $this->sort_translation_projects( $res );
 		}
 		$data['timestamp'] = time();
-		WPMUDEV_Dashboard::$settings->set_transient(
-			'translations_all_' . $locale,
-			$res,
-			WEEK_IN_SECONDS
-		);
+		WPMUDEV_Dashboard::$settings->set_transient( 'translations_all_' . $locale, $res, WEEK_IN_SECONDS );
+		// Set last checked time.
+		WPMUDEV_Dashboard::$settings->set( 'last_run_translation', time(), 'general' );
 
 		return $res;
 	}

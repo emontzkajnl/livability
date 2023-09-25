@@ -39,7 +39,6 @@ class TaxonomiesImport {
 		$skipped_count = $updated_row_counts['skipped'];
 		
 		$terms_table = $wpdb->term_taxonomy;
-        //$taxonomy = $importAs;
         $taxonomy = $importType;
 		
 		$term_children_options = get_option("$taxonomy" . "_children");

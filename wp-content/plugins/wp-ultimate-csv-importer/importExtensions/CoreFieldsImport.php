@@ -196,7 +196,6 @@ class CoreFieldsImport {
 				$import_as = $extension_object->import_post_types($import_type );
 				if(!empty($csv_value)){
 
-					//$pattern = "/({([a-z A-Z 0-9 | , _ -]+)(.*?)(}))/";
 					$pattern1 = '/{([^}]*)}/';
 					$pattern2 = '/\[([^\]]*)\]/';
 
@@ -238,7 +237,6 @@ class CoreFieldsImport {
 						if(!empty($csv_element) && !empty($wp_element)){
 							$post_values[$wp_element] = $csv_element;
 							$post_values['post_type'] = $import_as;
-							//$post_values = $this->import_core_fields($post_values);
 						}
 					}
 					// for custom function without headers in it
@@ -253,7 +251,6 @@ class CoreFieldsImport {
 						$wp_element= trim($key);
 						$post_values[$wp_element] = $csv_value;
 						$post_values['post_type'] = $import_as;
-						//$post_values = $this->import_core_fields($post_values,$mode);
 					}
 
 					else{
@@ -448,7 +445,6 @@ class CoreFieldsImport {
 						
 						if(!empty($orig_img_src)){						
 							foreach ($orig_img_src as $img => $img_val){
-								//$shortcode  = $shortcode_img[$img][$img];
 								$shortcode  = 'inline';
 								$wpdb->get_results("INSERT INTO $shortcode_table (image_shortcode , original_image , post_id,hash_key,templatekey) VALUES ( '{$shortcode}', '{$img_val}', $post_id  ,'{$hash_key}','{$templatekey}')");
 							}

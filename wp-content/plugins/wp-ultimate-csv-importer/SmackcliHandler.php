@@ -129,7 +129,6 @@ class Smackuci_Cli{
 					
             }
                 elseif($file_extension == 'xml'){
-                    //$total_rows = $this->set_rowcount($map,$total_rows,$file_path);                                                            
                     $importids = $this->importxml($map,$selected_type,$get_mode,$hash_key,$templatekey,$gmode,$progress,$file_name,$file_path,$total_rows);
                 }
                 elseif($file_extension == 'json') 

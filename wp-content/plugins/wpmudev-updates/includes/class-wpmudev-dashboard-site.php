@@ -1226,6 +1226,7 @@ class WPMUDEV_Dashboard_Site {
 				'can_autoupdate'      => false, // If plugin should auto-update?
 				'is_compatible'       => true, // Site has all requirements to install project?
 				'incompatible_reason' => '', // If is_compatible is false.
+				'requires_min_php'    => WPMUDEV_Dashboard::$upgrader->min_php, // Minimum PHP version required.
 				'need_upfront'        => false, // Only used by themes.
 				'is_installed'        => false, // Installed on current site?
 				'is_active'           => false, // WordPress state, i.e. plugin activated?
@@ -1272,17 +1273,18 @@ class WPMUDEV_Dashboard_Site {
 			$system_projects = WPMUDEV_Dashboard::$site->get_system_projects();
 
 			// General details.
-			$res->type           = ( 'theme' === $remote['type'] ? 'theme' : 'plugin' );
-			$res->name           = $remote['name'];
-			$res->info           = strip_tags( $remote['short_description'] );
-			$res->description    = isset( $remote['long_description'] ) ? $remote['long_description'] : '';
-			$res->version_latest = $remote['version'];
-			$res->features       = $remote['features'];
-			$res->default_order  = isset( $remote['_order'] ) ? intval( $remote['_order'] ) : 0;
-			$res->downloads      = intval( $remote['downloads'] );
-			$res->popularity     = intval( $remote['popularity'] );
-			$res->release_stamp  = intval( $remote['released'] );
-			$res->update_stamp   = intval( $remote['updated'] );
+			$res->type             = ( 'theme' === $remote['type'] ? 'theme' : 'plugin' );
+			$res->name             = $remote['name'];
+			$res->info             = strip_tags( $remote['short_description'] );
+			$res->description      = isset( $remote['long_description'] ) ? $remote['long_description'] : '';
+			$res->version_latest   = $remote['version'];
+			$res->features         = $remote['features'];
+			$res->default_order    = isset( $remote['_order'] ) ? intval( $remote['_order'] ) : 0;
+			$res->downloads        = intval( $remote['downloads'] );
+			$res->popularity       = intval( $remote['popularity'] );
+			$res->release_stamp    = intval( $remote['released'] );
+			$res->update_stamp     = intval( $remote['updated'] );
+			$res->requires_min_php = empty( $remote['requires_min_php'] ) ? WPMUDEV_Dashboard::$upgrader->min_php : $remote['requires_min_php'];
 
 			// Project tags.
 			if ( 'plugin' === $res->type ) {
@@ -1440,6 +1442,10 @@ class WPMUDEV_Dashboard_Site {
 
 					case 'buddypress':
 						$res->incompatible_reason = __( 'Requires BuddyPress', 'wpmudev' );
+						break;
+
+					case 'php':
+						$res->incompatible_reason = sprintf( __( 'Requires PHP %s or above', 'wpmudev' ), $res->requires_min_php );
 						break;
 
 					default:
@@ -2571,7 +2577,7 @@ class WPMUDEV_Dashboard_Site {
 		);
 
 		// Add download link only if not plugins page and updates page.
-		if ( ! in_array( $pagenow, array( 'plugins.php', 'update-core.php', 'plugin-install.php' ), true ) ) {
+		if ( ! in_array( $pagenow, array( 'plugins.php', 'update-core.php', 'plugin-install.php' ), true ) && $project->is_compatible ) {
 			$result->download_link = WPMUDEV_Dashboard::$api->rest_url_auth( 'install/' . $pid );
 		}
 
@@ -2644,10 +2650,11 @@ class WPMUDEV_Dashboard_Site {
 					$autoupdate = false;
 					$local      = $this->get_cached_projects( $id );
 					// $last_changes = $plugin['changelog'];
+					$compatible = WPMUDEV_Dashboard::$upgrader->is_project_compatible( $id );
 
-					if ( '1' == $plugin['autoupdate'] && WPMUDEV_Dashboard::$api->has_key() ) {
+					if ( $compatible && '1' == $plugin['autoupdate'] && WPMUDEV_Dashboard::$api->has_key() ) {
 						$package = WPMUDEV_Dashboard::$api->rest_url_auth( 'download/' . $id );
-					} elseif ( 119 === (int) $id ) {
+					} elseif ( $compatible && 119 === (int) $id ) {
 						// Public download url for Dashboard.
 						$package = WPMUDEV_Dashboard::$api->rest_url( 'download-dashboard' );
 					}

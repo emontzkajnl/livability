@@ -94,6 +94,7 @@ class LangEN {
                 'RankMathFields'=>'Rank Math Fields',
                 'RankMathProFields'=>'Rank Math Pro Fields',
                 'SeoPressFields' => 'SEOPress Fields',
+                'TotalPressFields' => 'TotalPress Fields',
                 'replyattributesfields' => 'Reply Attributes Fields',
                 'forumattributesfields' => 'Forum Attributes Fields',
                 'topicattributesfields' => 'Topic Attributes Fields',

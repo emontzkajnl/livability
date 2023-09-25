@@ -29,7 +29,6 @@ class ACFImport {
 		foreach($map as $key => $value){
 			$csv_value= trim($map[$key]);
 			if(!empty($csv_value) || $csv_value == 0){
-				//$pattern = "/({([a-z A-Z 0-9 | , _ -]+)(.*?)(}))/";
 				$pattern = '/{([^}]*)}/';
 
 				if(preg_match_all($pattern, $csv_value, $matches, PREG_PATTERN_ORDER)){	

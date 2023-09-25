@@ -1455,33 +1455,33 @@ function filter_parsely_metadata( $parsely_metadata, $post, $parsely_options ) {
 	return $parsely_metadata;
 }
 
-function make_places_csv() {
-    $csvFile = get_stylesheet_directory(  ).'/places.csv';
-    $args = array(
-        'post_type'         => 'liv_place',
-        'post_status'       => 'publish',
-        'posts_per_page'    => -1
-    );
-    $places = new WP_Query($args);
-    if ($places->have_posts()):
-		ini_set('auto_detect_line_endings', true);
-		$handle = fopen($csvFile, 'w');
-		echo 'inside if';
-        while ($places->have_posts()): $places->the_post();
-        // echo 'id is '.get_the_id().' and the title is '.get_the_title().'<br />';
-		// echo 'inside while';
-		$id = get_the_id();
-		$title = get_the_title();
+// function make_places_csv() {
+//     $csvFile = get_stylesheet_directory(  ).'/places.csv';
+//     $args = array(
+//         'post_type'         => 'liv_place',
+//         'post_status'       => 'publish',
+//         'posts_per_page'    => -1
+//     );
+//     $places = new WP_Query($args);
+//     if ($places->have_posts()):
+// 		ini_set('auto_detect_line_endings', true);
+// 		$handle = fopen($csvFile, 'w');
+		
+//         while ($places->have_posts()): $places->the_post();
+//         // echo 'id is '.get_the_id().' and the title is '.get_the_title().'<br />';
+// 		// echo 'inside while';
+// 		$id = get_the_id();
+// 		$title = get_the_title();
 
-		fputcsv($handle, array( $id, $title ));
-        endwhile;
-		fclose($handle);
-    else:
-		echo 'file issue';
-	endif;
-	wp_reset_query(  );
+// 		fputcsv($handle, array( $id, $title ));
+//         endwhile;
+// 		fclose($handle);
+//     else:
+// 		echo 'file issue';
+// 	endif;
+// 	wp_reset_query(  );
 
-}
+// }
 
 add_editor_style( 'assets/css/style-editor.css' );
 
@@ -1529,10 +1529,10 @@ function add_place_options($form) {
 // add_filter('gform_pre_validation_10', 'add_place_options');
 // add_filter('gform_pre_submission_filter_10', 'add_place_options');
 // add_filter('gform_admin_pre_render_10', 'add_place_options');
-add_filter('gform_pre_render_11', 'add_place_options');
-add_filter('gform_pre_validation_11', 'add_place_options');
-add_filter('gform_pre_submission_filter_11', 'add_place_options');
-add_filter('gform_admin_pre_render_11', 'add_place_options');
+// add_filter('gform_pre_render_11', 'add_place_options');
+// add_filter('gform_pre_validation_11', 'add_place_options');
+// add_filter('gform_pre_submission_filter_11', 'add_place_options');
+// add_filter('gform_admin_pre_render_11', 'add_place_options');
 
 function add_local_insights_place_options($form) {
 	foreach($form['fields'] as $field) {
@@ -1556,10 +1556,10 @@ function add_local_insights_place_options($form) {
 	
 	return $form;
 }
-add_filter('gform_pre_render_10', 'add_local_insights_place_options');
-add_filter('gform_pre_validation_10', 'add_local_insights_place_options');
-add_filter('gform_pre_submission_filter_10', 'add_local_insights_place_options');
-add_filter('gform_admin_pre_render_10', 'add_local_insights_place_options');
+// add_filter('gform_pre_render_10', 'add_local_insights_place_options');
+// add_filter('gform_pre_validation_10', 'add_local_insights_place_options');
+// add_filter('gform_pre_submission_filter_10', 'add_local_insights_place_options');
+// add_filter('gform_admin_pre_render_10', 'add_local_insights_place_options');
 
 if ( ! function_exists('local_insights') ) {
 
@@ -1751,11 +1751,20 @@ if ( ! function_exists('local_insights') ) {
 	}
 
 
-	function connected_communities_payment($entry, $form ) {
-		error_log(print_r($entry, true));
-	};
-	add_action('gform_after_submission_11', 'connected_communities_payment', 10, 2);	
+	// function connected_communities_payment($entry, $form ) {
+		// error_log(print_r($entry, true));
+	// };
+	// add_action('gform_after_submission_11', 'connected_communities_payment', 10, 2);	
 
+
+	/**
+	 * Gravity Perks // GP Populate Anything // Change The Query Limit
+	 * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
+	 */
+	// add_filter( 'gppa_query_limit_11_16', function() {
+		// Update "750" to whatever you would like the query limit to be.
+		// return 50;
+	// } );
 // add_action( 'init', 'make_places_csv');
 
 

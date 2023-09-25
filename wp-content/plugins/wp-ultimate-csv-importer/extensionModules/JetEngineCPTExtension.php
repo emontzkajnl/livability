@@ -33,7 +33,6 @@ class JetEngineCPTExtension extends ExtensionHandler{
 		$jet_engine_cpt_fields = $this->JetEngineCPTFields($import_type);
 		if(!empty($jet_engine_cpt_fields))
 		$response['jetenginecpt_fields'] = $jet_engine_cpt_fields;
-		//$response['jetenginecpt_rf_fields'] = null;	
 		return $response; 	
 	}
 
@@ -45,7 +44,6 @@ class JetEngineCPTExtension extends ExtensionHandler{
 	public function JetEngineCPTFields($import_type) {	
 		global $wpdb;
 
-		//$get_meta_fields = $wpdb->get_results($wpdb->prepare("SELECT id, meta_fields FROM {$wpdb->prefix}jet_post_types WHERE slug = %s AND status = %s", $import_type, 'publish'));
 		$import_type = $this->import_post_types($import_type);
 		if($import_type == 'WooCommerce Product'){
 			$import_type = 'product';

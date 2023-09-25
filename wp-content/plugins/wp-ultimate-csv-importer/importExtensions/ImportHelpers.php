@@ -232,7 +232,6 @@ class ImportHelpers {
 			foreach($map as $key => $value){
 				$csv_value= trim($map[$key]);
 				if(!empty($csv_value)){
-					//$pattern = "/({([a-z A-Z 0-9 | , _ -]+)(.*?)(}))/";
 					$pattern1 = '/{([^}]*)}/';
 					$pattern2 = '/\[([^\]]*)\]/';
 

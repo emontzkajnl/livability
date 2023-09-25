@@ -112,7 +112,6 @@ class JetEngineImport {
 							//added new checkbox values
 							if(!in_array($dvalueval, $keys)){
 							
-								//$get_meta_fields = $wpdb->get_results("SELECT id, meta_fields FROM {$wpdb->prefix}jet_post_types WHERE slug = '$type' AND status IN ('publish','built-in')");
 								$get_meta_fields = $wpdb->get_results( $wpdb->prepare("SELECT option_value FROM {$wpdb->prefix}options WHERE option_name=%s",'jet_engine_meta_boxes'));
 
 								if(isset($get_meta_fields[0])){
@@ -151,7 +150,6 @@ class JetEngineImport {
 						foreach($exp as $exp_values){
 							$dselect[] = trim($exp_values);
 						}
-						//$dselect = $exp;
 						$darray[$jet_data['JE'][$dkey]['name']] = $dselect;
 					}
 				}

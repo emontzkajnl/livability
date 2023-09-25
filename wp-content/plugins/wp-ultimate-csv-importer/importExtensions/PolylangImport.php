@@ -71,7 +71,6 @@ class PolylangImport {
 			   ) 
 			 );
 			}			
-			 //$get_term=$wpdb->get_results($wpdb->prepare("select term_id from {$wpdb->prefix}terms where slug like %s ",'%-'.$code));			 			 
 			 $get_term=$wpdb->get_results($wpdb->prepare("select term_id from {$wpdb->prefix}terms where slug like %s ",$code));			 			 
 			 foreach($get_term as $keys =>$values){
 					 $id = $values->term_id;

@@ -42,6 +42,13 @@ class WPMUDEV_Dashboard_Upgrader {
 	protected $update_results = array();
 
 	/**
+	 * Minimum PHP version required by WPMU DEV plugins.
+	 *
+	 * @var string
+	 */
+	public $min_php = '5.6';
+
+	/**
 	 * Set up actions for the Upgrader module.
 	 *
 	 * @internal
@@ -473,7 +480,19 @@ class WPMUDEV_Dashboard_Upgrader {
 			return false;
 		}
 
+		// Get project data.
 		$project = $data['projects'][ $project_id ];
+
+		// Minimum required PHP version.
+		$requires_min_php = empty( $project['requires_min_php'] ) ? $this->min_php : $project['requires_min_php'];
+
+		// Skip if minimum required PHP version is not found.
+		if ( version_compare( PHP_VERSION, $requires_min_php, '<' ) ) {
+			$reason = 'php';
+
+			return false;
+		}
+
 		if ( empty( $project['requires'] ) ) {
 			$reason = 'unknown requirements';
 
@@ -665,6 +684,13 @@ class WPMUDEV_Dashboard_Upgrader {
 		}
 
 		$project          = WPMUDEV_Dashboard::$site->get_project_info( $pid );
+
+		if ( ! $project->is_compatible && ! empty( $project->incompatible_reason ) ) {
+			$this->set_error( $pid, 'INS.09', sprintf( __( 'Incompatible: %s', 'wpmudev' ), $project->incompatible_reason ) );
+
+			return false;
+		}
+
 		$resp['type']     = $project->type;
 		$resp['filename'] = $project->filename;
 
@@ -1163,6 +1189,13 @@ class WPMUDEV_Dashboard_Upgrader {
 				return false;
 			}
 
+			// Check if project is compatible.
+			if ( ! $project->is_compatible && ! empty( $project->incompatible_reason ) ) {
+				$this->set_error( $pid, 'INS.09', sprintf( __( 'Incompatible: %s', 'wpmudev' ), $project->incompatible_reason ) );
+
+				return false;
+			}
+
 			// Make sure Upfront is available before an upfront theme or plugin is installed.
 			if ( $project->need_upfront && ! WPMUDEV_Dashboard::$site->is_upfront_installed() ) {
 				$this->install( WPMUDEV_Dashboard::$site->id_upfront );
@@ -1239,8 +1272,17 @@ class WPMUDEV_Dashboard_Upgrader {
 					$plugin = $upgrader->plugin_info();
 					// Plugin file found.
 					if ( ! empty( $plugin ) ) {
-						// Activate the plugin silently.
-						$activated = activate_plugin( $plugin, false, is_multisite(), true );
+						/**
+						 * Filter hook to change plugin silent activation.
+						 *
+						 * @since 4.11.20
+						 *
+						 * @param bool $silent Should silence activation?.
+						 */
+						$silent_activation = apply_filters( 'wpmudev_dashboard_plugin_install_silent_activation', false );
+
+						// Activate the plugin.
+						$activated = activate_plugin( $plugin, false, is_multisite(), $silent_activation );
 						// If error in activation.
 						if ( is_wp_error( $activated ) ) {
 							$this->set_error( $pid, 'INS.10', $activated->get_error_message() );

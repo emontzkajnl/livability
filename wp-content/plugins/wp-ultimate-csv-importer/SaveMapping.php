@@ -379,7 +379,6 @@ class SaveMapping{
 								break;
 								//added for woocommerce product attributes separate widget
 							case 'ATTRMETA':
-								//$product_attr_instance = ProductAttrImport::getInstance();
 								$variation_id = isset($variation_id) ? $variation_id :'';
 								$wpml_map = isset($map['WPML']) ? $map['WPML'] : '';
 								$woocom_image = isset($map['PRODUCTIMAGEMETA']) ? $map['PRODUCTIMAGEMETA'] : '';
@@ -541,6 +540,10 @@ class SaveMapping{
 							case 'SEOPRESS':
 								$seopress_instance = SeoPressImport::getInstance();
 								$seopress_instance->set_seopress_values($header_array, $value_array, $map['SEOPRESS'], $post_id, $selected_type, $hash_key,$gmode,$templatekey);
+								break;
+							case 'TotalPress':
+								$totalpress_instance = TotalPressImport::getInstance();
+								$totalpress_instance->set_totalpress_values($header_array, $value_array, $map['TOTALPRESS'], $post_id, $selected_type, $hash_key,$gmode,$templatekey);
 								break;				
 							case 'ACF':
 								$acf_image = isset($map['ACFIMAGEMETA']) ? $map['ACFIMAGEMETA'] : '';
@@ -1093,7 +1096,6 @@ class SaveMapping{
 				break;
 			//added for woocommerce product attributes separate widget
 			case 'ATTRMETA':
-				//$product_attr_instance = ProductAttrImport::getInstance();
 				$variation_id = isset($variation_id) ? $variation_id :'';
 				$wpml_map = isset($map['WPML']) ? $map['WPML'] : '';
 				$woocom_image = isset($map['PRODUCTIMAGEMETA']) ? $map['PRODUCTIMAGEMETA'] : '';

@@ -33,7 +33,6 @@ class JetEngineExtension extends ExtensionHandler{
 		$response = [];
 		$jet_engine_fields = $this->JetEngineFields($import_type);
 		$response['jetengine_fields'] = $jet_engine_fields;	
-		//$response['jetengine_rf_fields'] = null;	
 		return $response;		
 	}
 
@@ -131,7 +130,6 @@ class JetEngineExtension extends ExtensionHandler{
 		else{
 			$jet_value = '';
 		}
-		//$jet_value = $this->convert_fields_to_array($customFields);
 		return $jet_value;		
 	}
 

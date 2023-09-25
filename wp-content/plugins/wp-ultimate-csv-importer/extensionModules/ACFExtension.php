@@ -71,7 +71,6 @@ class ACFExtension extends ExtensionHandler{
 	
 		if ( !empty($group_id_arr) ) {
 			foreach($group_id_arr as $groupId) {
-				//$get_acf_fields = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_title, post_content, post_excerpt, post_name FROM {$wpdb->prefix}posts where post_status != %s AND post_parent in (%s)",'trash' , array($groupId) ) );	
 				$get_acf_fields = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_title, post_content, post_excerpt, post_name FROM {$wpdb->prefix}posts where post_status != 'trash' AND post_parent in (%s)", array($groupId) ) );			
 			
 				if ( ! empty( $get_acf_fields ) ) {	

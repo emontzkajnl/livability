@@ -24,8 +24,7 @@ class LearnPressExtension extends ExtensionHandler{
     public function processExtension($data){        
         $import_type = $data;
         $response = [];
-        //$import_type = $this->import_type_as($import_type);
-        if(is_plugin_active('learnpress/learnpress.php')){   
+       if(is_plugin_active('learnpress/learnpress.php')){   
             if($import_type == 'lp_course'){
                 $learn_meta_fields = array(
                             'Duration' => '_lp_duration',

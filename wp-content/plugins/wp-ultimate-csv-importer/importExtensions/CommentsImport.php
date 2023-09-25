@@ -314,7 +314,6 @@ class CommentsImport {
 		
 			// Retrieve the key of the next widget instance
 			$numeric_keys = array_filter( array_keys( $widget_instances ), 'is_int' );
-			//$next_key = $numeric_keys ? max( $numeric_keys ) + 1 : 2;
 		
 			if((count($numeric_keys) == 1) && (empty($widget_instances[$numeric_keys[0]]['title']))){
 				$next_key = $numeric_keys[0];

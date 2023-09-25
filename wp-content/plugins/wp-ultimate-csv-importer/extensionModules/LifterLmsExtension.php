@@ -27,7 +27,6 @@ class LifterLmsExtension extends ExtensionHandler{
             $mode = isset($_POST['Mode']) ? sanitize_text_field($_POST['Mode']) : "";     
             $import_type = $data;
             $response = [];
-            //$import_type = $this->import_type_as($import_type);
             if(is_plugin_active('lifterlms/lifterlms.php')){   
                 if($import_type == 'course'){
                     $lifter_meta_fields = array(

@@ -29,8 +29,6 @@ class JetEngineTaxonomyExtension extends ExtensionHandler{
 
 	public function processExtension($data){
 		$response = [];
-		//$response['jetenginetaxonomy_fields'] = null;
-		//$response['jetenginetaxonomy_rf_fields'] = null;	
 		return $response;		
 	}
 

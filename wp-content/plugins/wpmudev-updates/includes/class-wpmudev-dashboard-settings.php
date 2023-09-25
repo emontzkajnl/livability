@@ -372,15 +372,16 @@ class WPMUDEV_Dashboard_Settings {
 			),
 			// Other small options.
 			'general'                       => array(
-				'last_run_updates'   => 0,
-				'last_run_profile'   => 0,
-				'last_run_sync'      => 0,
-				'staff_notes'        => '',
-				'translation_locale' => 'en_US',
-				'version'            => WPMUDEV_Dashboard::$version,
-				'limit_to_user'      => '',
-				'auth_user'          => null,
-				'hub_nonce'          => '',
+				'last_run_updates'     => 0,
+				'last_run_profile'     => 0,
+				'last_run_sync'        => 0,
+				'last_run_translation' => 0,
+				'staff_notes'          => '',
+				'translation_locale'   => 'en_US',
+				'version'              => WPMUDEV_Dashboard::$version,
+				'limit_to_user'        => '',
+				'auth_user'            => null,
+				'hub_nonce'            => '',
 			),
 		);
 
