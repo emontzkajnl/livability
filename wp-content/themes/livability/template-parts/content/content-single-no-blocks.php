@@ -42,7 +42,7 @@
         $megahero_height = get_field('megahero_height');
         $megahero_vertical = get_field('vertical_position') ? get_field('vertical_position') : 'center';
         if ( is_mobile() ) {
-            $size = 'medium_large';
+            $size = 'portrait';
         } else {
             $size = 'full';
         }
