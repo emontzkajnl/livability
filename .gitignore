@@ -16,6 +16,7 @@ sitemap.xml.gz
 node_modules/
 mu-plugins/
 wp-config.php
+db/
 
 
 # @TODO writable paths

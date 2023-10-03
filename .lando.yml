@@ -8,3 +8,4 @@ config:
 services:
   myservice:
     type: php:8.0
+    via: nginx
