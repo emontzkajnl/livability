@@ -2370,6 +2370,35 @@ border-bottom: 1px solid $green;
   }
 }
 
+.wp-block-latest-posts {
+  &__featured-image {
+    height: 100px !important;
+    width: 150px !important;
+    flex-shrink: 0;
+    background-color: pink;
+    position: relative;
+    img {
+      object-fit: cover;
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100% !important;
+    }
+  }
+  
+  > li {
+    display: flex;
+    width: 100%;
+    margin-top: 0 !important;
+    > a {
+      font-family: "Jost",Arial,Helvetica,sans-serif;
+      font-size: 1.625rem;
+      font-weight: 600;
+      padding-left: 15px !important;
+    }
+  }
+}
+
 @media screen and (max-width: 480px) {
   .cc-cta-container {
 	  flex-wrap:wrap;
@@ -2632,6 +2661,16 @@ border-bottom: 1px solid $green;
 }
 
 @media screen and (min-width: 960px) {
+  .wp-block-latest-posts {
+    &__list {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    li {
+      width: 33%;
+    }
+    
+  }
   .brand-stories {
     &__one {
       // max-height: 400px;
