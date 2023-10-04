@@ -34,7 +34,7 @@ $article_array = array($article_one, $article_two, $article_three);
     <div class="place-container" style="background-image: url(<?php //echo $place_img; ?>);">
     
     <a href="<?php echo the_permalink($place->ID); ?>">
-    <?php echo get_the_post_thumbnail( $place->ID); ?>
+    <?php echo get_the_post_thumbnail( $place->ID, 'medium_large'); ?>
     <div class="cp-container">
     <h3><?php echo get_the_title($place->ID); ?></h3>
     </div>
