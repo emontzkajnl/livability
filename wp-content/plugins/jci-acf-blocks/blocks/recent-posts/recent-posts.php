@@ -15,7 +15,7 @@ if ($rp_query->have_posts()):
 // Create class attribute allowing for custom "className" and "align" values.
 $className = 'recent-posts';
 ?>
-<div id="Recent-Posts" class="<?php echo esc_attr($className); ?>"> ?>
+<div id="Recent-Posts" class="<?php echo esc_attr($className); ?>"> 
 <h2 class="green-line">Recent Posts</h2>
 <div class="recent-posts-container">
 <?php while ($rp_query->have_posts()):
