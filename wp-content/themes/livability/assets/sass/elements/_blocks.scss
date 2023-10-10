@@ -708,6 +708,9 @@ div[class^="curated-posts-"] {
     flex-basis: 50%;
     flex-grow: 1;
     margin-top: 15px;
+    .article-card:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -759,9 +762,6 @@ div[class^="curated-posts-"] {
     margin-left: 0;
     padding-top: 195px;
     width: 100%;
-  }
-  &:last-child {
-    margin-bottom: 0;
   }
   a {
     color: black;
@@ -2680,6 +2680,12 @@ border-bottom: 1px solid $green;
     flex-direction: row;
     flex-grow: 1;
     flex-wrap: wrap;
+    .alm-reveal {
+      display: flex;
+      flex-direction: row;
+      flex-grow: 1;
+      flex-wrap: wrap;
+    }
     .article-card {
       // flex-basis: calc(33% - 30px);
       // &:nth-child(3n+1) {
