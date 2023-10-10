@@ -58,7 +58,6 @@ $article_array = array($article_one, $article_two, $article_three);
         <!-- <h5 class="green-text uppercase"><?php //echo $cat[0]->name ?></h5> -->
         <a href="<?php echo the_permalink($ID); ?>">
             <?php echo '<h4>'.get_the_title( $ID ).'</h4>';  ?>
-            <!-- <p class="read-more">Read More</p> -->
         </a>
         </div>
 

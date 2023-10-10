@@ -404,6 +404,17 @@ function my_acf_init_block_types() {
             'keywords'          => array( 'block', 'related', 'article', 'post' ),
         ));
 
+        acf_register_block_type(array(
+            'name'              => 'Journal Recent Posts',
+            'title'             => __('Journal Recent Posts', 'acf-blocks'),
+            'description'       => __('Displays recent posts', 'acf-blocks'),
+            'mode'              => 'preview',
+            'render_template'   => plugin_dir_path( __FILE__ ) . 'blocks/recent-posts/recent-posts.php',
+            'category'          => 'jci-category',
+            'icon'              => 'layout',
+            'keywords'          => array( 'block', 'related', 'article', 'post' ),
+        ));
+
         // acf_register_block_type(array(
         //     'name'              => 'listicle',
         //     'title'             => __('Listicle Block', 'acf-blocks'),

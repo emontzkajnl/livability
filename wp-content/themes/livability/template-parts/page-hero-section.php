@@ -11,10 +11,17 @@ if (is_author()) {
 	$background = get_field('hero_background_image');
 	$override_page_title = get_field('override_page_title');
 }
+if (is_mobile()) {
+	$background_url = wp_get_attachment_image_src($background, 'portrait');
+} elseif (is_tablet()) { 
+	$background_url = wp_get_attachment_image_src($background, 'large');
+} else {
+	$background_url = wp_get_attachment_image_src($background, 'full');
+}
 
 
 ?>
-<div class="hero-section page-hero alignfull"  style="background-image: url(<?php echo wp_get_attachment_url($background); ?>)">
+<div class="hero-section page-hero alignfull"  style="background-image: url(<?php echo $background_url[0]; ?>);">
     <div class="container" style="position: relative;">
 		<div class="hero-title-area">
 		<?php if ($override_page_title) {

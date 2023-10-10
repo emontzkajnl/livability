@@ -2399,6 +2399,7 @@ border-bottom: 1px solid $green;
   }
 }
 
+
 @media screen and (max-width: 480px) {
   .cc-cta-container {
 	  flex-wrap:wrap;
@@ -2478,6 +2479,21 @@ border-bottom: 1px solid $green;
 }
 
 @media screen and (min-width: 520px) {
+  .recent-posts-container {
+    .article-card {
+      .article-img {
+        height: 100%;
+        width: 35%;
+      }
+      .article-text {
+        margin-left: 0;
+        padding-top: 20px;
+        width: 100%;
+        width: 65%;
+        margin-left: 35%;
+      }
+    }
+  }
   .quick-facts-block {
     dl {
       > div {
@@ -2658,8 +2674,34 @@ border-bottom: 1px solid $green;
 
     }
   }
-}
 
+  .recent-posts-container {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    .article-card {
+      // flex-basis: calc(33% - 30px);
+      // &:nth-child(3n+1) {
+        // margin-right: 15px;
+      // }
+      // &:nth-child(3n+2) {
+        // margin-right: 15px;
+      // }
+      flex-basis: calc(50% - 15px);
+      width: 100%;
+      &:nth-child(odd) {
+        // margin-right: 15px;
+      }
+      .article-text {
+        // padding: 20px 20px;
+      }
+      h4 {
+        font-size: 1rem;
+      }
+    }
+  }
+}
 @media screen and (min-width: 960px) {
   .wp-block-latest-posts {
     &__list {
@@ -2670,6 +2712,37 @@ border-bottom: 1px solid $green;
       width: 33%;
     }
     
+  }
+  .alm-reveal {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    flex-wrap: wrap;
+  }
+  .recent-posts-container {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    .article-card {
+      flex-basis: calc(33% - 30px);
+      &:nth-child(3n+1) {
+        margin-right: 15px;
+      }
+      &:nth-child(3n+2) {
+        margin-right: 15px;
+      }
+      // flex-basis: calc(50% - 15px);
+      &:nth-child(odd) {
+        margin-right: 15px;
+      }
+      .article-text {
+        padding: 20px 20px;
+      }
+      h4 {
+        font-size: 1rem;
+      }
+    }
   }
   .brand-stories {
     &__one {
