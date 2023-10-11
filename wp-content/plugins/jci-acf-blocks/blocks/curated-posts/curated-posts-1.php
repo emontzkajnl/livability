@@ -23,7 +23,7 @@ if( !empty($block['className']) ) {
 
 if (is_mobile() ) {
 	$img_size = 'portrait';
-} elseif (is_table()) {
+} elseif (is_tablet()) {
 	$img_size = 'medium_large';
 } else {
 	$img_size = '';
