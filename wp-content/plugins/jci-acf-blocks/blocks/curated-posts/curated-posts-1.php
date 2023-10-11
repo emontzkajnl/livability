@@ -21,6 +21,14 @@ if( !empty($block['className']) ) {
     $className .= ' ' . $block['className'];
 }
 
+if (is_mobile() ) {
+	$img_size = 'portrait';
+} elseif (is_table()) {
+	$img_size = 'medium_large';
+} else {
+	$img_size = '';
+}
+
 // Load values and assign defaults.
 $article_1 = get_field('curated_posts_1') ?: 'Curated Post';
 // $test = get_post_meta(7 );
@@ -34,7 +42,7 @@ $cat1 = get_the_category( $article_1->ID );
 // print_r($block['data']);
 //  echo '</pre>'; ?>
 <div class="post-1-1 cp" style="background-image: url(<?php //echo $img1; ?>);">
-<?php echo get_the_post_thumbnail( $article_1->ID ); ?>
+<?php echo get_the_post_thumbnail( $article_1->ID, $img_size ); ?>
 	<a href="<?php echo get_the_permalink( $article_1->ID); ?>">
 	
 	<div class="cp-container">

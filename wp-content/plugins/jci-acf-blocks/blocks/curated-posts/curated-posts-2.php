@@ -22,6 +22,12 @@ if( !empty($block['className']) ) {
     $className .= ' ' . $block['className'];
 }
 
+if (is_mobile() ) {
+	$img_size = 'portrait';
+} else {
+	$img_size = 'medium_large';
+}
+
 // Load values and assign defaults.
 $article_1 = get_field('curated_posts_2_1') ?: 'Curated Post';
 $article_2 = get_field('curated_posts_2_2') ?: 'Curated Post';
@@ -34,7 +40,7 @@ $cat2 = get_the_category( $article_2->ID );
 
 
     <div class="post-2-1 cp" style="background-image: url(<?php //echo $img1; ?>);">
-	<?php echo get_the_post_thumbnail( $article_1->ID , 'medium_large' ); ?>
+	<?php echo get_the_post_thumbnail( $article_1->ID , $img_size ); ?>
 	<a href="<?php echo get_the_permalink( $article_1->ID); ?>" >
 	<div class="cp-container">
 	<?php echo get_field('sponsored', $article_1->ID) ? '<p class="sponsored-label">Sponsored</p>' : ""; ?>
@@ -50,7 +56,7 @@ $cat2 = get_the_category( $article_2->ID );
 	
 	
     <div  class="post-2-2 cp" style="background-image: url(<?php //echo $img2; ?>);">
-	<?php echo get_the_post_thumbnail( $article_2->ID , 'medium_large' ); ?>
+	<?php echo get_the_post_thumbnail( $article_2->ID , $img_size ); ?>
 	<a href="<?php echo get_the_permalink( $article_2->ID); ?>">
 	<div class="cp-container">
 	<?php echo get_field('sponsored', $article_2->ID) ? '<p class="sponsored-label">Sponsored</p>' : ""; ?>
