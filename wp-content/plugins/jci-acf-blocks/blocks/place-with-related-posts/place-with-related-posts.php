@@ -21,20 +21,26 @@ if( !empty($block['className']) ) {
     $className .= ' ' . $block['className'];
 }
 
+if (is_mobile() ) {
+	$img_size = 'portrait';
+} else {
+	$img_size = 'medium_large';
+}
+
 // one place, three posts
 $place = get_field('place');
 $article_one = get_field('article_one');
 $article_two = get_field('article_two');
 $article_three = get_field('article_three');
-$place_img = get_the_post_thumbnail_url($place->ID, 'medium_large');
+// $place_img = get_the_post_thumbnail_url($place->ID, 'medium_large');
 $article_array = array($article_one, $article_two, $article_three);
 ?>
 
 <div id="<?php echo esc_attr($id); ?>" class="<?php echo esc_attr($className); ?>">
-    <div class="place-container" style="background-image: url(<?php //echo $place_img; ?>);">
+    <div class="place-container" >
     
     <a href="<?php echo the_permalink($place->ID); ?>">
-    <?php echo get_the_post_thumbnail( $place->ID, 'medium_large'); ?>
+    <?php echo get_the_post_thumbnail( $place->ID, $img_size); ?>
     <div class="cp-container">
     <h3><?php echo get_the_title($place->ID); ?></h3>
     </div>
