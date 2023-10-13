@@ -2719,17 +2719,18 @@ border-bottom: 1px solid $green;
     }
     
   }
-  .alm-reveal {
-    display: flex;
-    flex-direction: row;
-    flex-grow: 1;
-    flex-wrap: wrap;
-  }
+
   .recent-posts-container {
     display: flex;
     flex-direction: row;
     flex-grow: 1;
     flex-wrap: wrap;
+    .alm-reveal {
+      display: flex;
+      flex-direction: row;
+      flex-grow: 1;
+      flex-wrap: wrap;
+    }
     .article-card {
       flex-basis: calc(33% - 30px);
       &:nth-child(3n+1) {
