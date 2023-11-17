@@ -178,7 +178,7 @@
 
   const ajaxOneHundred = () => {
     // console.dir(window.ohlObj);
-
+console.log('function is running');
     var obj = window.ohlObj;
     const data = {
       action: "loadonehundred",
@@ -193,11 +193,14 @@
     if (typeof ga === "function") { 
       ga('send','pageview', newPage);
     }
-    PARSELY.beacon.trackPageView({
-      url: newPage,
-      urlref: href,
-      js: 1
-    });
+    if (typeof PARSELY.beacon !== 'undefined') {
+      PARSELY.beacon.trackPageView({
+        url: newPage,
+        urlref: href,
+        js: 1
+      });
+    }
+ 
     
 
     $.ajax({
