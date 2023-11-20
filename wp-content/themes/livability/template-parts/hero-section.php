@@ -121,7 +121,6 @@ echo '<ul>';
 
 </div>
 <?php //echo 'has hero video: '.$has_hero_video;
-
 if ( !$has_hero_video ):
   if ($ken_burns) {
       echo '<div class="livability-image-meta"></div>';

@@ -47,6 +47,7 @@
             $size = 'full';
         }
         $article_thumb_url = $override ? wp_get_attachment_image_url( $override['id'], $size ) :  get_the_post_thumbnail_url( $ID, $size);
+        $article_thumb_id = $override ? $override['id'] : get_post_thumbnail_id();
         $mega_title = get_field('custom_title_override') ? get_field('custom_title_override') : get_the_title(); 
         $megacat = get_the_category( ); 
         $uriSegments = explode("/", parse_url(get_the_permalink( ), PHP_URL_PATH)); 
@@ -59,15 +60,25 @@
         } else {
             $subtitlePlace = $uriSegments[2].' ';
         }
+        $hero_img_byline = get_field('img_byline', $article_thumb_id);
+        $hero_img_place_name = get_field('img_place_name', $article_thumb_id);
         ?>
         <div class="mega-hero alignfull" style="background-image: url('<?php echo $article_thumb_url; ?>'); height: <?php echo $megahero_height; ?>vh; background-position-y: <?php echo $megahero_vertical; ?>;">
             <div class="mega-hero-text-area">
                 <p class="mega-hero__subheader"><?php // echo $subtitlePlace.$megacat[0]->name;  ?><?php echo $megacat[0]->name; ?></p>
                 <?php echo '<p class="mega-hero__header">'.$mega_title.'</p>'; ?>
             </div>
+         
         </div>
-
-        <?php endif; 
+        <?php if ($hero_img_byline || $hero_img_place_name) {
+             echo '<div class="container" style="position: absolute; bottom: -2px; margin: 0;"><div class="livability-image-meta">';
+             echo $hero_img_place_name ? $hero_img_place_name : '' ;
+             echo $hero_img_place_name && $hero_img_byline ? ' / ' : '';
+             echo $hero_img_byline ?  strip_tags($hero_img_byline, "<a>") : '' ;
+             echo '</div></div>';
+        } ?>
+        <!-- <p>Testing here.</p> -->
+        <?php endif; //if enable megahero
         // $uriSegments = explode("/", parse_url(get_the_permalink( ), PHP_URL_PATH)); 
         // $uriSegments = array_filter($uriSegments);
         // $numSegments = count($uriSegments);
