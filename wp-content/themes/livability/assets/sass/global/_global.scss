@@ -8,6 +8,15 @@
   width: 100%;
   padding: 0 15px;
 }
+.absolute-container {
+  width: 100%;
+  padding: 0 15px;
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  background-color: pink;
+  height: 30px;
+}
 a:hover {
   text-decoration-style: solid;
 }
@@ -33,5 +42,10 @@ a:hover {
 @media all and (min-width: 1390px) {
   .container {
     padding: 0;
+  }
+  .absolute-container {
+    padding: 0;
+    width: 1366px;
+    left: calc(50% - 683px);
   }
 }

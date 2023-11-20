@@ -69,15 +69,15 @@
                 <?php echo '<p class="mega-hero__header">'.$mega_title.'</p>'; ?>
             </div>
          
-        </div>
+        
         <?php if ($hero_img_byline || $hero_img_place_name) {
-             echo '<div class="container" style="position: absolute; bottom: -2px; margin: 0;"><div class="livability-image-meta">';
+             echo '<div class="absolute-container"><div class="livability-image-meta">';
              echo $hero_img_place_name ? $hero_img_place_name : '' ;
              echo $hero_img_place_name && $hero_img_byline ? ' / ' : '';
              echo $hero_img_byline ?  strip_tags($hero_img_byline, "<a>") : '' ;
              echo '</div></div>';
         } ?>
-        <!-- <p>Testing here.</p> -->
+        </div>
         <?php endif; //if enable megahero
         // $uriSegments = explode("/", parse_url(get_the_permalink( ), PHP_URL_PATH)); 
         // $uriSegments = array_filter($uriSegments);
