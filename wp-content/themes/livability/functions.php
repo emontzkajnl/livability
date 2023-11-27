@@ -1294,9 +1294,10 @@ function livability_add_image_meta( $content ) {
 	} else {
 		if (gettype($html) != 'boolean') {
 			foreach($html->find('img') as $img){
+				 
 				$src = $img->src;
 				// temp fix for staging url img src until db search/replace can be done 
-				// $src = str_replace('//new.', '//', $src);
+				$src = str_replace('//livability.com', '//livability.lndo.site', $src);
 				$post_image_id = attachment_url_to_postid( $src );
 				$img_byline = get_field('img_byline', $post_image_id);
 				// if ($img_byline) { $img_byline = strip_tags($img_byline, "<p>");}
