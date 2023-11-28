@@ -1279,6 +1279,75 @@ function pm_conditional_permastructure($permastructure, $post) {
 }
 add_filter('permalink_manager_filter_permastructure', 'pm_conditional_permastructure', 10, 2);
 
+if ( ! function_exists( 'get_attachment_id' ) ) {
+    /**
+     * Get the Attachment ID for a given image URL.
+     *
+     * @link   http://wordpress.stackexchange.com/a/7094
+     *
+     * @param  string $url
+     *
+     * @return boolean|integer
+     */
+    function get_attachment_id( $url ) {
+
+        $dir = wp_upload_dir();
+
+        // baseurl never has a trailing slash
+        if ( false === strpos( $url, $dir['baseurl'] . '/' ) ) {
+            // URL points to a place outside of upload directory
+            return false;
+        }
+
+        $file  = basename( $url );
+        $query = array(
+            'post_type'  => 'attachment',
+            'fields'     => 'ids',
+            'meta_query' => array(
+                array(
+                    'key'     => '_wp_attached_file',
+                    'value'   => $file,
+                    'compare' => 'LIKE',
+                ),
+            )
+        );
+
+        // query attachments
+        $ids = get_posts( $query );
+
+        if ( ! empty( $ids ) ) {
+
+            foreach ( $ids as $id ) {
+
+                // first entry of returned array is the URL
+                if ( $url === array_shift( wp_get_attachment_image_src( $id, 'full' ) ) )
+                    return $id;
+            }
+        }
+
+        $query['meta_query'][0]['key'] = '_wp_attachment_metadata';
+
+        // query attachments again
+        $ids = get_posts( $query );
+
+        if ( empty( $ids) )
+            return false;
+
+        foreach ( $ids as $id ) {
+
+            $meta = wp_get_attachment_metadata( $id );
+
+            foreach ( $meta['sizes'] as $size => $values ) {
+
+                if ( $values['file'] === $file && $url === array_shift( wp_get_attachment_image_src( $id, $size ) ) )
+                    return $id;
+            }
+        }
+
+        return false;
+    }
+}
+
 // Add image meta to images in content
 function livability_add_image_meta( $content ) {
 	$html = str_get_html($content);
@@ -1298,11 +1367,13 @@ function livability_add_image_meta( $content ) {
 				$src = $img->src;
 				// temp fix for staging url img src until db search/replace can be done 
 				$src = str_replace('//livability.com', '//livability.lndo.site', $src);
-				$post_image_id = attachment_url_to_postid( $src );
+				// $post_image_id = attachment_url_to_postid( $src );
+				$post_image_id = get_attachment_id( $src );
 				$img_byline = get_field('img_byline', $post_image_id);
 				// if ($img_byline) { $img_byline = strip_tags($img_byline, "<p>");}
 				$img_place_name = get_field('img_place_name', $post_image_id);
 				// $img->alt = 'id-'.$post_image_id;
+				echo '<div style="display: none;">id: '.$post_image_id.' byline: '.$img_byline.'</div>';
 				if ($img_byline || $img_place_name) {
 					$outer = '<div class="livability-image-meta">';
 					$outer .= $img_place_name ? $img_place_name : '' ;
