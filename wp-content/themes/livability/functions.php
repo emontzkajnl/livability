@@ -1373,7 +1373,6 @@ function livability_add_image_meta( $content ) {
 				// if ($img_byline) { $img_byline = strip_tags($img_byline, "<p>");}
 				$img_place_name = get_field('img_place_name', $post_image_id);
 				// $img->alt = 'id-'.$post_image_id;
-				echo '<div style="display: none;">id: '.$post_image_id.' byline: '.$img_byline.'</div>';
 				if ($img_byline || $img_place_name) {
 					$outer = '<div class="livability-image-meta">';
 					$outer .= $img_place_name ? $img_place_name : '' ;

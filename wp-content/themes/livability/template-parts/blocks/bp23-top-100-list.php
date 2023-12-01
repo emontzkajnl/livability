@@ -96,7 +96,7 @@ if (isset($_COOKIE['bp23_cat'])) {
         <p>Med. Home Value: $<?php echo number_format($cityHomeValue); ?></p>
         <p><?php //echo 'key is '.$key; ?></p>
     </div>
-    <p class="read-more"><a href="<?php //echo get_the_permalink( $bp['id'] ); ?>">Read More</a></p>
+    <p class="read-more"><a href="<?php echo get_the_permalink( $bp->ID); ?>">Read More</a></p>
     </div>
 <?php }
 echo '<div style="width: 100%; text-align: center;">';
