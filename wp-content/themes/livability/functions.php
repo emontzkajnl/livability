@@ -1366,7 +1366,7 @@ function livability_add_image_meta( $content ) {
 				 
 				$src = $img->src;
 				// temp fix for staging url img src until db search/replace can be done 
-				$src = str_replace('//livability.com', '//livability.lndo.site', $src);
+				// $src = str_replace('//livability.com', '//livability.lndo.site', $src);
 				// $post_image_id = attachment_url_to_postid( $src );
 				$post_image_id = get_attachment_id( $src );
 				$img_byline = get_field('img_byline', $post_image_id);
