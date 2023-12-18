@@ -79,11 +79,13 @@
     if (typeof ga === "function") { 
       ga('send','pageview', pageView);
     }
+    if (typeof PARSELY.beacon !== 'undefined') {
     PARSELY.beacon.trackPageView({
       url: pageView,
       urlref: href,
       js: 1
     });
+    }
     $.ajax({
       url: params.ajaxurl,
       data: data,
@@ -126,11 +128,13 @@
     if (typeof ga === "function") { 
       ga('send','pageview', newPage);
     }
+    if (typeof PARSELY.beacon !== 'undefined') {
     PARSELY.beacon.trackPageView({
       url: newPage,
       urlref: href,
       js: 1
     });
+    }
     
 
     $.ajax({
@@ -793,11 +797,13 @@ function loadbp23() {
         if (typeof ga === "function") { 
           ga('send','pageview', newPage);
         }
+        if (typeof PARSELY.beacon !== 'undefined') {
         PARSELY.beacon.trackPageView({
           url: newPage,
           urlref: href,
           js: 1
         });
+      }
       }
       Waypoint.refreshAll();
     }
