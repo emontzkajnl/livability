@@ -415,6 +415,28 @@ function my_acf_init_block_types() {
             'keywords'          => array( 'block', 'related', 'article', 'post' ),
         ));
 
+        acf_register_block_type(array(
+            'name'              => 'Find Your BP to Live',
+            'title'             => __('Find Your BP to Live', 'acf-blocks'),
+            'description'       => __('Displays tab view of articles on map', 'acf-blocks'),
+            'mode'              => 'preview',
+            'render_template'   => plugin_dir_path( __FILE__ ) . 'blocks/find-bp2l/find-bp2l.php',
+            'category'          => 'jci-category',
+            'icon'              => 'layout',
+            'keywords'          => array( 'block', 'related', 'article', 'post' ),
+        ));
+
+        acf_register_block_type(array(
+            'name'              => 'Find Your BP to Play/Work',
+            'title'             => __('Find Your BP to Play/Work', 'acf-blocks'),
+            'description'       => __('Displays tab view of articles on map', 'acf-blocks'),
+            'mode'              => 'preview',
+            'render_template'   => plugin_dir_path( __FILE__ ) . 'blocks/find-bp2pw/find-bp2pw.php',
+            'category'          => 'jci-category',
+            'icon'              => 'layout',
+            'keywords'          => array( 'block', 'related', 'article', 'post' ),
+        ));
+
         // acf_register_block_type(array(
         //     'name'              => 'listicle',
         //     'title'             => __('Listicle Block', 'acf-blocks'),

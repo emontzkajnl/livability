@@ -1,0 +1,197 @@
+{
+    "key": "group_6585edbe70926",
+    "title": "Find Your Best Place to Play\/Work",
+    "fields": [
+        {
+            "key": "field_6585edbec8267",
+            "label": "Play or Work",
+            "name": "play_or_work",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "Play": "Play",
+                "Work": "Work"
+            },
+            "default_value": "",
+            "return_format": "value",
+            "allow_null": 1,
+            "other_choice": 0,
+            "layout": "vertical",
+            "save_other_choice": 0
+        },
+        {
+            "key": "field_658ee90b7ed09",
+            "label": "Curated Play Articles",
+            "name": "curated_play_articles",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Add zero to nine best places. If less than nine chosen, will fill in with recent best places. First slot will be featured with image",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6585edbec8267",
+                        "operator": "==",
+                        "value": "Play"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "table",
+            "pagination": 0,
+            "min": 0,
+            "max": 9,
+            "collapsed": "",
+            "button_label": "Add Row",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_658ee90b7ed0e",
+                    "label": "Play Article",
+                    "name": "play_article",
+                    "aria-label": "",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_6585edbec8267",
+                                "operator": "==",
+                                "value": "Play"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "post_type": [
+                        "post"
+                    ],
+                    "post_status": [
+                        "publish"
+                    ],
+                    "taxonomy": [
+                        "category:experiences-adventures",
+                        "category:food-scenes",
+                        "category:where-to-live-now",
+                        "category:healthy-places",
+                        "category:love-where-you-live",
+                        "category:make-your-move"
+                    ],
+                    "return_format": "id",
+                    "multiple": 0,
+                    "allow_null": 0,
+                    "bidirectional": 0,
+                    "ui": 1,
+                    "bidirectional_target": [],
+                    "parent_repeater": "field_658ee90b7ed09"
+                }
+            ]
+        },
+        {
+            "key": "field_658ee9ff2be84",
+            "label": "Curated Work Articles",
+            "name": "curated_work_articles",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Add zero to nine best places. If less than nine chosen, will fill in with recent best places. First slot will be featured with image",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6585edbec8267",
+                        "operator": "==",
+                        "value": "Work"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "table",
+            "pagination": 0,
+            "min": 0,
+            "max": 9,
+            "collapsed": "",
+            "button_label": "Add Row",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_658ee9ff2be89",
+                    "label": "Work Article",
+                    "name": "work_article",
+                    "aria-label": "",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_6585edbec8267",
+                                "operator": "==",
+                                "value": "Work"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "post_type": [
+                        "post"
+                    ],
+                    "post_status": [
+                        "publish"
+                    ],
+                    "taxonomy": [
+                        "category:education-careers-opportunity"
+                    ],
+                    "return_format": "id",
+                    "multiple": 0,
+                    "allow_null": 0,
+                    "bidirectional": 0,
+                    "ui": 1,
+                    "bidirectional_target": [],
+                    "parent_repeater": "field_658ee9ff2be84"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf\/find-your-bp-to-play-work"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1703867051
+}
