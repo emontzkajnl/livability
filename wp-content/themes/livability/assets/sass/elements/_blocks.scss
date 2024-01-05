@@ -18,6 +18,45 @@
     background-image: none;
   }
 }
+.bp2pw {
+  display: block;
+  &__col {
+    &:last-child {
+      .bp2pw__item {
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+  &__item {
+    border-bottom: 1px solid black;
+    padding-top: 20px;
+    &:first-child {
+      padding-top: none;
+    }
+    // &:last-child {
+    //   border-bottom: none;
+    // }
+    &.featured {
+      .bp2pw__title {
+        margin-bottom: 10px;
+      }
+    }
+    img {
+      margin-bottom: 15px;
+    }
+  }
+  &__title {
+    color: black;
+    font-size: 1.25rem;
+    margin-top: 0 !important;
+    margin-bottom: 30px;
+    a {
+      color: black;
+    }
+  }
+}
 .more-like-this-block {
   p {
     font-family: "Jost", Arial, Helvetica, sans-serif;
@@ -2460,6 +2499,44 @@ border-bottom: 1px solid $green;
   }
 }
 
+.ug2fyptl {
+  border: 1px solid black;
+  display: flex;
+  flex-wrap: nowrap;
+  &__img-container {
+    flex-shrink: 0;
+    img {
+      object-fit: cover;
+    }
+  }
+  &__text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    a {
+      button {
+        display: block;
+        background-color: white !important;
+        border: 1px solid black;
+        color: black !important;
+        &:hover {
+          background-color: black !important;
+          color: white !important;
+  
+        }
+      }
+    }
+
+  }
+  &__text {
+    max-width: 630px;
+    margin-bottom: 20px;
+  }
+}
+
 
 
 @media screen and (max-width: 480px) {
@@ -2608,6 +2685,24 @@ border-bottom: 1px solid $green;
 }
 
 @media screen and (min-width: 768px) {
+  .bp2pw {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    &__col {
+      flex-basis: 33%;
+      flex-shrink: 0;
+      padding-left: 15px;
+      &:first-child {
+        padding-left: 0;
+      }
+    }
+    &__item {
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
   .bp23-filter {
     width: auto;
     margin-right: 15px;
@@ -3192,5 +3287,4 @@ border-bottom: 1px solid $green;
       display: block;
     }
   }
-
 }

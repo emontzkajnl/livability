@@ -437,6 +437,17 @@ function my_acf_init_block_types() {
             'keywords'          => array( 'block', 'related', 'article', 'post' ),
         ));
 
+        acf_register_block_type(array(
+            'name'              => 'Ultimate Guide Link',
+            'title'             => __('Ultimate Guide Link', 'acf-blocks'),
+            'description'       => __('Block to link to the Ultimate Guide', 'acf-blocks'),
+            'mode'              => 'preview',
+            'render_template'   => plugin_dir_path( __FILE__ ) . 'blocks/ug2fyptl/ug2fyptl.php',
+            'category'          => 'jci-category',
+            'icon'              => 'layout',
+            'keywords'          => array( 'block', 'related', 'article', 'post' ),
+        ));
+
         // acf_register_block_type(array(
         //     'name'              => 'listicle',
         //     'title'             => __('Listicle Block', 'acf-blocks'),
