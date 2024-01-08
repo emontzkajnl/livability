@@ -4,7 +4,7 @@
  */
 
 // Create id attribute allowing for custom "anchor" value.
-$id = 'bp2l-' . $block['id'];
+$id = 'bp2l';
 if( !empty($block['anchor']) ) {
     $id = $block['anchor'];
 }
@@ -39,9 +39,13 @@ $region = get_field('region_text');
         <iframe src="https://map.proxi.co/r/0fSzOxRtmpiyf0FVupe-" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe> 
     </div>
     <div class="bp2l__one-text-container">
+        <div class="bp2l__top-100-img">
+            <img src="https://livability.com/wp-content/themes/livability/assets/images/2023-Livability-Top-100-best-places-badge.svg" alt="">
+        </div>
         <?php echo $top_onehundred; ?>
-        <button><a href="">See our top 100 list</a></button>
-        <a href=""><button>Previous Years List</button></a>
+
+        <a href=""><button style="background-color: #7dc244;">See our top 100 list</button></a>
+        <a href=""><button >Previous Years List</button></a>
     </div>
 </div>
 <div id="tab-two" class="tab-content" style="display: none;">

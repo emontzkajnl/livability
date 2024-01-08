@@ -1,0 +1,60 @@
+.newsletter {
+    background-color: $blurple;
+    padding-top: 30px;
+    padding-bottom: 50px;
+}
+.nl-inner-container {
+    width: 81%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    color: white;
+}
+.nl-text-area {
+margin-left: 0;
+margin-bottom: 0;
+text-align: center;
+}
+.nl-phone-image {
+    width: 300px;
+    margin: 0 auto;
+}
+
+#gform_wrapper_1 {
+    #gform_1 {
+      display: block;
+      #input_1_1 {
+        // width: 100%;
+        font-family: "Jost";
+        font-weight: 600;
+        font-size: 1.125rem;
+        border: none;
+        // width: 270px;
+        width: 100%;
+        height: 45px;
+        margin-top: 0;
+      }
+      #gform_submit_button_1 {
+        font-family: "Jost";
+        font-weight: 600;
+        font-size: 1.125rem;
+        background-color: $green !important;
+        border: none !important;
+        padding: 5px 30px;
+        // width: 170px;
+        width: 100%;
+        height: 45px;
+      }
+    }
+}
+@media all and (min-width: 992px) {
+    .nl-inner-container {
+        flex-direction: row-reverse;
+        justify-content: space-between;
+    }
+    .nl-text-area {
+        text-align: left;
+    }
+}

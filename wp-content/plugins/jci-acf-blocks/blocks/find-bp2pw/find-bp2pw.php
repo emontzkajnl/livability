@@ -28,12 +28,14 @@ if ($play_or_work == 'Play') {
     $cats = array('12'); 
 }
 
+$number_curated = 0;
 if ($curated) {
     foreach ($curated as $key => $value) {
         array_push($final_list,$value[$subfield]);
     }
+    $number_curated = count($curated);
 }
-$number_curated = count($curated);
+
 if ($number_curated < 9) { 
     $ppp = 9 - $number_curated;
     $extra_posts_arr = array(

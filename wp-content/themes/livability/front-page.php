@@ -17,8 +17,11 @@
 
 get_header();
 $hero_section = get_field('display_hero');
+
 if ($hero_section) {
-	get_template_part( 'template-parts/page-hero-section' );
+	// get_template_part( 'template-parts/page-hero-section' );
+	get_template_part('template-parts/rotating-hero-section');
+
 }
 
 /* Start the Loop */
