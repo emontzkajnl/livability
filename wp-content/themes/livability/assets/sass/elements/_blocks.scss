@@ -2463,6 +2463,7 @@ border-bottom: 1px solid $green;
   }
   &__top-100-img {
     max-width: 200px;
+    margin: 0 auto;
 
   }
   &__title {
@@ -2472,7 +2473,7 @@ border-bottom: 1px solid $green;
   }
   .tab-content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column-reverse;
   }
   &__one-map-container {
     flex-basis: 100%;
@@ -2929,6 +2930,9 @@ border-bottom: 1px solid $green;
   .bp2l {
     &__bpl {
       flex-basis: 25%;
+    }
+    .tab-content {
+      flex-direction: row;
     }
   }
 
