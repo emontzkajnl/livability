@@ -1,7 +1,7 @@
 .newsletter {
     background-color: $blurple;
     padding-top: 30px;
-    padding-bottom: 50px;
+    padding-bottom: 0;
 }
 .nl-inner-container {
     width: 81%;
@@ -18,8 +18,11 @@ margin-bottom: 0;
 text-align: center;
 }
 .nl-phone-image {
-    width: 300px;
+    width: 350px;
     margin: 0 auto;
+}
+.nl-img-container {
+    margin-bottom: 0;
 }
 
 #gform_wrapper_1 {
@@ -50,6 +53,9 @@ text-align: center;
     }
 }
 @media all and (min-width: 992px) {
+    .newsletter {
+        padding-top: 0;
+    }
     .nl-inner-container {
         flex-direction: row-reverse;
         justify-content: space-between;

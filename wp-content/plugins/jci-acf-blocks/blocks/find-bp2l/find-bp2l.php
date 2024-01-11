@@ -28,12 +28,16 @@ $region = get_field('region_text');
 
 <div id="<?php echo esc_attr($id); ?>" class="<?php echo esc_attr($className); ?>">
 <h2 class="bp2l__title">Find Your Best Place to Live</h2>
+<?php if ( ! is_handheld() ) { ?>
 <ul class="bp2l__tab-nav">
-<li  data-tab="tab-one"class="active" >Top 100 Best Places to Live in US</li>
+<li  data-tab="tab-one" class="active" >Top 100 Best Places to Live in US</li>
 <li data-tab="tab-two" >Best Places in Region</li>
 <li  data-tab="tab-three">Best Places in State</li>
 <li  data-tab="tab-four">More Best Places</li>
 </ul>
+<?php } ?>
+
+<?php if ( is_handheld()) {echo '<div class="bp2l__mobile-tab active" data-tab="tab-one"><h3>Top 100 Best Places to Live in US</h3></div>';} ?>
 <div id="tab-one" class="tab-content">
     <div class="bp2l__one-map-container">
         <iframe src="https://map.proxi.co/r/0fSzOxRtmpiyf0FVupe-" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe> 
@@ -48,6 +52,7 @@ $region = get_field('region_text');
         <a href=""><button >Previous Years List</button></a>
     </div>
 </div>
+<?php if ( is_handheld()) {echo '<div class="bp2l__mobile-tab" data-tab="tab-two"><h3>Best Places in Region</h3></div>';} ?>
 <div id="tab-two" class="tab-content" style="display: none;">
     <div class="bp2l__one-map-container">
         <iframe src="https://map.proxi.co/r/0fSzOxRtmpiyf0FVupe-" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe> <div style="font-family: Sans-Serif; font-size:12px;color:#000000;opacity:0.5; padding-top: 5px;"> powered by <a href="https://www.proxi.co/?utm_source=poweredbyproxi" style="color:#000000" target="_blank">Proxi</a> </div>
@@ -56,16 +61,72 @@ $region = get_field('region_text');
         <?php echo $region; ?>
     </div>
 </div>
+<?php if ( is_handheld()) {echo '<div class="bp2l__mobile-tab" data-tab="tab-three"><h3>Best Places in State</h3></div>';} ?>
 <div id="tab-three" class="tab-content" style="display: none;">
     <div class="bp2l__one-map-container">
         <iframe src="https://map.proxi.co/r/0fSzOxRtmpiyf0FVupe-" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe> <div style="font-family: Sans-Serif; font-size:12px;color:#000000;opacity:0.5; padding-top: 5px;"> powered by <a href="https://www.proxi.co/?utm_source=poweredbyproxi" style="color:#000000" target="_blank">Proxi</a> </div>
     </div>
     <div class="bp2l__one-text-container">
+            <select name="States" id=""  size="12">
+                <optgroup label="Select a State">
+                <option value="Alabama">Alabama</option>
+                <option value="Alaska">Alaska</option>
+                <option value="Arizona">Arizona</option>
+                <option value="Arkansas">Arkansas</option>
+                <option value="California">California</option>
+                <option value="Colorado">Colorado</option>
+                <option value="Connecticut">Connecticut</option>
+                <option value="Delaware">Delaware</option>
+                <option value="Florida">Florida</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Hawaii">Hawaii</option>
+                <option value="Idaho">Idaho</option>
+                <option value="Illinois">Illinois</option>
+                <option value="Indiana">Indiana</option>
+                <option value="Iowa">Iowa</option>
+                <option value="Kansas">Kansas</option>
+                <option value="Kentucky">Kentucky</option>
+                <option value="Louisiana">Louisiana</option>
+                <option value="Maine">Maine</option>
+                <option value="Maryland">Maryland</option>
+                <option value="Massachusetts">Massachusetts</option>
+                <option value="Michigan">Michigan</option>
+                <option value="Minnesota">Minnesota</option>
+                <option value="Mississippi">Mississippi</option>
+                <option value="Missouri">Missouri</option>
+                <option value="Montana">Montana</option>
+                <option value="Nebraska">Nebraska</option>
+                <option value="Nevada">Nevada</option>
+                <option value="New Hampshire">New Hampshire</option>
+                <option value="New Jersey">New Jersey</option>
+                <option value="New Mexico">New Mexico</option>
+                <option value="New York">New York</option>
+                <option value="North Carolina">North Carolina</option>
+                <option value="North Dakota">North Dakota</option>
+                <option value="Ohio">Ohio</option>
+                <option value="Oklahoma">Oklahoma</option>
+                <option value="Oregon">Oregon</option>
+                <option value="Pennsylvania">Pennsylvania</option>
+                <option value="Rhode Island">Rhode Island</option>
+                <option value="South Carolina">South Carolina</option>
+                <option value="South Dakota">South Dakota</option>
+                <option value="Tennessee">Tennessee</option>
+                <option value="Texas">Texas</option>
+                <option value="Utah">Utah</option>
+                <option value="Vermont">Vermont</option>
+                <option value="Virginia">Virginia</option>
+                <option value="Washington">Washington</option>
+                <option value="West Virginia">West Virginia</option>
+                <option value="Wisconsin">Wisconsin</option>
+                <option value="Wyoming">Wyoming</option>
+            </optgroup>
+            </select>
 
     </div>
 </div>
-<div id="tab-four" class="tab-content" style="display: none;">
 
+<?php if ( is_handheld()) {echo '<div class="bp2l__mobile-tab" data-tab="tab-four"><h3>More Best Places</h3></div>';} ?>
+<div id="tab-four" class="tab-content" style="display: none;">
 <?php 
     if (have_rows('best_places_list')):
         echo '<div class="bp2l__row">';

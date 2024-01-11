@@ -3,6 +3,7 @@
     $('.livability-image-meta').show();
   });
 
+  // desktop only
   $('.bp2l__tab-nav li').on('click', function(e){
     // console.log(e.target);
     const that = $(e.target);
@@ -14,14 +15,22 @@
     that.addClass('active');
     tabs.hide();
     tabTarget.show();
-
-    // console.log('tab is ',tabTarget);
-    // console.log('this ',that);
-    // console.log('tab ',tabID);
-
-
    
   });
+  // handheld only
+  $('.bp2l__mobile-tab').on('click', function(e){
+    const that = $(e.target).parent();
+    const items = $('.bp2l__mobile-tab');
+    const tabID = that.data('tab');
+    const tabs = $('.tab-content');
+    const tabTarget = tabs.filter('#'+tabID);
+    console.log('that ',that,' tab id ',tabID,' tabTarget ',tabTarget);
+    items.removeClass('active');
+    that.addClass('active');
+    tabs.hide();
+    tabTarget.show();
+  });
+
   // const bp2lTabs = document.querySelectorAll('.bp2l__tab-nav li');
   // console.log(bp2lTabs);
   // bp2lTabs.forEach(tab => {tab.addEventListener('click', bptTab))});
