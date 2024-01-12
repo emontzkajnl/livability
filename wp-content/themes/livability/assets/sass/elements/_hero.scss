@@ -55,6 +55,9 @@
     text-align: left;
     background: rgba(0,0,0,.4);
     max-width: 500px;
+    button {
+      color: white !important;
+    }
     
     &:after {
       content: '';

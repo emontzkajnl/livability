@@ -16,6 +16,12 @@
 margin-left: 0;
 margin-bottom: 0;
 text-align: center;
+font-size: 1.75rem;
+font-weight: 400;
+h3 {
+    font-size: 3.125rem;
+    font-weight: 600;
+}
 }
 .nl-phone-image {
     width: 350px;
@@ -38,6 +44,8 @@ text-align: center;
         width: 100%;
         height: 45px;
         margin-top: 0;
+        max-width: 250px;
+        text-indent: 20px;
       }
       #gform_submit_button_1 {
         font-family: "Jost";
@@ -49,6 +57,11 @@ text-align: center;
         // width: 170px;
         width: 100%;
         height: 45px;
+        max-width: 250px;
+        color: white !important;
+        &:hover {
+            color: white;
+        }
       }
     }
 }
