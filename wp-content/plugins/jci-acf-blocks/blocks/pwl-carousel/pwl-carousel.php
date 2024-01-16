@@ -19,7 +19,7 @@ $the_slides = get_field('slides');
 if ($the_slides): 
 shuffle($the_slides);?>
 <div id="<?php echo esc_attr($id); ?>" class="<?php echo esc_attr($className); ?>">
-<?php echo is_front_page() || is_page('homepage-output') ? '<h2 class="green-line">Places We Love</h2>' : '<h2 class="green-line">Places We Love In '. get_the_title($ID).'</h2>';
+<?php echo is_front_page() || is_page('homepage-output') ? '<h2 class="big-thin-text">Places We Love</h2>' : '<h2 class="green-line">Places We Love In '. get_the_title($ID).'</h2>';
 echo '<ul class="pwl-slick">';
 foreach($the_slides as $s){
 $slide = $s['slide'];

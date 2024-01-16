@@ -20,6 +20,7 @@
 }
 .bp2pw {
   display: block;
+  margin-bottom: 100px;
   &__col {
     &:last-child {
       .bp2pw__item {
@@ -29,6 +30,7 @@
       }
     }
   }
+ 
   &__item {
     border-bottom: 1px solid black;
     padding-top: 20px;
@@ -50,9 +52,10 @@
   }
   &__title {
     color: black;
-    font-size: 1.25rem;
+    font-size: 1.625rem;
     margin-top: 0 !important;
     margin-bottom: 30px;
+    font-weight: 600;
     a {
       color: black;
     }
@@ -2462,6 +2465,9 @@ border-bottom: 1px solid $green;
       }
     }
   }
+  select {
+    border: 1px solid black;
+  }
   &__top-100-img {
     max-width: 200px;
     margin: 0 auto;
@@ -2740,7 +2746,7 @@ border-bottom: 1px solid $green;
     &__col {
       flex-basis: 33%;
       flex-shrink: 0;
-      padding-left: 15px;
+      padding-left: 30px;
       &:first-child {
         padding-left: 0;
       }
