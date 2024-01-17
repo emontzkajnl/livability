@@ -32,8 +32,11 @@
   }
  
   &__item {
-    border-bottom: 1px solid black;
-    padding-top: 20px;
+    border-bottom: 1px solid #bbb;
+    padding-top: 30px;
+    h5 {
+      margin-bottom: 5px;
+    }
     &:first-child {
       padding-top: none;
     }
