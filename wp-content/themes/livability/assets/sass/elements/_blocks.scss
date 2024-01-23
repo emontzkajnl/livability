@@ -2507,14 +2507,27 @@ border-bottom: 1px solid $green;
       margin-bottom: 30px;
       text-align: center;
     }
+    // a {
+    //   &:first-child {
+    //     button {
+    //       background-color: $green !important;
+    //       &:hover {
+    //         background-color: $darkgreen !important;
+    //       }
+    //     }
+    //   }
+    // }
     button {
       color: white !important;
       margin-bottom: 20px;
       background-color: black;
       text-transform: uppercase;
-      &:first-child {
-        background-color: $green;
-      }
+    }
+  }
+  &__green-btn {
+    background-color: $green !important;
+    &:hover {
+      background-color: $darkgreen !important;
     }
   }
   &__row {

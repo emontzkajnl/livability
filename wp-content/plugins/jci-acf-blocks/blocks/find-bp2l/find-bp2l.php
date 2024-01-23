@@ -48,7 +48,7 @@ $region = get_field('region_text');
         </div>
         <?php echo $top_onehundred; ?>
 
-        <a href=""><button style="background-color: #7dc244;">See our top 100 list</button></a>
+        <a href=""><button class="bp2l__green-btn">See our top 100 list</button></a>
         <a href=""><button >Previous Years List</button></a>
     </div>
 </div>
