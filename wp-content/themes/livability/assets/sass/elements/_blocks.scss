@@ -50,7 +50,7 @@
       }
     }
     img {
-      margin-bottom: 15px;
+      margin-bottom: 30px;
     }
   }
   &__title {
@@ -356,7 +356,7 @@
     }
   }
   h3 {
-    text-indent: 10px;
+    text-indent: 20px;
     margin-top: 15px;
     font-size: 1.25rem;
   }
@@ -2446,6 +2446,7 @@ border-bottom: 1px solid $green;
 }
 
 .bp2l {
+  margin-bottom: 100px;
   &__tab-nav {
     display: flex;
     flex-direction: row;
@@ -2467,9 +2468,16 @@ border-bottom: 1px solid $green;
         background-color: $green;
       }
     }
+    &__region-list {
+      padding-left: 0;
+      li {
+        list-style: none;
+      }
+    }
   }
   select {
-    border: 1px solid black;
+    // border: 1px solid black;
+    border: none;
   }
   &__top-100-img {
     max-width: 200px;
@@ -2579,7 +2587,8 @@ border-bottom: 1px solid $green;
   }
   &__text {
     max-width: 630px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    margin-top: 10px;
   }
 }
 
@@ -2746,6 +2755,7 @@ border-bottom: 1px solid $green;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    margin-top: 0;
     &__col {
       flex-basis: 33%;
       flex-shrink: 0;

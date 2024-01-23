@@ -23,6 +23,42 @@
   position: relative;
   overflow-x: hidden;
   margin-top: 30px !important;
+  .home-hero-text {
+    position: relative;
+    padding: 30px 40px;
+    // margin-bottom: 0;
+    // margin-top: 30px;
+    color: white;
+    text-align: left;
+    background: rgba(0,0,0,.4);
+    max-width: 500px;
+    h2 {
+      margin-bottom: 20px;
+    }
+    button {
+      color: white !important;
+      background-color: $green !important;
+      text-transform: uppercase;
+      margin-top: 20px;
+      &:first-child {
+        margin-right: 15px;
+      }
+      &:hover {
+        background-color: $darkgreen !important;
+      }
+    }
+    
+    &:after {
+      content: '';
+      position: absolute;
+      right: -1000px;
+      top: 0;
+      height: 100%;
+      width: 1000px;
+      background: rgba(0,0,0,.4);
+
+    }
+  }
   .container {
     display: flex;
     justify-content: flex-end;
@@ -37,39 +73,16 @@
     top: 0;
     object-fit: cover;
   }
-  button {
-    color: white;
-    background-color: $green !important;
-    text-transform: uppercase;
-    margin-top: 20px;
-    &:first-child {
-      margin-right: 15px;
-    }
-  }
-  .home-hero-text {
-    position: relative;
-    padding: 30px;
-    // margin-bottom: 0;
-    // margin-top: 30px;
-    color: white;
-    text-align: left;
-    background: rgba(0,0,0,.4);
-    max-width: 500px;
-    button {
-      color: white !important;
-    }
-    
-    &:after {
-      content: '';
-      position: absolute;
-      right: -1000px;
-      top: 0;
-      height: 100%;
-      width: 1000px;
-      background: rgba(0,0,0,.4);
+  // button {
+  //   color: white;
+  //   background-color: $green;
+  //   text-transform: uppercase;
+  //   margin-top: 20px;
+  //   &:first-child {
+  //     margin-right: 15px;
+  //   }
+  // }
 
-    }
-  }
 }
 
 .hero-section {
