@@ -55,7 +55,7 @@ $region = get_field('region_text');
 <?php if ( is_handheld()) {echo '<div class="bp2l__mobile-tab" data-tab="tab-two"><h3>Best Places in Region</h3></div>';} ?>
 <div id="tab-two" class="tab-content" style="display: none;">
     <div class="bp2l__one-map-container">
-        <iframe src="https://map.proxi.co/r/0fSzOxRtmpiyf0FVupe-" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen name="proxi-region-map"></iframe> <div style="font-family: Sans-Serif; font-size:12px;color:#000000;opacity:0.5; padding-top: 5px;"> powered by <a href="https://www.proxi.co/?utm_source=poweredbyproxi" style="color:#000000" target="_blank">Proxi</a> </div>
+        <iframe src="https://map.proxi.co/r/livability-best-places-region" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen name="proxi-region-map"></iframe> <div style="font-family: Sans-Serif; font-size:12px;color:#000000;opacity:0.5; padding-top: 5px;"> powered by <a href="https://www.proxi.co/?utm_source=poweredbyproxi" style="color:#000000" target="_blank">Proxi</a> </div>
     </div>
     <div class="bp2l__one-text-container">
         <?php echo $region; ?>
