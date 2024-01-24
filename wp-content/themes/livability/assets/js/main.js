@@ -29,6 +29,9 @@
     that.addClass('active');
     tabs.hide();
     tabTarget.show();
+    $('html, body').animate({
+      scrollTop: $(that).offset().top-100
+    }, 500);
   });
 
   // const bp2lTabs = document.querySelectorAll('.bp2l__tab-nav li');
