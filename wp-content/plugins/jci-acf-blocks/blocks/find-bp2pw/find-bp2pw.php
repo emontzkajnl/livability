@@ -54,7 +54,7 @@ if ($number_curated < 9) {
 
 ?>
 
-<h2 class="big-thin-text" style="margin-bottom: 0;">Find Your Best Place To <?php echo  $play_or_work; ?></h2>
+<h2 class="big-thin-text" style="margin-bottom: -15px;">Find Your Best Place To <?php echo  $play_or_work; ?></h2>
 <div id="<?php echo esc_attr($id); ?>" class="<?php echo esc_attr($className); ?>">
 
 <?php
@@ -65,7 +65,7 @@ foreach ($final_list as $key => $value) {
         echo '<a href="'.get_the_permalink( $value).'">'.get_the_post_thumbnail( $value, 'medium' ).'</a>';
         if ($cat) {echo '<h5 class="green-text uppercase ">'.$cat[0]->name.'</h5>';}
         echo '<h3 class="bp2pw__title"><a class="unstyle-link" href="'.get_the_permalink( $value).'">'.get_the_title($value).'</a></h3>';
-        echo get_the_excerpt( $value );
+        echo '<p class="bp2pw__excerpt">'.get_the_excerpt( $value ).'</p>';
         echo '</div></div>';
     } else {
         if ($key == 1 || $key == 5 ) { echo '<div class="bp2pw__col">';}
