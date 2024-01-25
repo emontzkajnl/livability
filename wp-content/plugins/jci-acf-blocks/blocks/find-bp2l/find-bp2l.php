@@ -67,6 +67,7 @@ $region = get_field('region_text');
             <li>Northeast</li>
             <li>Southeast</li>
         </ul>
+        <a href="https://www.proxi.co/" target="_blank"><img class="bp2l__proxi-img" src="<?php echo plugin_dir_url( __FILE__ ); ?>images/powered-by-proxi.png" /></a>
     </div>
 </div>
 <?php if ( is_handheld()) {echo '<div class="bp2l__mobile-tab" data-tab="tab-three"><h3>Best Places in State</h3></div>';} ?>
@@ -129,6 +130,8 @@ $region = get_field('region_text');
                 <option value="Wyoming">Wyoming</option>
             </optgroup>
             </select>
+            <a href="https://www.proxi.co/" target="_blank"><img class="bp2l__proxi-img" src="<?php echo plugin_dir_url( __FILE__ ); ?>images/powered-by-proxi.png" /></a>
+
 
     </div>
 </div>
