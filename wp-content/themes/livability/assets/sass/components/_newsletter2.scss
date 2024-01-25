@@ -45,7 +45,7 @@ h3 {
         width: 100%;
         height: 45px;
         margin-top: 0;
-        max-width: 250px;
+        max-width: 450px;
         text-indent: 20px;
       }
       #gform_submit_button_1 {
@@ -58,7 +58,7 @@ h3 {
         // width: 170px;
         width: 100%;
         height: 45px;
-        max-width: 450px;
+        max-width: 250px;
         color: white !important;
         &:hover {
             color: white;
@@ -80,5 +80,15 @@ h3 {
     }
     .nl-text-area {
         text-align: left;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-top: 0;
+        .gform_legacy_markup_wrapper {
+            margin-bottom: 0;
+        }
+        h3 {
+            margin-top: 0;
+        }
     }
 }

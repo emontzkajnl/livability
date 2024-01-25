@@ -27,7 +27,7 @@ $region = get_field('region_text');
 ?>
 
 <div id="<?php echo esc_attr($id); ?>" class="<?php echo esc_attr($className); ?>">
-<h2 class="bp2l__title">Find Your Best Place to Live</h2>
+<h2 class="bp2l__title big-thin-text">Find Your Best Place to Live</h2>
 <?php if ( ! is_handheld() ) { ?>
 <ul class="bp2l__tab-nav">
 <li  data-tab="tab-one" class="active" >Top 100 Best Places to Live in US</li>
@@ -56,7 +56,7 @@ $region = get_field('region_text');
 <?php if ( is_handheld()) {echo '<div class="bp2l__mobile-tab" data-tab="tab-two"><h3>Best Places in Region</h3></div>';} ?>
 <div id="tab-two" class="tab-content" style="display: none;">
     <div class="bp2l__one-map-container">
-        <iframe src="https://map.proxi.co/r/livability-best-places-region" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen name="proxi-region-map"></iframe> <div style="font-family: Sans-Serif; font-size:12px;color:#000000;opacity:0.5; padding-top: 5px;"> Powered by <a href="https://www.proxi.co/?utm_source=poweredbyproxi" style="color:#000000" target="_blank">Proxi</a> </div>
+        <iframe src="https://map.proxi.co/r/livability-best-places-region" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen name="proxi-region-map"></iframe> 
     </div>
     <div class="bp2l__one-text-container">
         <?php echo $region; ?>
@@ -73,7 +73,7 @@ $region = get_field('region_text');
 <?php if ( is_handheld()) {echo '<div class="bp2l__mobile-tab" data-tab="tab-three"><h3>Best Places in State</h3></div>';} ?>
 <div id="tab-three" class="tab-content" style="display: none;">
     <div class="bp2l__one-map-container">
-        <iframe src="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" name="proxi-state-map" allowfullscreen></iframe> <div style="font-family: Sans-Serif; font-size:12px;color:#000000;opacity:0.5; padding-top: 5px;"> Powered by <a href="https://www.proxi.co/?utm_source=poweredbyproxi" style="color:#000000" target="_blank">Proxi</a> </div>
+        <iframe src="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" name="proxi-state-map" allowfullscreen></iframe> 
     </div>
     <div class="bp2l__one-text-container">
             <select name="States" id=""  size="12">

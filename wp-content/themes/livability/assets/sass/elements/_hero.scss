@@ -36,6 +36,12 @@
       margin-bottom: 15px;
       font-size: 1.9rem;
     }
+    .home-buttons {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
     button {
       color: white !important;
       background-color: $green !important;
@@ -314,6 +320,14 @@
     }
     .hero-badge {
       top: 60px;
+    }
+  }
+  .home-hero-section {
+    .home-hero-text {
+      .home-buttons {
+        flex-wrap: nowrap;
+        justify-content: unset;
+      }
     }
   }
 }
