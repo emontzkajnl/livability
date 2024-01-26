@@ -61,11 +61,11 @@ $region = get_field('region_text');
     <div class="bp2l__one-text-container">
         <?php echo $region; ?>
         <ul class="bp2l__region-list">
-            <li data-map-id="0fSzOxRtmpiyf0FVupe-"><a href="https://map.proxi.co/r/0fSzOxRtmpiyf0FVupe-" target="proxi-region-map">Northwest</a></li>
-            <li data-map-id="-zh_7WnxLgQ-CDqhL4O_"><a href="https://map.proxi.co/r/-zh_7WnxLgQ-CDqhL4O_" target="proxi-region-map">Southwest</a></li>
-            <li>Midwest</li>
+            <li><a href="https://map.proxi.co/r/livability-best-places-region?zoom=3" target="proxi-region-map">zoom out</a></li>
+            <li><a href="https://map.proxi.co/r/livability-best-places-region?zoom=7" target="proxi-region-map">zoom in</a></li>
+            <!-- <li>Midwest</li>
             <li>Northeast</li>
-            <li>Southeast</li>
+            <li>Southeast</li> -->
         </ul>
         <a href="https://www.proxi.co/" target="_blank"><img class="bp2l__proxi-img" src="<?php echo plugin_dir_url( __FILE__ ); ?>images/powered-by-proxi.png" /></a>
     </div>
@@ -73,10 +73,61 @@ $region = get_field('region_text');
 <?php if ( is_handheld()) {echo '<div class="bp2l__mobile-tab" data-tab="tab-three"><h3>Best Places in State</h3></div>';} ?>
 <div id="tab-three" class="tab-content" style="display: none;">
     <div class="bp2l__one-map-container">
-        <iframe src="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" name="proxi-state-map" allowfullscreen></iframe> 
+        <iframe src="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I"  allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" name="proxi-state-map" allowfullscreen></iframe> 
     </div>
     <div class="bp2l__one-text-container">
-            <select name="States" id=""  size="12">
+        <ul class="bp2l__state-links">
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I?zoom=3" target="proxi-state-map">Zoom out</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I?zoom=8" target="proxi-state-map">Zoom in</a></li>
+            <!-- <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Arkansas</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">California</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Colorado</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Connecticut</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Delaware</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Florida</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Georgia</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Hawaii</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Idaho</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Illinois</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Indiana</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Iowa</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Kansas</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Kentucky</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Louisiana</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Maine</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Maryland</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Massachusetts</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Michigan</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Minnesota</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Mississippi</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Missouri</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Montana</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Nebraska</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Nevada</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">New Hampshire</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">New Jersey</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">New Mexico</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">New York</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">North Carolina</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">North Dakota</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Ohio</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Oklahoma</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Oregon</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Pennsylvania</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Rhode Island</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">South Carolina</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">South Dakota</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Tennessee</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Texas</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Utah</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Vermont</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Virginia</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Washington</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">West Virginia</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Wisconsin</a></li>
+            <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I" target="proxi-state-map">Wyoming</a></li> -->
+        </ul>
+            <!-- <select name="States" id=""  size="12">
                 <optgroup label="Select a State">
                 <a href="https://map.proxi.co/r/0fSzOxRtmpiyf0FVupe-" target="proxi-state-map"><option value="Alabama">Alabama</option></a>
                 <option value="Alaska"><a href="https://map.proxi.co/r/-zh_7WnxLgQ-CDqhL4O_" target="proxi-state-map">Alaska</a></option>
@@ -129,7 +180,7 @@ $region = get_field('region_text');
                 <option value="Wisconsin">Wisconsin</option>
                 <option value="Wyoming">Wyoming</option>
             </optgroup>
-            </select>
+            </select> -->
             <a href="https://www.proxi.co/" target="_blank"><img class="bp2l__proxi-img" src="<?php echo plugin_dir_url( __FILE__ ); ?>images/powered-by-proxi.png" /></a>
 
 
