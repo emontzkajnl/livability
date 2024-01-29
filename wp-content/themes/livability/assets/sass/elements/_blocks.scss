@@ -2581,7 +2581,7 @@ border-bottom: 1px solid $green;
     }
   }
   &__state-links {
-    height: 200px;
+    height: 300px;
     overflow-y: auto;
     .heading {
       font-style: italic;
@@ -2603,7 +2603,7 @@ border-bottom: 1px solid $green;
 }
 
 .ug2fyptl {
-  border: 1px solid black;
+  border: 1px solid #bbb;
   display: block;
   margin-bottom: 100px;
   h3 {
@@ -2631,17 +2631,18 @@ border-bottom: 1px solid $green;
     align-items: center;
     width: 100%;
     text-align: center;
-    padding: 20px;
+    padding: 30px;
     a {
       button {
         display: block;
-        background-color: white !important;
-        border: 1px solid black;
-        color: black !important;
-        &:hover {
-          background-color: black !important;
+        background-color: black !important;
           color: white !important;
-  
+        
+        border: 1px solid black;
+        
+        &:hover {
+          color: black !important;
+          background-color: white !important;
         }
       }
     }
@@ -2650,7 +2651,7 @@ border-bottom: 1px solid $green;
   &__text {
     max-width: 630px;
     margin-bottom: 30px;
-    margin-top: 10px;
+    margin-top: 10px !important;
   }
 }
 

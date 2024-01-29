@@ -38,6 +38,15 @@ a:hover {
   display: none !important;
 }
 
+//fix scroll position anchor tags
+// *[id^="h-"] {
+//   scroll-margin-top: 100px;
+// }
+
+div, h1, h2, h3, h4, h5 {
+  scroll-margin-top: 100px;
+}
+
 @media all and (min-width: 1390px) {
   .container {
     padding: 0;
