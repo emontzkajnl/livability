@@ -43,6 +43,26 @@
             "delay": 0
         },
         {
+            "key": "field_65b7df5914e80",
+            "label": "State Text",
+            "name": "state_text",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "Text displayed in Region tab",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
             "key": "field_658476f6168d2",
             "label": "Best Places List",
             "name": "best_places_list",
@@ -114,5 +134,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1703191525
+    "modified": 1706549110
 }

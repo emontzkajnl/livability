@@ -17,6 +17,7 @@ if( !empty($block['className']) ) {
 
 $top_onehundred = get_field('top_100_text');
 $region = get_field('region_text');
+$state = get_field('state_text');
 // $bp_args = array(
 //     'post_type'         => 'best_places',
 //     'posts_per_page'    => 8,
@@ -61,11 +62,11 @@ $region = get_field('region_text');
     <div class="bp2l__one-text-container">
         <?php echo $region; ?>
         <ul class="bp2l__region-list">
-            <li><a href="https://map.proxi.co/r/livability-best-places-region?zoom=3" target="proxi-region-map">zoom out</a></li>
-            <li><a href="https://map.proxi.co/r/livability-best-places-region?zoom=7" target="proxi-region-map">zoom in</a></li>
-            <!-- <li>Midwest</li>
-            <li>Northeast</li>
-            <li>Southeast</li> -->
+            <li><a href="https://map.proxi.co/r/livability-best-places-region?zoom=5.5&lat=43.4927989&lng=-112.1162791" target="proxi-region-map">West</a></li>
+            <li><a href="https://map.proxi.co/r/livability-best-places-region?zoom=5&lat=31.8766609&lng=-102.4992723" target="proxi-region-map">Southwest</a></li>
+            <li><a href="https://map.proxi.co/r/livability-best-places-region?zoom=5.5&lat=41.9652371&lng=-91.7452492" target="proxi-region-map">Midwest</a></li>
+            <li><a href="https://map.proxi.co/r/livability-best-places-region?zoom=6&lat=42.6681401&lng=-73.8519663" target="proxi-region-map">Northeast</a></li>
+            <li><a href="https://map.proxi.co/r/livability-best-places-region?zoom=5.5&lat=33.7674827&lng=-84.502703" target="proxi-region-map">Southeast</a></li>
         </ul>
         <a href="https://www.proxi.co/" target="_blank"><img class="bp2l__proxi-img" src="<?php echo plugin_dir_url( __FILE__ ); ?>images/powered-by-proxi.png" /></a>
     </div>
@@ -76,6 +77,7 @@ $region = get_field('region_text');
         <iframe src="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I"  allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" name="proxi-state-map" allowfullscreen></iframe> 
     </div>
     <div class="bp2l__one-text-container">
+        <?php echo $state; ?>
         <ul class="bp2l__state-links">
             <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I?zoom=7&lat=32.3182&lng=-86.9022" target="proxi-state-map">Alabama</a></li>
             <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I?zoom=5&lat=66.1605&lng=-153.3691" target="proxi-state-map">Alaska</a></li>
