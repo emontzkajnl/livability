@@ -33,7 +33,7 @@
  
   &__item {
     border-bottom: 1px solid #bbb;
-    padding-top: 30px;
+    padding-top: 25px;
     h5 {
       margin-bottom: 5px;
     }
@@ -57,7 +57,7 @@
     color: black;
     font-size: 1.625rem;
     margin-top: 0 !important;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     font-weight: 500;
     a {
       color: black;
@@ -359,7 +359,7 @@
     }
   }
   .big-thin-text {
-    margin-left: -15px;
+    margin-left: -30px;
   }
   h3 {
     text-indent: 20px;
@@ -2578,6 +2578,26 @@ border-bottom: 1px solid $green;
       margin-top: 15px;
       margin-bottom: 15px;
 
+    }
+  }
+  &__state-links {
+    height: 200px;
+    overflow-y: auto;
+    .heading {
+      font-style: italic;
+    }
+    li {
+      text-align: left;
+      list-style: none;
+    }
+    a {
+      color: black;
+      &:hover, &:active {
+        color: green;
+      }
+      &:visited {
+        color: inherit;
+      }
     }
   }
 }
