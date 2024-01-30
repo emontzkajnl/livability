@@ -38,7 +38,8 @@ $state = get_field('state_text');
 </ul>
 <?php } ?>
 
-<?php if ( is_handheld()) {echo '<div class="bp2l__mobile-tab active" data-tab="tab-one"><h3>Top 100 Best Places to Live in US</h3></div>';} ?>
+<div class="bp2l__tab-container">
+<div class="bp2l__mobile-tab active" data-tab="tab-one"><h3>Top 100 Best Places to Live in US</h3></div>
 <div id="tab-one" class="tab-content">
     <div class="bp2l__one-map-container">
         <iframe src="https://map.proxi.co/r/0fSzOxRtmpiyf0FVupe-" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe> 
@@ -54,7 +55,9 @@ $state = get_field('state_text');
         <a href="https://www.proxi.co/" target="_blank"><img class="bp2l__proxi-img" src="<?php echo plugin_dir_url( __FILE__ ); ?>images/powered-by-proxi.png" /></a>
     </div>
 </div>
-<?php if ( is_handheld()) {echo '<div class="bp2l__mobile-tab" data-tab="tab-two"><h3>Best Places in Region</h3></div>';} ?>
+</div>
+<div class="bp2l__tab-container">
+<div class="bp2l__mobile-tab" data-tab="tab-two"><h3>Best Places in Region</h3></div>
 <div id="tab-two" class="tab-content" style="display: none;">
     <div class="bp2l__one-map-container">
         <iframe src="https://map.proxi.co/r/livability-best-places-region" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen name="proxi-region-map"></iframe> 
@@ -63,7 +66,7 @@ $state = get_field('state_text');
         <?php echo $region; ?>
         <ul class="bp2l__region-list">
             <li><a href="https://map.proxi.co/r/livability-best-places-region?zoom=5.5&lat=43.4927989&lng=-112.1162791" target="proxi-region-map">West</a></li>
-            <li><a href="https://map.proxi.co/r/livability-best-places-region?zoom=5&lat=31.8766609&lng=-102.4992723" target="proxi-region-map">Southwest</a></li>
+            <li><a href="https://map.proxi.co/r/livability-best-places-region?zoom=6&lat=31.8766609&lng=-102.4992723" target="proxi-region-map">Southwest</a></li>
             <li><a href="https://map.proxi.co/r/livability-best-places-region?zoom=5.5&lat=41.9652371&lng=-91.7452492" target="proxi-region-map">Midwest</a></li>
             <li><a href="https://map.proxi.co/r/livability-best-places-region?zoom=6&lat=42.6681401&lng=-73.8519663" target="proxi-region-map">Northeast</a></li>
             <li><a href="https://map.proxi.co/r/livability-best-places-region?zoom=5.5&lat=33.7674827&lng=-84.502703" target="proxi-region-map">Southeast</a></li>
@@ -71,7 +74,9 @@ $state = get_field('state_text');
         <a href="https://www.proxi.co/" target="_blank"><img class="bp2l__proxi-img" src="<?php echo plugin_dir_url( __FILE__ ); ?>images/powered-by-proxi.png" /></a>
     </div>
 </div>
-<?php if ( is_handheld()) {echo '<div class="bp2l__mobile-tab" data-tab="tab-three"><h3>Best Places in State</h3></div>';} ?>
+</div>
+<div class="bp2l__tab-container">
+<div class="bp2l__mobile-tab" data-tab="tab-three"><h3>Best Places in State</h3></div>
 <div id="tab-three" class="tab-content" style="display: none;">
     <div class="bp2l__one-map-container">
         <iframe src="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I"  allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" name="proxi-state-map" allowfullscreen></iframe> 
@@ -188,8 +193,9 @@ $state = get_field('state_text');
 
     </div>
 </div>
-
-<?php if ( is_handheld()) {echo '<div class="bp2l__mobile-tab" data-tab="tab-four"><h3>More Best Places</h3></div>';} ?>
+</div>
+<div class="bp2l__tab-container">
+<div class="bp2l__mobile-tab" data-tab="tab-four"><h3>More Best Places</h3></div>
 <div id="tab-four" class="tab-content" style="display: none;">
 <?php 
     if (have_rows('best_places_list')):
@@ -210,5 +216,5 @@ $state = get_field('state_text');
     wp_reset_query(  );
 ?>
 </div>
-
+</div>
 </div>
