@@ -536,7 +536,7 @@ div[class^="curated-posts-"] {
   justify-content: flex-end;
   background-image: linear-gradient(
       180deg,
-      rgba(0, 0, 0, 0) 50%,
+      rgba(0, 0, 0, 0) 40%,
       rgba(0, 0, 0, 1) 100%
     ),
     url();
@@ -544,7 +544,7 @@ div[class^="curated-posts-"] {
     font-family: "Jost", Arial, Helvetica, sans-serif;
   }
   h3 {
-    margin-top: 15px;
+    margin-top: 5px;
   }
 }
 .onehundred-container {
@@ -2528,9 +2528,11 @@ border-bottom: 1px solid $green;
     margin-left: 30px;
     font-family: "Jost",Arial,Helvetica,sans-serif;
     text-align: center;
+    position: relative;
     p {
       margin-bottom: 30px;
       text-align: center;
+      margin-top: 10px;
     }
     // a {
     //   &:first-child {
@@ -2583,12 +2585,15 @@ border-bottom: 1px solid $green;
   &__state-links {
     height: 300px;
     overflow-y: auto;
+    padding-left: 0;
+    border: 1px solid rgb(223, 221, 221);
     .heading {
       font-style: italic;
     }
     li {
       text-align: left;
       list-style: none;
+      text-indent: 10px;
     }
     a {
       color: black;
@@ -3027,6 +3032,15 @@ border-bottom: 1px solid $green;
     }
     .tab-content {
       flex-direction: row;
+    }
+    &__one-text-container {
+      position: relative;
+      padding-bottom: 75px;
+    }
+    &__proxi-img {
+      position: absolute;
+      bottom: 10px;
+      left: calc(50% - 65px);
     }
   }
 
