@@ -44,6 +44,7 @@
     //   border-bottom: none;
     // }
     &.featured {
+      padding-bottom: 20px;
       .bp2pw__title {
         margin-bottom: 10px;
         font-size: 1.625rem;
@@ -2508,7 +2509,7 @@ border-bottom: 1px solid $green;
   }
   &__top-100-img {
     max-width: 160px;
-    margin: 0 auto;
+    margin: 20px auto 0 ;
 
   }
   // &__title {

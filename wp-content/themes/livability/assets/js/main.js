@@ -308,8 +308,11 @@ console.log('function is running');
     offset: "bottom-in-view",
   });
 
-  let logosrc = $('.custom-logo').attr('src');
-  let whitelogosrc = logosrc.replace('logo.svg', 'white-logo.svg');
+  // let logosrc = $('.custom-logo').attr('src');
+  // let whitelogosrc = logosrc.replace('logo.svg', 'white-logo.svg');
+  const logosrc = 'https://' + location.host + '/wp-content/themes/livability/assets/images/logo.svg';
+  const whitelogosrc = 'https://' + location.host + '/wp-content/themes/livability/assets/images/white-logo.svg';
+  console.log('logo src ', logosrc );
   if ($('.mega-hero').length) {
     $('.custom-logo').attr('src', whitelogosrc);
     $('body').addClass('body-mega-hero');
