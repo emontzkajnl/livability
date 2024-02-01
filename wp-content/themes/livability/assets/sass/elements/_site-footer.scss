@@ -1,17 +1,19 @@
 .site-footer {
   padding-bottom: 100px;
   .site-name {
-    margin-bottom: 50px;
+    margin-bottom: 40px;
+  }
+  .site-logo {
+    .custom-logo {
+      max-width: 200px;
+    }
   }
 }
 .site-footer-info {
   display: block;
   padding-bottom: 20px;
 }
-.footer-about {
-  padding-left: 30px;
-  padding-right: 50px;
-}
+
 
 
 
@@ -48,7 +50,7 @@
 }
 
 .footer-social {
-  margin-bottom: 50px;
+  margin-bottom: 30px;
   ul {
     display: flex;
     padding-left: 0;
@@ -67,6 +69,13 @@
   }
 }
 
+.footer-menu-area {
+  border-top: 1px solid #bbb;
+}
+.footer-about {
+  padding-bottom: 30px;
+}
+
 @media only screen and (min-width: 768px) {
   .site-footer-info {
     display: flex;
@@ -74,10 +83,14 @@
   .footer-about {
     flex-basis: 67%;
     border-right: 1px solid gray;
+    padding-left: 30px;
+    padding-right: 50px;
+    padding-bottom: 0;
   }
   .footer-menu-area {
     flex-basis: 33%;
     padding-left: 50px;
+    border-top: none;
   }
 }
 

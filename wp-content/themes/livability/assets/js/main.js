@@ -312,10 +312,11 @@ console.log('function is running');
   // let whitelogosrc = logosrc.replace('logo.svg', 'white-logo.svg');
   const logosrc = 'https://' + location.host + '/wp-content/themes/livability/assets/images/logo.svg';
   const whitelogosrc = 'https://' + location.host + '/wp-content/themes/livability/assets/images/white-logo.svg';
-  console.log('logo src ', logosrc );
   if ($('.mega-hero').length) {
+    $('.mega-hero').css('margin-top', '-130px');
     $('.custom-logo').attr('src', whitelogosrc);
     $('body').addClass('body-mega-hero');
+    
   }
 
   const megaHeroFunction = function(direction) {

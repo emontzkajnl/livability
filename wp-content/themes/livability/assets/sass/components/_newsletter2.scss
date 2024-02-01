@@ -2,6 +2,7 @@
     background-color: $blurple;
     padding-top: 30px;
     padding-bottom: 0;
+    margin-top: 100px;
 }
 .nl-inner-container {
     width: 81%;
@@ -19,10 +20,14 @@ text-align: center;
 font-size: 1.25rem;
 font-weight: 400;
 line-height: 27px;
-h3 {
-    font-size: 3.125rem;
-    font-weight: 500;
-}
+    h3 {
+        font-size: 2.5rem;
+        font-weight: 500;
+        margin-top: 0;
+    }
+    br {
+        display: none;
+    }
 }
 .nl-phone-image {
     width: 350px;
@@ -67,6 +72,7 @@ h3 {
       }
       .gform_footer {
         margin-top: 0;
+        text-align: center;
     }
     }
 }
@@ -89,6 +95,16 @@ h3 {
         }
         h3 {
             margin-top: 0;
+        }
+        br {
+            display: inline;
+        }
+    }
+    #gform_wrapper_1 {
+        #gform_1 {
+            .gform_footer {
+                text-align: left;
+            }
         }
     }
 }
