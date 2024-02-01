@@ -115,3 +115,11 @@
   h4.mega-block-title {
   font-weight: 600;
 }
+@media only screen and (max-width: 481px) {
+  .site-header.has-logo:not(.has-title-and-tagline).has-menu .site-logo {
+    top: 0;
+  }
+  .primary-navigation {
+    right: 15px;
+  }
+}
