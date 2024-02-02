@@ -54,7 +54,7 @@ if ($number_curated < 9) {
 
 ?>
 
-<h2 class="big-thin-text" style="margin-bottom: 5px;">Find Your Best Place To <?php echo  $play_or_work; ?></h2>
+<h2 id="h-<?php echo strtolower($play_or_work); ?>" class="big-thin-text" style="margin-bottom: 5px;">Find Your Best Place To <?php echo  $play_or_work; ?></h2>
 <div id="<?php echo esc_attr($id); ?>" class="<?php echo esc_attr($className); ?>">
 
 <?php

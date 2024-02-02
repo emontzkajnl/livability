@@ -134,60 +134,6 @@ $state = get_field('state_text');
             <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I?zoom=7&lat=44.5&lng=-89.5" target="proxi-state-map">Wisconsin</a></li>
             <li><a href="https://map.proxi.co/r/c-OsWkiWgcodPdEN1I2I?zoom=7&lat=43.075970&lng=-107.290283" target="proxi-state-map">Wyoming</a></li>
         </ul>
-            <!-- <select name="States" id=""  size="12">
-                <optgroup label="Select a State">
-                <a href="https://map.proxi.co/r/0fSzOxRtmpiyf0FVupe-" target="proxi-state-map"><option value="Alabama">Alabama</option></a>
-                <option value="Alaska"><a href="https://map.proxi.co/r/-zh_7WnxLgQ-CDqhL4O_" target="proxi-state-map">Alaska</a></option>
-                <option value="Arizonaxxx">Arizona</option>
-                <option value="Arkansas">Arkansas</option>
-                <option value="California">California</option>
-                <option value="Colorado">Colorado</option>
-                <option value="Connecticut">Connecticut</option>
-                <option value="Delaware">Delaware</option>
-                <option value="Florida">Florida</option>
-                <option value="Georgia">Georgia</option>
-                <option value="Hawaii">Hawaii</option>
-                <option value="Idaho">Idaho</option>
-                <option value="Illinois">Illinois</option>
-                <option value="Indiana">Indiana</option>
-                <option value="Iowa">Iowa</option>
-                <option value="Kansas">Kansas</option>
-                <option value="Kentucky">Kentucky</option>
-                <option value="Louisiana">Louisiana</option>
-                <option value="Maine">Maine</option>
-                <option value="Maryland">Maryland</option>
-                <option value="Massachusetts">Massachusetts</option>
-                <option value="Michigan">Michigan</option>
-                <option value="Minnesota">Minnesota</option>
-                <option value="Mississippi">Mississippi</option>
-                <option value="Missouri">Missouri</option>
-                <option value="Montana">Montana</option>
-                <option value="Nebraska">Nebraska</option>
-                <option value="Nevada">Nevada</option>
-                <option value="New Hampshire">New Hampshire</option>
-                <option value="New Jersey">New Jersey</option>
-                <option value="New Mexico">New Mexico</option>
-                <option value="New York">New York</option>
-                <option value="North Carolina">North Carolina</option>
-                <option value="North Dakota">North Dakota</option>
-                <option value="Ohio">Ohio</option>
-                <option value="Oklahoma">Oklahoma</option>
-                <option value="Oregon">Oregon</option>
-                <option value="Pennsylvania">Pennsylvania</option>
-                <option value="Rhode Island">Rhode Island</option>
-                <option value="South Carolina">South Carolina</option>
-                <option value="South Dakota">South Dakota</option>
-                <option value="Tennessee">Tennessee</option>
-                <option value="Texas">Texas</option>
-                <option value="Utah">Utah</option>
-                <option value="Vermont">Vermont</option>
-                <option value="Virginia">Virginia</option>
-                <option value="Washington">Washington</option>
-                <option value="West Virginia">West Virginia</option>
-                <option value="Wisconsin">Wisconsin</option>
-                <option value="Wyoming">Wyoming</option>
-            </optgroup>
-            </select> -->
             <a href="https://www.proxi.co/" target="_blank"><img class="bp2l__proxi-img" src="<?php echo plugin_dir_url( __FILE__ ); ?>images/powered-by-proxi.png" /></a>
 
 
@@ -201,15 +147,13 @@ $state = get_field('state_text');
     if (have_rows('best_places_list')):
         echo '<div class="bp2l__row">';
         while (have_rows('best_places_list')): the_row();
-        $bp = get_sub_field('best_place'); ?>
-        <div class="bp2l__bpl">
-            <div class="bp2l__img-container">
-            <a href="<?php echo get_the_permalink($bp); ?>"><?php echo get_the_post_thumbnail($bp, 'medium'); ?></a>
+            $bp = get_sub_field('best_place'); ?>
+            <div class="bp2l__bpl">
+                <div class="bp2l__img-container">
+                <a href="<?php echo get_the_permalink($bp); ?>"><?php echo get_the_post_thumbnail($bp, 'medium'); ?></a>
+                </div>
+                <h4 class="bp2l__bpl-title"><a class="unstyle-link" href="<?php echo get_the_permalink($bp); ?>"><?php echo get_the_title($bp); ?></a></h4>
             </div>
-            <h4 class="bp2l__bpl-title"><a class="unstyle-link" href="<?php echo get_the_permalink($bp); ?>"><?php echo get_the_title($bp); ?></a></h4>
-        </div>
-
-        
         <?php endwhile;
         echo '</div>';
     endif;
