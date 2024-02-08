@@ -16,7 +16,7 @@ add_action( 'init', 'liv_mobile_menu' );
 function livability_enqueue_scripts() {
 	global $topics;
 	wp_enqueue_script( 'headroom', get_stylesheet_directory_uri() . '/assets/js/headroom.js', array('jquery'),null, true );
-	wp_enqueue_script( 'main-theme', get_stylesheet_directory_uri() . '/assets/js/main.js', array('jquery', 'slick', 'waypoints','waypoints-sticky'), null, true);
+	wp_enqueue_script( 'main-theme', get_stylesheet_directory_uri() . '/assets/js/main.js', array('jquery', 'slick', 'waypoints','waypoints-sticky', 'megamenu'), null, true);
 	wp_enqueue_style( 'style', get_stylesheet_uri(), array('twenty-twenty-one-style'));
 	wp_enqueue_style( 'compressed', get_stylesheet_directory_uri() . '/compressed-style.css', array('style'));
 	wp_enqueue_script( 'slick', get_stylesheet_directory_uri() . '/assets/js/slick.min.js', array('jquery'), null, true);
@@ -46,7 +46,14 @@ function livability_enqueue_scripts() {
 	) );
 }
 
+
+
 add_action('wp_enqueue_scripts', 'livability_enqueue_scripts');
+
+function ww_load_dashicons(){
+	wp_enqueue_style('dashicons');
+}
+add_action('wp_enqueue_scripts', 'ww_load_dashicons');
 
 function my_enqueue() {
     // wp_enqueue_script('my_custom_script', get_stylesheet_directory_uri(). '/assets/js/admin.js', array('wp-dom-ready', 'wp-blocks', 'wp-data'));

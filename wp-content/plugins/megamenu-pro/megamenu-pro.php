@@ -4,7 +4,7 @@
  * Plugin Name: Max Mega Menu - Pro Addon
  * Plugin URI:  https://www.megamenu.com
  * Description: Extends the free version of Max Mega Menu with additional functionality.
- * Version:     2.2.3
+ * Version:     2.3.1.1
  * Author:      megamenu.com
  * Author URI:  https://www.megamenu.com
  * Copyright:   2020 Tom Hemsley (https://www.megamenu.com)
@@ -24,7 +24,7 @@ class Mega_Menu_Pro {
 	/**
 	 * @var string
 	 */
-	public $version = '2.2.3';
+	public $version = '2.3.1.1';
 
 
 	/**
@@ -33,9 +33,7 @@ class Mega_Menu_Pro {
 	 * @since 1.0
 	 */
 	public static function init() {
-
 		$plugin = new self();
-
 	}
 
 
@@ -49,6 +47,9 @@ class Mega_Menu_Pro {
 		define( "MEGAMENU_PRO_VERSION", $this->version );
 		define( "MEGAMENU_PRO_PLUGIN_FILE", __FILE__ );
 
+		$this->load_plugin_textdomain();
+
+		add_action( "widgets_init", array( $this, 'register_widget' ) );
 		add_filter( "megamenu_versions", array( $this, 'add_version_to_header' ) );
 		add_action( "admin_init", array( $this, 'install_upgrade_check' ) );
 		add_action( "megamenu_enqueue_admin_scripts", array( $this, 'enqueue_nav_menu_scripts' ) );
@@ -60,12 +61,18 @@ class Mega_Menu_Pro {
 		add_action( "megamenu_general_settings", array( $this, 'add_icons_settings_to_general_settings' ), 21 );
 		add_filter( "megamenu_submitted_settings", array( $this, 'populate_empty_checkbox_values'), 9 );
 		add_action( "set_transient_megamenu_css", array( $this, 'set_megamenu_pro_css_version' ), 10, 3);
-		add_action( "widgets_init", array( $this, 'register_widget' ) );
-
 
 		$this->load();
 	}
 
+	/**
+	 * Initialise translations
+	 *
+	 * @since 1.0
+	 */
+	public function load_plugin_textdomain() {
+		load_plugin_textdomain( 'megamenu-pro', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+	}
 
 	/**
 	 * Detect new or updated installations and run actions accordingly.
@@ -118,6 +125,10 @@ class Mega_Menu_Pro {
 			$settings['enqueue_fa_5'] = 'disabled';
 		}
 
+		if ( ! isset( $settings['enqueue_fa_6'] ) ) {
+			$settings['enqueue_fa_6'] = 'disabled';
+		}
+
 		if ( ! isset( $settings['enqueue_genericons'] ) ) {
 			$settings['enqueue_genericons'] = 'disabled';
 		}
@@ -135,36 +146,49 @@ class Mega_Menu_Pro {
 	public function add_icons_settings_to_general_settings( $saved_settings ) {
 		$enqueue_fa_4 = isset( $saved_settings['enqueue_fa_4'] ) ? $saved_settings['enqueue_fa_4'] : 'enabled';
 		$enqueue_fa_5 = isset( $saved_settings['enqueue_fa_5'] ) ? $saved_settings['enqueue_fa_5'] : 'enabled';
+		$enqueue_fa_6 = isset( $saved_settings['enqueue_fa_6'] ) ? $saved_settings['enqueue_fa_6'] : 'enabled';
 		$enqueue_genericons = isset( $saved_settings['enqueue_genericons'] ) ? $saved_settings['enqueue_genericons'] : 'enabled';
 
 		?>
 
-		<h3><?php _e("Icons", "megamenupro"); ?></h3>
+		<h3><?php _e("Icons", "megamenu-pro"); ?></h3>
 
 		<table>
 			<tr>
 				<td class='mega-name'>
-					<?php _e("Enqueue Icon Styles", "megamenupro"); ?>
+					<?php _e("Enqueue Icon Styles", "megamenu-pro"); ?>
 					<div class='mega-description'>
-						<?php _e("", "megamenupro"); ?>
+						<?php _e("", "megamenu-pro"); ?>
 					</div>
 				</td>
 				<td class='mega-value'>
 					<table class='mega-inner-table'>
+						<?php if ($this->font_awesome_4_is_enabled() ): ?>
+							<tr>
+								<td>
+									<input type="checkbox" name="settings[enqueue_fa_4]" value="enabled" <?php checked( $enqueue_fa_4, 'enabled' ); ?> />
+								</td>
+								<td>
+									<?php _e("Font Awesome 4", "megamenu-pro"); ?>
+								</td>
+							</tr>
+						<?php endif; ?>
+						<?php if ($this->font_awesome_5_is_enabled() ): ?>
+							<tr>
+								<td>
+									<input type="checkbox" name="settings[enqueue_fa_5]" value="enabled" <?php checked( $enqueue_fa_5, 'enabled' ); ?> />
+								</td>
+								<td>
+									<?php _e("Font Awesome 5", "megamenu-pro"); ?>
+								</td>
+							</tr>
+						<?php endif; ?>
 						<tr>
 							<td>
-								<input type="checkbox" name="settings[enqueue_fa_4]" value="enabled" <?php checked( $enqueue_fa_4, 'enabled' ); ?> />
+								<input type="checkbox" name="settings[enqueue_fa_6]" value="enabled" <?php checked( $enqueue_fa_6, 'enabled' ); ?> />
 							</td>
 							<td>
-								<?php _e("Font Awesome 4", "megamenupro"); ?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="checkbox" name="settings[enqueue_fa_5]" value="enabled" <?php checked( $enqueue_fa_5, 'enabled' ); ?> />
-							</td>
-							<td>
-								<?php _e("Font Awesome 5", "megamenupro"); ?>
+								<?php _e("Font Awesome 6", "megamenu-pro"); ?>
 							</td>
 						</tr>
 						<tr>
@@ -172,7 +196,7 @@ class Mega_Menu_Pro {
 								<input type="checkbox" name="settings[enqueue_genericons]" value="enabled" <?php checked( $enqueue_genericons, 'enabled' ); ?> />
 							</td>
 							<td>
-								<?php _e("Genericons", "megamenupro"); ?>
+								<?php _e("Genericons", "megamenu-pro"); ?>
 							</td>
 						</tr>
 					</table>
@@ -194,7 +218,7 @@ class Mega_Menu_Pro {
 	public function add_version_to_header( $versions ) {
 
 		$versions['pro'] = array(
-			'text' => __("Pro version", "megamenupro"),
+			'text' => __("Pro version", "megamenu-pro"),
 			'version' => MEGAMENU_PRO_VERSION
 		);
 
@@ -213,10 +237,6 @@ class Mega_Menu_Pro {
 		if ( wp_script_is('megamenu-pro-admin') ) {
 			return; // enaure scripts are only loaded once
 		}
-
-		// svg icons break the FontAwesome icon selector
-		//wp_deregister_script( 'font-awesome-official' );
-		//wp_dequeue_script( 'font-awesome-official' );
 
 		wp_enqueue_script( 'megamenu-pro-admin', plugins_url( 'assets/admin.js' , __FILE__ ), array('jquery'), MEGAMENU_PRO_VERSION );
 
@@ -241,7 +261,7 @@ class Mega_Menu_Pro {
 
 
 		$params = array(
-			'file_frame_title' => __("Media Library", "megamenupro")
+			'file_frame_title' => __("Media Library", "megamenu-pro")
 		);
 
 		wp_localize_script( 'megamenu-pro-admin', 'megamenu_pro', $params );
@@ -259,7 +279,7 @@ class Mega_Menu_Pro {
 		wp_enqueue_script( 'megamenu-pro-admin', plugins_url( 'assets/admin.js' , __FILE__ ), array('jquery'), MEGAMENU_PRO_VERSION );
 
 		$params = array(
-			'file_frame_title' => __("Media Library", "megamenupro")
+			'file_frame_title' => __("Media Library", "megamenu-pro")
 		);
 
 		wp_localize_script( 'megamenu-pro-admin', 'megamenu_pro', $params );
@@ -290,10 +310,20 @@ class Mega_Menu_Pro {
 			'Mega_Menu_Tabbed' => $plugin_path . 'tabbed/tabbed.php',
 			'Mega_Menu_Font_Awesome' => $plugin_path . 'icons/fontawesome/fontawesome.php',
 			'Mega_Menu_Font_Awesome_5' => $plugin_path . 'icons/fontawesome5/fontawesome5.php',
+			'Mega_Menu_Font_Awesome_6' => $plugin_path . 'icons/fontawesome6/fontawesome6.php',
 			'Mega_Menu_Badge' => $plugin_path . 'badge/badge.php',
 			'Mega_Menu_Image_Swap' => $plugin_path . 'image-swap/image-swap.php',
 			'Mega_Menu_Widget_Image_Swap' => $plugin_path . 'image-swap/image-swap-widget.class.php'
 		);
+
+
+		if ( ! $this->font_awesome_4_is_enabled() ) {
+			unset( $classes['Mega_Menu_Font_Awesome'] );
+		}
+
+		if ( ! $this->font_awesome_5_is_enabled() ) {
+			unset( $classes['Mega_Menu_Font_Awesome_5'] );
+		}
 
 		foreach ( $classes as $classname => $file_path ) {
 			require_once( $file_path );
@@ -307,6 +337,39 @@ class Mega_Menu_Pro {
 
 	}
 
+	/**
+	 * 
+	 */
+	public static function font_awesome_4_is_enabled() {
+		if ( defined( "MEGAMENU_PRO_FA4_ENABLED" ) ) {
+			return MEGAMENU_PRO_FA4_ENABLED;
+		}
+
+		$initial_version = get_option( 'megamenu_pro_initial_version' );
+
+		if ( $initial_version && version_compare( $initial_version, '2.3', '>=' ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * 
+	 */
+	public static function font_awesome_5_is_enabled() {
+		if ( defined( "MEGAMENU_PRO_FA5_ENABLED" ) ) {
+			return MEGAMENU_PRO_FA5_ENABLED;
+		}
+
+		$initial_version = get_option( 'megamenu_pro_initial_version' );
+
+		if ( $initial_version && version_compare( $initial_version, '2.3', '>=' ) ) {
+			return false;
+		}
+
+		return true;
+	}
 
 	/**
 	 * Ensure Max Mega Menu (free) is installed
@@ -327,9 +390,9 @@ class Mega_Menu_Pro {
 
 			$plugin = plugin_basename('megamenu/megamenu.php');
 
-			$string = __( 'Max Mega Menu Pro requires Max Mega Menu (free). Please {activate} the Max Mega Menu plugin.', 'megamenu' );
+			$string = __( 'Max Mega Menu Pro requires Max Mega Menu (free). Please {activate} the Max Mega Menu plugin.', 'megamenu-pro' );
 
-			$link = '<a href="' . wp_nonce_url( 'plugins.php?action=activate&amp;plugin=' . $plugin . '&amp;plugin_status=all&amp;paged=1', 'activate-plugin_' . $plugin ) . '" class="edit">' . __( 'activate', 'megamenu' ) . '</a>';
+			$link = '<a href="' . wp_nonce_url( 'plugins.php?action=activate&amp;plugin=' . $plugin . '&amp;plugin_status=all&amp;paged=1', 'activate-plugin_' . $plugin ) . '" class="edit">' . __( 'activate', 'megamenu-pro' ) . '</a>';
 
 		?>
 
@@ -346,10 +409,10 @@ class Mega_Menu_Pro {
 		?>
 		<div class="updated">
 			<p>
-				<?php _e( 'Max Mega Menu Pro requires Max Mega Menu (free). Please install the Max Mega Menu plugin.', 'megamenu' ); ?>
+				<?php _e( 'Max Mega Menu Pro requires Max Mega Menu (free). Please install the Max Mega Menu plugin.', 'megamenu-pro' ); ?>
 			</p>
 			<p class='submit'>
-				<a href="<?php echo admin_url( "plugin-install.php?tab=search&type=term&s=max+mega+menu" ) ?>" class='button button-secondary'><?php _e("Install Max Mega Menu", "megamenupro"); ?></a>
+				<a href="<?php echo admin_url( "plugin-install.php?tab=search&type=term&s=max+mega+menu" ) ?>" class='button button-secondary'><?php _e("Install Max Mega Menu", "megamenu-pro"); ?></a>
 			</p>
 		</div>
 		<?php

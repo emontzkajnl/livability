@@ -31,13 +31,18 @@ class Mega_Menu_Font_Awesome_5 {
 	/**
 	 * Returns true when FontAwesome 5 Pro is installed/enabled
 	 */
-	public function use_pro() {
+	public static function use_pro() {
 		if ( defined( "MEGAMENU_PRO_USE_FONTAWESOME5_PRO" ) ) {
 			return MEGAMENU_PRO_USE_FONTAWESOME5_PRO;
 		}
 
-		if ( function_exists( 'FortAwesome\fa' ) && fa()->pro() ) {
-			return true;
+		if ( function_exists( 'FortAwesome\fa' ) ) {
+			$version = fa()->version();
+			$version_is_v5 = is_string( $version ) && 1 === preg_match( '/^5\./', $version );
+
+			if ( fa()->pro() && $version_is_v5 ) {
+				return true;
+			}
 		}
 
 		return false;
@@ -64,9 +69,9 @@ class Mega_Menu_Font_Awesome_5 {
      */
     public function add_fa5_scss_vars( $vars, $location, $theme, $menu_id ) {
     	if ( $this->use_pro() ) {
-        	$vars['font_awesome_family'] = "'Font Awesome 5 Pro'";
+        	$vars['font_awesome_5_family'] = "'Font Awesome 5 Pro'";
     	} else {
-        	$vars['font_awesome_family'] = "'Font Awesome 5 Free'";
+        	$vars['font_awesome_5_family'] = "'Font Awesome 5 Free'";
     	}
 
         return $vars;
@@ -121,7 +126,7 @@ class Mega_Menu_Font_Awesome_5 {
         $html = "";
 
         if ( is_array( $settings ) && isset( $settings['enqueue_fa_5'] ) && $settings['enqueue_fa_5'] == 'disabled' ) {
-        	$html .= "<div class='notice notice-warning'>" . __("Font Awesome 5 has been dequeued under Mega Menu > General Settings. You will need to ensure that Font Awesome 5 is enqueued on your site using an alternative method.", "megamenupro") . "</div>";
+        	$html .= "<div class='notice notice-warning'>" . __("Font Awesome 5 has been dequeued under Mega Menu > General Settings. You will need to ensure that Font Awesome 5 is enqueued on your site using an alternative method.", "megamenu-pro") . "</div>";
         }
 
         foreach ( $this->icons() as $code => $class ) {
@@ -146,7 +151,7 @@ class Mega_Menu_Font_Awesome_5 {
         	$icon_prefix = substr( $menu_item_meta['icon'], 0, 3 );
         }
 
-        $title = __("Font Awesome 5", "megamenupro");
+        $title = __("Font Awesome 5", "megamenu-pro");
 
         if ( $this->use_pro() ) {
         	$title .= " Pro";
@@ -154,14 +159,28 @@ class Mega_Menu_Font_Awesome_5 {
 
 		$insert['fontawesome5'] = array(
 			'title' => $title,
-			'active' => isset( $menu_item_meta['icon'] ) && in_array( $icon_prefix, array( 'fab', 'fas', 'far', 'fal' ) ),
+			'active' => isset( $menu_item_meta['icon'] ) && in_array( $icon_prefix, array( 'fab', 'fas', 'far', 'fal' ) ) && ! str_contains($menu_item_meta['icon'], 'fa6' ),
 			'content' => $html
 		);
 
-		array_splice( $tabs, 2, 0, $insert );
-		
+		$this->array_splice_assoc( $tabs, 2, 0, $insert );
 		return $tabs;
+	}
 
+
+	public function array_splice_assoc(&$input, $offset, $length, $replacement = array()) {
+	    $replacement = (array) $replacement;
+	    $key_indices = array_flip(array_keys($input));
+	    if (isset($input[$offset]) && is_string($offset)) {
+	            $offset = $key_indices[$offset];
+	    }
+	    if (isset($input[$length]) && is_string($length)) {
+	            $length = $key_indices[$length] - $offset;
+	    }
+
+	    $input = array_slice($input, 0, $offset, TRUE)
+	            + $replacement
+	            + array_slice($input, $offset + $length, NULL, TRUE); 
 	}
 
 	/**

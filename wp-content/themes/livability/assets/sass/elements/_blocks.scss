@@ -47,18 +47,18 @@
       padding-bottom: 20px;
       .bp2pw__title {
         margin-bottom: 10px;
-        font-size: 1.625rem;
+        font-size: 1.8rem;
       }
     }
     img {
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
   }
   &__title {
     color: black;
-    font-size: 1.625rem;
+    font-size: 1.4rem;
     margin-top: 0 !important;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     font-weight: 500;
     a {
       color: black;
@@ -2829,11 +2829,13 @@ border-bottom: 1px solid $green;
     flex-wrap: nowrap;
     margin-top: 0;
     &__col {
-      flex-basis: 33%;
+      flex-basis: 28%;
       flex-shrink: 0;
       padding-left: 30px;
       &:first-child {
         padding-left: 0;
+        flex-basis: 44%;
+        padding-right: 20px;
       }
     }
     &__item {

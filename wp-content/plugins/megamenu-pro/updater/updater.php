@@ -120,19 +120,27 @@ if ( ! class_exists('Mega_Menu_Updater') ) :
 				);
 			}
 
-			if ( defined( "MEGAMENU_LICENCE_DEBUG" ) && MEGAMENU_LICENCE_DEBUG === true ) {
-				var_dump( $api_params );
-				var_dump( $response );
-				die();
-			}
 
 			// make sure the response came back okay
-			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
-				echo "<h3>Error activating licence. Response details below.</h3>";
-				echo "<pre>";
-				var_dump( $api_params );
-				var_dump( $response );
-				echo "</pre>";
+			if ( ( defined( "MEGAMENU_LICENCE_DEBUG" ) && MEGAMENU_LICENCE_DEBUG === true ) || is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+				$real_ip = file_get_contents("http://ipecho.net/plain");
+				echo "<h2>Oops, something went wrong.</h2>";
+				echo "<p>There was a problem connecting to megamenu.com.</p>";
+				echo "<p>If this is the first time you have seen this message, please wait 24 hours and try again.</p>";
+				echo "<p>Check your server IP has not been blacklisted <a href='https://www.blacklistmaster.com/check?t={$real_ip}'>here</a>. If it has been blacklisted, please inform your host and ask them to assign you a new (clean) IP address.</p>";
+				echo "<p>Our host (Kinsta) also maintains a private IP blacklist, which your servers IP address may be on. Usually this is because a website sharing your IP servers address has made hacking attempts on sites hosted by Kinsta. In some cases our host will be able to temporarily unblock the IP at our request. Please contact support and include the error message below.</p>";
+				echo "<p>Please note that activating your licence simply enables Automatic Updates. All Pro functionality is available even with the licence deactivated.</p>";
+
+				echo "<h3>Debug information</h3>";
+				echo "<textarea style='width: 100%; height: 200px;'>";
+				print_r($real_ip);
+				print_r( $api_params );
+				print_r( $response );
+				
+				echo "</textarea><br />";
+
+				echo "<h3>Server Response</h3>";
+				echo "<iframe style='width: 100vw; height: 200px;' srcdoc=" . wp_remote_retrieve_body($response) . "></iframe>";
 				die();
 			}
 
@@ -218,7 +226,7 @@ if ( ! class_exists('Mega_Menu_Updater') ) :
 		 */
 		public function add_license_tab($tabs) {
 
-			$tabs['license'] = __("License", "megamenupro");
+			$tabs['license'] = __("License", "megamenu-pro");
 
 			return $tabs;
 
@@ -245,23 +253,23 @@ if ( ! class_exists('Mega_Menu_Updater') ) :
 				if ( isset( $_GET['error_code'] ) ) {
 					switch( $_GET['error_code'] ) {
 						case 'expired' :
-							$message = __("This licence key has expired. Please log in to your client area to renew your licence key.", "megamenupro" );
+							$message = __("This licence key has expired. Please log in to your client area to renew your licence key.", "megamenu-pro" );
 							break;
 						case 'revoked' :
-							$message =  __( 'Your license key has been disabled.', "megamenupro" );
+							$message =  __( 'Your license key has been disabled.', "megamenu-pro" );
 							break;
 						case 'missing' :
-							$message =  __( 'This licence key is not valid.', "megamenupro" );
+							$message =  __( 'This licence key is not valid.', "megamenu-pro" );
 							break;
 						case 'invalid' :
 						case 'site_inactive' :
-							$message =  __( 'Your license is not active for this URL.', "megamenupro" );
+							$message =  __( 'Your license is not active for this URL.', "megamenu-pro" );
 							break;
 						case 'item_name_mismatch' :
-							$message =  __( 'This appears to be an invalid license key.', "megamenupro" );
+							$message =  __( 'This appears to be an invalid license key.', "megamenu-pro" );
 							break;
 						case 'no_activations_left':
-							$message =  __( 'Your license key has reached its activation limit. Log into your client area to upgrade your licence or deactivate unused sites.', "megamenupro" );
+							$message =  __( 'Your license key has reached its activation limit. Log into your client area to upgrade your licence or deactivate unused sites.', "megamenu-pro" );
 							break;
 					}
 
@@ -276,15 +284,15 @@ if ( ! class_exists('Mega_Menu_Updater') ) :
 					<input type="hidden" name="action" value="megamenu_update_license" />
 					<?php wp_nonce_field( 'megamenu_update_license' ); ?>
 
-					<h3 class='first'><?php _e('Max Mega Menu Pro License', "megamenupro"); ?></h3>
+					<h3 class='first'><?php _e('Max Mega Menu Pro License', "megamenu-pro"); ?></h3>
 
 					<table>
 						<tbody>
 							<tr>
 								<td class='mega-name'>
-									<?php _e('License Key'); ?>
+									<?php _e('License Key', "megamenu-pro"); ?>
 									<div class='mega-description'>
-										<?php _e('A license key must be entered and activated to enable automatic plugin updates', "megamenupro"); ?>
+										<?php _e('A license key must be entered and activated to enable automatic plugin updates', "megamenu-pro"); ?>
 									</div>
 								</td>
 								<td class='mega-value'>
@@ -292,14 +300,14 @@ if ( ! class_exists('Mega_Menu_Updater') ) :
 									<input style='width: 25em;' name="edd_mmm_license_key" type="<?php echo apply_filters("megamenu_licence_key_field_type", "text"); ?>" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />
 
 									<?php if( $status !== false && $status == 'valid' ) { ?>
-										<input type="submit" class="button-secondary" name="edd_mmm_license_deactivate" value="<?php _e('Deactivate License', "megamenupro"); ?>"/>
+										<input type="submit" class="button-secondary" name="edd_mmm_license_deactivate" value="<?php _e('Deactivate License', "megamenu-pro"); ?>"/>
 									<?php } else { ?>
-										<input style='width: auto;' type="submit" class="button-secondary" name="edd_mmm_license_activate" value="<?php _e('Activate License', "megamenupro"); ?>"/>
+										<input style='width: auto;' type="submit" class="button-secondary" name="edd_mmm_license_activate" value="<?php _e('Activate License', "megamenu-pro"); ?>"/>
 									<?php } ?>
 
 									<div class='licence_info'>
-										<p><b><?php _e('Did you know?', "megamenupro"); ?></b></p>
-										<p><?php _e('You can also manage your active licenses and download updates in your <a href="https://www.maxmegamenu.com/client-area/">Client Area</a>.', "megamenupro"); ?></p>
+										<p><b><?php _e('Did you know?', "megamenu-pro"); ?></b></p>
+										<p><?php _e('You can also manage your active licenses and download updates in your <a href="https://www.megamenu.com/client-area/">Client Area</a>.', "megamenu-pro"); ?></p>
 									</div>
 
 									<?php

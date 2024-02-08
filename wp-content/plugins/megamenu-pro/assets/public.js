@@ -7,6 +7,11 @@
 (function($) {
     "use strict";
 
+      $('.mega-menu-link').on('click', function(e) {
+    e.preventDefault();
+  });
+
+
     $(function() {
         $('body').on('edd_cart_item_added', function(event, data) {
             $('.mega-menu-edd-cart-total').html(data.total);
@@ -19,7 +24,9 @@
             // reset default
             var placeholder = $(this).closest(".mega-menu-megamenu").find(".widget_maxmegamenu_image_swap img.mega-placeholder");
             var default_src = placeholder.attr('data-default-src');
+            var default_alt = placeholder.attr('data-default-alt');
             placeholder.attr('src', default_src);
+            placeholder.attr('alt', default_alt);
 
             // preload
             $('.mega-sub-menu [data-image-swap-url]', $(this) ).not(['data-preloaded']).each( function() {
@@ -28,11 +35,17 @@
             });
         });
 
+        if ( ! $.isFunction($.fn.hoverIntent) ) {
+            return;
+        }
+        
         $('.mega-sub-menu [data-image-swap-url]').hoverIntent({
             over: function () {
                 var placeholder = $(this).closest(".mega-menu-megamenu").find(".widget_maxmegamenu_image_swap img.mega-placeholder");
                 var new_src = $(this).attr('data-image-swap-url');
+                var new_alt = $(this).is("[data-image-swap-alt]") ? $(this).attr('data-image-swap-alt') : "";
                 placeholder.attr('src', new_src);
+                placeholder.attr('alt', new_alt);
             },
             out: function() {}
         });
@@ -89,17 +102,28 @@
             }
         };
 
-        plugin.close_search = function() {
+        plugin.close_search = function(moveFocus = true) {
+            $menu.triggerHandler("mmm:closeSearch");
             input.val("");
             input.attr('placeholder', '');
+            input.attr('tabindex', '-1');
             form.removeClass('mega-search-open');
             form.addClass('mega-search-closed');
+            icon.attr('aria-expanded', 'false');
+
+            if (moveFocus) {
+                icon.trigger("focus");
+            }
         }
 
         plugin.open_search = function() {
+            $menu.triggerHandler("mmm:openSearch");
             input.attr('placeholder', input.attr('data-placeholder'));
+            input.attr('tabindex', '0');
             form.removeClass('mega-search-closed');
             form.addClass('mega-search-open');
+            icon.attr('aria-expanded', 'true');
+            input.trigger("focus");
         }
 
         plugin.detect_background_click = function() {
@@ -115,48 +139,65 @@
                     return;
                 }
                 if ( ! dragging && ! $(e.target).closest(".max-mega-menu li").length && ! $(e.target).closest(".mega-menu-toggle").length ) {
-                    plugin.close_search();
+                    plugin.close_search(false);
                 }
                 dragging = false;
             });
         }
 
         plugin.init_replacements_search = function() {
-
-            input.val("");
-
             if ( $menu.data("view") === "mobile" ) {
+                input.attr('tabindex', '0');
+
                 $(".search-icon", $menu).on('click', function(e) {
                     $(this).parents(".mega-search").submit();
                 });
             }
 
             if ( $menu.data("view") === "desktop" ) {
-                input.on('focus', function(e) {
-                    if (! form.parent().hasClass('mega-static') && form.hasClass('mega-search-closed') && $wrap.hasClass('mega-keyboard-navigation') ) {
-                        plugin.open_search();
-                    }
-                });
-
                 input.on('blur', function(e) {
-                    if (! form.parent().hasClass('mega-static') && form.hasClass('mega-search-open') && $wrap.hasClass('mega-keyboard-navigation') ) {
+                    if ( $menu.parent().hasClass("mega-keyboard-navigation") && input.val() == '' && ! form.parent().hasClass('mega-static') && form.hasClass('mega-search-open') ) {
                         plugin.close_search();
                     }
                 });
 
-                icon.on('click', function(e) {
-                    if (form.parent().hasClass('mega-static') ) {
-                        form.submit();
-                        return;
+                icon.on('keypress click', function(e) {
+                    var enter_key = 13;
+                    var space_key = 32;
+
+                    if (e.which === enter_key || e.which === space_key || e.type === 'click') {
+                        e.preventDefault();
+
+                        if (form.parent().hasClass('mega-static') ) {
+                            form.submit();
+                            return;
+                        }
+
+                        if ( input.val() != '' ) {
+                            form.submit();
+                            return;
+                        }
+
+                        if ( form.hasClass('mega-search-open') ) {
+                            plugin.close_search();
+                            return;
+                        }
+
+                        if ( form.hasClass('mega-search-closed') ) {
+                            plugin.open_search();
+                            return;
+                        }
                     }
-                    
-                    if (form.hasClass('mega-search-closed')) {
-                        plugin.open_search();
-                        input.focus();
-                    } else if ( input.val() == '' ) {
-                        plugin.close_search();
-                    } else {
-                        form.submit();
+                });
+
+                $menu.on('keydown', function(e) {
+                    var escape_key = 27;
+
+                    if (e.which === escape_key) {
+                        if (! form.parent().hasClass('mega-static') && form.hasClass('mega-search-open') ) {
+                            plugin.close_search();
+                            return;
+                        }
                     }
                 });
             }
@@ -176,8 +217,8 @@
         });
     };
 
-    $(function() {
-        $(".max-mega-menu .mega-search").maxmegamenu_searchbox();
+    $(".max-mega-menu").on("after_mega_menu_init", function() {
+        $(".mega-search", this).maxmegamenu_searchbox();
     });
 })(jQuery);
 
@@ -226,7 +267,11 @@
 
             icon.on('click', function(e) {
                 if (form.hasClass('static') ) {
-                    form.submit();
+                    if ( input.attr('required') == 'required' && input.val() == "" ) {
+                        return;
+                    } else {
+                        form.submit();
+                    }
                 } else if (form.hasClass('mega-search-closed')) {
                     input.focus();
                     plugin.open_search();
@@ -290,7 +335,8 @@
         var is_vertical = $menu.hasClass('mega-menu-vertical') || $menu.hasClass('mega-menu-accordion');
 
         plugin.isDesktopView = function() {
-            return Math.max(window.outerWidth, $(window).width()) >= breakpoint; // account for scrollbars
+            var width = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+            return width > breakpoint;
         };
 
         var sticky_hide_until_scroll_up_enabled = function() {
@@ -423,6 +469,10 @@
                 'left' : '',
                 'width' : ''
             });
+            
+            if ( $(window).width() <= breakpoint ) {
+                $menu.data('maxmegamenu').toggleBarForceWidth();
+            }
 
             if (sticky_transition == 'true' && ! doing_resize ) {
                 var delay = 250; // allows the transiton to complete before unwrapping the menu

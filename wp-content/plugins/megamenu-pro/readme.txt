@@ -1,9 +1,74 @@
 === Max Mega Menu Pro ===
 Requires at least: 4.9
-Tested up to: 5.5
+Tested up to: 6.2
 Requires PHP: 5.6
 
 == Changelog ==
+
+= 2.3.1.1 =
+
+* Fix: WooCommerce store search option
+* Fix: Window width detection when using browser zoom function in Chrome
+
+= 2.3.1 =
+
+* Fix: Do not load Font Awesome 6 (Free) on nav-menus.php if the Font Awesome plugin is installed and configured to load Font Awesome 6 (Pro)
+* Fix: Compatibility with scssphp 1.11.1/Max Mega Menu v3.3
+* Fix: Restore "WooCommerce" store search option
+
+= 2.3 =
+
+* New: Font Awesome 6 support
+* Improvement: Add 'default' parameter to [maxmegamenu_user_gravatar] shortcode
+* Accessibility: Remove aria-label attribute when badge text is specified/available instead
+* Accessibility: Add aria-label option for search icon
+* Accessibility: Add alt text to gravatar icon
+* Fix: "Replace the menu item text" replacement option does not work correctly when the menu item text is hidden
+* New: Add 'megamenu_search_icon_attributes', ''megamenu_toggle_search_input_attributes' and 'megamenu_search_input_attributes' filters
+* Fix: Only submit static toggle block search form if the form is not empty
+* Fix: Compatibility with Imagify and Image Swap widget (do not convert placeholder image to webp)
+
+= 2.2.9.1 =
+
+* Fix: Do not capture focus on search box when clicking on other page elements
+
+= 2.2.9 =
+
+* Fix: PHP 8.2 warning
+* Fix: Search form does not submit when icon is clicked
+* Improvement: Add "Logged out users" to list of selectable role restrictions
+* Fix: Improved backwards compatibility when Font Awesome Kit is being used on site and v6 (Pro) is selected
+* Improvement: Refactor expanding search box code for improved keyboard interaction
+
+= 2.2.8 =
+
+* Improvement: Trigger custom events (mmm:openSearch, mmm:closeSearch) when opening and closing the search box
+* Fix: Ensure custom icon width and height is an integer to avoid PHP error
+* Fix: Apply :focus styling to custom icons and certain custom item styling options
+* Fix: Image Swap - Check media file ID has not been deleted to avoid PHP warning
+* Fix: Apply CSS transitions to tab content
+* Fix: Search box does not automatically open using keyboard navigation
+* Improvement: Add 'Item Divider' theme option to menu tabs
+
+= 2.2.7 =
+
+* Improvement: Update list of available Google Fonts
+* Improvement: Process shortcodes in icon toggle block URL
+* Fix: Custom icon toggle block could not be activated using keyboard navigation
+
+= 2.2.6 =
+
+* Fix: Localisation fixes
+* Fix: Mobile menu sizing issue when menu becomes unstuck
+* Fix: On mobile, apply the custom hover icon when item is active
+
+= 2.2.5 =
+
+Improvement: Add alt text to Image Swap feature
+
+= 2.2.4 =
+
+* Fix: Do not attempt to resize SVG files when used as search icon or as a logo
 
 = 2.2.3 =
 
