@@ -50,8 +50,8 @@ $state = get_field('state_text');
         </div>
         <?php echo $top_onehundred; ?>
 
-        <a href=""><button class="bp2l__green-btn">See our top 100 list</button></a>
-        <a href=""><button >Previous Years List</button></a>
+        <a href="https://livability.com/best-places/2023-top-100-best-places-to-live-in-the-us/"><button class="bp2l__green-btn">See our top 100 list</button></a>
+        <a href="https://livability.com/best-places/2022-top-100-best-places-to-live-in-the-us/"><button >Previous Years List</button></a>
         <a href="https://www.proxi.co/" target="_blank"><img class="bp2l__proxi-img" src="<?php echo plugin_dir_url( __FILE__ ); ?>images/powered-by-proxi.png" /></a>
     </div>
 </div>
