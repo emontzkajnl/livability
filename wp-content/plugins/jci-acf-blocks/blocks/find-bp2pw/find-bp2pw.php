@@ -62,7 +62,7 @@ foreach ($final_list as $key => $value) {
     $cat = get_the_category( $value );
     if ($key == 0) {
         echo '<div class="bp2pw__col"><div class="bp2pw__item featured">';
-        echo '<a href="'.get_the_permalink( $value).'">'.get_the_post_thumbnail( $value, 'medium' ).'</a>';
+        echo '<a href="'.get_the_permalink( $value).'">'.get_the_post_thumbnail( $value, 'rel_article' ).'</a>';
         // if ($cat) {echo '<h5 class="green-text uppercase ">'.$cat[0]->name.'</h5>';}
         echo '<h3 class="bp2pw__title"><a class="unstyle-link" href="'.get_the_permalink( $value).'">'.get_the_title($value).'</a></h3>';
         echo '<p class="bp2pw__excerpt">'.get_the_excerpt( $value ).'</p>';
