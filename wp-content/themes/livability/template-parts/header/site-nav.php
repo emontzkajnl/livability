@@ -11,19 +11,28 @@
 
 ?>
 
-<?php if ( has_nav_menu( 'primary' ) ) : ?>
+<?php //if ( has_nav_menu( 'primary' ) ) : ?>
 	<?php //if ( wp_is_mobile() ) : ?>
+		<nav id="mobile-navigation" class="mobile-navigation" role="navigation" aria-label="<?php esc_attr_e( 'Mobile menu', 'twentytwentyone' ); ?>">
+
+		<!-- <button class="menu-toggle" aria-controls="mobile-menu" aria-expanded="false"><?php //esc_html_e( 'Primary Menu', 'ag-sites' ); ?></button> -->
+			<div class="hamburger">
+				<span class="bar"></span>
+				<span class="bar"></span>
+				<span class="bar"></span>
+			</div>
 		<?php
-			// wp_nav_menu(
-			// 	array(
-			// 		'theme_location'  => 'liv-mobile-menu',
-			// 		'menu_class'      => 'menu-wrapper',
-			// 		'container_class' => 'primary-menu-container',
-			// 		'items_wrap'      => '<ul id="primary-menu-list" class="%2$s">%3$s</ul>',
-			// 		'fallback_cb'     => false,
-			// 	)
-			// );
-		?>
+			wp_nav_menu(
+				array(
+					'theme_location'  => 'liv-mobile-menu',
+					'menu_class'      => 'menu-wrapper',
+					// 'container_class' => 'primary-menu-container',
+					'items_wrap'      => '<ul id="primary-menu-list" class="%2$s">%3$s</ul>',
+					'fallback_cb'     => false,
+				)
+			); ?>
+			</nav>
+		
 	<?php //else : ?>
 		<nav id="site-navigation" class="primary-navigation" role="navigation" aria-label="<?php esc_attr_e( 'Primary menu', 'twentytwentyone' ); ?>">
 			<?php
@@ -39,4 +48,4 @@
 			?>
 		</nav><!-- #site-navigation -->
 	<?php //endif; ?>
-<?php endif; ?>
+<?php //endif; ?>

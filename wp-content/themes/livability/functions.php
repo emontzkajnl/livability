@@ -23,6 +23,7 @@ function livability_enqueue_scripts() {
 	wp_enqueue_script( 'waypoints', get_stylesheet_directory_uri() . '/assets/js/jquery.waypoints.min.js', array('jquery'), null, true );
 	wp_enqueue_script( 'waypoints-sticky', get_stylesheet_directory_uri() . '/assets/js/sticky.min.js', array('jquery', 'waypoints'), null, true );
 	wp_enqueue_script( 'youtube-api', 'https://www.youtube.com/iframe_api', array(), null, true );
+	wp_enqueue_script( 'navigation', get_stylesheet_directory_uri() . '/assets/js/navigation.js', array('jquery'), null, true );
 	wp_enqueue_style( 'slick-style', get_stylesheet_directory_uri() . '/assets/css/slick.css');
 	wp_enqueue_style( 'slick-theme', get_stylesheet_directory_uri() . '/assets/css/slick-theme.css');
 	wp_dequeue_script('twenty-twenty-one-primary-navigation-script');
