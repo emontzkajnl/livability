@@ -65,7 +65,7 @@
 	const links = menu.getElementsByTagName( 'a' );
 
 	// Get all the link elements with children within the menu.
-	const linksWithChildren = menu.querySelectorAll( '.menu-item-has-children > a, .page_item_has_children > a' );
+	const linksWithChildren = menu.querySelectorAll( '.menu-item-has-children > a, .menu-item-has-children > .sub-menu-toggle' );
 
 	// Toggle focus each time a menu link is focused or blurred.
 	for ( const link of links ) {
