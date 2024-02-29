@@ -33,6 +33,20 @@
     }, 500);
   });
 
+  const searchPopupBtn = document.querySelector(".mobile-search-icon");
+  const searchPopup = document.querySelector(".search-pop-up");
+  const searchClose = document.querySelector(".close-search");
+  console.log('btn ',searchPopupBtn);
+  searchPopupBtn.addEventListener("click", () => {
+    // searchPopup.style.display = 'flex';
+    searchPopup.classList.add('search-open');
+    document.querySelector('.search-field').focus();
+  });
+
+  searchClose.addEventListener("click", () => {
+    searchPopup.classList.remove('search-open');
+  });
+
   // $('.mega-menu-wrap').on('click', function(e) {
   //   // console.log('event is ',e.target); //mega-toggle-on
   //   const theTarget = $(e.target).parent('.mega-menu-item');

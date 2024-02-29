@@ -8,16 +8,14 @@
 	const siteNavigation = document.getElementById( 'mobile-navigation' );
     const topNavigation = document.querySelector('.nav-container');
 	const subMenuToggle = document.querySelectorAll('.sub-menu-toggle');
-    console.log('site nav ',siteNavigation);
 	// Return early if the navigation doesn't exist.
 	if ( ! siteNavigation ) {
-        console.log('no site nav');
 		return;
 	}
 
 	// const button = siteNavigation.getElementsByTagName( 'button' )[ 0 ];
     const button = document.querySelector('.hamburger');
-    console.log('button ',button);
+
 
 	// Return early if the button doesn't exist.
 	if ( 'undefined' === typeof button ) {
@@ -25,7 +23,6 @@
 	}
 
 	const menu = siteNavigation.getElementsByTagName( 'ul' )[ 0 ];
-	console.dir(menu);
 
 	// Hide menu toggle button if menu is empty and return early.
 	if ( 'undefined' === typeof menu ) {
@@ -94,15 +91,13 @@
 				// self = self.parentNode;
 			// }
 		// }
-		console.log('toggle focus funtion');
+
 
 		if ( event.type === 'touchstart' || event.type === 'click' ) {
 			const menuItem = this.parentNode;
-			console.log('parent node ',menuItem);
 			event.preventDefault();
 			for ( const link of menuItem.parentNode.children ) {
 				if ( menuItem !== link ) {
-					console.log('link ',link);
 					link.classList.remove( 'focus' );
 				}
 			}

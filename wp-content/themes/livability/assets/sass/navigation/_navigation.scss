@@ -65,7 +65,7 @@
     margin: 5px 15px 5px auto;
     -webkit-transition: all 0.2s ease-in-out;
     transition: all 0.3s ease-in-out;
-    background-color: black;
+    background-color: #8a8a8a;
   }
   .nav-container {
     position: relative;
@@ -118,9 +118,12 @@
 			}
 			.hamburger {
 				position: absolute;
-				top: -75px;
+				top: -65px;
 				right: 20px;
 			}
+      .mobile-search-icon {
+        top: 38px;
+      }
       .menu-wrapper {
         display: block;
       }

@@ -96,6 +96,11 @@
 			</div>
 	</footer><!-- #colophon -->
 </div><!-- #page -->
+
+<div class="search-pop-up">
+<div class="close-search"><i class="fas fa-times"></i></div>
+<?php get_template_part( 'template-parts/mobile-search-form' ); ?>
+</div>
 <?php wp_footer(); ?>
 </body>
 </html>
