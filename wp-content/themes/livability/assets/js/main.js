@@ -38,6 +38,8 @@
   const searchClose = document.querySelector(".close-search");
   console.log('btn ',searchPopupBtn);
   searchPopupBtn.addEventListener("click", () => {
+    console.log("button clicked");
+    
     // searchPopup.style.display = 'flex';
     searchPopup.classList.add('search-open');
     document.querySelector('.search-field').focus();

@@ -65,7 +65,7 @@
     margin: 5px 15px 5px auto;
     -webkit-transition: all 0.2s ease-in-out;
     transition: all 0.3s ease-in-out;
-    background-color: #8a8a8a;
+    background-color: #000;
   }
   .nav-container {
     position: relative;
@@ -73,7 +73,7 @@
       width: 100%;
       // padding-top: 15px;
       // padding-bottom: 15px;
-      border-bottom: 1px solid gray;
+      // border-bottom: 1px solid gray;
       a {
         color: black;
         font-weight: 400;
@@ -88,6 +88,11 @@
       li {
         background-color: #eee;
         text-indent: 20px;
+      }
+      .sub-menu { // third level menu
+        a {
+          padding-left: 40px;
+        }
       }
     }
     &.toggled {
@@ -159,6 +164,20 @@
       .menu-mobile-menu-container {
         display: block;
         width: 100%;
+        padding-left: 0;
+        .menu-wrapper {
+          padding-left: 0;
+        }
+        a {
+          margin-right: 20px;
+          margin-left: 20px;
+          border-bottom: 1px solid gray;
+        }
+        .focus {
+          > a {
+            font-weight: 600;
+          }
+        }
       }
       
       .menu-mobile-menu-container ul:not(.nav-menu) {

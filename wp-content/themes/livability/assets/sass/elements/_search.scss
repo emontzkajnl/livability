@@ -89,7 +89,9 @@
   position: absolute;
   top: 30px;
   right: 10%;
-  font-size: 60px;
+  // font-size: 60px;
+  height: 40px;
+  width: 40px;
 }
 
 .search-pop-up {
@@ -121,7 +123,7 @@
 .mobile-search-icon {
   width: 25px;
   height: 25px;
-  fill: #8a8a8a;
+  fill: #000;
   position: absolute;
   right: 75px;
   cursor: pointer;
