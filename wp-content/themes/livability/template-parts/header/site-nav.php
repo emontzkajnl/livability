@@ -13,6 +13,11 @@
 
 <?php //if ( has_nav_menu( 'primary' ) ) : ?>
 	<?php //if ( wp_is_mobile() ) : ?>
+			<!-- <div class="hamburger">
+				<span class="bar"></span>
+				<span class="bar"></span>
+				<span class="bar"></span>
+			</div> -->
 		<nav id="mobile-navigation" class="mobile-navigation" role="navigation" aria-label="<?php esc_attr_e( 'Mobile menu', 'twentytwentyone' ); ?>">
 
 		<!-- <button class="menu-toggle" aria-controls="mobile-menu" aria-expanded="false"><?php //esc_html_e( 'Primary Menu', 'ag-sites' ); ?></button> -->

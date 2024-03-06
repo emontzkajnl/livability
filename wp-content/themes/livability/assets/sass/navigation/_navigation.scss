@@ -55,8 +55,9 @@
     display: block;
     // position: relative;
     position: absolute;
-    top: 35px;
+    // top: 35px;
     right: 20px;
+    margin-top: -12px;
   }
   .bar {
     display: block;
@@ -125,6 +126,7 @@
 				position: absolute;
 				top: -65px;
 				right: 20px;
+        margin-top: 0;
 			}
       .mobile-search-icon {
         top: 38px;
@@ -188,8 +190,6 @@
       }
       
       .menu-mobile-menu-container ul ul {
-        box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
-        // position: absolute;
         top: 100%;
         left: -999em;
         z-index: 99999;
