@@ -1,6 +1,6 @@
 <?php
 /**
- * Template part for displaying posts
+ * Template part for displaying places, version 2
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  *
@@ -9,12 +9,54 @@
  * @since Twenty Twenty-One 1.0
  */
 
+$topic_args = array(
+    'posts_per_page'    => -1,
+    'post_status'       => 'publish',
+    'post_type'         => 'post',
+    'meta_query'        => array(
+        array( 
+            'key'       => 'place_relationship',
+            'value'     => '"' . get_the_ID() . '"',
+            'compare'   => 'LIKE'
+        ),
+        array(
+           'key'       => 'sponsored',
+           'value'     => 0
+       ),
+       'relation'      => 'AND'
+    )
+   );
+   $topics = new WP_Query( $topic_args );
+   $topics_array = array();
+   foreach($topics->posts as $topic) {
+        $ID = $topic->ID;
+       $cat = get_the_category( $ID );
+       $slug = $cat[0]->slug;
+       
+        if (! array_key_exists($slug, $topics_array)) {
+        $topics_array[$slug] = array($ID); 
+       } else {
+           array_push($topics_array[$slug], $ID );
+       }
+   }
+if (array_key_exists('education-careers-opportunity', $topics_array)) {
+    echo 'has education';
+} else {
+    echo 'no education';
+}
+
+if (array_key_exists('healthy-places', $topics_array)) {
+    echo 'has health';
+} else {
+    echo 'no health';
+}
+
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
 	<div class="entry-content">
-        <div class="wp-block-columns full-width-off-white">
+        <div class="wp-block-columns full-width-white">
             <div class="wp-block-column">
                 <?php get_template_part( 'template-parts/blocks/ad-one' ); ?>
             </div>
@@ -23,49 +65,27 @@
 <div class="place-column__parent">
     <div class="place-column__nav">
     <ul class="place-side-nav">
-                       <li><a href="#top-100" >2024 Top 100</a></li>
-                       <li><a href="#things-to-do">Things to Do</a></li>
-                       <li><a href="#economy">Economy</a></li>
-                       <li><a href="brands-to-know">Brands to Know</a></li>
-                       <li><a href="quick-facts">Quick Facts</a></li>
-                       <li><a href="#weather">Weather</a></li>
-                       <li><a href="#map">Map</a></li>
-                       <li><a href="#experiences-and-adventures">Experiences & Adventures</a></li>
-                       <li><a href="#food-scenes">Food Scenes</a></li>
-                       <li><a href="#healthy-places">Healthy Places</a></li>
-                       <li><a href="#make-your-move">Make Your Move</a></li>
-                       <li><a href="#where-to-live-now">Where to Live Now</a></li>
-                       <li><a href="#education-careers-and-opportunities">Education, Careers & Opportunities</a></li>
-                       <li><a href="#love-where-you-live">Love Where You Live</a></li>
-                       <li><a href="#more-about-living-in">More About Living in </a></li>
+        <?php 
+        echo '<li><a href="#top-100" >2024 Top 100</a></li>';
+        echo array_key_exists('education-careers-opportunity', $topics_array) ? '<li><a href="#things-to-do">Things to Do</a></li>' : '';
+        echo '<li><a href="#economy">Economy</a></li>';
+        echo '<li><a href="#brands-to-know">Brands to Know</a></li>';
+        echo '<li><a href="#quick-facts">Quick Facts</a></li>';
+        echo '<li><a href="#weather">Weather</a></li>';
+        echo '<li><a href="#map">Map</a></li>';
+        echo array_key_exists('education-careers-opportunity', $topics_array) ? '<li><a href="#experiences-and-adventures">Experiences & Adventures</a></li>' : '';
+        echo '<li><a href="#food-scenes">Food Scenes</a></li>';
+        echo '<li><a href="#healthy-places">Healthy Places</a></li>';
+        echo '<li><a href="#make-your-move">Make Your Move</a></li>';
+        echo '<li><a href="#where-to-live-now">Where to Live Now</a></li>';
+        echo '<li><a href="#education-careers-and-opportunities">Education, Careers & Opportunities</a></li>';
+        echo '<li><a href="#love-where-you-live">Love Where You Live</a></li>';
+        echo '<li><a href="#more-about-living-in">More About Living in </a></li>';
+        ?>
 
-                   </ul>
+    </ul>
     </div>
     <div class="place-column__content">
-    <div class="wp-block-columns">
-        <div class="wp-block-column">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sit amet nunc blandit, laoreet diam at, efficitur justo. Praesent cursus purus vel consectetur mattis. Nulla convallis, nisl in cursus pretium, nisl lacus vulputate mauris, quis tempor augue ante at augue. Vivamus imperdiet dictum sem, quis luctus leo tincidunt posuere. Mauris sed metus vehicula, pulvinar magna vitae, gravida mauris. Ut pellentesque, leo et efficitur feugiat, est velit accumsan mi, eget cursus mi nibh laoreet urna. Fusce et ultricies sem, eu malesuada purus. Nullam velit diam, imperdiet sed dui non, tincidunt laoreet lorem. Maecenas ac turpis laoreet, auctor sem a, congue nulla.
-
-Sed porta tortor et tellus elementum, ac imperdiet libero vestibulum. Nulla in ante lacus. Nam consequat orci vel elit lacinia lobortis sit amet vel nulla. Pellentesque eleifend in ante at tincidunt. Curabitur tincidunt hendrerit consectetur. In eu lectus vitae nunc sagittis ultrices non ut urna. Nulla ac iaculis nulla, nec rutrum risus. Duis nec auctor sapien. Donec sit amet risus elit. Quisque in erat sodales, scelerisque tortor vitae, mollis ex. Nulla ac iaculis nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque fermentum augue nec tortor ultrices pulvinar. Nunc orci leo, luctus et dapibus vel, vestibulum a libero. Morbi vestibulum dapibus ligula id gravida.</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sit amet nunc blandit, laoreet diam at, efficitur justo. Praesent cursus purus vel consectetur mattis. Nulla convallis, nisl in cursus pretium, nisl lacus vulputate mauris, quis tempor augue ante at augue. Vivamus imperdiet dictum sem, quis luctus leo tincidunt posuere. Mauris sed metus vehicula, pulvinar magna vitae, gravida mauris. Ut pellentesque, leo et efficitur feugiat, est velit accumsan mi, eget cursus mi nibh laoreet urna. Fusce et ultricies sem, eu malesuada purus. Nullam velit diam, imperdiet sed dui non, tincidunt laoreet lorem. Maecenas ac turpis laoreet, auctor sem a, congue nulla.
-
-Sed porta tortor et tellus elementum, ac imperdiet libero vestibulum. Nulla in ante lacus. Nam consequat orci vel elit lacinia lobortis sit amet vel nulla. Pellentesque eleifend in ante at tincidunt. Curabitur tincidunt hendrerit consectetur. In eu lectus vitae nunc sagittis ultrices non ut urna. Nulla ac iaculis nulla, nec rutrum risus. Duis nec auctor sapien. Donec sit amet risus elit. Quisque in erat sodales, scelerisque tortor vitae, mollis ex. Nulla ac iaculis nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque fermentum augue nec tortor ultrices pulvinar. Nunc orci leo, luctus et dapibus vel, vestibulum a libero. Morbi vestibulum dapibus ligula id gravida.</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sit amet nunc blandit, laoreet diam at, efficitur justo. Praesent cursus purus vel consectetur mattis. Nulla convallis, nisl in cursus pretium, nisl lacus vulputate mauris, quis tempor augue ante at augue. Vivamus imperdiet dictum sem, quis luctus leo tincidunt posuere. Mauris sed metus vehicula, pulvinar magna vitae, gravida mauris. Ut pellentesque, leo et efficitur feugiat, est velit accumsan mi, eget cursus mi nibh laoreet urna. Fusce et ultricies sem, eu malesuada purus. Nullam velit diam, imperdiet sed dui non, tincidunt laoreet lorem. Maecenas ac turpis laoreet, auctor sem a, congue nulla.
-
-Sed porta tortor et tellus elementum, ac imperdiet libero vestibulum. Nulla in ante lacus. Nam consequat orci vel elit lacinia lobortis sit amet vel nulla. Pellentesque eleifend in ante at tincidunt. Curabitur tincidunt hendrerit consectetur. In eu lectus vitae nunc sagittis ultrices non ut urna. Nulla ac iaculis nulla, nec rutrum risus. Duis nec auctor sapien. Donec sit amet risus elit. Quisque in erat sodales, scelerisque tortor vitae, mollis ex. Nulla ac iaculis nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque fermentum augue nec tortor ultrices pulvinar. Nunc orci leo, luctus et dapibus vel, vestibulum a libero. Morbi vestibulum dapibus ligula id gravida.</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sit amet nunc blandit, laoreet diam at, efficitur justo. Praesent cursus purus vel consectetur mattis. Nulla convallis, nisl in cursus pretium, nisl lacus vulputate mauris, quis tempor augue ante at augue. Vivamus imperdiet dictum sem, quis luctus leo tincidunt posuere. Mauris sed metus vehicula, pulvinar magna vitae, gravida mauris. Ut pellentesque, leo et efficitur feugiat, est velit accumsan mi, eget cursus mi nibh laoreet urna. Fusce et ultricies sem, eu malesuada purus. Nullam velit diam, imperdiet sed dui non, tincidunt laoreet lorem. Maecenas ac turpis laoreet, auctor sem a, congue nulla.
-
-Sed porta tortor et tellus elementum, ac imperdiet libero vestibulum. Nulla in ante lacus. Nam consequat orci vel elit lacinia lobortis sit amet vel nulla. Pellentesque eleifend in ante at tincidunt. Curabitur tincidunt hendrerit consectetur. In eu lectus vitae nunc sagittis ultrices non ut urna. Nulla ac iaculis nulla, nec rutrum risus. Duis nec auctor sapien. Donec sit amet risus elit. Quisque in erat sodales, scelerisque tortor vitae, mollis ex. Nulla ac iaculis nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque fermentum augue nec tortor ultrices pulvinar. Nunc orci leo, luctus et dapibus vel, vestibulum a libero. Morbi vestibulum dapibus ligula id gravida.</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sit amet nunc blandit, laoreet diam at, efficitur justo. Praesent cursus purus vel consectetur mattis. Nulla convallis, nisl in cursus pretium, nisl lacus vulputate mauris, quis tempor augue ante at augue. Vivamus imperdiet dictum sem, quis luctus leo tincidunt posuere. Mauris sed metus vehicula, pulvinar magna vitae, gravida mauris. Ut pellentesque, leo et efficitur feugiat, est velit accumsan mi, eget cursus mi nibh laoreet urna. Fusce et ultricies sem, eu malesuada purus. Nullam velit diam, imperdiet sed dui non, tincidunt laoreet lorem. Maecenas ac turpis laoreet, auctor sem a, congue nulla.
-
-Sed porta tortor et tellus elementum, ac imperdiet libero vestibulum. Nulla in ante lacus. Nam consequat orci vel elit lacinia lobortis sit amet vel nulla. Pellentesque eleifend in ante at tincidunt. Curabitur tincidunt hendrerit consectetur. In eu lectus vitae nunc sagittis ultrices non ut urna. Nulla ac iaculis nulla, nec rutrum risus. Duis nec auctor sapien. Donec sit amet risus elit. Quisque in erat sodales, scelerisque tortor vitae, mollis ex. Nulla ac iaculis nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque fermentum augue nec tortor ultrices pulvinar. Nunc orci leo, luctus et dapibus vel, vestibulum a libero. Morbi vestibulum dapibus ligula id gravida.</p>
-
-        </div>
-    </div>
-</div>
-
-</div>
-
         <div class="wp-block-columns">
      
         </div>
@@ -135,7 +155,9 @@ Sed porta tortor et tellus elementum, ac imperdiet libero vestibulum. Nulla in a
             </div>
         </div>
 
+        </div><!-- place-column__content -->
 
+</div><!-- place-column__parent --> 
 		
 	</div><!-- .entry-content -->
 

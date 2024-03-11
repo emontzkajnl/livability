@@ -1581,6 +1581,7 @@ button.insights-button {
 .bp23-thumb {
   // background-size: cover;
   // background-repeat: no-repeat;
+  position: relative;
  
   img {
     object-fit: cover;
@@ -2684,12 +2685,7 @@ border-bottom: 1px solid $green;
       margin: 0 auto;
     }
   }
-  .bp23-thumb {
-    .livability-image-meta {
-      // top: 220px;
-      bottom: revert;
-    }
-  }
+
   .livscore-block {
     &__cat-bkgrnd {
       width: 90px;

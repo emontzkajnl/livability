@@ -31,9 +31,26 @@
   }
 }
 
-.handheld {
-  #mega-menu-wrap-primary {
-    display: none !important;
+// .handheld {
+//   #mega-menu-wrap-primary {
+//     display: none !important;
+//   }
+// }
+
+.place-side-nav {
+  margin-left: 0;
+  padding: 20px;
+  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.6);
+  li {
+    list-style: none;
+  }
+  a {
+    color: black;
+    font-size: 1rem;
+    font-family: "Jost", Arial, Helvetica, sans-serif;
+    &:hover, &:active, &:visited {
+      color: inherit;
+    }
   }
 }
 
@@ -89,6 +106,17 @@
       li {
         background-color: #eee;
         text-indent: 20px;
+        &.menu-item-type-custom {
+          > div {
+            padding: 20px 20px 20px 35px;
+            text-indent: 0;
+            text-transform: uppercase;
+            font-family: "Jost",Arial,Helvetica,sans-serif;
+          }
+        }
+        #ajaxsearchlite1 .probox, div.asl_w .probox {
+          height: 40px;
+        }
       }
       .sub-menu { // third level menu
         a {

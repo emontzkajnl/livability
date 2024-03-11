@@ -120,7 +120,18 @@
   padding: 30px 0;
   z-index: 5;
   overflow-x: visible;
-  background-color: $white2;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  // min-height: 250px;
+}
+
+.full-width-white.wp-block-columns {
+  position: relative;
+  background-color: $white;
+  padding: 30px 0;
+  z-index: 5;
+  overflow-x: visible;
   max-width: none !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
@@ -278,8 +289,6 @@ li.AjaxSearchLiteWidget {
       flex-basis: 200px;
       position: sticky;
       top: 150px;
-      // height: 200px;
-      // background-color: pink;
       flex-grow: 0;
       flex-shrink: 0;
       max-height: 100vh;
@@ -287,20 +296,25 @@ li.AjaxSearchLiteWidget {
     }
     &__content {
       flex-basis: calc(100% - 200px);
-      // height: 800px;
-      // background-color: blue;
       padding-right: 200px;
-      // max-width: 1365px;
-     
        >.wp-block-columns {
         margin: 0 auto;
         max-width: 1365px;
-        // position: relative;
-        // left: -100px;
-        // max-width: calc(100% - 100px);
       }
     }
-
+  }
+  .liv-column-p {
+    .wp-block-column {
+      &:first-child {
+        flex-basis: auto;
+      }
+      &:last-child {
+        //sticky sidebar
+        flex-basis: 360px;
+        padding-left: 60px;
+        position: sticky;
+      }
+    }
   }
 
 }
