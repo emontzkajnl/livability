@@ -1,0 +1,442 @@
+# Translation of Selling Ads in Greek
+# This file is distributed under the same license as the Selling Ads package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2022-10-23 23:01:51+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/3.0.0\n"
+"Language: el_GR\n"
+"Project-Id-Version: Selling Ads\n"
+
+#. Author of the plugin
+msgid "Advanced Ads GmbH"
+msgstr "Advanced Ads GmbH"
+
+#: public/views/woocommerce/myaccount/ads.php:26
+msgid "No orders found"
+msgstr "Δεν βρέθηκαν παραγγελίες"
+
+#: public/views/woocommerce/myaccount/ads.php:20
+msgid "Options"
+msgstr "Επιλογές"
+
+#: public/views/woocommerce/myaccount/ads.php:15
+msgid "Ad Title - Product Name"
+msgstr "Τίτλος διαφήμισης - Όνομα προϊόντος"
+
+#: admin/views/setting-ads-page.php:4
+msgid "The page contains links to the public stats pages of ads when the Advanced Ads Tracking add-on is enabled."
+msgstr "Η σελίδα περιέχει συνδέσμους προς τις δημόσιες σελίδες στατιστικών διαφημίσεων όταν είναι ενεργοποιημένο το πρόσθετο Advanced Ads Tracking."
+
+#: admin/views/setting-ads-page.php:3
+msgid "Show an ”Ads” link in the customer account in the frontend with a list of purchased ads and additional information."
+msgstr "Εμφάνιση ενός συνδέσμου \"Διαφημίσεις\" στον λογαριασμό πελάτη στη διεπαφή με μια λίστα με τις αγορασμένες διαφημίσεις και πρόσθετες πληροφορίες."
+
+#: public/public.php:213
+msgid "The ad setup form is only visible through the link in the purchase confirmation email or account."
+msgstr "Η φόρμα ρύθμισης διαφήμισης είναι ορατή μόνο μέσω του συνδέσμου στο email επιβεβαίωσης αγοράς ή στον λογαριασμό."
+
+#: admin/admin.php:234
+msgid "List ads in the customer account"
+msgstr "Καταχωρίστε διαφημίσεις στον λογαριασμό πελάτη"
+
+#: classes/public-ads-page-endpoint.php:109
+#: classes/public-ads-page-endpoint.php:130
+msgid "Ads"
+msgstr "Διαφημίσεις"
+
+#: public/includes/order.php:110
+msgid "Price option"
+msgstr "Επιλογή τιμής"
+
+#: admin/admin.php:228
+msgid "WooCommerce adjustments"
+msgstr "Προσαρμογές WooCommerce"
+
+#: admin/views/setting-wc-fixes.php:2
+msgid "Applies the following changes to WooCommerce. Especially useful, when you don’t use WooCommerce for anything else than ads."
+msgstr "Εφαρμόζει τις ακόλουθες αλλαγές στο WooCommerce. Ιδιαίτερα χρήσιμο, όταν δεν χρησιμοποιείτε το WooCommerce για οτιδήποτε άλλο εκτός από διαφημίσεις."
+
+#. URI of the plugin
+#. Author URI of the plugin
+msgid "https://wpadvancedads.com/"
+msgstr "https://wpadvancedads.com/"
+
+#. Description of the plugin
+msgid "Let users purchase ads directly in the frontend of your site."
+msgstr "Επιτρέψτε στους χρήστες να αγοράζουν διαφημίσεις απευθείας στο frontend του ιστότοπού σας."
+
+#. Name of the plugin
+msgid "Advanced Ads – Selling Ads"
+msgstr "Advanced Ads – Selling Ads"
+
+#: public/views/product-template.php:64
+msgid "You will be able to submit the ad content after the purchase."
+msgstr "Θα μπορείτε να υποβάλετε το περιεχόμενο της διαφήμισης μετά την αγορά."
+
+#: public/views/product-template.php:38
+msgid "Select a placement"
+msgstr "Επιλέξτε μια τοποθέτηση"
+
+#: public/views/ad-setup-page.php:8
+msgid "Ad Setup"
+msgstr "Ρύθμιση διαφήμισης"
+
+#: public/views/ad-setup-form.php:146
+msgid "The ad was successfully submitted for review."
+msgstr "Η διαφήμιση υποβλήθηκε με επιτυχία για έλεγχο."
+
+#: public/views/ad-setup-form.php:144
+msgid "The ad could not be submitted. Please try later or contact the site admin."
+msgstr "Δεν ήταν δυνατή η υποβολή της διαφήμισης. Δοκιμάστε αργότερα ή επικοινωνήστε με τον διαχειριστή του ιστότοπου."
+
+#: public/views/ad-setup-form.php:141
+msgid "submit this ad"
+msgstr "υποβάλετε αυτήν την διαφήμιση"
+
+#: public/views/ad-setup-form.php:130
+msgid "Target URL"
+msgstr "Διεύθυνση URL στόχου"
+
+#: public/views/ad-setup-form.php:125
+msgid "Max File Size : %s MB"
+msgstr "Μέγιστο μέγεθος αρχείου: %s MB"
+
+#: public/views/ad-setup-form.php:120
+msgid "Image Upload"
+msgstr "Μεταφόρτωση εικόνας"
+
+#: public/views/ad-setup-form.php:112
+msgid "Please enter the ad code. HTML, JavaScript, CSS and plain text are allowed."
+msgstr "Εισαγάγετε τον κωδικό διαφήμισης. Επιτρέπονται HTML, JavaScript, CSS και απλό κείμενο."
+
+#: public/views/ad-setup-form.php:107
+msgid "Ad Code"
+msgstr "Κώδικας διαφήμισης"
+
+#: public/views/ad-setup-form.php:81
+msgid "Ad Type"
+msgstr "Τύπος διαφήμισης"
+
+#: public/views/ad-setup-form.php:70
+msgid "Please complete the ad details so that we can process your order."
+msgstr "Συμπληρώστε τα στοιχεία της διαφήμισης για να μπορέσουμε να επεξεργαστούμε την παραγγελία σας."
+
+#: public/views/ad-setup-form.php:68
+msgid "This ad is currently in review."
+msgstr "Αυτή η διαφήμιση βρίσκεται υπό εξέταση."
+
+#: public/views/ad-setup-form.php:66
+msgid "The content of this ad was already accepted and can no longer be changed."
+msgstr "Το περιεχόμενο αυτής της διαφήμισης ήταν ήδη αποδεκτό και δεν μπορεί πλέον να αλλάξει."
+
+#: public/views/ad-setup-form.php:61
+msgid "Status"
+msgstr "Κατάσταση"
+
+#: public/views/ad-setup-form.php:48
+msgid "Pricing option"
+msgstr "Επιλογή τιμολόγησης"
+
+#. %d is an item ID.
+#: public/views/ad-setup-form.php:43
+msgid "Item #%d"
+msgstr "Στοιχείο #%d"
+
+#: public/views/ad-setup-form.php:16
+msgid "purchased by"
+msgstr "αγοράστηκε από"
+
+#. %d is the number of items purchased.
+#: public/views/ad-setup-form.php:9
+msgid "%d item(s)"
+msgstr "%d στοιχείο(α)"
+
+#. %1$d is an order ID, %2$s a string with the number of items purchased.
+#: public/views/ad-setup-form.php:5
+msgid "Setup page for order #%1$d, %2$s"
+msgstr "Σελίδα ρύθμισης για την παραγγελία #%1$d, %2$s"
+
+#: public/includes/order.php:294
+msgid "Details"
+msgstr "Λεπτομέρειες"
+
+#: public/includes/order.php:179
+msgid "Please enter a positive number of days."
+msgstr "Εισαγάγετε έναν θετικό αριθμό ημερών."
+
+#: public/includes/ajax.php:34
+msgid "Invalid request."
+msgstr "Ακυρη Αίτηση."
+
+#: admin/views/setting-wc-fixes.php:4
+msgid "Remove product images"
+msgstr "Αφαιρέστε τις εικόνες προϊόντων"
+
+#: admin/views/setting-setup-page.php:9
+msgid "Choose the page on which you want to show the ad setup for the client after the purchase. Leave blank for the default layout."
+msgstr "Επιλέξτε τη σελίδα στην οποία θέλετε να εμφανιστεί η ρύθμιση διαφημίσεων για τον πελάτη μετά την αγορά. Αφήστε κενό για την προεπιλεγμένη διάταξη."
+
+#: admin/views/setting-setup-page.php:3
+msgid "(default)"
+msgstr "(Προκαθορισμένο)"
+
+#: admin/views/setting-sender-email.php:2
+msgid "Enter the email used as a sender of ad store specific emails. This works best if the email contains the store domain."
+msgstr "Εισαγάγετε το email που χρησιμοποιείται ως αποστολέας συγκεκριμένων μηνυμάτων ηλεκτρονικού ταχυδρομείου από το κατάστημα διαφημίσεων. Αυτό λειτουργεί καλύτερα εάν το email περιέχει τον τομέα καταστήματος."
+
+#: admin/views/setting-hide-ad-setup.php:2
+msgid "Hide the link to the public ad setup page from the client and don‘t send out emails about the ad setup process."
+msgstr "Απόκρυψη του συνδέσμου προς τη σελίδα ρύθμισης της δημόσιας διαφήμισης από τον πελάτη και μην στέλνετε μηνύματα ηλεκτρονικού ταχυδρομείου σχετικά με τη διαδικασία ρύθμισης της διαφήμισης."
+
+#: admin/views/setting-admin-email.php:2
+msgid "Enter the email used for communication about ads."
+msgstr "Εισαγάγετε το email που χρησιμοποιείται για την επικοινωνία σχετικά με τις διαφημίσεις."
+
+#: admin/views/ad-store-widget.php:20
+msgid "No ad purchases to review"
+msgstr "Δεν υπάρχουν αγορές διαφημίσεων για έλεγχο"
+
+#: admin/views/ad-store-widget.php:11
+msgid "Pending ad purchases"
+msgstr "Αγορές διαφημίσεων σε εκκρεμότητα"
+
+#: admin/views/ad-store-widget.php:2
+msgid "New ad purchases"
+msgstr "Νέες αγορές διαφημίσεων"
+
+#: admin/views/ad-order-meta-box.php:26
+msgid "Product"
+msgstr "Προϊόν"
+
+#: admin/views/ad-order-meta-box.php:20
+msgid "Public Ad Setup URL"
+msgstr "URL ρύθμισης δημόσιας διαφήμισης"
+
+#. %d is an order ID.
+#: admin/views/ad-order-meta-box.php:15
+msgid "Order #%d"
+msgstr "Παραγγελία #%d"
+
+#: admin/views/ad-order-data.php:3
+msgid "Setup URL"
+msgstr "Ρύθμιση URL"
+
+#: admin/includes/placements.php:64
+msgid "This ad is going to <strong>expire %d days</strong> after being published."
+msgstr "Αυτή η διαφήμιση πρόκειται να <strong>λήξει %d ημέρες</strong> μετά τη δημοσίευσή της."
+
+#: admin/includes/placements.php:57
+msgid "When you press “Publish”, this ad will be added to the group <strong>%1$s</strong> in the <strong>%2$s</strong> placement."
+msgstr "Όταν πατήσετε \"Δημοσίευση\", αυτή η διαφήμιση θα προστεθεί στην ομάδα <strong>%1$s</strong> στην τοποθέτηση <strong>%2$s</strong>."
+
+#: admin/includes/placements.php:53
+msgid "When you press “Publish”, this ad will be swapped against the currently assigned ad (<strong>%s</strong>) in the <strong>%2$s</strong> placement."
+msgstr "Όταν πατήσετε \"Δημοσίευση\", αυτή η διαφήμιση θα αντικατασταθεί με τη διαφήμιση που έχει εκχωρηθεί αυτήν τη στιγμή (<strong>%s</strong>) στην τοποθέτηση <strong>%2$s</strong>."
+
+#: admin/includes/placements.php:49
+msgid "When you press “Publish”, this ad will be published in the <strong>%2$s</strong> placement."
+msgstr "Όταν πατήσετε \"Δημοσίευση\", αυτή η διαφήμιση θα δημοσιευτεί στην τοποθέτηση <strong>%2$s</strong>."
+
+#: admin/includes/order-page.php:109
+msgid "Ad Types"
+msgstr "Τύποι διαφημίσεων"
+
+#: admin/includes/order-page.php:108 admin/views/ad-order-meta-box.php:34
+#: public/views/ad-setup-form.php:57
+msgid "Placement"
+msgstr "Τοποθέτηση"
+
+#: admin/includes/order-page.php:107 admin/views/ad-order-meta-box.php:40
+msgid "Sales Type"
+msgstr "Τύπος πωλήσεων"
+
+#: admin/includes/order-page.php:106 admin/views/ad-order-meta-box.php:52
+msgid "Pricing Label"
+msgstr "Ετικέτα τιμολόγησης"
+
+#: admin/includes/order-page.php:105 admin/views/ad-order-meta-box.php:46
+msgid "Pricing Value"
+msgstr "Αξία τιμολόγησης"
+
+#: admin/includes/order-page.php:91
+msgid "Ad"
+msgstr "Διαφήμιση"
+
+#: admin/includes/order-page.php:41
+msgid "Ad Data"
+msgstr "Δεδομένα διαφήμισης"
+
+#: admin/includes/ad-product.php:116
+msgid "Available placements"
+msgstr "Διαθέσιμες τοποθετήσεις"
+
+#: admin/includes/ad-product.php:109 admin/includes/ad-product.php:111
+msgid "define label, value and price separated by |, e.g. 100.000 impressions|100000|20.00"
+msgstr "ορίστε ετικέτα, αξία και τιμή διαχωρισμένα με |, π.χ. 100.000 εμφανίσεις|100.000|20.00"
+
+#: admin/includes/ad-product.php:108
+msgid "Price options"
+msgstr "Επιλογές τιμής"
+
+#: admin/includes/ad-product.php:103
+msgid "Customer can buy per …"
+msgstr "Ο πελάτης μπορεί να αγοράσει ανά …"
+
+#: admin/includes/ad-product.php:98 public/views/product-template.php:54
+msgid "Available ad types"
+msgstr "Διαθέσιμοι τύποι διαφημίσεων"
+
+#: admin/includes/ad-product.php:91
+msgctxt "ad type"
+msgid "image"
+msgstr "εικόνα"
+
+#: admin/includes/ad-product.php:90
+msgctxt "ad type"
+msgid "html"
+msgstr "html"
+
+#: admin/includes/ad-product.php:70
+msgid "Ad Options"
+msgstr "Επιλογές διαφημίσεων"
+
+#: admin/includes/ad-order-meta-box.php:45
+msgid "Order Data"
+msgstr "Δεδομένα παραγγελίας"
+
+#: public/public.php:519 public/includes/ajax.php:58
+msgid "Error when submitting the ad. Please contact the site admin."
+msgstr "Σφάλμα κατά την υποβολή της διαφήμισης. Επικοινωνήστε με τον διαχειριστή του ιστότοπου."
+
+#: public/public.php:504 public/includes/ajax.php:43
+msgid "Ad content missing."
+msgstr "Λείπει περιεχόμενο διαφήμισης."
+
+#. %s is a file size with one decimal
+#: public/public.php:421
+msgid "The allowed file size is %s MB"
+msgstr "Το επιτρεπόμενο μέγεθος αρχείου είναι %s MB"
+
+#: public/public.php:414
+msgid "Extension not allowed, please choose a JPEG, PNG or GIF file."
+msgstr "Δεν επιτρέπεται η επέκταση, επιλέξτε ένα αρχείο JPEG, PNG ή GIF."
+
+#: public/public.php:312
+msgid "You can manage the content of your ads on the <a href=\"%s\">ad setup page</a>."
+msgstr "Μπορείτε να διαχειριστείτε το περιεχόμενο των διαφημίσεών σας στη <a href=\"%s\">σελίδα ρύθμισης διαφημίσεων</a>."
+
+#: classes/plugin.php:159
+msgid "Advanced Ad"
+msgstr "Advanced Ad"
+
+#: classes/plugin.php:81
+msgctxt "sales type"
+msgid "clicks"
+msgstr "κλικς"
+
+#: classes/plugin.php:80
+msgctxt "sales type"
+msgid "impressions"
+msgstr "εμφανίσεις"
+
+#: classes/plugin.php:75
+msgctxt "sales type"
+msgid "days"
+msgstr "ημέρες"
+
+#: classes/plugin.php:74
+msgctxt "sales type"
+msgid "flat price"
+msgstr "σταθερή τιμή"
+
+#: classes/notifications.php:197
+msgid "An ad for order #%d was published."
+msgstr "Δημοσιεύτηκε μια διαφήμιση για την παραγγελία #%d."
+
+#: classes/notifications.php:196
+msgid "An ad for order #%d was published"
+msgstr "Δημοσιεύτηκε μια διαφήμιση για την παραγγελία #%d"
+
+#: classes/notifications.php:152
+msgid "The ad content for ad #%s (order #%d) was rejected by the ad manager."
+msgstr "Το περιεχόμενο διαφήμισης για τη διαφήμιση #%s (παραγγελία #%d) απορρίφθηκε από τον διαχειριστή διαφημίσεων."
+
+#: classes/notifications.php:151
+msgid "Ad for order #%d was rejected"
+msgstr "Η διαφήμιση για την παραγγελία #%d απορρίφθηκε"
+
+#: classes/notifications.php:109
+msgid "PS: If you want to contact the client directly, just reply to this email."
+msgstr "ΥΓ: Εάν θέλετε να επικοινωνήσετε απευθείας με τον πελάτη, απλώς απαντήστε σε αυτό το email."
+
+#: classes/notifications.php:106
+msgid "The ad content for ad #%d (order #%d) was submitted by the client. You can review it now using the following link."
+msgstr "Το περιεχόμενο διαφήμισης για τη διαφήμιση #%d (παραγγελία #%d) υποβλήθηκε από τον πελάτη. Μπορείτε να το ελέγξετε τώρα χρησιμοποιώντας τον παρακάτω σύνδεσμο."
+
+#: classes/notifications.php:104
+msgid "Ad #%d needs approval"
+msgstr "Η διαφήμιση #%d χρειάζεται έγκριση"
+
+#: classes/notifications.php:62 classes/notifications.php:154
+#: classes/notifications.php:199
+msgid "PS: If you want to contact the ad manager directly, just reply to this email."
+msgstr "ΥΓ: Εάν θέλετε να επικοινωνήσετε απευθείας με τον διαχειριστή διαφημίσεων, απλώς απαντήστε σε αυτό το μήνυμα ηλεκτρονικού ταχυδρομείου."
+
+#: classes/notifications.php:61 classes/notifications.php:108
+#: classes/notifications.php:153 classes/notifications.php:198
+msgid ""
+"Sincerely,\n"
+"Your ad team\n"
+"%s"
+msgstr ""
+"Με εκτίμηση,↵\n"
+"Η ομάδα διαφημίσεών σας↵\n"
+"%s"
+
+#: classes/notifications.php:59
+msgid "Thank you for your order. You can already upload the content of your ads following the link below."
+msgstr "Ευχαριστούμε για την παραγγελία σας. Μπορείτε ήδη να ανεβάσετε το περιεχόμενο των διαφημίσεών σας ακολουθώντας τον παρακάτω σύνδεσμο."
+
+#: classes/notifications.php:58
+msgid "Edit your ads for order #%d"
+msgstr "Επεξεργαστείτε τις διαφημίσεις σας για την παραγγελία #%d"
+
+#: admin/admin.php:224
+msgid "Hide ad setup"
+msgstr "Απόκρυψη ρύθμισης διαφήμισης"
+
+#: admin/admin.php:220
+msgid "Setup page"
+msgstr "Σελίδα εγκατάστασης"
+
+#: admin/admin.php:216
+msgid "Store sender email"
+msgstr "Αποθήκευση email αποστολέα"
+
+#: admin/admin.php:212
+msgid "Store admin email"
+msgstr "Αποθηκεύστε το email διαχειριστή"
+
+#: admin/admin.php:207
+msgid "Ad Store"
+msgstr "Διαφημιστικό κατάστημα"
+
+#: admin/admin.php:148
+msgid "<em>Advanced Ads – Selling Ads</em> requires the free <strong>WooCommerce</strong> to be installed and activated on your site."
+msgstr "Το <em>Advanced Ads - Selling Ads</em> απαιτεί το δωρεάν <strong> WooCommerce </strong> να εγκατασταθεί και να ενεργοποιηθεί στον ιστότοπό σας."
+
+#: admin/admin.php:130
+msgid "<em>Advanced Ads – Selling Ads</em> requires the <strong><a href=\"https://wpadvancedads.com\" target=\"_blank\">Advanced Ads</a></strong> plugin to be installed and activated on your site."
+msgstr "Για το <em>Advanced Ads - Selling Ads</em> απαιτείται η εγκατάσταση και η ενεργοποίηση του πρόσθετου <strong><a href=\"https://wpadvancedads.com\" target=\"_blank\">Advanced Ads</a></strong> στον ιστότοπό σας."
+
+#: admin/admin.php:126 admin/admin.php:144
+msgid "Install Now"
+msgstr "Εγκατάσταση τώρα"
+
+#: admin/admin.php:124 admin/admin.php:142
+msgid "Activate Now"
+msgstr "Ενεργοποίηση τώρα"
