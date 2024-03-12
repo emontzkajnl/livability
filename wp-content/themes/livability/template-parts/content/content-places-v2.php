@@ -65,22 +65,23 @@ if (array_key_exists('healthy-places', $topics_array)) {
 <div class="place-column__parent">
     <div class="place-column__nav">
     <ul class="place-side-nav">
+        
+        <li><a href="#top-100" >2024 Top 100</a></li>
+        <li><a href="#things-to-do">Things to Do</a></li>
+        <li><a href="#economy">Economy</a></li>
+        <li><a href="#brands-to-know">Brands to Know</a></li>
+        <li><a href="#quick-facts">Quick Facts</a></li>
+        <li><a href="#weather">Weather</a></li>
+        <li><a href="#map">Map</a></li>
         <?php 
-        echo '<li><a href="#top-100" >2024 Top 100</a></li>';
-        echo array_key_exists('education-careers-opportunity', $topics_array) ? '<li><a href="#things-to-do">Things to Do</a></li>' : '';
-        echo '<li><a href="#economy">Economy</a></li>';
-        echo '<li><a href="#brands-to-know">Brands to Know</a></li>';
-        echo '<li><a href="#quick-facts">Quick Facts</a></li>';
-        echo '<li><a href="#weather">Weather</a></li>';
-        echo '<li><a href="#map">Map</a></li>';
-        echo array_key_exists('education-careers-opportunity', $topics_array) ? '<li><a href="#experiences-and-adventures">Experiences & Adventures</a></li>' : '';
-        echo '<li><a href="#food-scenes">Food Scenes</a></li>';
-        echo '<li><a href="#healthy-places">Healthy Places</a></li>';
-        echo '<li><a href="#make-your-move">Make Your Move</a></li>';
-        echo '<li><a href="#where-to-live-now">Where to Live Now</a></li>';
-        echo '<li><a href="#education-careers-and-opportunities">Education, Careers & Opportunities</a></li>';
-        echo '<li><a href="#love-where-you-live">Love Where You Live</a></li>';
-        echo '<li><a href="#more-about-living-in">More About Living in </a></li>';
+        echo array_key_exists('experiences-adventures', $topics_array) ? '<li><a href="#experiences-and-adventures">Experiences & Adventures</a></li>' : '';
+        echo array_key_exists('food-scenes', $topics_array) ? '<li><a href="#food-scenes">Food Scenes</a></li>': '';
+        echo array_key_exists('healthy-places', $topics_array) ? '<li><a href="#healthy-places">Healthy Places</a></li>': '';
+        echo array_key_exists('make-your-move', $topics_array) ? '<li><a href="#make-your-move">Make Your Move</a></li>': '';
+        echo array_key_exists('where-to-live-now', $topics_array) ? '<li><a href="#where-to-live-now">Where to Live Now</a></li>': '';
+        echo array_key_exists('education-careers-opportunity', $topics_array) ? '<li><a href="#education-careers-and-opportunities">Education, Careers & Opportunities</a></li>': '';
+        echo array_key_exists('love-where-you-live', $topics_array) ? '<li><a href="#love-where-you-live">Love Where You Live</a></li>': '';
+        echo array_key_exists('where-to-live-now', $topics_array) ? '<li><a href="#more-about-living-in">More About Living in </a></li>': '';
         ?>
 
     </ul>

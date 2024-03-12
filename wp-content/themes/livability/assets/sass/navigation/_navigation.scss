@@ -24,6 +24,11 @@
   }
 }
 
+// override parent theme style
+.site-header.has-logo:not(.has-title-and-tagline).has-menu .site-logo {
+  position: static;
+  padding-top: 0;
+}
 
 @media all and (max-width: 485px) {
   .primary-navigation {
@@ -31,11 +36,11 @@
   }
 }
 
-// .handheld {
-//   #mega-menu-wrap-primary {
-//     display: none !important;
-//   }
-// }
+.handheld {
+  #mega-menu-wrap-primary {
+    display: none !important;
+  }
+}
 
 .place-side-nav {
   margin-left: 0;
@@ -127,8 +132,6 @@
     &.toggled {
       width: 100%;
 			position: fixed;
-			// height: 100vh;
-      max-height: calc(100vh - 100px);
       overflow-y: auto;
 			background-color: white;
 			top: 0;
@@ -136,7 +139,7 @@
 			justify-content: flex-start;
       .site-branding {
         position: absolute;
-        top: 20px;
+        top: 30px;
         left: 10px;
       }
       .bar {
@@ -299,7 +302,7 @@ button.sub-menu-toggle:not(:hover):not(:active):not(.has-text-color) {
 }
 
 @media all and (min-width: 728px) {
-  .desktop {
+  body {
     .menu-mobile-menu-container {
       display: none;
     }

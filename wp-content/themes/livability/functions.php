@@ -347,7 +347,7 @@ function liv_best_places_years() {
 		'show_tagcloud'              => true,
 		'show_in_rest'               => true,
 	);
-	register_taxonomy( 'best_places_years', array( 'best_places' ), $args );
+	register_taxonomy( 'best_places_years', array( 'best_places', 'liv_place' ), $args );
 
 }
 add_action( 'init', 'liv_best_places_years', 0 );
