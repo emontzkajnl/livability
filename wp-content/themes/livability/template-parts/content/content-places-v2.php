@@ -9,6 +9,7 @@
  * @since Twenty Twenty-One 1.0
  */
 
+ // get all posts related to place and sort into categories
 $topic_args = array(
     'posts_per_page'    => -1,
     'post_status'       => 'publish',
@@ -39,17 +40,6 @@ $topic_args = array(
            array_push($topics_array[$slug], $ID );
        }
    }
-if (array_key_exists('education-careers-opportunity', $topics_array)) {
-    echo 'has education';
-} else {
-    echo 'no education';
-}
-
-if (array_key_exists('healthy-places', $topics_array)) {
-    echo 'has health';
-} else {
-    echo 'no health';
-}
 
 ?>
 
@@ -87,9 +77,7 @@ if (array_key_exists('healthy-places', $topics_array)) {
     </ul>
     </div>
     <div class="place-column__content">
-        <div class="wp-block-columns">
-     
-        </div>
+    
         <div class="wp-block-columns liv-columns">
             <div class="wp-block-column">
                 <div class="wp-block-columns liv-columns-2">
