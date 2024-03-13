@@ -41,6 +41,7 @@ $topic_args = array(
        }
    }
 
+   $is_2024_bp = has_term('2024', 'best_places_years');
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
@@ -86,7 +87,9 @@ $topic_args = array(
                         <div id="crumbs">
                             <?php echo return_breadcrumbs(); ?> 
                         </div>
-                        
+                        <?php if (has_term('2024', 'best_places_years')) {echo 'has term';} else {echo 'not term';} 
+                        // print_r(get_terms()); 
+                        echo get_the_term_list(get_the_ID(),'best_places_years' );?>
                      
                     </div>
                 </div>
@@ -100,8 +103,15 @@ $topic_args = array(
                     <div class="wp-block-column">
 
                     
-                     <h1 class="h1"><?php echo get_the_title(); ?></h1>
-                     <?php //If there is and article connected to this place with a 
+                     
+                     <?php 
+                     if ($is_2024_bp) {
+                         echo '<h2 class="h1">'.get_the_title().'</h2>';
+                     } else {
+                        echo '<h1 class="h1">'.get_the_title().'</h1>';
+                     }
+                     
+                     //If there is and article connected to this place with a 
                      // topic of connected community, show block
                      echo do_shortcode('[addtoany]'); 
                      get_template_part( 'template-parts/blocks/cc-cta-block' );
