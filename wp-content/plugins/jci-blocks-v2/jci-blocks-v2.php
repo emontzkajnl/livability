@@ -1021,6 +1021,7 @@ function jci_blocks_render_infobox($attributes, $content, $block ) {
 }
 
 function jci_blocks_livscore_block() {
+    if (get_post_type( ) == 'best_places'):
     $place = get_field('place_relationship');
     foreach ($place as $p) {
         if (get_field('place_type', $p) == 'city') {
@@ -1052,6 +1053,7 @@ function jci_blocks_livscore_block() {
     arsort($top_array);
     $top_array = array_slice($top_array, 0, 3);
     $top_array_keys = array_keys($top_array);
+    $post_type = get_post_type(  );
     $html = <<< EOF
     <div class="livscore-block">
     <div class="livscore-block__arc" >
@@ -1118,6 +1120,7 @@ foreach ($cat_array as $key => $cat) {
 
 $html .= '</div>';
     return $html; 
+endif; // if place type is best place
 }
 
 function jci_blocks_weather_block() {

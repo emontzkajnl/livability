@@ -312,6 +312,8 @@ li.AjaxSearchLiteWidget {
         //sticky sidebar
         flex-basis: 360px;
         padding-left: 60px;
+        flex-grow: 0;
+        flex-shrink: 0;
         position: sticky;
       }
     }
