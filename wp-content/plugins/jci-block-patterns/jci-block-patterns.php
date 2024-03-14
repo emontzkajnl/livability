@@ -79,6 +79,14 @@ function jci_register_block_patterns() {
             )
         );
 
+        register_block_pattern(
+            'jci_gutenberg-block-patterns/2024-top-100-content',
+            array( 'title'  => __('Template for Page Layout', 'jci_register_block_patterns'),
+            'categories'    => array('jci'),
+            'content'       => getBlockPattern('2024-top-100-content'),
+            )
+        );
+
   
     }
 }
@@ -383,6 +391,38 @@ function getBlockPattern($pattern_name){
             <div class="wp-block-column"><!-- wp:jci-blocks/ad-area-two /--></div>
             <!-- /wp:column --></div>
             <!-- /wp:columns -->';
+        case "2024-top-100-content":
+            return '<!-- wp:group {"layout":{"type":"constrained"}} -->
+            <div class="wp-block-group"><!-- wp:columns -->
+            <div class="wp-block-columns"><!-- wp:column -->
+            <div class="wp-block-column"><!-- wp:heading -->
+            <h2 class="wp-block-heading" id="h-what-make-city-state-a-best-place-to-live-in-2024">What make City, State a Best Place to Live in 2024?</h2>
+            <!-- /wp:heading -->
+            
+            <!-- wp:paragraph -->
+            <p>Add content here.</p>
+            <!-- /wp:paragraph -->
+            
+            <!-- wp:jci-blocks/livscore-block /-->
+            
+            <!-- wp:heading -->
+            <h2 class="wp-block-heading" id="h-things-to-do-in-city-state">Things to Do in City, State</h2>
+            <!-- /wp:heading -->
+            
+            <!-- wp:yoast/faq-block {"questions":[{"id":"faq-question-1710431183578","question":["Enter question"],"answer":["Answer question"],"jsonQuestion":"Enter question","jsonAnswer":"Answer question"}]} -->
+            <div class="schema-faq wp-block-yoast-faq-block"><div class="schema-faq-section" id="faq-question-1710431183578"><strong class="schema-faq-question">Enter question</strong> <p class="schema-faq-answer">Answer question</p> </div> </div>
+            <!-- /wp:yoast/faq-block -->
+            
+            <!-- wp:heading -->
+            <h2 class="wp-block-heading" id="h-the-local-and-state-economy-in-city-state">The Local and State Economy in City, State</h2>
+            <!-- /wp:heading -->
+            
+            <!-- wp:yoast/faq-block {"questions":[{"id":"faq-question-1710431183578","question":["Enter question"],"answer":["Answer question"],"jsonQuestion":"Enter question","jsonAnswer":"Answer question"}]} -->
+            <div class="schema-faq wp-block-yoast-faq-block"><div class="schema-faq-section" id="faq-question-1710431183578"><strong class="schema-faq-question">Enter question</strong> <p class="schema-faq-answer">Answer question</p> </div> </div>
+            <!-- /wp:yoast/faq-block --></div>
+            <!-- /wp:column --></div>
+            <!-- /wp:columns --></div>
+            <!-- /wp:group -->';
 
       default:
         return "";
