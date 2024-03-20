@@ -120,7 +120,7 @@ class License
     /**
      * The last error associated with the license.
      *
-     * @var \WP_Error
+     * @var \WP_Error|null
      */
     protected $_error;
 
@@ -437,6 +437,25 @@ class License
     public function hostingLicense()
     {
         return (bool) preg_match('/^L\d /', (string) $this->plan);
+    }
+
+    /**
+     * Returns the error meta data.
+     *
+     * @return array<string, mixed>
+     */
+    public function errorData()
+    {
+        if (! isset($this->_error)) {
+            return [];
+        }
+
+        return array_merge([
+            'code' => $this->_error->get_error_code(),
+        ], array_diff_key(
+            $this->_error->get_error_data() ?? [],
+            ['token' => null]
+        ));
     }
 
     /**

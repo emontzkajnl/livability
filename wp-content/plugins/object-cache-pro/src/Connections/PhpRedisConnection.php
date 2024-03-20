@@ -214,7 +214,11 @@ class PhpRedisConnection extends Connection implements ConnectionInterface
     public function flushdb($async = null)
     {
         if ($async ?? $this->config->async_flush) {
-            return $this->command('flushdb', [true]);
+            $asyncValue = \version_compare((string) \phpversion('redis'), '6.0', '<')
+                ? true // PhpRedis 4.x - 5.x
+                : false; // PhpRedis 6.x
+
+            return $this->command('flushdb', [$asyncValue]);
         }
 
         return $this->withoutTimeout(function () {

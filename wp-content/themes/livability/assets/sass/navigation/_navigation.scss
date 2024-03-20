@@ -45,9 +45,13 @@
 .place-side-nav {
   margin-left: 0;
   padding: 20px;
-  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.6);
+  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.4);
+  border-radius: 0 0 5px 0;
+  margin-right: 5px;
   li {
     list-style: none;
+    line-height: 1;
+    padding-bottom: 5px;
   }
   a {
     color: black;

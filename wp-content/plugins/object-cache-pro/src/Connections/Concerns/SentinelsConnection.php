@@ -75,11 +75,9 @@ trait SentinelsConnection
             }
         }
 
-        $message = isset($error)
-            ? sprintf('Unable to connect to any valid sentinels [%s]', $error->getMessage())
-            : 'Unable to connect to any valid sentinels';
+        $lastMessage = isset($error) ? "[{$error->getMessage()}]" : '';
 
-        throw new ConnectionException($message, 0, $error ?? null);
+        throw new ConnectionException("Unable to connect to any valid sentinels {$lastMessage}", 0, $error ?? null);
     }
 
     /**

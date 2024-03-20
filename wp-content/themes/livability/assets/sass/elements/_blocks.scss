@@ -68,6 +68,29 @@
     display: none;
   }
 }
+.place-topics-2 {
+  display: block;
+  margin-top: 40px;
+  &__img-container {
+    position: relative;
+    height: 280px;
+    width: 100%;
+    img {
+      object-fit: cover;
+      position: absolute;
+      width: 100%;
+      height: 100% !important;
+      max-width: unset;
+      left: 0;
+      top: 0;
+    }
+  }
+  &__title {
+    a {
+      color: black;
+    }
+  }
+}
 .more-like-this-block {
   p {
     font-family: "Jost", Arial, Helvetica, sans-serif;
@@ -2659,7 +2682,58 @@ border-bottom: 1px solid $green;
   }
 }
 
+.more-about-living {
+  padding-top: 80px;
+  padding-bottom: 80px;
+  margin-bottom: -130px !important;
+  background-color: #f1f5f8;
+  a {
+    color: black;
+    text-decoration: none;
 
+  }
+  h3 {
+    color: black;
+    text-decoration: none;
+  }
+  &__card {
+    background-color: white;
+    height: 210px;
+    width: 100%;
+    position: relative;
+    padding-right: 50%;
+    padding-left: 30px;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    margin-bottom: 30px;
+    &.moving-to {
+      img {
+        bottom: 0;
+        right: calc(25% - 62px);
+      }
+    }
+    &.best-places {
+      img {
+        bottom: 5px;
+        right: calc(25% - 120px);
+      }
+    }
+    &.ultimate-guide {
+      img {
+        bottom: 0;
+        right: calc(25% - 100px);
+      }
+     
+    }
+  }
+  img {
+    position: absolute;
+    height: 200px;
+    // bottom: 0;
+    // right: 25%;
+  }
+}
 
 @media screen and (max-width: 480px) {
 
@@ -3013,6 +3087,18 @@ border-bottom: 1px solid $green;
   }
 }
 @media screen and (min-width: 960px) {
+  .place-topics-2 {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    &__card {
+      flex-basis: 33%;
+      margin-left: 15px;
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
   .wp-block-latest-posts {
     &__list {
       display: flex;
@@ -3235,6 +3321,7 @@ border-bottom: 1px solid $green;
       display: block;
     }
   }
+
   
   .small-articles {
     display: flex;
@@ -3270,6 +3357,25 @@ border-bottom: 1px solid $green;
 }
 
 @media screen and (min-width: 1030px) {
+
+  .more-about-living {
+    &__cards {
+      display: flex;
+      flex-direction: row;
+      > a {
+        flex-basis: 33%;
+        margin-left: 45px;
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+    }
+    &__card {
+      &.more-about-living {
+        padding-right: 55%;
+      }
+    }
+  }
   
   div[class^="curated-posts-"] {
     display: flex;

@@ -146,7 +146,11 @@ class PhpRedisReplicatedConnection extends PhpRedisConnection implements Connect
     public function flushdb($async = null)
     {
         if ($async ?? $this->config->async_flush) {
-            return $this->primary->command('flushdb', [true]);
+            $asyncValue = \version_compare((string) \phpversion('redis'), '6.0', '<')
+                ? true // PhpRedis 4.x - 5.x
+                : false; // PhpRedis 6.x
+
+            return $this->primary->command('flushdb', [$asyncValue]);
         }
 
         return $this->withoutTimeout(function () {

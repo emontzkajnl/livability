@@ -1134,7 +1134,7 @@ function get_topic_sponsors() {
 	}
 	
 }
-add_action('wp_head','get_topic_sponsors');
+// add_action('wp_head','get_topic_sponsors');
 
 function change_post_menu_label() {
     global $menu;

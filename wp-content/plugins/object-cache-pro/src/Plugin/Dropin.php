@@ -86,7 +86,7 @@ trait Dropin
          * @param  bool  $autoflush  Whether to auto-flush the object cache. Default true.
          */
         if ((bool) apply_filters('objectcache_autoflush', true)) {
-            $this->flush();
+            $this->resetCache();
         }
 
         /**
@@ -132,7 +132,7 @@ trait Dropin
          * @param  bool  $autoflush  Whether to auto-flush the object cache. Default true.
          */
         if ((bool) apply_filters('objectcache_autoflush', true)) {
-            $this->flush();
+            $this->resetCache();
         }
 
         return $result;

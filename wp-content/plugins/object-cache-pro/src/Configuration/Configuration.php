@@ -353,7 +353,7 @@ final class Configuration
      *
      * @var int
      */
-    protected $retries = 5;
+    protected $retries = 3;
 
     /**
      * The backoff algorithm.
@@ -476,6 +476,7 @@ final class Configuration
      * - `enabled`: (bool) Whether to collect and display analytics
      * - `persist`: (bool) Whether to restore analytics data after cache flushes
      * - `retention`: (int) The number of seconds to keep analytics before purging them
+     * - `sample_rate`: (float) The sample rate for analytics in the range of 0 to 100
      * - `footnote`: (bool) Whether to print a HTML comment with non-sensitive metrics
      *
      * @var \RedisCachePro\Support\AnalyticsConfiguration
@@ -484,6 +485,7 @@ final class Configuration
         'enabled' => true,
         'persist' => true,
         'retention' => 60 * 60 * 2,
+        'sample_rate' => 100,
         'footnote' => true,
     ];
 
@@ -1551,6 +1553,9 @@ final class Configuration
                 case 'retention':
                     $this->analytics[$option] = (int) $analytics[$option];
                     break;
+                case 'sample_rate':
+                    $this->analytics[$option] = (float) $analytics[$option];
+                    break;
                 default:
                     $this->analytics[$option] = (bool) $analytics[$option];
                     break;
@@ -1930,6 +1935,7 @@ final class Configuration
             'tls_options' => $this->tls_options,
             'updates' => $this->updates,
             'debug' => $this->debug,
+            'strict' => $this->strict,
             'save_commands' => $this->save_commands,
         ];
     }

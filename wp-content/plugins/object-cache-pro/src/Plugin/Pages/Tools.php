@@ -197,10 +197,6 @@ class Tools extends Page
             $backtrace
         );
 
-        if (strpos($caller, 'Plugin->deactivate') || strpos($caller, 'Plugin->on_deactivation')) {
-            return 'Plugin deactivated';
-        }
-
         if (strpos($caller, 'Plugin->handleWidgetActions')) {
             return 'Dashboard widget';
         }
@@ -211,6 +207,10 @@ class Tools extends Page
 
         if (strpos($caller, 'Plugin->disableDropin')) {
             return 'Drop-in disabled';
+        }
+
+        if (strpos($caller, '->bootMetadata')) {
+            return 'Integrity protection';
         }
 
         if ($caller == 'Cache_Command->flush') {
@@ -231,6 +231,10 @@ class Tools extends Page
 
         if (strpos($caller, 'Commands->flush')) {
             return 'wp redis flush';
+        }
+
+        if (strpos($caller, 'Commands->reset')) {
+            return 'wp redis reset';
         }
 
         if (strpos($caller, 'Plugin\Api\\')) {

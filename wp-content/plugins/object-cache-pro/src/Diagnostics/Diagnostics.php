@@ -325,7 +325,7 @@ class Diagnostics implements ArrayAccess
         $relayMemory = Diagnostic::name('Relay Memory');
 
         if ($this->relayAtCapacity()) {
-            $relayMemory->warning($humanMemory);
+            $relayMemory->error($humanMemory);
         } else {
             $relayMemory->value($humanMemory);
         }
@@ -512,17 +512,32 @@ class Diagnostics implements ArrayAccess
             $diagnostic->comment($license['reason']);
         }
 
-        switch ($license['state']) {
+        $state = (string) $license['state'];
+
+        switch ($state) {
             case 'licensed':
-                return $diagnostic->success(ucwords((string) $license['state']));
-            case 'unlicensed':
+                return $diagnostic->success(ucwords($state));
             case 'unknown':
-                return $diagnostic->warning(ucwords((string) $license['state']));
+                return $diagnostic->value(ucwords($state));
             case 'suspended':
-                return $diagnostic->error(ucwords((string) $license['state']));
-            default:
-                return $diagnostic->value(ucwords((string) $license['state']));
+                return $diagnostic->error(ucwords($state));
         }
+
+        // Handle `unlicensed` state
+        switch ($license['reason']) {
+            case 'NO_KEY':
+                return $diagnostic->value(ucwords($state));
+            case 'UNKNOWN_KEY':
+            case 'DEFAULT_UUID':
+            case 'EARLY_HEARTBEAT':
+            case 'BINARY_SUSPENDED':
+            case 'LICENSE_SUSPENDED':
+            case 'INVALID_HEARTBEAT':
+            case 'SUBSCRIPTION_INACTIVE':
+                return $diagnostic->error(ucwords($state));
+        }
+
+        return $diagnostic->error(ucwords($state));
     }
 
     /**
@@ -1046,13 +1061,6 @@ class Diagnostics implements ArrayAccess
 
         $isValid = $dropin['PluginURI'] === $plugin['PluginURI'];
 
-        $isValid = (bool) apply_filters_deprecated(
-            'rediscache_validate_dropin',
-            [$isValid, $dropin, $plugin],
-            '1.14.0',
-            'objectcache_validate_dropin'
-        );
-
         /**
          * Filter the drop-in validation result.
          *
@@ -1079,13 +1087,6 @@ class Diagnostics implements ArrayAccess
         $dropin = $this->dropinMetadata();
 
         $upToDate = version_compare($dropin['Version'], $plugin['Version'], '>=');
-
-        $upToDate = (bool) apply_filters_deprecated(
-            'rediscache_validate_dropin_version',
-            [$upToDate, $dropin, $plugin],
-            '1.14.0',
-            'objectcache_validate_dropin_version'
-        );
 
         /**
          * Filter the drop-in version check result.
@@ -1116,7 +1117,7 @@ class Diagnostics implements ArrayAccess
         }
 
         $stub = realpath(__DIR__ . '/../../stubs/object-cache.php');
-        $temp = WP_CONTENT_DIR . '/.object-cache-test.tmp';
+        $temp = WP_CONTENT_DIR . '/object-cache.tmp';
 
         if (! $wp_filesystem->exists($stub)) {
             return new WP_Error('fs', 'Stub file does not exist');

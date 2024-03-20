@@ -18,8 +18,6 @@ namespace RedisCachePro\Plugin;
 
 use Throwable;
 
-use Relay\Relay;
-
 use RedisCachePro\License;
 use RedisCachePro\Diagnostics\Diagnostics;
 use RedisCachePro\ObjectCaches\ObjectCache;
@@ -146,19 +144,12 @@ trait Health
             },
         ];
 
-        $checkFilesystem = (bool) apply_filters_deprecated(
-            'rediscache_check_filesystem',
-            [true],
-            '1.14.0',
-            'objectcache_check_filesystem'
-        );
-
         /**
          * Whether to run the filesystem health check.
          *
-         * @param  bool  $run_check  Whether to run the filesystem health check. Default `true`.
+         * @param  bool  $run_check  Whether to run the filesystem health check.
          */
-        if ((bool) apply_filters('objectcache_check_filesystem', $checkFilesystem)) {
+        if ((bool) apply_filters('objectcache_check_filesystem', ! defined('DISALLOW_FILE_MODS') || ! DISALLOW_FILE_MODS)) {
             $tests['async']['objectcache_filesystem'] = [
                 'label' => 'Object Cache Pro filesystem',
                 'test' => 'objectcache-filesystem',
@@ -824,8 +815,9 @@ trait Health
             wp_send_json_success([
                 'label' => 'Unable to verify license token',
                 'description' => sprintf(
-                    '<p>The license token <code>••••••••%s</code> could not be verified.</p>',
-                    substr($license->token(), -4)
+                    '<p>The license token <code>••••••••%s</code> could not be verified.</p><p><code>%s</code></p>',
+                    substr($license->token(), -4),
+                    esc_html(implode(', ', $license->errorData()))
                 ),
                 'badge' => ['label' => 'Object Cache Pro', 'color' => 'red'],
                 'status' => 'critical',
@@ -880,12 +872,13 @@ trait Health
 
         $response = $this->request('test');
 
-        if (is_wp_error($response) && strpos((string) $response->get_error_code(), 'objectcache_', 0) === false) {
+        if (is_wp_error($response)) {
             wp_send_json_success([
                 'label' => 'Licensing API is unreachable',
                 'description' => sprintf(
-                    '<p>WordPress is unable to communicate with Object Cache Pro’s licensing API.</p><p><code>%s</code></p>',
-                    esc_html($response->get_error_message())
+                    '<p>WordPress is unable to communicate with Object Cache Pro’s licensing API.</p><p><code>%s (%s)</code></p>',
+                    esc_html($response->get_error_message()),
+                    esc_html(implode(', ', $response->get_error_data() ?? []))
                 ),
                 'badge' => ['label' => 'Object Cache Pro', 'color' => 'red'],
                 'status' => 'critical',
@@ -995,7 +988,12 @@ trait Health
             wp_send_json_success([
                 'label' => 'Unable to manage object cache drop-in',
                 'description' => sprintf(
-                    '<p>Object Cache Pro is unable to access the local filesystem and cannot manage the object cache drop-in.</p><p><code>%s</code></p>',
+                    implode('', [
+                        '<p>Object Cache Pro is unable to access the local filesystem and may not be able to manage the object cache drop-in.</p>',
+                        '<p>The PHP process must be allowed to write to the <code>%1$s/object-cache.php</code> and <code>%1$s/object-cache.tmp</code> file.</p>',
+                        '<p><code>%2$s</code></p>',
+                    ]),
+                    esc_html(str_replace(ABSPATH, '', WP_CONTENT_DIR)),
                     esc_html($fs->get_error_message())
                 ),
                 'badge' => ['label' => 'Object Cache Pro', 'color' => 'red'],

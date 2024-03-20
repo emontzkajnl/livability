@@ -5,15 +5,6 @@ defined('ABSPATH') || exit;
 require_once __DIR__ . '/bootstrap.php';
 
 /**
- * Improve `WP_Query::get_posts()` performance by just fetching the IDs
- * of the found posts and then individually fetch each post by ID.
- * Rather than fetching every complete row at once.
- */
-if (\function_exists('\add_filter')) {
-    \add_filter('split_the_query', '__return_true');
-}
-
-/**
  * Determines whether the object cache implementation supports a particular feature.
  *
  * Possible values include:
@@ -98,10 +89,12 @@ function wp_cache_init()
 
         $objectCache->add_global_groups([
             'analytics',
+            'objectcache',
         ]);
 
         $objectCache->add_non_prefetchable_groups([
             'analytics',
+            'objectcache',
             'userlogins',
             'wc_session_id',
         ]);
@@ -109,9 +102,14 @@ function wp_cache_init()
         // set up multisite environments
         if (is_multisite()) {
             $objectCache->setMultisite(true);
+
+            // prefetch once `$blog_id` is available
+            if (method_exists($objectCache, 'prefetch')) {
+                add_action('ms_loaded', [$objectCache, 'prefetch'], 0);
+            }
         }
 
-        $connection->memoize('ping');
+        $objectCache->boot();
 
         $wp_object_cache = $objectCache;
     } catch (Throwable $exception) {
@@ -132,12 +130,6 @@ function wp_cache_init()
         error_log('objectcache.warning: Failing over to in-memory object cache');
 
         $wp_object_cache = new \RedisCachePro\ObjectCaches\ArrayObjectCache($config);
-    }
-
-    if (\is_multisite()) {
-        \add_action('ms_loaded', [$wp_object_cache, 'boot'], 0);
-    } else {
-        $wp_object_cache->boot();
     }
 
     \register_shutdown_function([$wp_object_cache, 'close']);
@@ -264,6 +256,10 @@ function wp_cache_flush()
         if (! $should_flush) {
             return false;
         }
+    }
+
+    if ($wp_object_cache->shouldFlushBlog()) {
+        return $wp_object_cache->flushBlog();
     }
 
     $wp_object_cache_flushlog[] = [

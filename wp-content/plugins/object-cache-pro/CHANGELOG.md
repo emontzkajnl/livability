@@ -2,7 +2,52 @@
 
 All notable changes to this project will be documented in this file.
 
-## 1.19.0 - 2023-07-21
+## v1.20.2 - 2023-10-28
+### Fixed
+- Fixed plugin version string
+
+## v1.20.1 - 2023-10-27
+### Changed
+- Log exception message when cache reset fails
+- Don't run filesystem health check if `DISALLOW_FILE_MODS` is `true`
+- Changed filesystem test file name from `.object-cache-test.tmp` to `object-cache.tmp`
+
+### Fixed
+- Fixed `async_flush` when using PhpRedis v6.0
+- Avoid `TypeError` when using `WP_Error::get_error_data()`
+
+## v1.20.0 - 2023-09-19
+### Added
+- Added cache integrity protection
+- Added analytics charts to dashboard widget
+- Added `objectcache_widget_metrics` filter
+- Added `wp redis reset` command
+- Added support for `OBJECTCACHE_OVERRIDE` and `OBJECTCACHE_MERGE` constants
+- Added support for PhpRedis v6.0
+- Added `analytics.sample_rate` configuration option
+
+### Changed
+- Reduce default `retries` from `5` to `3`
+- Refresh nonce using `X-WP-Nonce` header
+- Expose Relay license issues in Dashboard widget
+- Refactored various flush mechanisms
+- Expanded `ObjectCache::withoutMutations()` callback type from `Closure` to `callable`
+- Delete `objectcache_*` site options when uninstalling
+- Improved license API error handling
+
+### Fixed
+- Fixed failover when using Redis Sentinel
+- Bump `plugins_api` priority to prevent plugins from hijacking responses
+- Mute rare `undefined array key` notice in `flushBacktraceSummary()`
+
+### Removed
+- Removed `split_the_query` filter in favor of native WordPress 6.4 behavior
+- Removed deprecated `rediscache_*` filters
+- Removed deprecated `ObjectCache::flushMemory()` method
+- Removed `objectcache_analytics_retention` filter
+- Removed `--async` option from `wp redis flush`
+
+## v1.19.0 - 2023-07-21
 ### Added
 - Added `strict` configuration option
 - Added group flush log widget
@@ -32,7 +77,7 @@ All notable changes to this project will be documented in this file.
 - Avoid confusing hiredis error message Relay connection times out
 - Avoid fatal error when `gmt_offset` is not valid
 
-## 1.18.2 - 2023-04-04
+## v1.18.2 - 2023-04-04
 ### Added
 - Added Query Monitor constants to panel
 
@@ -46,7 +91,7 @@ All notable changes to this project will be documented in this file.
 - Fixed `storeWaitAverage` calculation
 - Fixed supported Redis version indicator when using Relay
 
-## 1.18.1 - 2023-03-24
+## v1.18.1 - 2023-03-24
 ### Changed
 - Updated End-User License Agreement
 - Don't flush cache when updating drop-in
@@ -56,7 +101,7 @@ All notable changes to this project will be documented in this file.
 - Fixed widget flush button label on multisite
 - Fixed flushing groups that end with blog id on multisite
 
-## 1.18.0 - 2023-02-20
+## v1.18.0 - 2023-02-20
 ### Added
 - Added `wp redis flush-group` CLI command
 
@@ -80,7 +125,7 @@ All notable changes to this project will be documented in this file.
 - Removed metrics keys from `info()` in favor of `metrics()`
 - Removed `backtrace_summary` logging and deprecated `BacktraceLogger`
 
-## 1.17.1 - 2023-01-28
+## v1.17.1 - 2023-01-28
 ### Changed
 - Switched to faster Zstandard compression level
 - Handle non `int|string` cache keys stricter and more gracefully
@@ -94,7 +139,7 @@ All notable changes to this project will be documented in this file.
 - Fixed setting `analytics` option to boolean
 - Fixed calling `get_plugin_data()` on non-existent drop-in
 
-## 1.17.0 - 2022-11-23
+## v1.17.0 - 2022-11-23
 ### Added
 - Added support replicated and sentinel Relay connections
 - Added `group_flush` configuration option supporting `keys` (new faster default), `scan` (previous default) and `incremental` (enormous datasets)
@@ -138,7 +183,7 @@ All notable changes to this project will be documented in this file.
 - Dropped `*ObjectCache::Client` constants
 - Dropped `WP_REDIS_PHPREDIS_OPTIONS` constant
 
-## 1.16.4 - 2022-10-31
+## v1.16.4 - 2022-10-31
 ### Added
 - Added support for WordPress 6.1's `wp_cache_supports()`
 
@@ -151,7 +196,7 @@ All notable changes to this project will be documented in this file.
 - Fixed rare undefined `OPT_MAX_RETRIES` constant error
 - Don't use WordPress 5.3's `WP_REST_Request::has_param()`
 
-## 1.16.3 - 2022-10-09
+## v1.16.3 - 2022-10-09
 ### Added
 - Added new `wp redis status` command
 - Added `objectcache_omit_settings_pointer` filter
@@ -170,7 +215,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - Removed no longer needed `Relay::dispatchEvents()` calls
 
-## 1.16.2 - 2022-09-29
+## v1.16.2 - 2022-09-29
 ### Added
 - Added support for Relay's "client only" mode
 - Added compatibility with new Query Monitor data classes
@@ -194,11 +239,11 @@ All notable changes to this project will be documented in this file.
 - Hide more update notices when `updates` is `false`
 - Don't inline widget CSS twice
 
-## 1.16.1 - 2022-08-29
+## v1.16.1 - 2022-08-29
 ### Fixed
 - Fixed health check condition
 
-## 1.16.0 - 2022-08-22
+## v1.16.0 - 2022-08-22
 ### Added
 - Added WordPress 6.1 `wp_cache_flush_group()` support
 - Added REST API endpoint for plugin options
@@ -246,7 +291,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - ⚠️ Removed deprecated `flushRuntimeCache()` helper
 
-## 1.15.2 - 2022-06-30
+## v1.15.2 - 2022-06-30
 ### Added
 - Added SQL queries metric
 
@@ -256,7 +301,7 @@ All notable changes to this project will be documented in this file.
 - Tweak widget latency warning color
 - Fixed rare error of `get_num_queries()` not being available
 
-## 1.15.1 - 2022-06-19
+## v1.15.1 - 2022-06-19
 ### Added
 - Show basename in diagnostics
 
@@ -271,7 +316,7 @@ All notable changes to this project will be documented in this file.
 - Avoid rare undefined index when not connected in Query Monitor
 - Catch all `Throwable` errors in `ObjectCache::error()`, not only exceptions
 
-## 1.15.0 - 2022-06-10
+## v1.15.0 - 2022-06-10
 
 This releases introduces a settings page to keep an eye on cache analytics, manage plugin updates and use diagnostic tools.
 
@@ -329,7 +374,7 @@ This releases introduces a settings page to keep an eye on cache analytics, mana
 - Prevent risky plugin auto-updates
 - Prevent plugin upgrades when using version control
 
-## 1.14.5 - 2022-03-22
+## v1.14.5 - 2022-03-22
 ### Added
 - Store `alloptions` as individual keys when using Relay
 - Added health check for Relay configuration
@@ -348,7 +393,7 @@ This releases introduces a settings page to keep an eye on cache analytics, mana
 - Avoid rare `TypeError` in `Diagnostics`
 - Avoid rare error in Query Monitor when no connection is present
 
-## 1.14.4 - 2022-02-03
+## v1.14.4 - 2022-02-03
 ### Added
 - Introduced `ObjectCache::Client` and `ObjectCache::clientName()`
 
@@ -363,7 +408,7 @@ This releases introduces a settings page to keep an eye on cache analytics, mana
 ### Fixed
 - Avoid warnings when displaying rare commands in Query Monitor
 
-## 1.14.3 - 2021-12-30
+## v1.14.3 - 2021-12-30
 ### Added
 - Added file header health checks
 - Use Query Monitor backtraces and components when available
@@ -387,7 +432,7 @@ This releases introduces a settings page to keep an eye on cache analytics, mana
 - Corrected value used for total Relay memory
 - Avoid warning in `Diagnostics` when `WP_REDIS_CONFIG` is not set
 
-## 1.14.2 - 2021-12-12
+## v1.14.2 - 2021-12-12
 ### Added
 - Added `objectcache_dashboard_widget` filter
 - Added `objectcache_network_dashboard_widget` filter
@@ -407,14 +452,14 @@ This releases introduces a settings page to keep an eye on cache analytics, mana
 ### Fixed
 - Several PHP 8.1 compatibility fixes
 
-## 1.14.1 - 2021-10-26
+## v1.14.1 - 2021-10-26
 ### Fixed
 - Fixed invalid nonce errors
 
 ### Removed
 - Removed unnecessary `phpversion()` and `setOption()` calls in `RelayConnector`
 
-## 1.14.0 - 2021-10-26
+## v1.14.0 - 2021-10-26
 
 ⚠️ This release contains minor breaking changes.
 

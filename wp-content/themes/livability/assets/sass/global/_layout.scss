@@ -187,6 +187,10 @@ li.AjaxSearchLiteWidget {
 //   }
 // }
 
+.place-column__nav {
+  display: none;
+}
+
 
 @media screen and (min-width: 550px) {
   .bp-sponsor-container {
@@ -286,17 +290,20 @@ li.AjaxSearchLiteWidget {
       flex-wrap: nowrap;
     }
     &__nav {
+      display: block;
       flex-basis: 200px;
       position: sticky;
-      top: 150px;
+      top: 100px;
       flex-grow: 0;
       flex-shrink: 0;
       max-height: 100vh;
       overflow-y: auto;
+      margin-right: 60px;
     }
     &__content {
-      flex-basis: calc(100% - 200px);
-      padding-right: 200px;
+      // flex-basis: calc(100% - 200px);
+      // padding-right: 200px;
+      padding-right: 15px;
        >.wp-block-columns {
         margin: 0 auto;
         max-width: 1365px;
@@ -310,8 +317,8 @@ li.AjaxSearchLiteWidget {
       }
       &:last-child {
         //sticky sidebar
-        flex-basis: 360px;
-        padding-left: 60px;
+        flex-basis: 300px;
+        margin-left: 60px;
         flex-grow: 0;
         flex-shrink: 0;
         position: sticky;

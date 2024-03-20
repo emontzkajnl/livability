@@ -88,13 +88,6 @@
 
 .objectcache\:chart .apexcharts-tooltip {
     visibility: hidden;
-    top: 0 !important;
-    background: rgba(254, 255, 228, .75) !important;
-    box-shadow: none;
-    border-radius: 0;
-    border: none !important;
-    padding: 6px;
-    font-size: 12px;
 }
 
 .objectcache\:chart:hover .apexcharts-tooltip {
@@ -109,13 +102,6 @@
 .objectcache\:chart .apexcharts-yaxis-label {
     font-size: 10px;
     fill: #646970;
-}
-
-.objectcache\:chart .apexcharts-tooltip-marker {
-    margin-right: 2px;
-    display: inline-block;
-    width: 8px;
-    height: 8px;
 }
 
 .apexcharts-gridlines-horizontal line:last-child,

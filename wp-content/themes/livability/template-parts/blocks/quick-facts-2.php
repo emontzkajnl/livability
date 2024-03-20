@@ -1,0 +1,25 @@
+<?php 
+$city_name = $args['city'];
+$state_name = $args['state'];
+$id = get_the_ID();
+
+ $commute = get_field('city_commute', $id); 
+ $cityHomeValue = str_replace(',','',get_field('city_home_value', $id)); 
+ $cityHomeValue ? intval($cityHomeValue) : ''; 
+ $cityHouseholdIncome = str_replace(',','', get_field('city_household_income', $id)); 
+ $cityHouseholdIncome = intval($cityHouseholdIncome); 
+ $cityPopulation = str_replace(',','', get_field('city_population', $id)); 
+ $cityPopulation = intval($cityPopulation);
+ $cityWalkScore = get_field('city_walk_score', $id);  
+ $cityPropTax = str_replace(',','', get_field('city_property_tax', $id)); 
+ $cityPropTax = intval($cityPropTax);
+ 
+echo '<div class="quick-facts-2-block" id="quick-facts"><h2 class="qf-title h3">Quick Facts about '.$city_name.', '.$state_name.'</h2><dl>';
+echo $commute ? '<div><dt>Average Commute</dt><dd>'.$commute.'</dd></div>' : '';
+echo $cityHomeValue ? '<div><dt>Median Home Value</dt><dd>$'.number_format($cityHomeValue).'</dd></div>' : '';
+echo $cityHouseholdIncome ? '<div><dt>Med. Household Income</dt><dd>$'.number_format($cityHouseholdIncome).'</dd></div>' : '';
+echo $cityPopulation ? '<div><dt>Total Population</dt><dd>'.number_format($cityPopulation).'</dd></div>' : '';
+echo $cityWalkScore ? '<div><dt>Walk Score</dt><dd>'.number_format($cityWalkScore).'</dd></div>' : '';
+echo $cityPropTax ? '<div><dt>Median Property Tax</dt><dd>$'.number_format($cityPropTax).'</dd></div>' : '';
+ //echo '</dl><p class="widget-link"><a href="'.site_url( 'city-data-widget?cityid=' ).$id.'">Display these facts on your site.</a></p></div>';
+ echo '</dl></div>';

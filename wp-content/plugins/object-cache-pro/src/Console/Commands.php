@@ -125,7 +125,7 @@ class Commands extends WP_CLI_Command
                 ));
             }
         } else {
-            $GLOBALS['ObjectCachePro']->flush()
+            $GLOBALS['ObjectCachePro']->resetCache()
                 ? WP_CLI::success('Object cache flushed.')
                 : WP_CLI::error('Object cache could not be flushed.');
         }
@@ -197,7 +197,7 @@ class Commands extends WP_CLI_Command
         WP_CLI::success('Object cache disabled.');
 
         if (! isset($options['skip-flush'])) {
-            $GLOBALS['ObjectCachePro']->flush()
+            $GLOBALS['ObjectCachePro']->resetCache()
                 ? WP_CLI::success('Object cache flushed.')
                 : WP_CLI::error('Object cache could not be flushed.');
         }
@@ -334,17 +334,10 @@ class Commands extends WP_CLI_Command
     /**
      * Flushes the object cache.
      *
-     * Flushing the object cache will flush the cache for all sites.
-     * Beware of the performance impact when flushing the object cache in production,
-     * when not using asynchronous flushing.
-     *
      * ## OPTIONS
      *
      * [<site-id>...]
      * : One or more IDs of sites to flush.
-     *
-     * [--async]
-     * : Force asynchronous flush.
      *
      * ## EXAMPLES
      *
@@ -386,8 +379,7 @@ class Commands extends WP_CLI_Command
         if (empty($arguments)) {
             try {
                 $GLOBALS['ObjectCachePro']->logFlush();
-
-                $result = $wp_object_cache->connection()->flushdb(isset($options['async']));
+                $result = $wp_object_cache->flush();
             } catch (Throwable $exception) {
                 $result = false;
             }
@@ -472,6 +464,26 @@ class Commands extends WP_CLI_Command
                 ), false);
             }
         }
+    }
+
+    /**
+     * Resets the entire object cache database, including metadata and analytics.
+     *
+     * ## EXAMPLES
+     *
+     *     # Resets the entire cache.
+     *     $ wp redis reset
+     *     Success: The object cache was reset.
+     *
+     * @param  array<int, string>  $arguments
+     * @param  array<mixed>  $options
+     * @return void
+     */
+    public function reset($arguments, $options)
+    {
+        $GLOBALS['ObjectCachePro']->resetCache()
+            ? WP_CLI::success('Object cache reset.')
+            : WP_CLI::error('Object cache could not be reset.');
     }
 
     /**

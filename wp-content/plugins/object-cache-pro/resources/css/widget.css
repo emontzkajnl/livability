@@ -124,3 +124,29 @@
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
 }
+
+.objectcache\:widget-charts {
+    background: #f5f5f5;
+}
+
+.objectcache\:widget-charts .objectcache\:chart {
+    border-top: 1px solid #eee;
+    cursor: pointer;
+}
+
+.objectcache\:chart .apexcharts-tooltip {
+    top: 0 !important;
+    background: rgba(254, 255, 228, .75) !important;
+    box-shadow: none;
+    border-radius: 0;
+    border: none !important;
+    padding: 6px;
+    font-size: 12px;
+}
+
+.objectcache\:chart .apexcharts-tooltip-marker {
+    display: inline-block;
+    margin-right: 2px;
+    width: 8px;
+    height: 8px;
+}

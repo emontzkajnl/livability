@@ -19,7 +19,9 @@ jQuery.extend(window.objectcache, {
                         xhr.setRequestHeader('X-WP-Nonce', objectcache.rest.nonce);
                     },
                 })
-                .done(function (data) {
+                .done(function (data, status, xhr) {
+                    objectcache.rest.nonce = xhr.getResponseHeader('X-WP-Nonce') ?? objectcache.rest.nonce;
+
                     var widget = document.querySelector('.objectcache\\:latency-widget');
 
                     var table = widget.querySelector('table');
@@ -50,7 +52,7 @@ jQuery.extend(window.objectcache, {
 
                     document.querySelector('.objectcache\\:latency-widget table').innerHTML = content;
                 })
-                .error(function (error) {
+                .fail(function (error) {
                     var widget = document.querySelector('.objectcache\\:latency-widget');
 
                     var table = widget.querySelector('table');
@@ -143,7 +145,9 @@ jQuery.extend(window.objectcache, {
                         xhr.setRequestHeader('X-WP-Nonce', objectcache.rest.nonce);
                     },
                 })
-                .done(function (data) {
+                .done(function (data, status, xhr) {
+                    objectcache.rest.nonce = xhr.getResponseHeader('X-WP-Nonce') ?? objectcache.rest.nonce;
+
                     var info = widget.querySelector('p:first-child');
                     info && widget.removeChild(info);
 
@@ -188,7 +192,7 @@ jQuery.extend(window.objectcache, {
 
                     table.innerHTML = content;
                 })
-                .error(function (error) {
+                .fail(function (error) {
                     var container = widget.querySelector('.error');
 
                     if (! container) {
@@ -244,7 +248,9 @@ jQuery.extend(window.objectcache, {
                         xhr.setRequestHeader('X-WP-Nonce', objectcache.rest.nonce);
                     },
                 })
-                .done(function() {
+                .done(function(data, status, xhr) {
+                    objectcache.rest.nonce = xhr.getResponseHeader('X-WP-Nonce') ?? objectcache.rest.nonce;
+
                     var title = document.querySelector('#objectcache_groups .hndle');
                     title.dataset.count = title.dataset.count - 1;
 
@@ -252,7 +258,7 @@ jQuery.extend(window.objectcache, {
 
                     event.target.closest('tr').remove();
                 })
-                .error(function (error) {
+                .fail(function (error) {
                     groupLabel.classList.add('error');
 
                     if (error.responseJSON && error.responseJSON.message) {
@@ -298,7 +304,7 @@ jQuery.extend(window.objectcache, {
                         xhr.setRequestHeader('X-WP-Nonce', objectcache.rest.nonce);
                     },
                 })
-                .error(function (error) {
+                .fail(function (error) {
                     if (error.responseJSON && error.responseJSON.message) {
                         window.alert(error.responseJSON.message);
                     } else {

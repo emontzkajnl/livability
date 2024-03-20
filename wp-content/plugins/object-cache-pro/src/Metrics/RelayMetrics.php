@@ -163,7 +163,7 @@ class RelayMetrics
             'relay-ops-per-sec' => [
                 'title' => 'Throughput',
                 'description' => 'Number of commands processed per second.',
-                'type' => 'integer',
+                'type' => 'throughput',
             ],
             'relay-keys' => [
                 'title' => 'Keys',

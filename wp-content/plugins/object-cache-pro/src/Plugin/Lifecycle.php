@@ -16,6 +16,8 @@ declare(strict_types=1);
 
 namespace RedisCachePro\Plugin;
 
+use Exception;
+
 /**
  * @mixin \RedisCachePro\Plugin
  */
@@ -60,11 +62,7 @@ trait Lifecycle
     {
         delete_site_option('objectcache_license');
 
-        delete_site_option('rediscache_license');
-        delete_site_option('rediscache_license_last_check');
-
         $this->disableDropin();
-        $this->flush();
     }
 
     /**
@@ -74,10 +72,38 @@ trait Lifecycle
      */
     public function uninstall()
     {
+        delete_site_option('objectcache_options');
+
+        delete_site_option('objectcache_license');
+        delete_site_option('objectcache_relay_license');
+
+        delete_site_option('objectcache_flushlog');
+        delete_site_option('objectcache_flushlog_groups');
+
         wp_unschedule_event(
             (int) wp_next_scheduled('objectcache_prune_analytics'),
             'objectcache_prune_analytics'
         );
+    }
+
+    /**
+     * Attempt to wipe the Redis database on a standalone connection.
+     *
+     * Exceptions are caught and converted to error log messages.
+     *
+     * @return bool
+     */
+    public function resetCache()
+    {
+        try {
+            $this->logFlush(null, 2);
+
+            return $this->config->connector::connect($this->config)->flushdb();
+        } catch (Exception $exception) {
+            error_log($exception->getMessage());
+
+            return false;
+        }
     }
 
     /**
@@ -143,14 +169,15 @@ trait Lifecycle
      * Log cache flush.
      *
      * @param  ?array<int, array<string, mixed>>  $backtrace
+     * @param  int  $skip_frames
      * @return void
      */
-    public function logFlush($backtrace = null)
+    public function logFlush($backtrace = null, int $skip_frames = 1)
     {
         /** @var string $traceSummary */
         $traceSummary = $backtrace
-            ? $this->flushBacktraceSummary($backtrace, 1)
-            : wp_debug_backtrace_summary(null, 1);
+            ? $this->flushBacktraceSummary($backtrace, $skip_frames)
+            : wp_debug_backtrace_summary(null, $skip_frames);
 
         if ($this->config->debug || (WP_DEBUG && WP_DEBUG_LOG)) {
             error_log("objectcache.debug: Flushing object cache... {$traceSummary}");
@@ -245,7 +272,8 @@ trait Lifecycle
                 $caller[] = "{$call['class']}{$call['type']}{$call['function']}";
             } else {
                 if (in_array($call['function'], ['do_action', 'apply_filters', 'do_action_ref_array', 'apply_filters_ref_array'], true)) {
-                    $caller[] = "{$call['function']}('{$call['args'][0]}')";
+                    $name = $call['args'][0] ?? '';
+                    $caller[] = "{$call['function']}('{$name}')";
                 } elseif (in_array($call['function'], ['include', 'include_once', 'require', 'require_once'], true)) {
                     $filename = $call['args'][0] ?? '';
                     $caller[] = $call['function'] . "('" . str_replace($truncate_paths, '', wp_normalize_path($filename)) . "')";

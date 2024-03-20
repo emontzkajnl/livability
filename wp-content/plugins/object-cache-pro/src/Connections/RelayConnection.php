@@ -198,7 +198,11 @@ class RelayConnection extends PhpRedisConnection implements ConnectionInterface
      */
     public function flushdb($async = null)
     {
-        return $this->command('flushdb', [true]);
+        $asyncValue = \version_compare((string) \phpversion('relay'), '0.6.9', '<')
+            ? true // Relay < 0.6.9
+            : false; // Relay >= 0.6.9
+
+        return $this->command('flushdb', [$asyncValue]);
     }
 
     /**
