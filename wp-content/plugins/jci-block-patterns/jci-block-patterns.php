@@ -79,13 +79,13 @@ function jci_register_block_patterns() {
             )
         );
 
-        register_block_pattern(
-            'jci_gutenberg-block-patterns/2024-top-100-content',
-            array( 'title'  => __('Template for 2024 Top 100 Content', 'jci_register_block_patterns'),
-            'categories'    => array('jci'),
-            'content'       => getBlockPattern('2024-top-100-content'),
-            )
-        );
+        // register_block_pattern(
+        //     'jci_gutenberg-block-patterns/2024-top-100-content',
+        //     array( 'title'  => __('Template for 2024 Top 100 Content', 'jci_register_block_patterns'),
+        //     'categories'    => array('jci'),
+        //     'content'       => getBlockPattern('2024-top-100-content'),
+        //     )
+        // );
 
   
     }
