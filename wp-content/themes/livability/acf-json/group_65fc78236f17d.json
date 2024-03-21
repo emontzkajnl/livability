@@ -1,0 +1,45 @@
+{
+    "key": "group_65fc78236f17d",
+    "title": "Turn On Top 100 Blocks",
+    "fields": [
+        {
+            "key": "field_65fc7824be278",
+            "label": "Turn On Top 100 Blocks",
+            "name": "turn_on_top_100_blocks",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Toggle display of 2024 Top 100 Blocks",
+            "default_value": 0,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "theme-general-settings"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1711044768
+}
