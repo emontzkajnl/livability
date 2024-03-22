@@ -71,6 +71,12 @@
 .place-topics-2 {
   display: block;
   margin-top: 40px;
+  padding-bottom: 80px;
+  border-bottom: 1px solid black;
+  margin-bottom: 80px;
+  &:last-child {
+    border-bottom: none;
+  }
   &__img-container {
     position: relative;
     height: 280px;
@@ -89,6 +95,9 @@
     a {
       color: black;
     }
+  }
+  &__excerpt {
+    margin-top: .8rem;
   }
 }
 .more-like-this-block {
@@ -270,6 +279,91 @@
   dt {
     font-size: 1.25rem;
     font-family: "Crimson Text", "Times New Roman", Times, serif;
+    font-weight: 400;
+  }
+  dd {
+    padding-left: 0;
+    font-family: "Jost", Arial, Helvetica, sans-serif;
+    font-size: 1.875rem; //30pt
+    font-weight: 600;
+  }
+}
+
+.quick-facts-2-block {
+  text-align: center;
+  position: relative;
+  padding: 40px 20px 20px;
+  margin-bottom: 40px !important;
+  margin-top: 60px !important;
+  background-color: #f1f5f8;
+  .qf-title {
+    display: inline-block;
+    padding: 10px 20px;
+    // transform: translateY(-50%);
+  }
+  dl {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    
+    > div {
+      flex-basis: 100%;
+      padding: 30px;
+      padding-top: 70px;
+      position: relative;
+      &:before {
+        content: "";
+        position: absolute;
+        background-repeat: no-repeat;
+        top: 20px;
+
+      }
+    }
+      .home-val, .prop-tax {
+        &:before {
+          width: 53px;
+          height: 48px;
+          right: calc(50% - 26px);
+          background-image: url("./assets/images/placev2-qf-icons/house.svg");
+        }
+      }
+      .city-pop {
+        &:before {
+          background-image: url("./assets/images/placev2-qf-icons/people.svg");
+          height: 45px;
+          width: 60px;
+          right: calc(50% - 30px);
+        }
+      }
+      .avg-com {
+        &:before {
+          background-image: url("./assets/images/placev2-qf-icons/car.svg");
+          height: 45px;
+          width: 50px;
+          right: calc(50% - 25px);
+        }
+      }
+      .avg-inc {
+        &:before {
+          background-image: url("./assets/images/placev2-qf-icons/piggy-bank.svg");
+          height: 47px;
+          width: 49px;
+          right: calc(50% - 25px);
+        }
+      }
+      .avg-rent {
+        &:before {
+          background-image: url("./assets/images/placev2-qf-icons/calendar.svg");
+          height: 47px;
+          width: 42px;
+          right: calc(50% - 21px);
+        }
+      }
+    }
+  dt {
+    font-size: 1.25rem;
+    font-family: "Jost",Arial,Helvetica,sans-serif;
     font-weight: 400;
   }
   dd {
@@ -2695,6 +2789,10 @@ border-bottom: 1px solid $green;
   h3 {
     color: black;
     text-decoration: none;
+    margin-top: 0;
+  }
+  &__cards {
+    margin-top: 30px;
   }
   &__card {
     background-color: white;
@@ -2830,11 +2928,12 @@ border-bottom: 1px solid $green;
       flex-basis: 50%;
     }
   }
-  .quick-facts-block {
+  .quick-facts-block, .quick-facts-2-block {
     dl {
       > div {
         flex-basis: 50%;
         padding: 10px;
+        padding-top: 70px;
       }
     }
   }
@@ -2981,10 +3080,11 @@ border-bottom: 1px solid $green;
       margin-left: 20px;
     }
   }
-  .quick-facts-block {
+  .quick-facts-block, .quick-facts-2-block {
     dl {
       > div {
         flex-basis: 33%;
+
       }
     }
   }

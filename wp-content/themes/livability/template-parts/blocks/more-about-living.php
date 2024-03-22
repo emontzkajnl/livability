@@ -1,7 +1,7 @@
 <?php
 $state = $args['state']; 
 $abbv = $args['abbv']; ?>
-<div class="more-about-living">
+<div class="more-about-living" id="more-about-living">
     <div class="container">
         <h2 class="more-about-living__title">More about Living in <?php echo $state; ?></h2>
         <div class="more-about-living__cards">

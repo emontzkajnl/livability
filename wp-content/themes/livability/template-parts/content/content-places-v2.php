@@ -61,6 +61,7 @@ $topic_args = array(
 <div class="place-column__parent">
     <div class="place-column__nav">
     <ul class="place-side-nav">
+        <li><a href="#overview">Overview</a></li>
         <?php if ($is_2024_bp): ?>
         <li><a href="#top-100" >2024 Top 100</a></li>
         <li><a href="#things-to-do">Things to Do</a></li>
@@ -90,9 +91,9 @@ $topic_args = array(
             <div class="wp-block-column">
                      <?php 
                      if ($is_2024_bp) {
-                         echo '<h2 class="h1">'.get_the_title().'</h2>';
+                         echo '<h2 class="h1" id="overview">'.get_the_title().'</h2>';
                      } else {
-                        echo '<h1 class="h1">'.get_the_title().'</h1>';
+                        echo '<h1 class="h1" id="overview">'.get_the_title().'</h1>';
                      }
                      
                      //If there is and article connected to this place with a 
