@@ -70,7 +70,7 @@
         
         <?php get_template_part( 'template-parts/blocks/city-map' ); ?>
         
-        <div class="wp-block-colomns">
+        <div class="wp-block-columns">
             <div class="wp-block-column">
       
             <?php get_template_part( 'template-parts/blocks/place-brand-story' ); ?>
