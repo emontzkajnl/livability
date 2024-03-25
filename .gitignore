@@ -17,6 +17,7 @@ node_modules/
 mu-plugins/
 wp-config.php
 db/
+wp-content/ewww/lazy/
 
 
 # @TODO writable paths
