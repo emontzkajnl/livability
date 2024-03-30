@@ -151,6 +151,39 @@
   }
   initPwlSlick();
 
+  $(".place-topics-2__button").on("click", function(){
+    const button = $(this);
+    const catObj = button.data("cat");
+    const parent = button.parent();
+    const container = button.parent().find('.place-topics-2__container');
+    const catData = window[catObj];
+    let currentPage = catData['current_page'];
+    const maxPages = catData['max_pages'];
+    
+    const posts = JSON.parse(catData.posts);
+    const nextPosts = posts.slice(currentPage*3, currentPage*3+3);
+    const data = {
+      action: "placeTopics2",
+      posts: nextPosts,
+    };
+    $.ajax({
+      url: params.ajaxurl,
+      data: data,
+      type: "POST",
+      dataType: "html",
+      success: function (data) {
+        console.log(data);
+        container.append(data);
+        if (currentPage == maxPages-1) {
+          button.remove();
+        } else {
+          window[catObj].current_page++;
+        }
+      }
+      
+    });
+  });
+
 
   $(".load-places").on("click", function () {
     const button = $(this);

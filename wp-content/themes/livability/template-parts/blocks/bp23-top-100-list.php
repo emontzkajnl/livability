@@ -100,7 +100,7 @@ if (isset($_COOKIE['bp23_cat'])) {
     </div>
 <?php }
 echo '<div style="width: 100%; text-align: center;">';
-get_template_part( 'template-parts/blocks/ad-three'); 
+//get_template_part( 'template-parts/blocks/ad-three'); 
 echo '</div>';
 ?>
 

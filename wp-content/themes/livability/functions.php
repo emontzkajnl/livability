@@ -533,6 +533,30 @@ function load_topic_posts() {
 add_action('wp_ajax_loadmore', 'load_topic_posts');
 add_action('wp_ajax_nopriv_loadmore', 'load_topic_posts');
 
+function load_place_topics_2() {
+	$posts = $_POST['posts'];
+	foreach ($posts as $p) { 
+		if ($p): ?>
+		<div class="place-topics-2__card">
+		<a href="<?php echo get_the_permalink($p); ?>">
+		
+		<div class="place-topics-2__img-container">
+			<?php echo get_the_post_thumbnail($p, 'medium'); ?>
+		</div>
+		 </a>
+		 <div class="place-topics-2__text-container">
+		<h3 class="place-topics-2__title"><a class="unstyle-link" href="<?php echo get_the_permalink($p); ?>"><?php echo get_the_title($p); ?></a></h3>
+		<p class="place-topics-2__excerpt"><?php echo get_the_excerpt( $p ); ?></p>
+		 </div>
+	</div>
+	<?php endif;
+	}
+	die();
+}
+
+add_action('wp_ajax_placeTopics2', 'load_place_topics_2');
+add_action('wp_ajax_nopriv_placeTopics2', 'load_place_topics_2');
+
 function load_onehundred_list() {
 	// $children = $_POST['children'];
 	$parent = $_POST['parent'];

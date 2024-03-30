@@ -18,13 +18,40 @@ get_header();
 while ( have_posts() ) :
 	the_post();
 	
-	
-	// !get_field('place_type') == 'state' && 
-	if ((!get_field('client_place')) && (get_field('place_type') != 'state')) {
+	if (get_field('place_type') != 'state') {
+		// if 2024 top 100, show bp hero whether client or not
+		if (has_term('2024', 'best_places_years')) { 
+			$parent_id = wp_get_post_parent_id();
+ 			$byline =  get_field('img_byline',get_post_thumbnail_id());
+			?>
+			<div class="wp-block-columns">
+			
+            <div class="wp-column container" style="width: 100%; margin-top: 50px;">
+                <div class="bp23-heading-section">
+                    <div class="bp23-thumb" >
+ 					<?php echo get_the_post_thumbnail( get_the_ID(), 'medium-large' );  
+					  echo $byline ? '<div class="livability-image-meta">'.$byline.'</div>' : ''; ?>
+                    </div>
+					<div class="bp23-title-section">
+						<!-- logo here -->
+						<img class="bp23-badge-single" src="<?php echo get_stylesheet_directory_uri(  ); ?>/assets/images/2023-Livability-Top-100-best-places-badge.svg"/>
+						<?php echo '<h1 class="bp23-title">'.get_the_title().'<span><a href="'.get_the_permalink( $parent_id ).'">Best Places to Live in the U.S. in 2024</a></span></h1>'; ?>
+						
+						<?php echo has_excerpt( ) ? '<p class="bp23-excerpt">'.get_the_excerpt().'</p>' : ''; 
+						// echo 'parent: '.wp_get_post_parent_id(  ).' '.get_the_title(150065 ); ?>
+					</div>
+                </div>
+            </div>
+        </div> <!--wp-block-columns-->
+		<?php } elseif (get_field('client_place'))  {
+			get_template_part( 'template-parts/hero-section' );
+		}
+		// content part for both client and non-client: 
 		get_template_part( 'template-parts/content/content-places-v2' );
 	} else {
+		// state places retain old templates
 		get_template_part( 'template-parts/hero-section' );
-		get_template_part( 'template-parts/content/content-places-v2' );
+		get_template_part( 'template-parts/content/content-single-places' );
 	}
 
 

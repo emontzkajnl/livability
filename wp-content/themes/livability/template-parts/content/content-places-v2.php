@@ -62,7 +62,7 @@ $topic_args = array(
     <div class="place-column__nav">
     <ul class="place-side-nav">
         <li><a href="#overview">Overview</a></li>
-        <?php if ($is_2024_bp): ?>
+        <?php if ($is_2024_bp && get_field('turn_on_top_100_blocks', 'options')): ?>
         <li><a href="#top-100" >2024 Top 100</a></li>
         <li><a href="#things-to-do">Things to Do</a></li>
         <li><a href="#economy">Economy</a></li>
@@ -72,14 +72,13 @@ $topic_args = array(
         <li><a href="#weather">Weather</a></li>
         <li><a href="#map">Map</a></li>
         <?php 
-        echo array_key_exists('experiences-adventures', $topics_array) ? '<li><a href="#experiences-and-adventures">Experiences & Adventures</a></li>' : '';
+        echo array_key_exists('experiences-adventures', $topics_array) ? '<li><a href="#experiences-adventures">Experiences & Adventures</a></li>' : '';
         echo array_key_exists('food-scenes', $topics_array) ? '<li><a href="#food-scenes">Food Scenes</a></li>': '';
         echo array_key_exists('healthy-places', $topics_array) ? '<li><a href="#healthy-places">Healthy Places</a></li>': '';
         echo array_key_exists('make-your-move', $topics_array) ? '<li><a href="#make-your-move">Make Your Move</a></li>': '';
         echo array_key_exists('where-to-live-now', $topics_array) ? '<li><a href="#where-to-live-now">Where to Live Now</a></li>': '';
         echo array_key_exists('education-careers-opportunity', $topics_array) ? '<li><a href="#education-careers-and-opportunity">Education, Careers & Opportunities</a></li>': '';
         echo array_key_exists('love-where-you-live', $topics_array) ? '<li><a href="#love-where-you-live">Love Where You Live</a></li>': '';
-        echo array_key_exists('where-to-live-now', $topics_array) ? '<li><a href="#more-about-living-in">More About Living in </a></li>': '';
         ?>
         <li><a href="#more-about-living">More About Living in <?php echo $state_name;   ?></a></li>
 
@@ -89,6 +88,11 @@ $topic_args = array(
     
         <div class="wp-block-columns liv-column-p">
             <div class="wp-block-column">
+            <div id="crumbs">
+                <?php if (function_exists('return_breadcrumbs')) {
+                    echo return_breadcrumbs(); 
+                } ?>
+            </div>
                      <?php 
                      if ($is_2024_bp) {
                          echo '<h2 class="h1" id="overview">'.get_the_title().'</h2>';
@@ -101,11 +105,15 @@ $topic_args = array(
                      echo do_shortcode('[addtoany]'); 
                      get_template_part( 'template-parts/blocks/cc-cta-block' );
                      
-                     if (get_field('non-client_city_with_content')) {
+                     if (get_field('client_place') || get_field('non-client_city_with_content')) {
                         the_content( );
-                    } else {
+                     } else {
                         get_template_part( 'template-parts/blocks/madlib' ); 
-                    }
+                        // non-clients that are 2024 top 100 have content to show
+                        if ($is_2024_bp) {
+                            the_content();
+                        }
+                     }
                     get_template_part( 'template-parts/blocks/embedded-cc-article' );
                     // get_template_part( 'template-parts/blocks/link-to-2023-best-place' );
                      ?>
@@ -134,43 +142,43 @@ $topic_args = array(
             if (array_key_exists('experiences-adventures', $topics_array)) {
                 echo '<h2 id="experiences-adventures">Experiences & Adventures in '.$city_name.', '.$state_name.'</h2>';
                 
-                get_template_part( 'template-parts/blocks/place-topics-2', null, array('posts' => $topics_array['experiences-adventures']));
+                get_template_part( 'template-parts/blocks/place-topics-2', null, array('posts' => $topics_array['experiences-adventures'], 'cat' => 'experiences-adventures'));
             }
 
             if (array_key_exists('food-scenes', $topics_array)) {
                 echo '<h2 id="food-scenes">Food Scenes in '.$city_name.', '.$state_name.'</h2>';
                 
-                get_template_part( 'template-parts/blocks/place-topics-2', null, array('posts' => $topics_array['food-scenes']));
+                get_template_part( 'template-parts/blocks/place-topics-2', null, array('posts' => $topics_array['food-scenes'], 'cat' => 'food-scenes'));
             }  
             
             if (array_key_exists('healthy-places', $topics_array)) {
                 echo '<h2 id="healthy-places">Healthy Places in '.$city_name.', '.$state_name.'</h2>';
                 
-                get_template_part( 'template-parts/blocks/place-topics-2', null, array('posts' => $topics_array['healthy-places']));
+                get_template_part( 'template-parts/blocks/place-topics-2', null, array('posts' => $topics_array['healthy-places'], 'cat' => 'healthy-places' ));
             }   
             
             if (array_key_exists('make-your-move', $topics_array)) {
                 echo '<h2 id="make-your-move">Make Your Move to '.$city_name.', '.$state_name.'</h2>';
                 
-                get_template_part( 'template-parts/blocks/place-topics-2', null, array('posts' => $topics_array['make-your-move']));
+                get_template_part( 'template-parts/blocks/place-topics-2', null, array('posts' => $topics_array['make-your-move'], 'cat' => 'make-your-move'));
             }    
             
             if (array_key_exists('where-to-live-now', $topics_array)) {
                 echo '<h2 id="where-to-live-now">'.$city_name.', '.$state_name.': Where to Live Now</h2>';
                 
-                get_template_part( 'template-parts/blocks/place-topics-2', null, array('posts' => $topics_array['where-to-live-now']));
+                get_template_part( 'template-parts/blocks/place-topics-2', null, array('posts' => $topics_array['where-to-live-now'], 'cat' => 'where-to-live-now'));
             }               
 
             if (array_key_exists('education-careers-opportunity', $topics_array)) {
                 echo '<h2 id="education-careers-and-opportunity">Education, Careers and Opportunity in '.$city_name.', '.$state_name.'</h2>';
                 
-                get_template_part( 'template-parts/blocks/place-topics-2', null, array('posts' => $topics_array['education-careers-opportunity']));
+                get_template_part( 'template-parts/blocks/place-topics-2', null, array('posts' => $topics_array['education-careers-opportunity'], 'cat' => 'education-careers-opportunity'));
             }
 
             if (array_key_exists('love-where-you-live', $topics_array)) {
                 echo '<h2 id="love-where-you-live">'.$city_name.', '.$state_name.': Love Where You Live</h2>';
                 
-                get_template_part( 'template-parts/blocks/place-topics-2', null, array('posts' => $topics_array['love-where-you-live']));
+                get_template_part( 'template-parts/blocks/place-topics-2', null, array('posts' => $topics_array['love-where-you-live'], 'cat' => 'love-where-you-live'));
             }            
             ?>
             </div>

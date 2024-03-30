@@ -8,7 +8,7 @@ $snow = get_field('city_snow');
 
 if ($sun && $rain && $snow):
 
-echo '<h3>Weather and Outdoor Activities in '.$city.', '.strtoupper($abbv).'</h3>'; ?>
+echo '<h3 id="weather">Weather in '.$city.', '.strtoupper($abbv).'</h3>'; ?>
 
 <div class="weather-block-2">
     <div class="weather-block-2__card sun">
