@@ -1038,6 +1038,21 @@ function jci_blocks_livscore_block() {
     $health = get_field('ls_health');
     $housing = get_field('ls_housing');
     $safety = get_field('ls_safety');
+    elseif (get_post_type( ) == 'liv_place'):
+        global $wpdb;
+        $id = get_the_ID();
+        $title = get_the_title();
+     $results = $wpdb->get_results( "SELECT * FROM 2024_top_100 WHERE place_id = $id", OBJECT );
+     $livscore = $results[0]->livscore;
+     $amenities = $results[0]->amenities;
+     $environment = $results[0]->environment;
+     $economy = $results[0]->economy;
+     $education = $results[0]->education;
+     $transportation = $results[0]->transportation;
+     $health = $results[0]->healthcare;
+     $housing = $results[0]->housing;
+     $safety = $results[0]->safety;
+    endif; // if place type is place
     $siteurl = site_url( );
     $cat_array= array(
         'amenities'         => $amenities,
@@ -1049,6 +1064,7 @@ function jci_blocks_livscore_block() {
         'safety'            => $safety,
         'transportation'    => $transportation,
     );
+    
     $top_array = $cat_array;
     arsort($top_array);
     $top_array = array_slice($top_array, 0, 3);
@@ -1120,7 +1136,6 @@ foreach ($cat_array as $key => $cat) {
 
 $html .= '</div>';
     return $html; 
-endif; // if place type is best place
 }
 
 function jci_blocks_weather_block() {
