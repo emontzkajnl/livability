@@ -159,7 +159,7 @@ function liv_place_post_type() {
 		'label'                 => __( 'Place', 'text_domain' ),
 		'description'           => __( 'A state, city or metro region', 'text_domain' ),
 		'labels'                => $labels,
-		'supports'              => array( 'title', 'editor', 'thumbnail', 'revisions', 'page-attributes' ),
+		'supports'              => array( 'title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'page-attributes' ),
 		'taxonomies'            => array( 'place_topic', 'post_tag' ),
 		'hierarchical'          => true,
 		'public'                => true,

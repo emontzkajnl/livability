@@ -2417,21 +2417,33 @@ border-bottom: 1px solid $green;
     min-height: 175px;
     margin-bottom: 30px;
     text-align: center;
+    padding: 25px;
   }
   &__icon {
     height: 60px;
     width: 60px;
     margin: 20px auto;
     background-repeat: no-repeat;
-    &.sun {
-      background-image: url('./assets/images/weather-icons/weather-sun.svg');
+    &.temp {
+      background-image: url('./assets/images/weather-icons/weather-temp.svg');
     }
     &.rain {
-      background-image: url('./assets/images/weather-icons/weather-rain.svg');
+      background-image: url('./assets/images/weather-icons/weather-rain2.svg');
     }
     &.snow {
-      background-image: url('./assets/images/weather-icons/weather-snow.svg');
+      background-image: url('./assets/images/weather-icons/weather-snow2.svg');
     }
+  }
+  h4 {
+    font-size: 1.25rem;
+    font-family: "Jost",Arial,Helvetica,sans-serif;
+    font-weight: 400;
+  }
+  p {
+    font-family: "Jost",Arial,Helvetica,sans-serif;
+    font-size: 1.875rem;
+    font-weight: 600;
+    margin-top: 5px;
   }
 }
 
