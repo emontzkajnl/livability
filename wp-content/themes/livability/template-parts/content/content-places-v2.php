@@ -127,7 +127,9 @@ $topic_args = array(
         </div>
         <div class="wp-block-columns">
             <div class="wp-block-column">
-            <?php get_template_part( 'template-parts/blocks/brand-stories', null, array('city' => $city_name, 'state' => $state_name) );
+            
+            <?php get_template_part( 'template-parts/blocks/top-100-carousel-24'); 
+            get_template_part( 'template-parts/blocks/brand-stories', null, array('city' => $city_name, 'state' => $state_name) );
             get_template_part( 'template-parts/blocks/quick-facts-2', null, array('city' => $city_name, 'state' => $state_name  ) ); 
             get_template_part( 'template-parts/blocks/weather', null, array('city' => $city_name, 'abbv' => $state_abbv) );?>
             </div>

@@ -299,6 +299,12 @@ li.AjaxSearchLiteWidget {
       max-height: 100vh;
       overflow-y: auto;
       margin-right: 60px;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
     }
     &__content {
       // flex-basis: calc(100% - 200px);
