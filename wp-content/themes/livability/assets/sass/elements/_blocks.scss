@@ -2030,6 +2030,8 @@ border-bottom: 1px solid $green;
    
   }
 
+
+
   .read-more {
     text-align: right;
     position: absolute;
@@ -2046,6 +2048,84 @@ border-bottom: 1px solid $green;
     }
   }
 }
+
+.bp24 {
+  &__results-container {
+    display: block;
+    position: relative;
+  }
+  &__filters-container {
+    width: 100%;
+    background-color: white;
+    min-height: 500px; // delete
+    fieldset {
+      border: none;
+      legend {
+        font-family: "Jost",Arial,Helvetica,sans-serif;
+        font-size: 1rem;
+        font-weight: 500;
+      }
+      label {
+        font-family: "Jost",Arial,Helvetica,sans-serif;
+        font-weight: normal;
+        font-size: 1rem !important;
+        margin-bottom: 15px;
+        margin-left: 10px;
+      }
+      input[type="radio"] {
+        width: 20px;
+        height: 20px;
+        border: 1px solid black;
+        outline-offset: 0;
+        outline: 1px solid black !important;
+        &:checked, &:focus {
+          outline-offset: 0;
+        }
+      }
+    }
+
+  }
+  &__results {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+  &__card {
+    width: 100%;
+    margin: 15px 0;
+    background-color: white;
+  }
+  &__img-container {
+    height: 230px;
+    position: relative;
+    img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100% !important;
+      width: 100%;
+      object-fit: cover;
+      background-color: blue;
+
+    }
+  }
+  &__text-container {
+    padding: 30px 15px ;
+    p {
+      font-family: "Jost", arial, sans-serif;
+      font-size: 0.9rem;
+      margin-top: .6rem;
+      }
+      .bp24__state {
+        text-transform: uppercase;
+        font-size: 1rem;
+        font-weight: 500;
+      }
+  }
+
+}
+
 .livscore-block {
 
   &__arc {
@@ -3019,6 +3099,30 @@ border-bottom: 1px solid $green;
 }
 
 @media screen and (min-width: 768px) {
+  .bp24 {
+    &__results-container {
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: row;
+    }
+    &__results {
+      display: flex;
+      flex-wrap: wrap;
+      margin-left: -15px;
+      margin-right: -15px;
+    }
+    &__filters-container {
+      width: 300px;
+      position: sticky;
+      flex: 0 0 300px;
+      margin-right: 30px;
+    }
+    &__card {
+      width: calc(50% - 30px);
+      margin: 15px;
+      background-color: white;
+    }
+  }
   .place-topics-2 {
     &__card {
       &.single {
@@ -3256,6 +3360,11 @@ border-bottom: 1px solid $green;
   }
 }
 @media screen and (min-width: 960px) {
+  .bp24 {
+    &__card {
+      width: calc(33% - 30px);
+    }
+  }
   .weather-block-2 {
     flex-direction: row;
     &__card {
@@ -3675,6 +3784,11 @@ border-bottom: 1px solid $green;
  
 }
 @media screen and (min-width: 1150px) {
+  .bp24 {
+    &__card {
+      width: calc(25% - 30px);
+    }
+  }
   .weather-block {
     flex-direction: row;
     > div {

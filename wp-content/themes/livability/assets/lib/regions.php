@@ -16,4 +16,19 @@ function get_region($state) {
     }
 }
 
+function get_region_by_state_name($state) {
+    $us_regions = array(
+        "Northeast" => array('Virginia', 'West Virginia', 'Vermont', 'Pennsylvania', 'Rhode Island', 'Ohio', 'New York', 'New Hampshire', 'New Jersey', 'Maine', 'Maryland', 'Massachusetts', 'Connecticut', 'Delaware'),
+        "Midwest"   => array('Wisconsin', 'South Dakota', 'North Dakota', 'Missouri', 'Nebraska', 'Michigan', 'Minnesota', 'Kansas', 'Illinois', 'Indiana', 'Iowa') ,
+        "Southwest"     => array('Washington, DC', 'Texas', 'Utah', 'Oklahoma', 'New Mexico', 'Nevada', 'Kentucky', 'Louisiana', 'Arizona', 'Arkansas', 'California', 'Colorado'),
+        "Southeast"     => array('South Carolina', 'Tennessee', 'North Carolina', 'Mississippi', 'Florida', 'Georgia', 'Alabama'),
+        "Northwest"      => array('Wyoming', 'Washington', 'Oregon', 'Montana', 'Hawaii', 'Idaho', 'Alaska')
+    );
+    foreach($us_regions as $key => $region) {
+        if (in_array($state, $region)) {
+            return $key;
+        }
+    }
+}
+
 

@@ -9,6 +9,13 @@ function liv_mobile_menu() {
 }
 add_action( 'init', 'liv_mobile_menu' );
 
+add_action('init', 'myStartSession', 1);
+function myStartSession() {
+    if(!session_id()) {
+        session_start();
+    }
+}
+
 // wp_enqueue_script( 'slick', get_stylesheet_directory_uri() . '/js/slick.min.js', array('jquery'), null, true);
 // wp_enqueue_script( 'main', get_stylesheet_directory_uri() . '/js/main.js', array('jquery','slick'), null, true);
 // wp_enqueue_style( 'slick', get_stylesheet_directory_uri() . '/css/slick.css');

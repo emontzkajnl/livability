@@ -246,7 +246,7 @@ class Lazy_Load extends Page_Parser {
 		if ( false !== \strpos( $uri, '&builder=true' ) ) {
 			return false;
 		}
-		if ( false !== \strpos( $uri, 'cornerstone=' ) || false !== \strpos( $uri, 'cornerstone-endpoint' ) ) {
+		if ( false !== \strpos( $uri, 'cornerstone=' ) || false !== \strpos( $uri, 'cornerstone-endpoint' ) || false !== \strpos( $uri, 'cornerstone/edit/' ) ) {
 			return false;
 		}
 		if ( false !== \strpos( $uri, 'ct_builder=' ) ) {
@@ -256,6 +256,9 @@ class Lazy_Load extends Page_Parser {
 			return false;
 		}
 		if ( \did_action( 'cornerstone_boot_app' ) || \did_action( 'cs_before_preview_frame' ) ) {
+			return false;
+		}
+		if ( \did_action( 'cs_element_rendering' ) || \did_action( 'cornerstone_before_boot_app' ) || \apply_filters( 'cs_is_preview_render', false ) ) {
 			return false;
 		}
 		if ( false !== \strpos( $uri, 'elementor-preview=' ) ) {
@@ -371,6 +374,10 @@ class Lazy_Load extends Page_Parser {
 		}
 		if ( ! \apply_filters( 'eio_do_lazyload', true, $this->request_uri ) ) {
 			return $buffer;
+		}
+
+		if ( ! $this->parsing_exactdn ) {
+			$this->get_preload_images( $buffer );
 		}
 
 		$above_the_fold   = \apply_filters( 'eio_lazy_fold', 0 );
@@ -771,6 +778,17 @@ class Lazy_Load extends Page_Parser {
 				$bg_image_urls = $this->get_background_image_urls( $style );
 				if ( $this->is_iterable( $bg_image_urls ) ) {
 					$this->debug_message( 'bg-image urls found' );
+
+					foreach ( $bg_image_urls as $bg_image_url ) {
+						$bg_image_path = $this->parse_url( $bg_image_url, PHP_URL_PATH );
+						foreach ( $this->preload_images as $preload_image ) {
+							if ( $bg_image_path === $preload_image['path'] ) {
+								$this->debug_message( "preloading $bg_image_url, so no lazy allowed!" );
+								continue 3;
+							}
+						}
+					}
+
 					$new_style = $this->remove_background_image( $style );
 					if ( $style !== $new_style ) {
 						$this->debug_message( 'style modified, continuing' );
@@ -1010,6 +1028,14 @@ class Lazy_Load extends Page_Parser {
 		foreach ( $exclusions as $exclusion ) {
 			if ( false !== \strpos( $image, $exclusion ) ) {
 				$this->debug_message( "img matched $exclusion" );
+				return false;
+			}
+		}
+
+		$src_path = $this->parse_url( $image_src, PHP_URL_PATH );
+		foreach ( $this->preload_images as $preload_image ) {
+			if ( $src_path === $preload_image['path'] ) {
+				$this->debug_message( "preloading $image_src, so no lazy allowed!" );
 				return false;
 			}
 		}
