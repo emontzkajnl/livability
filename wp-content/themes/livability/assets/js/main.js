@@ -781,9 +781,20 @@ $(".bp23-category-btns").slick({
   ],
 });
 
+//best place landing pages, return current year from page template class
+function getBpYear(){
+  if ( $('body').hasClass('best_places-template-best_places_2023_landing_page') ) {
+    return '2023';
+  } else if ( $('body').hasClass('best_places-template-best_places_2024_landing_page') ) {
+    return '2024';
+  } else {
+    return null;
+  }
+}
+
 $('.bp23-category-btn').on('click', function(){
   const $this = $(this); 
-  
+  const year = getBpYear();
   const siblings = $this.siblings().find('div');
   if ( $this.hasClass('active')) {
     return;
@@ -797,7 +808,8 @@ $('.bp23-category-btn').on('click', function(){
   const data = {
     action: "loadbp23",
     cat: cat,
-    bp23filters: window.params.bp23filters
+    bp23filters: window.params.bp23filters,
+    year
   }
   $.ajax({
     url: params.ajaxurl,
@@ -806,29 +818,50 @@ $('.bp23-category-btn').on('click', function(){
     dataType: "html",
     success: function (data) {
       // console.log('data is ',data);
-      $('.bp23-results').html(data);
+      if (year == '2023') {
+        
+        $('.bp23-results').html(data);
+      } else if (year == '2024') {
+        console.log('is 2024');
+        console.log(data);
+        $('.bp24__results').html(data);
+      }
+      
       Waypoint.refreshAll();
     }
   }
 
   );
 });
-
+// $('input[type=radio][name=population], input[type=radio][name=region], input[type=radio][name=home_value]').on('change', function(e) {
+//   // console.log('this: ',$(this).attr('name'));
+//   console.log('attribute: ',e.target.getAttribute('name'));
+//   const that = $(this);
+//   const name = e.target.getAttribute('name');
+//   window.params.bp24filters[name] = that.val();
+// });
 $('#region, #population, #home_value').on('change', function(e){
-  window.params.bp23filters[e.target.id] = e.target.value;
+  
+  // console.log('e ',e);
+  const year = getBpYear();
+  if (year == '2024') {
+    window.params.bp23filters[e.target.parentElement.parentElement.id] = e.target.value;
+  } else {
+    window.params.bp23filters[e.target.id] = e.target.value;
+  }
   window.params.bp23page = 1;
   if (e.target.value == '') {
     e.target.classList.remove("filtered");
   } else {
     e.target.classList.add("filtered");
   }
-  console.log('e: ',e.target);
   const cat = $('.bp23-category-btn .active').data('cat');
   // console.log('cat data is ',cat);
   const data = {
     action: "loadbp23",
     cat: cat,
-    bp23filters: window.params.bp23filters
+    bp23filters: window.params.bp23filters,
+    year
   }
   $.ajax({
     url: params.ajaxurl,
@@ -837,7 +870,14 @@ $('#region, #population, #home_value').on('change', function(e){
     dataType: "html",
     success: function (data) {
       // console.log('data is ',data);
-      $('.bp23-results').html(data);
+      if (year == '2023') {
+        // console.log('2023 response')
+        // console.log('data is ',data);
+        $('.bp23-results').html(data);
+      } else if (year == '2024') {
+        $('.bp24__results').html(data);
+      }
+      
       Waypoint.refreshAll();
     }
   });
@@ -935,6 +975,11 @@ function loadbp23() {
     }
   });
 }
+
+function loadbp24() {
+ 
+}
+
 $('.cat-detail').on('click', function(){
   $(this).toggleClass('open');
   $(this).find('p').toggleClass('open');

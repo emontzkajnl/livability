@@ -50,7 +50,13 @@ function livability_enqueue_scripts() {
 			'population'	=> '',
 			'home_value'	=> ''
 		],
-		'bp23page'	=> 1
+		'bp24filters'	=> [
+			'region' 		=> '',
+			'population'	=> '',
+			'home_value'	=> ''
+		],
+		'bp23page'	=> 1,
+		'bp24page' => 1
 	) );
 }
 
@@ -1756,7 +1762,8 @@ if ( ! function_exists('local_insights') ) {
 	function load_bp_23(){
 		$meta_key = $_POST['cat']; 
 		setcookie('bp23_cat', $meta_key, time()+3600);
-		$filters = $_POST['bp23filters'];
+		// $filters = $_POST['bp23filters'];
+		if ($_POST['year'] == '2023'):
 		$bp_args = array(
 			'post_type'         => 'best_places',
 			'post_status'       => 'any',
@@ -1798,10 +1805,7 @@ if ( ! function_exists('local_insights') ) {
 			// filter by region
 			if ($_POST['bp23filters']['region']) {
 				if ( $_POST['bp23filters']['region'] != strtolower(get_region($state)) ) {
-					// unset($bp_posts[$key]);
 					$arr = null;
-					// echo 'not a match <br>';
-
 				}
 			}
 			// filter by population
@@ -1811,7 +1815,6 @@ if ( ! function_exists('local_insights') ) {
 					$arr = null;
 				}
 			}
-
 			// filter by home value
 			if ($_POST['bp23filters']['home_value']) {
 				$hv_array = explode("-", $_POST['bp23filters']['home_value']);
@@ -1822,8 +1825,6 @@ if ( ! function_exists('local_insights') ) {
 			if ($arr) {
 				$bp23_array[] = $arr;
 			}
-
-
 		}
 		
 		// store posts in session variable 
@@ -1849,6 +1850,72 @@ if ( ! function_exists('local_insights') ) {
 		<?php }
 		}
 		// ad goes here. 
+		// die();
+		elseif ($_POST['year'] == '2024'):
+		// else:
+			// print_r($_POST);
+			global $wpdb;
+			$sortBy = $_POST['cat'] ? $_POST['cat'] : 'livscore'; 
+			// echo 'sort by '.$sortBy;
+			$results = $wpdb->get_results( "SELECT * FROM 2024_top_100  ORDER BY ".$sortBy, OBJECT );
+			$bp24_array = array();
+			foreach ($results as $key => $value) { 
+				$arr = array(); // collect data to use in loop
+				// get population and home value from city data table
+				$city_data = $wpdb->get_results( "SELECT * FROM 2024_city_data  WHERE place_id = $value->place_id", OBJECT );
+				$arr['population'] = $city_data[0]->city_pop;
+				$arr['home_value'] = $city_data[0]->avg_hom_val;
+				$arr['cat_name'] = $sortBy;
+				$arr['cat_val'] = json_decode($value->$sortBy, true);
+				$arr['place_id'] = $value->place_id;
+				$arr['city'] = $value->city;
+				$arr['state'] = $value->state;
+				
+
+				// add three filters
+				// filter by region
+			// if ($_POST['bp23filters']['region']) {
+			// 	if ( $_POST['bp23filters']['region'] != strtolower(get_region_by_state_name($value->state)) ) {
+			// 		$arr = null;
+			// 	}
+			// }
+			// echo '<br />post is '.$_POST['bp23filters']['region'].'and data is '.get_region_by_state_name($value->state);
+				// print_r($value[$sortBy]);
+				// echo json_decode($value->$sortBy, true);
+				// print_r($arr);
+				// echo '<br />';
+				// print_r($value);
+				if ($arr) {
+					$bp24_array[] = $arr;
+				}
+
+				?>
+				
+			<?php } //end foreach
+			$total_posts = count($bp24_array);
+			$bp24_array = array_slice($bp24_array, 0, 20);
+			// foreach loop to display
+			echo '<p class="bp24__total-posts">We found '.$total_posts.' cities based on your filter selection.</p><br />';
+			foreach ($bp24_array as $key => $value) { 
+				$score_text = $value->cat_name == 'livscore' ? '' : ' Score'; 
+				// print_r($value);?>
+				
+				<div class="bp24__card">
+				<div class="bp24__img-container" >
+				<?php echo get_the_post_thumbnail( $value['place_id'], 'medium'); ?>
+				</div>
+				<div class="bp24__text-container">
+				<h4 class="bp24__city"><?php echo $value['city']; ?></h4>
+				<p class="bp24__state"><?php echo $value['state']; ?></p>
+				<p class="bp24__cat-paragraph"><?php echo ucfirst($value['cat_name']).$score_text.': '.$value['cat_val']; ?></p>
+				<p>Region: <?php echo get_region_by_state_name($value['state']); ?></p>
+				<p>Population: <?php echo  number_format($value['population']); ?></p>
+				<p>Med. Home Value: $<?php echo number_format($value['home_value']); ?></p>
+				</div>
+			</div>
+			<?php }
+			// die();
+		endif; // if year is 23 or 24
 		die();
 	}
 
