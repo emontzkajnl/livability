@@ -24,10 +24,10 @@ class Crawl_Cleanup_Basic implements Integration_Interface {
 	/**
 	 * Crawl Cleanup Basic integration constructor.
 	 *
-	 * @param Options_Helper $options_helper The option helper.
-	 *
 	 * @deprecated 20.4
 	 * @codeCoverageIgnore
+	 *
+	 * @param Options_Helper $options_helper The option helper.
 	 */
 	public function __construct( Options_Helper $options_helper ) {
 		\_deprecated_function( __METHOD__, 'Yoast SEO Premium 20.4', 'Yoast\WP\SEO\Integrations\Front_End\Crawl_Cleanup_Basic' );
@@ -108,6 +108,8 @@ class Crawl_Cleanup_Basic implements Integration_Interface {
 	 *
 	 * @deprecated 20.4
 	 * @codeCoverageIgnore
+	 *
+	 * @return void
 	 */
 	public function clean_headers() {
 		\_deprecated_function( __METHOD__, 'Yoast SEO Premium 20.4', 'Yoast\WP\SEO\Integrations\Front_End\Crawl_Cleanup_Basic::clean_headers()' );
@@ -127,10 +129,10 @@ class Crawl_Cleanup_Basic implements Integration_Interface {
 	/**
 	 * Remove the core s.w.org hint as it's only used for emoji stuff we don't use.
 	 *
-	 * @param array $hints The hints we're adding to.
-	 *
 	 * @deprecated 20.4
 	 * @codeCoverageIgnore
+	 *
+	 * @param array $hints The hints we're adding to.
 	 *
 	 * @return array
 	 */

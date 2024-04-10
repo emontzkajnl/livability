@@ -1,6 +1,5 @@
 <?php
-// phpcs:disable Yoast.NamingConventions.NamespaceName.Invalid
-// phpcs:disable Yoast.NamingConventions.NamespaceName.MaxExceeded
+
 namespace Yoast\WP\SEO\Schema_Templates\Block_Patterns;
 
 /**
@@ -11,5 +10,5 @@ namespace Yoast\WP\SEO\Schema_Templates\Block_Patterns;
  */
 class Block_Pattern_Keywords {
 
-	const YOAST_JOB_POSTING = [ 'yoast', 'job', 'posting', 'vacancy' ];
+	public const YOAST_JOB_POSTING = [ 'yoast', 'job', 'posting', 'vacancy' ];
 }

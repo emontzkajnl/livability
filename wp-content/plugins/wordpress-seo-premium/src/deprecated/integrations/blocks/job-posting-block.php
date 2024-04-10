@@ -1,7 +1,5 @@
 <?php
 
-// phpcs:disable Yoast.NamingConventions.NamespaceName.MaxExceeded
-// phpcs:disable Yoast.NamingConventions.NamespaceName.Invalid
 namespace Yoast\WP\SEO\Integrations\Blocks;
 
 use Yoast\WP\SEO\Conditionals\No_Conditionals;
@@ -43,6 +41,8 @@ class Job_Posting_Block implements Integration_Interface {
 	 *
 	 * @deprecated 20.5
 	 * @codeCoverageIgnore
+	 *
+	 * @return void
 	 */
 	public function register_hooks() {
 		\_deprecated_function( __METHOD__, 'Yoast SEO Premium 20.5' );
