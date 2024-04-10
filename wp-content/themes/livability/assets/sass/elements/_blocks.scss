@@ -1505,6 +1505,9 @@ div[class^="curated-posts-"] {
 .entry-content > .city-map-block {
   max-width: none !important;
 }
+.city-map-block {
+  margin-bottom: 80px;
+}
 
 .person-container {
   background-color: $white2;

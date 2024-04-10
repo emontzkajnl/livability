@@ -935,13 +935,14 @@ function create_listing_object() {
 	if ($post_type == 'liv_place') {
 		$t = get_field('place_type');
 		$sc = get_field('state_code');
-		$onid = get_field('old_node_id');
+		// $onid = get_field('place_relationship');
+		// print_r($onid);
 		if ($sc) {
 			$state = $sc;	
 		}
-		if ($onid) {
-			$placeid = json_encode(array($onid));	
-		}
+		// if ($onid) {
+		// 	$placeid = json_encode(array($onid));	
+		// }
 		if ($t == 'city') {
 			$pagetype = $t;
 		} elseif ($t == 'state') {
@@ -949,15 +950,14 @@ function create_listing_object() {
 		} else {
 			$pagetype = 'page';
 		}
-		$place = array(get_the_title( ));
-
+		$place = get_the_title( );
+		$placeid = get_the_ID();
 	}
 
 	//Magazines
 	if ($post_type ==  'liv_magazine') {
 		$pagetype = 'digital_magazine';
 		$mag_place_type = get_field('mag_place_type');
-		// $placeid = get_field('mag_old_node_id');
 		$mag_place_array = get_field('place_relationship');
 		if ($mag_place_array) {
 		$mag_places = array();
@@ -966,42 +966,16 @@ function create_listing_object() {
 			$mpa_parent = wp_get_post_parent_id($mpa);
 			if ($mag_place_type == 'State' && $mpa_parent < 1) {
 				$mag_places[] = get_the_title($mpa);
-				$mag_ids[] = get_field('old_node_id', $mpa);
+				$mag_ids[] = $mpa;
 			} elseif ($mag_place_type != 'State' && $mpa_parent > 0) {
 				$mag_places[] = get_the_title($mpa);
-				$mag_ids[] = get_field('old_node_id', $mpa);
+				$mag_ids[] = $mpa;
 			}
-			// if ($mpa_parent > 0) {
-			// 	$mag_places[] = get_the_title($mpa);
-			// 	$mag_ids[] = get_field('old_node_id', $mpa);
-			// }
 		}
-		$place = $mag_places;
 		$placeid = json_encode($mag_ids);
-		// $placeid = get_field('mag_old_node_id') ? get_field('mag_old_node_id') : get_the_ID( );
 
 	}
 
-		// var_dump($mag_place_array);
-		// if (count($mag_place_array) == 1) {
-			// $mag_ID = $mag_place_array[0];
-			// $placeid = json_encode(array(get_field('old_node_id', $mag_ID)));
-		// } else {
-			// 'meta_key'	=> 'place_type','meta_value' => 'state'
-			// $mag_place_array = implode(",", $mag_place_array);
-			// $state_place = get_posts( array(
-			// 	'post_type'	=> 'liv_place',
-			// 	'orderby'   => 'post__in',
-			// 	'post__in' => $mag_place_array,
-			// 	'posts_per_page' => 1
-			// ));
-			// $state_place_id = $state_place[0]->ID;
-			// $placeid = json_encode(array(get_field('old_node_id', $state_place_id)));
-			// echo '<pre>';
-			// var_dump($state_place[0]->ID);
-			// var_dump($mag_place_array);
-			// echo '</pre>';
-		// }
 	}
 	// Best Places 
 	if ($post_type == 'best_places') {
@@ -1063,6 +1037,8 @@ function create_listing_object() {
 		// $placeid = get_field('article_node_id');
 		if ($article_place_rel) {
 			foreach($article_place_rel as $apr) {
+				// echo 'place';
+				// print_r($apr);
 				// $post_places[] = "'".get_the_title($apr)."'";
 				$apr_parent = wp_get_post_parent_id($apr);
 				if ($apr_parent && $apr_parent > 0) {
@@ -1072,14 +1048,15 @@ function create_listing_object() {
 				}
 
 				$post_places[] = get_the_title($apr);
-				$place_ids[] = strval(get_field('old_node_id',$apr));
+				// $place_ids[] = strval(get_field('old_node_id',$apr));
+				$place_ids[] = $apr;
 			}
 			if (!empty($state_names)) {
 				$state = $state_names[0];
 			}
 			// print_r($post_places);
-			// $place = implode(",", $post_places);
-			$place = $post_places;
+			$place = implode(",", $post_places);
+			// $place = $post_places;
 			// $placeid = implode(",",$place_ids);
 			$placeid = json_encode($place_ids);
 			// $placeid = get_field('old_node_id', $article_place_rel[0]);
@@ -1119,6 +1096,9 @@ function create_listing_object() {
 		
 	}
 	$currentcat = str_replace('&amp;',' ', $currentcat);
+	// $place_id_list = implode(', ',$placeid);
+	$placeid = str_replace(array("[","]"), "",$placeid);
+	// echo $placeid;
 	?>
 <script>
 		if (!window.ListingObj) {
@@ -1126,17 +1106,17 @@ function create_listing_object() {
 		"pageslug" : window.location.pathname,
 		"pagetype" : "<?php echo $pagetype; ?>",
 		"currentcat": "<?php echo $currentcat; ?>",
-		"place"		: <?php echo json_encode($place); ?>,
-		"placeid"	: "",
+		"place"		: "<?php echo $place; ?>",
+		"placeid"	: "<?php echo $placeid; ?>",
 		"state"		: "<?php echo $state; ?>",
 		"oldcategory"	: "<?php echo $oldcategory; ?>",
 		"global"	: "<?php echo strval($global); ?>",
 		"year"	: "<?php echo $year; ?>",
 		"articleid":	"<?php echo $articleid; ?>"
 	}
-	<?php if (strlen($placeid) > 0) { ?>
-	ListingObj['placeid'] = <?php echo $placeid; ?>;	
-	<?php } ?>
+	<?php //if (strlen($placeid) > 0) { ?>
+	// ListingObj['placeid'] = <?php //echo $placeid; ?>;	
+	<?php //} ?>
 	}
 	
 </script>
@@ -1396,9 +1376,10 @@ if ( ! function_exists( 'get_attachment_id' ) ) {
 // Add image meta to images in content
 function livability_add_image_meta( $content ) {
 	$html = str_get_html($content);
-	if (get_post_type() == 'liv_place' ) {
-		return $html;
-	} elseif(is_front_page()) {	
+	// if (get_post_type() == 'liv_place' ) {
+		// return $html;
+	// } elseif(is_front_page()) {	
+	if (is_front_page()) {
 		$homepage_obj = get_page_by_title( 'Homepage Output');
 		if ($homepage_obj && file_exists(WP_CONTENT_DIR.'/uploads/homepage-content/homepage-output.html')){
 			include(WP_CONTENT_DIR.'/uploads/homepage-content/homepage-output.html');

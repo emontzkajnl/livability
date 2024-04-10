@@ -328,6 +328,9 @@ li.AjaxSearchLiteWidget {
         flex-grow: 0;
         flex-shrink: 0;
         position: sticky;
+        top: 100px;
+        align-self: flex-start;
+        margin-bottom: 30px;
       }
     }
   }

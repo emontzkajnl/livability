@@ -11,7 +11,7 @@ $snow = $results[0]->avg_snow;
 
 if ($high && $low && $rain && $snow):
 
-echo '<h3 id="weather">Weather in '.$city.', '.strtoupper($abbv).'</h3>'; ?>
+echo '<h2 id="weather">Weather in '.$city.', '.strtoupper($abbv).'</h2>'; ?>
 
 <div class="weather-block-2">
     <div class="weather-block-2__card temp">
