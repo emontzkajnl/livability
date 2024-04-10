@@ -29,8 +29,8 @@ echo $home_val ? '<div class="home-val"><dt>Median Home Value</dt><dd>$'.number_
 echo $prop_tax ? '<div class="prop-tax"><dt>Median Property Tax</dt><dd>$'.number_format($prop_tax).'</dd></div>' : '';
 echo $city_pop ? '<div class="city-pop"><dt>Total Population</dt><dd>'.number_format($city_pop).'</dd></div>' : '';
 echo $avg_com ? '<div class="avg-com"><dt>Average Commute</dt><dd>'.$avg_com.' min</dd></div>' : '';
-echo $avg_hou_inc ? '<div class="avg-inc"><dt>Med. Household Income</dt><dd>$'.number_format($avg_hou_inc).'</dd></div>' : '';
-echo $avg_rent ? '<div class="avg-rent"><dt>Med Rent per Month</dt><dd>$'.number_format($avg_rent).'</dd></div>' : '';
+echo $avg_hou_inc ? '<div class="avg-inc"><dt>Median Household Income</dt><dd>$'.number_format($avg_hou_inc).'</dd></div>' : '';
+echo $avg_rent ? '<div class="avg-rent"><dt>Median Rent per Month</dt><dd>$'.number_format($avg_rent).'</dd></div>' : '';
 
  //echo '</dl><p class="widget-link"><a href="'.site_url( 'city-data-widget?cityid=' ).$id.'">Display these facts on your site.</a></p></div>';
  echo '</dl></div>';

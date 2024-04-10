@@ -1874,11 +1874,27 @@ if ( ! function_exists('local_insights') ) {
 
 				// add three filters
 				// filter by region
-			// if ($_POST['bp23filters']['region']) {
-			// 	if ( $_POST['bp23filters']['region'] != strtolower(get_region_by_state_name($value->state)) ) {
-			// 		$arr = null;
-			// 	}
-			// }
+			if ($_POST['bp23filters']['region']) {
+				if ( $_POST['bp23filters']['region'] != strtolower(get_region_by_state_name($value->state)) ) {
+					$arr = null;
+				}
+			}
+
+			// filter by population
+			if ($_POST['bp23filters']['population']) {
+				$pop_array = explode("-",$_POST['bp23filters']['population']);
+				if ($arr['population'] < $pop_array[0] || $arr['population'] > $pop_array[1]) {
+					$arr = null;
+				}
+			}
+
+			// filter by home value
+			if ($_POST['bp23filters']['home_value']) {
+				$hv_array = explode("-", $_POST['bp23filters']['home_value']);
+				if (intval($arr['home_value']) < intval($hv_array[0]) ||  intval($arr['home_value']) > intval($hv_array[1])) {
+					$arr = null;
+				}
+			}
 			// echo '<br />post is '.$_POST['bp23filters']['region'].'and data is '.get_region_by_state_name($value->state);
 				// print_r($value[$sortBy]);
 				// echo json_decode($value->$sortBy, true);

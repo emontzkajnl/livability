@@ -132,6 +132,7 @@
   text-align: center;
   position: relative;
   margin-bottom: 50px;
+  flex-shrink: 1;
   h3 {
     color: white;
     margin-bottom: 30px;
@@ -139,6 +140,7 @@
 }
 .carousel-24-right {
   flex-basis: 45%;
+  flex-shrink: 1;
   margin-bottom: 50px;
   padding: 25px 50px 100px 50px;
   // margin-left: 50px;
@@ -218,5 +220,14 @@
     flex-direction: row;
     justify-content: space-between;
     column-gap: 50px;
+  }
+  .carousel-24-left {
+    width: calc(45% - 50px);
+    flex-shrink: 1;
+    
+  }
+  .carousel-24-right {
+    width: 55%;
+    flex-shrink: 1;
   }
 } 

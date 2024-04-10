@@ -1,11 +1,11 @@
 .newsletter {
     background-color: $blurple;
-    padding-top: 30px;
-    padding-bottom: 0;
+    padding-top: 40px;
+    padding-bottom: 40px;
     margin-top: 100px;
 }
 .nl-inner-container {
-    width: 81%;
+    // width: 81%;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -50,8 +50,12 @@ line-height: 27px;
         width: 100%;
         height: 45px;
         margin-top: 0;
-        max-width: 450px;
+        width: 450px;
         text-indent: 20px;
+        &::placeholder {
+            font-weight: 400;
+            color: gray;
+        }
       }
       #gform_submit_button_1 {
         font-family: "Jost";
@@ -78,10 +82,10 @@ line-height: 27px;
 }
 @media all and (min-width: 992px) {
     .newsletter {
-        padding-top: 0;
+        // padding-top: 0;
     }
     .nl-inner-container {
-        flex-direction: row-reverse;
+        flex-direction: row;
         justify-content: space-between;
     }
     .nl-text-area {
@@ -102,6 +106,7 @@ line-height: 27px;
     }
     #gform_wrapper_1 {
         #gform_1 {
+            display: flex;
             .gform_footer {
                 text-align: left;
             }

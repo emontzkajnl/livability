@@ -1042,6 +1042,7 @@ function jci_blocks_livscore_block() {
         global $wpdb;
         $id = get_the_ID();
         $title = get_the_title();
+        $city_title = $title;
      $results = $wpdb->get_results( "SELECT * FROM 2024_top_100 WHERE place_id = $id", OBJECT );
      $livscore = $results[0]->livscore;
      $amenities = $results[0]->amenities;
