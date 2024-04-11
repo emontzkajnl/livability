@@ -46,8 +46,26 @@
     searchPopup.classList.remove('search-open');
   });
 
-  const top100_24btn = document.querySelector('.map-popup');
-  // const top100_24btn = document.querySelector('.map-popup');
+  const top100_24btn = document.querySelectorAll('.open-top-100-24-map');
+  const top100_24closebtn = document.querySelector('.map-popup-close');
+  const top100_24_popup = document.querySelector('.top-100-popup-container');
+
+  top100_24btn.forEach(btn => {
+    btn.addEventListener("click", () => {
+      top100_24_popup.classList.add('open-top-100-popup');
+    });
+  })
+  
+
+  top100_24closebtn.addEventListener("click", () => {
+    console.log('close');
+    top100_24_popup.classList.remove('open-top-100-popup');
+  });
+
+
+
+
+
 
   // $('.mega-menu-wrap').on('click', function(e) {
   //   // console.log('event is ',e.target); //mega-toggle-on
@@ -910,15 +928,6 @@ $('.reset-filter').on('click', function() {
       Waypoint.refreshAll();
     }
   });
-
-   
-  
-
-
-  
-  
-
-
 });
 
 const bp23Waypoint = $(".bp23-results").waypoint({
@@ -1089,6 +1098,11 @@ $('ul.max-mega-menu').not(current_menu).each( function() {
   $(this).data('maxmegamenu').hideAllPanels();
 });
 });
+
+//select all h2 and div. 
+//filter all that have ids
+// create a function that adds active class on entry, removing class from siblings
+
 
   
 })(jQuery);

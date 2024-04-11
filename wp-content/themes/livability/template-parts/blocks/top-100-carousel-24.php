@@ -50,8 +50,8 @@ $merged = array_merge($row2, $row1);
 </div>
 <div class="carousel-24-right">
     <h3>Explore All Top 100 Best Places Cities </h3>
-    <img src="<?php echo get_stylesheet_directory_uri(  ); ?>/assets/images/top-100-map-screenshot.png" alt="">
-    <button class="bp2l__green-btn"  >Top 100 Cities Map</button>
+    <img class="open-top-100-24-map" src="<?php echo get_stylesheet_directory_uri(  ); ?>/assets/images/top-100-map-screenshot.png" alt="">
+    <button class="bp2l__green-btn open-top-100-24-map"  >Top 100 Cities Map</button>
 </div>
 </div>  <!-- .carousel-blocks-container -->
 <?php   endif; // if this is a top 100 

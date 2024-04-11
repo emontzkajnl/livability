@@ -23,6 +23,26 @@
             "ui_off_text": ""
         },
         {
+            "key": "field_6617ff8ebb80a",
+            "label": "Non-client city with content",
+            "name": "non-client_city_with_content",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "If selected, place will display the content section instead of the dyamically created \"madlib\" section. Content should be one column of text and blocks, not a full page layout",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "ui": 1
+        },
+        {
             "key": "field_605c93cd9bebd",
             "label": "FIPS",
             "name": "fips",
@@ -132,26 +152,6 @@
             "prepend": "",
             "append": "",
             "maxlength": ""
-        },
-        {
-            "key": "field_62a0cc7d756ba",
-            "label": "Non-client city with content",
-            "name": "non-client_city_with_content",
-            "aria-label": "",
-            "type": "true_false",
-            "instructions": "If selected, place will display the content section instead of the dyamically created \"madlib\" section. Content should be one column of text and blocks, not a full page layout",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "message": "",
-            "default_value": 0,
-            "ui": 0,
-            "ui_on_text": "",
-            "ui_off_text": ""
         }
     ],
     "location": [
@@ -189,5 +189,5 @@
     "active": true,
     "description": "Client, FIPS, relationship county",
     "show_in_rest": 0,
-    "modified": 1712848922
+    "modified": 1712858218
 }
