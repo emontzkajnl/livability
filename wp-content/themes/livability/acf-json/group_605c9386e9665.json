@@ -6,27 +6,9 @@
             "key": "field_608a7ea8d521e",
             "label": "This Place is a client city or state",
             "name": "client_place",
+            "aria-label": "",
             "type": "true_false",
             "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "message": "",
-            "default_value": 0,
-            "ui": 1,
-            "ui_on_text": "",
-            "ui_off_text": ""
-        },
-        {
-            "key": "field_62a0cc7d756ba",
-            "label": "Non-client city with content",
-            "name": "non-client_city_with_content",
-            "type": "true_false",
-            "instructions": "If selected, place will display the content section instead of the dyamically created \"madlib\" section. Content should be one column of text and blocks, not a full page layout",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -44,6 +26,7 @@
             "key": "field_605c93cd9bebd",
             "label": "FIPS",
             "name": "fips",
+            "aria-label": "",
             "type": "number",
             "instructions": "",
             "required": 0,
@@ -65,6 +48,7 @@
             "key": "field_605c943a9bebf",
             "label": "State Code",
             "name": "state_code",
+            "aria-label": "",
             "type": "text",
             "instructions": "",
             "required": 0,
@@ -84,6 +68,7 @@
             "key": "field_605c94e69bec0",
             "label": "Place Relationship",
             "name": "place_relationship",
+            "aria-label": "",
             "type": "relationship",
             "instructions": "",
             "required": 0,
@@ -103,33 +88,14 @@
             "elements": "",
             "min": "",
             "max": "",
-            "return_format": "object"
+            "return_format": "object",
+            "bidirectional_target": []
         },
         {
             "key": "field_605c94249bebe",
             "label": "Migrate ID",
             "name": "migrate_id",
-            "type": "number",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": "",
-            "min": "",
-            "max": "",
-            "step": ""
-        },
-        {
-            "key": "field_605c95b2d31dc",
-            "label": "Old Node ID",
-            "name": "old_node_id",
+            "aria-label": "",
             "type": "number",
             "instructions": "",
             "required": 0,
@@ -151,6 +117,7 @@
             "key": "field_609e9f6a82be1",
             "label": "County",
             "name": "county",
+            "aria-label": "",
             "type": "text",
             "instructions": "",
             "required": 0,
@@ -167,11 +134,12 @@
             "maxlength": ""
         },
         {
-            "key": "field_6149f725858d1",
-            "label": "Missing City",
-            "name": "missing_city",
+            "key": "field_62a0cc7d756ba",
+            "label": "Non-client city with content",
+            "name": "non-client_city_with_content",
+            "aria-label": "",
             "type": "true_false",
-            "instructions": "This field can be deleted after launch. Group can be switched back to admin too.",
+            "instructions": "If selected, place will display the content section instead of the dyamically created \"madlib\" section. Content should be one column of text and blocks, not a full page layout",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -219,7 +187,7 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "",
+    "description": "Client, FIPS, relationship county",
     "show_in_rest": 0,
-    "modified": 1654708135
+    "modified": 1712848922
 }
