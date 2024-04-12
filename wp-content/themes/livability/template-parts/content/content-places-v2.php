@@ -62,15 +62,15 @@ $topic_args = array(
 <div class="place-column__parent">
     <div class="place-column__nav">
     <ul class="place-side-nav">
-        <li><a href="#overview">Overview</a></li>
+        <li class="active"><a href="#overview">Overview</a></li>
         <?php if ($is_2024_bp && get_field('turn_on_top_100_blocks', 'options')): ?>
         <li><a href="#top-100" >2024 Top 100</a></li>
         <li><a href="#things-to-do">Things to Do</a></li>
         <li><a href="#economy">Economy</a></li>
         <?php endif; ?>
         <li><a href="#brands-to-know">Brands to Know</a></li>
-        <li><a href="#quick-facts">Quick Facts</a></li>
         <li><a href="#weather">Weather</a></li>
+        <li><a href="#quick-facts">Quick Facts</a></li>
         <li><a href="#map">Map</a></li>
         <?php 
         echo array_key_exists('experiences-adventures', $topics_array) ? '<li><a href="#experiences-adventures">Experiences & Adventures</a></li>' : '';

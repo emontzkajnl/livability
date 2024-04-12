@@ -1099,10 +1099,56 @@ $('ul.max-mega-menu').not(current_menu).each( function() {
 });
 });
 
+// add active class to side that has id
+// const sideNav = anchor => {
+//   $('.place-side-nav li').each(function(n){
+//     $(n).find('a').attr('id');
+//     console.log('id is ',);
+//   });
+// }
+
 //select all h2 and div. 
+// const sideNav = $('.single-liv_place .entry-content div, .single-liv_place .entry-content h2').waypoint({
+//   handler: {
+//     function () {
+//       console.log('id is ');
+//     }
+//   },
+//   offset: "150px"
+// });
 //filter all that have ids
 // create a function that adds active class on entry, removing class from siblings
 
+// var testing = new Waypoint({
+//   element: document.querySelectorAll('.single-liv_place div, .single-liv_place h2'),
+//   handler: function(direction) {
+//     let navItems = document.querySelectorAll('.place-side-nav li');
+//     const theTarget = document.getElementById(this.element.id);
+//     navItems.forEach(element => {
+//       element.classList.remove('active');
+//     });
+//     document.
 
+//     // console.log(this.element.id + 'sdfsdf hit');
+//     // console.dir(this);
+//   },
+//   offset: '150px'
+// });
+$('.single-liv_place .entry-content').find('div, h2').each( function(i,e){
+  let id = $(e).attr('id');
+  if (id) {
+    let temp = new Waypoint({
+      element: e,
+      handler: function(direction) {
+        const theID = `#${this.element.id}`;
+        const navItems = $('.place-side-nav li');
+        navItems.removeClass('active');
+        navItems.find('a[href='+theID+']').parent().addClass('active');
+      },
+      offset: '150px'
+    });
+  }
+  
+});
   
 })(jQuery);
