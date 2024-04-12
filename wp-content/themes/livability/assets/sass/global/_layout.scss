@@ -322,15 +322,19 @@ li.AjaxSearchLiteWidget {
         flex-basis: auto;
       }
       &:last-child {
-        //sticky sidebar
         flex-basis: 300px;
         margin-left: 60px;
         flex-grow: 0;
         flex-shrink: 0;
-        position: sticky;
+        // position: sticky;
         top: 100px;
-        align-self: flex-start;
+        // align-self: flex-start;
         margin-bottom: 30px;
+        .wp-block-jci-ad-area-two {
+          position: sticky;
+          top: 120px;
+          background-color: pink;
+        }
       }
     }
   }

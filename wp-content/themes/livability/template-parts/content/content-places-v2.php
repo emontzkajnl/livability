@@ -123,8 +123,8 @@ $topic_args = array(
             <!-- </div> -->
             <div class="wp-block-column">
             <?php 
-            get_template_part( 'template-parts/blocks/ad-two' );
-            get_template_part( 'template-parts/blocks/sidebar-mag-link' ); ?>
+            // get_template_part( 'template-parts/blocks/sidebar-mag-link' );
+            get_template_part( 'template-parts/blocks/ad-two' ); ?>
             </div>
         </div>
         <div class="wp-block-columns">

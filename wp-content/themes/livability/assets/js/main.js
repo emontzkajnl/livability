@@ -1134,21 +1134,31 @@ $('ul.max-mega-menu').not(current_menu).each( function() {
 //   },
 //   offset: '150px'
 // });
-$('.single-liv_place .entry-content').find('div, h2').each( function(i,e){
-  let id = $(e).attr('id');
-  if (id) {
-    let temp = new Waypoint({
-      element: e,
-      handler: function(direction) {
-        const theID = `#${this.element.id}`;
-        const navItems = $('.place-side-nav li');
-        navItems.removeClass('active');
-        navItems.find('a[href='+theID+']').parent().addClass('active');
-      },
-      offset: '150px'
-    });
-  }
-  
-});
+
+const sideNavFunc = () => {
+  const navItems = $('.place-side-nav li');
+  $('.entry-content').find('div, h2').each( function(i,e){
+    let id = $(e).attr('id');
+    if (id) {
+      let match = navItems.find('a[href$='+id+']');
+      if (!match) {
+        console.log('notta match');
+        return;
+      }
+      let temp = new Waypoint({
+        element: e,
+        handler: function(direction) {
+          // const theID = `#${this.element.id}`;
+          navItems.removeClass('active');
+          match.parent().addClass('active');
+        },
+        offset: '130px'
+      });
+    }
+  });
+}
+if ( $('body').hasClass('single-liv_place')) {
+  sideNavFunc();
+} 
   
 })(jQuery);
