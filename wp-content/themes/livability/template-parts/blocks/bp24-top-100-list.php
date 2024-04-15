@@ -11,7 +11,7 @@ include_once( get_stylesheet_directory() .'/assets/lib/regions.php');
     <li class="bp23-category-btn" class="economy" ><div data-cat="economy" class="economy <?php echo $meta_key == 'economy' ? 'active' : ''; ?>">Economy</div></li>
     <li class="bp23-category-btn" class="education"><div data-cat="education"  class="education <?php echo $meta_key == 'education' ? 'active' : ''; ?>">Education</div></li>
     <li class="bp23-category-btn" class="environment"><div data-cat="environment"  class="environment <?php echo $meta_key == 'environment' ? 'active' : ''; ?>">Environment</div></li>
-    <li class="bp23-category-btn" class="health-care"><div  data-cat="health" class="health-care <?php echo $meta_key == 'health' ? 'active' : ''; ?>">Health</div></li>
+    <li class="bp23-category-btn" class="health-care"><div  data-cat="healthcare" class="health-care <?php echo $meta_key == 'healthcare' ? 'active' : ''; ?>">Health</div></li>
     <li class="bp23-category-btn" class="housing"><div  data-cat="housing" class="housing <?php echo $meta_key == 'housing' ? 'active' : ''; ?>">Housing & Cost of Living</div></li>
     <li class="bp23-category-btn" class="safety"><div  data-cat="safety" class="safety <?php echo $meta_key == 'safety' ? 'active' : ''; ?>">Safety</div></li>
     <li class="bp23-category-btn" class="transportation"><div  data-cat="transportation" class="transportation <?php echo $meta_key == 'transportation' ? 'active' : ''; ?>">Transportation</div></li>
@@ -110,6 +110,7 @@ include_once( get_stylesheet_directory() .'/assets/lib/regions.php');
     $sortBy = 'livscore';
     $score_string = $sortBy == 'livscore' ? '' : ' score';
      $results = $wpdb->get_results( "SELECT * FROM 2024_top_100  ORDER BY ".$sortBy, OBJECT );
+     $results = array_splice($results, 0, 20);
      foreach ($results as $key=>$value) {
      $city_data = $wpdb->get_results( "SELECT * FROM 2024_city_data  WHERE place_id = $value->place_id", OBJECT );
      $population = $city_data[0]->city_pop;
@@ -117,10 +118,12 @@ include_once( get_stylesheet_directory() .'/assets/lib/regions.php');
      ?>
     <div class="bp24__card">
         <div class="bp24__img-container" >
+        <a href="<?php echo get_the_permalink( $value->place_id); ?>">
         <?php echo get_the_post_thumbnail( $value->place_id, 'medium'); ?>
+        </a>
         </div>
         <div class="bp24__text-container">
-        <h4 class="bp24__city"><?php echo $value->city; ?></h4>
+        <a class="unstyle-link" href="<?php echo get_the_permalink( $value->place_id);  ?>"><h4 class="bp24__city"><?php echo $value->city; ?></h4></a>
         <p class="bp24__state"><?php echo $value->state; ?></p>
         <p class="bp24__cat-paragraph"><?php echo ucfirst($sortBy).$score_string.': '.json_decode($value->$sortBy, true); ?></p>
         <p>Region: <?php echo get_region_by_state_name($value->state); ?></p>

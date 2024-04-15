@@ -1,6 +1,6 @@
 <?php 
 global $wpdb;
-$sortBy = 'healthcare'; // TODO: set by session variable
+$sortBy = isset( $_SESSION['bp23_cat'] ) ? $_SESSION['bp23_cat'] : 'livscore';
 $results = $wpdb->get_results( "SELECT * FROM 2024_top_100 ORDER BY ".$sortBy, OBJECT );
 // session_start();
 // get array position of current post
@@ -54,4 +54,22 @@ $merged = array_merge($row2, $row1);
     <button class="bp2l__green-btn open-top-100-24-map"  >Top 100 Cities Map</button>
 </div>
 </div>  <!-- .carousel-blocks-container -->
+<!-- <script>
+    const top100_24btn = document.querySelectorAll('.open-top-100-24-map');
+  const top100_24closebtn = document.querySelector('.map-popup-close');
+  const top100_24_popup = document.querySelector('.top-100-popup-container');
+
+  
+    top100_24btn.forEach(btn => {
+      btn.addEventListener("click", () => {
+        top100_24_popup.classList.add('open-top-100-popup');
+      });
+    });
+    
+  
+    top100_24closebtn.addEventListener("click", () => {
+      top100_24_popup.classList.remove('open-top-100-popup');
+    });
+  
+</script> -->
 <?php   endif; // if this is a top 100 

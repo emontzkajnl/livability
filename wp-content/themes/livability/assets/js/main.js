@@ -46,21 +46,8 @@
     searchPopup.classList.remove('search-open');
   });
 
-  const top100_24btn = document.querySelectorAll('.open-top-100-24-map');
-  const top100_24closebtn = document.querySelector('.map-popup-close');
-  const top100_24_popup = document.querySelector('.top-100-popup-container');
+ 
 
-  top100_24btn.forEach(btn => {
-    btn.addEventListener("click", () => {
-      top100_24_popup.classList.add('open-top-100-popup');
-    });
-  })
-  
-
-  top100_24closebtn.addEventListener("click", () => {
-    console.log('close');
-    top100_24_popup.classList.remove('open-top-100-popup');
-  });
 
 
 
@@ -930,19 +917,20 @@ $('.reset-filter').on('click', function() {
   });
 });
 
-const bp23Waypoint = $(".bp23-results").waypoint({
+const bp23Waypoint = $(".bp23-results, .bp24__results").waypoint({
   handler: function (direction) {
-    // console.log('waypoint is running');
     loadbp23();
   },
   offset: "bottom-in-view",
 });
 
 function loadbp23() {
+  const year = getBpYear();
   const data = {
     action: "loadMorebp23",
     page: window.params.bp23page,
-    bp23filters: window.params.bp23filters
+    bp23filters: window.params.bp23filters,
+    year
   }
   $.ajax({
     url: params.ajaxurl,
@@ -952,7 +940,8 @@ function loadbp23() {
     success: function (data) {
       if (data) {
         window.params.bp23page++;
-        $('.bp23-results').append(data);
+        const resultContainer = year == '2023' ? $('.bp23-results') : $('.bp24__results');
+        resultContainer.append(data);
         cmWrapper.que.push(function () {
           cmWrapper.ads.define("ROS_BTF_970x250", `ohlloop${window.params.bp23page}-2`, function(name, slot){
             // console.log('name: ',name,' slot: ',slot.getSlotElementId());
@@ -961,14 +950,13 @@ function loadbp23() {
             adDiv.classList.add("wp-block-jci-blocks-ad-area-three");
             // console.log('adDiv: ',adDiv);
             // $(".onehundred-container").append(adDiv);
-            document.getElementsByClassName('bp23-results')[0].appendChild(adDiv);
+            resultContainer.appendChild(adDiv);
           });
           cmWrapper.ads.requestUnits();
         });
         let href = location.href;
         href = href.slice(-1) == '/' ? href.slice(0, -1) : href;
         let newPage = href+'/'+window.params.bp23page;
-        console.log('new page is ',newPage);
         if (typeof ga === "function") { 
           ga('send','pageview', newPage);
         }
