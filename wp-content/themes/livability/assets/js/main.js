@@ -36,6 +36,8 @@
   const searchPopupBtn = document.querySelector(".mobile-search-icon");
   const searchPopup = document.querySelector(".search-pop-up");
   const searchClose = document.querySelector(".close-search");
+
+  
   searchPopupBtn.addEventListener("click", () => {
     // searchPopup.style.display = 'flex';
     searchPopup.classList.add('search-open');
@@ -48,7 +50,11 @@
 
  
 
-
+  $('.text-shortener__button').on('click', function(){
+    console.log('ts clicked');
+    $('.text-shortener').removeClass('text-shortener');
+    $('.text-shortener__container').remove();
+  });
 
 
 
