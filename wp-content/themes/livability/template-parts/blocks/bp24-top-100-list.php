@@ -134,3 +134,4 @@ include_once( get_stylesheet_directory() .'/assets/lib/regions.php');
     <?php } //end foreach ?>
 </div>
 </div> <!-- results container -->
+<iframe src="https://map.proxi.co/r/top-100-best-places-2024_view" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe>
