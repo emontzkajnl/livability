@@ -2101,7 +2101,22 @@ border-bottom: 1px solid $green;
     }
   }
 }
-
+#top-one-hundred-list {
+  padding-top: 70px;
+}
+.mag-sponsor-sidebar {
+  text-align: center;
+  font-family: 'Jost', arial, sans-serif;
+  p {
+    margin-top: .8rem;
+  }
+  .mag-sponsored-by {
+    font-style: italic;
+  }
+  .mag-sponsor {
+    margin-top: 0;
+  }
+}
 .bp24 {
   &__results-container {
     display: block;

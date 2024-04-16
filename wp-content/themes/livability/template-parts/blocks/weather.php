@@ -9,7 +9,7 @@ $low = $results[0]->avg_low_temp;
 $rain = $results[0]->avg_rain;
 $snow = $results[0]->avg_snow;
 
-if ($high && $low && $rain && $snow):
+if ($high != null && $low != null && $rain != null && $snow != null):
 
 echo '<h2 id="weather">Weather in '.$city.', '.strtoupper($abbv).'</h2>'; ?>
 
