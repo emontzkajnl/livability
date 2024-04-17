@@ -2135,6 +2135,21 @@ border-bottom: 1px solid $green;
         font-family: "Jost",Arial,Helvetica,sans-serif;
         font-size: 1rem;
         font-weight: 500;
+        line-height: 2;
+        position: relative;
+        width: 100%;
+        // background-color: blue;
+        &:after {
+          content: '';
+          position: absolute;
+          width: 17px;
+          height: 15px;
+          // background-color: pink;
+          right: 0;
+          top: 7px;
+          background-image: url('./assets/images/chevron-down.svg');
+          background-repeat: no-repeat;
+        }
       }
       label {
         font-family: "Jost",Arial,Helvetica,sans-serif;
@@ -2154,7 +2169,14 @@ border-bottom: 1px solid $green;
         }
       }
     }
-
+    .radio-container {
+      display: none;
+    }
+    &.open {
+      .radio-container {
+        display: block;
+      }
+    }
   }
   &__results {
     display: flex;

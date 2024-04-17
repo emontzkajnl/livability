@@ -48,31 +48,34 @@
     searchPopup.classList.remove('search-open');
   });
 
-  // const top100_24btn = document.querySelectorAll('.open-top-100-24-map');
-  // const top100_24closebtn = document.querySelector('.map-popup-close');
-  // const top100_24_popup = document.querySelector('.top-100-popup-container');
+  const top100_24btn = document.querySelectorAll('.open-top-100-24-map');
+  const top100_24closebtn = document.querySelector('.map-popup-close');
+  const top100_24_popup = document.querySelector('.top-100-popup-container');
 
-  // if (top100_24btn.length && top100_24_popup.length && top100_24closebtn.length) {
-  //   top100_24btn.forEach(btn => {
-  //     btn.addEventListener("click", () => {
-  //       top100_24_popup.classList.add('open-top-100-popup');
-  //     });
-  //   });
-  // }   
+  if (top100_24btn.length && top100_24_popup.length && top100_24closebtn.length) {
+    top100_24btn.forEach(btn => {
+      btn.addEventListener("click", () => {
+        top100_24_popup.classList.add('open-top-100-popup');
+      });
+    });
+  }   
   
-  //   top100_24closebtn.addEventListener("click", () => {
-  //     top100_24_popup.classList.remove('open-top-100-popup');
-  //   });
+    top100_24closebtn.addEventListener("click", () => {
+      top100_24_popup.classList.remove('open-top-100-popup');
+    });
 
-  const top10024popup = $('.top-100-popup-container');
-  $('.open-top-100-24-map').on('click', function(){
-    top10024popup.addClass('open-top-100-popup');
-  });
-  $('.map-popup-close').on('click', function(){
-    top10024popup.removeClass('open-top-100-popup');
-  });
+  // const top10024popup = $('.top-100-popup-container');
+  // $('.open-top-100-24-map').on('click', function(){
+  //   top10024popup.addClass('open-top-100-popup');
+  // });
+  // $('.map-popup-close').on('click', function(){
+  //   top10024popup.removeClass('open-top-100-popup');
+  // });
 
-
+  // $('.bp24__filters-container legend').on('click', function(e) {
+  //   console.dir($(e.target));
+  //   $(this).parent().parent().toggleClass('open');
+  // });
 
   $('.text-shortener__button').on('click', function(){
     $('.text-shortener').removeClass('text-shortener');
