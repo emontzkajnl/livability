@@ -7,5 +7,5 @@ config:
   webroot: .
 services:
   myservice:
-    type: php:8.0
+    type: 'php:8.0'
     via: nginx

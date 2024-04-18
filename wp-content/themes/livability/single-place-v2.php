@@ -20,7 +20,7 @@ while ( have_posts() ) :
 	
 	if (get_field('place_type') != 'state') {
 		// if 2024 top 100, show bp hero whether client or not
-		if (has_term('2024', 'best_places_years')) { 
+		if (has_term('2024', 'best_places_years') && get_field('turn_on_top_100_blocks', 'options')) { 
 			$parent_id = wp_get_post_parent_id();
  			$byline =  get_field('img_byline',get_post_thumbnail_id());
 			?>
