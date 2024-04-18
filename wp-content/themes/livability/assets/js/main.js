@@ -48,34 +48,34 @@
     searchPopup.classList.remove('search-open');
   });
 
-  const top100_24btn = document.querySelectorAll('.open-top-100-24-map');
-  const top100_24closebtn = document.querySelector('.map-popup-close');
-  const top100_24_popup = document.querySelector('.top-100-popup-container');
+  // const top100_24btn = document.querySelectorAll('.open-top-100-24-map');
+  // const top100_24closebtn = document.querySelector('.map-popup-close');
+  // const top100_24_popup = document.querySelector('.top-100-popup-container');
 
-  if (top100_24btn.length && top100_24_popup.length && top100_24closebtn.length) {
-    top100_24btn.forEach(btn => {
-      btn.addEventListener("click", () => {
-        top100_24_popup.classList.add('open-top-100-popup');
-      });
-    });
-  }   
+  // if (top100_24btn.length && top100_24_popup.length && top100_24closebtn.length) {
+  //   top100_24btn.forEach(btn => {
+  //     btn.addEventListener("click", () => {
+  //       top100_24_popup.classList.add('open-top-100-popup');
+  //     });
+  //   });
+  // }   
   
-    top100_24closebtn.addEventListener("click", () => {
-      top100_24_popup.classList.remove('open-top-100-popup');
-    });
+  //   top100_24closebtn.addEventListener("click", () => {
+  //     top100_24_popup.classList.remove('open-top-100-popup');
+  //   });
 
-  // const top10024popup = $('.top-100-popup-container');
-  // $('.open-top-100-24-map').on('click', function(){
-  //   top10024popup.addClass('open-top-100-popup');
-  // });
-  // $('.map-popup-close').on('click', function(){
-  //   top10024popup.removeClass('open-top-100-popup');
-  // });
+  const top10024popup = $('.top-100-popup-container');
+  $('.open-top-100-24-map').on('click', function(){
+    top10024popup.addClass('open-top-100-popup');
+  });
+  $('.map-popup-close').on('click', function(){
+    top10024popup.removeClass('open-top-100-popup');
+  });
 
-  // $('.bp24__filters-container legend').on('click', function(e) {
-  //   console.dir($(e.target));
-  //   $(this).parent().parent().toggleClass('open');
-  // });
+  $('.bp24__filters-container legend').on('click', function(e) {
+    console.dir($(e.target));
+    $(this).parent().parent().toggleClass('open');
+  });
 
   $('.text-shortener__button').on('click', function(){
     $('.text-shortener').removeClass('text-shortener');
@@ -164,8 +164,6 @@
       slidesToShow: 3,
       slidesToScroll: 1,
       arrows: true,
-      // prevArrow: '<svg class="slick-prev" xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>',
-      // nextArrow: '<svg class="slick-next" xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>',
       prevArrow: '<svg class="slick-prev" xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>',
        nextArrow: '<svg class="slick-next" xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>',
       responsive: [
@@ -187,6 +185,34 @@
     });
   }
   initPwlSlick();
+
+  const placeBrandStories = function() {
+    $(".pwl-slick-place-brand-stories").slick({
+      infinite: true,
+      slidesToShow: 3,
+      slidesToScroll: 1,
+      arrows: true,
+      prevArrow: '<svg class="slick-prev" xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>',
+       nextArrow: '<svg class="slick-next" xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>',
+      responsive: [
+        {
+          breakpoint: 1200,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 1
+          },
+        },
+        {
+          breakpoint: 962,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1
+          },
+        },
+      ],
+    });
+  }
+  placeBrandStories();
 
   $(".place-topics-2__button").on("click", function(){
     const button = $(this);
