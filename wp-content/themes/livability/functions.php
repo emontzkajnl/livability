@@ -894,10 +894,14 @@ function load_more_bpm_posts() {
 			
 			<div class="bp24__card">
 			<div class="bp24__img-container" >
+			<a href="<?php echo get_the_permalink( $value['place_id']); ?>">
 			<?php echo get_the_post_thumbnail( $value['place_id'], 'medium'); ?>
+			</a>
 			</div>
 			<div class="bp24__text-container">
+			<a class="unstyle-link" href="<?php echo get_the_permalink( $value->place_id); ?>">
 			<h4 class="bp24__city"><?php echo $value['city']; ?></h4>
+			</a>
 			<p class="bp24__state"><?php echo $value['state']; ?></p>
 			<p class="bp24__cat-paragraph"><?php echo ucfirst($value['cat_name']).$score_text.': '.$value['cat_val']; ?></p>
 			<p>Region: <?php echo get_region_by_state_name($value['state']); ?></p>
@@ -1965,10 +1969,14 @@ if ( ! function_exists('local_insights') ) {
 				
 				<div class="bp24__card">
 				<div class="bp24__img-container" >
+				<a href="<?php echo get_the_permalink( $value['place_id']); ?>">
 				<?php echo get_the_post_thumbnail( $value['place_id'], 'medium'); ?>
+				</a>
 				</div>
 				<div class="bp24__text-container">
+				<a class="unstyle-link" href="<?php echo get_the_permalink( $value->place_id); ?>">
 				<h4 class="bp24__city"><?php echo $value['city']; ?></h4>
+				</a>
 				<p class="bp24__state"><?php echo $value['state']; ?></p>
 				<p class="bp24__cat-paragraph"><?php echo ucfirst($value['cat_name']).$score_text.': '.$value['cat_val']; ?></p>
 				<p>Region: <?php echo get_region_by_state_name($value['state']); ?></p>
