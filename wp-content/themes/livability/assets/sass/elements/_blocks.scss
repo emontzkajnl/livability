@@ -2129,12 +2129,20 @@ border-bottom: 1px solid $green;
     width: 100%;
     background-color: white;
     min-height: 500px; // delete
+    padding: 15px;
+    box-shadow: 2px 2px 2px 2px rgba(0,0,0,.2);
+    hr{
+      border: 1px solid #b2b2b2;
+    } 
+    h5 {
+      margin-bottom: 30px;
+    }
     fieldset {
       border: none;
       legend {
         font-family: "Jost",Arial,Helvetica,sans-serif;
         font-size: 1rem;
-        font-weight: 500;
+        font-weight: bold;
         line-height: 2;
         position: relative;
         width: 100%;
@@ -2167,16 +2175,25 @@ border-bottom: 1px solid $green;
         &:checked, &:focus {
           outline-offset: 0;
         }
+        &:after {
+          background: $green;
+        }
       }
-    }
-    .radio-container {
-      display: none;
-    }
-    &.open {
       .radio-container {
-        display: block;
+        display: none;
+      }
+      &.open {
+        legend {
+          &:after {
+            background-image: url('./assets/images/chevron-up.svg');
+          }
+        }
+        .radio-container {
+          display: block;
+        }
       }
     }
+
   }
   &__results {
     display: flex;

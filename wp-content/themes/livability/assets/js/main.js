@@ -73,8 +73,7 @@
   });
 
   $('.bp24__filters-container legend').on('click', function(e) {
-    console.dir($(e.target));
-    $(this).parent().parent().toggleClass('open');
+    $(this).parent().toggleClass('open');
   });
 
   $('.text-shortener__button').on('click', function(){
