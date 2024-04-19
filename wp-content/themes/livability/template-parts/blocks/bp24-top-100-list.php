@@ -19,7 +19,7 @@ include_once( get_stylesheet_directory() .'/assets/lib/regions.php');
 
 <div class="bp24__results-container">
     <div class="bp24__filters-container">
-        <h5>Filter by region, population and median home value</h5>
+        <h5>Filter the list</h5>
         <hr>
         <fieldset id="region">
         <legend>U.S. Region</legend>

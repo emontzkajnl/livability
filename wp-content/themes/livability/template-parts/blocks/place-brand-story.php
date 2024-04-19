@@ -31,7 +31,7 @@ if ($sponsors):
         $sponsor_url = get_field('sponsor_url', $s);  ?>
         <div class="brand-stories__card">
             <a href="<?php echo get_the_permalink($s); ?>" class="brand-stories__img">
-            <!-- <div style="background-image: url(<?php //echo get_the_post_thumbnail_url( $s,'rel_article' ); ?>); display: block;"></div> -->
+            <div style="background-image: url(<?php echo get_the_post_thumbnail_url( $s,'rel_article' ); ?>); display: block;"></div>
             <?php echo get_the_post_thumbnail( $s, 'rel_article', array('style' => 'height: auto;') ); ?>
             </a>
             <div class="brand-stories__one-container">
@@ -69,7 +69,7 @@ if ($sponsors):
         $sponsor_url = get_field('sponsor_url', $s);  ?>
         <div class="brand-stories__card">
             <a href="<?php echo get_the_permalink($s); ?>" class="brand-stories__img">
-            <!-- <div style="background-image: url(<?php //echo get_the_post_thumbnail_url( $s,'rel_article' ); ?>); display: block;"></div> -->
+            <div style="background-image: url(<?php echo get_the_post_thumbnail_url( $s,'rel_article' ); ?>); display: block;"></div> 
             <?php //echo get_the_post_thumbnail( $s, 'rel_article', array('style', 'width: 100%;') ); ?>
             </a>
             <div class="brand-stories__title">
