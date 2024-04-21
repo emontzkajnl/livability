@@ -185,33 +185,33 @@
   }
   initPwlSlick();
 
-  const placeBrandStories = function() {
-    $(".pwl-slick-place-brand-stories").slick({
-      infinite: true,
-      slidesToShow: 3,
-      slidesToScroll: 1,
-      arrows: true,
-      prevArrow: '<svg class="slick-prev" xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>',
-       nextArrow: '<svg class="slick-next" xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>',
-      responsive: [
-        {
-          breakpoint: 1200,
-          settings: {
-            slidesToShow: 2,
-            slidesToScroll: 1
-          },
-        },
-        {
-          breakpoint: 962,
-          settings: {
-            slidesToShow: 1,
-            slidesToScroll: 1
-          },
-        },
-      ],
-    });
-  }
-  placeBrandStories();
+  // const placeBrandStories = function() {
+  //   $(".pwl-slick-place-brand-stories").slick({
+  //     infinite: true,
+  //     slidesToShow: 3,
+  //     slidesToScroll: 1,
+  //     arrows: true,
+  //     prevArrow: '<svg class="slick-prev" xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>',
+  //      nextArrow: '<svg class="slick-next" xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>',
+  //     responsive: [
+  //       {
+  //         breakpoint: 1200,
+  //         settings: {
+  //           slidesToShow: 2,
+  //           slidesToScroll: 1
+  //         },
+  //       },
+  //       {
+  //         breakpoint: 962,
+  //         settings: {
+  //           slidesToShow: 1,
+  //           slidesToScroll: 1
+  //         },
+  //       },
+  //     ],
+  //   });
+  // }
+  // placeBrandStories();
 
   $(".place-topics-2__button").on("click", function(){
     const button = $(this);
@@ -931,10 +931,7 @@ $('#region, #population, #home_value').on('change', function(e){
     type: "POST",
     dataType: "html",
     success: function (data) {
-      // console.log('data is ',data);
       if (year == '2023') {
-        // console.log('2023 response')
-        // console.log('data is ',data);
         $('.bp23-results').html(data);
       } else if (year == '2024') {
         $('.bp24__results').html(data);
@@ -945,11 +942,21 @@ $('#region, #population, #home_value').on('change', function(e){
   });
   
 });
+
 // console.dir(Object.values(window.params.bp23filters));
-$('.reset-filter').on('click', function() {
+$('.reset-filter, .bp24__reset-btn').on('click', function() {
+  const year = getBpYear();
   window.params.bp23page = 1;
-  const filters = $('#region, #population, #home_value');
-  filters.val("").removeClass('filtered');
+  
+  if (year == '2023') {
+    const filters = $('#region, #population, #home_value');
+    filters.val("").removeClass('filtered');
+  } else {
+    $('#allRegions, #allPopulation, #allhv').prop('checked', true);
+    $('fieldset').removeClass('open');
+  }
+  
+
   window.params.bp23filters = {
     "region": "",
     "population": "",
@@ -959,7 +966,8 @@ $('.reset-filter').on('click', function() {
   const data = {
     action: "loadbp23",
     cat: cat,
-    bp23filters: window.params.bp23filters
+    bp23filters: window.params.bp23filters,
+    year
   }
   $.ajax({
     url: params.ajaxurl,
@@ -967,8 +975,12 @@ $('.reset-filter').on('click', function() {
     type: "POST",
     dataType: "html",
     success: function (data) {
-      // console.log('data is ',data);
-      $('.bp23-results').html(data);
+      if (year == '2023') {
+        $('.bp23-results').html(data);
+      } else if (year == '2024') {
+        $('.bp24__results').html(data);
+      }
+      
       Waypoint.refreshAll();
     }
   });
@@ -1028,10 +1040,6 @@ function loadbp23() {
       Waypoint.refreshAll();
     }
   });
-}
-
-function loadbp24() {
- 
 }
 
 $('.cat-detail').on('click', function(){

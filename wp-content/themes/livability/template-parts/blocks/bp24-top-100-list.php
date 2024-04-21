@@ -4,7 +4,7 @@ include_once( get_stylesheet_directory() .'/assets/lib/regions.php');
 
 ?>
 <h3 id="top-one-hundred-list">Explore Our Best Places to Live in the U.S.</h3>
-<h5 style="margin-bottom: 10px;">Sort by category...</h5>
+<h5 style="margin-bottom: 10px;">Sort by category</h5>
 <ul class="bp23-category-btns" >
     <li class="bp23-category-btn" class="liv-score" ><div data-cat="livscore" class="livscore  <?php echo $meta_key == 'livscore' ? 'active' : ''; ?>">Liv Score</div></li>
     <li class="bp23-category-btn" class="amenities" ><div data-cat="amenities" class="amenities <?php echo $meta_key == 'amenities' ? 'active' : ''; ?>">Amenities</div></li>
@@ -104,6 +104,7 @@ include_once( get_stylesheet_directory() .'/assets/lib/regions.php');
             <label for="400hv"">$400K-$500K</label>
         </div>
         </fieldset>
+        <p class="bp24__reset-btn">Reset All Filters</p>
     </div>
 <div class="bp24__results">
     <?php global $wpdb;

@@ -46,7 +46,7 @@ $merged = array_merge($row2, $row1);
     </ul>
 
 </div>
-<button class="bp2l__green-btn"  >Return to Main List</button>
+<a href="<?php echo site_url( '/best-places/2024-top-100-best-places-to-live-in-the-us/' ); ?>"><button class="bp2l__green-btn"  >Return to Main List</button></a>
 </div>
 <div class="carousel-24-right">
     <h3>Explore All Top 100 Best Places Cities </h3>
