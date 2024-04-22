@@ -6,7 +6,7 @@ include_once( get_stylesheet_directory() .'/assets/lib/regions.php');
 <h3 id="top-one-hundred-list">Explore Our Best Places to Live in the U.S.</h3>
 <h5 style="margin-bottom: 10px;">Sort by category</h5>
 <ul class="bp23-category-btns" >
-    <li class="bp23-category-btn" class="liv-score" ><div data-cat="livscore" class="livscore  <?php echo $meta_key == 'livscore' ? 'active' : ''; ?>">Liv Score</div></li>
+    <li class="bp23-category-btn" class="liv-score" ><div data-cat="livscore" class="livscore  <?php echo $meta_key == 'livscore' ? 'active' : ''; ?>">LivScore</div></li>
     <li class="bp23-category-btn" class="amenities" ><div data-cat="amenities" class="amenities <?php echo $meta_key == 'amenities' ? 'active' : ''; ?>">Amenities</div></li>
     <li class="bp23-category-btn" class="economy" ><div data-cat="economy" class="economy <?php echo $meta_key == 'economy' ? 'active' : ''; ?>">Economy</div></li>
     <li class="bp23-category-btn" class="education"><div data-cat="education"  class="education <?php echo $meta_key == 'education' ? 'active' : ''; ?>">Education</div></li>
@@ -130,6 +130,7 @@ include_once( get_stylesheet_directory() .'/assets/lib/regions.php');
         <p>Region: <?php echo get_region_by_state_name($value->state); ?></p>
         <p>Population: <?php echo  number_format($population); ?></p>
         <p>Med. Home Value: $<?php echo number_format($home_value); ?></p>
+        <p class="bp24__read-more"><a class="unstyle-link" href="<?php echo get_the_permalink( $value->place_id);  ?>">Read More</a></p>
         </div>
     </div>
     <?php } //end foreach ?>

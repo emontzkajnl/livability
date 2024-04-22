@@ -780,7 +780,7 @@ $(".bp23-category-btns").slick({
       breakpoint: 200,
       settings: {
         slidesToShow: 2,
-        slidesToScroll: 1,
+        slidesToScroll: 2,
         // centerPadding: "80px",
       },
     },
@@ -788,7 +788,7 @@ $(".bp23-category-btns").slick({
         breakpoint: 350,
         settings: {
           slidesToShow: 3,
-          slidesToScroll: 1,
+          slidesToScroll: 3,
           // centerPadding: "80px",
         },
     },
@@ -796,7 +796,7 @@ $(".bp23-category-btns").slick({
       breakpoint: 500,
       settings: {
         slidesToShow: 4,
-        slidesToScroll: 1,
+        slidesToScroll: 4,
         // centerPadding: "80px",
       },
   },
@@ -804,7 +804,7 @@ $(".bp23-category-btns").slick({
     breakpoint: 750,
     settings: {
       slidesToShow: 5,
-      slidesToScroll: 1,
+      slidesToScroll: 5,
       // centerPadding: "80px",
     },
 },
@@ -812,7 +812,7 @@ $(".bp23-category-btns").slick({
   breakpoint: 900,
   settings: {
     slidesToShow: 6,
-    slidesToScroll: 1,
+    slidesToScroll: 4,
     // centerPadding: "80px",
   },
 },
@@ -820,7 +820,7 @@ $(".bp23-category-btns").slick({
   breakpoint: 1050,
   settings: {
     slidesToShow: 7,
-    slidesToScroll: 1,
+    slidesToScroll: 3,
     // centerPadding: "80px",
   },
 },
@@ -828,7 +828,7 @@ $(".bp23-category-btns").slick({
   breakpoint: 1200,
   settings: {
     slidesToShow: 8,
-    slidesToScroll: 1,
+    slidesToScroll: 2,
     // centerPadding: "80px",
   },
 },

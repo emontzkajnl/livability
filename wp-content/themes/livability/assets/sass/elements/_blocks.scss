@@ -2129,6 +2129,10 @@ border-bottom: 1px solid $green;
   &__total-posts {
     flex-basis: 100%;
   }
+  &__read-more {
+    font-style: italic;
+    text-align: right;
+  }
   &__filters-container {
     width: 100%;
     background-color: white;
