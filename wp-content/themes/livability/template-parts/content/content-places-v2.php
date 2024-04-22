@@ -45,8 +45,10 @@ $topic_args = array(
    $parent_obj = get_post_parent();
    $state_name = $parent_obj->post_title;
    $state_abbv = $parent_obj->post_name;
-   $full_city_name = get_the_title($place[0]);
-   $city_name = substr(get_the_title($place[0]), 0, -4); 
+//    $full_city_name = get_the_title($place[0]);
+//    $city_name = substr(get_the_title($place[0]), 0, -4); 
+   $full_city_name = get_the_title();
+   $city_name = substr(get_the_title(), 0, -4); 
 //    print_r($parent_obj);
 
 ?>
