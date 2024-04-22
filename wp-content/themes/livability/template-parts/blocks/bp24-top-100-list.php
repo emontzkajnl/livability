@@ -110,7 +110,7 @@ include_once( get_stylesheet_directory() .'/assets/lib/regions.php');
     <?php global $wpdb;
     $sortBy = 'livscore';
     $score_string = $sortBy == 'livscore' ? '' : ' score';
-     $results = $wpdb->get_results( "SELECT * FROM 2024_top_100  ORDER BY ".$sortBy, OBJECT );
+     $results = $wpdb->get_results( "SELECT * FROM 2024_top_100 ORDER BY ".$sortBy." DESC", OBJECT );
      $results = array_splice($results, 0, 20);
      foreach ($results as $key=>$value) {
      $city_data = $wpdb->get_results( "SELECT * FROM 2024_city_data  WHERE place_id = $value->place_id", OBJECT );

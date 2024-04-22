@@ -823,7 +823,7 @@ function load_more_bpm_posts() {
 			<div class="bp23-card">
 				<?php echo '<a class="bp23-img" href="'.get_the_permalink( $bp['id'] ).'">'.get_the_post_thumbnail( $bp['id'], 'rel_article').'</a>'; ?>
 				<div class="bp23-card-text">
-                <h3  class="h4"><?php echo $bp['cityTitle']; ?></h3>
+                <h3  class="h4"><?php echo '<a href="'.get_the_permalink( $bp['id'] ).'">'.$bp['cityTitle'].'</a>'; ?></h3>
                 <p class="meta-sort <?php echo strtolower(display_meta_key($meta_key)); ?>"><strong><?php echo ucfirst(display_meta_key($meta_key)).$score_text.': '.get_field($meta_key, $bp['id']); ?></strong></p>
                 <p><?php echo 'Region: '.get_region($bp['stateId']); ?></p>
                 <p>Population: <?php echo number_format($bp['cityPopulation']); ?></p>
@@ -840,7 +840,7 @@ function load_more_bpm_posts() {
 		}
 		$page = $_POST['page'];
 		global $wpdb;
-		$results = $wpdb->get_results( "SELECT * FROM 2024_top_100  ORDER BY ".$sortBy, OBJECT );
+		$results = $wpdb->get_results( "SELECT * FROM 2024_top_100  ORDER BY ".$sortBy." DESC", OBJECT );
 		$bp24_array = array();
 		foreach ($results as $key => $value) { 
 			$arr = array(); // collect data to use in loop
@@ -1914,7 +1914,7 @@ if ( ! function_exists('local_insights') ) {
 			$sortBy = $_POST['cat'] ? $_POST['cat'] : 'livscore'; 
 			$_SESSION["bp23_cat"] = $sortBy;
 			// echo 'sort by '.$sortBy;
-			$results = $wpdb->get_results( "SELECT * FROM 2024_top_100  ORDER BY ".$sortBy, OBJECT );
+			$results = $wpdb->get_results( "SELECT * FROM 2024_top_100  ORDER BY ".$sortBy." DESC", OBJECT );
 			$bp24_array = array();
 			foreach ($results as $key => $value) { 
 				$arr = array(); // collect data to use in loop
@@ -1974,9 +1974,9 @@ if ( ! function_exists('local_insights') ) {
 				</a>
 				</div>
 				<div class="bp24__text-container">
-				<a class="unstyle-link" href="<?php echo get_the_permalink( $value->place_id); ?>">
+				<a class="unstyle-link" href="<?php echo get_the_permalink( $value['place_id']); ?>">
 				<h4 class="bp24__city"><?php echo $value['city']; ?></h4>
-				</a>
+			</a>
 				<p class="bp24__state"><?php echo $value['state']; ?></p>
 				<p class="bp24__cat-paragraph"><?php echo ucfirst($value['cat_name']).$score_text.': '.$value['cat_val']; ?></p>
 				<p>Region: <?php echo get_region_by_state_name($value['state']); ?></p>
