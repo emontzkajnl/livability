@@ -3,10 +3,15 @@ $args = array(
     'post_type'         => 'liv_magazine',
     'posts_per_page'    => 1,
     'meta_query'        => array(
+        'relation'      => 'AND',
         array( 
             'key'       => 'place_relationship',
             'value'     => '"' . get_the_ID() . '"',
             'compare'   => 'LIKE'
+        ),
+        array(
+            'key'       => 'special_section',
+            'value'     => 0
         )
     ),
 );
