@@ -23,7 +23,7 @@ $merged = array_merge($row2, $row1);
 
 
 <div class="carousel-24-left" >
-<?php if (isset( $_SESSION['bp23_cat']) { ?>
+<?php if (isset( $_SESSION['bp23_cat'])) { ?>
 <h3>Continue Browsing <?php echo ucfirst($sortBy); ?> in the Top 100 Best Places to Live in the U.S.</h3>
 <?php } else {
     echo '<h3>Browse the Top 100  Best Places to Live in the U.S.</h3>';
