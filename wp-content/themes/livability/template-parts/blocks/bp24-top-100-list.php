@@ -44,8 +44,8 @@ include_once( get_stylesheet_directory() .'/assets/lib/regions.php');
             <label for="southeast">Southeast</label>
         </div>
         <div class="radio-container">
-            <input type="radio" name="region" id="west" value="west"/>
-            <label for="west">West</label>
+            <input type="radio" name="region" id="southwest" value="southwest"/>
+            <label for="southwest">Southwest</label>
         </div>
         </fieldset>
         <hr>
@@ -135,4 +135,5 @@ include_once( get_stylesheet_directory() .'/assets/lib/regions.php');
     <?php } //end foreach ?>
 </div>
 </div> <!-- results container -->
+<h3>Top 100 Best Places to Live in the U.S. Map</h3>
 <iframe src="https://map.proxi.co/r/top-100-best-places-2024_view" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe>
