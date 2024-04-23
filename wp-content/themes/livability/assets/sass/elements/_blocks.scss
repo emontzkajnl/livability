@@ -2212,6 +2212,7 @@ border-bottom: 1px solid $green;
   &__results {
     display: flex;
     flex-wrap: wrap;
+    flex-grow: 1;
     margin-left: -15px;
     margin-right: -15px;
   }

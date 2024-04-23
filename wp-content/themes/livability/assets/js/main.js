@@ -3,6 +3,17 @@
     $('.livability-image-meta').show();
   });
 
+  const bp24ScrollFixx = () => {
+    const headHeight = $('.entry-header').height();
+    const articleHeight = $('article').height();
+    const totalHeight = headHeight + articleHeight + 200;
+    window.scroll({
+      top: totalHeight,
+      left: 0,
+      behavior: "smooth",
+    });
+  }
+
   // desktop only
   $('.bp2l__tab-nav li').on('click', function(e){
     // console.log(e.target);
@@ -263,7 +274,7 @@
     if (typeof ga === "function") { 
       ga('send','pageview', pageView);
     }
-    if (typeof PARSELY.beacon !== 'undefined') {
+    if (typeof PARSELY !== 'undefined') {
     PARSELY.beacon.trackPageView({
       url: pageView,
       urlref: href,
@@ -312,7 +323,7 @@
     if (typeof ga === "function") { 
       ga('send','pageview', newPage);
     }
-    if (typeof PARSELY.beacon !== 'undefined') {
+    if (typeof PARSELY !== 'undefined') {
     PARSELY.beacon.trackPageView({
       url: newPage,
       urlref: href,
@@ -365,8 +376,6 @@
   });
 
   const ajaxOneHundred = () => {
-    // console.dir(window.ohlObj);
-console.log('function is running');
     var obj = window.ohlObj;
     const data = {
       action: "loadonehundred",
@@ -381,7 +390,7 @@ console.log('function is running');
     if (typeof ga === "function") { 
       ga('send','pageview', newPage);
     }
-    if (typeof PARSELY.beacon !== 'undefined') {
+    if (typeof PARSELY !== 'undefined') {
       PARSELY.beacon.trackPageView({
         url: newPage,
         urlref: href,
@@ -491,6 +500,7 @@ console.log('function is running');
                   urlref = host+alm.slug;
         // console.log('url is ',url);
         // console.log('urlref is ',urlref);
+        
          PARSELY.beacon.trackPageView({
                   url: url,
                   urlref: urlref,
@@ -884,9 +894,8 @@ $('.bp23-category-btn').on('click', function(){
         
         $('.bp23-results').html(data);
       } else if (year == '2024') {
-        console.log('is 2024');
-        console.log(data);
         $('.bp24__results').html(data);
+        
       }
       
       Waypoint.refreshAll();
@@ -933,15 +942,18 @@ $('#region, #population, #home_value').on('change', function(e){
     success: function (data) {
       if (year == '2023') {
         $('.bp23-results').html(data);
+        Waypoint.refreshAll();
       } else if (year == '2024') {
         $('.bp24__results').html(data);
+        bp24ScrollFixx();
+        Waypoint.refreshAll();
+       
       }
-      
-      Waypoint.refreshAll();
     }
   });
   
 });
+
 
 // console.dir(Object.values(window.params.bp23filters));
 $('.reset-filter, .bp24__reset-btn').on('click', function() {
@@ -979,12 +991,14 @@ $('.reset-filter, .bp24__reset-btn').on('click', function() {
         $('.bp23-results').html(data);
       } else if (year == '2024') {
         $('.bp24__results').html(data);
+        bp24ScrollFixx();
       }
       
       Waypoint.refreshAll();
     }
   });
 });
+
 
 const bp23Waypoint = $(".bp23-results, .bp24__results").waypoint({
   handler: function (direction) {
@@ -1011,6 +1025,7 @@ function loadbp23() {
         window.params.bp23page++;
         const resultContainer = year == '2023' ? $('.bp23-results') : $('.bp24__results');
         resultContainer.append(data);
+        if (year == '2023') {
         cmWrapper.que.push(function () {
           cmWrapper.ads.define("ROS_BTF_970x250", `ohlloop${window.params.bp23page}-2`, function(name, slot){
             // console.log('name: ',name,' slot: ',slot.getSlotElementId());
@@ -1023,13 +1038,14 @@ function loadbp23() {
           });
           cmWrapper.ads.requestUnits();
         });
+      } // end if year is 2023
         let href = location.href;
         href = href.slice(-1) == '/' ? href.slice(0, -1) : href;
         let newPage = href+'/'+window.params.bp23page;
         if (typeof ga === "function") { 
           ga('send','pageview', newPage);
         }
-        if (typeof PARSELY.beacon !== 'undefined') {
+        if (typeof PARSELY !== 'undefined') {
         PARSELY.beacon.trackPageView({
           url: newPage,
           urlref: href,
