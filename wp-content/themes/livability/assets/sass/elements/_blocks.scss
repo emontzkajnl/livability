@@ -2143,12 +2143,6 @@ border-bottom: 1px solid $green;
     background-color: white;
     padding: 15px;
     box-shadow: 2px 2px 2px 2px rgba(0,0,0,.2);
-    overflow-y: auto;
-    max-height: 100vh;
-    scrollbar-width: none;
-    &::-webkit-scrollbar {
-      display: none;
-    }
     hr{
       border: 1px solid #b2b2b2;
     } 
@@ -2166,6 +2160,7 @@ border-bottom: 1px solid $green;
         line-height: 2;
         position: relative;
         width: 100%;
+        display: block;
         // background-color: blue;
         &:after {
           content: '';
@@ -3277,6 +3272,12 @@ border-bottom: 1px solid $green;
       margin-right: 30px;
       top: 150px;
       align-self: flex-start;
+      overflow-y: auto;
+      max-height: 100vh;
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
     &__card {
       width: calc(50% - 30px);
