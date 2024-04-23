@@ -889,7 +889,7 @@ function load_more_bpm_posts() {
 		$bp24_array = array_slice($bp24_array, $page*20, 20);
 		// foreach loop to display
 		foreach ($bp24_array as $key => $value) { 
-			$score_text = $value->cat_name == 'livscore' ? '' : ' Score'; 
+			$score_text = $value['cat_name'] == 'livscore' ? 'LivScore' : $value['cat_name'].' Score'; 
 			// print_r($value);?>
 			
 			<div class="bp24__card">
@@ -903,7 +903,7 @@ function load_more_bpm_posts() {
 			<h4 class="bp24__city"><?php echo $value['city']; ?></h4>
 			</a>
 			<p class="bp24__state"><?php echo $value['state']; ?></p>
-			<p class="bp24__cat-paragraph"><?php echo ucfirst($value['cat_name']).$score_text.': '.$value['cat_val']; ?></p>
+			<p class="bp24__cat-paragraph"><?php echo ucfirst($score_text).': '.$value['cat_val']; ?></p>
 			<p>Region: <?php echo get_region_by_state_name($value['state']); ?></p>
 			<p>Population: <?php echo  number_format($value['population']); ?></p>
 			<p>Med. Home Value: $<?php echo number_format($value['home_value']); ?></p>
@@ -1965,7 +1965,7 @@ if ( ! function_exists('local_insights') ) {
 			// foreach loop to display
 			echo '<p class="bp24__total-posts">We found '.$total_posts.' cities based on your filter selection.</p><br />';
 			foreach ($bp24_array as $key => $value) { 
-				$score_text = $value->cat_name == 'livscore' ? '' : ' Score'; 
+				$score_text = $value['cat_name'] == 'livscore' ? 'LivScore' : $value['cat_name'].' Score'; 
 				// print_r($value);?>
 				
 				<div class="bp24__card">
@@ -1979,7 +1979,7 @@ if ( ! function_exists('local_insights') ) {
 				<h4 class="bp24__city"><?php echo $value['city']; ?></h4>
 			</a>
 				<p class="bp24__state"><?php echo $value['state']; ?></p>
-				<p class="bp24__cat-paragraph"><?php echo ucfirst($value['cat_name']).$score_text.': '.$value['cat_val']; ?></p>
+				<p class="bp24__cat-paragraph"><?php echo ucfirst($score_text).': '.$value['cat_val']; ?></p>
 				<p>Region: <?php echo get_region_by_state_name($value['state']); ?></p>
 				<p>Population: <?php echo  number_format($value['population']); ?></p>
 				<p>Med. Home Value: $<?php echo number_format($value['home_value']); ?></p>
