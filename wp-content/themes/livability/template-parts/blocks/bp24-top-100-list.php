@@ -109,7 +109,7 @@ include_once( get_stylesheet_directory() .'/assets/lib/regions.php');
 <div class="bp24__results">
     <?php global $wpdb;
     $sortBy = 'livscore';
-    $score_string = $sortBy == 'livscore' ? '' : ' score';
+    $score_string = $sortBy == 'livscore' ? 'LivScore' : $sortBy.' score';
      $results = $wpdb->get_results( "SELECT * FROM 2024_top_100 ORDER BY ".$sortBy." DESC", OBJECT );
      $results = array_splice($results, 0, 20);
      foreach ($results as $key=>$value) {
@@ -120,13 +120,13 @@ include_once( get_stylesheet_directory() .'/assets/lib/regions.php');
     <div class="bp24__card">
         <div class="bp24__img-container" >
         <a href="<?php echo get_the_permalink( $value->place_id); ?>">
-        <?php echo get_the_post_thumbnail( $value->place_id, 'medium'); ?>
+        <?php echo get_the_post_thumbnail( $value->place_id, 'medium'); ?>k
         </a>
         </div>
         <div class="bp24__text-container">
         <a class="unstyle-link" href="<?php echo get_the_permalink( $value->place_id);  ?>"><h4 class="bp24__city"><?php echo $value->city; ?></h4></a>
         <p class="bp24__state"><?php echo $value->state; ?></p>
-        <p class="bp24__cat-paragraph"><?php echo ucfirst($sortBy).$score_string.': '.json_decode($value->$sortBy, true); ?></p>
+        <p class="bp24__cat-paragraph"><?php echo ucfirst($score_string).': '.json_decode($value->$sortBy, true); ?></p>
         <p>Region: <?php echo get_region_by_state_name($value->state); ?></p>
         <p>Population: <?php echo  number_format($population); ?></p>
         <p>Med. Home Value: $<?php echo number_format($home_value); ?></p>
