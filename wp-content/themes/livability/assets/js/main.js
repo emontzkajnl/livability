@@ -5,8 +5,10 @@
 
   const bp24ScrollFixx = () => {
     const headHeight = $('.entry-header').height();
-    const articleHeight = $('article').height();
+    const articleHeight = $('.bp24lparticle').height();
     const totalHeight = headHeight + articleHeight + 200;
+
+    console.log('head ',headHeight,' article ',articleHeight,' total height ',totalHeight);
     window.scroll({
       top: totalHeight,
       left: 0,
