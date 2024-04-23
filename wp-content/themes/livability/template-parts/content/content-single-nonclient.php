@@ -9,6 +9,7 @@
  * @since Twenty Twenty-One 1.0
  */
 
+ $is_2024_bp = has_term('2024', 'best_places_years');
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
@@ -48,7 +49,7 @@
                     <div class="wp-block-column">
 
                     <?php 
-                     if (get_field('non-client_city_with_content')) {
+                     if (get_field('non-client_city_with_content') || $is_2024_bp ) {
                         the_content( );
                     } else {
                         get_template_part( 'template-parts/blocks/madlib' ); 

@@ -111,10 +111,12 @@ $topic_args = array(
                      if (get_field('client_place') || get_field('non-client_city_with_content')) {
                         the_content( );
                      } else {
-                        get_template_part( 'template-parts/blocks/madlib' ); 
+                        
                         // non-clients that are 2024 top 100 have content to show
                         if ($is_2024_bp) {
                             the_content();
+                        } else {
+                            get_template_part( 'template-parts/blocks/madlib' ); 
                         }
                      }
                     get_template_part( 'template-parts/blocks/embedded-cc-article' );
