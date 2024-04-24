@@ -1,20 +1,26 @@
 <?php 
 session_start();
 include_once( get_stylesheet_directory() .'/assets/lib/regions.php'); 
+if (isset($_SESSION['bp23_cat'])) {
+    $sortBy = $_SESSION['bp23_cat'];
+} else {
+    $sortBy = 'livscore';
+}
 
 ?>
 <h3 id="top-one-hundred-list">Explore Our Best Places to Live in the U.S.</h3>
 <h5 style="margin-bottom: 10px;">Sort by category</h5>
+<p>sort by is <?php echo $sortBy; ?></p>
 <ul class="bp23-category-btns" >
-    <li class="bp23-category-btn" class="liv-score" ><div data-cat="livscore" class="livscore  <?php echo $meta_key == 'livscore' ? 'active' : ''; ?>">LivScore</div></li>
-    <li class="bp23-category-btn" class="amenities" ><div data-cat="amenities" class="amenities <?php echo $meta_key == 'amenities' ? 'active' : ''; ?>">Amenities</div></li>
-    <li class="bp23-category-btn" class="economy" ><div data-cat="economy" class="economy <?php echo $meta_key == 'economy' ? 'active' : ''; ?>">Economy</div></li>
-    <li class="bp23-category-btn" class="education"><div data-cat="education"  class="education <?php echo $meta_key == 'education' ? 'active' : ''; ?>">Education</div></li>
-    <li class="bp23-category-btn" class="environment"><div data-cat="environment"  class="environment <?php echo $meta_key == 'environment' ? 'active' : ''; ?>">Environment</div></li>
-    <li class="bp23-category-btn" class="health-care"><div  data-cat="healthcare" class="health-care <?php echo $meta_key == 'healthcare' ? 'active' : ''; ?>">Health</div></li>
-    <li class="bp23-category-btn" class="housing"><div  data-cat="housing" class="housing <?php echo $meta_key == 'housing' ? 'active' : ''; ?>">Housing & Cost of Living</div></li>
-    <li class="bp23-category-btn" class="safety"><div  data-cat="safety" class="safety <?php echo $meta_key == 'safety' ? 'active' : ''; ?>">Safety</div></li>
-    <li class="bp23-category-btn" class="transportation"><div  data-cat="transportation" class="transportation <?php echo $meta_key == 'transportation' ? 'active' : ''; ?>">Transportation</div></li>
+    <li class="bp23-category-btn" class="liv-score" ><div data-cat="livscore" class="livscore  <?php echo $sortBy == 'livscore' ? 'active' : ''; ?>">LivScore</div></li>
+    <li class="bp23-category-btn" class="amenities" ><div data-cat="amenities" class="amenities <?php echo $sortBy == 'amenities' ? 'active' : ''; ?>">Amenities</div></li>
+    <li class="bp23-category-btn" class="economy" ><div data-cat="economy" class="economy <?php echo $sortBy == 'economy' ? 'active' : ''; ?>">Economy</div></li>
+    <li class="bp23-category-btn" class="education"><div data-cat="education"  class="education <?php echo $sortBy == 'education' ? 'active' : ''; ?>">Education</div></li>
+    <li class="bp23-category-btn" class="environment"><div data-cat="environment"  class="environment <?php echo $sortBy == 'environment' ? 'active' : ''; ?>">Environment</div></li>
+    <li class="bp23-category-btn" class="health-care"><div  data-cat="healthcare" class="health-care <?php echo $sortBy == 'healthcare' ? 'active' : ''; ?>">Health</div></li>
+    <li class="bp23-category-btn" class="housing"><div  data-cat="housing" class="housing <?php echo $sortBy == 'housing' ? 'active' : ''; ?>">Housing & Cost of Living</div></li>
+    <li class="bp23-category-btn" class="safety"><div  data-cat="safety" class="safety <?php echo $sortBy == 'safety' ? 'active' : ''; ?>">Safety</div></li>
+    <li class="bp23-category-btn" class="transportation"><div  data-cat="transportation" class="transportation <?php echo $sortBy == 'transportation' ? 'active' : ''; ?>">Transportation</div></li>
 </ul>
 
 <div class="bp24__results-container">
@@ -108,7 +114,7 @@ include_once( get_stylesheet_directory() .'/assets/lib/regions.php');
     </div>
 <div class="bp24__results">
     <?php global $wpdb;
-    $sortBy = 'livscore';
+
     $score_string = $sortBy == 'livscore' ? 'LivScore' : $sortBy.' score';
      $results = $wpdb->get_results( "SELECT * FROM 2024_top_100 ORDER BY ".$sortBy." DESC", OBJECT );
      $results = array_splice($results, 0, 20);
