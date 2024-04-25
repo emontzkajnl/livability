@@ -1,17 +1,34 @@
+
 <?php 
 $posts = $args['posts']; 
 $cat = $args['cat'];
-$cat = str_replace('-','_', $cat);
+$catObj = get_category_by_slug($cat);
+$catID = $catObj->term_id;
+
 $single_class = count($posts) == 1 ? 'single' : ''; 
-$length = count($posts) > 3 ? 3 : count($posts); ?>
+$length = count($posts) > 3 ? 3 : count($posts); 
+$sponsor = get_topic_sponsors(); // defined in functions.php
+if ($sponsor) {
+    // print_r($sponsor);
+    foreach($sponsor as $key => $S) {
+        if ($S['category'] == $catID) {
+        $sponsor_name = $S['sponsor'];
+        $sponsor_url = $S['url']; 
+        echo $sponsor_url ?
+        '<p class="topic-sponsor">Sponsored by <a href="'.$sponsor_url.'" target="_blank">'.$sponsor_name.'</a></p>' : 
+        '<p class="topic-sponsor">Sponsored by '.$sponsor_name.'</p>';
+        break;
+        }
+    }
+} 
+$cat = str_replace('-','_', $cat);
+
+?>
 
 
 <div class="place-topics-2 <?php echo $cat; ?>">
     <div class="place-topics-2__container">
-    <?php for ($i=0; $i < $length; $i++) { 
-        # code...
-    // }
-     //foreach ($posts as $p) {  ?>
+    <?php for ($i=0; $i < $length; $i++) { ?>
        <div class="place-topics-2__card <?php echo $single_class; ?>">
            <a href="<?php echo get_the_permalink($posts[$i]); ?>">
            

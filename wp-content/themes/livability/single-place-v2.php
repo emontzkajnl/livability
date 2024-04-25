@@ -31,6 +31,7 @@ while ( have_posts() ) :
             <div class="wp-column container" style="width: 100%; margin-top: 50px;">
                 <div class="bp23-heading-section">
                     <div class="bp23-thumb" >
+
  					<?php if ($hero && $hero['hero_video']) {
  					echo do_shortcode('[nk_awb awb_type="yt_vm_video" awb_video="https://youtu.be/'.$hero['hero_video'].'" awb_video_start_time="0" awb_video_end_time="0" awb_video_always_play="true" awb_video_mobile="true"]' );
 					} else {
