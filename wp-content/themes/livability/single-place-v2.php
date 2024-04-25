@@ -23,14 +23,21 @@ while ( have_posts() ) :
 		if (has_term('2024', 'best_places_years') && get_field('turn_on_top_100_blocks', 'options')) { 
 			$parent_id = wp_get_post_parent_id();
  			$byline =  get_field('img_byline',get_post_thumbnail_id());
+			$hero  = get_field('hero_section');
+			
 			?>
 			<div class="wp-block-columns">
 			
             <div class="wp-column container" style="width: 100%; margin-top: 50px;">
                 <div class="bp23-heading-section">
                     <div class="bp23-thumb" >
- 					<?php echo get_the_post_thumbnail( get_the_ID(), 'medium-large' );  
-					  echo $byline ? '<div class="livability-image-meta">'.$byline.'</div>' : ''; ?>
+ 					<?php if ($hero && $hero['hero_video']) {
+ 					echo do_shortcode('[nk_awb awb_type="yt_vm_video" awb_video="https://youtu.be/'.$hero['hero_video'].'" awb_video_start_time="0" awb_video_end_time="0" awb_video_always_play="true" awb_video_mobile="true"]' );
+					} else {
+						echo get_the_post_thumbnail( get_the_ID(), 'medium-large' );  
+					  echo $byline ? '<div class="livability-image-meta">'.$byline.'</div>' : ''; 
+					} ?>
+					 
                     </div>
 					<div class="bp23-title-section">
 						<!-- logo here -->

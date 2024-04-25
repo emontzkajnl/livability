@@ -1768,6 +1768,9 @@ button.insights-button {
     object-fit: cover;
     height: 100% !important;
   }
+  .nk-awb {
+    padding-top: 66%;
+  }
 }
 
 .bp23-category-btns {
@@ -3483,6 +3486,10 @@ border-bottom: 1px solid $green;
   .bp23-thumb {
     width: 50%;
     position: relative;
+    .nk-awb {
+      height: 100%;
+      padding-top: 0;
+    }
   }
   .bp23-title-section {
     width: 50%;
