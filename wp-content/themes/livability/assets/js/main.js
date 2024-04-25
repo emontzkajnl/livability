@@ -79,6 +79,7 @@
 
   const top10024popup = $('.top-100-popup-container');
   $('.open-top-100-24-map').on('click', function(){
+    console.log('clicksfsdf');
     top10024popup.addClass('open-top-100-popup');
   });
   $('.map-popup-close').on('click', function(){

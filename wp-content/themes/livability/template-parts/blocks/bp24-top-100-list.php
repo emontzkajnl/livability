@@ -10,7 +10,6 @@ if (isset($_SESSION['bp23_cat'])) {
 ?>
 <h3 id="top-one-hundred-list">Explore Our Best Places to Live in the U.S.</h3>
 <h5 style="margin-bottom: 10px;">Sort by category</h5>
-<p>sort by is <?php echo $sortBy; ?></p>
 <ul class="bp23-category-btns" >
     <li class="bp23-category-btn" class="liv-score" ><div data-cat="livscore" class="livscore  <?php echo $sortBy == 'livscore' ? 'active' : ''; ?>">LivScore</div></li>
     <li class="bp23-category-btn" class="amenities" ><div data-cat="amenities" class="amenities <?php echo $sortBy == 'amenities' ? 'active' : ''; ?>">Amenities</div></li>
@@ -111,6 +110,7 @@ if (isset($_SESSION['bp23_cat'])) {
         </div>
         </fieldset>
         <p class="bp24__reset-btn">Reset All Filters</p>
+        <button class="open-top-100-24-map bp2l__green-btn">Top 100 Map</button>
     </div>
 <div class="bp24__results">
     <?php global $wpdb;
@@ -142,5 +142,5 @@ if (isset($_SESSION['bp23_cat'])) {
     <?php } //end foreach ?>
 </div>
 </div> <!-- results container -->
-<h3>Top 100 Best Places to Live in the U.S. Map</h3>
-<iframe src="https://map.proxi.co/r/top-100-best-places-2024_view" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe>
+<!-- <h3>Top 100 Best Places to Live in the U.S. Map</h3> -->
+<!-- <iframe src="https://map.proxi.co/r/top-100-best-places-2024_view" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe> -->

@@ -3,7 +3,7 @@ $state = $args['state'];
 $abbv = $args['abbv']; ?>
 <div class="more-about-living" id="more-about-living">
     <div class="container">
-        <h2 class="more-about-living__title">More about Living in <?php echo $state; ?></h2>
+        <h2 class="more-about-living__title">More About Living in <?php echo $state; ?></h2>
         <div class="more-about-living__cards">
             <a href="<?php echo site_url().'/'.$abbv; ?>">
             <div class="more-about-living__card moving-to">

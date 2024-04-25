@@ -2149,6 +2149,14 @@ border-bottom: 1px solid $green;
     h5 {
       margin-bottom: 30px;
     }
+    .bp2l__green-btn {
+      color: white !important;
+      margin-top: 20px;
+      &:hover {
+        color: white;
+      }
+
+    }
     fieldset {
       border: none;
       margin-top: 20px;

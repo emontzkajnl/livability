@@ -102,9 +102,9 @@
 
 <?php get_template_part( 'template-parts/mobile-search-form' ); 
 echo '</div>';
-if (get_post_type() == 'liv_place') {
+// if (get_post_type() == 'liv_place'  ) {
 	get_template_part( 'template-parts/blocks/popup-top-100-map-24' );
-} ?>
+// } ?>
 
 
 <?php wp_footer(); ?>
