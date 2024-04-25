@@ -1,0 +1,130 @@
+.aweber-popup {
+	background-image: url(../img/AWeber.png);
+}
+
+.sgpb-aweber-connect-status {
+	display: inline-block !important;
+	padding: 5px 9px !important;
+	font-size: 15px !important;
+	border-radius: 3px;
+}
+
+.sgpb-aweber-connect-status.sgpb-aweber-not-connected {
+	color: #CC0000;
+}
+
+.sgpb-aweber-connect-status.sgpb-aweber-connected {
+	color: #00AE5D;
+}
+
+.sgpb-aweber-status-label {
+	margin-top: 6px;
+}
+
+.sgpb-pointer-events-none {
+	pointer-events: none;
+}
+
+.sg-text-align {
+	text-align: center;
+}
+
+.sgpb-aweber-form-loading-wrapper {
+	padding-top: 100px;
+	padding-bottom: 100px;
+	background-color: rgba(246, 249, 255, 0.1);
+}
+
+#sgpb-aweber-webform-wrapper {
+	margin-right: -10px;
+}
+
+.sgpb-aweber-form-loading-wrapper .col-md-2 {
+	margin: 0 auto;
+}
+
+.sgpb-spinner-aweber-lists {
+	margin-top: 6px;
+	margin-left: -6px;
+}
+
+/* spinner */
+.item {
+	width: 28px;
+	height: 28px;
+	margin: 10px 25px;
+	border-radius: 3px;
+	position: relative;
+}
+
+.loader09 {
+	width: 5px;
+	height: 48px;
+	background: #007cc7;
+	position: relative;
+	animation: loader09-u3e967ec0 1s ease-in-out infinite;
+	animation-delay: 0.4s;
+	top: 50%;
+	margin: -28px auto 0;
+}
+
+.loader09::after,
+.loader09::before {
+	content: '';
+	position: absolute;
+	width: 5px;
+	height: 48px;
+	background: #007cc7;
+	animation: loader09-u3e967ec0 1s ease-in-out infinite;
+}
+
+.loader09::before {
+	right: 14px;
+	animation-delay: 0.2s;
+}
+
+.loader09::after {
+	left: 14px;
+	animation-delay: 0.6s;
+}
+
+@keyframes loader09-u3e967ec0 {
+	0%, 100% {
+		box-shadow: 0 0 0 #007cc7, 0 0 0 #007cc7;
+	}
+	50% {
+		box-shadow: 0 -8px 0 #007cc7, 0 8px 0 #007cc7;
+	}
+}
+
+
+.sgpb-aweber-form-loading-wrapper .col-md-2 {
+	min-width: 150px;
+}
+
+@media (max-width: 999px) {
+	.sgpb-aweber-form-loading-wrapper .col-md-4 {
+		width: 20%;
+	}
+
+	.sgpb-aweber-form-loading-wrapper .col-md-2 {
+		margin-bottom: 50px;
+		margin-left: 40px;
+	}
+
+	.sgpb-aweber-form-loading-wrapper .col-md-1 {
+		margin-left: 40px;
+	}
+
+	.sgpb-aweber-form-loading-wrapper .item {
+		margin: 10px 50px;
+	}
+}
+.sgpb-popup-content-direction-right,
+.sgpb-popup-content-direction-right label,
+.sgpb-forms-preview-direction,
+.sgpb-forms-preview-direction input[type="url"],
+.sgpb-forms-preview-direction input[type="email"] {
+	direction: rtl !important;
+	text-align: right !important;
+}

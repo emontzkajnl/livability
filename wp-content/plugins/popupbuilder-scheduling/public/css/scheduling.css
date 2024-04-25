@@ -1,0 +1,57 @@
+#sgpb-popup-end-timer,
+#sgpb-popup-start-timer {
+	max-width: 308px !important;
+}
+
+#sgpb-schedule-start-time,
+#sgpb-schedule-end-time {
+	max-width: 90px !important;
+}
+
+.sgpb-schedule-from-start {
+	padding-left: 0;
+}
+.sgpb .sgpb-scheduling .sgpb-dateTimePicker-icon, .sgpb .sgpb-scheduling .select2-selection {
+	background-image: url(../icons/calendar.svg) !important;
+	background-size: 16% !important;
+	background-position-x: 95.1% !important;
+	background-position-y: 8px !important;
+	background-repeat: no-repeat !important;
+}
+
+.sgpb .sgpb-scheduling .select2 {
+	max-width: 190px;
+}
+
+.sgpb .sgpb-scheduling .sgpb-timePicker-icon {
+	position: absolute;
+	right: 3px;
+	width: 30px;
+	height: 30px;
+	background: #fff;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.sgpb .sgpb-scheduling .sgpb-timePicker-icon span {
+	width: 10px;
+	height: 4px;
+	background: #000;
+	border-radius: 6px;;
+}
+
+.sgpb .sgpb-scheduling .sgpb-timePicker-icon span:first-child {
+	transform: translate(4px, -4px);
+	height: 10px;
+	width: 4px;
+}
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_default, .xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_current, .xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box > div > div.xdsoft_current {
+	background: #2873EB;
+}
+.xdsoft_datetimepicker .xdsoft_calendar td:hover, .xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box > div > div:hover {
+	color: #fff !important;
+	background: #01B9FF !important;
+	box-shadow: none !important;
+}

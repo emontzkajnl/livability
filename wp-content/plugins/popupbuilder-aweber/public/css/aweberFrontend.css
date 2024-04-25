@@ -1,0 +1,44 @@
+.sgpb-aweber-ajax-spinner {
+	display: block;
+	margin: 0 auto !important;
+}
+
+.sgpb-alert-success {
+	color: #3c763d;
+	background-color: #dff0d8;
+	border-color: #d6e9c6;
+}
+
+.sgpb-alert-danger {
+	color: #a94442;
+	background-color: #f2dede;
+	border-color: #ebccd1;
+}
+
+.sgpb-alert {
+	padding: 15px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	text-align: center;
+}
+
+.sgpb-alert p {
+	margin-bottom: 0px;
+}
+
+.sgpb-aweber-spinner-column {
+	padding: 0 !important;
+}
+
+.sgpb-spinner-aweber-lists {
+	margin-top: 5px;
+}
+
+.sgpb-popup-builder-content-html .af-form {
+	width: inherit !important;
+}
+
+.sgpb-popup-content-direction-right label {
+	direction: rtl !important;
+	text-align: right !important;
+}

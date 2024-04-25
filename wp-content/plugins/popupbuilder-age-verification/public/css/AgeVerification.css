@@ -1,0 +1,4 @@
+.js-age-verification-submit-btn:hover,
+.js-age-verification-restriction-submit-btn:hover {
+    filter: opacity(0.8);
+}

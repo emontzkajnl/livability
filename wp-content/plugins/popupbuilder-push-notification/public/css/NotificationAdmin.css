@@ -1,0 +1,390 @@
+.sgpb-notifications-list td,
+.sgpb-notifications-list th {
+	padding: 8px 10px;
+}
+
+.sgpb-not-delete-button-wrapper {
+	text-align: right;
+}
+.sgpb-push-notification-preview-wrapper * {
+	position: relative;
+	z-index: 2;
+}
+/*Tab styles start*/
+
+.sgpb-tab-content-wrapper {
+	display: none;
+	padding: 6px 12px;
+}
+
+.sgpb-options-tabs-wrapper {
+	overflow: hidden;
+	border: 1px solid #ccc;
+	background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.sgpb-options-tabs-wrapper button {
+	background-color: inherit;
+	float: left;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 14px 16px;
+	transition: 0.3s;
+	font-size: 17px;
+	border-width: 0 !important;
+}
+
+.sgpb-options-tab-links {
+	background-color: #ffffff;
+	border-radius: 0 !important;
+}
+
+/* Change background color of buttons on hover */
+.sgpb-options-tabs-wrapper input:hover {
+	background-color: rgba(204, 204, 204, 0.4) !important;
+	color: #636363 !important;
+	border-radius: 0 !important;
+}
+
+/* Create an active/current tablink class */
+.sgpb-options-tabs-wrapper .sgpb-active-tab {
+	background-color: #ccc !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+}
+
+.sgpb-options-tab-content-wrapper .sgpb-sub-option {
+	padding-left: 20px !important;
+}
+
+.sgpb-options-tab-content-wrapper #js-subs-bg-opacity {
+	right: -34px !important;
+}
+
+/* Style the tab content */
+.sgpb-options-tab-content-wrapper {
+	display: none;
+	padding: 6px 12px;
+	border: 1px solid #ccc;
+	border-top: none;
+}
+
+.sgpb-subscription-plus-tab-1,
+.sgpb-subscription-plus-tab-2,
+.sgpb-subscription-plus-tab-3 {
+	border-radius: 0 !important;
+}
+
+.sgpb-options-tabs-wrapper .sgpb-options-tab-links:nth-child(2) {
+	border-left: 1px solid #cccccc !important;
+	border-right: 1px solid #cccccc !important;
+}
+
+
+.sgpb-subscription-plus-tab-2 {
+	border-left: 1px solid #cccccc !important;
+	border-right: 1px solid #cccccc !important;
+}
+
+/*Tab styles end*/
+
+.sgpb-push-notification-preview-wrapper {
+	min-height: 20px;
+	padding: 19px;
+	margin-bottom: 20px;
+	background-color: #f5f5f5;
+	border: 1px solid #e3e3e3;
+	border-radius: 4px;
+}
+
+.sgpb-browser-name {
+	font-size: 16px !important;
+	font-weight: 700 !important;
+	text-align: center !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
+	width: 360px !important;
+	margin-bottom: 6px !important;
+	color: rgba(0, 0, 0, .75) !important;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, .2) !important;
+}
+
+.sgpb-preview-push {
+	margin-left: auto;
+	margin-right: auto;
+	width: 360px;
+	overflow: hidden;
+	position: relative;
+	background: #fff;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, .5);
+	font-family: 'Segoe UI', 'Lucida Sans Unicode', sans-serif;
+}
+
+.sgpb-preview-push-chrome-win {
+	background: #404445;
+	padding: 24px 16px;
+}
+
+.sgpb-preview-push-chrome-win .sgpb-icon-side {
+	max-width: 42px;
+	-webkit-box-flex: 0;
+	-ms-flex: 0 0 42px;
+	flex: 0 0 42px;
+	display: block;
+	width: auto;
+	margin-right: 14px;
+}
+
+.sgpb-icon-wrapper {
+	display: table-cell;
+	vertical-align: middle;
+	background-color: #fff;
+}
+
+.sgpb-preview-push-chrome-win .sgpb-icon {
+	width: 42px !important;
+	height: 42px !important;
+}
+
+.sgpb-preview-push-chrome-win .sgpb-message-wrapper {
+	padding: 0;
+	width: auto;
+}
+
+.sgpb-message-wrapper {
+	display: table-cell;
+	vertical-align: top;
+	padding: 10px 15px;
+	position: relative;
+}
+
+.sgpb-preview-push-chrome-win .sgpb-notify-title {
+	color: #fff;
+	margin: -4px 0 3px;
+	line-height: 17px;
+	font-weight: 500;
+	min-height: 17px;
+}
+
+.sgpb-preview-push-chrome-win .sgpb-notify-message {
+	color: #B5B5B5;
+	line-height: 17px;
+	max-height: 100%;
+	-webkit-line-clamp: 4;
+	line-clamp: 4;
+	max-width: 264px;
+	margin-bottom: 3px;
+}
+
+.sgpb-preview-push-flex-wrap {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	-ms-flex-direction: row;
+	flex-direction: row;
+	-ms-flex-wrap: nowrap;
+	flex-wrap: nowrap;
+}
+
+.sgpb-preview-push-firefox .sgpb-notify-title {
+	margin-bottom: 10px;
+	color: #191919;
+	min-height: 12px;
+}
+
+.sgpb-preview-push-firefox .sgpb-notify-title {
+	font-size: 12px;
+	font-weight: 700;
+	margin-left: -87px;
+	-webkit-line-clamp: 1;
+	line-clamp: 1;
+	max-height: 18px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+}
+
+.sgpb-preview-push-firefox .sgpb-close-notify {
+	font-weight: 400;
+	font-size: 20px;
+	top: -1px;
+	right: 4px;
+	position: absolute;
+	color: #777;
+}
+
+.sgpb-preview-push-firefox .sgpb-message-wrapper {
+	padding: 5px 25px 10px 0;
+	-webkit-line-clamp: 5;
+	line-clamp: 5;
+	width: 100%;
+}
+
+.sgpb-cog-icon {
+	right: 10px;
+	position: absolute;
+	bottom: 10px;
+}
+
+.sgpb-preview-push-firefox .sgpb-notify-message {
+	-webkit-line-clamp: 5;
+	line-clamp: 5;
+	min-height: 59px;
+	max-height: 88px;
+}
+
+.sgpb-preview-push-firefox .sgpb-icon {
+	margin: 7px;
+}
+
+.sgpb-preview-push-firefox .sgpb-icon-side {
+	padding-top: 20px;
+	vertical-align: middle;
+	width: 94px;
+}
+
+.sgpb-preview-push-chrome-mac .sgpb-message-wrapper {
+	width: 185px;
+	max-width: 185px;
+	padding: 7px 8px;
+}
+
+.sgpb-preview-push-chrome-mac {
+	height: 60px;
+	width: 345px;
+	background-color: #ece5e6;
+	border-radius: 6px;
+}
+
+.sgpb-preview-push-chrome-mac .sgpb-icon-wrapper {
+	height: 32px;
+	background: 0 0;
+	width: 42px;
+	text-align: right;
+}
+
+.sgpb-preview-push-chrome-mac .sgpb-icon-side {
+	display: table-cell;
+	height: 60px;
+	width: 42px;
+	vertical-align: middle;
+}
+
+.sgpb-preview-push-chrome-mac .sgpb-icon-side.text-center {
+	border-left: 1px solid #d4ced0;
+}
+
+.sgpb-preview-push-chrome-mac .sgpb-system-btn {
+	font-size: 11px;
+	font-weight: 600;
+	padding: 6px 8px;
+}
+
+.sgpb-preview-push-chrome-mac .sgpb-system-btn:first-child {
+	border-bottom: 1px solid #c9c2c6;
+}
+
+.sgpb-preview-push-chrome-mac .sgpb-icon-side.sgpb-chrome {
+	width: 52px;
+}
+
+.sgpb-preview-push-chrome-mac .sgpb-notify-title,
+.sgpb-preview-push-chrome-mac .sgpb-notify-message {
+	margin-bottom: 3px;
+	font-weight: 600;
+	min-height: 12px;
+}
+
+.sgpb-preview-push {
+	margin-bottom: 15px;
+}
+
+.sgpb-push-notification-preview-wrapper .sgpb-push-notification-preview-wrapper-img {
+	position: absolute!important;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	filter: blur(1px);
+	z-index: 1;
+}
+
+.sgpb-wrapper .sgpb-settings {
+	padding-top: 15px;
+}
+
+.sgpb-notification-send-success-js,
+.sgpb-notification-send-error-js {
+	margin-bottom: 1px !important;
+	height: 35px !important;
+	line-height: 33px !important;
+	padding: 0 15px !important;
+}
+
+.post-type-popupbuilder .sgpb-push-notification-settings .select2 {
+	min-width: auto;
+}
+
+.icons_blue {
+	background: #b5caec !important;
+	color: #2873eb !important;
+}
+
+.sgpb-show-button-image-container, .sgpb-show-gamification-image-container, .sgpb-show-sales-image-container {
+	width: 40px;
+	height: 40px;
+}
+
+.sgpb-push-notification div.search-box {
+	display: flex;
+	justify-content: flex-end;
+	margin: 10px 0;
+}
+
+.sgpb-push-notification div.search-box input[type="search"] {
+	padding: 5px 15px !important;
+	border-radius: 5px !important;
+	background-color: #F1F1F1 !important;
+	border: 2px solid transparent !important;
+	line-height: 2.7 !important;
+}
+.sgpb-push-notification div.search-box input[type="submit"] {
+	font-family: "Segoe UI Regular";
+	font-weight: 500;
+	margin-left: -2px;
+	color: #fff;
+	background: #2873eb;
+	border-color: #2873eb;
+	font-size: 14px;
+	padding: 5px 15px !important;
+	height: 100%;
+}
+.sgpb-push-notification div.search-box input[type="submit"]:focus,
+.sgpb-push-notification div.search-box input[type="submit"]:active {
+	border-color: transparent;
+	box-shadow: none;
+}
+.sgpb-push-notification div.search-box input[type="submit"]:hover {
+	box-shadow: 0 0 10px rgba(40, 115, 235, 0.4);
+	background: #fff;
+	color: #2873eb;
+	border-color: #2873eb;
+}
+.sgpb-push-notification div.search-box input:focus, .sgpb-push-notification div.search-box input:active {
+	border-color: transparent !important;
+}
+.sgpb-notifications-list .table > thead > tr > th {
+	vertical-align: middle!important;
+}
+.sgpb .sgpb-wrapper .alert-success {
+	color: #ffffff;
+}
+.sgpb-notifications-list  .search-box {
+	display: none!important;
+}

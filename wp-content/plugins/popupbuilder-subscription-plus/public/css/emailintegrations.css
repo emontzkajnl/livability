@@ -1,0 +1,277 @@
+.sgpb-integrations-fields-main-wrapper:nth-child(2) {
+	border-top: 1px solid #ccc !important;
+}
+
+.sgpb-field-icon-wrapper-default .sgpb-slider {
+	background-color: grey !important;
+	cursor: default !important;
+}
+
+.sgpb-connect-button span:hover,
+.sgpb-disconnect-field span:hover {
+	background-color: #ccc;
+}
+
+.sgpb-dialog-info {
+	padding: 5px;
+	padding-top: 0px;
+	text-align: center;
+	font-size: 14px;
+	margin-bottom: 5px;
+}
+
+.sgpb-error-message {
+	margin-top: 5px;
+}
+
+.sgpb-error-message p {
+	font-size: 13.5px;
+}
+
+.sgpb-required-field-message {
+	font-size: 12px !important;
+}
+
+.sgpb-success-message {
+	width: 375px;
+	height: 50px;
+	margin: 0px auto;
+	margin-top: 20% !important;
+	border-radius: 5px;
+	background: #FFFFFF 0% 0% no-repeat padding-box;
+	border: 1px solid #ccd0d4;
+	box-shadow: 0px 0px 6px #00000014;
+	font: 18px Segoe UI !important;
+	display: flex;
+}
+
+.sgpb-success-message-text {
+	padding-left: 2.5% !important;
+	padding-top: 9px;
+}
+
+.sgpb-success-message-icon {
+	padding-left: 2.5% !important;
+	padding-top: 10px;
+}
+
+.sgpb-integrations-field-icon-wrapper {
+	padding: 2px !important;
+}
+
+.sgpb-success-message div span {
+	color:green;
+}
+
+.sgpb-dialog-image img {
+	width: 50px;
+}
+
+.sgpb-dialog-image{
+	text-align: center;
+}
+
+.sgpb-integrations {
+	overflow: hidden;
+	margin-right: 20px !important;
+}
+
+.sgpb-integrations-bunner img {
+	width: 100%;
+}
+
+.sgpb-integrations-bunner {
+	margin-top: 15px;
+}
+
+.sgpb-integration-block1, .sgpb-integration-block2 {
+	min-height: 250px !important;
+	margin-top: 15px;
+	width: 100%;
+	min-height: 100px;
+	border-radius: 5px;
+	background: #FFFFFF 0% 0% no-repeat padding-box;
+	border: 1px solid #ccd0d4;
+	box-shadow: 0px 0px 6px #00000014;
+}
+
+.sgpb-integration-hundle {
+	font: Bold 20px Segoe UI !important;
+	letter-spacing: 0 !important;
+	color: #000000 !important;
+	padding-left: 2.5% !important;
+	padding-top: 25px !important;
+	margin: 0 !important;
+}
+
+.sgpb-integration-paragraph {
+	font: 15px Segoe UI !important;
+	letter-spacing: 0 !important;
+	color: #000000 !important;
+	padding-left: 2.5% !important;
+	margin: 0 !important;
+}
+
+.sgpb-integration-table table {
+	width: 95%;
+	margin: 15px auto !important;
+}
+
+tbody {
+	table-layout: fixed;
+	border-radius: 5px;
+	box-shadow: 0px 0px 6px #00000014;
+	background: #FFFFFF 0% 0% no-repeat padding-box;
+	color: #000000;
+	letter-spacing: 0;
+	font: 15px Segoe UI;
+	opacity: 1;
+}
+
+td {
+	padding: 11px !important;
+}
+
+td div {
+	padding: 10px 0 !important;
+}
+
+tr:first-child td > div {
+	padding: 10px 0 !important;
+	border-top: none !important;
+}
+
+tr {
+	border-top: 1px solid #e6e6e6 !important;
+}
+
+.sgpb-app-icon {
+	width: 20px;
+	height: 20px;
+	margin: 0 10px;
+}
+
+.sgpb-icon {
+	width: 20px;
+	height: 20px;
+	float:right;
+	cursor: pointer;
+}
+
+.sgpb-disconnect-field, .sgpb-connect-field {
+	padding: 0 !important;
+	margin: 0 !important;
+	background-color: #ffffff !important;
+	width: 3%;
+	border: none !important;
+	float: right;
+}
+
+.sgpb-integration-dialog-wrapper {
+	width: 20%;
+	min-width: 310px;
+	background-color: #fff;
+	border: 1px solid #ccd0d4;
+	padding: 15px;
+	box-sizing: border-box;
+	box-shadow: 100px 100px 100px 100px rgba(0,0,0,0.07);
+	height: 600px;
+	overflow: auto;
+}
+#dialog-form {
+	margin: 0 30px !important;
+}
+
+.sgpb-dialog-handle {
+	text-align: center;
+	font-size: 22px;
+	line-height: 30px;
+	font-weight: bold !important;
+}
+
+.sgpb-dialog-div {
+	margin-bottom: 12px;
+	line-height: 2;
+}
+
+.sgpb-connect-link {
+	padding-left: 5px;
+	color: #007cba !important;
+}
+
+.sgpb-dialog-div input {
+	width: 100%;
+	height: 40px;
+	font-size: 15px !important;
+	font-weight: bold !important;
+}
+
+.sgpb-dialog-div label{
+	text-align: left !important;
+	margin: 0 0 5px;
+	font-size: 14px;
+}
+
+.sgpb-dialog-div ::placeholder {
+	color: gray;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.sgpb-js-integration-spinner {
+	margin-left: 10px;
+}
+
+.sgpb-dialog-connection-div {
+	float: right;
+}
+
+.success-message-dialog {
+	color:green;
+	font-weight: bold;
+	text-align: center;
+}
+
+.success-message-dialog p {
+	font-size: 16px;
+}
+
+.sgpb-dialog-wrapper {
+	top: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    left: 0;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.sgpb-integrations-fields-main-wrapper .sgpb-field-icon-wrapper:hover {
+	background-color: #fafafb;
+}
+
+.sgpb-integrations-fields-main-wrapper .sgpb-field-display-name {
+	width: 100% !important;
+}
+
+.sgpb-add-integrations-default:hover {
+	background-color: #fff !important;
+}
+
+.sgpb-integrations-default-disabled-connection *,
+.sgpb-integrations-default-disabled-connection .sgpb-add-integrations-default span {
+	cursor: default !important;
+}
+
+.sgpb-field-config {
+	margin-bottom:10px !important;
+}
+
+.sgpb-integrations-field-icon-wrapper span {
+	margin-top: 5px;
+    display: inline-block;
+}
+
+.sgpb-integrations-fields-main-wrapper .sgpb-edit-settings-area {
+	display: block !important;
+}

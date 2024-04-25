@@ -1,0 +1,37 @@
+@font-face{font-family:Segoe UI;src:url(Segoe-UI.ttf)}.sg-hide,.sg-hide-element{display:none}.sgpb-gifts-content-wrapper{padding:64px
+60px 0 60px}.sgpb-gamification-content-wrapper
+.error{text-align:center;color:red;display:block;margin-top:10px}.sgpb-gamification-content-wrapper #sgpb-subs-email-error:empty{margin-top:0 !important}.sgpb-gifts{position:relative;margin-top:61px;margin-bottom:0px;display:flex;flex-wrap:wrap;z-index:2;justify-content:center !important;-webkit-tap-highlight-color:rgba(0,0,0,0)}.sgpb-overflow-hidden{overflow:auto !important}.sgpb-gifts .sgpb-gift{position:relative;visibility:initial;bottom:0;display:block;margin:20px;margin-top:0 !important;padding:0;height:73px;width:72px;cursor:pointer;-webkit-tap-highlight-color:rgba(0, 0, 0, 0)}.sgpb-gifts.sgpb-bigger .sgpb-gift:hover{transform:scale(1.1)}.sgpb-gifts .sgpb-gift:active,
+.sgpb-gifts .sgpb-gift:focus{outline:0
+!important}.sgpb-gamification-texts{margin-bottom:36px;text-align:center}.sgpb-alert{padding:15px;border:1px
+solid transparent;border-radius:4px;text-align:center}.sgpb-alert-info{color:#31708f;background-color:#d9edf7;border-color:#bce8f1}.sgpb-alert-danger{color:#a94442;background-color:#f2dede;border-color:#ebccd1}.sgpb-alert
+p{margin-bottom:0px}.sgpb-gamification-start-paragraph{margin-bottom:0 !important;line-height:1}.sgpb-gamification-start-header,.sgpb-gamification-play-header{margin-bottom:18px !important;line-height:1}.js-gamification-email-input{margin-top:0 !important}.sgpb-gamification-form{text-align:center}@media (max-width: 760px){.sgpb-gamification-content-wrapper{padding:0
+!important}}@media (max-width: 600px){.sgpb-gifts-content-wrapper{padding-left:0 !important;padding-right:0 !important}.sgpb-gifts .sgpb-gift{margin:8px}}@media (max-width: 506px){.sgpb-gifts .sgpb-gift{margin:21px}.sgpb-gifts-content-wrapper{padding-top:24px}.sgpb-gifts{margin-top:21px}}@media (max-width: 404px){.sgpb-gifts .sgpb-gift{margin:8px}}.sgpb-gifts-content-wrapper{position:relative}.sgpb-animate-double{animation:crescendo 1.5s;transform:scale(2);margin:0
+!important}@keyframes
+crescendo{from{transform:scale(1);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}0%{transform:scale(1)}10%{transform:scale(1.1)}15%{transform:scale(1.15)}20%{transform:scale(1.2)}25%{transform:scale(1.25)}30%{transform:scale(1.3)}35%{transform:scale(1.35)}40%{transform:scale(1.4)}45%{transform:scale(1.45)}50%{transform:scale(1.5)}55%{transform:scale(1.55)}60%{transform:scale(1.6)}65%{transform:scale(1.65)}70%{transform:scale(1.7)}75%{transform:scale(1.75)}80%{transform:scale(1.8)}85%{transform:scale(1.85)}90%{transform:scale(1.9)}95%{transform:scale(1.95)}100%{transform:scale(2)}to{transform:scale(2);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}}.sgpb-gamification-lose-text{margin-top:75px}.js-gamification-text-inputs{text-align:left !important}.sgpb-gamification-content-wrapper{overflow:hidden}.sgpb-gamification-play-text{padding-top:16px;margin-bottom:-8px}.sgpb-gamification-form input,
+.sgpb-gamification-form label,
+.sgpb-gamification-form select,
+.sgpb-gamification-form button,
+.sgpb-gamification-form
+textarea{margin:0;border:0;padding:0;display:inline-block;vertical-align:middle;white-space:normal;background:none;line-height:1;max-width:100% !important;font-size:13px;font-family:Arial}.sgpb-gamification-form input:focus{outline:0}.sgpb-gamification-form input,
+.sgpb-gamification-form
+textarea{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box}.sgpb-gamification-form button,
+.sgpb-gamification-form input[type=reset],
+.sgpb-gamification-form input[type=button],
+.sgpb-gamification-form input[type=submit],
+.sgpb-gamification-form input[type=checkbox],
+.sgpb-gamification-form input[type=radio],
+.sgpb-gamification-form
+select{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}.sgpb-gamification-form input[type=checkbox],
+.sgpb-gamification-form input[type=radio]{width:13px;height:13px}.sgpb-gamification-form input[type=search]{-webkit-appearance:textfield;-webkit-box-sizing:content-box}.sgpb-gamification-form ::-webkit-search-decoration{display:none}.sgpb-gamification-form button,
+.sgpb-gamification-form input[type="reset"],
+.sgpb-gamification-form input[type="button"],
+.sgpb-gamification-form input[type="submit"]{overflow:visible;width:auto}.sgpb-gamification-form ::-webkit-file-upload-button{padding:0;border:0;background:none}.sgpb-gamification-form
+textarea{vertical-align:top;overflow:auto}.sgpb-gamification-form select[multiple]{vertical-align:top}.sgpb-gamification-form input[type="text"],
+.sgpb-gamification-form input[type="number"],
+.sgpb-gamification-form input[type="password"],
+.sgpb-gamification-form input[type="email"],
+.sgpb-gamification-form input[type="submit"],
+.sgpb-gamification-form input[type="button"]{max-width:100% !important;padding:10px
+!important;box-sizing:border-box;font-size:14px !important;box-shadow:none !important;margin:5px
+auto !important;display:inline-block !important;font-weight:bold !important;background-image:none !important}.sgpb-gamification-form input[type="submit"],
+.sgpb-gamification-form input[type="button"]{line-height:0.4 !important;font-size:18px !important}.sg-js-hide{display:none}.sgpb-gamification-win-text{margin-top:-60px}.js-gamification-submit-btn{cursor:pointer !important}.sgpb-gamification-gdpr-text{text-align:center !important;color:#9f9f9f !important;font-size:12px;font-family:Segoe UI !important;margin-top:17px !important;line-height:1}

@@ -1,0 +1,20 @@
+.sg-hide {
+	display: none !important;
+}
+
+.sgpb .sgpb .sgpb-recentSales textarea {
+	min-height: 50px;
+	height: 100px;
+	width: 30%;
+}
+
+.sgpb .sgpb-options-content .sgpb-wrapper .sgpb-btn {
+	width: 100%;
+}
+.sgpb-close-btn-change-image-wrapper, .sgpb-close-btn-image-wrapper {
+	max-width: inherit;
+}
+.sgpb-show-button-image-container, .sgpb-show-gamification-image-container, .sgpb-show-sales-image-container {
+	width: 50px;
+	height: 50px;
+}

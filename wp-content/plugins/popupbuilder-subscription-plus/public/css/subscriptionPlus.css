@@ -1,0 +1,116 @@
+.sgpb-scratch-div {
+	border: 1px solid #dedede !important;
+}
+
+.sgpb-scratch-div p {
+	font-size: 22px !important;
+}
+
+.sgpb-scratch-div:hover {
+	background-color: #e6e6e6 !important;
+}
+
+.sgpb-scratch-div .sgpb-type-icon {
+	background-image: url("../img/scratch.png");
+}
+
+.sgpb-template1-div {
+	background-image: url("../img/templates/template1.png");
+	background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #f4f4f4!important;
+	border: 1px solid #dedede !important;
+}
+
+.sgpb-template2-div {
+	background-image: url("../img/templates/template2.png");
+	background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #f4f4f4!important;
+	border: 1px solid #dedede !important;
+}
+
+.sgpb-template3-div {
+	background-image: url("../img/templates/template3.png");
+	background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #f4f4f4!important;
+	border: 1px solid #dedede !important;
+}
+
+.sgpb-template4-div {
+	background-image: url("../img/templates/template4.png");
+	background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #f4f4f4!important;
+	border: 1px solid #dedede !important;
+}
+
+.sgpb-template5-div {
+	background-image: url("../img/templates/template5.png");
+	background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #f4f4f4!important;
+	border: 1px solid #dedede !important;
+}
+
+.sgpb-templates-div .sgpb-type-text {
+	background-color: #ffffff;
+	color: #000000 !important;
+	padding-bottom: 8px;
+	padding-top: 7px;
+}
+
+.sgpb-add-template-scratch {
+	padding: 3px 10px !important;
+	font-weight: normal !important;
+	margin-top: 16px !important;
+	margin-right: 0 !important;
+	font-size: 22px !important;
+	font-weight: normal !important;
+}
+
+.sgpb-templates-shortcodes-wrapper .row {
+	margin-left: -20px !important;
+	margin-right: -20px !important;
+	margin-bottom: 5px !important;
+}
+
+
+.sgpb .sgpb-add-email-template, .sgpb .sgpb-edit-email-template {
+	box-shadow: 0 3px 20px #00000029;
+	border-radius: 20px;
+	width: 200px;
+	height: 200px;
+	font-size: 50px;
+	color: #2873EB;
+}
+.sgpb-integration-dialog-wrapper .sgpb-close-icon {
+	position: absolute;
+	top: 1%;
+	right: 1%;
+	background: #2873EB;
+	border-radius: 50%;
+	width: 26px;
+	height: 26px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+.sgpb-integration-dialog-wrapper .sgpb-close-icon::before, .sgpb-integration-dialog-wrapper .sgpb-close-icon::after {
+	content: '';
+	display: block;
+	height: 2px;
+	width: 14px;
+	left: 6px;
+	background: white;
+	position: absolute;
+	border-radius: 5px;
+}
+.sgpb-integration-dialog-wrapper .sgpb-close-icon::before {
+	transform: rotate(45deg);
+}
+.sgpb-integration-dialog-wrapper .sgpb-close-icon::after {
+	transform: rotate(-45deg);
+}

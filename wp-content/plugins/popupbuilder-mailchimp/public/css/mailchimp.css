@@ -1,0 +1,152 @@
+.mailchimp-popup {
+	background-image: url("../img/mailchimp.png");
+}
+
+a.sgpb-connect-link{
+	margin-top: 4px !important;
+	display: inline-block;
+}
+
+.sgpb-mailchimp-options-wrapper label,
+.sgpb-mailchimp-options-wrapper .sgpb-sub-option {
+	font-weight: inherit !important;
+}
+
+label.sgpb-mailchimp-label-bold {
+	font-weight: bold !important;
+}
+
+.sgpb .sg-mailchimp-connect-status {
+	display: inline-block !important;
+	padding: 3px 6px !important;
+	font-size: 15px !important;
+}
+
+.sgpb .sg-mailchimp-connect-status.sg-mailchimp-not-connected {
+	color: #CC0000;
+}
+
+.sgpb .sg-mailchimp-connect-status.sg-mailchimp-connected {
+	color: #00AE5D;
+}
+
+.sg-live-preview {
+	text-align: center;
+}
+
+.sg-mailchimp-selectbox {
+	width: 189px;
+}
+
+.sg-apikey-input-div {
+	display: inline-block;
+	float: left;
+}
+
+.sg-show-apikey-div {
+	display: inline-block;
+	background-color: #e0e0e0;
+	float: left;
+	height: 32px;
+	border: 2px solid #c9c9c9;
+	border-left: none;
+	box-sizing: border-box;
+	padding: 0 6px 0 1px;
+}
+
+#sgpb-mailchimp-api-key {
+	border: 2px solid #c9c9c9;
+	height: 32px;
+	width: 300px;
+}
+
+#sg-show-mailchimp-apikey {
+	width: 20px;
+	height: 20px;
+	background-repeat: no-repeat;
+	overflow: hidden;
+	background-size: 24px 384px;
+	margin: 4px 7px 0 13px;
+}
+
+#sg-show-mailchimp-apikey:checked:before {
+	margin: -2px 0 0 -3px;
+}
+
+.sgpb-mailchimp-api-key-show {
+	display: inline-block;
+	vertical-align: middle;
+	margin-top: 2px;
+}
+
+.sgpb-mailchimp-help {
+	margin-top: 11px !important;
+	font-size: 14px;
+}
+
+.sgpb .sgpb-mailchimp-to-api-link {
+	color: #2873EB;
+	text-decoration: underline;
+}
+.sgpb .sgpb-mailchimp-to-api-link:hover, .sgpb .sgpb-mailchimp-to-api-link:focus {
+	color: #2873EB;
+	text-decoration: underline;
+}
+
+#sgpb-api-key-label {
+	display: inline-block;
+	margin-top: 16px;
+}
+
+.sgpb-selectbox-label {
+	margin-top: 5px;
+}
+
+.sgpb-mailchimp-admin-form-wrapper {
+	max-width: 100%;
+}
+
+#sgpbm-gdpr {
+	margin: 4px 0 0 0;
+	max-width: 5% !important;
+	font-weight: bold;
+}
+
+#sgpbm-gdpr:hover + label  {
+	cursor: pointer !important;
+}
+
+#sgpbm-gdpr + label {
+	margin: 4px 0 0 5px;
+	text-align: left !important;
+	display: inline-block;
+	font-weight: bold !important;
+	font-size: 17px !important;
+}
+
+.sgpb-gdpr-label-wrapper {
+	display: block;
+	text-align: left !important;
+}
+
+.sgpb-gdpr-info {
+	text-align: left !important;
+	line-height: normal !important;
+	padding: 0 !important;
+	font-size: 16px !important;
+}
+
+.sgpb-gdpr-wrapper .sgpb-alert {
+	margin-bottom: 0 !important;
+}
+
+.sgpb-alert-info {
+	background-color: transparent !important;
+}
+.sgpb .formItem .subFormItem .wp-picker-container button {
+	margin: 0 6px;
+}
+
+#sgpb-mailchimp-api-key{
+	line-height: inherit!important;
+}
