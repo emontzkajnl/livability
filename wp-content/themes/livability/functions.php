@@ -894,12 +894,12 @@ function load_more_bpm_posts() {
 			
 			<div class="bp24__card">
 			<div class="bp24__img-container" >
-			<a href="<?php echo get_the_permalink( $value['place_id']); ?>">
+			<a href="<?php echo get_the_permalink( $value['place_id']).'?top-100'; ?>">
 			<?php echo get_the_post_thumbnail( $value['place_id'], 'medium'); ?>
 			</a>
 			</div>
 			<div class="bp24__text-container">
-			<a class="unstyle-link" href="<?php echo get_the_permalink( $value['place_id']); ?>">
+			<a class="unstyle-link" href="<?php echo get_the_permalink( $value['place_id']).'?top-100'; ?>">
 			<h4 class="bp24__city"><?php echo $value['city']; ?></h4>
 			</a>
 			<p class="bp24__state"><?php echo $value['state']; ?></p>
@@ -907,7 +907,7 @@ function load_more_bpm_posts() {
 			<p>Region: <?php echo get_region_by_state_name($value['state']); ?></p>
 			<p>Population: <?php echo  number_format($value['population']); ?></p>
 			<p>Med. Home Value: $<?php echo number_format($value['home_value']); ?></p>
-			<p class="bp24__read-more"><a class="unstyle-link" href="<?php echo get_the_permalink( $value['place_id']);  ?>">Read More</a></p>
+			<p class="bp24__read-more"><a class="unstyle-link" href="<?php echo get_the_permalink( $value['place_id']).'?top-100';  ?>">Read More</a></p>
 			</div>
 		</div>
 		<?php }
@@ -1970,12 +1970,12 @@ if ( ! function_exists('local_insights') ) {
 				
 				<div class="bp24__card">
 				<div class="bp24__img-container" >
-				<a href="<?php echo get_the_permalink( $value['place_id']); ?>">
+				<a href="<?php echo get_the_permalink( $value['place_id']).'?top-100'; ?>">
 				<?php echo get_the_post_thumbnail( $value['place_id'], 'medium'); ?>
 				</a>
 				</div>
 				<div class="bp24__text-container">
-				<a class="unstyle-link" href="<?php echo get_the_permalink( $value['place_id']); ?>">
+				<a class="unstyle-link" href="<?php echo get_the_permalink( $value['place_id']).'?top-100'; ?>">
 				<h4 class="bp24__city"><?php echo $value['city']; ?></h4>
 			</a>
 				<p class="bp24__state"><?php echo $value['state']; ?></p>
@@ -1983,7 +1983,7 @@ if ( ! function_exists('local_insights') ) {
 				<p>Region: <?php echo get_region_by_state_name($value['state']); ?></p>
 				<p>Population: <?php echo  number_format($value['population']); ?></p>
 				<p>Med. Home Value: $<?php echo number_format($value['home_value']); ?></p>
-				<p class="bp24__read-more"><a class="unstyle-link" href="<?php echo get_the_permalink( $value['place_id']);  ?>">Read More</a></p>
+				<p class="bp24__read-more"><a class="unstyle-link" href="<?php echo get_the_permalink( $value['place_id']).'?top-100';  ?>">Read More</a></p>
 				</div>
 			</div>
 			<?php }
