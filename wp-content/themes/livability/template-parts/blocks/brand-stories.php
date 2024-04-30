@@ -1,30 +1,17 @@
 <?php 
 
-// post, sponsored, place relationship includes id if city, pr 
+// post, sponsored, place relationship includes id if city
 
 $city_name = $args['city'];
 $state_name = $args['state'];
+$posts = $args['posts'];
 $ID = get_the_ID();
 
 $args = array(
-    'numberposts'         => 'post', 
-    'post_status'       => 'publish',
-    'posts_per_page'    => -1,
-    'orderby'           => 'rand',
-    'meta_query'        => array(
-        array(
-            'key'           => 'place_relationship',
-            'value'         => '"' . get_the_ID() . '"',
-            'compare'       => 'LIKE'
-        ),
-        array(
-            'key'           => 'sponsored',
-            'value'         => 1
-        ) 
-    )
-); 
-$sponsors = get_posts($args);
+    'include' => $posts
+);
 
+$sponsors = get_posts($args);
 if ($sponsors):
     $count = count($sponsors);
     $heading = $city_name.', '.$state_name.' Businesses & Brands to Know'; 

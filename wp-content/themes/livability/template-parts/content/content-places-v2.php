@@ -20,17 +20,21 @@ $topic_args = array(
             'value'     => '"' . get_the_ID() . '"',
             'compare'   => 'LIKE'
         ),
-        array(
-           'key'       => 'sponsored',
-           'value'     => 0
-       ),
-       'relation'      => 'AND'
+    //     array(
+    //        'key'       => 'sponsored',
+    //        'value'     => 0
+    //    ),
+    //    'relation'      => 'AND'
     )
    );
    $topics = new WP_Query( $topic_args );
    $topics_array = array();
+   $brands_array = array();
    foreach($topics->posts as $topic) {
         $ID = $topic->ID;
+        if (get_field('sponsored', $ID)) {
+            array_push($brands_array, $ID);
+        } else {
        $cat = get_the_category( $ID );
        $slug = $cat[0]->slug;
        
@@ -39,6 +43,7 @@ $topic_args = array(
        } else {
            array_push($topics_array[$slug], $ID );
        }
+    }
    }
 
    $is_2024_bp = has_term('2024', 'best_places_years');
@@ -55,6 +60,7 @@ $topic_args = array(
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
+
 	<div class="entry-content">
         <div class="wp-block-columns full-width-white">
             <div class="wp-block-column">
@@ -69,8 +75,9 @@ $topic_args = array(
         <li><a href="#top-100" >2024 Top 100</a></li>
         <li><a href="#things-to-do">Things to Do</a></li>
         <li><a href="#economy">Economy</a></li>
-        <?php endif; ?>
-        <li><a href="#brands-to-know">Brands to Know</a></li>
+        <?php endif; 
+        echo count($brands_array) > 0 ? '<li><a href="#brands-to-know">Brands to Know</a></li>' : '';
+        ?>
         <li><a href="#weather">Weather</a></li>
         <li><a href="#quick-facts">Quick Facts</a></li>
         <li><a href="#map">Map</a></li>
@@ -134,7 +141,7 @@ $topic_args = array(
         <div class="wp-block-columns">
             <div class="wp-block-column">
             <?php if (get_field('turn_on_top_100_blocks', 'options')) {get_template_part( 'template-parts/blocks/top-100-carousel-24'); }
-            get_template_part( 'template-parts/blocks/brand-stories', null, array('city' => $city_name, 'state' => $state_name) );
+            get_template_part( 'template-parts/blocks/brand-stories', null, array('city' => $city_name, 'state' => $state_name, 'posts' => $brands_array) );
             get_template_part( 'template-parts/blocks/weather', null, array('city' => $city_name, 'abbv' => $state_abbv) );
             get_template_part( 'template-parts/blocks/quick-facts-2', null, array('city' => $city_name, 'state' => $state_name  ) ); 
             ?>
@@ -195,7 +202,6 @@ $topic_args = array(
         </div><!-- place-column__content -->
 
 </div><!-- place-column__parent --> 
-<?php //get_template_part( 'template-parts/blocks/brand-stories', null, array('city' => $city_name, 'state' => $state_name) ); ?>
 		
 	</div><!-- .entry-content -->
     <?php get_template_part( 'template-parts/blocks/more-about-living', null, array('state' => $state_name, 'abbv' => $state_abbv) ); ?>
