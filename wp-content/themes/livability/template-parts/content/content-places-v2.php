@@ -55,6 +55,8 @@ $topic_args = array(
    $full_city_name = get_the_title();
    $city_name = substr(get_the_title(), 0, -4); 
 //    print_r($parent_obj);
+echo 'brands array:<br />';
+print_r($brands_array);
 
 ?>
 

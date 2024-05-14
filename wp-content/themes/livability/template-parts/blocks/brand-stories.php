@@ -7,12 +7,14 @@ $state_name = $args['state'];
 $posts = $args['posts'];
 $ID = get_the_ID();
 
+if ($posts):
 $args = array(
-    'include' => $posts
+    'include'          => $posts,
+    'numberposts' => 30
 );
 
 $sponsors = get_posts($args);
-if ($sponsors):
+
     $count = count($sponsors);
     $heading = $city_name.', '.$state_name.' Businesses & Brands to Know'; 
     echo '<div class="brand-stories" id="brands-to-know"><h2 class="wp-block-jci-blocks-section-header " style="margin-bottom: 30px;">'.$heading.'</h2>';
@@ -73,4 +75,4 @@ if ($sponsors):
         echo '</div>';
     }
     echo '</div>';
-endif;
+endif; // if posts
