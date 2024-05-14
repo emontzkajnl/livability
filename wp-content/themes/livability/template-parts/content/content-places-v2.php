@@ -71,7 +71,7 @@ $topic_args = array(
     <div class="place-column__nav">
     <ul class="place-side-nav">
         <li class="active"><a href="#overview">Overview</a></li>
-        <?php if ($is_2024_bp && get_field('turn_on_top_100_blocks', 'options')): ?>
+        <?php if ($is_2024_bp): ?>
         <li><a href="#top-100" >2024 Top 100</a></li>
         <li><a href="#things-to-do">Things to Do</a></li>
         <li><a href="#economy">Economy</a></li>
@@ -140,7 +140,7 @@ $topic_args = array(
         </div>
         <div class="wp-block-columns">
             <div class="wp-block-column">
-            <?php if (get_field('turn_on_top_100_blocks', 'options')) {get_template_part( 'template-parts/blocks/top-100-carousel-24'); }
+            <?php get_template_part( 'template-parts/blocks/top-100-carousel-24');
             get_template_part( 'template-parts/blocks/brand-stories', null, array('city' => $city_name, 'state' => $state_name, 'posts' => $brands_array) );
             get_template_part( 'template-parts/blocks/weather', null, array('city' => $city_name, 'abbv' => $state_abbv) );
             get_template_part( 'template-parts/blocks/quick-facts-2', null, array('city' => $city_name, 'state' => $state_name  ) ); 
