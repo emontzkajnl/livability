@@ -1999,6 +1999,14 @@ if ( ! function_exists('local_insights') ) {
 	function enable_creditcard( $is_enabled ) {
 	return true;
 	}
+
+	// Advanced Ads Label changes for GA4
+	add_filter( 'advanced-ads-tracking-ga-click', function(){
+	return 'Livability Ad Clicks';
+	} );
+	add_filter( 'advanced-ads-tracking-ga-impression', function(){
+	return 'Livability Ad Impressions';
+	} );
 	
 
 
