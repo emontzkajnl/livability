@@ -1999,6 +1999,7 @@ if ( ! function_exists('local_insights') ) {
 	function enable_creditcard( $is_enabled ) {
 	return true;
 	}
+	
 
 
 	// function connected_communities_payment($entry, $form ) {
