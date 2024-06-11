@@ -818,6 +818,9 @@ div[class^="curated-posts-"] {
   background-size: cover;
   background-position: center center;
   position: relative;
+  .img-container {
+    display: block;
+  }
   > div {
     height: 100%;
     width: 100%;
