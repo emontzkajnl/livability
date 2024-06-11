@@ -5,7 +5,7 @@ import {
 } from '../helpers/toggleSubmitButton';
 import getFormFieldValues from '../helpers/getFormFieldValues';
 import { ILiveMergeTagValues } from './GPPALiveMergeTags';
-import initTinyMCE from '../helpers/initTinyMCE';
+import { reInitTinyMCEEditor } from '../helpers/initTinyMCE';
 import uniq from 'lodash/uniq';
 import uniqWith from 'lodash/uniqWith';
 import isEqual from 'lodash/isEqual';
@@ -13,7 +13,7 @@ import debounce from 'lodash/debounce';
 
 const $ = window.jQuery;
 
-export type formId = number | string;
+export type formID = number | string;
 export type fieldID = number | string;
 
 export interface fieldMapFilter {
@@ -41,6 +41,8 @@ export default class GPPopulateAnything {
 	public currentPage = 1;
 	public populatedFields: fieldID[] = [];
 	public postedValues: { [input: string]: string } = {};
+	public pageConditionalLogicMap: { [pageId: number]: fieldID[] } = {};
+	public gfPageConditionalLogic: any;
 	public gravityViewMeta?: gravityViewMeta;
 	private triggerChangeAfterCalculate: boolean = false;
 	private triggerChangeExecuted: boolean = false;
@@ -50,12 +52,22 @@ export default class GPPopulateAnything {
 		rounding: string;
 	}[] = [];
 
-	private currentBatchedAjaxRequest: JQuery.jqXHR | undefined;
+	private lockoutChangeEvents: boolean = false;
+
+	private currentBatchedAjaxRequests: {
+		[fieldIds: string]: JQuery.jqXHR;
+	} = {};
 
 	// eslint-disable-next-line no-shadow
-	constructor(public formId: formId, public fieldMap: fieldMap) {
+	constructor(public formId: formID, public fieldMap: fieldMap) {
 		if ('GPPA_POSTED_VALUES_' + formId in window) {
 			this.postedValues = (window as any)['GPPA_POSTED_VALUES_' + formId];
+		}
+
+		if ('GPPA_PAGE_CONDITIONAL_LOGIC_MAP_' + formId in window) {
+			this.pageConditionalLogicMap = (window as any)[
+				'GPPA_PAGE_CONDITIONAL_LOGIC_MAP_' + formId
+			];
 		}
 
 		if ('GPPA_GRAVITYVIEW_META_' + formId in window) {
@@ -67,6 +79,31 @@ export default class GPPopulateAnything {
 		jQuery(document).on('gform_post_render', this.postRenderSetCurrentPage);
 
 		jQuery(document).on('gform_post_render', this.postRender);
+
+		// Listen for gform/conditionalLogic/init/start and end to lockout change events on init.
+		document.addEventListener(
+			'gform/conditionalLogic/init/start',
+			(e: any) => {
+				// eslint-disable-next-line eqeqeq
+				if (e.detail.formId != formId || !e.detail.isInit) {
+					return;
+				}
+
+				this.lockoutChangeEvents = true;
+			}
+		);
+
+		document.addEventListener(
+			'gform/conditionalLogic/init/end',
+			(e: any) => {
+				// eslint-disable-next-line eqeqeq
+				if (e.detail.formId != formId || !e.detail.isInit) {
+					return;
+				}
+
+				this.lockoutChangeEvents = false;
+			}
+		);
 
 		// Update prices when fields are updated. By default, Gravity Forms does not trigger recalculations when
 		// hidden inputs in product fields are updated.
@@ -104,7 +141,7 @@ export default class GPPopulateAnything {
 		 *
 		 * Likewise for the GravityView search widget.
 		 */
-		if ($('#wpwrap #entry_form').length || this.gravityViewMeta) {
+		if ($('#wpwrap #entry_form').length || this.isGravityView()) {
 			this.postRender(null, formId, 0);
 		}
 		/**
@@ -221,7 +258,7 @@ export default class GPPopulateAnything {
 		// default form element.
 		const $form = this.getFormElement();
 
-		if (this.gravityViewMeta) {
+		if (this.isGravityView()) {
 			inputPrefix = 'filter_';
 		}
 
@@ -229,7 +266,7 @@ export default class GPPopulateAnything {
 
 		$form.data(
 			lastFieldValuesDataId,
-			getFormFieldValues(this.formId, !!this.gravityViewMeta)
+			getFormFieldValues(this.formId, !!this.isGravityView())
 		);
 
 		$form.off('.gppa');
@@ -237,6 +274,11 @@ export default class GPPopulateAnything {
 			'keyup.gppa change.gppa DOMAutoComplete.gppa paste.gppa forceReload.gppa',
 			'[name^="' + inputPrefix + '"]',
 			(event) => {
+				// Prevent a ton of change events from firing when the form is first loaded due to conditional logic.
+				if (this.lockoutChangeEvents) {
+					return;
+				}
+
 				const $el = $(event.target);
 
 				const inputId = String($el.attr('name')).replace(
@@ -280,7 +322,7 @@ export default class GPPopulateAnything {
 				);
 
 				const currentFieldValues = this.processInputValuesForComparison(
-					getFormFieldValues(this.formId, !!this.gravityViewMeta)
+					getFormFieldValues(this.formId, !!this.isGravityView())
 				);
 
 				// Do not fire if values didn't change
@@ -379,6 +421,7 @@ export default class GPPopulateAnything {
 
 		this.bindNestedForms();
 		this.bindConditionalLogicPricing();
+		this.bindPageConditionalLogic();
 
 		// Trigger change event on calculated fields only once on initial load
 		if (this.triggerChangeAfterCalculate && !this.triggerChangeExecuted) {
@@ -465,7 +508,7 @@ export default class GPPopulateAnything {
 
 			$form.data(
 				lastFieldValuesDataId,
-				getFormFieldValues(this.formId, !!this.gravityViewMeta)
+				getFormFieldValues(this.formId, !!this.isGravityView())
 			);
 
 			this.bulkBatchedAjax(dependentFieldsToLoad, triggerInputIds);
@@ -478,7 +521,7 @@ export default class GPPopulateAnything {
 				field: fieldID;
 				filters?: fieldMapFilter[];
 			}[],
-			triggerInputIds: fieldID[]
+			triggerInputIds: fieldID[] = []
 		): JQueryPromise<JQueryXHR> => {
 			const $form: JQuery = this.getFormElement();
 
@@ -527,6 +570,58 @@ export default class GPPopulateAnything {
 		);
 	}
 
+	bindPageConditionalLogic() {
+		window.gform.addAction(
+			'gform_frontend_pages_evaluated',
+			(pages: any, formId: number, self: any) => {
+				// eslint-disable-next-line eqeqeq
+				if (formId == this.formId) {
+					this.gfPageConditionalLogic = self;
+				}
+			}
+		);
+
+		window.gform.addAction(
+			'gform_frontend_page_visible',
+			(
+				page: {
+					conditionalLogic: any;
+					fieldId: number;
+					isUpdated: boolean;
+					isVisible: boolean;
+					nextButton: any;
+				},
+				formId: number
+			) => {
+				// eslint-disable-next-line eqeqeq
+				if (formId != this.formId || !this.gfPageConditionalLogic) {
+					return;
+				}
+
+				// Get the page number from the page field ID from this.gfPageConditionalLogic.options.pages
+				let pageNumber = 1; // Start at 1 since the first page of the form is not a "page"
+
+				for (const page of this.gfPageConditionalLogic.options.pages) {
+					pageNumber++;
+
+					if (page.fieldId === page.fieldId) {
+						break;
+					}
+				}
+
+				if (this.pageConditionalLogicMap[pageNumber]) {
+					this.bulkBatchedAjax(
+						this.pageConditionalLogicMap[pageNumber].map(
+							(field) => ({
+								field,
+							})
+						)
+					);
+				}
+			}
+		);
+	}
+
 	/*
 	 * Run the field values through various transformations to make comparisons more accurate.
 	 *
@@ -555,7 +650,7 @@ export default class GPPopulateAnything {
 	getFieldFilterValues($form: JQuery, filters: fieldMapFilter[]) {
 		let prefix = 'input_';
 
-		if (this.gravityViewMeta) {
+		if (this.isGravityView()) {
 			prefix = 'filter_';
 		}
 
@@ -625,15 +720,27 @@ export default class GPPopulateAnything {
 		requestedFields: { field: fieldID; filters?: fieldMapFilter[] }[],
 		triggerInputId: fieldID | fieldID[]
 	): JQueryPromise<any> {
-		/* Abort previous batched AJAX request if it hasn't resolved yet. */
+		const ajaxRequestId = JSON.stringify(requestedFields);
+
+		/* Abort previous batched AJAX requests if they haven't resolved yet and the requested fields matches. */
 		if (
-			this.currentBatchedAjaxRequest &&
-			this.currentBatchedAjaxRequest?.state() !== 'resolved'
+			typeof this.currentBatchedAjaxRequests[ajaxRequestId] !==
+				'undefined' &&
+			this.currentBatchedAjaxRequests[ajaxRequestId].state() !==
+				'resolved'
 		) {
-			this.currentBatchedAjaxRequest?.abort();
+			this.currentBatchedAjaxRequests[ajaxRequestId].abort();
 		}
 
-		const focusBeforeAJAX = $(':focus').attr('id');
+		const $focusedSel = $(':focus');
+		let focusBeforeAJAX = $focusedSel.attr('id');
+
+		// stop "tracking" the focused element if the blur event occurs (e.g. user clicks away from it)
+		// to prevent the focus from erroneously being "restored" to the element after the AJAX request completes
+		$focusedSel.on('blur', () => {
+			focusBeforeAJAX = undefined;
+		});
+
 		const fieldIDs: fieldID[] = [];
 		const fields: fieldDetails[] = [];
 
@@ -650,7 +757,7 @@ export default class GPPopulateAnything {
 				.find('#input_' + this.formId + '_' + fieldID)
 				.data('chosen');
 
-			if (this.gravityViewMeta) {
+			if (this.isGravityView()) {
 				const $searchBoxFilter = $form.find(
 					'#search-box-filter_' + fieldID
 				);
@@ -680,7 +787,7 @@ export default class GPPopulateAnything {
 		}
 
 		fields.sort((a, b) => {
-			const idAttrPrefix = this.gravityViewMeta
+			const idAttrPrefix = this.isGravityView()
 				? '[id^=search-box-filter]'
 				: '[id^=field]';
 
@@ -755,10 +862,10 @@ export default class GPPopulateAnything {
 				'field-ids': fields.map((field) => {
 					return field.field;
 				}),
-				'gravityview-meta': this.gravityViewMeta,
+				'gravityview-meta': this.isGravityView(),
 				'field-values': getFormFieldValues(
 					this.formId,
-					!!this.gravityViewMeta
+					!!this.isGravityView()
 				),
 				'merge-tags': window.gppaLiveMergeTags[
 					this.formId
@@ -770,13 +877,16 @@ export default class GPPopulateAnything {
 				'current-merge-tag-values':
 					window.gppaLiveMergeTags[this.formId].currentMergeTagValues,
 				security: window.GPPA.NONCE,
+				show_admin_fields_in_ajax:
+					window[`GPPA_FORM_${this.formId}`]
+						.SHOW_ADMIN_FIELDS_IN_AJAX,
 			},
 			this.formId
 		);
 
 		disableSubmitButton(this.getFormElement());
 
-		this.currentBatchedAjaxRequest = $.ajax({
+		this.currentBatchedAjaxRequests[ajaxRequestId] = $.ajax({
 			url: window.GPPA.AJAXURL + '?action=gppa_get_batch_field_html',
 			contentType: 'application/json',
 			dataType: 'json',
@@ -788,10 +898,14 @@ export default class GPPopulateAnything {
 				fields: any;
 				event_id: any;
 			}) => {
-				this.currentBatchedAjaxRequest = undefined;
+				delete this.currentBatchedAjaxRequests[ajaxRequestId];
 
 				if (Object.keys(response.fields).length) {
 					const updatedFieldIDs = []; // Stores updated field IDs for `gppa_updated_batch_fields`
+					const fieldsToTriggerInputChange: {
+						[fieldID: string]: HTMLElement[];
+					} = {};
+
 					for (const fieldDetails of fields) {
 						const fieldID = fieldDetails.field;
 						const $field = fieldDetails.$el!;
@@ -825,23 +939,24 @@ export default class GPPopulateAnything {
 						if ($gravityflowVacationContainer.length) {
 							$fieldContainer = $gravityflowVacationContainer;
 						}
-						if (!this.gravityViewMeta) {
-							$fieldContainer = $(
-								response.fields[fieldID]
-							).replaceAll($fieldContainer);
-						} else {
+
+						if (this.isGravityView()) {
 							const $results = $(response.fields[fieldID]);
 
 							$fieldContainer = $results
 								.find('p')
 								.replaceAll($fieldContainer);
+						} else {
+							$fieldContainer = $(
+								response.fields[fieldID]
+							).replaceAll($fieldContainer);
 						}
 
 						this.populatedFields.push(fieldID);
 
 						if (fieldDetails.hasChosen) {
 							window.gformInitChosenFields(
-								('#input_{0}_{1}' as any).format(
+								('#input_{0}_{1}' as any).gformFormat(
 									this.formId,
 									fieldID
 								),
@@ -850,7 +965,10 @@ export default class GPPopulateAnything {
 						}
 
 						if ($fieldContainer.find('.wp-editor-area').length) {
-							initTinyMCE();
+							reInitTinyMCEEditor(
+								Number(this.formId),
+								Number(fieldID)
+							);
 						}
 
 						if (
@@ -861,15 +979,45 @@ export default class GPPopulateAnything {
 						}
 
 						$fieldContainer.find(':input').each((index, el) => {
-							$(el).data('gppaDisableListener', true);
-							window.gform.doAction(
-								'gform_input_change',
-								el,
-								this.formId,
-								fieldID
-							);
-							$(el).trigger('change');
-							$(el).removeData('gppaDisableListener');
+							/**
+							 * Filter whether conditional logic and input changes should be ran after all fields are
+							 * refreshed rather than after each field is refreshed.
+							 *
+							 * In most situations, this can improve performance. However, in complex conditional logic
+							 * setups, it can cause issues.
+							 *
+							 * @param {boolean} deferConditionalLogic Whether conditional logic and input change events should be deferred.
+							 * @param {number}  formId                The current form ID.
+							 *
+							 * @since 2.0.8
+							 */
+							if (
+								window.gform.applyFilters(
+									'gppa_defer_conditional_logic',
+									false,
+									this.formId
+								)
+							) {
+								if (
+									typeof fieldsToTriggerInputChange[
+										fieldID
+									] === 'undefined'
+								) {
+									fieldsToTriggerInputChange[fieldID] = [];
+								}
+
+								fieldsToTriggerInputChange[fieldID].push(el);
+							} else {
+								$(el).data('gppaDisableListener', true);
+								window.gform.doAction(
+									'gform_input_change',
+									el,
+									this.formId,
+									fieldID
+								);
+								$(el).trigger('change');
+								$(el).removeData('gppaDisableListener');
+							}
 						});
 
 						/**
@@ -881,7 +1029,9 @@ export default class GPPopulateAnything {
 								typeof (window as any)
 									.imageChoices_SetUpFields === 'function'
 							) {
-								(window as any).imageChoices_SetUpFields();
+								(window as any).imageChoices_SetUpFields(
+									this.formId
+								);
 							}
 						}
 
@@ -922,9 +1072,27 @@ export default class GPPopulateAnything {
 						($('.js-range-slider') as any).ionRangeSlider();
 					}
 
+					/**
+					 * Filter documented above.
+					 */
+					if (
+						window.gform.applyFilters(
+							'gppa_defer_conditional_logic',
+							false,
+							this.formId
+						)
+					) {
+						this.triggerInputChangesWithCLDeferred(
+							fieldsToTriggerInputChange,
+							updatedFieldIDs
+						);
+					}
+
 					$(document).trigger('gppa_updated_batch_fields', [
 						this.formId,
 						updatedFieldIDs,
+						triggerInputId,
+						this,
 					]);
 				}
 
@@ -939,9 +1107,16 @@ export default class GPPopulateAnything {
 				/**
 				 * Refocus input if current input was updated with AJAX
 				 */
-				const $focus = $('#' + focusBeforeAJAX);
+				let $focus = null;
+				if (focusBeforeAJAX) {
+					$focus = $('#' + focusBeforeAJAX);
+				}
 
-				if ($focus.length && !$(':focus').length) {
+				if (
+					$focus?.length &&
+					!$(':focus').length &&
+					this.isVisible($focus)
+				) {
 					const focusVal = $focus.val();
 
 					/* Simply using .focus() will set the cursor at the beginning instead of the end. */
@@ -952,7 +1127,84 @@ export default class GPPopulateAnything {
 			}
 		);
 
-		return this.currentBatchedAjaxRequest;
+		return this.currentBatchedAjaxRequests[ajaxRequestId];
+	}
+
+	/**
+	 * Triggers input changes without triggering conditional logic during. Conditional logic is handled at the
+	 * very end to improve performance.
+	 *
+	 * @param fieldsToTriggerInputChange
+	 * @param updatedFieldIDs
+	 */
+	triggerInputChangesWithCLDeferred(
+		fieldsToTriggerInputChange: {
+			[fieldID: string]: HTMLElement[];
+		},
+		updatedFieldIDs: (number | string)[]
+	) {
+		// Set the form to not having conditional logic to speed up these listeners, we'll evaluate all
+		// rules at the end.
+		window.gf_form_conditional_logic_backup =
+			window.gf_form_conditional_logic;
+		window.gf_form_conditional_logic = undefined;
+
+		for (const [fieldID, inputs] of Object.entries(
+			fieldsToTriggerInputChange
+		)) {
+			// Only trigger gform_input_change for the first input
+			window.gform.doAction(
+				'gform_input_change',
+				inputs[0],
+				this.formId,
+				fieldID
+			);
+
+			for (const el of inputs) {
+				const $el = $(el);
+
+				$el.data('gppaDisableListener', true);
+				$el.trigger('change');
+				$el.removeData('gppaDisableListener');
+			}
+		}
+
+		window.gf_form_conditional_logic =
+			window.gf_form_conditional_logic_backup;
+		window.gf_form_conditional_logic_backup = undefined;
+
+		// Evaluate conditional logic for each field with Conditional Logic
+		const conditionalLogicFieldIDs = [];
+		const cl = window.gf_form_conditional_logic?.[this.formId];
+
+		if (cl) {
+			for (const fieldId of updatedFieldIDs) {
+				if (typeof cl.dependents[fieldId] === 'undefined') {
+					continue;
+				}
+
+				conditionalLogicFieldIDs.push(fieldId);
+			}
+
+			window.gf_apply_rules(this.formId, conditionalLogicFieldIDs);
+		}
+	}
+
+	/**
+	 * Checks if an input to be re-focused is visible.
+	 *
+	 * @param $input
+	 */
+	isVisible($input: JQuery) {
+		// GPPT compatibility: if the inputs ancestor is a Swiper slide, check if the slide is active.
+		if (
+			$input.parents('.swiper-slide').length &&
+			!$input.parents('.swiper-slide-active').length
+		) {
+			return false;
+		}
+
+		return $input.is(':visible');
 	}
 
 	/**
@@ -1126,7 +1378,7 @@ export default class GPPopulateAnything {
 				this.formId
 		).parents('form');
 
-		if (this.gravityViewMeta) {
+		if (!$form.length && this.gravityViewMeta) {
 			$form = $('.gv-widget-search');
 		}
 
@@ -1136,5 +1388,9 @@ export default class GPPopulateAnything {
 		}
 
 		return $form;
+	}
+
+	isGravityView() {
+		return this.getFormElement().hasClass('gv-widget-search');
 	}
 }

@@ -21,8 +21,6 @@ use WebpConverter\PluginData;
 use WebpConverter\PluginInfo;
 use WebpConverter\Service\FileLoader;
 use WebpConverter\Settings\Option\LoaderTypeOption;
-use WebpConverter\Settings\Option\OutputFormatsOption;
-use WebpConverter\Settings\Option\SupportedDirectoriesOption;
 
 /**
  * Checks for configuration errors about non-working HTTP rewrites.
@@ -80,12 +78,6 @@ class RewritesErrorsDetector implements DetectorInterface {
 	 * {@inheritdoc}
 	 */
 	public function get_error() {
-		$plugin_settings = $this->plugin_data->get_plugin_settings();
-		if ( ! $plugin_settings[ SupportedDirectoriesOption::OPTION_NAME ]
-			|| ! $plugin_settings[ OutputFormatsOption::OPTION_NAME ] ) {
-			return null;
-		}
-
 		$this->convert_images_for_debug();
 
 		do_action( LoaderAbstract::ACTION_NAME, true, true );
@@ -148,28 +140,47 @@ class RewritesErrorsDetector implements DetectorInterface {
 		$path_file_png     = $uploads_dir . self::PATH_OUTPUT_FILE_PNG;
 		$path_file_png2    = $uploads_dir . self::PATH_OUTPUT_FILE_PNG2;
 		$path_file_plugins = apply_filters( 'webpc_dir_path', '', 'plugins' ) . self::PATH_OUTPUT_FILE_PLUGINS;
+		$file_statuses     = [];
 
 		if ( ! file_exists( $path_file_png ) || ! file_exists( $path_file_png2 ) ) {
-			copy( $this->plugin_info->get_plugin_directory_path() . self::PATH_SOURCE_FILE_PNG, $path_file_png );
-			copy( $this->plugin_info->get_plugin_directory_path() . self::PATH_SOURCE_FILE_PNG, $path_file_png2 );
+			$file_statuses[] = copy( $this->plugin_info->get_plugin_directory_path() . self::PATH_SOURCE_FILE_PNG, $path_file_png );
+			$file_statuses[] = copy( $this->plugin_info->get_plugin_directory_path() . self::PATH_SOURCE_FILE_PNG, $path_file_png2 );
+		} else {
+			$file_statuses[] = true;
+			$file_statuses[] = true;
 		}
 
 		if ( ( $output_path = $this->output_path->get_path( $path_file_png, true, WebpFormat::FORMAT_EXTENSION ) )
 			&& ! file_exists( $output_path ) ) {
-			copy( $this->plugin_info->get_plugin_directory_path() . self::PATH_SOURCE_FILE_WEBP, $output_path );
+			$file_statuses[] = copy( $this->plugin_info->get_plugin_directory_path() . self::PATH_SOURCE_FILE_WEBP, $output_path );
+		} else {
+			$file_statuses[] = true;
 		}
 		if ( ( $output_path = $this->output_path->get_path( $path_file_png, true, AvifFormat::FORMAT_EXTENSION ) )
 			&& ! file_exists( $output_path ) ) {
-			copy( $this->plugin_info->get_plugin_directory_path() . self::PATH_SOURCE_FILE_AVIF, $output_path );
+			$file_statuses[] = copy( $this->plugin_info->get_plugin_directory_path() . self::PATH_SOURCE_FILE_AVIF, $output_path );
+		} else {
+			$file_statuses[] = true;
 		}
 		if ( ( $output_path = $this->output_path->get_path( $path_file_png2, true, WebpFormat::FORMAT_EXTENSION ) )
 			&& ! file_exists( $output_path ) ) {
-			copy( $this->plugin_info->get_plugin_directory_path() . self::PATH_SOURCE_FILE_WEBP, $output_path );
+			$file_statuses[] = copy( $this->plugin_info->get_plugin_directory_path() . self::PATH_SOURCE_FILE_WEBP, $output_path );
+		} else {
+			$file_statuses[] = true;
 		}
 
 		if ( ( $output_path = $this->output_path->get_path( $path_file_plugins, true, WebpFormat::FORMAT_EXTENSION ) )
 			&& ! file_exists( $output_path ) ) {
-			copy( $this->plugin_info->get_plugin_directory_path() . self::PATH_SOURCE_FILE_WEBP, $output_path );
+			$file_statuses[] = copy( $this->plugin_info->get_plugin_directory_path() . self::PATH_SOURCE_FILE_WEBP, $output_path );
+		} else {
+			$file_statuses[] = true;
+		}
+
+		if ( in_array( false, $file_statuses, true ) ) {
+			$GLOBALS[ FileLoader::GLOBAL_LOGS_VARIABLE ][] = [
+				'context' => __FUNCTION__,
+				'status'  => $file_statuses,
+			];
 		}
 	}
 
@@ -224,14 +235,14 @@ class RewritesErrorsDetector implements DetectorInterface {
 	 * @return bool
 	 */
 	private function if_htaccess_can_be_overwritten(): bool {
-		$file_size = $this->file_loader->get_file_size_by_url(
+		$file_status = $this->file_loader->get_file_status_by_url(
 			$this->plugin_info->get_plugin_directory_url() . self::URL_DEBUG_HTACCESS_FILE,
 			true,
 			$this->test_version,
 			__FUNCTION__
 		);
 
-		return ( $file_size === 0 );
+		return ( in_array( $file_status, [ 403, 404 ] ) );
 	}
 
 	/**

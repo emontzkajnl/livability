@@ -1,10 +1,10 @@
-@-webkit-keyframes pulse {
+@-webkit-keyframes gppa-pulse {
 	0% { opacity: 0.6; }
 	50% { opacity: 0.1; }
 	100% { opacity: 0.6; }
 }
 
-@keyframes pulse {
+@keyframes gppa-pulse {
 	0% { opacity: 0.6; }
 	50% { opacity: 0.25; }
 	100% { opacity: 0.6; }
@@ -15,11 +15,11 @@
 }
 
 .gppa-loading:not(.gppa-empty) {
-	-webkit-animation: pulse 1s infinite ease-in-out;
-	-o-animation: pulse 1s infinite ease-in-out;
-	-ms-animation: pulse 1s infinite ease-in-out;
-	-moz-animation: pulse 1s infinite ease-in-out;
-	animation: pulse 1s infinite ease-in-out;
+	-webkit-animation: gppa-pulse 1s infinite ease-in-out;
+	-o-animation: gppa-pulse 1s infinite ease-in-out;
+	-ms-animation: gppa-pulse 1s infinite ease-in-out;
+	-moz-animation: gppa-pulse 1s infinite ease-in-out;
+	animation: gppa-pulse 1s infinite ease-in-out;
 	cursor: wait;
 }
 
@@ -69,4 +69,12 @@
 .gform_page_footer input[type="submit"][disabled],
 .gform_page_footer input[type="button"][disabled] {
 	cursor: wait;
+}
+
+/*
+ * The Theme Framework makes field labels flex. This causes span's to have a gap applied to them which can create
+ * some bizarre spacing issues. This rule makes the span display as if it were inline text.
+ */
+.gform-theme--foundation .gform-field-label span[data-gppa-live-merge-tag] {
+	display: contents;
 }

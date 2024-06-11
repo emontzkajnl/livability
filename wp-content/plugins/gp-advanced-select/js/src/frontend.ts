@@ -1,6 +1,6 @@
-/// <reference types="tom-select" />
+/// <reference types="@gravitywiz/tom-select" />
 import getFormFieldValues from './helpers/getFormFieldValues';
-import TomSelect from 'tom-select';
+import TomSelect from '@gravitywiz/tom-select';
 import { createPopper } from '@popperjs/core';
 
 // eslint-disable-next-line import/no-unresolved
@@ -8,7 +8,7 @@ import type {
 	RecursivePartial,
 	TomLoadCallback,
 	TomSettings,
-} from 'tom-select/dist/types/types';
+} from '@gravitywiz/tom-select/dist/types/types';
 
 const $ = window.jQuery;
 
@@ -18,7 +18,14 @@ interface GPAdvancedSelectInitArgs {
 	lazyLoad: boolean;
 	usingSearchValue: boolean;
 	hasImageChoices: boolean;
-	fieldType: 'select' | 'multiselect' | 'address';
+	fieldType:
+		| 'select'
+		| 'multiselect'
+		| 'address'
+		| 'workflow_assignee_select'
+		| 'workflow_multi_user'
+		| 'workflow_role'
+		| 'workflow_user';
 	minSearchLength: number;
 	ignoreEmptySearchValue: boolean;
 	placeholder: string;
@@ -110,6 +117,10 @@ class GPAdvancedSelect implements GPAdvancedSelectInitArgs {
 			loadThrottle: 0,
 			maxOptions: undefined,
 			searchField: ['text'],
+			render: {
+				no_results: () =>
+					`<div class="no-results">${window.GPADVS.strings?.no_results_found}</div>`,
+			},
 			onInitialize(this: TomSelect) {
 				// Add modifier to prevent the dropdown from going under the Nested Forms/Tingle modal footer.
 				const modifiers = [];
@@ -230,12 +241,19 @@ class GPAdvancedSelect implements GPAdvancedSelectInitArgs {
 		 * keyboard navigation.
 		 * See the docs for complete settings options: https://tom-select.js.org/docs/
 		 *
-		 * @param {Object} settings The Tom Select settings.
-		 * @param {Object} gpadvs   The GPAdvancedSelect instance.
+		 * @param {Object} settings        The Tom Select settings.
+		 * @param {Object} gpadvs          The GPAdvancedSelect instance.
+		 * @param {Object} selectNamespace The key with which the Tom Select instance can be retrieved from `window`.
 		 *
+		 * @since 1.1.5         Added the `selectNamespace` argument.
 		 * @since 1.0-beta-1
 		 */
-		return window.gform.applyFilters('gpadvs_settings', settings, gpadvs);
+		return window.gform.applyFilters(
+			'gpadvs_settings',
+			settings,
+			gpadvs,
+			selectNamespace
+		);
 	}
 
 	public loadResults(

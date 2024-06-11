@@ -1,51 +1,60 @@
-# Copyright (C) 2023 Gravity Wiz
+# Copyright (C) 2024 Gravity Wiz
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: GP Advanced Select 1.0.1\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cloned-perk-VbQ-X3bon\n"
+"Project-Id-Version: GP Advanced Select 1.1.7\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cloned-perk-7PZgtZ-mK\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-09-07T18:48:23+00:00\n"
+"POT-Creation-Date: 2024-05-23T01:45:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.7.1\n"
+"X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: gp-advanced-select\n"
 
 #. Plugin Name of the plugin
+#: gp-advanced-select.php
 msgid "GP Advanced Select"
 msgstr ""
 
 #. Plugin URI of the plugin
+#: gp-advanced-select.php
 msgid "https://gravitywiz.com/documentation/gravity-forms-advanced-select/"
 msgstr ""
 
 #. Description of the plugin
+#: gp-advanced-select.php
 msgid "Modern Drop Down and Multi Select fields with search and powerful integrations."
 msgstr ""
 
 #. Author of the plugin
+#: gp-advanced-select.php
 msgid "Gravity Wiz"
 msgstr ""
 
 #. Author URI of the plugin
+#: gp-advanced-select.php
 msgid "https://gravitywiz.com/"
 msgstr ""
 
-#: class-gp-advanced-select.php:555
+#: class-gp-advanced-select.php:614
 msgid "Remove this item"
 msgstr ""
 
-#: class-gp-advanced-select.php:566
+#: class-gp-advanced-select.php:615
+msgid "No results found"
+msgstr ""
+
+#: class-gp-advanced-select.php:626
 msgid "GP Advanced Select requires that Enhanced UI is disabled."
 msgstr ""
 
-#: class-gp-advanced-select.php:698
+#: class-gp-advanced-select.php:759
 msgid "Enable Advanced Select"
 msgstr ""
 
-#: class-gp-advanced-select.php:707
+#: class-gp-advanced-select.php:768
 msgid "Lazy Load Populated Choices"
 msgstr ""

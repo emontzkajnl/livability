@@ -2,7 +2,7 @@
  * Augment Window typings and add in properties provided by Gravity Forms, WordPress, etc.
  */
 export {};
-import TomSelect from "tom-select";
+import TomSelect from "@gravitywiz/tom-select";
 
 declare global {
 	type formID = number | string;
@@ -41,11 +41,13 @@ declare global {
 		GPADVS_FORM_EDITOR: {
 			strings: {
 				not_compat_with_enhanced_ui: string
-			 }
+			},
+			supported_types: Array<string>,
 		}
 		GPADVS: {
 			strings: {
-				remove_this_item: string
+				remove_this_item: string,
+				no_results_found: string
 			}
 		}
 		form: {

@@ -103,7 +103,7 @@ class MonsterInsights_Site_Notes_DB_Base
 			'ID' => isset($data['id']) ? $data['id'] : null,
 			'post_title'    => sanitize_text_field($data['note']),
 			'post_status'   => 'publish',
-			'post_author'   => get_current_user_id(),
+			'post_author'   => isset( $data['author_id'] ) ? intval( $data['author_id'] ) : get_current_user_id(),
 			'post_date'     => !empty($data['date']) ? $data['date'] : current_datetime()->format('Y-m-d'),
 			'post_type'     => 'monsterinsights_note',
 		);
@@ -188,7 +188,7 @@ class MonsterInsights_Site_Notes_DB_Base
 			'note_date' => get_the_date( 'Y-m-d', $post),
 			'note_date_ymd' => get_the_date( 'Y-m-d', $post ),
 			'status' => get_post_status($post),
-			'important' => get_post_meta($post->ID, 'important', true),
+			'important' => (int) get_post_meta($post->ID, 'important', true),
 			'medias' => array(),
 			'category' => array(
 				'id' => 0,
@@ -232,7 +232,7 @@ class MonsterInsights_Site_Notes_DB_Base
 		if ($categories) {
 			$note['category'] = array(
 				'id'   => $categories[0]->term_id,
-				'name' => $categories[0]->name,
+				'name' => html_entity_decode( $categories[0]->name ),
 			);
 
 			if (monsterinsights_is_pro_version()) {
@@ -269,7 +269,8 @@ class MonsterInsights_Site_Notes_DB_Base
 		if (isset($args['search'])) {
 			$query_args['s'] = $args['search'];
 		}
-				$all_notes_query_args = $query_args;
+
+		$all_notes_query_args = $query_args;
 		$all_notes_query_args['post_status'] = ['publish'];
 
 		if (isset($args['filter'])) {
@@ -310,7 +311,7 @@ class MonsterInsights_Site_Notes_DB_Base
 			$query_args['orderby'] = 'meta_value';
 		}
 		// handle last30days
-		
+
 		if (isset($query_args['date_query']) && !is_null($query_args['date_query'])) {
 			if ($query_args['date_query']['after'] == '' && $query_args['date_query']['before'] == '') {
 				$query_args['date_query']['before'] = wp_date('Y-m-d', strtotime('-1 day'));
@@ -338,7 +339,7 @@ class MonsterInsights_Site_Notes_DB_Base
 				),
 			);
 		}
-		
+
 		foreach ($query->posts as $post_id) {
 			$post = $this->get($post_id);
 			$is_important = get_post_meta($post_id, 'important', true);
@@ -389,7 +390,7 @@ class MonsterInsights_Site_Notes_DB_Base
 
 			$categories[] = array(
 				'id' => $term_id,
-				'name' => $term_name,
+				'name' => html_entity_decode( $term_name ),
 				'background_color' => !empty($background_color) ? $background_color : '#E9AF00',
 			);
 		}

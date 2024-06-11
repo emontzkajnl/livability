@@ -84,7 +84,7 @@ class GP_Advanced_Select extends GP_Plugin {
 
 	}
 	public function add_gpadvs_field_preview_markup( $input, $field, $value, $entry_id, $form_id ) {
-		if ( ! GFCommon::is_form_editor() || ! in_array( $field->get_input_type(), array( 'select', 'multiselect' ) ) ) {
+		if ( ! GFCommon::is_form_editor() || ! $this->is_advanced_select_field( $field ) ) {
 			return $input;
 		}
 
@@ -137,7 +137,7 @@ class GP_Advanced_Select extends GP_Plugin {
 	}
 
 	public function add_gpadvs_css_class( $classes, $field, $form ) {
-		if ( in_array( $field->get_input_type(), array( 'select', 'multiselect' ) ) && $field['gpadvsEnable'] === true ) {
+		if ( $this->is_advanced_select_field( $field ) && $field['gpadvsEnable'] === true ) {
 			$classes .= ' gform-theme__disable';
 		}
 
@@ -226,6 +226,34 @@ class GP_Advanced_Select extends GP_Plugin {
 	}
 
 	/**
+	 * Gets the Array of support input types for Advanced Select.
+	 *
+	 * @return array
+	 */
+	public function is_supported_input_type() {
+		$supported_types = array(
+			'select',
+			'multiselect',
+			'address',
+			'workflow_assignee_select',
+			'workflow_multi_user',
+			'workflow_role',
+			'workflow_user',
+		);
+
+		/**
+		 * Allows you to filter the supported field types for GP Advanced Select.
+		 *
+		 * @param array $supported_types
+		 *
+		 * @since 1.1.2
+		 */
+		$supported_types = apply_filters( 'gpadvs_is_supported_input_type', $supported_types );
+
+		return $supported_types;
+	}
+
+	/**
 	 * Determine whether the field is an Advanced Select field.
 	 *
 	 * @param GF_Field $field Field to check.
@@ -233,11 +261,7 @@ class GP_Advanced_Select extends GP_Plugin {
 	 * @return boolean
 	 */
 	public function is_advanced_select_field( $field ) {
-		return rgar( $field, 'gpadvsEnable' ) && in_array( $field->get_input_type(), array(
-			'select',
-			'multiselect',
-			'address',
-		) );
+		return rgar( $field, 'gpadvsEnable' ) && in_array( $field->get_input_type(), $this->is_supported_input_type() );
 	}
 
 	/**
@@ -330,7 +354,7 @@ class GP_Advanced_Select extends GP_Plugin {
 	 * @param boolean $run_pre_render
 	 */
 	public function populate_field_lazy( $hydrated_field, $field, $form, $field_values, $entry, $force_use_field_value, $include_html, $run_pre_render ) {
-		if ( ! $this->is_lazy_loaded_field( $field ) ) {
+		if ( ! $this->is_lazy_loaded_field( $field ) || GFCommon::is_entry_detail_edit() ) {
 			return $hydrated_field;
 		}
 
@@ -342,6 +366,41 @@ class GP_Advanced_Select extends GP_Plugin {
 
 		foreach ( $selected_items as $selected ) {
 			$field->choices[] = $selected;
+		}
+
+		// This code is duplicated from GPPA as we're utilizing gppa_pre_populate_field which bypasses populate_field_choices()
+		if ( $field->choices !== '' && isset( $field->choices ) ) {
+			if ( gp_populate_anything()->has_empty_field_value( $field, 'choices', $field_values ) ) {
+				$field->choices = array(
+					array(
+						// Unchecked checkboxes need to have a non-empty value otherwise they will automatically be checked by GF.
+						'value'           => apply_filters( 'gppa_missing_filter_value', $field->get_input_type() === 'checkbox', $field ),
+						'text'            => apply_filters( 'gppa_missing_filter_text', '&ndash; ' . esc_html__( 'Fill Out Other Fields', 'gp-populate-anything' ) . ' &ndash;', $field ),
+						/*
+						 * We only want our instructive text to be selected for Drop Downs. This bit below is necessary because
+						 * Product Drop Downs do not have an empty value so the first option is not selected automatically.
+						 * This also overrides placeholders for any Drop Down field.
+						 */
+						'isSelected'      => $field->inputType === 'select',
+						'gppaErrorChoice' => 'missing_filter',
+						'object'          => null,
+					),
+				);
+
+				/*
+				 * If there is a missing filter value, then it should always be disabled as we won't be able to populate
+				 * objects for the choices.
+				 */
+				$field->gppaDisable = true;
+			}
+
+			/*
+			 * If the field is NOT lazy loaded, and the first choice is an error such as missing_filter or no_choices
+			 * then disable the field.
+			 */
+			if ( ! $this->is_lazy_loaded_field( $field ) && ! empty( $field->choices[0]['gppaErrorChoice'] ) ) {
+				$field->gppaDisable = true;
+			}
 		}
 
 		/**
@@ -553,6 +612,7 @@ class GP_Advanced_Select extends GP_Plugin {
 		wp_localize_script( 'gp-advanced-select', 'GPADVS', array(
 			'strings' => array(
 				'remove_this_item' => __( 'Remove this item', 'gp-advanced-select' ),
+				'no_results_found' => __( 'No results found', 'gp-advanced-select' ),
 			),
 		) );
 	}
@@ -565,6 +625,7 @@ class GP_Advanced_Select extends GP_Plugin {
 			'strings' => array(
 				'not_compat_with_enhanced_ui' => __( 'GP Advanced Select requires that Enhanced UI is disabled.', 'gp-advanced-select' ),
 			),
+			'supported_types' => $this->is_supported_input_type(),
 		) );
 	}
 

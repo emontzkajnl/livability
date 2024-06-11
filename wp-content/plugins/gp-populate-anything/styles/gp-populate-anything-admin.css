@@ -135,7 +135,7 @@
 	margin: 0 !important;
 	height: 100%;
 	width: 100%;
-	padding-right: 30px;
+	padding-right: 30px !important;
 	flex: 1;
 }
 
@@ -231,7 +231,6 @@ i.gform-icon.gform-icon--merge-tag.gform-button__icon {
 
 .gppa-choices-enabled .ginput_container_select:before {
 	content: '';
-	background-color: #f00;
 	display: block;
 	position: absolute;
 	top: 0.3rem;

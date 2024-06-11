@@ -7,7 +7,8 @@ $(function () {
 	for (const fieldType in fieldSettings) {
 		if (
 			fieldSettings.hasOwnProperty(fieldType) &&
-			$.inArray(fieldType, ['select', 'multiselect', 'address']) !== -1
+			$.inArray(fieldType, window.GPADVS_FORM_EDITOR.supported_types) !==
+				-1
 		) {
 			fieldSettings[fieldType] += ', .gpadvs-field-setting';
 		}

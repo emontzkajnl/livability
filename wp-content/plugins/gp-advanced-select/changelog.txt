@@ -1,31 +1,65 @@
 # Changelog
 
+## 1.1.7 | May 22, 2024
+
+- Fixed issue where Lazy Load setting with Dynamic Values did not render field values on Entry Detail Edit page.
+
+## 1.1.6 | May 1, 2024
+
+- Internationalized "No results found."
+
+## 1.1.5
+
+- Added `selectNamespace` as an argument to [`gpadvs_settings`](https://gravitywiz.com/documentation/gpadvs_settings-js/).
+
+## 1.1.4
+
+- Updated dependency to fix an issue where lazy loaded options would not respect the limit selections snippet.
+- Fixed issue where lazy-loaded fields could be disabled on initial load when they should not be.
+
+## 1.1.3
+
+- Added support for Advanced Select on Gravity Flow fields.
+
+## 1.1.2
+
+- Fixed issue where lazy-loaded fields could be marked as disabled when they shouldn't be and not marked as disabled when they should be.
+
+## 1.1.1
+
+- Updated styles to work with GF 2.8 Theme Framework changes.
+
+## 1.1
+
+- Updated `tom-select` dependency to use new Gravity Wiz fork
+- Improved compatibility with snippets that interact with the native select element.
+
 ## 1.0.1
 
-	- Improved compatibility with Avada theme.
+- Improved compatibility with Avada theme.
 
 ## 1.0
 
-	- Improved compatibility with Gravity Forms Theme Framework.
-	- Added dynamic display of multiselect field options in the GPADVS field preview UI.
-	- Added live UI preview of GPADVS-enabled fields in form editor.
-	- Improved GPPA filter so that if "Advanced Select Search Value" is chosen, the `contains` operator is automatically used.
-	- Fixed issue where old GPPA search results would remain in a Tom Select dropdown when starting a new query after selecting an item.
-	- Added ability to filter the minimum search query for selects and the ability to optionally load all results upon field focus.
-	- Added `gpadvs_js_init_args` filter to allow for configuring options passed to form JS script.
-	- Fixed potential error when adding the "virtual_scroll" Tom Select plugin.
-	- Added "remove button" to each item in a multi-select for easy removal.
-	- Improved Multi Select field settings so that the accessibility warning is hidden if GPADVS is enabled.
-	- Added support for Advanced Select on select inputs in Address Fields.
+- Improved compatibility with Gravity Forms Theme Framework.
+- Added dynamic display of multiselect field options in the GPADVS field preview UI.
+- Added live UI preview of GPADVS-enabled fields in form editor.
+- Improved GPPA filter so that if "Advanced Select Search Value" is chosen, the `contains` operator is automatically used.
+- Fixed issue where old GPPA search results would remain in a Tom Select dropdown when starting a new query after selecting an item.
+- Added ability to filter the minimum search query for selects and the ability to optionally load all results upon field focus.
+- Added `gpadvs_js_init_args` filter to allow for configuring options passed to form JS script.
+- Fixed potential error when adding the "virtual_scroll" Tom Select plugin.
+- Added "remove button" to each item in a multi-select for easy removal.
+- Improved Multi Select field settings so that the accessibility warning is hidden if GPADVS is enabled.
+- Added support for Advanced Select on select inputs in Address Fields.
 
 ## 1.0-beta-1.2
 
-	- Improved support for dynamically populating values of lazy-loaded multi-select fields.
+- Improved support for dynamically populating values of lazy-loaded multi-select fields.
 
 ## 1.0-beta-1.1
 
-	- Fixed issue where GP Easy Passthrough would not not auto populate Advanced Selected enabled Multi Select Fields correctly.
+- Fixed issue where GP Easy Passthrough would not not auto populate Advanced Selected enabled Multi Select Fields correctly.
 
 ## 1.0-beta-1
 
-	- Hello World!
+- Hello World!

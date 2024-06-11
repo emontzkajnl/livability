@@ -3,7 +3,7 @@
  * Plugin Name: GP Advanced Select
  * Description: Modern Drop Down and Multi Select fields with search and powerful integrations.
  * Plugin URI: https://gravitywiz.com/documentation/gravity-forms-advanced-select/
- * Version: 1.0.1
+ * Version: 1.1.7
  * Author: Gravity Wiz
  * Author URI: https://gravitywiz.com/
  * License: GPL2
@@ -12,7 +12,7 @@
  * Domain Path: /languages
  */
 
-define( 'GP_ADVANCED_SELECT_VERSION', '1.0.1' );
+define( 'GP_ADVANCED_SELECT_VERSION', '1.1.7' );
 
 require plugin_dir_path( __FILE__ ) . 'includes/class-gp-bootstrap.php';
 

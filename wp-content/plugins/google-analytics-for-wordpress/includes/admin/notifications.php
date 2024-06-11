@@ -190,18 +190,6 @@ class MonsterInsights_Notifications {
 				continue;
 			}
 
-			// Ignore if notification existed before installing MonsterInsights.
-			// Prevents bombarding the user with notifications after activation.
-			$over_time = get_option( 'monsterinsights_over_time', array() );
-
-			if (
-				! empty( $over_time['installed_date'] ) &&
-				! empty( $notification['start'] ) &&
-				$over_time['installed_date'] > strtotime( $notification['start'] )
-			) {
-				continue;
-			}
-
 			$data[] = $notification;
 		}
 
@@ -407,7 +395,7 @@ class MonsterInsights_Notifications {
 			return false;
 		}
 
-		$option = $this->get_option();
+		$option = $this->get_option( false );
 
 		$current_notifications = $option['events'];
 
@@ -620,5 +608,14 @@ class MonsterInsights_Notifications {
 
 		monsterinsights_notification_event_runner()->delete_data();
 
+	}
+
+	/**
+	 * This generates the markup for the notifications indicator for expired license.
+	 *
+	 * @return string
+	 */
+	public function get_license_expired_indicator() {
+			return '<span class="monsterinsights-menu-notification-indicator expired-license">!</span>';
 	}
 }

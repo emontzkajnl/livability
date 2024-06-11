@@ -54,10 +54,22 @@ jQuery(document).ready(function ($) {
 
     let position = $('#eztoc-general').find("select[name='ez-toc-settings[position]']");
     let customParaNumber = $('#eztoc-general').find("input[name='ez-toc-settings[custom_para_number]']");
+    let customImgNumber = $('#eztoc-general').find("input[name='ez-toc-settings[custom_img_number]']");
+    let blockQCheckB = $('#eztoc-general').find("input[name='ez-toc-settings[blockqoute_checkbox]']");
     if($(position).val() == 'aftercustompara'){
         $(customParaNumber).parents('tr').show();
     }else{
         $(customParaNumber).parents('tr').hide();
+    }
+    if($(position).val() == 'afterpara' || $(position).val() == 'aftercustompara'){
+        $(blockQCheckB).parents('tr').show();
+    }else{
+        $(blockQCheckB).parents('tr').hide();
+    }
+    if($(position).val() == 'aftercustomimg'){
+        $(customImgNumber).parents('tr').show();
+    }else{
+        $(customImgNumber).parents('tr').hide();
     }
     $(document).on("change", "select[name='ez-toc-settings[position]']", function() {
         if($(this).val() == 'aftercustompara'){
@@ -65,7 +77,104 @@ jQuery(document).ready(function ($) {
         }else{
             $(customParaNumber).parents('tr').hide(500);
         }    
+        if($(this).val() == 'afterpara' || $(this).val() == 'aftercustompara'){
+            $(blockQCheckB).parents('tr').show(500);
+        }else{
+            $(blockQCheckB).parents('tr').hide(500);
+        }
+        if($(this).val() == 'aftercustomimg'){
+            $(customImgNumber).parents('tr').show(500);    
+        }else{
+            $(customImgNumber).parents('tr').hide(500);
+        }
     });
+    let check_method = $('#eztoc-general').find("select[name='ez-toc-settings[toc_loading]']");
+    let smoothCheck = $('#eztoc-general').find("input[name='ez-toc-settings[smooth_scroll]']");
+    let anchsJump = $('#eztoc-general').find("input[name='ez-toc-settings[avoid_anch_jump]']");
+    let js_where = $('#eztoc-advanced').find("select[name='ez-toc-settings[load_js_in]']");
+    if($(check_method).val() == 'js'){
+        $(smoothCheck).parents('tr').show();
+        $(anchsJump).parents('tr').show();
+        $(js_where).parents('tr').show();
+    }else{
+        $(smoothCheck).parents('tr').hide();
+        $(anchsJump).parents('tr').hide();
+        $(js_where).parents('tr').hide();
+    }
+    $(document).on("change", "select[name='ez-toc-settings[toc_loading]']", function() {
+        if($(this).val() == 'js'){
+            $(smoothCheck).parents('tr').show(500);    
+            $(anchsJump).parents('tr').show(500);    
+            $(js_where).parents('tr').show(500);    
+        }else{
+            $(smoothCheck).parents('tr').hide(500);
+            $(anchsJump).parents('tr').hide(500);
+            $(js_where).parents('tr').hide(500);
+        }
+    });
+
+    let stickyHighlight = $('#eztoc-sticky').find("input[name='ez-toc-settings[sticky_highlight_heading]']");
+    let stickyHighlightBg = $('#eztoc-sticky').find("input[name='ez-toc-settings[sticky_highlight_bg_colour]']");
+    let stickyHighlightTitle = $('#eztoc-sticky').find("input[name='ez-toc-settings[sticky_highlight_title_colour]']");
+    if($(stickyHighlight).prop('checked') == true){
+        $(stickyHighlightBg).parents('tr').show();
+        $(stickyHighlightTitle).parents('tr').show();
+    }else{
+        $(stickyHighlightBg).parents('tr').hide();
+        $(stickyHighlightTitle).parents('tr').hide();
+    }
+    $(document).on("change", "input[name='ez-toc-settings[sticky_highlight_heading]']", function() {
+        if($(this).prop('checked') == true){
+            $(stickyHighlightBg).parents('tr').show(500);    
+            $(stickyHighlightTitle).parents('tr').show(500);    
+        }else{
+            $(stickyHighlightBg).parents('tr').hide(500);
+            $(stickyHighlightTitle).parents('tr').hide(500);
+        }
+    });
+
+    let s_position = jQuery('#ez-toc').find("select[name='ez-toc-settings[position-specific]']");
+    let s_customParaNumber = jQuery('#ez-toc').find("input[name='ez-toc-settings[s_custom_para_number]']");
+    let s_customImgNumber = jQuery('#ez-toc').find("input[name='ez-toc-settings[s_custom_img_number]']");
+    let s_blockQCheckB = jQuery('#ez-toc').find("input[name='ez-toc-settings[s_blockqoute_checkbox]']");
+
+    if(jQuery(s_position).val() == 'aftercustompara'){
+        jQuery(s_customParaNumber).parents('tr').show();
+    }else{
+        jQuery(s_customParaNumber).parents('tr').hide();
+    }
+    if(jQuery(s_position).val() == 'afterpara' || jQuery(s_position).val() == 'aftercustompara'){
+        jQuery(s_blockQCheckB).parents('tr').show();
+    }else{
+        jQuery(s_blockQCheckB).parents('tr').hide();
+    }
+    if(jQuery(s_position).val() == 'aftercustomimg'){
+        jQuery(s_customImgNumber).parents('tr').show();
+    }else{
+        jQuery(s_customImgNumber).parents('tr').hide();
+    }
+    jQuery('#ez-toc').on("change", "select[name='ez-toc-settings[position-specific]']", function() {
+        if(jQuery(this).val() == 'aftercustompara'){
+            jQuery(s_customParaNumber).parents('tr').show(500);    
+        }else{
+            jQuery(s_customParaNumber).parents('tr').hide(500);
+        }    
+        if(jQuery(this).val() == 'afterpara' || jQuery(this).val() == 'aftercustompara'){
+            jQuery(s_blockQCheckB).parents('tr').show(500);
+        }else{
+            jQuery(s_blockQCheckB).parents('tr').hide(500);
+        }
+        if(jQuery(this).val() == 'aftercustomimg'){
+            jQuery(s_customImgNumber).parents('tr').show(500);    
+        }else{
+            jQuery(s_customImgNumber).parents('tr').hide(500);
+        }
+    });
+
+    
+    
+
+    
 
 });
 
@@ -115,7 +224,8 @@ function ez_toc_clipboard(id, tooltipId, $this, event) {
     var copyText = $this.parentNode.parentNode.querySelectorAll("#" + id)[0];
     copyText.select();
     copyText.setSelectionRange(0, 99999);
-    unsecuredCopyToClipboard(copyText.value);
+    // unsecuredCopyToClipboard(copyText.value);
+    navigator.clipboard.writeText(copyText.value);
 
     var tooltip = $this.querySelectorAll('span.' + tooltipId)[0];
     tooltip.innerHTML = "Copied: " + copyText.value;
@@ -154,6 +264,7 @@ function ezTocSettingsTabsFixed() {
             var ezTocGeneralTabsLinkAppearance = document.querySelector("#general #eztoc-tabs #eztoc-link-appearance");
             var ezTocGeneralTabsLinkAdvanced = document.querySelector("#general #eztoc-tabs #eztoc-link-advanced");
             var ezTocGeneralTabsLinkShortcode = document.querySelector("#general #eztoc-tabs #eztoc-link-shortcode");
+            var ezTocGeneralTabsLinkSticky = document.querySelector("#general #eztoc-tabs #eztoc-link-sticky");
             var ezTocGeneralTabsLinkCompatibility = document.querySelector("#general #eztoc-tabs #eztoc-link-compatibility");
             var ezTocGeneralTabsLinkIeSettings = document.querySelector("#general #eztoc-tabs #eztoc-link-iesettings");
             var ezTocGeneralTabsLinkProSettings = document.querySelector("#general #eztoc-tabs #eztoc-link-prosettings");
@@ -166,10 +277,13 @@ function ezTocSettingsTabsFixed() {
             var ezTocGeneralContainerShortcode = document.querySelector("#general div#eztoc-shortcode").offsetTop - minusOffsetTop;
             var ezTocGeneralContainerCompatibility = document.querySelector("#general div#eztoc-compatibility").offsetTop - minusOffsetTop;
             var ezTocGeneralContainerIeSettings = document.querySelector("#general div#eztoc-iesettings").offsetTop - minusOffsetTop;
+            var ezTocGeneralContainerSticky = document.querySelector("#eztoc-sticky").offsetTop - minusOffsetTop;
+           
             if(ez_toc_pro_settings_link_paid !== null && ez_toc_pro_settings_link_paid.length > 0) {
                 var ezTocGeneralContainerProSettings = document.querySelector("#general div#eztoc-prosettings").offsetTop - minusOffsetTop - 150;
             } else {
-                ezTocGeneralContainerCompatibility -= 250;
+                ezTocGeneralContainerCompatibility -= 150;
+                ezTocGeneralContainerIeSettings -= 150;
             }
             ezTocGeneralTabsLinkGeneral.classList.add('active');
             ezTocGeneralTabsLinkAppearance.classList.remove('active');
@@ -177,6 +291,7 @@ function ezTocSettingsTabsFixed() {
             ezTocGeneralTabsLinkShortcode.classList.remove('active');
             ezTocGeneralTabsLinkCompatibility.classList.remove('active');
             ezTocGeneralTabsLinkIeSettings.classList.remove('active');
+            ezTocGeneralTabsLinkSticky.classList.remove('active');
             if (ezTocElementProSettingsContainer.length > 0 && ezTocGeneralTabsLinkProSettings !== null)
                 ezTocGeneralTabsLinkProSettings.classList.remove('active');
 
@@ -201,6 +316,7 @@ function ezTocSettingsTabsFixed() {
                 ezTocGeneralTabsLinkShortcode.classList.remove('active');
                 ezTocGeneralTabsLinkCompatibility.classList.remove('active');
                 ezTocGeneralTabsLinkIeSettings.classList.remove('active');
+                ezTocGeneralTabsLinkSticky.classList.remove('active');
                 if(ez_toc_pro_settings_link_paid !== null && ez_toc_pro_settings_link_paid.length > 0 && ezTocElementProSettingsContainer.length > 0 && ezTocGeneralTabsLinkProSettings !== null)
                     ezTocGeneralTabsLinkProSettings.classList.remove('active');
             }
@@ -211,6 +327,7 @@ function ezTocSettingsTabsFixed() {
                 ezTocGeneralTabsLinkShortcode.classList.remove('active');
                 ezTocGeneralTabsLinkCompatibility.classList.remove('active');
                 ezTocGeneralTabsLinkIeSettings.classList.remove('active');
+                ezTocGeneralTabsLinkSticky.classList.remove('active');
                if(ez_toc_pro_settings_link_paid !== null && ez_toc_pro_settings_link_paid.length > 0 && ezTocElementProSettingsContainer.length > 0 && ezTocGeneralTabsLinkProSettings !== null)
                     ezTocGeneralTabsLinkProSettings.classList.remove('active');
             }
@@ -221,6 +338,7 @@ function ezTocSettingsTabsFixed() {
                 ezTocGeneralTabsLinkShortcode.classList.remove('active');
                 ezTocGeneralTabsLinkCompatibility.classList.remove('active');
                 ezTocGeneralTabsLinkIeSettings.classList.remove('active');
+                ezTocGeneralTabsLinkSticky.classList.remove('active');
                 if(ez_toc_pro_settings_link_paid !== null && ez_toc_pro_settings_link_paid.length > 0 && ezTocElementProSettingsContainer.length > 0 && ezTocGeneralTabsLinkProSettings !== null)
                     ezTocGeneralTabsLinkProSettings.classList.remove('active');
             }
@@ -231,16 +349,30 @@ function ezTocSettingsTabsFixed() {
                 ezTocGeneralTabsLinkShortcode.classList.add('active');
                 ezTocGeneralTabsLinkCompatibility.classList.remove('active');
                 ezTocGeneralTabsLinkIeSettings.classList.remove('active');
+                ezTocGeneralTabsLinkSticky.classList.remove('active');
                 if(ez_toc_pro_settings_link_paid !== null && ez_toc_pro_settings_link_paid.length > 0 && ezTocElementProSettingsContainer.length > 0 && ezTocGeneralTabsLinkProSettings !== null)
                     ezTocGeneralTabsLinkProSettings.classList.remove('active');
             }
-            if (y >= ezTocGeneralTabsLinkCompatibility) {
+            if (y >= ezTocGeneralContainerSticky) {
+                ezTocGeneralTabsLinkGeneral.classList.remove('active');
+                ezTocGeneralTabsLinkAppearance.classList.remove('active');
+                ezTocGeneralTabsLinkAdvanced.classList.remove('active');
+                ezTocGeneralTabsLinkShortcode.classList.remove('active');
+                ezTocGeneralTabsLinkCompatibility.classList.remove('active');
+                ezTocGeneralTabsLinkIeSettings.classList.remove('active');
+                ezTocGeneralTabsLinkSticky.classList.add('active');
+                
+                if(ez_toc_pro_settings_link_paid !== null && ez_toc_pro_settings_link_paid.length > 0 && ezTocElementProSettingsContainer.length > 0 && ezTocGeneralTabsLinkProSettings !== null)
+                    ezTocGeneralTabsLinkProSettings.classList.remove('active');
+            }
+            if (y >= ezTocGeneralContainerCompatibility) {
                 ezTocGeneralTabsLinkGeneral.classList.remove('active');
                 ezTocGeneralTabsLinkAppearance.classList.remove('active');
                 ezTocGeneralTabsLinkAdvanced.classList.remove('active');
                 ezTocGeneralTabsLinkShortcode.classList.remove('active');
                 ezTocGeneralTabsLinkCompatibility.classList.add('active');
                 ezTocGeneralTabsLinkIeSettings.classList.remove('active');
+                ezTocGeneralTabsLinkSticky.classList.remove('active');
                 if(ez_toc_pro_settings_link_paid !== null && ez_toc_pro_settings_link_paid.length > 0 && ezTocElementProSettingsContainer.length > 0 && ezTocGeneralTabsLinkProSettings !== null)
                     ezTocGeneralTabsLinkProSettings.classList.remove('active');
             }
@@ -251,6 +383,7 @@ function ezTocSettingsTabsFixed() {
                 ezTocGeneralTabsLinkShortcode.classList.remove('active');
                 ezTocGeneralTabsLinkCompatibility.classList.remove('active');
                 ezTocGeneralTabsLinkIeSettings.classList.add('active');
+                ezTocGeneralTabsLinkSticky.classList.remove('active');
                 if(ez_toc_pro_settings_link_paid !== null && ez_toc_pro_settings_link_paid.length > 0 && ezTocElementProSettingsContainer.length > 0 && ezTocGeneralTabsLinkProSettings !== null)
                     ezTocGeneralTabsLinkProSettings.classList.remove('active');
             }
@@ -261,6 +394,7 @@ function ezTocSettingsTabsFixed() {
                 ezTocGeneralTabsLinkShortcode.classList.remove('active');
                 ezTocGeneralTabsLinkCompatibility.classList.remove('active');
                 ezTocGeneralTabsLinkIeSettings.classList.remove('active');
+                ezTocGeneralTabsLinkSticky.classList.remove('active');
                 if(ez_toc_pro_settings_link_paid !== null && ez_toc_pro_settings_link_paid.length > 0 && ezTocElementProSettingsContainer.length > 0 && ezTocGeneralTabsLinkProSettings !== null)
                     ezTocGeneralTabsLinkProSettings.classList.add('active');
             }
@@ -270,3 +404,18 @@ function ezTocSettingsTabsFixed() {
     }
 }
 ezTocSettingsTabsFixed();
+
+function no_heading_text(params) {
+    if(jQuery("input[name='ez-toc-settings[no_heading_text]']").prop('checked') == true) {
+        jQuery("input[name='ez-toc-settings[no_heading_text_value]']").parents('tr').show(200);
+    } else {
+        jQuery("input[name='ez-toc-settings[no_heading_text_value]']").parents('tr').hide(200);
+    }
+}
+jQuery(document).on("change", "input[name='ez-toc-settings[no_heading_text]']", function() {
+    no_heading_text();
+});
+no_heading_text();
+
+
+
