@@ -26,28 +26,6 @@ class Permalink_Manager_Helper_Functions {
 	}
 
 	/**
-	 * Support for multidimensional arrays - array_map()
-	 *
-	 * @param string $function
-	 * @param array $input
-	 *
-	 * @return array
-	 */
-	static function multidimensional_array_map( $function, $input ) {
-		$output = array();
-
-		if ( is_array( $input ) ) {
-			foreach ( $input as $key => $val ) {
-				$output[ $key ] = ( is_array( $val ) ? self::multidimensional_array_map( $function, $val ) : $function( $val ) );
-			}
-		} else {
-			$output = $function( $input );
-		}
-
-		return $output;
-	}
-
-	/**
 	 * Get the primary term for the specific post
 	 *
 	 * @param int $post_id
@@ -94,6 +72,10 @@ class Permalink_Manager_Helper_Functions {
 		else if ( class_exists( '\SmartCrawl\SmartCrawl' )  ) {
 			$primary_cat_id = get_post_meta( $post_id, "wds_primary_{$taxonomy}", true );
 			$primary_term   = ( ! empty( $primary_cat_id ) ) ? get_term( $primary_cat_id, $taxonomy ) : '';
+		} // F. All In One SEO Pro
+		else if ( class_exists( '\AIOSEO\Plugin\Pro\Standalone\PrimaryTerm' ) ) {
+			$primary_term_class = new \AIOSEO\Plugin\Pro\Standalone\PrimaryTerm();
+			$primary_term       = ( method_exists( $primary_term_class, 'getPrimaryTerm' ) ) ? $primary_term_class->getPrimaryTerm( $post_id, $taxonomy ) : '';
 		}
 
 		if ( ! empty( $primary_term ) && ! is_wp_error( $primary_term ) ) {
@@ -802,6 +784,7 @@ class Permalink_Manager_Helper_Functions {
 			$clean = preg_replace( "/[,]+/", "", $clean );
 			$clean = preg_replace( '/([\.]+)(?![a-z]{3,4}$)/i', '', $clean );
 			$clean = preg_replace( '/([-\s+]\/[-\s+])/', '-', $clean );
+			$clean = preg_replace( '|-+|', '-', $clean );
 		} else {
 			$clean = preg_replace( "/[\s]+/", "-", $clean );
 		}
@@ -811,7 +794,10 @@ class Permalink_Manager_Helper_Functions {
 		$clean = preg_replace( '/([\/]+)/', '/', $clean );
 
 		// Trim slashes, dashes and whitespaces
-		return trim( $clean, " /-" );
+		$clean = trim( $clean, " /-" );
+
+		// Allow to filter the slug after it is sanitized
+		return apply_filters( 'permalink_manager_sanitize_title', $clean, $str, $keep_percent_sign, $force_lowercase, $sanitize_slugs );
 	}
 
 	/**
@@ -832,7 +818,7 @@ class Permalink_Manager_Helper_Functions {
 		// Encode the URI before placeholders are removed
 		$chunks = explode( '/', $default_uri );
 		foreach ( $chunks as &$chunk ) {
-			if ( ! preg_match( "/^(%.+?%)$/", $chunk ) ) {
+			if ( ! preg_match( "/^(%.+?%)$/", $chunk ) && preg_match( '/%[A-F0-9]{2}%[A-F0-9]{2}/i', $chunk ) ) {
 				$chunk = rawurldecode( $chunk );
 			}
 		}

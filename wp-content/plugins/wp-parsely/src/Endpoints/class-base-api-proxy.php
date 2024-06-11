@@ -20,6 +20,7 @@ use WP_REST_Server;
 use function Parsely\Utils\convert_endpoint_to_filter_key;
 use function Parsely\Utils\get_date_format;
 use function Parsely\Utils\get_formatted_duration;
+use function Parsely\Utils\parsely_is_https_supported;
 
 /**
  * Configures a REST API endpoint for use.
@@ -63,18 +64,20 @@ abstract class Base_API_Proxy {
 	 * Cached "proxy" to the Parse.ly API endpoint.
 	 *
 	 * @param WP_REST_Request $request The request object.
-	 *
 	 * @return stdClass|WP_Error stdClass containing the data or a WP_Error object on failure.
 	 */
 	abstract public function get_items( WP_REST_Request $request );
 
 	/**
-	 * Determines if there are enough permissions to call the endpoint.
+	 * Returns whether the endpoint is available for access by the current
+	 * user.
+	 *
+	 * @since 3.14.0 Renamed from `permission_callback()`.
 	 *
 	 * @return bool
 	 */
-	public function permission_callback(): bool {
-		return $this->api->is_user_allowed_to_make_api_call();
+	public function is_available_to_current_user(): bool {
+		return $this->api->is_available_to_current_user();
 	}
 
 	/**
@@ -91,9 +94,10 @@ abstract class Base_API_Proxy {
 	/**
 	 * Registers the endpoint's WP REST route.
 	 *
-	 * @param string $endpoint The endpoint's route (e.g. /stats/posts).
+	 * @param string        $endpoint  The endpoint's route (e.g. /stats/posts).
+	 * @param array<string> $methods   The HTTP methods to use for the endpoint.
 	 */
-	protected function register_endpoint( string $endpoint ): void {
+	protected function register_endpoint( string $endpoint, array $methods = array( WP_REST_Server::READABLE ) ): void {
 		if ( ! apply_filters( 'wp_parsely_enable_' . convert_endpoint_to_filter_key( $endpoint ) . '_api_proxy', true ) ) {
 			return;
 		}
@@ -114,11 +118,11 @@ abstract class Base_API_Proxy {
 
 		$rest_route_args = array(
 			array(
-				'methods'             => WP_REST_Server::READABLE,
+				'methods'             => $methods,
 				'callback'            => array( $this, 'get_items' ),
-				'permission_callback' => array( $this, 'permission_callback' ),
+				'permission_callback' => array( $this, 'is_available_to_current_user' ),
 				'args'                => $get_items_args,
-				'show_in_index'       => $this->permission_callback(),
+				'show_in_index'       => $this->is_available_to_current_user(),
 			),
 		);
 
@@ -129,28 +133,15 @@ abstract class Base_API_Proxy {
 	 * Cached "proxy" to the endpoint.
 	 *
 	 * @param WP_REST_Request $request            The request object.
-	 * @param bool            $require_api_secret Specifies if the API Secret is
-	 *                                            required.
-	 * @param string          $param_item         The param element to use to
-	 *                                            get the items.
-	 *
+	 * @param bool            $require_api_secret Specifies if the API Secret is required.
+	 * @param string|null     $param_item         The param element to use to get the items.
 	 * @return stdClass|WP_Error stdClass containing the data or a WP_Error object on failure.
 	 */
 	protected function get_data( WP_REST_Request $request, bool $require_api_secret = true, string $param_item = null ) {
-		if ( false === $this->parsely->site_id_is_set() ) {
-			return new WP_Error(
-				'parsely_site_id_not_set',
-				__( 'A Parse.ly Site ID must be set in site options to use this endpoint', 'wp-parsely' ),
-				array( 'status' => 403 )
-			);
-		}
-
-		if ( true === $require_api_secret && false === $this->parsely->api_secret_is_set() ) {
-			return new WP_Error(
-				'parsely_api_secret_not_set',
-				__( 'A Parse.ly API Secret must be set in site options to use this endpoint', 'wp-parsely' ),
-				array( 'status' => 403 )
-			);
+		// Validate Site ID and secret.
+		$validation = $this->validate_apikey_and_secret( $require_api_secret );
+		if ( is_wp_error( $validation ) ) {
+			return $validation;
 		}
 
 		if ( null !== $param_item ) {
@@ -176,6 +167,35 @@ abstract class Base_API_Proxy {
 	}
 
 	/**
+	 * Validates that the Site ID and secret are set.
+	 * If the API secret is not required, it will not be validated.
+	 *
+	 * @since 3.13.0
+	 *
+	 * @param bool $require_api_secret Specifies if the API Secret is required.
+	 * @return WP_Error|bool
+	 */
+	protected function validate_apikey_and_secret( bool $require_api_secret = true ) {
+		if ( false === $this->parsely->site_id_is_set() ) {
+			return new WP_Error(
+				'parsely_site_id_not_set',
+				__( 'A Parse.ly Site ID must be set in site options to use this endpoint', 'wp-parsely' ),
+				array( 'status' => 403 )
+			);
+		}
+
+		if ( $require_api_secret && false === $this->parsely->api_secret_is_set() ) {
+			return new WP_Error(
+				'parsely_api_secret_not_set',
+				__( 'A Parse.ly API Secret must be set in site options to use this endpoint', 'wp-parsely' ),
+				array( 'status' => 403 )
+			);
+		}
+
+		return true;
+	}
+
+	/**
 	 * Extracts the post data from the passed object.
 	 *
 	 * Should only be used with endpoints that return post data.
@@ -183,7 +203,6 @@ abstract class Base_API_Proxy {
 	 * @since 3.10.0
 	 *
 	 * @param stdClass $item The object to extract the data from.
-	 *
 	 * @return array<string, mixed> The extracted data.
 	 */
 	protected function extract_post_data( stdClass $item ): array {
@@ -221,10 +240,16 @@ abstract class Base_API_Proxy {
 			// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.url_to_postid_url_to_postid
 			$post_id = url_to_postid( $item->url ); // 0 if the post cannot be found.
 
-			$data['dashUrl'] = Parsely::get_dash_url( $site_id, $item->url );
-			$data['id']      = Parsely::get_url_with_itm_source( $item->url, null ); // Unique.
+			$post_url = Parsely::get_url_with_itm_source( $item->url, null );
+			if ( parsely_is_https_supported() ) {
+				$post_url = str_replace( 'http://', 'https://', $post_url );
+			}
+
+			$data['rawUrl']  = $post_url;
+			$data['dashUrl'] = Parsely::get_dash_url( $site_id, $post_url );
+			$data['id']      = Parsely::get_url_with_itm_source( $post_url, null ); // Unique.
 			$data['postId']  = $post_id; // Might not be unique.
-			$data['url']     = Parsely::get_url_with_itm_source( $item->url, $this->itm_source );
+			$data['url']     = Parsely::get_url_with_itm_source( $post_url, $this->itm_source );
 
 			// Set thumbnail URL, falling back to the Parse.ly thumbnail if needed.
 			$thumbnail_url = get_the_post_thumbnail_url( $post_id, 'thumbnail' );
@@ -246,7 +271,6 @@ abstract class Base_API_Proxy {
 	 * @since 3.10.0
 	 *
 	 * @param array<stdClass> $response The response received by the proxy.
-	 *
 	 * @return array<stdClass> The generated data.
 	 */
 	protected function generate_post_data( array $response ): array {

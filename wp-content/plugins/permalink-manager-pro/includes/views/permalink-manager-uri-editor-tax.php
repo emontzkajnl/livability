@@ -229,12 +229,6 @@ class Permalink_Manager_Tax_Uri_Editor_Table extends WP_List_Table {
 		$sql_query = apply_filters( 'permalink_manager_filter_uri_editor_query', $sql_query, $this, $sql_parts, $is_taxonomy = true );
 		$all_items = $wpdb->get_results( $sql_query, ARRAY_A );
 
-		// Debug SQL query
-		if ( isset( $_REQUEST['debug_editor_sql'] ) ) {
-			$debug_txt = "<textarea style=\"width:100%;height:300px\">{$sql_query} \n\nOffset: {$offset} \nPage: {$current_page}\nPer page: {$per_page} \nTotal: {$total_items}</textarea>";
-			wp_die( $debug_txt );
-		}
-
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,
 			'per_page'    => $per_page

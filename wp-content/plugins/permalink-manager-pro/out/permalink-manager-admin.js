@@ -5,9 +5,9 @@ jQuery(document).ready(function() {
 	 */
 	var checkbox_actions = ['select_all', 'unselect_all'];
  	checkbox_actions.forEach(function(element) {
-		jQuery('#permalink-manager .' + element).on('click', function() {
+		jQuery(document).on('click', '#permalink-manager .' + element, function() {
 			jQuery(this).parents('.field-container').find('.checkboxes input[type="checkbox"]').each(function() {
-				var action = (element == 'select_all') ? true : false;
+				var action = (element === 'select_all');
 				jQuery(this).prop('checked', action);
 			});
 
@@ -170,21 +170,13 @@ jQuery(document).ready(function() {
 					action: 'pm_detect_duplicates',
 					custom_uris: all_custom_uris_values
 				},
-				success: function(data) {
-					if(data.length > 5) {
-						try {
-							var results = JSON.parse(data);
-						} catch (e) {
-							console.log(e);
-							console.log(data);
-							return;
-						}
-
+				success: function (data) {
+					if (typeof data === 'object' && data !== null) {
 						// Loop through results
-						jQuery.each(results, function(key, is_duplicate) {
+						jQuery.each(data, function (key, is_duplicate) {
 							var alert_container = jQuery('.custom_uri[data-element-id="' + key + '"]').parents('.custom_uri_container').find('.duplicated_uri_alert');
 
-							if(is_duplicate) {
+							if (is_duplicate) {
 								jQuery(alert_container).text(is_duplicate);
 							} else {
 								jQuery(alert_container).empty();
@@ -209,9 +201,8 @@ jQuery(document).ready(function() {
 			// Wait until user finishes typing
 			custom_uri_check_timeout = setTimeout(function() {
 					permalink_manager_duplicate_check(input);
-			}, 500);
+			}, 1000);
 		});
-
 	});
 
 	/**
@@ -669,7 +660,11 @@ jQuery(document).ready(function() {
 			let auto_update = item_row.find(".permalink-manager-col-uri").attr('data-disabled');
 
 			if(typeof auto_update !== "undefined" && (auto_update == 1 || auto_update == 2)) {
-				custom_uri_field.attr('disabled', 'disabled');
+				if(auto_update == 1) {
+					custom_uri_field.attr('readonly', 'readonly');
+				} else if(auto_update == 2) {
+					custom_uri_field.attr('disabled', 'disabled');
+				}
 			}
 
 			// Set the element ID

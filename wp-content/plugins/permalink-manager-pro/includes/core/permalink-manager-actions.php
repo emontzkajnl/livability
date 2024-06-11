@@ -134,11 +134,6 @@ class Permalink_Manager_Actions {
 			self::fix_uri_duplicates();
 		}
 
-		// 4. Remove items without keys
-		/*if(!empty($permalink_manager_uris[null])) {
-			unset($permalink_manager_uris[null]);
-		}*/
-
 		// Save cleared URIs & Redirects
 		if ( $removed_uris > 0 || $removed_redirects > 0 ) {
 			update_option( 'permalink-manager-uris', array_filter( $permalink_manager_uris ) );
@@ -563,9 +558,9 @@ class Permalink_Manager_Actions {
 
 		// Get the name of the function
 		if ( isset( $_POST['regenerate'] ) && wp_verify_nonce( $_POST['regenerate'], 'permalink-manager' ) ) {
-			$function_name = 'regenerate_all_permalinks';
+			$operation = 'regenerate';
 		} else if ( isset( $_POST['find_and_replace'] ) && wp_verify_nonce( $_POST['find_and_replace'], 'permalink-manager' ) && ! empty( $_POST['old_string'] ) && ! empty( $_POST['new_string'] ) ) {
-			$function_name = 'find_and_replace';
+			$operation = 'find_and_replace';
 		}
 
 		// Get the session ID
@@ -595,9 +590,7 @@ class Permalink_Manager_Actions {
 			}
 		}
 
-		// Check if both strings are set for "Find and replace" tool
-		if ( ! empty( $function_name ) && ! empty( $content_type ) && empty( $error ) ) {
-
+		if ( ! empty( $operation ) && empty( $error ) ) {
 			// Hotfix for WPML (start)
 			if ( $sitepress ) {
 				remove_filter( 'get_terms_args', array( $sitepress, 'get_terms_args_filter' ), 10 );
@@ -607,14 +600,8 @@ class Permalink_Manager_Actions {
 			}
 
 			// Get the mode
-			$mode = isset( $_POST['mode'] ) ? $_POST['mode'] : 'custom_uris';
-
-			// Get the content type
-			if ( $content_type == 'taxonomies' ) {
-				$class_name = 'Permalink_Manager_URI_Functions_Tax';
-			} else {
-				$class_name = 'Permalink_Manager_URI_Functions_Post';
-			}
+			$mode         = ( isset( $_POST['mode'] ) ) ? $_POST['mode'] : 'custom_uris';
+			$preview_mode = ( ! empty( $_POST['preview_mode'] ) ) ? true : false;
 
 			// Get items (try to get them from transient)
 			$items = get_transient( "pm_{$uniq_id}" );
@@ -624,7 +611,11 @@ class Permalink_Manager_Actions {
 			$chunk_size = apply_filters( 'permalink_manager_chunk_size', 50 );
 
 			if ( empty( $items ) && ! empty ( $chunk_size ) ) {
-				$items = $class_name::get_items();
+				if ( $content_type == 'taxonomies' ) {
+					$items = Permalink_Manager_URI_Functions_Tax::get_items();
+				} else {
+					$items = Permalink_Manager_URI_Functions_Post::get_items();
+				}
 
 				if ( ! empty( $items ) ) {
 					// Count how many items need to be processed
@@ -649,7 +640,7 @@ class Permalink_Manager_Actions {
 
 			// Process the variables from $_POST object
 			$old_string = ( ! empty( $_POST['old_string'] ) ) ? str_replace( $home_url, '', esc_sql( $_POST['old_string'] ) ) : '';
-			$new_string = ( ! empty( $_POST['old_string'] ) ) ? str_replace( $home_url, '', esc_sql( $_POST['new_string'] ) ) : '';
+			$new_string = ( ! empty( $_POST['new_string'] ) ) ? str_replace( $home_url, '', esc_sql( $_POST['new_string'] ) ) : '';
 
 			// Process only one subarray
 			if ( ! empty( $items[ $iteration - 1 ] ) ) {
@@ -658,15 +649,14 @@ class Permalink_Manager_Actions {
 				// Check how many iterations are needed
 				$total_iterations = count( $items );
 
-				// Check if posts or terms should be updated
-				if ( $function_name == 'find_and_replace' ) {
-					$output = $class_name::find_and_replace( $chunk, $mode, $old_string, $new_string );
+				if ( $content_type == 'taxonomies' ) {
+					$output = Permalink_Manager_URI_Functions_Tax::bulk_process_items( $chunk, $mode, $operation, $old_string, $new_string, $preview_mode );
 				} else {
-					$output = $class_name::regenerate_all_permalinks( $chunk, $mode );
+					$output = Permalink_Manager_URI_Functions_Post::bulk_process_items( $chunk, $mode, $operation, $old_string, $new_string, $preview_mode );
 				}
 
 				if ( ! empty( $output['updated_count'] ) ) {
-					$return                  = array_merge( $return, (array) Permalink_Manager_UI_Elements::display_updated_slugs( $output['updated'], true ) );
+					$return                  = array_merge( $return, (array) Permalink_Manager_UI_Elements::display_updated_slugs( $output['updated'], true, true, $preview_mode ) );
 					$return['updated_count'] = $output['updated_count'];
 				}
 
@@ -706,8 +696,8 @@ class Permalink_Manager_Actions {
 	public function ajax_save_permalink() {
 		$element_id = ( ! empty( $_POST['permalink-manager-edit-uri-element-id'] ) ) ? sanitize_text_field( $_POST['permalink-manager-edit-uri-element-id'] ) : '';
 
-		if ( ! empty( $element_id ) && is_numeric( $element_id ) ) {
-			Permalink_Manager_URI_Functions_Post::update_post_uri( $element_id );
+		if ( ! empty( $element_id ) && is_numeric( $element_id ) && current_user_can( 'edit_post', $element_id ) ) {
+			Permalink_Manager_URI_Functions_Post::update_post_hook( $element_id );
 
 			// Reload URI Editor & clean post cache
 			clean_post_cache( $element_id );
@@ -717,32 +707,24 @@ class Permalink_Manager_Actions {
 
 	/**
 	 * Check if URI was used before
-	 *
-	 * @param string $uri
-	 * @param string $element_id
 	 */
-	function ajax_detect_duplicates( $uri = null, $element_id = null ) {
+	function ajax_detect_duplicates() {
 		$duplicate_alert = __( "Permalink is already in use, please select another one!", "permalink-manager" );
+		$duplicates_data = array();
 
 		if ( ! empty( $_REQUEST['custom_uris'] ) ) {
-			// Sanitize the array
-			$custom_uris      = Permalink_Manager_Helper_Functions::sanitize_array( $_REQUEST['custom_uris'] );
-			$duplicates_array = array();
+			$custom_uris = Permalink_Manager_Helper_Functions::sanitize_array( $_REQUEST['custom_uris'] );
 
 			// Check each URI
-			foreach ( $custom_uris as $element_id => $uri ) {
-				$duplicates_array[ $element_id ] = Permalink_Manager_Admin_Functions::is_uri_duplicated( $uri, $element_id ) ? $duplicate_alert : 0;
+			foreach ( $custom_uris as $raw_element_id => $element_uri ) {
+				$element_id                     = sanitize_key( $raw_element_id );
+				$duplicates_data[ $element_id ] = Permalink_Manager_Admin_Functions::is_uri_duplicated( $element_uri, $element_id ) ? $duplicate_alert : 0;
 			}
-
-			// Convert the output to JSON and stop the function
-			echo json_encode( $duplicates_array );
 		} else if ( ! empty( $_REQUEST['custom_uri'] ) && ! empty( $_REQUEST['element_id'] ) ) {
-			$is_duplicated = Permalink_Manager_Admin_Functions::is_uri_duplicated( $uri, $element_id );
-
-			echo ( $is_duplicated ) ? $duplicate_alert : 0;
+			$duplicates_data = Permalink_Manager_Admin_Functions::is_uri_duplicated( $_REQUEST['custom_uri'], sanitize_key( $_REQUEST['element_id'] ) );
 		}
 
-		die();
+		wp_send_json( $duplicates_data );
 	}
 
 	/**

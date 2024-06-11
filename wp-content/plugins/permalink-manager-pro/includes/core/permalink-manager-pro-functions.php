@@ -76,7 +76,7 @@ class Permalink_Manager_Pro_Functions {
 			$license_key = ( ! empty( $permalink_manager_options['licence']['licence_key'] ) ) ? $permalink_manager_options['licence']['licence_key'] : "";
 		}
 
-		return $license_key;
+		return preg_replace( "/[^a-zA-Z0-9-]/", "", $license_key );
 	}
 
 	/**
@@ -181,7 +181,7 @@ class Permalink_Manager_Pro_Functions {
 
 		$license_info_page = ( ! empty( $license_key ) ) ? sprintf( "https://permalinkmanager.pro/license-info/%s", trim( $license_key ) ) : "";
 
-		// There is no key defined
+		// There is no license key defined
 		if ( empty( $license_key ) ) {
 			$settings_page_url = Permalink_Manager_Admin_Functions::get_admin_url( "&section=settings" );
 			$expiration_info   = sprintf( __( 'Please paste the licence key to access all Permalink Manager Pro updates & features <a href="%s" target="_blank">on this page</a>.', 'permalink-manager' ), $settings_page_url );
@@ -190,35 +190,37 @@ class Permalink_Manager_Pro_Functions {
 		else if ( $exp_date == '-' ) {
 			$expiration_info = __( 'Your Permalink Manager Pro licence key is invalid!', 'permalink-manager' );
 			$expired         = 3;
-		} // Key expired
-		else if ( ! empty( $exp_date ) && $exp_date < time() ) {
-			$expiration_info = sprintf( __( 'Your Permalink Manager Pro licence key expired! Please renew your license key using <a href="%s" target="_blank">this link</a> to regain access to plugin updates and technical support.', 'permalink-manager' ), $license_info_page );
-			$expired         = 2;
-		} // License key is abused
-		else if ( ! empty( $exp_date ) && ! empty( $websites ) && $update_available === false ) {
-			$expiration_info = sprintf( __( 'Your Permalink Manager Pro license is already in use on another website and cannot be used to request automatic update for this domain.', 'permalink-manager' ), $license_info_page ) . " ";
-			$expiration_info .= sprintf( __( 'For further information, visit the <a href="%s" target="_blank"> License info</a> page.' ), $license_info_page );
-			$expired         = 2;
-		} // Valid lifetime license key
-		else if ( date( "Y", intval( $exp_date ) ) > 2028 ) {
-			$expiration_info = __( 'You own a lifetime licence key.', 'permalink-manager' );
-			$expired         = 0;
-		} // License key is valid
-		else if ( $exp_date ) {
-			// License key will expire in less than month
-			if ( $exp_date - MONTH_IN_SECONDS < time() ) {
-				$expiration_info = sprintf( __( 'Your Permalink Manager Pro license key will expire on <strong>%s</strong>. Please renew it to maintain access to plugin updates and technical support!' ), wp_date( get_option( 'date_format' ), $exp_date ) ) . " ";
+		} else {
+			// Key expired
+			if ( ! empty( $exp_date ) && $exp_date < time() ) {
+				$expiration_info = sprintf( __( 'Your Permalink Manager Pro licence key expired! Please renew your license key using <a href="%s" target="_blank">this link</a> to regain access to plugin updates and technical support.', 'permalink-manager' ), $license_info_page );
+				$expired         = 2;
+			} // License key is abused
+			else if ( ! empty( $exp_date ) && ! empty( $websites ) && $update_available === false ) {
+				$expiration_info = sprintf( __( 'Your Permalink Manager Pro license is already in use on another website and cannot be used to request automatic update for this domain.', 'permalink-manager' ), $license_info_page ) . " ";
 				$expiration_info .= sprintf( __( 'For further information, visit the <a href="%s" target="_blank"> License info</a> page.' ), $license_info_page );
-				$expired         = 1;
-			} // License key can be used
+				$expired         = 2;
+			} // Valid lifetime license key
+			else if ( date( "Y", intval( $exp_date ) ) > date( 'Y', strtotime( "+10 years", time() ) ) ) {
+				$expiration_info = __( 'You own a lifetime licence key.', 'permalink-manager' );
+				$expired         = 0;
+			} // License key is valid
+			else if ( $exp_date ) {
+				// License key will expire in less than month & do not display the alert if the developer license key is used
+				if ( $exp_date - MONTH_IN_SECONDS < time() && ! preg_match( '/^([A-G0-9]{4,8})-([A-G0-9]{4,8})$/', $license_key ) ) {
+					$expiration_info = sprintf( __( 'Your Permalink Manager Pro license key will expire on <strong>%s</strong>. Please renew it to maintain access to plugin updates and technical support!' ), wp_date( get_option( 'date_format' ), $exp_date ) ) . " ";
+					$expiration_info .= sprintf( __( 'For further information, visit the <a href="%s" target="_blank"> License info</a> page.' ), $license_info_page );
+					$expired         = 1;
+				} // License key can be used
+				else {
+					$expiration_info = sprintf( __( 'Your licence key is valid until %s.<br />To prolong it please go to <a href="%s" target="_blank">this page</a> for more information.', 'permalink-manager' ), date( get_option( 'date_format' ), $exp_date ), $license_info_page );
+					$expired         = 0;
+				}
+			} // Expiration data could not be downloaded
 			else {
-				$expiration_info = sprintf( __( 'Your licence key is valid until %s.<br />To prolong it please go to <a href="%s" target="_blank">this page</a> for more information.', 'permalink-manager' ), date( get_option( 'date_format' ), $exp_date ), $license_info_page );
+				$expiration_info = __( 'Expiration date could not be downloaded at this moment. Please try again in a few minutes.', 'permalink-manager' );
 				$expired         = 0;
 			}
-		} // Expiration data could not be downloaded
-		else {
-			$expiration_info = __( 'Expiration date could not be downloaded at this moment. Please try again in a few minutes.', 'permalink-manager' );
-			$expired         = 0;
 		}
 
 		// Do not return any text alert
@@ -269,7 +271,7 @@ class Permalink_Manager_Pro_Functions {
 		$exp_info_code = self::get_expiration_date( true, true, false );
 
 		if ( ! empty( $exp_info_text ) && $exp_info_code >= 2 ) {
-			$alerts['licence_key3'] = array( 'txt' => $exp_info_text, 'type' => 'notice-error', 'plugin_only' => false, 'dismissed_time' => DAY_IN_SECONDS * 3 );
+			$alerts['licence_key'] = array( 'txt' => $exp_info_text, 'type' => 'notice-error', 'plugin_only' => false, 'dismissed_time' => DAY_IN_SECONDS * 3 );
 		}
 
 		return $alerts;
@@ -480,7 +482,7 @@ class Permalink_Manager_Pro_Functions {
 
 				// Make sure that custom field is a string
 				if ( ! empty( $custom_field_value ) && is_string( $custom_field_value ) ) {
-					// Do not sanitize the custom field if 'no-sanitize' argument is added (eg. %__custom-field-name.no-sanitize%)
+					// Do not sanitize the custom field if 'no-sanitize' argument is added (e.g. %__custom-field-name.no-sanitize%)
 					if ( empty( $custom_field_arg ) || strpos( $custom_field_arg, 'no-sanitize' ) === false ) {
 						$custom_field_value = Permalink_Manager_Helper_Functions::sanitize_title( $custom_field_value );
 					}
@@ -562,6 +564,9 @@ class Permalink_Manager_Pro_Functions {
 
 			Permalink_Manager_Actions::clear_single_element_duplicated_redirect( $element_id, false, $new_uri );
 
+			// Remove empty subarray
+			$permalink_manager_redirects = array_filter( $permalink_manager_redirects );
+
 			update_option( 'permalink-manager-redirects', $permalink_manager_redirects );
 		}
 
@@ -580,16 +585,12 @@ class Permalink_Manager_Pro_Functions {
 	public static function save_external_redirect( $url, $element_id ) {
 		global $permalink_manager_external_redirects;
 
-		if ( empty( $url ) ) {
-			return;
-		}
-
 		$url = filter_var( $url, FILTER_SANITIZE_URL );
 
 		if ( ( empty( $url ) || filter_var( $url, FILTER_VALIDATE_URL ) === false ) && ! empty( $permalink_manager_external_redirects[ $element_id ] ) && isset( $_POST['permalink-manager-external-redirect'] ) ) {
 			unset( $permalink_manager_external_redirects[ $element_id ] );
 		} else {
-			$permalink_manager_external_redirects[ $element_id ] = $url;
+			$permalink_manager_external_redirects[ $element_id ] = esc_url( $url );
 		}
 
 		update_option( 'permalink-manager-external-redirects', $permalink_manager_external_redirects );
@@ -641,7 +642,7 @@ class Permalink_Manager_Pro_Functions {
 		woocommerce_wp_text_input( array(
 			'id'                => 'custom_uri',
 			'label'             => __( 'Coupon URI', 'permalink-manager' ),
-			'description'       => '<span class="duplicated_uri_alert"></span>' . __( 'The URIs are case-insensitive, eg. <strong>BLACKFRIDAY</strong> and <strong>blackfriday</strong> are equivalent.', 'permalink-manager' ),
+			'description'       => '<span class="duplicated_uri_alert"></span>' . __( 'The URIs are case-insensitive, e.g. <strong>BLACKFRIDAY</strong> and <strong>blackfriday</strong> are equivalent.', 'permalink-manager' ),
 			'value'             => $custom_uri,
 			'custom_attributes' => array( 'data-element-id' => $post->ID ),
 			//'desc_tip' => true
@@ -680,12 +681,11 @@ class Permalink_Manager_Pro_Functions {
 			return;
 		}
 
-		$old_uri = ( ! empty( $permalink_manager_uris[ $post_id ] ) ) ? $permalink_manager_uris[ $post_id ] : "";
+		$old_uri = Permalink_Manager_URI_Functions::get_single_uri( $post_id, false, true );
 		$new_uri = ( ! empty( $_POST['custom_uri'] ) ) ? $_POST['custom_uri'] : "";
 
-		if ( $old_uri != $new_uri ) {
-			$permalink_manager_uris[ $post_id ] = Permalink_Manager_Helper_Functions::sanitize_title( $new_uri, true );
-			update_option( 'permalink-manager-uris', $permalink_manager_uris );
+		if ( $old_uri !== $new_uri ) {
+			Permalink_Manager_URI_Functions::save_single_uri( $post_id, $new_uri, false, true );
 		}
 	}
 

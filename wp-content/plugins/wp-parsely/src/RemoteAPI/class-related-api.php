@@ -17,16 +17,20 @@ use Parsely\Parsely;
  *
  * @since 3.2.0
  */
-class Related_API extends Remote_API_Base {
+class Related_API extends Base_Endpoint_Remote {
+	protected const API_BASE_URL = Parsely::PUBLIC_API_BASE_URL;
 	protected const ENDPOINT     = '/related';
 	protected const QUERY_FILTER = 'wp_parsely_related_endpoint_args';
 
 	/**
-	 * Indicates whether the endpoint is public or protected behind permissions.
+	 * Returns whether the endpoint is available for access by the current
+	 * user.
 	 *
-	 * @since 3.7.0
+	 * @since 3.14.0
 	 *
-	 * @var bool
+	 * @return bool
 	 */
-	protected $is_public_endpoint = true;
+	public function is_available_to_current_user(): bool {
+		return true;
+	}
 }

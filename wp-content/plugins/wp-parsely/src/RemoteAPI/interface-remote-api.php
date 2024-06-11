@@ -20,16 +20,19 @@ interface Remote_API_Interface {
 	 * Returns the items provided by this interface.
 	 *
 	 * @param array<string, mixed> $query The query arguments to send to the remote API.
-	 * @param bool                 $associative (optional) When TRUE, returned objects will be converted into associative arrays.
-	 *
-	 * @return WP_Error|array<string, mixed>|false
+	 * @param bool                 $associative (optional) When TRUE, returned objects will be converted into
+	 *                             associative arrays.
+	 * @return array<string, mixed>|object|WP_Error
 	 */
-	public function get_items( $query, $associative = false );
+	public function get_items( array $query, bool $associative = false );
 
 	/**
-	 * Checks if the current user is allowed to make the API call.
+	 * Returns whether the endpoint is available for access by the current
+	 * user.
+	 *
+	 * @since 3.14.0 Renamed from `is_user_allowed_to_make_api_call()`.
 	 *
 	 * @return bool
 	 */
-	public function is_user_allowed_to_make_api_call(): bool;
+	public function is_available_to_current_user(): bool;
 }

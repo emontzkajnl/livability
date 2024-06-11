@@ -214,7 +214,7 @@ class Permalink_Manager_Settings {
 						'type'        => 'single_checkbox',
 						'label'       => __( 'RankMath\'s "Redirections" fix redirect conflict', 'permalink-manager' ),
 						'input_class' => '',
-						'description' => sprintf( '%s<br />%s', __( 'If enabled, the Permalink Manager plugin <strong>will stop a redirect set with the RankMath SEO plugin\'s "Source URLs"</strong> if this URL is already being used as a custom permalink by any post or term.', 'permalink-manager' ), __( 'This prevents redirect loops from forming when both plugins manage redirects on the same URL.', 'permalink-manager' ) )
+						'description' => sprintf( '%s<br />%s', __( 'If enabled, the Permalink Manager plugin <strong>will stop a redirect set with the RankMath SEO plugin\'s "Source URLs"</strong> if this URL is already being used as a custom permalink by any post or term.', 'permalink-manager' ), __( 'This prevents redirect loops when both plugins manage redirects on the same URL.', 'permalink-manager' ) )
 					),
 					'yoast_breadcrumbs'     => array(
 						'type'        => 'single_checkbox',
@@ -239,10 +239,11 @@ class Permalink_Manager_Settings {
 						'type'  => 'single_checkbox',
 						'label' => __( 'Show "Native slug" field in URI Editor', 'permalink-manager' )
 					),
-					'pagination_redirect'       => array(
-						'type'        => 'single_checkbox',
-						'label'       => __( 'Force 404 on non-existing pagination pages', 'permalink-manager' ),
-						'description' => __( 'If enabled, the non-existing pagination pages (for single posts) will return 404 ("Not Found") error.<br /><strong>Please disable it, if you encounter any problems with pagination pages or use custom pagination system.</strong>', 'permalink-manager' )
+					'pagination_redirect' => array(
+						'type'        => 'select',
+						'label'       => __( 'Handling non-existent pagination pages', 'permalink-manager' ),
+						'choices'     => array( 0 => __( 'Stop canonical redirect without forcing "404" status code', 'permalink-manager' ), 1 => __( 'Stop canonical redirect and force "404" status code', 'permalink-manager' ), 2 => __( 'Allow canonical redirect without forcing "404" status code', 'permalink-manager' ) ),
+						'description' => __( 'Decide if you would like the plugin to force a "404" error or allow canonical redirect for pagination pages that do not exist.<br /><strong>If you experience any issues with pagination pages, please select the first option.</strong>', 'permalink-manager' )
 					),
 					'disable_slug_sanitization' => array(
 						'type'        => 'select',

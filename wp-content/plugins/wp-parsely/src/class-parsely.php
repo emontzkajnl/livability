@@ -33,6 +33,7 @@ use WP_Post;
  *   track_post_types: string[],
  *   track_page_types: string[],
  *   track_post_types_as?: array<string, string>,
+ *   full_metadata_in_non_posts: ?bool,
  *   disable_javascript: bool,
  *   disable_amp: bool,
  *   meta_type: string,
@@ -57,12 +58,13 @@ class Parsely {
 	/**
 	 * Declare our constants
 	 */
-	public const VERSION             = PARSELY_VERSION;
-	public const MENU_SLUG           = 'parsely';        // Defines the page param passed to options-general.php.
-	public const OPTIONS_KEY         = 'parsely';        // Defines the key used to store options in the WP database.
-	public const CAPABILITY          = 'manage_options'; // The capability required for the user to administer settings.
-	public const DASHBOARD_BASE_URL  = 'https://dash.parsely.com';
-	public const PUBLIC_API_BASE_URL = 'https://api.parsely.com/v2';
+	public const VERSION                         = PARSELY_VERSION;
+	public const MENU_SLUG                       = 'parsely'; // The page param passed to options-general.php.
+	public const OPTIONS_KEY                     = 'parsely'; // The key used to store options in the WP database.
+	public const CAPABILITY                      = 'manage_options'; // The capability required to administer settings.
+	public const DASHBOARD_BASE_URL              = 'https://dash.parsely.com';
+	public const PUBLIC_API_BASE_URL             = 'https://api.parsely.com/v2';
+	public const PUBLIC_SUGGESTIONS_API_BASE_URL = 'https://content-suggestions-api.parsely.net/prod';
 
 	/**
 	 * Declare some class properties
@@ -70,33 +72,34 @@ class Parsely {
 	 * @var Parsely_Options $option_defaults The defaults we need for the class.
 	 */
 	private $option_defaults = array(
-		'apikey'                    => '',
-		'content_id_prefix'         => '',
-		'api_secret'                => '',
-		'use_top_level_cats'        => false,
-		'custom_taxonomy_section'   => 'category',
-		'cats_as_tags'              => false,
-		'track_authenticated_users' => false,
-		'lowercase_tags'            => true,
-		'force_https_canonicals'    => false,
-		'track_post_types'          => array(),
-		'track_page_types'          => array(),
-		'disable_javascript'        => false,
-		'disable_amp'               => false,
-		'meta_type'                 => 'json_ld',
-		'logo'                      => '',
-		'metadata_secret'           => '',
-		'disable_autotrack'         => false,
-		'plugin_version'            => self::VERSION,
+		'apikey'                     => '',
+		'content_id_prefix'          => '',
+		'api_secret'                 => '',
+		'use_top_level_cats'         => false,
+		'custom_taxonomy_section'    => 'category',
+		'cats_as_tags'               => false,
+		'track_authenticated_users'  => false,
+		'lowercase_tags'             => true,
+		'force_https_canonicals'     => false,
+		'track_post_types'           => array(),
+		'track_page_types'           => array(),
+		'full_metadata_in_non_posts' => true,
+		'disable_javascript'         => false,
+		'disable_amp'                => false,
+		'meta_type'                  => 'json_ld',
+		'logo'                       => '',
+		'metadata_secret'            => '',
+		'disable_autotrack'          => false,
+		'plugin_version'             => self::VERSION,
 	);
 
 	/**
 	 * Declare post types that Parse.ly will process as "posts".
 	 *
-	 * @link https://docs.parse.ly/metadata-jsonld/#distinguishing-between-posts-and-non-posts-pages
-	 *
 	 * @since 2.5.0
 	 * @var string[]
+	 *
+	 * @link https://docs.parse.ly/metadata-jsonld/#distinguishing-between-posts-and-non-posts-pages
 	 */
 	public const SUPPORTED_JSONLD_POST_TYPES = array(
 		'NewsArticle',
@@ -107,15 +110,24 @@ class Parsely {
 		'Report',
 		'Review',
 		'CreativeWork',
+		'OpinionNewsArticle',
+		'AnalysisNewsArticle',
+		'BackgroundNewsArticle',
+		'ReviewNewsArticle',
+		'ReportageNewsArticle',
+		'Recipe',
+		'AdvertiserContentArticle',
+		'MedicalWebPage',
+		'PodcastEpisode',
 	);
 
 	/**
 	 * Declare post types that Parse.ly will process as "non-posts".
 	 *
-	 * @link https://docs.parse.ly/metadata-jsonld/#distinguishing-between-posts-and-non-posts-pages
-	 *
 	 * @since 2.5.0
 	 * @var string[]
+	 *
+	 * @link https://docs.parse.ly/metadata-jsonld/#distinguishing-between-posts-and-non-posts-pages
 	 */
 	public const SUPPORTED_JSONLD_NON_POST_TYPES = array(
 		'WebPage',
@@ -141,7 +153,6 @@ class Parsely {
 	 *
 	 * @since 3.9.0
 	 * @access private
-	 *
 	 * @var bool
 	 */
 	public $are_credentials_managed;
@@ -154,7 +165,6 @@ class Parsely {
 	 *
 	 * @since 3.9.0
 	 * @access private
-	 *
 	 * @var array<empty>|array<string, bool|string|null>
 	 */
 	public $managed_options = array();
@@ -167,6 +177,8 @@ class Parsely {
 
 		$this->are_credentials_managed = $this->are_credentials_managed();
 		$this->set_managed_options();
+
+		$this->allow_parsely_remote_requests();
 	}
 
 	/**
@@ -272,7 +284,7 @@ class Parsely {
 		 * @param bool $skip True if the password check should be skipped.
 		 * @param int|WP_Post $post Which post object or ID is being checked.
 		 *
-		 * @returns bool
+		 * @return bool
 		 */
 		$skip_password_check = apply_filters( 'wp_parsely_skip_post_password_check', false, $post );
 		if ( ! $skip_password_check && post_password_required( $post ) ) {
@@ -306,7 +318,6 @@ class Parsely {
 	 *
 	 * @param array<string, mixed> $parsely_options parsely_options array.
 	 * @param WP_Post              $post object.
-	 *
 	 * @return Metadata_Attributes
 	 */
 	public function construct_parsely_metadata( array $parsely_options, WP_Post $post ) {
@@ -360,7 +371,7 @@ class Parsely {
 		 * POST request options.
 		 *
 		 * @var WP_HTTP_Request_Args $options
-		*/
+		 */
 		$options = array(
 			'method'      => 'POST',
 			'headers'     => $headers,
@@ -394,8 +405,13 @@ class Parsely {
 		 */
 		$options = get_option( self::OPTIONS_KEY, null );
 
+		if ( is_array( $options ) && ! isset( $options['full_metadata_in_non_posts'] ) ) {
+			$this->set_default_full_metadata_in_non_posts();
+		}
+
 		if ( ! is_array( $options ) ) {
 			$this->set_default_track_as_values();
+			$this->set_default_full_metadata_in_non_posts();
 			$options = $this->option_defaults;
 		}
 
@@ -438,11 +454,39 @@ class Parsely {
 	}
 
 	/**
+	 * Sets the default value for the full_metadata_in_non_posts option.
+	 *
+	 * @since 3.14.0
+	 */
+	public function set_default_full_metadata_in_non_posts(): void {
+		$this->option_defaults['full_metadata_in_non_posts'] = true;
+
+		// Usage of any of these filters will result in the setting being set
+		// to false.
+		$filter_tags = array(
+			'wp_parsely_metadata',
+			'wp_parsely_post_tags',
+			'wp_parsely_permalink',
+			'wp_parsely_post_category',
+			'wp_parsely_pre_authors',
+			'wp_parsely_post_authors',
+			'wp_parsely_custom_taxonomies',
+			'wp_parsely_post_type',
+		);
+
+		foreach ( $filter_tags as $filter_tag ) {
+			if ( has_filter( $filter_tag ) ) {
+				$this->option_defaults['full_metadata_in_non_posts'] = false;
+				break;
+			}
+		}
+	}
+
+	/**
 	 * Gets the URL of the plugin's settings page.
 	 *
 	 * @param int|null $_blog_id The Blog ID for the multisite subsite to use
 	 *                           for context (Default null for current).
-	 *
 	 * @return string
 	 */
 	public static function get_settings_url( int $_blog_id = null ): string {
@@ -479,7 +523,6 @@ class Parsely {
 	 *
 	 * @param string      $url The URL to modify.
 	 * @param string|null $itm_source The value of the itm_source parameter.
-	 *
 	 * @return string The resulting URL.
 	 */
 	public static function get_url_with_itm_source( string $url, $itm_source ): string {
@@ -741,7 +784,6 @@ class Parsely {
 	 *
 	 * @param string      $option_id The option's ID.
 	 * @param bool|string $value The option's value.
-	 *
 	 * @return bool|string The sanitized option value.
 	 */
 	private function sanitize_managed_option( string $option_id, $value ) {
@@ -807,5 +849,36 @@ class Parsely {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Allows remote requests to Parse.ly.
+	 *
+	 * This is needed for environments, such as wp-now, that block remote requests.
+	 *
+	 * @since 3.13.0
+	 * @access private
+	 */
+	private function allow_parsely_remote_requests(): void {
+		$allowed_urls = array(
+			self::DASHBOARD_BASE_URL,
+			self::PUBLIC_API_BASE_URL,
+			self::PUBLIC_SUGGESTIONS_API_BASE_URL,
+		);
+
+		add_filter(
+			'http_request_host_is_external',
+			function ( $external, $host, $url ) use ( $allowed_urls ) {
+				// Check if the URL matches any URLs on the allowed list.
+				foreach ( $allowed_urls as $allowed_url ) {
+					if ( \Parsely\Utils\str_starts_with( $url, $allowed_url ) ) {
+						return true;
+					}
+				}
+				return $external;
+			},
+			10,
+			3
+		);
 	}
 }

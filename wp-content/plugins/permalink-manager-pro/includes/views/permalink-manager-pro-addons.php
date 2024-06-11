@@ -100,7 +100,8 @@ class Permalink_Manager_Pro_Addons {
 		);
 
 		if ( defined( 'PMP_LICENCE_KEY' ) || defined( 'PMP_LICENSE_KEY' ) ) {
-			$fields['licence']['fields']['licence_key']['readonly'] = true;
+			$fields['licence']['fields']['licence_key']['disabled'] = true;
+			$fields['licence']['fields']['licence_key']['type']     = 'password';
 		}
 
 		// 2. Unblock some fields
@@ -277,7 +278,7 @@ class Permalink_Manager_Pro_Addons {
 
 		$html .= sprintf( "<p><label for=\"auto_auri\" class=\"strong\">%s %s</label></p>", __( "Redirect this page to external URL", "permalink-manager" ), Permalink_Manager_UI_Elements::help_tooltip( __( "If not empty, the visitors trying to access this page will be redirected to the URL specified below.", "permalink-manager" ) ) );
 
-		$external_redirect_url = ( ! empty( $permalink_manager_external_redirects[ $element_id ] ) ) ? $permalink_manager_external_redirects[ $element_id ] : "";
+		$external_redirect_url = ( ! empty( $permalink_manager_external_redirects[ $element_id ] ) ) ? esc_url( $permalink_manager_external_redirects[ $element_id ] ) : "";
 		$html                  .= Permalink_Manager_UI_Elements::generate_option_field( "permalink-manager-external-redirect", array( "input_class" => "widefat", "value" => urldecode( $external_redirect_url ), "placeholder" => __( "http://another-website.com/final-target-url", "permalink-manager" ) ) );
 
 		// 2B. Description

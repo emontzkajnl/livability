@@ -17,7 +17,7 @@ class Permalink_Manager_Third_Parties {
 		global $permalink_manager_options;
 
 		// Stop redirect
-		add_action( 'wp', array( $this, 'stop_redirect' ), 0 );
+		add_action( 'wp', array( $this, 'stop_redirect' ), 2 );
 
 		// AMP
 		if ( defined( 'AMP_QUERY_VAR' ) ) {
@@ -107,11 +107,6 @@ class Permalink_Manager_Third_Parties {
 			add_filter( 'permalink_manager_excluded_post_ids', array( $this, 'learnpress_exclude_pages' ) );
 		}
 
-		// Bricks
-		if ( class_exists( '\Bricks\Theme' ) ) {
-			add_filter( 'permalink_manager_filter_query', array( $this, 'bricks_fix_template' ), 10, 5 );
-		}
-
 		// Google Site Kit
 		if ( class_exists( '\Google\Site_Kit\Plugin' ) ) {
 			add_filter( 'request', array( $this, 'googlesitekit_fix_request' ), 10, 1 );
@@ -180,7 +175,9 @@ class Permalink_Manager_Third_Parties {
 			} // AMP
 			else if ( function_exists( 'amp_get_slug' ) && array_key_exists( amp_get_slug(), $query_vars ) ) {
 				$wp_query->query_vars['do_not_redirect'] = 1;
-			} // LearnPress
+			}
+
+			// LearnPress
 			if ( ! empty( $query_vars['view'] ) && ! empty( $query_vars['page_id'] ) ) {
 				$wp_query->query_vars['do_not_redirect'] = 1;
 			}
@@ -301,7 +298,7 @@ class Permalink_Manager_Third_Parties {
 	 * Import the URIs from the Custom Permalinks plugin.
 	 */
 	static public function import_custom_permalinks_uris() {
-		global $permalink_manager_uris, $permalink_manager_before_sections_html;
+		global $permalink_manager_before_sections_html;
 
 		$custom_permalinks_plugin = 'custom-permalinks/custom-permalinks.php';
 
@@ -321,11 +318,11 @@ class Permalink_Manager_Third_Parties {
 					$item_uri = urldecode( $item_uri );
 				}
 
-				$permalink_manager_uris[ $item['id'] ] = Permalink_Manager_Helper_Functions::sanitize_title( $item_uri );
+				Permalink_Manager_URI_Functions::save_single_uri( $item['id'], $item_uri, false, false );
 			}
 
 			$permalink_manager_before_sections_html .= Permalink_Manager_UI_Elements::get_alert_message( __( '"Custom Permalinks" URIs were imported!', 'permalink-manager' ), 'updated' );
-			update_option( 'permalink-manager-uris', $permalink_manager_uris );
+			Permalink_Manager_URI_Functions::save_all_uris();
 		} else {
 			$permalink_manager_before_sections_html .= Permalink_Manager_UI_Elements::get_alert_message( __( 'No "Custom Permalinks" URIs were imported!', 'permalink-manager' ), 'error' );
 		}
@@ -354,12 +351,10 @@ class Permalink_Manager_Third_Parties {
 	 * @param int $new_id
 	 */
 	function revisionize_keep_post_uri( $old_id, $new_id ) {
-		global $permalink_manager_uris;
+		$old_uri = Permalink_Manager_URI_Functions::get_single_uri( $old_id, false, true );
 
-		if ( ! empty( $permalink_manager_uris[ $old_id ] ) ) {
-			$permalink_manager_uris[ $new_id ] = $permalink_manager_uris[ $old_id ];
-
-			update_option( 'permalink-manager-uris', $permalink_manager_uris );
+		if ( ! empty( $old_uri ) ) {
+			Permalink_Manager_URI_Functions::save_single_uri( $new_id, $old_uri, false, true );
 		}
 	}
 
@@ -370,13 +365,11 @@ class Permalink_Manager_Third_Parties {
 	 * @param int $new_id
 	 */
 	function revisionize_clone_uri( $old_id, $new_id ) {
-		global $permalink_manager_uris;
+		$new_uri = Permalink_Manager_URI_Functions::get_single_uri( $new_id, false, true );
 
-		if ( ! empty( $permalink_manager_uris[ $new_id ] ) ) {
-			$permalink_manager_uris[ $old_id ] = $permalink_manager_uris[ $new_id ];
-			unset( $permalink_manager_uris[ $new_id ] );
-
-			update_option( 'permalink-manager-uris', $permalink_manager_uris );
+		if ( ! empty( $new_uri ) ) {
+			Permalink_Manager_URI_Functions::save_single_uri( $old_id, $new_uri, false, true );
+			Permalink_Manager_URI_Functions::remove_single_uri( $new_id, false, true );
 		}
 	}
 
@@ -710,8 +703,7 @@ class Permalink_Manager_Third_Parties {
 				$old_post_uri = $permalink_manager_uris[ $old_post_id ];
 				$new_post_uri = preg_replace( '/(.+?)(\.[^\.]+$|$)/', '$1-2$2', $old_post_uri );
 
-				$permalink_manager_uris[ $new_post_id ] = $new_post_uri;
-				update_option( 'permalink-manager-uris', $permalink_manager_uris );
+				Permalink_Manager_URI_Functions::save_single_uri( $new_post_id, $new_post_uri, false, true );
 			}
 		}
 	}
@@ -810,15 +802,10 @@ class Permalink_Manager_Third_Parties {
 	 * @param int $post_id
 	 */
 	function ml_set_listing_uri( $post_id ) {
-		global $permalink_manager_uris;
+		$default_uri = Permalink_Manager_URI_Functions_Post::get_default_post_uri( $post_id );
 
-		if ( ! empty( $permalink_manager_uris ) ) {
-			$default_uri = Permalink_Manager_URI_Functions_Post::get_default_post_uri( $post_id );
-
-			if ( $default_uri ) {
-				$permalink_manager_uris[ $post_id ] = $default_uri;
-				update_option( 'permalink-manager-uris', $permalink_manager_uris );
-			}
+		if ( $default_uri ) {
+			Permalink_Manager_URI_Functions::save_single_uri( $post_id, $default_uri, false, true );
 		}
 	}
 
@@ -937,7 +924,7 @@ class Permalink_Manager_Third_Parties {
 
 		// Stop the redirect
 		if ( ! empty( $dashboard_page ) && ! empty( $post->ID ) && ( $post->ID == $dashboard_page ) ) {
-			$wp->query_vars['do_not_redirect'] = 1;
+			$wp_query->query_vars['do_not_redirect'] = 1;
 
 			// Detect Dokan shortcode
 			if ( empty( $pm_query['endpoint'] ) ) {
@@ -1111,26 +1098,6 @@ class Permalink_Manager_Third_Parties {
 	}
 
 	/**
-	 * Remove the obsolete 'term' and 'taxonomy' query parameters if Bricks theme is detected
-	 *
-	 * @param array $query The query object.
-	 * @param array $old_query The original query array.
-	 * @param array $uri_parts An array of the URI parts.
-	 * @param array $pm_query
-	 * @param string $content_type
-	 *
-	 * @return array
-	 */
-	function bricks_fix_template( $query, $old_query, $uri_parts, $pm_query, $content_type ) {
-		if ( ! empty( $pm_query ) && ! empty( $query['term'] ) && ! empty( $query['taxonomy'] ) ) {
-			unset( $query['taxonomy'] );
-			unset( $query['term'] );
-		}
-
-		return $query;
-	}
-
-	/**
 	 * Regenerate the default permalink for the post after the custom permalink is imported by Store Locator - CSV Manager
 	 *
 	 * @param int $meta_id The ID of the metadata entry.
@@ -1139,14 +1106,11 @@ class Permalink_Manager_Third_Parties {
 	 * @param mixed $meta_value The value of the meta key.
 	 */
 	public function wpsl_regenerate_after_import( $meta_id, $post_id, $meta_key, $meta_value ) {
-		global $permalink_manager_uris;
-
 		if ( strpos( $meta_key, 'wpsl_' ) !== false && isset( $_POST['wpsl_csv_import_nonce'] ) ) {
 			$default_uri = Permalink_Manager_URI_Functions_Post::get_default_post_uri( $post_id );
 
 			if ( $default_uri ) {
-				$permalink_manager_uris[ $post_id ] = $default_uri;
-				update_option( 'permalink-manager-uris', $permalink_manager_uris );
+				Permalink_Manager_URI_Functions::save_single_uri( $post_id, $default_uri, false, true );
 			}
 		}
 	}
@@ -1163,7 +1127,7 @@ class Permalink_Manager_Third_Parties {
 			global $pm_query;
 
 			$old_url   = trim( esc_url_raw( $_GET['permaLink'] ), '/' );
-			$new_query = Permalink_Manager_Core_Functions::detect_post( null, $old_url );
+			$new_query = Permalink_Manager_Core_Functions::detect_post( array(), $old_url );
 
 			if ( ! empty( $new_query ) && ! empty( $pm_query['id'] ) ) {
 				$request = $new_query;

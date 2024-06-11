@@ -21,6 +21,7 @@ export enum ContentHelperErrorCode {
 	CannotFormulateApiQuery = 'ch_cannot_formulate_api_query',
 	FetchError = 'fetch_error', // apiFetch() failure, possibly caused by ad blocker.
 	HttpRequestFailed = 'http_request_failed', // Parse.ly API is unreachable.
+	ParselyAborted = 'ch_parsely_aborted', // The request was aborted.
 	ParselyApiForbidden = 403, // Intentionally without quotes.
 	ParselyApiResponseContainsError = 'ch_response_contains_error',
 	ParselyApiReturnedNoData = 'ch_parsely_api_returned_no_data',
@@ -29,6 +30,16 @@ export enum ContentHelperErrorCode {
 	PluginSettingsApiSecretNotSet = 'parsely_api_secret_not_set',
 	PluginSettingsSiteIdNotSet = 'parsely_site_id_not_set',
 	PostIsNotPublished = 'ch_post_not_published',
+
+	// Suggestions API.
+	ParselySuggestionsApiAuthUnavailable = 'AUTH_UNAVAILABLE', // HTTP Code 503.
+	ParselySuggestionsApiNoAuthentication = 'NO_AUTHENTICATION', // HTTP Code 401.
+	ParselySuggestionsApiNoAuthorization = 'NO_AUTHORIZATION', // HTTP Code 403.
+	ParselySuggestionsApiNoData = 'NO_DATA', // HTTP Code 507.
+	ParselySuggestionsApiOpenAiError = 'OPENAI_ERROR', // HTTP Code 500.
+	ParselySuggestionsApiOpenAiSchema = 'OPENAI_SCHEMA', // HTTP Code 507.
+	ParselySuggestionsApiOpenAiUnavailable = 'OPENAI_UNAVAILABLE', // HTTP Code 500.
+	ParselySuggestionsApiSchemaError = 'SCHEMA_ERROR', // HTTP Code 422.
 }
 
 /**
@@ -56,12 +67,61 @@ export class ContentHelperError extends Error {
 			ContentHelperErrorCode.PluginSettingsApiSecretNotSet,
 			ContentHelperErrorCode.PluginSettingsSiteIdNotSet,
 			ContentHelperErrorCode.PostIsNotPublished,
+
+			// Don't perform any fetch retries for the Suggestions API due to
+			// its time-consuming operations.
+			ContentHelperErrorCode.ParselySuggestionsApiAuthUnavailable,
+			ContentHelperErrorCode.ParselySuggestionsApiNoAuthentication,
+			ContentHelperErrorCode.ParselySuggestionsApiNoAuthorization,
+			ContentHelperErrorCode.ParselySuggestionsApiNoData,
+			ContentHelperErrorCode.ParselySuggestionsApiSchemaError,
 		];
 
 		this.retryFetch = ! noRetryFetchErrors.includes( this.code );
 
 		// Set the prototype explicitly.
 		Object.setPrototypeOf( this, ContentHelperError.prototype );
+
+		// Errors that need rephrasing.
+		if ( this.code === ContentHelperErrorCode.ParselySuggestionsApiNoAuthorization ) {
+			this.message = __(
+				'This AI-powered feature is opt-in. To gain access, please submit a request ' +
+				'<a href="https://wpvip.com/parsely-content-helper/" target="_blank" rel="noreferrer">here</a>.',
+				'wp-parsely'
+			);
+		} else if ( this.code === ContentHelperErrorCode.ParselySuggestionsApiOpenAiError ||
+			this.code === ContentHelperErrorCode.ParselySuggestionsApiOpenAiUnavailable ) {
+			this.message = __(
+				'The Parse.ly API returned an internal server error. Please retry with a different input, or try again later.',
+				'wp-parsely'
+			);
+		} else if ( this.code === ContentHelperErrorCode.HttpRequestFailed &&
+			this.message.includes( 'cURL error 28' ) ) {
+			this.message = __(
+				'The Parse.ly API did not respond in a timely manner. Please try again later.',
+				'wp-parsely'
+			);
+		} else if ( this.code === ContentHelperErrorCode.ParselySuggestionsApiSchemaError ) {
+			this.message = __(
+				'The Parse.ly API returned a validation error. Please try again with different parameters.',
+				'wp-parsely'
+			);
+		} else if ( this.code === ContentHelperErrorCode.ParselySuggestionsApiNoData ) {
+			this.message = __(
+				'The Parse.ly API couldn\'t find any relevant data to fulfill the request. Please retry with a different input.',
+				'wp-parsely'
+			);
+		} else if ( this.code === ContentHelperErrorCode.ParselySuggestionsApiOpenAiSchema ) {
+			this.message = __(
+				'The Parse.ly API returned an incorrect response. Please try again later.',
+				'wp-parsely'
+			);
+		} else if ( this.code === ContentHelperErrorCode.ParselySuggestionsApiAuthUnavailable ) {
+			this.message = __(
+				'The Parse.ly API is currently unavailable. Please try again later.',
+				'wp-parsely'
+			);
+		}
 	}
 
 	/**
@@ -89,7 +149,8 @@ export class ContentHelperError extends Error {
 				'wp-parsely'
 			) );
 		}
-		if ( this.code === ContentHelperErrorCode.ParselyApiForbidden ) {
+		if ( this.code === ContentHelperErrorCode.ParselyApiForbidden ||
+			this.code === ContentHelperErrorCode.ParselySuggestionsApiNoAuthentication ) {
 			this.hint = this.Hint( __(
 				"Please ensure that the Site ID and API Secret given in the plugin's settings are correct.",
 				'wp-parsely'

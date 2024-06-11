@@ -66,7 +66,7 @@ class Permalink_Manager_UI_Elements {
 		$container_class = ( isset( $args['container_class'] ) ) ? " class=\"{$args['container_class']} field-container\"" : " class=\"field-container\"";
 
 		// Get the field value (if it is not set in $args)
-		if ( isset( $args['value'] ) && ! empty( $args['value'] ) ) {
+		if ( ! empty( $args['value'] ) ) {
 			$value = $args['value'];
 		} else {
 			// Extract the section and field name from $input_name
@@ -173,24 +173,16 @@ class Permalink_Manager_UI_Elements {
 				$fields .= '</span>';
 				break;
 
-			case 'number' :
-				$fields .= "<input type='number' {$input_atts} value='{$value}' name='{$input_name}' />";
-				break;
-
-			case 'hidden' :
-				$fields .= "<input type='hidden' {$input_atts} value='{$value}' name='{$input_name}' />";
-				break;
-
 			case 'textarea' :
-				$fields .= "<textarea {$input_atts} name='{$input_name}' {$rows}>{$value}</textarea>";
+				$fields .= sprintf( "<textarea %s name='%s' %s>%s</textarea>", $input_atts, $input_name, $rows, esc_textarea( $value ) );
 				break;
 
 			case 'pre' :
-				$fields .= "<pre {$input_atts}>{$value}</pre>";
+				$fields .= sprintf( "<pre %s>%s</pre>", $input_atts, esc_textarea( $value ) );
 				break;
 
 			case 'info' :
-				$fields .= "<div {$input_atts}>{$value}</div>";
+				$fields .= sprintf( "<div %s>%s</div>", $input_atts, $value );
 				break;
 
 			case 'clearfix' :
@@ -255,7 +247,7 @@ class Permalink_Manager_UI_Elements {
 				$fields .= sprintf( "<p class=\"default-permastruct-row columns-container\"><span class=\"column-2_4\"><strong>%s:</strong> %s</span><span class=\"column-2_4\"><a href=\"#\" class=\"restore-default\"><span class=\"dashicons dashicons-image-rotate\"></span> %s</a></span></p>", __( "Default permastructure", "permalink-manager" ), esc_html( $default_permastruct ), __( "Restore default permastructure", "permalink-manager" ) );
 
 				// 2B. Do not auto-append slug field
-				$fields .= sprintf( "<h4>%s</h4><div class=\"settings-container\">%s</div>", __( "Permastructure settings", "permalink-manager" ), self::generate_option_field( "permastructure-settings[do_not_append_slug][$content_type][{$type_name}]", array( 'type' => 'single_checkbox', 'checkbox_label' => __( "Do not automatically append the slug", "permalink-manager" ) ) ) );
+				$fields .= sprintf( "<h4>%s</h4><div class=\"settings-container\">%s</div>", __( "Permastructure settings", "permalink-manager" ), self::generate_option_field( "permastructure-settings[do_not_append_slug][$content_type][{$type_name}]", array( 'type' => 'single_checkbox', 'default' => 1, 'checkbox_label' => __( "Do not automatically append the slug", "permalink-manager" ) ) ) );
 
 				$fields .= "</div>";
 
@@ -267,7 +259,8 @@ class Permalink_Manager_UI_Elements {
 				break;
 
 			default :
-				$fields .= "<input type='text' {$input_atts} value='{$value}' name='{$input_name}'/>";
+				$input_type = ( in_array( $field_type, array( 'text', 'password', 'number', 'hidden' ) ) ) ? $field_type : 'text';
+				$fields     .= sprintf( "<%s type='%s' %s value='%s' name='%s' />", 'input', $input_type, $input_atts, $value, $input_name );
 		}
 
 		// Get the final HTML output
@@ -354,19 +347,19 @@ class Permalink_Manager_UI_Elements {
 		// 4. Display settings tabs
 		if ( $container == 'tabs' ) {
 			// Get active section
-			$active_tab = ( ! empty( $_POST['pm_active_tab'] ) ) ? $_POST['pm_active_tab'] : key( array_slice( $fields, 0, 1, true ) );
+			$active_tab = ( ! empty( $_POST['pm_active_tab'] ) ) ? esc_attr( $_POST['pm_active_tab'] ) : key( array_slice( $fields, 0, 1, true ) );
 
 			$html .= "<ul class=\"subsubsub\">";
 			foreach ( $fields as $tab_name => $tab ) {
 				$active_class = ( $active_tab === $tab_name ) ? 'current' : '';
-				$html         .= sprintf( "<li><a href=\"%s\" class=\"%s\" data-tab=\"%s\">%s</a></li>", "#{$tab_name}", $active_class, $tab_name, $tab['section_name'] );
+				$html         .= sprintf( "<li><a href=\"#%s\" class=\"%s\" data-tab=\"%s\">%s</a></li>", $tab_name, $active_class, $tab_name, $tab['section_name'] );
 			}
 			$html .= "</ul>";
 		}
 
 		// 5. Display some notes
 		if ( $sidebar_class && $sidebar ) {
-			$html .= "<div class=\"{$sidebar_class}\">";
+			$html .= sprintf( "<div class=\"%s\">", $sidebar_class );
 			$html .= "<div class=\"section-notes\">";
 			$html .= $sidebar;
 			$html .= "</div>";
@@ -374,8 +367,8 @@ class Permalink_Manager_UI_Elements {
 		}
 
 		// 6. Start fields' section
-		$html .= ( $form_column_class ) ? "<div class=\"{$form_column_class}\">" : "";
-		$html .= "<form method=\"POST\" class=\"{$form_classes}\">";
+		$html .= ( $form_column_class ) ? sprintf( "<div class=\"%s\">", $form_column_class ) : "";
+		$html .= sprintf( "<form method=\"POST\" class=\"%s\">", $form_classes );
 		$html .= ( $wrap ) ? "<table class=\"form-table\">" : "";
 
 		// 7. Loop through all fields assigned to this section
@@ -403,13 +396,13 @@ class Permalink_Manager_UI_Elements {
 					if ( $container == 'tabs' ) {
 						$is_active_tab = ( ! empty( $active_tab ) && $active_tab == $tab_name ) ? 'class="active-tab"' : '';
 
-						$html .= "<div id=\"pm_{$tab_name}\" data-tab=\"{$tab_name}\" {$is_active_tab}>";
+						$html .= sprintf( "<div id=\"pm_%s\" data-tab=\"%s\" %s>", $tab_name, $tab_name, $is_active_tab );
 					}
 
 					$html .= "<h3>{$field['section_name']}</h3>";
 					$html .= ( isset( $field['append_content'] ) ) ? $field['append_content'] : "";
-					$html .= ( isset( $field['description'] ) ) ? "<p class=\"description\">{$field['description']}</p>" : "";
-					$html .= "<table class=\"form-table\" data-field=\"{$field_name}\">{$row_output}</table>";
+					$html .= ( isset( $field['description'] ) ) ? sprintf( "<p class=\"description\">%s</p>", $field['description'] ) : "";
+					$html .= sprintf( "<table class=\"form-table\" data-field=\"%s\">%s</table>", $field_name, $row_output );
 					$html .= ( $container == 'tabs' ) ? "</div>" : "";
 				} else {
 					$html .= $row_output;
@@ -522,10 +515,11 @@ class Permalink_Manager_UI_Elements {
 	 * @param array $updated_array
 	 * @param bool $return_array
 	 * @param bool $display_full_table
+	 * @param bool $preview_mode
 	 *
 	 * @return array|string
 	 */
-	static function display_updated_slugs( $updated_array, $return_array = false, $display_full_table = true ) {
+	static function display_updated_slugs( $updated_array, $return_array = false, $display_full_table = true, $preview_mode = false ) {
 		global $permalink_manager_before_sections_html, $adjust_id_url_filter_off;
 
 		$updated_slugs_count = 0;
@@ -595,13 +589,16 @@ class Permalink_Manager_UI_Elements {
 
 		// 3. Display the alert
 		if ( isset( $updated_slugs_count ) ) {
-			if ( $updated_slugs_count > 0 ) {
-				$alert_content = sprintf( _n( '<strong class="updated_count">%d</strong> slug was updated!', '<strong class="updated_count">%d</strong> slugs were updated!', $updated_slugs_count, 'permalink-manager' ), $updated_slugs_count ) . ' ';
-				$alert_content .= sprintf( __( '<a %s>Click here</a> to go to the list of updated slugs', 'permalink-manager' ), "href=\"#updated-list\"" );
+			if ( $updated_slugs_count > 0 && ! $preview_mode ) {
+				$alert_content = sprintf( _n( '<strong class="updated_count">%d</strong> item was updated!', '<strong class="updated_count">%d</strong> items were updated!', $updated_slugs_count, 'permalink-manager' ), $updated_slugs_count ) . ' ';
+				$alert_content .= sprintf( __( '<a %s>Click here</a> to go to the list of affected items', 'permalink-manager' ), "href=\"#updated-list\"" );
 
 				$alert = self::get_alert_message( $alert_content, 'updated updated_slugs' );
 			} else {
-				$alert = self::get_alert_message( __( '<strong>No slugs</strong> were updated!', 'permalink-manager' ), 'error updated_slugs' );
+				$alert_content = ( $preview_mode ) ? sprintf( '[%s] ', __( 'Preview mode', 'permalink-manager' ) ) : '';
+				$alert_content .= __( '<strong>No items</strong> were affected!', 'permalink-manager' );
+
+				$alert = self::get_alert_message( $alert_content, 'error updated_slugs' );
 			}
 		}
 
@@ -778,7 +775,6 @@ class Permalink_Manager_UI_Elements {
 		}
 
 		// 11. Append nonce field, element ID & native slug
-		$html .= self::generate_option_field( "permalink-manager-edit-uri-element-slug", array( "type" => "hidden", "value" => $native_slug ) );
 		$html .= self::generate_option_field( "permalink-manager-edit-uri-element-id", array( "type" => "hidden", "value" => $element_id ) );
 		$html .= wp_nonce_field( 'permalink-manager-edit-uri-box', 'permalink-manager-nonce', true, false );
 

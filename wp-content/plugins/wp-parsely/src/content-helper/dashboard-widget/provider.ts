@@ -1,46 +1,61 @@
 /**
  * WordPress dependencies
  */
-import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
 
 /**
  * Internal dependencies
  */
+import { BaseProvider } from '../common/base-provider';
 import {
 	ContentHelperError,
 	ContentHelperErrorCode,
 } from '../common/content-helper-error';
 import { getApiPeriodParams } from '../common/utils/api';
-import { Metric, Period } from './components/top-posts';
-import { TopPostData } from './model';
+import { PostData } from '../common/utils/post';
+import { TopPostsSettings } from '../common/settings';
 
-/**
- * The form of the response returned by the /stats/posts WordPress REST API
- * endpoint.
- */
-interface TopPostsApiResponse {
-	error?: Error;
-	data?: TopPostData[];
-}
+export const TOP_POSTS_DEFAULT_LIMIT = 5;
 
-const TOP_POSTS_DEFAULT_LIMIT = 3;
+export class DashboardWidgetProvider extends BaseProvider {
+	/**
+	 * The singleton instance of the DashboardWidgetProvider.
+	 *
+	 * @since 3.15.0
+	 */
+	private static instance: DashboardWidgetProvider;
 
-export class DashboardWidgetProvider {
+	/**
+	 * Returns the singleton instance of the DashboardWidgetProvider.
+	 *
+	 * @since 3.15.0
+	 *
+	 * @return {DashboardWidgetProvider} The singleton instance.
+	 */
+	public static getInstance(): DashboardWidgetProvider {
+		if ( ! this.instance ) {
+			this.instance = new DashboardWidgetProvider();
+		}
+
+		return this.instance;
+	}
+
 	/**
 	 * Returns the site's top posts.
 	 *
-	 * @param {string} period The period to fetch data for.
-	 * @param {string} metric The metric to sort by.
+	 * @param {TopPostsSettings} settings The settings to use.
+	 * @param {number}           page     The page to fetch, defaults to the first page.
 	 *
-	 * @return {Promise<Array<TopPostData>>} Object containing message and posts.
+	 * @return {Promise<Array<PostData>>} Object containing message and posts.
 	 */
-	public async getTopPosts( period: Period, metric: Metric ): Promise<TopPostData[]> {
-		let data: TopPostData[] = [];
+	public async getTopPosts(
+		settings: TopPostsSettings, page: number = 1
+	): Promise<PostData[]> {
+		let data: PostData[] = [];
 
 		try {
-			data = await this.fetchTopPostsFromWpEndpoint( period, metric );
+			data = await this.fetchTopPostsFromWpEndpoint( settings, page );
 		} catch ( contentHelperError ) {
 			return Promise.reject( contentHelperError );
 		}
@@ -59,36 +74,24 @@ export class DashboardWidgetProvider {
 	/**
 	 * Fetches the site's top posts data from the WordPress REST API.
 	 *
-	 * @param {string} period The period to fetch data for.
-	 * @param {string} metric The metric to sort by.
+	 * @param {TopPostsSettings} settings The settings to use.
+	 * @param {number}           page     The page to fetch.
 	 *
-	 * @return {Promise<Array<TopPostData>>} Array of fetched posts.
+	 * @return {Promise<Array<PostData>>} Array of fetched posts.
 	 */
-	private async fetchTopPostsFromWpEndpoint( period: Period, metric: Metric ): Promise<TopPostData[]> {
-		let response;
+	private async fetchTopPostsFromWpEndpoint(
+		settings: TopPostsSettings, page: number
+	): Promise<PostData[]> {
+		const response = this.fetch<PostData[]>( {
+			path: addQueryArgs( '/wp-parsely/v1/stats/posts/', {
+				limit: TOP_POSTS_DEFAULT_LIMIT,
+				...getApiPeriodParams( settings.Period ),
+				sort: settings.Metric,
+				page,
+				itm_source: 'wp-parsely-content-helper',
+			} ),
+		} );
 
-		try {
-			response = await apiFetch( {
-				path: addQueryArgs( '/wp-parsely/v1/stats/posts/', {
-					limit: TOP_POSTS_DEFAULT_LIMIT,
-					...getApiPeriodParams( parseInt( period ) ),
-					sort: metric,
-					itm_source: 'wp-parsely-content-helper',
-				} ),
-			} ) as TopPostsApiResponse;
-		} catch ( wpError: any ) { // eslint-disable-line @typescript-eslint/no-explicit-any
-			return Promise.reject( new ContentHelperError(
-				wpError.message, wpError.code
-			) );
-		}
-
-		if ( response?.error ) {
-			return Promise.reject( new ContentHelperError(
-				response.error.message,
-				ContentHelperErrorCode.ParselyApiResponseContainsError
-			) );
-		}
-
-		return response?.data ?? [];
+		return response ?? [];
 	}
 }

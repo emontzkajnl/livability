@@ -29,7 +29,7 @@ class Permalink_Manager_SEO_Plugins {
 		add_filter( 'seopress_pro_breadcrumbs_crumbs', array( $this, 'filter_breadcrumbs' ), 9 );
 		add_filter( 'woocommerce_get_breadcrumb', array( $this, 'filter_breadcrumbs' ), 9 );
 		add_filter( 'slim_seo_breadcrumbs_links', array( $this, 'filter_breadcrumbs' ), 9 );
-		// add_filter( 'aioseo_breadcrumbs_trail', array( $this, 'filter_breadcrumbs' ), 9 );
+		add_filter( 'aioseo_breadcrumbs_trail', array( $this, 'filter_breadcrumbs' ), 9 );
 		add_filter( 'avia_breadcrumbs_trail', array( $this, 'filter_breadcrumbs' ), 100 );
 	}
 
@@ -160,7 +160,8 @@ class Permalink_Manager_SEO_Plugins {
 		if ( ! empty( $element_id ) && ! empty( $permalink_manager_uris[ $element_id ] ) ) {
 			$custom_uri = preg_replace( "/([^\/]+)$/", '', $permalink_manager_uris[ $element_id ] );
 		} else {
-			$custom_uri = trim( preg_replace( "/([^\/]+)$/", '', $wp->request ), "/" );
+			// $custom_uri = trim( preg_replace( "/([^\/]+)$/", '', $wp->request ), "/" );
+			return $links;
 		}
 
 		$all_uris                     = array_flip( $permalink_manager_uris );
@@ -312,7 +313,7 @@ class Permalink_Manager_SEO_Plugins {
 		if ( ! empty( $links ) && is_array( $links ) ) {
 			$first_element  = reset( $links );
 			$last_element   = end( $links );
-			$b_last_element = prev( $links );
+			$b_last_element = ( count( $links ) > 2 ) ? prev( $links ) : "";
 			$breadcrumbs    = ( ! empty( $breadcrumbs ) ) ? $breadcrumbs : array();
 
 			// Support RankMath/SEOPress/WooCommerce/Slim SEO/AIOSEO breadcrumbs

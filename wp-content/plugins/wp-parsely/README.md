@@ -1,13 +1,13 @@
 # Parse.ly
 
-Stable tag: 3.10.0  
-Requires at least: 5.0  
-Tested up to: 6.3  
+Stable tag: 3.15.0  
+Requires at least: 5.2  
+Tested up to: 6.5  
 Requires PHP: 7.2  
 License: GPLv2 or later  
 License URI: https://www.gnu.org/licenses/gpl-2.0.html  
-Tags: analytics, content marketing, parse.ly, parsely, parsley  
-Contributors: parsely, hbbtstar, jblz, mikeyarce, GaryJ, parsely_mike, acicovic, mehmoodak
+Tags: analytics, statistics, stats, content marketing, parsely, parsley, parse.ly  
+Contributors: parsely, hbbtstar, jblz, mikeyarce, GaryJ, parsely_mike, acicovic, mehmoodak, vaurdan
 
 The Parse.ly plugin facilitates real-time and historical analytics to your content through a platform designed and built for digital publishing.
 
@@ -17,7 +17,7 @@ Designed and built for digital publishers, Parse.ly helps you understand how you
 
 Thousands of writers, editors, site managers, and technologists already use Parse.ly to understand what content draws in website visitors, and why. Using our powerful dashboards and APIs, customers build successful digital strategies that allow them to grow and engage a loyal audience.
 
-Join industry leaders -- like NBA, Slate, News Corp, and Conde Nast -- who already use Parse.ly to bring clarity to content, audience, and analytics.
+Join industry leaders -- like NBA, Slate, News Corp, and Condé Nast -- who already use Parse.ly to bring clarity to content, audience, and analytics.
 
 Feedback, suggestions, questions or concerns? Open a new [GitHub issue](https://github.com/Parsely/wp-parsely/issues) or email us at [support@parsely.com](mailto:support@parsely.com). We always want to hear from you!
 
@@ -37,22 +37,25 @@ The plugin automatically inserts the Parse.ly metadata and JavaScript in all pub
 #### The Parse.ly Content Helper
 
 The [Content Helper](https://docs.parse.ly/plugin-content-helper/) is a set of content insight tools including:
-- The [Parse.ly Dashboard Widget](https://docs.parse.ly/plugin-content-helper/#h-dashboard) - Displays the site's top posts in the last 7 days in the WordPress Dashboard.
+- The [Parse.ly Dashboard Widget](https://docs.parse.ly/plugin-content-helper/#h-dashboard) - Displays the site's top posts in the WordPress Dashboard.
 - The [Parse.ly Stats Column](https://docs.parse.ly/plugin-content-helper/#h-posts) - Displays published post performance for the last 7 days in Post Lists.
 - The [Parse.ly Editor Sidebar](https://docs.parse.ly/plugin-content-helper/#h-editor) - This sidebar is integrated into the WordPress Editor and offers insights about the content currently being edited such as:
-  - [Performance Details](https://docs.parse.ly/plugin-content-helper/#h-performance-details) - Displays performance metrics about the content currently being edited.
-  - [Related Top Posts](https://docs.parse.ly/plugin-content-helper/#h-related-top-posts) - Displays a list of the website’s most successful posts, similar to the post/page currently being edited.
+  - [Title Suggestions](https://docs.wpvip.com/parse-ly/wp-parsely-features/title-suggestions/) - Generates title suggestions for the post/page currently being edited.
+  - [Smart Linking](https://docs.wpvip.com/parse-ly/wp-parsely-features/smart-linking/) - Automatically adds links to the current content that point to the most relevant and top-performing posts.
+  - [Related Posts](https://docs.parse.ly/plugin-content-helper/#h-related-posts) - Displays a list of the website’s most successful posts, similar to the post/page currently being edited.
+  - [Performance Stats](https://docs.parse.ly/plugin-content-helper/#h-see-performance-details) - Displays performance metrics about the content currently being edited.
+- The [Parse.ly Excerpt Generator](https://docs.wpvip.com/parse-ly/wp-parsely-features/excerpt-generator/) - A Post Editor settings enhancement that generates an excerpt for the post/page currently being edited.
 
 #### The Parse.ly Recommendations Block
 
-The plugin includes a [Recommendations Block](https://docs.parse.ly/recommendations-block/) that displays a list of posts related to the currently viewed post/page. The Block is useful for showcasing related content to visitors, and it can also be used in Full Site Editing mode or as a [Block-based Widget](https://wordpress.org/documentation/article/block-based-widgets-editor/). 
+The plugin includes a [Recommendations Block](https://docs.parse.ly/recommendations-block/) that displays a list of posts related to the currently viewed post/page. The Block is useful for showcasing related content to visitors, and it can also be used in Site Editing mode or as a [Block-based Widget](https://wordpress.org/documentation/article/block-based-widgets-editor/). 
 
 #### Advanced integrations support
 
 While the plugin works out of the box for basic integrations, it offers a host of features that easily allow for advanced integration scenarios:
-- Support for [Google Tag Manager, AMP, Google Web Stories and Cloudflare](https://docs.parse.ly/plugin-common-questions/#h-is-wp-parsely-compatible-with-amp-facebook-instant-articles-or-google-web-stories) is included.
+- Support for [Google Tag Manager, AMP, Google Web Stories and Cloudflare](https://docs.parse.ly/plugin-common-questions/#h-is-wp-parsely-compatible-with-amp-or-google-web-stories) is included.
 - The plugin exposes the `wpParselyOnLoad` and `wpParselyOnReady` JavaScript hooks that allow for advanced integrations requiring JavaScript, such as [Dynamic Tracking](https://docs.parse.ly/plugin-dynamic-tracking/).
-- Support for WordPress [network/multisite](https://docs.parse.ly/plugin-common-questions/#h-is-wp-parsely-compatible-with-wordpress-network-multisite) and [decoupled/headless](https://docs.parse.ly/plugin-decoupled-headless-support/) (GraphQL and WP Rest API) setups is included.
+- Support for WordPress [network/multisite](https://docs.parse.ly/plugin-common-questions/#h-is-wp-parsely-compatible-with-wordpress-network-multisite) and [decoupled/headless](https://docs.parse.ly/decoupled-set-up/) (GraphQL and WP Rest API) setups is included.
 - Last but not least, a wide range of hooks is available in order to customize the plugin's functionality even further.
 
 ### Documentation and resources
@@ -61,7 +64,7 @@ While the plugin works out of the box for basic integrations, it offers a host o
 - [Commonly Asked Questions](https://docs.parse.ly/plugin-common-questions/).
 - [Changelog](https://github.com/parsely/wp-parsely/blob/trunk/CHANGELOG.md).
 
-**IMPORTANT:** If you are a [WordPress VIP](https://wpvip.com/) customer, the plugin should be enabled by using an `mu-plugins` filter. Please consult the [WordPress VIP documentation](https://docs.wpvip.com/technical-references/plugins/parse-ly/) for more details.
+**IMPORTANT:** If you are a [WordPress VIP](https://wpvip.com/) customer, please consult the [WordPress VIP documentation](https://docs.wpvip.com/parse-ly/) for more details.
 
 ### Sample Parse.ly metadata
 
@@ -91,7 +94,7 @@ A sample `JSON-LD` meta tag and structured data for an article or post:
 
 Development, code hosting and issue tracking of this plugin happens on the [wp-parsely GitHub repository](https://github.com/Parsely/wp-parsely/). Active development happens on the `develop` branch and releases are made off the `trunk` branch.
 
-To run the plugin locally or to contribute to it, please check the instructions in the [CONTRIBUTING](https://github.com/parsely/wp-parsely/blob/trunk/CONTRIBUTING.md) file.
+To run the plugin locally or to contribute to it, please check the instructions in the [CONTRIBUTING](https://github.com/Parsely/wp-parsely/blob/develop/docs/CONTRIBUTING.md) file.
 
 ## Installation
 
@@ -109,19 +112,21 @@ Please visit the [changelog](https://github.com/parsely/wp-parsely/blob/trunk/CH
 
 ## Screenshots
 
-1. Parse.ly plugin basic settings for easy setup. For the plugin to start working, only the Site ID is needed.  
-   ![Parse.ly Plugin - Basic Settings](.wordpress-org/screenshot-1.png)
-2. Parse.ly plugin settings that require a website recrawl whenever they are updated.  
-   ![Parse.ly Plugin - Recrawl Settings](.wordpress-org/screenshot-2.png)
-3. Parse.ly plugin advanced settings, to be used only if instructed by Parse.ly staff.  
-   ![Parse.ly Plugin - Advanced Settings](.wordpress-org/screenshot-3.png)
-4. The Parse.ly Dashboard Widget, showing the website's top posts in the last 7 days.
-   ![Parse.ly Dashboard Widget](.wordpress-org/screenshot-4.png)
-5. The Parse.ly Stats Column (on the right), showing information about content that is being tracked as Posts.
-   ![Parse.ly List Column](.wordpress-org/screenshot-5.png)
-6. The Parse.ly Editor Sidebar, featuring the Performance Details and Related Top Posts panels.  
-   ![Parse.ly Editor Sidebar](.wordpress-org/screenshot-6.png)
-7. The Recommendations Block, showcasing links to related content on your site.  
-   ![Parse.ly Recommendations Block](.wordpress-org/screenshot-7.png)
-8. A view of the Parse.ly Dashboard Overview. Parse.ly offers analytics that empower you to better understand how your content is performing.  
-   ![Parse.ly Dashboard Overview](.wordpress-org/screenshot-8.png)
+1. The Parse.ly Dashboard Widget, showing the website's top posts.  
+   ![Parse.ly Dashboard Widget](.wordpress-org/screenshot-1.png)
+2. The Parse.ly Stats Column (on the right), showing information about content that is being tracked as Posts.  
+   ![Parse.ly List Column](.wordpress-org/screenshot-2.png)
+3. The Parse.ly Editor Sidebar, featuring the Title Suggestions panel.  
+   ![Parse.ly Editor Sidebar - Title Suggestions](.wordpress-org/screenshot-3.png)
+4. The Parse.ly Editor Sidebar, featuring the Smart Linking panel.  
+   ![Parse.ly Editor Sidebar - Smart Linking](.wordpress-org/screenshot-4.png)
+5. The Parse.ly Editor Sidebar, featuring the Related Posts panel.  
+   ![Parse.ly Editor Sidebar - Related Posts](.wordpress-org/screenshot-5.png)
+6. The Parse.ly Editor Sidebar, featuring the Performance Stats panel.  
+   ![Parse.ly Editor Sidebar - Performance Stats](.wordpress-org/screenshot-6.png)
+7. The Parse.ly Excerpt Generator in the Post Editor's settings.  
+   ![Parse.ly Excerpt Generator](.wordpress-org/screenshot-7.png)
+8. The Recommendations Block, showcasing links to related content on your site.  
+   ![Parse.ly Recommendations Block](.wordpress-org/screenshot-8.png)
+9. A view of the Parse.ly Dashboard Overview. Parse.ly offers analytics that empower you to better understand how your content is performing.  
+   ![Parse.ly Dashboard Overview](.wordpress-org/screenshot-9.png)

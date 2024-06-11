@@ -81,6 +81,12 @@ class Permalink_Manager_Language_Plugins {
 				add_filter( 'permalink_manager_filter_post_type_slug', array( $this, 'wpml_translate_post_type_slug' ), 9, 3 );
 			}
 
+			// Translate "page" endpoint
+			if ( class_exists( 'PLL_Translate_Slugs_Model' ) ) {
+				add_filter( 'permalink_manager_endpoints', array( $this, 'pl_translate_pagination_endpoint' ), 9 );
+				add_filter( 'permalink_manager_detect_uri', array( $this, 'pl_detect_pagination_endpoint' ), 10, 3 );
+			}
+
 			// Translate WooCommerce endpoints
 			if ( class_exists( 'WCML_Endpoints' ) ) {
 				add_filter( 'request', array( $this, 'wpml_translate_wc_endpoints' ), 99999 );
@@ -421,7 +427,7 @@ class Permalink_Manager_Language_Plugins {
 		} elseif ( function_exists( 'pll_languages_list' ) ) {
 			$languages_array = pll_languages_list();
 			$languages_list  = ( is_array( $languages_array ) ) ? $languages_array : "";
-		} elseif ( $translate_press_settings['url-slugs'] ) {
+		} elseif ( ! empty( $translate_press_settings['url-slugs'] ) ) {
 			$languages_list = $translate_press_settings['url-slugs'];
 		}
 
@@ -782,7 +788,7 @@ class Permalink_Manager_Language_Plugins {
 	 * @param stdClass $job
 	 */
 	function wpml_save_uri_after_wpml_translation_completed( $post_id, $postdata, $job ) {
-		global $permalink_manager_uris;
+		global $permalink_manager_uris, $permalink_manager_options;
 
 		$post_object = get_post( $post_id );
 
@@ -796,14 +802,22 @@ class Permalink_Manager_Language_Plugins {
 		// A. Use the translated custom permalink (if available)
 		if ( ! empty( $postdata['Custom URI'] ) ) {
 			$new_uri = ( ! empty( $postdata['Custom URI']['data'] ) && ! in_array( $postdata['Custom URI']['data'], array( '-', 'auto' ) ) ) ? Permalink_Manager_Helper_Functions::sanitize_title( $postdata['Custom URI']['data'] ) : $default_uri;
-		} // B. Generate the new custom permalink
+		} // B. Generate the new custom permalink (if not set earlier)
 		else if ( empty( $permalink_manager_uris[ $post_id ] ) ) {
 			$new_uri = $default_uri;
+		} // C. Auto-update custom permalink
+		else if ( ! empty( $job->original_doc_id ) ) {
+			$auto_update_uri = get_post_meta( $job->original_doc_id, 'auto_update_uri', true );
+			$auto_update_uri = ( ! empty( $auto_update_uri ) ) ? $auto_update_uri : $permalink_manager_options['general']['auto_update_uris'];
+
+			if ( $auto_update_uri == 1 ) {
+				$new_uri = $default_uri;
+			}
 		}
 
 		// Save the custom permalink
 		if ( ! empty( $new_uri ) ) {
-			Permalink_Manager_URI_Functions::save_single_uri( $post_id, $new_uri, false, true );
+			Permalink_Manager_URI_Functions_Post::save_uri( $post_object, $new_uri, false );
 		}
 	}
 
@@ -871,7 +885,7 @@ class Permalink_Manager_Language_Plugins {
 			$translation_id = $in;
 		}
 
-		if ( isset( $data['pm-custom_uri'] ) && isset( $data['pm-custom_uri']['data'] ) && ! empty( $translation_id ) ) {
+		if ( isset( $data['pm-custom_uri']['data'] ) && ! empty( $translation_id ) ) {
 			$pre_custom_uri = trim( $data['pm-custom_uri']['data'] );
 			$custom_uri     = ( ! empty( $pre_custom_uri ) && $pre_custom_uri !== '-' ) ? Permalink_Manager_Helper_Functions::sanitize_title( $pre_custom_uri, true ) : Permalink_Manager_URI_Functions_Post::get_default_post_uri( $translation_id );
 
@@ -897,9 +911,8 @@ class Permalink_Manager_Language_Plugins {
 			return;
 		}
 
-		$permalink_manager_uris[ $id ] = Permalink_Manager_URI_Functions_Post::get_default_post_uri( $id );
-
-		update_option( 'permalink-manager-uris', $permalink_manager_uris );
+		$new_uri = Permalink_Manager_URI_Functions_Post::get_default_post_uri( $id );
+		Permalink_Manager_URI_Functions::save_single_uri( $id, $new_uri, false, true );
 	}
 
 	/**
@@ -931,6 +944,69 @@ class Permalink_Manager_Language_Plugins {
 		}
 
 		return $query;
+	}
+
+	/**
+	 * Support the endpoints translated by Polylang
+	 *
+	 * @param string $endpoints
+	 *
+	 * @return string
+	 */
+	function pl_translate_pagination_endpoint( $endpoints ) {
+		$pagination_endpoint = $this->pl_get_translated_slugs( 'paged' );
+
+		if ( ! empty( $pagination_endpoint ) && ! empty( $pagination_endpoint['translations'] ) && function_exists( 'pll_current_language' ) ) {
+			$current_language = pll_current_language();
+
+			if ( ! empty( $current_language ) && ! empty( $pagination_endpoint['translations'][ $current_language ] ) ) {
+				$endpoints .= "|" . $pagination_endpoint['translations'][ $current_language ];
+			}
+		}
+
+		return $endpoints;
+	}
+
+	/**
+	 * Get the translated slugs array
+	 *
+	 * @param string $slug
+	 *
+	 * @return array
+	 */
+	function pl_get_translated_slugs( $slug = '' ) {
+		$translated_slugs = get_transient( 'pll_translated_slugs' );
+
+		if ( is_array( $translated_slugs ) ) {
+			if ( ! empty( $slug ) && ! empty( $translated_slugs[ $slug ] ) ) {
+				$translated_slug = $translated_slugs[ $slug ];
+			} else {
+				$translated_slug = $translated_slugs;
+			}
+		} else {
+			$translated_slug = array();
+		}
+
+		return $translated_slug;
+	}
+
+	/**
+	 * Get back the original name of the translated endpoint
+	 *
+	 * @param array $uri_parts
+	 *
+	 * @return array
+	 */
+	function pl_detect_pagination_endpoint( $uri_parts, $request_url, $endpoints ) {
+		if ( ! empty( $uri_parts['endpoint'] ) ) {
+			$pagination_endpoint = $this->pl_get_translated_slugs( 'paged' );
+
+			if ( ! empty( $pagination_endpoint['translations'] ) && in_array( $uri_parts['endpoint'], $pagination_endpoint['translations'] ) ) {
+				$uri_parts['endpoint'] = $pagination_endpoint['slug'];
+			}
+		}
+
+		return $uri_parts;
 	}
 
 }

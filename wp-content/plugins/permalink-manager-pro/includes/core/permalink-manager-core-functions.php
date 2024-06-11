@@ -79,7 +79,7 @@ class Permalink_Manager_Core_Functions {
 		 * 1. Prepare URL and check if it is correct (make sure that both requested URL & home_url share the same protocol and get rid of www prefix)
 		 */
 		$request_url = ( ! empty( $request_url ) ) ? parse_url( $request_url, PHP_URL_PATH ) : $_SERVER['REQUEST_URI'];
-		$request_url = strtok( $request_url, "?" );
+		$request_url = ( ! empty( $request_url ) ) ? strtok( $request_url, "?" ) : $request_url;
 
 		// Make sure that either $_SERVER['SERVER_NAME'] or $_SERVER['HTTP_HOST'] are set
 		if ( empty( $_SERVER['HTTP_HOST'] ) && empty( $_SERVER['SERVER_NAME'] ) ) {
@@ -91,7 +91,7 @@ class Permalink_Manager_Core_Functions {
 		$raw_home_url = trim( get_option( 'home' ) );
 		$home_url     = preg_replace( "/http(s)?:\/\/(www\.)?(.+?)\/?$/", "http://$3", $raw_home_url );
 
-		if ( filter_var( $request_url, FILTER_VALIDATE_URL ) ) {
+		if ( parse_url( $request_url, PHP_URL_HOST ) ) {
 			// Check if "Deep Detect" is enabled
 			$deep_detect_enabled = apply_filters( 'permalink_manager_deep_uri_detect', true );
 
@@ -220,12 +220,9 @@ class Permalink_Manager_Core_Functions {
 					$uri = strtolower( urldecode( $uri ) );
 
 					foreach ( $all_uris as $raw_uri => $uri_id ) {
-						$raw_uri              = urldecode( $raw_uri );
+						$raw_uri              = strtolower( urldecode( $raw_uri ) );
 						$all_uris[ $raw_uri ] = $uri_id;
 					}
-
-					// Convert array keys lowercase
-					$all_uris = array_change_key_case( $all_uris );
 
 					$element_id = isset( $all_uris[ $uri ] ) ? $all_uris[ $uri ] : $element_id;
 				}
@@ -264,23 +261,15 @@ class Permalink_Manager_Core_Functions {
 					$term_element_id = apply_filters( 'permalink_manager_detected_term_id', $term_element_id, $uri_parts, true );
 
 					// Get the variables to filter wp_query and double-check if taxonomy exists
-					$term = $element_object = ( ! empty( $term_element_id ) && is_numeric( $term_element_id ) ) ? get_term( $term_element_id ) : false;
-					$term_taxonomy  = ( ! empty( $term->taxonomy ) ) ? $term->taxonomy : false;
+					$term                 = $element_object = ( ! empty( $term_element_id ) && is_numeric( $term_element_id ) ) ? get_term( $term_element_id ) : false;
+					$term_taxonomy        = ( ! empty( $term->taxonomy ) ) ? $term->taxonomy : false;
+					$term_taxonomy_object = ( ! empty( $term_taxonomy ) ) ? get_taxonomy( $term_taxonomy ) : '';
 
 					// Check if term is allowed
-					$disabled = ( $term_taxonomy && Permalink_Manager_Helper_Functions::is_term_excluded( $term ) ) ? true : false;
+					$disabled = ( $term_taxonomy_object && Permalink_Manager_Helper_Functions::is_term_excluded( $term ) ) ? true : false;
 
 					// Proceed only if the term is not removed and its taxonomy is not disabled
-					if ( ! $disabled && $term_taxonomy ) {
-						// Get some term data
-						if ( $term_taxonomy == 'category' ) {
-							$query_parameter = 'category_name';
-						} else if ( $term_taxonomy == 'post_tag' ) {
-							$query_parameter = 'tag';
-						} else {
-							$query["taxonomy"] = $term_taxonomy;
-							$query_parameter   = $term_taxonomy;
-						}
+					if ( ! $disabled && $term_taxonomy_object ) {
 						$term_ancestors = get_ancestors( $element_id, $term_taxonomy );
 						$final_uri      = $term->slug;
 
@@ -294,8 +283,12 @@ class Permalink_Manager_Core_Functions {
 							}
 						}
 
-						$query["term"]             = $term->slug;
-						$query[ $query_parameter ] = $term->slug;
+						if ( empty( $term_taxonomy_object->query_var ) ) {
+							$query["taxonomy"] = $term_taxonomy;
+							$query["term"]     = $term->slug;
+						} else {
+							$query[ $term_taxonomy_object->query_var ] = $term->slug;
+						}
 					} else if ( $disabled ) {
 						$broken_uri = true;
 						$query      = $old_query;
@@ -324,7 +317,7 @@ class Permalink_Manager_Core_Functions {
 					$post_type    = ( ! empty( $post_to_load->post_type ) ) ? $post_to_load->post_type : false;
 
 					// Check if post is allowed
-					$disabled = ( $post_type && Permalink_Manager_Helper_Functions::is_post_excluded( $post_to_load ) ) ? true : false;
+					$disabled = ( $post_type && Permalink_Manager_Helper_Functions::is_post_excluded( $post_to_load, true ) ) ? true : false;
 
 					// Proceed only if the term is not removed and its taxonomy is not disabled
 					if ( ! $disabled && $post_type ) {
@@ -534,8 +527,8 @@ class Permalink_Manager_Core_Functions {
 	static function control_trailing_slashes( $permalink ) {
 		global $permalink_manager_options;
 
-		// Ignore empty permalinks
-		if ( empty( $permalink ) ) {
+		// Ignore empty & numeric permalinks
+		if ( empty( $permalink ) || is_numeric( $permalink ) ) {
 			return $permalink;
 		}
 
@@ -549,7 +542,7 @@ class Permalink_Manager_Core_Functions {
 			return $permalink;
 		}
 
-		// Always remove trailing slashes from URLs/URIs that end with file extension (eg. .html)
+		// Always remove trailing slashes from URLs/URIs that end with file extension (e.g. html)
 		if ( preg_match( '/(http(?:s)\:\/\/[^\/]+\/)?.*\.([a-zA-Z]{3,4})[\/]*(\?[^\/]+|$)/', $permalink ) ) {
 			$trailing_slash_mode = 2;
 		}
@@ -578,15 +571,28 @@ class Permalink_Manager_Core_Functions {
 	 * Display 404 if requested page does not exist in pagination or the pagination format is incorrect
 	 */
 	function fix_pagination_pages() {
-		global $wp_query, $wp, $pm_query;
+		global $wp_query, $pm_query, $post, $permalink_manager_options;
 
-		// 1. Get the queried object
-		$post = get_queried_object();
-		$post = ( empty( $post ) && ! empty( $wp_query->post ) ) ? $wp_query->post : $post;
+		// 1. Check if the custom permalink was detected
+		if ( empty( $pm_query['id'] ) ) {
+			return;
+		}
 
-		// 2. Check if post object is defined
-		if ( ( ! empty( $post->post_type ) && isset( $post->post_content ) ) || ( ! empty( $wp_query->max_num_pages ) ) ) {
-			// 2.1A. Check if pagination is detected
+		// 2. Get the queried object
+		$object = get_queried_object();
+
+		if ( ! empty( $object ) && ! empty( $object->taxonomy ) ) {
+			$term = $object;
+		} else if ( ! empty( $object->post_type ) ) {
+			$post = $object;
+		} else if ( empty( $object ) && ! empty( $wp_query->post ) ) {
+			$post = $wp_query->post;
+		} else {
+			return;
+		}
+
+		// 3.1. Validate the pages count
+		if ( ( ! empty( $post->post_type ) && isset( $post->post_content ) ) || ( isset( $wp_query->max_num_pages ) && ! empty( $term->taxonomy ) ) ) {
 			$current_page = ( ! empty( $wp_query->query_vars['page'] ) ) ? $wp_query->query_vars['page'] : 1;
 			$current_page = ( empty( $wp_query->query_vars['page'] ) && ! empty( $wp_query->query_vars['paged'] ) ) ? $wp_query->query_vars['paged'] : $current_page;
 
@@ -594,30 +600,31 @@ class Permalink_Manager_Core_Functions {
 			$post_content = ( ! empty( $post->post_content ) ) ? $post->post_content : '';
 			$num_pages    = ( is_home() || is_archive() || is_search() ) ? $wp_query->max_num_pages : substr_count( strtolower( $post_content ), '<!--nextpage-->' ) + 1;
 
-			// 2.1C. Remove 'do_not_redirect' parameter if the first page of content is requested to force canonical redirect
-			if ( ! empty( $pm_query['id'] ) && is_numeric( $pm_query['id'] ) && ! empty( $wp->query_vars['do_not_redirect'] ) && empty( $pm_query['endpoint'] ) && $pm_query['endpoint_value'] == 1 ) {
-				$is_404                            = true;
-				$wp->query_vars['do_not_redirect'] = 0;
-				set_query_var( 'p', $pm_query['id'] );
-			} else {
-				$is_404 = ( $current_page > 1 && ( $current_page > $num_pages ) ) ? true : false;
-			}
-		} // 2.2. Force 404 if no posts are loaded
+			$is_404 = ( $current_page > 1 && ( $current_page > $num_pages ) ) ? true : false;
+		} // 3.2. Force 404 if no posts are loaded
 		else if ( ! empty( $wp_query->query['paged'] ) && $wp_query->post_count == 0 ) {
 			$is_404 = true;
 		}
 
-		// 2.3. Force 404 if endpoint value is not set or not numeric
+		// 3.4. Force 404 if endpoint value is not set or not numeric
 		if ( ! empty( $pm_query['endpoint'] ) && $pm_query['endpoint'] == 'page' && ( empty( $pm_query['endpoint_value'] ) || ! is_numeric( $pm_query['endpoint_value'] ) ) ) {
 			$is_404 = true;
 		}
 
-		// 3. Block non-existent pages (Force 404 error)
+		// 4. Block non-existent pages (Force 404 error or allow canonical redirect)
 		if ( ! empty( $is_404 ) ) {
-			$wp_query->query = $wp_query->queried_object = $wp_query->queried_object_id = null;
-			$wp_query->set_404();
-			status_header( 404 );
-			nocache_headers();
+			$pagination_mode = ( ! empty( $permalink_manager_options['general']['pagination_redirect'] ) ) ? $permalink_manager_options['general']['pagination_redirect'] : false;
+
+			// Make sure that canonical redirect is not disabled in adjust_canonical_redirect() method
+			if ( $pagination_mode == 2 ) {
+				$wp_query->query_vars['do_not_redirect'] = 0;
+			} else {
+				$wp_query->query = $wp_query->queried_object = $wp_query->queried_object_id = $pm_query = $post = null;
+				$wp_query->set_404();
+				status_header( 404 );
+				nocache_headers();
+			}
+
 			$pm_query = '';
 		}
 	}
@@ -636,7 +643,6 @@ class Permalink_Manager_Core_Functions {
 		$canonical_redirect        = ( ! empty( $permalink_manager_options['general']['canonical_redirect'] ) ) ? $permalink_manager_options['general']['canonical_redirect'] : false;
 		$old_slug_redirect         = ( ! empty( $permalink_manager_options['general']['old_slug_redirect'] ) ) ? $permalink_manager_options['general']['old_slug_redirect'] : false;
 		$endpoint_redirect         = ( ! empty( $permalink_manager_options['general']['endpoint_redirect'] ) ) ? $permalink_manager_options['general']['endpoint_redirect'] : false;
-		$pagination_redirect       = ( ! empty( $permalink_manager_options['general']['pagination_redirect'] ) ) ? $permalink_manager_options['general']['pagination_redirect'] : false;
 		$copy_query_redirect       = ( ! empty( $permalink_manager_options['general']['copy_query_redirect'] ) ) ? $permalink_manager_options['general']['copy_query_redirect'] : false;
 		$redirect_type             = '-';
 
@@ -654,7 +660,7 @@ class Permalink_Manager_Core_Functions {
 
 		$query_string = ( $copy_query_redirect && ! empty( $_SERVER['QUERY_STRING'] ) ) ? $_SERVER['QUERY_STRING'] : '';
 		$old_uri      = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
-		$old_uri      = ( empty( $old_uri ) ) ? strtok( $_SERVER["REQUEST_URI"], '?' ) : $old_uri;
+		$old_uri      = $old_uri_abs = ( empty( $old_uri ) ) ? strtok( $_SERVER["REQUEST_URI"], '?' ) : $old_uri;
 
 		// Fix for WP installed in directories (remove the directory name from the URI)
 		if ( ! empty( $home_dir ) ) {
@@ -737,15 +743,7 @@ class Permalink_Manager_Core_Functions {
 			}
 
 			/**
-			 * 1C. Pagination redirect
-			 */
-			if ( $pagination_redirect && ( ( isset( $wp_query->query_vars['paged'] ) && $wp_query->query_vars['paged'] == 1 ) || ( isset( $wp_query->query_vars['page'] ) && $wp_query->query_vars['page'] == 1 && ! empty( $pm_query['endpoint_value'] ) ) ) ) {
-				$pm_query['endpoint']                    = $pm_query['endpoint_value'] = '';
-				$wp_query->query_vars['do_not_redirect'] = 0;
-			}
-
-			/**
-			 * 1D. Enhance native redirect
+			 * 1C. Enhance native redirect
 			 */
 			if ( $canonical_redirect && empty( $wp_query->query_vars['do_not_redirect'] ) && ! empty( $queried_object ) && empty( $correct_permalink ) ) {
 				// Affect only posts with custom URI and old URIs
@@ -777,7 +775,7 @@ class Permalink_Manager_Core_Functions {
 			}
 
 			/**
-			 * 1E. Old slug redirect
+			 * 1D. Old slug redirect
 			 */
 			if ( $old_slug_redirect && ! empty( $pm_query['uri'] ) && empty( $wp_query->query_vars['do_not_redirect'] ) && is_404() && empty( $correct_permalink ) ) {
 				$slug = basename( $pm_query['uri'] );
@@ -792,7 +790,7 @@ class Permalink_Manager_Core_Functions {
 			/**
 			 * 2. Prevent redirect loop
 			 */
-			if ( ! empty( $correct_permalink ) && is_string( $correct_permalink ) && ! empty( $wp->request ) && ! empty( $redirect_type ) && $redirect_type != 'slash_redirect' ) {
+			if ( ! empty( $correct_permalink ) && is_string( $correct_permalink ) && ! empty( $wp->request ) && $redirect_type != 'slash_redirect' ) {
 				$current_uri  = trim( $wp->request, "/" );
 				$redirect_uri = trim( parse_url( $correct_permalink, PHP_URL_PATH ), "/" );
 
@@ -824,7 +822,7 @@ class Permalink_Manager_Core_Functions {
 		/**
 		 * 4. Check trailing & duplicated slashes (ignore links with query parameters)
 		 */
-		if ( ( ( $trailing_slashes_mode && $trailing_slashes_redirect ) || preg_match( '/\/{2,}/', $old_uri ) ) && empty( $correct_permalink ) && empty( $query_string ) && ! empty( $old_uri ) && $old_uri !== "/" ) {
+		if ( ( ( $trailing_slashes_mode && $trailing_slashes_redirect ) || preg_match( '/\/{2,}/', $old_uri ) ) && empty( $_POST ) && empty( $correct_permalink ) && empty( $query_string ) && ! empty( $old_uri ) && $old_uri !== "/" ) {
 			$trailing_slash = ( substr( $old_uri, - 1 ) == "/" ) ? true : false;
 			$obsolete_slash = ( preg_match( '/\/{2,}/', $old_uri ) || preg_match( "/.*\.([a-zA-Z]{3,4})\/$/", $old_uri ) );
 
@@ -873,7 +871,7 @@ class Permalink_Manager_Core_Functions {
 			$correct_permalink = self::control_trailing_slashes( $correct_permalink );
 
 			// Prevent redirect loop
-			$rel_old_uri = wp_make_link_relative( $old_uri );
+			$rel_old_uri = wp_make_link_relative( $old_uri_abs );
 			$rel_new_uri = wp_make_link_relative( $correct_permalink );
 
 			if ( $redirect_type === 'www_redirect' || $rel_old_uri !== $rel_new_uri ) {
@@ -887,7 +885,7 @@ class Permalink_Manager_Core_Functions {
 	 * Control how the canonical redirect function in WordPress and other popular plugins works
 	 */
 	function adjust_canonical_redirect() {
-		global $permalink_manager_options, $wp, $wp_rewrite;
+		global $permalink_manager_options, $wp, $wp_query, $wp_rewrite;
 
 		// Adjust rewrite settings for trailing slashes
 		$trailing_slash_setting = ( ! empty( $permalink_manager_options['general']['trailing_slashes'] ) ) ? $permalink_manager_options['general']['trailing_slashes'] : "";
@@ -904,9 +902,17 @@ class Permalink_Manager_Core_Functions {
 		// Check if any endpoint is called (fix for endpoints)
 		foreach ( $endpoints_array as $endpoint ) {
 			if ( ! empty( $wp->query_vars[ $endpoint ] ) && ! in_array( $endpoint, array( 'attachment', 'page', 'paged', 'feed' ) ) ) {
-				$wp->query_vars['do_not_redirect'] = 1;
+				$wp_query->query_vars['do_not_redirect'] = 1;
 				break;
 			}
+		}
+
+		// Allow canonical redirect for ../1/ and ../page/1/
+		if ( ( ! empty( $wp->query_vars['paged'] ) && $wp->query_vars['paged'] == 1 ) || ( ! empty( $wp->query_vars['page'] ) && $wp->query_vars['page'] == 1 ) ) {
+			$wp_query->query_vars['do_not_redirect'] = 0;
+		} // Allow canonical redirect for URL with specific query parameters
+		else if ( ( is_single() && ( ! empty( $_GET['p'] ) || ! empty( $_GET['name'] ) ) ) || ( is_page() && ! empty( $_GET['page_id'] ) ) ) {
+			$wp_query->query_vars['do_not_redirect'] = 0;
 		}
 
 		if ( empty( $permalink_manager_options['general']['canonical_redirect'] ) ) {
@@ -917,12 +923,12 @@ class Permalink_Manager_Core_Functions {
 			remove_action( 'template_redirect', 'wp_old_slug_redirect' );
 		}
 
-		if ( ! empty( $wp->query_vars['do_not_redirect'] ) ) {
+		if ( ! empty( $wp_query->query_vars['do_not_redirect'] ) ) {
 			if ( function_exists( 'rank_math' ) && ! empty( $permalink_manager_options['general']['rankmath_redirect'] ) ) {
 				$rank_math_instance = rank_math();
 
-				if ( property_exists( $rank_math_instance, 'container' ) && is_array( $rank_math_instance->container ) && is_object( $rank_math_instance->container['manager'] ) && method_exists( $rank_math_instance->container['manager'], 'get_module' ) ) {
-					$rank_math_redirections_module = $rank_math_instance->container['manager']->get_module( 'redirections' );
+				if ( ! empty( $rank_math_instance->manager ) && is_object( $rank_math_instance->manager ) && method_exists( $rank_math_instance->manager, 'get_module' ) ) {
+					$rank_math_redirections_module = $rank_math_instance->manager->get_module( 'redirections' );
 
 					if ( ! empty( $rank_math_redirections_module ) ) {
 						remove_action( 'template_redirect', array( $rank_math_redirections_module, 'do_redirection' ), 11 );

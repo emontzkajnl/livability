@@ -45,8 +45,10 @@ class Permalink_Manager_Admin_Functions {
 		}
 
 		$permalink_manager_ignore_permalink_filters = true;
-		if ( ! empty( $object->ID ) ) {
+		if ( ! empty( $object->ID ) && is_a( $object, 'WP_Post' ) ) {
 			$new_url = get_permalink( $object->ID );
+		} else if ( ! empty( $object->taxonomy ) && is_a( $object, 'WP_Term' ) ) {
+			$new_url = get_term_link( $object, $object->taxonomy );
 		}
 		$permalink_manager_ignore_permalink_filters = false;
 
@@ -366,9 +368,9 @@ class Permalink_Manager_Admin_Functions {
 
 		foreach ( $permalink_manager_uris as $id => $uri ) {
 			if ( preg_match( "/\b$search_query\b/i", $uri ) ) {
-				if ( $content_type && $content_type == 'taxonomies' && ( strpos( $id, 'tax-' ) !== false ) ) {
+				if ( $content_type == 'taxonomies' && ( strpos( $id, 'tax-' ) !== false ) ) {
 					$found[] = (int) abs( filter_var( $id, FILTER_SANITIZE_NUMBER_INT ) );
-				} else if ( $content_type && $content_type == 'posts' && is_numeric( $id ) ) {
+				} else if ( $content_type == 'posts' && is_numeric( $id ) ) {
 					$found[] = (int) filter_var( $id, FILTER_SANITIZE_NUMBER_INT );
 				} else {
 					$found[] = $id;
