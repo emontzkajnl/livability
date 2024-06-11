@@ -109,19 +109,21 @@ if ($sponsor) {
     $ID = $topic_posts[$i]->ID;
     $places = get_field('place_relationship', $ID); ?>
     <li class="one-hundred-list-container">
-    <a href="<?php echo get_the_permalink( $ID ); ?>" class="ohl-thumb" >
+    <div class="ohl-thumb">
+    <a href="<?php echo get_the_permalink( $ID ); ?>">
     
     <?php echo  get_the_post_thumbnail($ID, 'rel_article'); ?>
-    <?php echo get_field('sponsored', $ID) ? '<p class="sponsored-label ">Sponsored</p>' : ""; ?>
+    <?php //echo get_field('sponsored', $ID) ? '<p class="sponsored-label ">Sponsored</p>' : ""; ?>
     
     </a>
-    <div class="ohl-text">
-    <a href="<?php  echo get_the_permalink( $ID ); ?>">
-    <?php echo '<h2>'.get_the_title( $ID).'</h2>'; 
-    echo '<p>'.get_the_excerpt( $ID).'</p>';
-    ?>
-    </a>
     </div>
+        <div class="ohl-text">
+            <a href="<?php  echo get_the_permalink( $ID ); ?>">
+                <?php echo '<h2>'.get_the_title( $ID).'</h2>'; 
+                echo '<p>'.get_the_excerpt( $ID).'</p>';
+                ?>
+            </a>
+        </div>
     </li>
 <?php }
 
