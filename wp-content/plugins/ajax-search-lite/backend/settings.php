@@ -2,14 +2,10 @@
 $params = array();
 $action_msg = "";
 
-$inst = wd_asl()->instances->get(0);
-$sd = &$inst['data'];
-
 if (isset($_POST['submit_asl'])) {
-
-	if ( wp_verify_nonce( $_POST['asl_sett_nonce'], 'asl_sett_nonce' ) ) {
+	if ( isset($_POST['asl_sett_nonce']) && wp_verify_nonce( $_POST['asl_sett_nonce'], 'asl_sett_nonce' ) ) {
 		$params = wpdreams_parse_params($_POST);
-		$_asl_options = array_merge($sd, $params);
+		$_asl_options = array_merge(wd_asl()->instances->get(0)['data'], $params);
 
 		wd_asl()->instances->update(0, $_asl_options);
 		// Force instance data to the debug storage
@@ -24,8 +20,9 @@ if (isset($_POST['submit_asl'])) {
 		$_POST = array();
 	}
 }
+
+$sd = wd_asl()->instances->get(0)['data'];
 ?>
-<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css'>
 
 <div id="wpdreams" class='wpdreams wrap<?php echo isset($_COOKIE['asl-accessibility']) ? ' wd-accessible' : ''; ?>'>
 	<h2 display="none"></h2>

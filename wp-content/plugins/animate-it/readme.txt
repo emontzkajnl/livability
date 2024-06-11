@@ -2,8 +2,8 @@
 Contributors: eleopard
 Tags: css3 animation, animate.css, jquery, on scroll animation, delay, infinite, entry exit, iteration
 Requires at least: 4.7.0
-Tested up to: 6.1.1
-Stable tag: 3.0.2
+Tested up to: 6.5.2
+Stable tag: 3.0.3
 License: GNU General Public License version 2 or later
 License URI: http://www.gnu.org/copyleft/gpl.html
 
@@ -85,6 +85,9 @@ Add duration class ( duration1 to duration20 ) along with the other classes. or 
 
 
 == Changelog ==
+
+= Version 3.0.3 =
+* Tested up to version 6.5.2
 
 = Version 3.0.2 =
 * Fixes related to compatibility with other plugins.

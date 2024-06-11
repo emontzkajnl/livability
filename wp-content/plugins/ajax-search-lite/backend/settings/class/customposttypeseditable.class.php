@@ -12,6 +12,9 @@ if (!class_exists("wpdreamsCustomPostTypesEditable")) {
      * @copyright Copyright (c) 2014, Ernest Marcinko
      */
     class wpdreamsCustomPostTypesEditable extends wpdreamsType {
+	    private array $selected = array();
+	    private array $types = array();
+
         function getType() {
             parent::getType();
             $this->processData();
@@ -29,7 +32,6 @@ if (!class_exists("wpdreamsCustomPostTypesEditable")) {
 			foreach ($this->types as $k => $v) {
 				if (in_array($k, $exclude)) {
 					unset($this->types[$k]);
-					continue;
 				}
 			}
             echo "
@@ -38,25 +40,21 @@ if (!class_exists("wpdreamsCustomPostTypesEditable")) {
           <legend>" . $this->label . "</legend>";
             echo '<div class="sortablecontainer" id="sortablecontainer' . self::$_instancenumber . '">
             <p>Available post types</p><ul id="sortable' . self::$_instancenumber . '" class="connectedSortable">';
-            if ($this->types != null && is_array($this->types)) {
-                foreach ($this->types as $k => $v) {
-                    if ($this->selected == null || !wd_in_array_r($v, $this->selected)) {
-                        echo '<li class="ui-state-default ui-left" style="background: #ddd;">
-              <label>' . $k . '</label>
-              <input type="text" value="' . $k . '"/>
-              </li>';
-                    }
+            foreach ($this->types as $k => $v) {
+                if ($this->selected == null || !wd_in_array_r($v, $this->selected)) {
+                    echo '<li class="ui-state-default ui-left" style="background: #ddd;">
+				          <label>' . $k . '</label>
+				          <input type="text" value="' . $k . '"/>
+				          </li>';
                 }
             }
             echo "</ul></div>";
             echo '<div class="sortablecontainer"><p>Drag here the post types you want to use!</p><ul id="sortable_conn' . self::$_instancenumber . '" class="connectedSortable">';
-            if ($this->selected != null && is_array($this->selected)) {
-                foreach ($this->selected as $k => $v) {
-                    echo '<li class="ui-state-default ui-left" style="background: #ddd;">
-            <label>' . $v[0] . '</label>
-            <input type="text" value="' . $v[1] . '"/>
-            </li>';
-                }
+            foreach ($this->selected as $v) {
+                echo '<li class="ui-state-default ui-left" style="background: #ddd;">
+				        <label>' . $v[0] . '</label>
+				        <input type="text" value="' . $v[1] . '"/>
+				        </li>';
             }
             echo "</ul></div>";
             echo "
@@ -71,12 +69,10 @@ if (!class_exists("wpdreamsCustomPostTypesEditable")) {
         function processData() {
             $this->data = stripslashes(str_replace("\n", "", $this->data));
             if ($this->data != "") {
-                $this->_t = explode("|", $this->data);
-                foreach ($this->_t as $k => $v) {
+                $selected = explode("|", $this->data);
+                foreach ($selected as $v) {
                     $this->selected[] = explode(';', $v);
                 }
-            } else {
-                $this->selected = null;
             }
         }
 

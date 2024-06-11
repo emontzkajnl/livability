@@ -367,7 +367,7 @@ class Groups_List_Table extends WP_Terms_List_Table {
 	 * @return void
 	 */
 	private function render_edit_modal( $group ): void {
-		$group_ads_info = $this->get_group_ads_info( $group );
+		$group_ads_info = $this->get_group_ads_info( $group, 'modal' );
 		$ads            = $group_ads_info['ads'] ?? null;
 		$weights        = $group_ads_info['weights'] ?? null;
 		$ad_form_rows   = $this->get_weighted_ad_order( $weights );
@@ -376,25 +376,34 @@ class Groups_List_Table extends WP_Terms_List_Table {
 		// The Loop.
 		if ( $ads->post_count ) {
 			foreach ( $ads->posts as $ad ) {
-				$ad_url = add_query_arg(
+				$ad_id    = absint( $ad->ID );
+				$group_id = absint( $group->id );
+				$ad_url   = add_query_arg(
 					[
-						'post'   => $ad->ID,
+						'post'   => $ad_id,
 						'action' => 'edit',
 					],
 					admin_url( 'post.php' )
 				);
 				// translators: %s is the title for ad.
-				$link_title = sprintf( esc_html__( 'Opens ad %s in a new tab', 'advanced-ads' ), $ad->post_title );
+				$link_title = sprintf( esc_attr__( 'Opens ad %s in a new tab', 'advanced-ads' ), $ad->post_title );
+				$ad_weight  = ( isset( $weights[ $ad_id ] ) ) ? $weights[ $ad_id ] : Advanced_Ads_Group::MAX_AD_GROUP_DEFAULT_WEIGHT;
 
-				$row       = '';
-				$row      .= '<tr data-ad-id="' . absint( $ad->ID ) . '" data-group-id="' . absint( $group->id ) . '"><td> <a target="_blank" href="' . esc_url( $ad_url ) . '" title="' . $link_title . '">' . esc_html( $ad->post_title ) . '</a></td><td>';
-				$row      .= '<select name="advads-groups[' . absint( $group->id ) . '][ads][' . absint( $ad->ID ) . ']">';
-				$ad_weight = ( isset( $weights[ $ad->ID ] ) ) ? $weights[ $ad->ID ] : Advanced_Ads_Group::MAX_AD_GROUP_DEFAULT_WEIGHT;
+				$row  = '<tr data-ad-id="' . $ad_id . '" data-group-id="' . $group_id . '">';
+				$row .= '<td class="ad-list-entry-name">';
+				$row .= '<a target="_blank" href="' . esc_url( $ad_url ) . '" title="' . $link_title . '">' . esc_html( $ad->post_title ) . '</a></td>';
+				$row .= '<td>' . \Advanced_Ads_Admin_Ad_Type::get_ad_schedule_output( $ad_id ) . '</td>';
+				$row .= '<td><select name="advads-groups[' . $group_id . '][ads][' . $ad_id . ']">';
+
+				$options = [];
 				for ( $i = 0; $i <= $max_weight; $i++ ) {
-					$row .= '<option ' . selected( $ad_weight, $i, false ) . '>' . $i . '</option>';
+					$selected  = selected( $ad_weight, $i, false );
+					$options[] = '<option ' . $selected . '>' . $i . '</option>';
 				}
 
-				$row                    .= '</select</td><td><button type="button" class="advads-remove-ad-from-group button">x</button></td></tr>';
+				$row .= implode( '', $options );
+				$row .= '</select</td><td><button type="button" class="advads-remove-ad-from-group button">x</button></td></tr>';
+
 				$ad_form_rows[ $ad->ID ] = $row;
 			}
 		}
@@ -464,38 +473,38 @@ class Groups_List_Table extends WP_Terms_List_Table {
 	}
 
 	/**
-	 * Get ads information for this group
+	 * Get ads information for this group.
 	 *
 	 * @param Advanced_Ads_Group $group group object.
+	 * @param string             $view  View parameter to manipulate the output.
 	 *
-	 * @return WP_Query
+	 * @return array
 	 */
-	private function get_group_ads_info( $group ) {
-		if ( isset( $this->group_ads_info[ $group->id ] ) ) {
-			return $this->group_ads_info[ $group->id ];
-		}
+	private function get_group_ads_info( $group, $view = 'list' ) {
+		// TODO: reenable the following caching mechanism when switching to AA 2.0.
 
 		$weights = $group->get_ad_weights();
-
-		$sorted_ad_ids = array_keys( $weights );
-		$args          = [
+		$args    = [
 			'post_type'      => Entities::POST_TYPE_AD,
 			'post_status'    => [ 'publish', 'future', 'pending', 'private' ],
 			'taxonomy'       => $group->taxonomy,
 			'term'           => $group->slug,
-			'posts_per_page' => - 1,
+			'posts_per_page' => -1,
 		];
 
-		$ads        = new WP_Query( $args );
+		$ads    = new WP_Query( $args );
+		$ad_ids = wp_list_pluck( $ads->posts, 'ID' );
 
-		$ad_ids     = wp_list_pluck( $ads->posts, 'ID' );
+		$weights = array_reduce(
+			$ads->posts,
+			function ( $carry, $item ) use ( $weights, $view ) {
+				$weight             = $weights[ $item->ID ] ?? Advanced_Ads_Group::MAX_AD_GROUP_DEFAULT_WEIGHT;
+				$carry[ $item->ID ] = ( 'modal' === $view || 'publish' === $item->post_status ) ? $weight : 0;
 
-		$weights = array_reduce( $ads->posts, function( $carry, $item ) use ( $weights ) {
-			$weight             = $weights[$item->ID] ?? Advanced_Ads_Group::MAX_AD_GROUP_DEFAULT_WEIGHT;
-			$carry[ $item->ID ] = $item->post_status === 'publish' ? $weight : 0;
-
-			return $carry;
-		}, [] );
+				return $carry;
+			},
+			[]
+		);
 
 		arsort( $weights );
 		$weight_sum = array_sum( array_intersect_key( $weights, array_flip( $ad_ids ) ) );

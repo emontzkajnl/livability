@@ -223,28 +223,24 @@ if (!function_exists("asl_generate_html_results")) {
 
 if (!function_exists('asl_icl_t')) {
     /* Ajax Search Lite wrapper for WPML and Polylang print */
-    function asl_icl_t($name, $value, $strip_special = false) {
-        $regex = '/[^\pL\s]+/u';
-        if (function_exists('icl_register_string') && function_exists('icl_t')) {
-            icl_register_string('ajax-search-lite', $name, $value);
-            if ( $strip_special )
-                return preg_replace($regex, ' ', stripslashes( icl_t('ajax-search-lite', $name, $value) ));
-            return stripslashes( icl_t('ajax-search-lite', $name, $value) );
-        }
-        if (function_exists('pll_register_string') && function_exists('pll__')) {
+    function asl_icl_t($name, $value, $esc_html = false) {
+	    $ret = apply_filters('asl_icl_t', $value, $name, $esc_html);
+
+        if (defined('WPML_PLUGIN_BASENAME') || defined('ICL_SITEPRESS_VERSION')) {
+	        do_action( 'wpml_register_single_string', 'ajax-search-lite', $name, $value );
+	        $ret = apply_filters('wpml_translate_single_string', $value, 'ajax-search-lite', $name);
+        } elseif (function_exists('pll_register_string') && function_exists('pll__')) {
             pll_register_string($name, $value, 'ajax-search-lite');
-            if ( $strip_special )
-                return preg_replace( $regex, ' ', stripslashes( pll__($value)) );
-            return stripslashes( pll__($value) );
+	        $ret = pll__($value);
+        } elseif (function_exists('qtranxf_useCurrentLanguageIfNotFoundUseDefaultLanguage')) {
+	        $ret = qtranxf_useCurrentLanguageIfNotFoundUseDefaultLanguage( $value );
         }
-        if (function_exists('qtranxf_useCurrentLanguageIfNotFoundUseDefaultLanguage')) {
-            if ( $strip_special )
-                return preg_replace( $regex, ' ', stripslashes( qtranxf_useCurrentLanguageIfNotFoundUseDefaultLanguage( $value ) ) );
-            return stripslashes( qtranxf_useCurrentLanguageIfNotFoundUseDefaultLanguage( $value ) );
+
+        if ( $esc_html ) {
+	        return esc_html( stripslashes( $ret ) );
         }
-        if ( $strip_special )
-            return preg_replace( $regex, ' ', stripslashes( $value ) );
-        return stripslashes( $value );
+
+        return stripslashes( $ret );
     }
 }
 

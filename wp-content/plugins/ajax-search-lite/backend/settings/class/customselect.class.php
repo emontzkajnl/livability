@@ -12,6 +12,9 @@ if (!class_exists("wpdreamsCustomSelect")) {
      * @copyright Copyright (c) 2014, Ernest Marcinko
      */
     class wpdreamsCustomSelect extends wpdreamsType {
+		private array $selects = array();
+		private string $selected = '';
+
         function getType() {
             parent::getType();
             $this->processData();
@@ -30,8 +33,6 @@ if (!class_exists("wpdreamsCustomSelect")) {
         }
 
         function processData() {
-            //$this->data = str_replace("\n","",$this->data);
-            $this->selects = array();
             $this->selects = $this->data['selects'];
             $this->selected = $this->data['value'];
         }

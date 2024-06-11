@@ -2,9 +2,9 @@
 Contributors: webzunft, advancedads
 Tags: ads, adsense, amp, ads.txt, ad rotations, ad blocker, amazon, banner, click fraud protection, google ad manager, header code, lazy loading,
 Requires at least: 5.0
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 7.2
-Stable tag: 1.51.2
+Stable tag: 1.52.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -338,20 +338,20 @@ Yes. You can use plenty of [hooks](https://wpadvancedads.com/codex/) to customiz
 
 == Changelog ==
 
-= 1.51.2 (March 13, 2024) =
+= 1.52.3 (May 14, 2024) =
 
-- Improvement: enhance compatibility with PHP 8.3
-- Fix: resolve smaller style issues on the dashboard page
-- Fix: resolve an issue preventing the deletion of groups
-- Fix: correct an issue where saving in Gutenberg occasionally caused an error
+- Fix: remove a PHP warning in Gutenberg block
 
-= 1.51.1 (February 29, 2024) =
+= 1.52.2 (May 6, 2024) =
 
-- Fix: resolve an issue that prevents delete links from working
+- Fix: enhance data handling in Gutenberg block module for improved security
+- Fix: replace function 'maybe_unserialize' with a more secure custom function
 
-= 1.51.0 (February 27, 2024) =
+= 1.52.1 (April 4, 2024) =
 
-- Feature: add an integration for PubGuru®
-- Improvement: add AdSense widget on WordPress dashboard
-- Fix: rename Advanced Ads widget on WordPress dashboard
-- Fix: refresh group page after deleting or creating a group
+- Fix: resolve issue with saving group weight
+
+= 1.52.0 (April 3, 2024) =
+
+- Improvement: bump 'Tested up to' version to 6.5
+- Improvement: add status icon for ads in group modal

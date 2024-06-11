@@ -127,22 +127,7 @@ if (!class_exists("wpdreamsType")) {
          *
          * Checks for errors when a new value was posted.
          */
-        protected function getType() {
-            if ( isset($_POST[$this->name]) ) {
-                if (!$this->checkData() || $this->getError()) {
-                    /*errormessage*/
-                    echo "<div class='errorMsg'>" . (($this->errormsg != "") ? $this->errormsg : self::$_globalerrormsg) . "</div>";
-                } else {
-                    if (is_array($this->data) && isset($this->data['value'])) {
-                        $this->data['value'] = $_POST[$this->name];
-                        $this->value = $this->data['value'];
-                    } else {
-                        $this->data = $_POST[$this->name];
-                        $this->value = $this->data;
-                    }
-                }
-            }
-        }
+        protected function getType() {}
 
         protected function decode_param($v) {
             if (gettype($v) === 'string' && substr($v, 0, strlen('_decode_')) === '_decode_') {

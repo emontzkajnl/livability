@@ -23,7 +23,8 @@ if ( !class_exists("WD_ASL_Shortcodes") ) {
          * @var array
          */
         private static $shortcodes = array(
-            "wpdreams_ajaxsearchlite" => "Search"
+            "wpdreams_ajaxsearchlite" => "Search",
+            "wd_asl" => "Search"
         );
 
         /**

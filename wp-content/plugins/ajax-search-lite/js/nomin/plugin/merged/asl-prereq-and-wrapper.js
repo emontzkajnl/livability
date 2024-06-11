@@ -1565,40 +1565,44 @@ window.WPD.intervalUntilExecute = function(f, criteria, interval, maxTries) {
         ASL.initialized = true;
     };
 
+
+
     window.ASL.initializeHighlight = function() {
         let _this = this;
         if (_this.highlight.enabled) {
-            let data = localStorage.getItem('asl_phrase_highlight');
-            localStorage.removeItem('asl_phrase_highlight');
-            if (data != null) {
-                data = JSON.parse(data);
-                _this.highlight.data.forEach(function (o) {
-                    let selector = o.selector != '' && $(o.selector).length > 0 ? o.selector : 'article',
-                        $highlighted;
-                    selector = $(selector).length > 0 ? selector : 'body';
+            _this.highlight.data.forEach(function (data) {
+                let selector = data.selector != '' && $(data.selector).length > 0 ? data.selector : 'article',
+                    $highlighted, phrase, s;
+                selector = $(selector).length > 0 ? selector : 'body';
+
+                s = new URLSearchParams(location.search);
+                phrase = s.get('s') || s.get('asl_highlight');
+                $(selector).unhighlight({className: 'asl_single_highlighted'});
+                if (phrase !== null && phrase.trim() != '') {
                     // noinspection JSUnresolvedVariable
-                    $(selector).highlight(data.phrase, {
+                    selector = $(selector).length > 0 ? selector : 'body';
+                    $(selector).highlight(phrase.trim().split(' '), {
                         element: 'span',
                         className: 'asl_single_highlighted',
-                        wordsOnly: o.whole,
+                        wordsOnly: data.whole,
                         excludeParents: '.asl_w, .asl-try'
                     });
                     $highlighted = $('.asl_single_highlighted');
-                    if (o.scroll && $highlighted.length > 0) {
+                    if (data.scroll && $highlighted.length > 0) {
                         let stop = $highlighted.offset().top - 120;
                         let $adminbar = $("#wpadminbar");
                         if ($adminbar.length > 0)
                             stop -= $adminbar.height();
                         // noinspection JSUnresolvedVariable
-                        stop = stop + o.scroll_offset;
+                        stop = stop + data.scroll_offset;
                         stop = stop < 0 ? 0 : stop;
                         $('html').animate({
                             "scrollTop": stop
                         }, 500);
                     }
-                    return false;
-                });
-            }
+                }
+            });
+            return false;
         }
     };
 

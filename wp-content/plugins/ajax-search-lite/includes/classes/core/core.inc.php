@@ -13,3 +13,4 @@ require_once(ASL_CLASSES_PATH . "core/class-asl-dbman.php");
 require_once(ASL_CLASSES_PATH . "core/class-asl-instances.php");
 require_once(ASL_CLASSES_PATH . "core/class-asl-manager.php");
 require_once(ASL_CLASSES_PATH . "core/class-asl-scripts.php");
+require_once(ASL_CLASSES_PATH . "core/class-asl-styles.php");

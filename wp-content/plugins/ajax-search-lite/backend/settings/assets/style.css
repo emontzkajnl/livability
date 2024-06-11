@@ -920,23 +920,6 @@ input[type=button].wd_button:active,
     font-size: 14px;
 }
 
-#wpdreams .wpdreamsanimationselect + span {
-  padding: 4px 11px;
-  display: inline-block;
-  background: #eee;
-  margin: 3px;
-  animation-delay: 0.3s;
-  animation-duration: 1s;
-  animation-fill-mode: both;
-  animation-timing-function: ease;
-  backface-visibility: hidden;
-  -webkit-animation-delay: 0.3s;
-  -webkit-animation-duration: 1s;
-  -webkit-animation-fill-mode: both;
-  -webkit-animation-timing-function: ease;
-  -webkit-backface-visibility: hidden;
-}
-
 
 #wpdreams .successMsg {
   color:#1a772c;

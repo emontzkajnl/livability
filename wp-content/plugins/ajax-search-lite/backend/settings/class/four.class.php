@@ -13,6 +13,12 @@ if (!class_exists("wpdreamsFour")) {
      * @copyright Copyright (c) 2014, Ernest Marcinko
      */
     class wpdreamsFour extends wpdreamsType {
+		private string $desc;
+		private string $top;
+		private string $bottom;
+		private string $right;
+		private string $left;
+
         function getType() {
             parent::getType();
             $this->processData();

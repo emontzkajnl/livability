@@ -300,6 +300,7 @@ class Advanced_Ads_Admin_Meta_Boxes {
 				$report_filter                     = $unit_code;
 				$advads_gadsense_options['hidden'] = ! $unit_code;
 				$view                              = 'gadsense-dashboard.php';
+				$pub_id                            = Advanced_Ads_AdSense_Data::get_instance()->get_adsense_id();
 				$hndlelinks                        = '<a href="' . esc_url( admin_url( 'admin.php?page=advanced-ads-settings#top#adsense' ) ) . '" target="_blank">' . __( 'Disable', 'advanced-ads' ) . '</a>';
 				break;
 		}

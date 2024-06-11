@@ -187,6 +187,15 @@ div.asl_m .probox .proinput {
     -webkit-order: 5;
 }
 
+div.asl_m .probox .proinput form {
+    height: 100%;
+    /* some themes like to add un-removable margin and padding.. */
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+    max-width: unset !important;
+}
+
 div.asl_m .probox .proinput input:before,
 div.asl_m .probox .proinput input:after,
 div.asl_m .probox .proinput form:before,

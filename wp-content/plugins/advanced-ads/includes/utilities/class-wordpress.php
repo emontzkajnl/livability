@@ -117,4 +117,21 @@ class WordPress {
 
 		return $is_gutenberg && $is_writing;
 	}
+
+	/**
+	 * Unserializes data only if it was serialized.
+	 *
+	 * @link https://patchstack.com/articles/unauthenticated-php-object-injection-in-flatsome-theme-3-17-5/
+	 *
+	 * @param string $data Data that might be unserialized.
+	 *
+	 * @return mixed Unserialized data can be any type.
+	 */
+	public static function maybe_unserialize( $data ) {
+		if ( is_serialized( $data ) ) { // Don't attempt to unserialize data that wasn't serialized going in.
+			return @unserialize( trim( $data ), [ 'allowed_classes' => false ] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
+		}
+
+		return $data;
+	}
 }

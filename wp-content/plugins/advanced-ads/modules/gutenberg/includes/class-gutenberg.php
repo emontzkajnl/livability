@@ -217,18 +217,18 @@ class Advanced_Ads_Gutenberg {
 		];
 
 		if ( isset( $attr['fixed_widget'] ) ) {
-			$output['wrapper_attrs']['data-fixed_widget'] = $attr['fixed_widget'];
+			$output['wrapper_attrs']['data-fixed_widget'] = esc_attr( $attr['fixed_widget'] );
 		}
 
 		if ( ! empty( $attr['width'] ) ) {
-			$output['output']['wrapper_attrs']['style']['width'] = $attr['width'] . 'px';
+			$output['output']['wrapper_attrs']['style']['width'] = absint( $attr['width'] ) . 'px';
 		}
 
 		if ( ! empty( $attr['height'] ) ) {
-			$output['output']['wrapper_attrs']['style']['height'] = $attr['height'] . 'px';
+			$output['output']['wrapper_attrs']['style']['height'] = absint( $attr['height'] ) . 'px';
 		}
 
-		$align           = $attr['align'] ?? 'default';
+		$align           = esc_attr( $attr['align'] ?? 'default' );
 		$after_ad_filter = function( $output, $ad ) {
 			return $output . '<br style="clear: both; display: block; float: none;">';
 		};

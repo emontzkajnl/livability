@@ -2,14 +2,12 @@
 /* Prevent direct access */
 defined('ABSPATH') or die("You can't access this file directly.");
 
-$com_options = wd_asl()->o['asl_compatibility'];
-
 if (ASL_DEMO) $_POST = null;
 
 // Compatibility stuff
 $action_msg = '';
 if (
-isset($_POST, $_POST['asl_compatibility'], $_POST['asl_compatibility_nonce'])
+	isset($_POST, $_POST['asl_compatibility'], $_POST['asl_compatibility_nonce'])
 ) {
 	if ( wp_verify_nonce( $_POST['asl_compatibility_nonce'], 'asl_compatibility_nonce' ) ) {
 		$values = array(
@@ -27,12 +25,15 @@ isset($_POST, $_POST['asl_compatibility'], $_POST['asl_compatibility_nonce'])
 			"db_force_utf8_like" => $_POST['db_force_utf8_like']
 		);
 		update_option('asl_compatibility', $values);
+		asl_parse_options();
 		$action_msg = "<div class='successMsg'>" . __('Search compatibility settings successfuly updated!', 'ajax-search-lite') . "</div>";
 	} else {
 		$action_msg = "<div class='errorMsg'>" . __('Something went wrong, pelase try again!', 'ajax-search-lite') . "</div>";
 		$_POST = array();
 	}
 }
+
+$com_options = wd_asl()->o['asl_compatibility'];
 ?>
 <div id="wpdreams" class='wpdreams wrap<?php echo isset($_COOKIE['asl-accessibility']) ? ' wd-accessible' : ''; ?>'>
     <div class="wpdreams-box" style="float:left;">

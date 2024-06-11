@@ -1,4 +1,7 @@
 <?php
+
+use WPDRMS\Backend\Blocks\AslSearchBlocks;
+
 if (!defined('ABSPATH')) die('-1');
 
 if (!class_exists("WD_ASL_Manager")) {
@@ -161,6 +164,10 @@ if (!class_exists("WD_ASL_Manager")) {
             require_once(ASL_CLASSES_PATH . "suggest/suggest.inc.php");
             require_once(ASL_CLASSES_PATH . "search/search.inc.php");
             require_once(ASL_CLASSES_PATH . "shortcodes/shortcodes.inc.php");
+
+	        // FSE & Gutenberg
+	        require_once ASL_PATH . '/backend/Blocks/AslSearchBlocks.php';
+	        new AslSearchBlocks();
 
             switch ($this->context) {
                 case "special":

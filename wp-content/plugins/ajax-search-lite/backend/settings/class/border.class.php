@@ -12,12 +12,13 @@ if (!class_exists("wpdreamsBorder")) {
      * @copyright Copyright (c) 2014, Ernest Marcinko
      */
     class wpdreamsBorder extends wpdreamsType {
-        private $topleft;
-        private $topright;
-        private $bottomright;
-        private $bottomleft;
-        private $width;
-        private $style;
+        private string $topleft;
+        private string $topright;
+        private string $bottomright;
+        private string $bottomleft;
+        private string $width;
+        private string $style;
+		private string $color;
         private $border_styles = array(
             'none', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset'
         );

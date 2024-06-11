@@ -2,7 +2,6 @@
 /* Prevent direct access */
 defined( 'ABSPATH' ) or die( "You can't access this file directly." );
 
-$cache_options = wd_asl()->o['asl_performance'];
 $action_msg = '';
 
 if ( isset($_POST, $_POST['asl_performance'],  $_POST['submit'], $_POST['asl_performance_nonce']) ) {
@@ -21,6 +20,7 @@ if ( isset($_POST, $_POST['asl_performance'],  $_POST['submit'], $_POST['asl_per
 	}
 }
 
+$cache_options = wd_asl()->o['asl_performance'];
 ?>
 <div id="wpdreams" class='wpdreams wrap<?php echo isset($_COOKIE['asl-accessibility']) ? ' wd-accessible' : ''; ?>'>
     <?php if (wd_asl()->o['asl_performance']['use_custom_ajax_handler'] == 1): ?>

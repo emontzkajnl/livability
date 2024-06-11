@@ -8,7 +8,11 @@
  * @var Advanced_Ads_Group $group      Group object.
  * @var int[]              $weights    All weights.
  * @var int                $weight_sum Sum of all ad weights.
+ * @var Groups_List_Table  $this       The group terms list table class.
+ * @var WP_Query           $ads        The query object to fetch all ads inside that group.
  */
+
+use AdvancedAds\Admin\Groups_List_Table;
 
 $i = 1;
 

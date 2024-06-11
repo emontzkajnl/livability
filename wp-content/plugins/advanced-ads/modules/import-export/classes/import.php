@@ -152,7 +152,7 @@ class Advanced_Ads_Import {
 				if ( isset( $ad['meta_input'] ) && is_array( $ad['meta_input'] ) ) {
 					foreach ( $ad['meta_input'] as $meta_k => &$meta_v ) {
 						if ( Advanced_Ads_Ad::$options_meta_field !== $meta_k ) {
-							$meta_v = maybe_unserialize( $meta_v );
+							$meta_v = WordPress::maybe_unserialize( $meta_v );
 						}
 					}
 				}
@@ -534,7 +534,7 @@ class Advanced_Ads_Import {
 
 				/* translators: %s: Option name. */
 				$this->messages[] = [ 'update', sprintf( __( 'Option was updated: <em>%s</em>', 'advanced-ads' ), $option_name ) ];
-				update_option( $option_name, maybe_unserialize( $option_to_import ) );
+				update_option( $option_name, WordPress::maybe_unserialize( $option_to_import ) );
 			}
 		}
 	}

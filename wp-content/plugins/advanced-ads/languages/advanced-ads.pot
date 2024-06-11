@@ -2,20 +2,20 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Advanced Ads 1.51.1\n"
+"Project-Id-Version: Advanced Ads 1.52.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/advanced-ads/\n"
 "Last-Translator: Thomas Maier <post@webzunft.de>\n"
 "Language-Team: webgilde <support@wpadvancedads.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-03-13T09:10:08+00:00\n"
+"POT-Creation-Date: 2024-05-14T06:20:15+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: advanced-ads\n"
 
 #. Plugin Name of the plugin
-#: admin/includes/class-meta-box.php:564
+#: admin/includes/class-meta-box.php:565
 #: modules/gutenberg/includes/class-gutenberg.php:136
 msgid "Advanced Ads"
 msgstr ""
@@ -59,7 +59,7 @@ msgid "Ads are disabled for all or some pages. See \"disabled ads\" in <a href=\
 msgstr ""
 
 #: admin/includes/ad-health-notices.php:73
-#: admin/views/support.php:58
+#: admin/views/support.php:63
 msgid "Advanced Ads related constants enabled"
 msgstr ""
 
@@ -315,6 +315,10 @@ msgstr ""
 msgid "expired %s"
 msgstr ""
 
+#: admin/includes/class-ad-type.php:1205
+msgid "Published"
+msgstr ""
+
 #: admin/includes/class-admin-upgrades.php:41
 msgid "Load ad units directly from your Google Ad Manager account."
 msgstr ""
@@ -449,7 +453,7 @@ msgid "Earnings of  %1$s"
 msgstr ""
 
 #: admin/includes/class-meta-box.php:137
-#: includes/admin/class-groups-list-table.php:442
+#: includes/admin/class-groups-list-table.php:451
 #: views/admin/screens/placements.php:351
 msgid "Usage"
 msgstr ""
@@ -517,34 +521,34 @@ msgstr ""
 msgid "Visitor Conditions"
 msgstr ""
 
-#: admin/includes/class-meta-box.php:303
+#: admin/includes/class-meta-box.php:304
 #: admin/includes/class-overview-widgets.php:64
 msgid "Disable"
 msgstr ""
 
-#: admin/includes/class-meta-box.php:465
+#: admin/includes/class-meta-box.php:466
 msgid "Ad Settings"
 msgstr ""
 
 #. translators: %1$d is the number of ads, %2$s and %3$s are URLs.
-#: admin/includes/class-meta-box.php:580
+#: admin/includes/class-meta-box.php:581
 msgid "%1$d ads – <a href=\"%2$s\">manage</a> - <a href=\"%3$s\">new</a>"
 msgstr ""
 
-#: admin/includes/class-meta-box.php:593
+#: admin/includes/class-meta-box.php:594
 msgid "Get the tutorial via email"
 msgstr ""
 
-#: admin/includes/class-meta-box.php:602
+#: admin/includes/class-meta-box.php:603
 msgid "Get AdSense tips via email"
 msgstr ""
 
-#: admin/includes/class-meta-box.php:611
+#: admin/includes/class-meta-box.php:612
 msgid "Visit our blog for more articles about ad optimization"
 msgstr ""
 
 #. translators: %s is our URL.
-#: admin/includes/class-meta-box.php:666
+#: admin/includes/class-meta-box.php:667
 msgid "Latest posts on wpadvancedads.com"
 msgstr ""
 
@@ -580,7 +584,7 @@ msgstr ""
 #: admin/views/placements-item.php:68
 #: includes/admin/class-assets.php:71
 #: views/admin/tables/groups/list-row-loop-none.php:17
-#: views/admin/tables/groups/list-row-option-ads.php:60
+#: views/admin/tables/groups/list-row-option-ads.php:61
 msgid "Create your first ad"
 msgstr ""
 
@@ -1812,49 +1816,49 @@ msgstr ""
 msgid "Ask your question!"
 msgstr ""
 
-#: admin/views/support.php:6
+#: admin/views/support.php:10
 msgid "Please fix the red highlighted issues on this page or try to understand their consequences before contacting support."
 msgstr ""
 
-#: admin/views/support.php:7
+#: admin/views/support.php:11
 msgid "Possible Issues"
 msgstr ""
 
-#: admin/views/support.php:9
+#: admin/views/support.php:13
 msgid "Ads not showing up"
 msgstr ""
 
-#: admin/views/support.php:10
+#: admin/views/support.php:14
 msgid "Purchase & Licenses"
 msgstr ""
 
-#: admin/views/support.php:11
+#: admin/views/support.php:15
 msgid "Issues after updating"
 msgstr ""
 
-#: admin/views/support.php:12
+#: admin/views/support.php:16
 msgid "General Issues"
 msgstr ""
 
-#: admin/views/support.php:13
+#: admin/views/support.php:17
 msgid "Issues with Add-Ons"
 msgstr ""
 
-#: admin/views/support.php:15
+#: admin/views/support.php:19
 msgid "Use the following form to search for solutions in the manual on wpadvancedads.com"
 msgstr ""
 
-#: admin/views/support.php:18
+#: admin/views/support.php:22
 msgid "search"
 msgstr ""
 
 #. translators: %s is a URL.
-#: admin/views/support.php:26
+#: admin/views/support.php:30
 msgid "Take a look at more common issues or contact us directly through the <a href=\"%s\" target=\"_blank\">support page</a>."
 msgstr ""
 
 #. translators: %s is a URL.
-#: admin/views/support.php:44
+#: admin/views/support.php:48
 msgid "Upgrade to any premium add-on and get <strong>priority email support</strong> or reach out through the <a href=\"%s\" target=\"_blank\">support forum</a> for individual help."
 msgstr ""
 
@@ -2837,7 +2841,7 @@ msgid "ID: %s"
 msgstr ""
 
 #: includes/admin/class-groups-list-table.php:345
-#: includes/admin/class-groups-list-table.php:411
+#: includes/admin/class-groups-list-table.php:420
 #: includes/class-entities.php:59
 #: modules/import-export/classes/import.php:168
 #: modules/import-export/classes/import.php:211
@@ -2857,26 +2861,26 @@ msgid "Delete"
 msgstr ""
 
 #. translators: %s is the title for ad.
-#: includes/admin/class-groups-list-table.php:387
+#: includes/admin/class-groups-list-table.php:389
 msgid "Opens ad %s in a new tab"
 msgstr ""
 
-#: includes/admin/class-groups-list-table.php:412
+#: includes/admin/class-groups-list-table.php:421
 msgid "Save"
 msgstr ""
 
-#: includes/admin/class-groups-list-table.php:430
+#: includes/admin/class-groups-list-table.php:439
 #: views/admin/screens/placements.php:337
 msgid "shortcode"
 msgstr ""
 
-#: includes/admin/class-groups-list-table.php:432
+#: includes/admin/class-groups-list-table.php:441
 #: views/admin/screens/placements.php:341
 msgid "template (PHP)"
 msgstr ""
 
 #. translators: amount of ads displayed
-#: includes/admin/class-groups-list-table.php:528
+#: includes/admin/class-groups-list-table.php:537
 msgid "Up to %d ad displayed."
 msgid_plural "Up to %d ads displayed"
 msgstr[0] ""
@@ -2886,7 +2890,7 @@ msgstr[1] ""
 #: includes/admin/class-header.php:61
 #: includes/class-entities.php:57
 #: includes/class-entities.php:61
-#: views/admin/tables/groups/list-row-option-ads.php:38
+#: views/admin/tables/groups/list-row-option-ads.php:39
 msgid "New Ad"
 msgstr ""
 
@@ -4571,14 +4575,18 @@ msgid "Add some"
 msgstr ""
 
 #. translators: %d is a number.
-#: views/admin/tables/groups/list-row-loop.php:38
+#: views/admin/tables/groups/list-row-loop.php:42
 msgid "show %d more ads"
 msgstr ""
 
 #: views/admin/tables/groups/list-row-option-ads.php:20
-msgid "weight"
+msgid "Status"
 msgstr ""
 
-#: views/admin/tables/groups/list-row-option-ads.php:57
+#: views/admin/tables/groups/list-row-option-ads.php:21
+msgid "Weight"
+msgstr ""
+
+#: views/admin/tables/groups/list-row-option-ads.php:58
 msgid "add"
 msgstr ""

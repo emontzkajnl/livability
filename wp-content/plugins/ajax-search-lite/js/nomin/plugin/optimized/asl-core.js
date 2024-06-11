@@ -125,16 +125,7 @@
                     });
 
                     // Single highlight on live results
-                    // noinspection JSUnresolvedVariable
-                    if ( $this.o.singleHighlight == 1 ) {
-                        $(selector).find('a').on('click', function(){
-                            localStorage.removeItem('asl_phrase_highlight');
-                            if ( helpers.unqoutePhrase( $this.n('text').val() ) != '' )
-                                localStorage.setItem('asl_phrase_highlight', JSON.stringify({
-                                    'phrase': helpers.unqoutePhrase( $this.n('text').val() )
-                                }));
-                        });
-                    }
+                    $this.addHighlightString($(selector).find('a'));
 
                     helpers.Hooks.applyFilters('asl/live_load/finished', url, $this, selector, $el.get(0));
 
@@ -584,6 +575,24 @@
             $this.fixResultsPosition(true);
         },
 
+        addHighlightString: function( $items ) {
+            // Results highlight on results page
+            let $this = this,
+                phrase = $this.n('text').val().replace(/["']/g, '');
+    
+            $items = typeof $items == 'undefined' ? $this.n('items').find('a.asl_res_url') : $items;
+            if ( $this.o.singleHighlight == 1 && phrase != '' && $items.length > 0 ) {
+                $items.forEach( function(){
+                    try {
+                        const url = new URL($(this).attr('href'));
+                        url.searchParams.set('asl_highlight', phrase);
+                        url.searchParams.set('p_asid', $this.o.id);
+                        $(this).attr('href', url.href);
+                    } catch (e) {}
+                });
+            }
+        },
+
         scrollToResults: function( ) {
             let $this = this,
                 tolerance = Math.floor( window.innerHeight * 0.1 ),
@@ -707,6 +716,8 @@
                         });
 
                         $this.nodes.items = $('.item', $this.n('resultsDiv'));
+
+                        $this.addHighlightString();
 
                         $this.gaEvent?.('search_end', {'results_count': $this.n('items').length});
 
@@ -1774,17 +1785,6 @@
                     'result_title': $(this).find('a.asl_res_url').text(),
                     'result_url': $(this).find('a.asl_res_url').attr('href')
                 });
-
-                // Results highlight on results page
-                // noinspection JSUnresolvedVariable
-                if ( $this.o.singleHighlight == 1 ) {
-                    localStorage.removeItem('asl_phrase_highlight');
-                    if (  $this.n('text').val().replace(/["']/g, '')  != '' ) {
-                        localStorage.setItem('asl_phrase_highlight', JSON.stringify({
-                            'phrase': $this.n('text').val().replace(/["']/g, '')
-                        }));
-                    }
-                }
             });
         }
     }

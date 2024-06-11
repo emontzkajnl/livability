@@ -17,7 +17,8 @@
 	<thead>
 		<tr>
 			<th><?php esc_html_e( 'Ad', 'advanced-ads' ); ?></th>
-			<th colspan="2"><?php esc_html_e( 'weight', 'advanced-ads' ); ?></th>
+			<th><?php esc_html_e( 'Status', 'advanced-ads' ); ?></th>
+			<th colspan="2"><?php esc_html_e( 'Weight', 'advanced-ads' ); ?></th>
 		</tr>
 	</thead>
 	<?php endif; ?>

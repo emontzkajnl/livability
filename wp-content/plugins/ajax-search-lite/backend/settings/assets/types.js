@@ -1432,20 +1432,6 @@ jQuery(function($){
     });
 
     /**
-     * Animation selector
-     */
-    $('.wpdreamsAnimations .wpdreamsanimationselect').change(function () {
-        var parent = $(this).parent();
-        $('span', parent).removeClass();
-        $('span', parent).addClass("asp_an_" + $(this).val());
-    });
-    $('.wpdreamsAnimations .triggerer').bind('click', function () {
-        var parent = $(this).parent();
-        var select = $('select', parent);
-        return;
-    });
-
-    /**
      * Image Settings
      * The name of the separate params determinates the value outputted in the hidden field.
      */

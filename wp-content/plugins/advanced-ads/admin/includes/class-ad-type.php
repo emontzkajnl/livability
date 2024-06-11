@@ -1200,7 +1200,10 @@ class Advanced_Ads_Admin_Ad_Type {
 			}
 		}
 
-		$status_type = ! $status_type ? 'published' : $status_type;
+		if ( ! $status_type ) {
+			$status_type      = 'published';
+			$status_strings[] = __( 'Published', 'advanced-ads' );
+		}
 
 		include ADVADS_ABSPATH . 'admin/views/ad/status-icon.php';
 

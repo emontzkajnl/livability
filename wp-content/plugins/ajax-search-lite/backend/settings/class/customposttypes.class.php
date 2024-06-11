@@ -12,6 +12,8 @@ if (!class_exists("wpdreamsCustomPostTypes")) {
      * @copyright Copyright (c) 2017, Ernest Marcinko
      */
     class wpdreamsCustomPostTypes extends wpdreamsType {
+        private $types, $selected;
+        
         private $args = array(
             'exclude' => array("revision", "nav_menu_item", "attachment")
         );

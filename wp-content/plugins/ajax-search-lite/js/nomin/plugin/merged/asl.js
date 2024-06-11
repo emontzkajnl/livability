@@ -1735,16 +1735,7 @@ window.WPD.intervalUntilExecute = function(f, criteria, interval, maxTries) {
                     });
 
                     // Single highlight on live results
-                    // noinspection JSUnresolvedVariable
-                    if ( $this.o.singleHighlight == 1 ) {
-                        $(selector).find('a').on('click', function(){
-                            localStorage.removeItem('asl_phrase_highlight');
-                            if ( helpers.unqoutePhrase( $this.n('text').val() ) != '' )
-                                localStorage.setItem('asl_phrase_highlight', JSON.stringify({
-                                    'phrase': helpers.unqoutePhrase( $this.n('text').val() )
-                                }));
-                        });
-                    }
+                    $this.addHighlightString($(selector).find('a'));
 
                     helpers.Hooks.applyFilters('asl/live_load/finished', url, $this, selector, $el.get(0));
 
@@ -2194,6 +2185,24 @@ window.WPD.intervalUntilExecute = function(f, criteria, interval, maxTries) {
             $this.fixResultsPosition(true);
         },
 
+        addHighlightString: function( $items ) {
+            // Results highlight on results page
+            let $this = this,
+                phrase = $this.n('text').val().replace(/["']/g, '');
+    
+            $items = typeof $items == 'undefined' ? $this.n('items').find('a.asl_res_url') : $items;
+            if ( $this.o.singleHighlight == 1 && phrase != '' && $items.length > 0 ) {
+                $items.forEach( function(){
+                    try {
+                        const url = new URL($(this).attr('href'));
+                        url.searchParams.set('asl_highlight', phrase);
+                        url.searchParams.set('p_asid', $this.o.id);
+                        $(this).attr('href', url.href);
+                    } catch (e) {}
+                });
+            }
+        },
+
         scrollToResults: function( ) {
             let $this = this,
                 tolerance = Math.floor( window.innerHeight * 0.1 ),
@@ -2423,6 +2432,8 @@ window.WPD.intervalUntilExecute = function(f, criteria, interval, maxTries) {
                         });
 
                         $this.nodes.items = $('.item', $this.n('resultsDiv'));
+
+                        $this.addHighlightString();
 
                         $this.gaEvent?.('search_end', {'results_count': $this.n('items').length});
 
@@ -3567,17 +3578,6 @@ window.WPD.intervalUntilExecute = function(f, criteria, interval, maxTries) {
                     'result_title': $(this).find('a.asl_res_url').text(),
                     'result_url': $(this).find('a.asl_res_url').attr('href')
                 });
-
-                // Results highlight on results page
-                // noinspection JSUnresolvedVariable
-                if ( $this.o.singleHighlight == 1 ) {
-                    localStorage.removeItem('asl_phrase_highlight');
-                    if (  $this.n('text').val().replace(/["']/g, '')  != '' ) {
-                        localStorage.setItem('asl_phrase_highlight', JSON.stringify({
-                            'phrase': $this.n('text').val().replace(/["']/g, '')
-                        }));
-                    }
-                }
             });
         }
     }
@@ -4382,40 +4382,44 @@ window.ASL.api = (function() {
         ASL.initialized = true;
     };
 
+
+
     window.ASL.initializeHighlight = function() {
         let _this = this;
         if (_this.highlight.enabled) {
-            let data = localStorage.getItem('asl_phrase_highlight');
-            localStorage.removeItem('asl_phrase_highlight');
-            if (data != null) {
-                data = JSON.parse(data);
-                _this.highlight.data.forEach(function (o) {
-                    let selector = o.selector != '' && $(o.selector).length > 0 ? o.selector : 'article',
-                        $highlighted;
-                    selector = $(selector).length > 0 ? selector : 'body';
+            _this.highlight.data.forEach(function (data) {
+                let selector = data.selector != '' && $(data.selector).length > 0 ? data.selector : 'article',
+                    $highlighted, phrase, s;
+                selector = $(selector).length > 0 ? selector : 'body';
+
+                s = new URLSearchParams(location.search);
+                phrase = s.get('s') || s.get('asl_highlight');
+                $(selector).unhighlight({className: 'asl_single_highlighted'});
+                if (phrase !== null && phrase.trim() != '') {
                     // noinspection JSUnresolvedVariable
-                    $(selector).highlight(data.phrase, {
+                    selector = $(selector).length > 0 ? selector : 'body';
+                    $(selector).highlight(phrase.trim().split(' '), {
                         element: 'span',
                         className: 'asl_single_highlighted',
-                        wordsOnly: o.whole,
+                        wordsOnly: data.whole,
                         excludeParents: '.asl_w, .asl-try'
                     });
                     $highlighted = $('.asl_single_highlighted');
-                    if (o.scroll && $highlighted.length > 0) {
+                    if (data.scroll && $highlighted.length > 0) {
                         let stop = $highlighted.offset().top - 120;
                         let $adminbar = $("#wpadminbar");
                         if ($adminbar.length > 0)
                             stop -= $adminbar.height();
                         // noinspection JSUnresolvedVariable
-                        stop = stop + o.scroll_offset;
+                        stop = stop + data.scroll_offset;
                         stop = stop < 0 ? 0 : stop;
                         $('html').animate({
                             "scrollTop": stop
                         }, 500);
                     }
-                    return false;
-                });
-            }
+                }
+            });
+            return false;
         }
     };
 

@@ -35,6 +35,12 @@ if ( !class_exists("WD_ASL_Actions") ) {
                 "priority"    => 10,
                 "args"  => 0
             ),
+	        array(
+		        "action" => "admin_enqueue_scripts",
+		        "handler" => "StyleSheets",
+		        "priority"    => 10,
+		        "args"  => 0
+	        ),
             array(
                 "action" => "wp_head",
                 "handler" => "CustomFonts",

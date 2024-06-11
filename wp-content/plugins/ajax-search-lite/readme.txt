@@ -1,11 +1,11 @@
 === Ajax Search Lite ===
 Contributors: wpdreams
 Donate link: http://wp-dreams.com
-Tags: search, better wordpress search, search plugin, relevance search, widget, Post, ajax search, search filter, wp ajax search, custom fields search, better search, ajax search plugin, wp search, wp search plugin, filter, relevant search plugin, wordpress search, Live Search, shortcode, google, autocomplete, suggest, woocommerce, woocommerce search, product, product search, custom search, ajax, suggest, autosuggest, search autocomplete, live, plugin, sidebar, product tag search, products, woocommerce tag search, WooCommerce Plugin, shop, search by sku, relevant search, highlight, term, image, custom search, ecommerce, Predictive Search, search product, shop, typehead, suggest, instant-search
+Tags: search, better search, live search, product search, woocommerce search
 Requires at least: 3.5
-Requires PHP: 7.0
-Tested up to: 6.3
-Stable tag: 4.11.4
+Requires PHP: 7.4
+Tested up to: 6.5
+Stable tag: 4.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -100,12 +100,34 @@ You should contact me on the support forum with your website url. I will check y
 and will let you know what to do.
 
 
+= Where do I report security bugs found in this plugin? =
+
+Please report security bugs found in the source code of the
+Ajax Search Lite plugin through the [Patchstack
+Vulnerability Disclosure Program](https://patchstack.com/database/vulnerability/ajax-search-lite). The
+Patchstack team will assist you with verification, CVE assignment, and
+notify the developers of this plugin.
+
+
 == Screenshots ==
 
 1. Ajax Search Lite in action - 2 themes
 2. Administrator area - nice and smooth
 
 == Changelog ==
+= 4.12 =
+* Added support for Block Editor - the Ajax Search Lite block should be available for Gutenberg
+* WPML String translations updates
+* PHP 8.3 compatibility fixes
+* Fixed an issue with the post_parent shortcode attribute
+* Fixed an issue with form width/flex with some themes
+
+= 4.11.5 =
+* Improved the results keyword highlighter - now does not need to use the local storage
+* Fixed a few PHP>8.2 deprecation issues
+* Removed some CSS files, which are no longer needed for the back-end
+* Fixed a potential CRSF & XSS issue identified by [Le Ngoc Anh](https://patchstack.com/database/researcher/be74d02b-c6f9-4a2b-bd48-5977f25413b3)
+
 = 4.11.4 =
 * Fixed a layout issue with the magnifier icon
 
@@ -602,4 +624,4 @@ and will let you know what to do.
 
 == Plugin website ==
 
-`http://ajaxsearchpro.com`
+`https://ajaxsearchpro.com`
