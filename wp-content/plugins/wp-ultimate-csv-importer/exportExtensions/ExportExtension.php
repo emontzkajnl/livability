@@ -95,13 +95,19 @@ class ExportExtension {
 			wp_die();
 		}
 		elseif($module == 'Tags'){
-			$get_all_terms = get_tags('hide_empty=0');
-			echo wp_json_encode(count($get_all_terms));
+			// $get_all_terms = get_tags('hide_empty=0');
+			$query = "SELECT * FROM {$wpdb->prefix}terms t INNER JOIN {$wpdb->prefix}term_taxonomy tax 
+				ON  `tax`.term_id = `t`.term_id WHERE `tax`.taxonomy =  'post_tag'";         
+			$get_all_taxonomies =  $wpdb->get_results($query);
+			echo wp_json_encode(count($get_all_taxonomies));
 			wp_die();
 		}
 		elseif($module == 'Categories'){
-			$get_all_terms = get_categories('hide_empty=0');
-			echo wp_json_encode(count($get_all_terms));
+			// $get_all_terms = get_categories('hide_empty=0');
+			$query = "SELECT * FROM {$wpdb->prefix}terms t INNER JOIN {$wpdb->prefix}term_taxonomy tax 
+				ON  `tax`.term_id = `t`.term_id WHERE `tax`.taxonomy =  'category'";         
+			$get_all_taxonomies =  $wpdb->get_results($query);
+			echo wp_json_encode(count($get_all_taxonomies));
 			wp_die();
 		}
 		elseif($module == 'Taxonomies'){
@@ -131,10 +137,37 @@ class ExportExtension {
 		/**
 		 * Check for specific status
 		 */
-		if($module == 'shop_order'){
-
-			$get_post_ids .= " and post_status in ('wc-completed','wc-cancelled','wc-on-hold','wc-processing','wc-pending')";
-
+		// if($module == 'product'){
+		// 	$product_statuses = array('publish', 'draft', 'future', 'private', 'pending');
+		// 	$products = wc_get_products(array('status' => $product_statuses));
+		// 	$response = count($products);
+		// 	echo wp_json_encode($response);	
+        //     wp_die();
+		// }
+		if($module  == 'product_variation'){
+			$product_statuses = array('publish', 'draft', 'future', 'private', 'pending');
+			$products = wc_get_products(array('status' => $product_statuses));
+			$variable_product_ids = [];
+			foreach($products as $product){
+				if ($product->is_type('variable')) {
+					$variable_product_ids[] = $product->get_id();
+				}
+			}	
+			$variation_count = 0;
+			foreach($variable_product_ids as $variable_product_id){
+				$variations = wc_get_products(array('parent_id' => $variable_product_id,'type' => 'variation','limit'=> -1));
+				$variation_count += count($variations);
+			}	
+			$response = $variation_count;
+			echo wp_json_encode($response);	
+            wp_die();			
+		}
+		elseif($module == 'shop_order'){
+			$order_statuses = array('wc-completed', 'wc-cancelled', 'wc-on-hold', 'wc-processing', 'wc-pending');
+			$orders = wc_get_orders(array('status' => $order_statuses));
+			$response = count($orders);
+			echo wp_json_encode($response);	
+            wp_die();
 		}elseif ($module == 'shop_coupon') {
 
 			$get_post_ids .= " and post_status in ('publish','draft','pending')";
@@ -176,6 +209,7 @@ class ExportExtension {
 		global $wpdb;
 		$get_comments = "select * from $wpdb->comments";
 		// Check status
+		if(isset($this->conditions['specific_status']) && !empty($this->conditions['specific_status'])) {
 		if($this->conditions['specific_status']['is_check'] == 'true') {
 			if($this->conditions['specific_status']['status'] == 'Pending')
 				$get_comments .= " where comment_approved = '0'";
@@ -184,17 +218,22 @@ class ExportExtension {
 			else
 				$get_comments .= " where comment_approved in ('0','1')";
 		}
+		}
 		else
 			$get_comments .= " where comment_approved in ('0','1')";
 		// Check for specific period
+		if(isset($this->conditions['specific_period']) && !empty($this->conditions['specific_period'])) {
 		if($this->conditions['specific_period']['is_check'] == 'true') {
 			$get_comments .= " and comment_date >= '" . $this->conditions['specific_period']['from'] . "' and comment_date <= '" . $this->conditions['specific_period']['to'] . "'";
 		}
+		}
 		// Check for specific authors
+		if(isset($this->conditions['specific_authors']) && !empty($this->conditions['specific_authors'])) {
 		if($this->conditions['specific_authors']['is_check'] == 'true') {
 			if(isset($this->conditions['specific_authors']['author'])) {
 				$get_comments .= " and comment_author_email = '".$this->conditions['specific_authors']['author']."'"; 
 			}
+		}
 		}
 		$get_comments .= " order by comment_ID";
 		$comments = $wpdb->get_results( $get_comments );

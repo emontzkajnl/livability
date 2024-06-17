@@ -12,13 +12,13 @@ exit; // Exit if accessed directly
 
 class SmackCSVInstall {
 
-	protected static $instance = null,$smack_instance,$tables_instance;
+	protected static $instance = null,$smack_instance,$tables_instance,$plugin;
 
 	/**
 	 * SmackCSVInstall Constructor
 	 */
 	public function __construct() {
-		$this->plugin = Plugin::getInstance();
+		$plugin = Plugin::getInstance();
 		self::$tables_instance = new Tables();
 	}
 
@@ -92,8 +92,6 @@ class SmackCSVInstall {
 
 		self::update_uci_version();
 
-		// Flush rules after install
-		flush_rewrite_rules();
 
 		// Trigger action
 		do_action( 'sm_uci_installed' );

@@ -396,8 +396,19 @@ class LangFA
 					'SampleCSVXML' => 'نمونه CSV&XML',
 					'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => 'هشدار: برخی از افزونه ها گم شده اند، توصیه می شود',
 					'DragDropyourfilesor' => 'فایل های خود را بکشید و رها کنید یا',
+					'WPCompleteFields' => 'فیلدهای WPComplete'
                 );
                 return $response;
         }
-}
+		
+		public static function notice_contents()
+        {
+        $result =array(
+                'UpgradetoPROusingcode' => 'ارتقا به PRO با استفاده از کد',
+                'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'باز کردن ویژگی هایی مانند واردات فله، صادرات پیشرفته، برنامه ریزی، به روز رسانی محتوا، و بیشتر، به علاوه پشتیبانی طول عمر',
+                'upgradenow' => 'ارتقاء دهید'
+        );
+        return $result;
+        }
+	}
 

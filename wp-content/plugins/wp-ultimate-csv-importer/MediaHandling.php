@@ -102,10 +102,22 @@ class MediaHandling{
 
 		}
 		else{
-			$attach_id = $this->image_function( $img_url , $post_id ,$data_array);
-			if($attach_id !=null){
+			$img_url = is_array($img_url) ? implode(',', array_filter($img_url)) : $img_url;
+			$hash_key = is_array($hash_key) ? implode(',', array_filter($hash_key)) : $hash_key;
+			$templatekey = is_array($templatekey) ? implode(',', array_filter($templatekey)) : $templatekey;
+			$module = is_array($module) ? implode(',', array_filter($module)) : $module;
+			$image_type = is_array($image_type) ? implode(',', array_filter($image_type)) : $image_type;
+			$img_url = esc_sql($img_url);
+			$hash_key = esc_sql($hash_key);
+			$templatekey = esc_sql($templatekey);
+			$module = esc_sql($module);
+			$image_type = esc_sql($image_type);
+			
+			$attach_id = $this->image_function($img_url, $post_id, $data_array);
+			if ($attach_id != null) {
+				global $wpdb;
 				$image_table = $wpdb->prefix . "ultimate_csv_importer_media";
-				$wpdb->get_results("INSERT INTO $image_table (image_url , attach_id , post_id,hash_key,templatekey,module,image_type,status) VALUES ( '{$img_url}', $attach_id , $post_id  ,'{$hash_key}','{$templatekey}','{$module}','{$image_type}','Completed')");
+				$wpdb->query($wpdb->prepare("INSERT INTO $image_table (image_url, attach_id, post_id, hash_key, templatekey, module, image_type, status) VALUES (%s, %d, %d, %s, %s, %s, %s, 'Completed')",$img_url,$attach_id,$post_id,$hash_key,$templatekey,$module,$image_type));
 			}
 
 		}
@@ -113,7 +125,6 @@ class MediaHandling{
 	}
 
 	public function image_function($f_img , $post_id , $data_array = null,$option_name = null, $use_existing_image = false,$header_array = null , $value_array = null){
-		
 		global $wpdb;
 		$f_img = urldecode($f_img);
 		$image = explode("?", $f_img);
@@ -188,6 +199,10 @@ class MediaHandling{
 			$fimg_name = preg_replace('/[^a-zA-Z0-9._\-\s]/', '', $fimg_name);
 		}
 		if ($uploaddir_paths != "" && $uploaddir_paths) {
+			if (strpos($fimg_name, ' ') !== false) {
+				$fimg_name = str_replace(' ', '-', $fimg_name);
+				$fimg_name = preg_replace('/[^a-zA-Z0-9._\-\s]/', '', $fimg_name);
+			}
 			$uploaddir_path = $uploaddir_paths . "/" . $fimg_name;
 		}
 	
@@ -209,44 +224,72 @@ class MediaHandling{
 		if ( $http_code != 200 && strpos( $rawdata, 'Not Found' ) != 0 ) {
 			return null;
 		}
-
+		if(is_plugin_active('exmage-wp-image-links/exmage-wp-image-links.php')){
+			$guid =$fimg_name;
+		}
 		if ($rawdata == false) {
 			return null;
 		} else {		
-
-			if (file_exists($uploaddir_path)) {
-				$i = 1;
-				$exist = true;
-				while($exist){
-					$fimg_name = $attachment_title . "-" . $i . "." . $file_type['ext'];        
-					$uploaddir_path = $uploaddir_paths . "/" . $fimg_name;
-
-					if (file_exists($uploaddir_path)) {
-						$i = $i + 1;
-					}
-					else{
-						$exist = false;
-					}
+			if(is_plugin_active('exmage-wp-image-links/exmage-wp-image-links.php')){
+				$link = new \EXMAGE_WP_IMAGE_LINKS;
+				$postID = $link->add_image($data_array['featured_image'],$value);
+				wp_update_post(array(
+					'ID'           => $postID['id'],
+					'post_title'   => $data_array['title'],
+					'post_content' => $data_array['description'],
+					'post_excerpt' => $data_array['caption']
+				));
+                if($postID['id'] != null && isset($data_array['alt_text'])){  
+					update_post_meta($postID['id'], '_wp_attachment_image_alt', $data_array['alt_text']);
 				}
 			}
-			$fp = fopen($uploaddir_path, 'x');
-			fwrite($fp, $rawdata);
-			fclose($fp);
+			else{
+				if (file_exists($uploaddir_path)) {
+					$i = 1;
+					$exist = true;
+					while($exist){
+						$fimg_name = $attachment_title . "-" . $i . "." . $file_type['ext'];        
+						$uploaddir_path = $uploaddir_paths . "/" . $fimg_name;
+
+						if (file_exists($uploaddir_path)) {
+							$i = $i + 1;
+						}
+						else{
+							$exist = false;
+						}
+					}
+				}
+				$fp = fopen($uploaddir_path, 'x');
+				fwrite($fp, $rawdata);
+				fclose($fp);
+			}
 		}
 		if(empty($file_type['type'])){
 			$file_type['type'] = 'image/jpeg';
 		}
-		
+		if(is_plugin_active('exmage-wp-image-links/exmage-wp-image-links.php')){
+			$guids =$data_array['featured_image'];
+		}
+		else{
+			$guids=$uploaddir_url . "/" .  $fimg_name;
+		}
+		if(!empty($data_array['title'])){
+			$attachment_title = $data_array['title'];
+		}else{
+			$attachment_title = str_replace('-', ' ', $attachment_title);
+		}
 		$post_info = array(
-			'guid'           => $uploaddir_url . "/" .  $fimg_name,
+			'guid'           => $guids,
 			'post_mime_type' => $file_type['type'],
 			'post_title'     => $attachment_title,
 			'post_content'   => '',
 			'post_status'    => 'inherit',
 		);
-		$attach_id = wp_insert_attachment( $post_info,$uploaddir_path, $post_id );
-		$attach_data = wp_generate_attachment_metadata( $attach_id, $uploaddir_path );
-		wp_update_attachment_metadata( $attach_id,  $attach_data );
+		if(!is_plugin_active('exmage-wp-image-links/exmage-wp-image-links.php')){
+			$attach_id = wp_insert_attachment( $post_info,$uploaddir_path, $post_id );
+			$attach_data = wp_generate_attachment_metadata( $attach_id, $uploaddir_path );
+			wp_update_attachment_metadata( $attach_id,  $attach_data );
+		}
 		if(isset($media_handle['media_settings']['description'])){
 			$media_handle['media_settings']['description'] = isset($media_settings[$media_handle['media_settings']['description']]) ?  $media_settings[$media_handle['media_settings']['description']] :'';
 		}

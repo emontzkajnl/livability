@@ -22,7 +22,7 @@ class CustomerReviewsImport {
 		return CustomerReviewsImport::$customer_reviews_instance;
     }
 
-    public function customer_reviews_import($data_array, $mode , $unikey_value,$unikey_name , $line_number) {
+    public function customer_reviews_import($data_array, $mode , $unikey_value = null,$unikey_name = null , $line_number = null) {
         global $wpdb;
 		$mapping_instance = MappingExtension::getInstance();
 		$helpers_instance = ImportHelpers::getInstance();

@@ -49,7 +49,7 @@ foreach ($cc_posts as $cc_post) {
         array_push($cc_array, $cc_post);
     }
 } 
-$cc_query->posts = $cc_array;
+$cc_query->posts = $cc_array; // posts of same city or state
 $cc_query->found_posts = count($cc_array);
 $cc_query->post_count = count($cc_array);
 
@@ -62,20 +62,21 @@ $cc_query->post_count = count($cc_array);
 echo '<ul class="pwl-slick">';
 while ($cc_query->have_posts()): $cc_query->the_post(); 
 $ID = get_the_ID();
-$proceed = false;
-if (!$parent_place) {
-    $proceed = true;
-} else {
-    $places = get_field('place_relationship', $ID);
-    // print_r($places);
-    foreach ((array)$places as $place) {
-        $this_parent = wp_get_post_parent_id($place);
-       if ($place == $parent_place || $place == $this_parent) {
-           $proceed = true;
-       }
-    }
-}
-if ($proceed):
+
+// $proceed = false;
+// if (!$parent_place) {
+//     $proceed = true;
+// } else {
+//     $places = get_field('place_relationship', $ID);
+//     // print_r($places);
+//     foreach ((array)$places as $place) {
+//         $this_parent = wp_get_post_parent_id($place);
+//        if ($place == $parent_place || $place == $this_parent) {
+//            $proceed = true;
+//        }
+//     }
+// }
+//if ($proceed):
 $slidebkgrnd = get_the_post_thumbnail_url( $ID, 'rel_article' ); ?> 
 <li>
 <a href="<?php echo get_the_permalink($ID); ?>">
@@ -87,7 +88,7 @@ $slidebkgrnd = get_the_post_thumbnail_url( $ID, 'rel_article' ); ?>
 </a>
 </li>
 
-<?php endif; //proceed
+<?php //endif; //proceed
  endwhile; 
 echo '</ul></div>'; ?>
 <?php endif; 

@@ -1092,7 +1092,14 @@ class WPDataChart
      */
     public function enqueueScriptsAfterChartRender()
     {
-        do_action('wdt-enqueue-scripts-after-chart-render');
+        do_action_deprecated(
+            'wdt-enqueue-scripts-after-chart-render',
+            array(),
+            WDT_INITIAL_LITE_VERSION,
+            'wpdatatables_enqueue_scripts_after_chart_render'
+        );
+        do_action('wpdatatables_enqueue_scripts_after_chart_render');
+
 
         $id = $this->_id;
         ob_start();

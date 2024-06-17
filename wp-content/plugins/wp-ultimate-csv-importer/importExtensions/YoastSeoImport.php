@@ -129,8 +129,8 @@ class YoastSeoImport {
 			}
 		}
 		// Import WP Yoast SEO information for Post types
-		if (isset($data_array['focuskeywords'])) {
-			$custom_array['_yoast_wpseo_focuskw'] = $data_array['focuskeywords'];
+		if (isset($data_array['focus_keyword'])) {
+			$custom_array['_yoast_wpseo_focuskw'] = $data_array['focus_keyword'];
 			$custom_array['_yoast_wpseo_focuskw_text_input'] = $data_array['focuskeywords']; //yoast seo pro works
 		}
 		if (isset($data_array['title'])) {

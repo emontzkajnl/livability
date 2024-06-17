@@ -387,8 +387,17 @@ class LangIT {
 		'SampleCSVXML' => 'Campione CSV&XML',
 		'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => 'Avvertenza: mancano alcuni componenti aggiuntivi, si consiglia di farlo',
 		'DragDropyourfilesor' => 'Trascina e rilascia i tuoi file o',
-
+		'WPCompleteFields' => 'Campi WPComplete'
         );
 		return $response;
+	}
+	public static function notice_contents()
+	{
+	$result =array(
+			'UpgradetoPROusingcode' => 'Upgrade auf PRO mit Code',
+			'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Sblocca le funzionalità come importazione sfuso, esportazione avanzata, programmazione, aggiornamento dei contenuti, e più, oltre al supporto a vita',
+			'upgradenow' => 'aggiorna ora'
+	);
+	return $result;
 	}
 }

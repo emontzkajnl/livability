@@ -101,7 +101,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card wdt-premium-feature">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay">
+                        <div class="wdt-simple-table-template-overlay m-b-5">
                             <i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i><?php esc_html_e('Available in Premium','wpdatatables');?>
                         </div>
                         <img class="img-responsive"
@@ -116,7 +116,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card wdt-premium-feature">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay">
+                        <div class="wdt-simple-table-template-overlay m-b-5">
                             <i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i><?php esc_html_e('Available in Premium','wpdatatables');?>
                         </div>
                         <img class="img-responsive"
@@ -131,7 +131,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card wdt-premium-feature">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay">
+                        <div class="wdt-simple-table-template-overlay m-b-5">
                             <i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i><?php esc_html_e('Available in Premium','wpdatatables');?>
                         </div>
                         <img class="img-responsive"
@@ -145,7 +145,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card wdt-premium-feature">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay">
+                        <div class="wdt-simple-table-template-overlay m-b-5">
                             <i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i><?php esc_html_e('Available in Premium','wpdatatables');?>
                         </div>
                         <img class="img-responsive"
@@ -161,7 +161,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card" id="wdt-pricing-table-5-template" data-type="wdt-pricing-table-5-template" data-template_id="18">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay"></div>
+                        <div class="wdt-simple-table-template-overlay m-b-5"></div>
                         <img class="img-responsive"
                              src="<?php echo WDT_ASSETS_PATH ?>img/simple-templates/pricing-template-5.jpg">
                         <button class=" btn btn-primary wdt-simple-table-constructor">
@@ -180,7 +180,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card" id="wdt-pricing-table-6-template" data-type="wdt-pricing-table-6-template" data-template_id="19">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay"></div>
+                        <div class="wdt-simple-table-template-overlay m-b-5"></div>
                         <img class="img-responsive"
                              src="<?php echo WDT_ASSETS_PATH ?>img/simple-templates/pricing-template-6.jpg">
                         <button class=" btn btn-primary wdt-simple-table-constructor">
@@ -199,7 +199,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card" id="wdt-pricing-table-7-template" data-type="wdt-pricing-table-7-template" data-template_id="23">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay"></div>
+                        <div class="wdt-simple-table-template-overlay m-b-5"></div>
                         <img class="img-responsive"
                              src="<?php echo WDT_ASSETS_PATH ?>img/simple-templates/pricing-template-7.jpg">
                         <button class=" btn btn-primary wdt-simple-table-constructor">
@@ -218,7 +218,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card" id="wdt-pricing-table-8-template" data-type="wdt-pricing-table-8-template" data-template_id="27">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay"></div>
+                        <div class="wdt-simple-table-template-overlay m-b-5"></div>
                         <img class="img-responsive"
                              src="<?php echo WDT_ASSETS_PATH ?>img/simple-templates/pricing-template-8.jpg">
                         <button class=" btn btn-primary wdt-simple-table-constructor">
@@ -239,7 +239,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card" id="wdt-pricing-table-9-template" data-type="wdt-pricing-table-9-template" data-template_id="28">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay"></div>
+                        <div class="wdt-simple-table-template-overlay m-b-5"></div>
                         <img class="img-responsive"
                              src="<?php echo WDT_ASSETS_PATH ?>img/simple-templates/pricing-template-9.jpg">
                         <button class=" btn btn-primary wdt-simple-table-constructor">
@@ -268,7 +268,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card wdt-premium-feature">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay">
+                        <div class="wdt-simple-table-template-overlay m-b-5">
                             <i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i><?php esc_html_e('Available in Premium','wpdatatables');?>
                         </div>
                         <img class="img-responsive"
@@ -283,7 +283,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card wdt-premium-feature">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay">
+                        <div class="wdt-simple-table-template-overlay m-b-5">
                             <i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i><?php esc_html_e('Available in Premium','wpdatatables');?>
                         </div>
                         <img class="img-responsive"
@@ -297,7 +297,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card wdt-premium-feature">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay">
+                        <div class="wdt-simple-table-template-overlay m-b-5">
                             <i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i><?php esc_html_e('Available in Premium','wpdatatables');?>
                         </div>
                         <img class="img-responsive"
@@ -311,7 +311,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card wdt-premium-feature">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay">
+                        <div class="wdt-simple-table-template-overlay m-b-5">
                             <i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i><?php esc_html_e('Available in Premium','wpdatatables');?>
                         </div>
                         <img class="img-responsive"
@@ -327,7 +327,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card" id="wdt-comparison-table-5-template" data-type="wdt-comparison-table-5-template" data-template_id="20">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay"></div>
+                        <div class="wdt-simple-table-template-overlay m-b-5"></div>
                         <img class="img-responsive"
                              src="<?php echo WDT_ASSETS_PATH ?>img/simple-templates/comparison-template-5.jpg">
                         <button class=" btn btn-primary wdt-simple-table-constructor">
@@ -346,7 +346,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card" id="wdt-comparison-table-6-template" data-type="wdt-comparison-table-6-template" data-template_id="21">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay"></div>
+                        <div class="wdt-simple-table-template-overlay m-b-5"></div>
                         <img class="img-responsive"
                              src="<?php echo WDT_ASSETS_PATH ?>img/simple-templates/comparison-template-6.jpg">
                         <button class=" btn btn-primary wdt-simple-table-constructor">
@@ -365,7 +365,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card" id="wdt-comparison-table-7-template" data-type="wdt-comparison-table-7-template" data-template_id="22">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay"></div>
+                        <div class="wdt-simple-table-template-overlay m-b-5"></div>
                         <img class="img-responsive"
                              src="<?php echo WDT_ASSETS_PATH ?>img/simple-templates/comparison-template-7.jpg">
                         <button class=" btn btn-primary wdt-simple-table-constructor">
@@ -384,7 +384,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card" id="wdt-comparison-table-8-template" data-type="wdt-comparison-table-8-template" data-template_id="29">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay"></div>
+                        <div class="wdt-simple-table-template-overlay m-b-5"></div>
                         <img class="img-responsive"
                              src="<?php echo WDT_ASSETS_PATH ?>img/simple-templates/comparison-template-8.jpg">
                         <button class=" btn btn-primary wdt-simple-table-constructor">
@@ -413,7 +413,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card"  id="wdt-pedigree-table-1-template" data-type="wdt-pedigree-table-1-template" data-template_id="8">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay"></div>
+                        <div class="wdt-simple-table-template-overlay m-b-5"></div>
                         <img class="img-responsive"
                              src="<?php echo WDT_ASSETS_PATH ?>img/simple-templates/pedigree-template-1.png">
                         <button class=" btn btn-primary wdt-simple-table-constructor">
@@ -433,7 +433,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card wdt-premium-feature">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay">
+                        <div class="wdt-simple-table-template-overlay m-b-5">
                             <i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i><?php esc_html_e('Available in Premium','wpdatatables');?>
                         </div>
                         <img class="img-responsive"
@@ -448,7 +448,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card wdt-premium-feature">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay">
+                        <div class="wdt-simple-table-template-overlay m-b-5">
                             <i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i><?php esc_html_e('Available in Premium','wpdatatables');?>
                         </div>
                         <img class="img-responsive"
@@ -473,7 +473,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card" id="wdt-merged-cells-table-1-template" data-type="wdt-merged-cells-table-1-template" data-template_id="4">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay"></div>
+                        <div class="wdt-simple-table-template-overlay m-b-5"></div>
                         <img class="img-responsive"
                              src="<?php echo WDT_ASSETS_PATH ?>img/simple-templates/merged-cells-template-1.png">
                         <button class=" btn btn-primary wdt-simple-table-constructor">
@@ -493,7 +493,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card wdt-premium-feature">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay">
+                        <div class="wdt-simple-table-template-overlay m-b-5">
                             <i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i><?php esc_html_e('Available in Premium','wpdatatables');?>
                         </div>
                         <img class="img-responsive"
@@ -508,7 +508,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card wdt-premium-feature">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay">
+                        <div class="wdt-simple-table-template-overlay m-b-5">
                             <i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i><?php esc_html_e('Available in Premium','wpdatatables');?>
                         </div>
                         <img class="img-responsive"
@@ -522,7 +522,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card wdt-premium-feature">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay">
+                        <div class="wdt-simple-table-template-overlay m-b-5">
                             <i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i><?php esc_html_e('Available in Premium','wpdatatables');?>
                         </div>
                         <img class="img-responsive"
@@ -547,7 +547,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card" id="wdt-employee-table-1-template" data-type="wdt-employee-table-1-template" data-template_id="1">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay"></div>
+                        <div class="wdt-simple-table-template-overlay m-b-5"></div>
                         <img class="img-responsive"
                              src="<?php echo WDT_ASSETS_PATH ?>img/simple-templates/employee-template-1.jpg">
                         <button class=" btn btn-primary wdt-simple-table-constructor">
@@ -566,7 +566,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card wdt-premium-feature">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay">
+                        <div class="wdt-simple-table-template-overlay m-b-5">
                             <i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i><?php esc_html_e('Available in Premium','wpdatatables');?>
                         </div>
                         <img class="img-responsive"
@@ -580,7 +580,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card wdt-premium-feature">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay">
+                        <div class="wdt-simple-table-template-overlay m-b-5">
                             <i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i><?php esc_html_e('Available in Premium','wpdatatables');?>
                         </div>
                         <img class="img-responsive"
@@ -604,7 +604,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card" id="wdt-scheduling-table-1-template" data-type="wdt-scheduling-table-1-template" data-template_id="24">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay"></div>
+                        <div class="wdt-simple-table-template-overlay m-b-5"></div>
                         <img class="img-responsive"
                              src="<?php echo WDT_ASSETS_PATH ?>img/simple-templates/scheduling-template-1.jpg">
                         <button class=" btn btn-primary wdt-simple-table-constructor">
@@ -623,7 +623,7 @@
             <div class="wdt-simple-table-template col-sm-2">
                 <div class="card wdt-premium-feature">
                     <div class="card-header">
-                        <div class="wdt-simple-table-template-overlay">
+                        <div class="wdt-simple-table-template-overlay m-b-5">
                             <i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i><?php esc_html_e('Available in Premium','wpdatatables');?>
                         </div>
                         <img class="img-responsive"

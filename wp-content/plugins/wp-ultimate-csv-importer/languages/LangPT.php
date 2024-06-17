@@ -391,5 +391,14 @@ class LangPT {
                 );
         return $response;
         }
+        public static function notice_contents()
+        {
+        $result =array(
+                'UpgradetoPROusingcode' => 'Upgrade para PRO utilizando o código',
+                'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Desbloquear características como a importação a granel, exportações avançadas, horários de exportações, actualização de conteúdos, mais apoio ao longo da vida',
+                'upgradenow' => 'actualizar agora'
+        );
+        return $result;
+        }
 }
 

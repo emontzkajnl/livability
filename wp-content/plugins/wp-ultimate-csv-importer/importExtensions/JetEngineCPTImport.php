@@ -45,7 +45,6 @@ class JetEngineCPTImport {
 		
 		foreach ($data_array as $dkey => $dvalue) {
 			if(array_key_exists($dkey,$jet_data['JECPT'])){
-			
 				if($jet_data['JECPT'][$dkey]['type'] == 'datetime-local'){
 					$dateformat = 'Y-m-d\TH:m';
 					if(!empty($dvalue)){

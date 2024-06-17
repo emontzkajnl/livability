@@ -343,6 +343,11 @@ class WPO_Page_Cache {
 			return $already_ran_enable;
 		}
 
+		if (!file_exists($this->config->get_config_file_path())) {
+			$result = $this->update_cache_config();
+			if (is_wp_error($result)) return $result;
+		}
+
 		// if WPO_ADVANCED_CACHE isn't set, or environment doesn't contain the right constant, force regeneration
 		if (!defined('WPO_ADVANCED_CACHE') || !defined('WP_CACHE')) {
 			$force_enable = true;
@@ -443,7 +448,7 @@ class WPO_Page_Cache {
 		 */
 		$this->should_purge = apply_filters('wpo_purge_page_cache_on_activate_deactivate_plugin', true);
 		$purge_actions = array(
-			'deactivate_' . plugin_basename(WPO_PLUGIN_MAIN_PATH . '/wp-optimize.php'),
+			'deactivate_' . plugin_basename(WPO_PLUGIN_MAIN_PATH . 'wp-optimize.php'),
 			'deactivate_plugin',
 			'activated_plugin',
 		);
@@ -904,12 +909,14 @@ EOF;
 
 	/**
 	 * Update cache config. Used to support 3d party plugins.
+	 *
+	 * @return {boolean|WP_Error}
 	 */
 	public function update_cache_config() {
 		// get current cache settings.
 		$current_config = $this->config->get();
 		// and call update to change if need cookies and query variable names.
-		$this->config->update($current_config, true);
+		return $this->config->update($current_config);
 	}
 
 	/**
@@ -1090,37 +1097,6 @@ EOF;
 	}
 
 	/**
-	 * Delete sitemap cache.
-	 */
-	public static function delete_sitemap_cache() {
-		if (!defined('WPO_CACHE_FILES_DIR')) return;
-
-		$homepage_url = get_home_url(get_current_blog_id());
-
-		$path = trailingslashit(WPO_CACHE_FILES_DIR) . trailingslashit(wpo_get_url_path($homepage_url));
-
-		if (!is_dir($path)) return;
-
-		$handle = opendir($path);
-
-		if (false !== $handle) {
-			$file = readdir($handle);
-
-			while (false !== $file) {
-	
-				if ('.' != $file && '..' != $file && is_dir($path . $file) && preg_match('/.*sitemap.*\.xml/i', $file)) {
-					do_action('wpo_delete_cache_by_url', $path . $file, false);
-					wpo_delete_files($path . $file, true);
-				}
-	
-				$file = readdir($handle);
-			}
-		}
-
-		closedir($handle);
-	}
-
-	/**
 	 * Delete feed from cache.
 	 */
 	public static function delete_feed_cache() {
@@ -1188,7 +1164,7 @@ EOF;
 	 * @param string $url
 	 * @return string
 	 */
-	private static function get_full_path_from_url($url) {
+	public static function get_full_path_from_url($url) {
 		return trailingslashit(WPO_CACHE_FILES_DIR) . trailingslashit(wpo_get_url_path($url));
 	}
 
@@ -1458,6 +1434,33 @@ EOF;
 			$config = $this->config->get();
 			$this->config->write($config);
 		}
+	}
+	
+	/**
+	 * Checks if the given cache directory is empty
+	 *
+	 * @param string $path The path to the cache directory.
+	 * @return bool Returns true if the cache directory is empty, false otherwise.
+	 */
+	public static function is_cache_empty($path) {
+		if (!is_dir($path)) return true;
+		
+		if ($handle = opendir($path)) {
+			while (false !== ($entry = readdir($handle))) {
+				if ("." == $entry || ".." == $entry) {
+					continue;
+				}
+				
+				$full_path = $path . '/' . $entry;
+				if (is_file($full_path)) {
+					closedir($handle);
+					return false;
+				}
+			}
+			closedir($handle);
+			return true;
+		}
+		return true;
 	}
 }
 

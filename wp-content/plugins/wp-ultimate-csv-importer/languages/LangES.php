@@ -123,7 +123,7 @@ class LangES
                         'BillingAndShippingInformation' => 'Información de facturación y envío',
                         'CustomFieldsWPMemberFields' => 'Campos personalizados Campos de miembros de WP',
                         'CustomFieldsMemberFields' => 'Campos personalizados Campos de miembros',
-                        'ProductMetaFields' => 'Meta campos del producto',
+                         'ProductMetaFields' => 'Meta campos del producto',
                         'ProductAttrFields' => 'Campos de atributo de producto',
                         'ProductBundleMetaFields' => 'Campos meta del paquete de productos',
                         'OrderMetaFields' => 'Ordenar metacampos',
@@ -429,9 +429,19 @@ class LangES
 			'poweredBy' => 'Energizado por',
 			'Hire_us' => 'Contratanos',
 			'DragDropyourfilesor' => 'Arrastra y suelta tus archivos o',
+                        'WPCompleteFields' =>'Campos completos de WP',
 
                 );
                 return $response;
+        }
+        public static function notice_contents()
+        {
+        $result =array(
+        'UpgradetoPROusingcode'  =>'Actualizar a PRO con el código',
+        'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Desbloquea funciones como la importación masiva, la exportación avanzada, la programación, la actualización de contenidos y mucho más, además de soporte técnico de por vida',
+        'upgradenow' =>  'actualizar ahora'
+        );
+        return $result;
         }
 }
 

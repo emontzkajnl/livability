@@ -24,6 +24,7 @@ class BBPressExtension extends ExtensionHandler{
 	public function processExtension($data){        
 		$import_type = $data;
 		$response = [];
+		//$import_type = $this->import_type_as($import_type);
 		if(is_plugin_active('bbpress/bbpress.php')){   
 			if($import_type == 'forum'){
 				$bbpress_meta_fields = array(

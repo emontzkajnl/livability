@@ -136,6 +136,7 @@ class AllInOneSeoImport
             $og_description = isset($data_array['og_description'])?$data_array['og_description']:'';
             $canonical_url = isset($data_array['custom_link']) ? $data_array['custom_link'] : '';
             $og_image_type = isset($data_array['og_image_type']) ? $data_array['og_image_type'] : '';
+            $og_image_custom_url = isset($data_array['og_image_custom_url']) ? $data_array['og_image_custom_url'] : '';
             $og_video = isset($data_array['og_video']) ? $data_array['og_video'] : '';
             $og_object_type = isset($data_array['og_object_type']) ? $data_array['og_object_type'] : '';
             $og_article_section = isset($data_array['og_article_section'])?$data_array['og_article_section']:'';
@@ -148,6 +149,7 @@ class AllInOneSeoImport
             $twitter_use_og = isset($data_array['twitter_use_og'])?$data_array['twitter_use_og']:'';
             $twitter_card = isset($data_array['twitter_card']) ? $data_array['twitter_card'] : '';
             $twitter_image_type = isset($data_array['twitter_image_type']) ? $data_array['twitter_image_type'] : '';
+            $twitter_image_custom_url = isset($data_array['twitter_image_custom_url']) ? $data_array['twitter_image_custom_url'] : '';
             $twitter_title = isset($data_array['twitter_title']) ? $data_array['twitter_title'] : '';
             $twitter_description = isset($data_array['twitter_description']) ? $data_array['twitter_description'] : '';
             $robots_default = isset($data_array['robots_default'])?$data_array['robots_default']:'';
@@ -171,20 +173,20 @@ class AllInOneSeoImport
 			$og_image_custom_fields = '';
             if ($twitter_image_type == 'custom')
             {
-                $twitter_image_custom_fields = isset($data_array['twitter_image_custom_fields'])?$data_array['twitter_image_custom_fields']:'';
+                $twitter_image_custom_url = isset($data_array['twitter_image_custom_url']) ? $data_array['twitter_image_custom_url'] : '';
             }
             if ($og_image_type == 'custom')
             {
-                $og_image_custom_fields = isset($data_array['og_image_custom_fields'])?$data_array['og_image_custom_fields']:'';
+                $og_image_custom_url = isset($data_array['og_image_custom_url']) ? $data_array['og_image_custom_url'] : '';
             }
             $wpdb->get_results("INSERT INTO $aioseo_table_name
-				(post_id,og_title ,og_description,canonical_url,og_image_type,og_video,og_object_type,og_article_section,
-				twitter_use_og,twitter_card,twitter_image_type,twitter_title,twitter_description,robots_default,
+				(post_id,og_title ,og_description,canonical_url,og_image_type,og_image_custom_url,og_video,og_object_type,og_article_section,
+				twitter_use_og,twitter_card,twitter_image_type,twitter_image_custom_url,twitter_title,twitter_description,robots_default,
 				robots_noindex,robots_noarchive,robots_nosnippet,robots_nofollow,robots_noimageindex,
 				robots_noodp,robots_notranslate,robots_max_snippet,robots_max_videopreview,robots_max_imagepreview,og_article_tags
 				,title,keyphrases,description,og_image_custom_fields,twitter_image_custom_fields)
-				values('$pID','$og_title','$og_description','$canonical_url','$og_image_type','$og_video','$og_object_type','$og_article_section',
-					'$twitter_use_og','$twitter_card','$twitter_image_type','$twitter_title','$twitter_description',
+				values('$pID','$og_title','$og_description','$canonical_url','$og_image_type','$og_image_custom_url','$og_video','$og_object_type','$og_article_section',
+					'$twitter_use_og','$twitter_card','$twitter_image_type','$twitter_image_custom_url','$twitter_title','$twitter_description',
 					'$robots_default','$robots_noindex','$robots_noarchive','$robots_nosnippet','$robots_nofollow',
 					'$robots_noimageindex','$robots_noodp','$robots_notranslate','$robots_max_snippet',
 					'$robots_max_videopreview','$robots_max_imagepreview','$og_article_tags','$title','$keyphrases','$description'
@@ -314,14 +316,14 @@ class AllInOneSeoImport
             {
                 if ($custom_value['twitter_image_type'] == 'custom')
                 {
-                    $custom_value['twitter_image_custom_fields'] = $data_array['twitter_image_custom_fields'];
+                    $custom_value['twitter_image_custom_url'] = $data_array['twitter_image_custom_url'];
                 }
             }
             if (isset($data_array['og_image_custom_fields']))
             {
                 if ($custom_value['og_image_type'] == 'custom')
                 {
-                    $custom_value['og_image_custom_fields'] = $data_array['og_image_custom_fields'];
+                    $custom_value['og_image_custom_url'] = $data_array['og_image_custom_url'];
                 }
             }
             if (!empty($custom_value))

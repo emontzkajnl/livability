@@ -388,8 +388,18 @@ class LangEN_GB {
                         'LifterReviewSettingsFields' => 'Lifter Review Settings Fields',
                         'LifterCouponSettingsFields' => 'Lifter Coupon Settings Fields',
                         'LifterLessonSettingsFields' => 'Lifter Lesson Settings Fields',
+                        'WPCompleteFields' => 'WPComplete Fields'
                 );
         return $response;
+        }
+        public static function notice_contents()
+        {
+        $result =array(
+                'UpgradetoPROusingcode' => 'Upgrade to PRO using code',
+                'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Unlock features like bulk import, advanced export, scheduling, content update, & more, plus lifetime support',
+                'upgradenow' => 'upgrade now'
+        );
+        return $result;
         }
 }
 

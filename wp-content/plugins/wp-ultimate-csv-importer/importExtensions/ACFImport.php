@@ -29,6 +29,7 @@ class ACFImport {
 		foreach($map as $key => $value){
 			$csv_value= trim($map[$key]);
 			if(!empty($csv_value) || $csv_value == 0){
+				//$pattern = "/({([a-z A-Z 0-9 | , _ -]+)(.*?)(}))/";
 				$pattern = '/{([^}]*)}/';
 
 				if(preg_match_all($pattern, $csv_value, $matches, PREG_PATTERN_ORDER)){	
@@ -65,6 +66,7 @@ class ACFImport {
 				}
 
 				elseif(!in_array($csv_value , $header_array)){
+					$wp_element= trim($key);
 					$this->acf_import_function($wp_element ,$post_values, $csv_value ,$type, $post_id,$mode, $hash_key,$line_number);
 				}
 
@@ -147,6 +149,157 @@ class ACFImport {
 				}
 				$map_acf_wp_element = $acf_wp_name;
 			}
+			if($field_type == 'user'){	
+				$maps_acf_csv_name = $acf_csv_name;	
+				$map_acf_wp_element = $acf_wp_name;
+				$explo_acf_csv_name = explode(',',trim($acf_csv_name));		
+				foreach($explo_acf_csv_name as $user){
+					if(!is_numeric($explo_acf_csv_name)){
+						$userid = $wpdb->get_col($wpdb->prepare("select ID from {$wpdb->prefix}users where user_login = %s",$user));			
+						foreach($userid as $users){
+							$map_acf_csv_element[] = $users;		
+						}
+					}
+				}
+				if(is_numeric($user)){
+					$map_acf_csv_element = $user;
+				}
+
+				$bidirectional =$get_type_field ['bidirectional'] ;	
+				if($bidirectional == 1){
+					$bidirectional_target =$get_type_field ['bidirectional_target'] ;	
+
+					foreach($bidirectional_target as $bidirectional) {
+						$field_name = $wpdb->get_results("SELECT post_excerpt FROM {$wpdb->prefix}posts WHERE post_name = '$bidirectional' AND post_status = 'publish'", ARRAY_A);						
+						$field_value = $field_name[0]['post_excerpt'];	
+						$get_relation = $wpdb->get_results("SELECT meta_value FROM {$wpdb->prefix}usermeta WHERE meta_key = '$field_value' AND user_id = '$map_acf_csv_element'", ARRAY_A);
+						$get_relation_field=$get_relation[0]['meta_value'];
+						$update_id = unserialize($get_relation_field);
+						$update_id[] = $post_id;
+						update_user_meta($map_acf_csv_element, $field_value, $update_id);
+						update_user_meta($map_acf_csv_element, '_' . $field_value, $bidirectional);
+					}
+				}
+			}
+			if($field_type == 'post_object'){
+				if($get_type_field['multiple'] == 0){
+					$maps_acf_csv_name = $acf_csv_name;
+				}else{
+					$explo_acf_csv_name = explode(',',trim($acf_csv_name));
+					$maps_acf_csv_name = array();
+					foreach($explo_acf_csv_name as $explo_csv_value){
+						$maps_acf_csv_name[] = trim($explo_csv_value);
+					}	
+				}
+				$map_acf_csv_elements = $maps_acf_csv_name;				
+				
+				if($get_type_field['multiple'] == 0){
+					if (!is_numeric($map_acf_csv_elements ) ){
+						$map_acf_csv_elements = $wpdb->_real_escape($map_acf_csv_elements);
+					
+						$id = $wpdb->get_results("SELECT ID FROM {$wpdb->prefix}posts WHERE post_title = '{$map_acf_csv_elements}' AND post_status = 'publish' order by ID DESC", ARRAY_A);
+						$map_acf_csv_element = isset($id[0]['ID']) ? $id[0]['ID'] : '';
+					}
+					else{
+						$map_acf_csv_element = $maps_acf_csv_name;	
+					}
+				}
+				else{
+					$map_acf_csv_element = array();
+					foreach($map_acf_csv_elements as $csv_element){
+						$csv_element = $wpdb->_real_escape($csv_element);						
+						$id = $wpdb->get_results("SELECT ID FROM {$wpdb->prefix}posts WHERE post_title = '$csv_element' AND post_status = 'publish'", ARRAY_A);						
+						$map_acf_csv_element[] = isset($id[0]['ID']) ? $id[0]['ID'] : '';
+					}
+				}			
+				$bidirectional =$get_type_field ['bidirectional'] ;	
+					if($bidirectional == 1){
+						$bidirectional_target =$get_type_field ['bidirectional_target'] ;	
+						
+						foreach($bidirectional_target as $bidirectional) {
+							$field_name = $wpdb->get_results("SELECT post_excerpt FROM {$wpdb->prefix}posts WHERE post_name = '$bidirectional' AND post_status = 'publish'", ARRAY_A);						
+							$field_value = $field_name[0]['post_excerpt'];	
+						
+							foreach($map_acf_csv_element as $id){
+								$get_relation = $wpdb->get_results("SELECT meta_value FROM {$wpdb->prefix}postmeta WHERE meta_key = '$field_value' AND post_id = '$id'", ARRAY_A);
+
+								$get_object_field=$get_relation[0]['meta_value'];
+								$update_id = unserialize($get_object_field);
+								$update_id[] = $post_id;
+
+								update_post_meta($id, $field_value, $update_id);
+								update_post_meta($id, '_' . $field_value, $bidirectional);
+							}
+						}
+					}	
+
+				$map_acf_wp_element = $acf_wp_name;
+			}
+			if($field_type == 'relationship' || $field_type == 'taxonomy'){
+				$relations = array();
+				$check_is_valid_term = null;
+				$get_relations = $acf_csv_name;
+				if(!empty($get_relations)){
+					$exploded_relations = explode(',', $get_relations);
+					foreach ($exploded_relations as $relVal) {
+						$relationTerm = trim($relVal);
+						//$relTerm[] = $relationTerm;
+
+						if ($field_type == 'taxonomy') {
+							$taxonomy_name =  $get_type_field['taxonomy'];
+							// $check_is_valid_term = $helpers_instance->get_requested_term_details($post_id, $relTerm, $taxonomy_name);
+							$check_is_valid_term = $helpers_instance->get_requested_term_details($post_id, array($relationTerm), $taxonomy_name);
+							$relations[] = $check_is_valid_term;
+						} else {
+							$reldata = strlen($relationTerm);
+							$checkrelid = intval($relationTerm);
+							$verifiedRelLen = strlen($checkrelid);
+							if ($reldata == $verifiedRelLen) {
+								$relations[] = $relationTerm;
+							} else {
+								$relVal = $wpdb->_real_escape($relVal);
+							
+								$relation_id = $wpdb->get_results("SELECT ID FROM {$wpdb->prefix}posts WHERE post_title = '$relVal' AND post_status = 'publish'", ARRAY_A);
+								if (!empty($relation_id)) {
+									$relations[] = $relation_id[0]['ID'];
+								}
+							}
+						}
+					}
+				}
+
+				$bidirectional =$get_type_field ['bidirectional'] ;	
+				if($bidirectional == 1){
+					$bidirectional_target =$get_type_field ['bidirectional_target'] ;	
+
+					foreach($bidirectional_target as $bidirectional) {
+						$field_name = $wpdb->get_results("SELECT post_excerpt FROM {$wpdb->prefix}posts WHERE post_name = '$bidirectional' AND post_status = 'publish'", ARRAY_A);						
+						$field_value = $field_name[0]['post_excerpt'];
+					
+						foreach($relations as $relation_id) {
+							if ($field_type == 'taxonomy') {
+								$get_relation = $wpdb->get_results("SELECT meta_value FROM {$wpdb->prefix}postmeta WHERE meta_key = '$field_value' AND term_id = '$relation_id'", ARRAY_A);	
+							}
+							else{
+								$get_relation = $wpdb->get_results("SELECT meta_value FROM {$wpdb->prefix}postmeta WHERE meta_key = '$field_value' AND post_id = '$relation_id'", ARRAY_A);	
+							}
+							$get_relation_field=$get_relation[0]['meta_value'];
+							$update_id = unserialize($get_relation_field);
+							$update_id[] = $post_id;
+							if ($field_type == 'taxonomy') {
+								update_term_meta($relation_id, $field_value, $update_id);
+								update_term_meta($relation_id, '_' . $field_value, $bidirectional);
+							}
+							else{
+								update_post_meta($relation_id, $field_value, $update_id);
+								update_post_meta($relation_id, '_' . $field_value, $bidirectional);
+							}
+						}
+					}
+				}
+				$map_acf_csv_element = $relations;
+				$map_acf_wp_element = $acf_wp_name;
+			}	
 			if($field_type == 'date_picker'){
 
 				$var = trim($acf_csv_name);

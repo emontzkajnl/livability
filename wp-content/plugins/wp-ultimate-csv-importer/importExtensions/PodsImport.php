@@ -131,6 +131,7 @@ class PodsImport {
 				$pick_objtype = $podsFields["PODS"][$custom_key]['pick_objecttype'];
 				$termitem = [];
 				$item = [];
+				//$exploded_rel_items = explode(',', $custom_value);
 				if (strpos($custom_value, ',') !== false) {
 					$exploded_rel_items = explode(',', $custom_value);
 				} elseif (strpos($custom_value, '|') !== false) {

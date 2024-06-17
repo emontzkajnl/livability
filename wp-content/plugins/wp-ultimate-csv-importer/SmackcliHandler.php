@@ -22,7 +22,7 @@ if (class_exists('\WP_CLI')) {
  * Class Smackuci_Cli
  */
 class Smackuci_Cli{
-    private static $smackcsv_instance = null;    
+    private static $smackcsv_instance = null,$instance;    
     
     public static function getInstance()
 	{
@@ -69,6 +69,7 @@ class Smackuci_Cli{
                 $total_rows = $get_id[0]->total_rows;
                 $file_name = $get_id[0]->file_name;
                 
+                $all_value_array = array();
                 $line_number = 1;
                 $progress = NULL;
                 $addHeader = true;
@@ -109,7 +110,6 @@ class Smackuci_Cli{
 				
 				$line_number = 0;				
 				$info = [];
-                $all_value_array = array();
 				$i = 0;
 				while(($data = fgetcsv($h, 0, $delimiters[$array_index]))!== FALSE) {
 					$trimmed_array = array_map('trim', $data);
@@ -128,13 +128,13 @@ class Smackuci_Cli{
                     $importids = $this->importcsv($all_value_array,$map,$header_array,$selected_type,$get_mode,$hash_key,$templatekey,$gmode,$progress,$file_name,$total_rows);	
 					
             }
-                elseif($file_extension == 'xml'){
+                elseif($file_extension == 'xml'){                                                           
                     $importids = $this->importxml($map,$selected_type,$get_mode,$hash_key,$templatekey,$gmode,$progress,$file_name,$file_path,$total_rows);
                 }
                 elseif($file_extension == 'json') 
                     $importids = $this->importjson();                
                 else 
-                    $importids = $this->importcsv($all_value_array,$map,$header_array,$selected_type,$get_mode,$hash_key,$templatekey,$gmode,$progress,$file_name,$total_rows);
+                    $importids = $this->importcsv($all_value_array,$map,$header_array=null,$selected_type,$get_mode,$hash_key,$templatekey,$gmode,$progress,$file_name,$total_rows);
              
                 $end = time();
                 //Log file creation after import .html  
@@ -257,8 +257,7 @@ class Smackuci_Cli{
             //Set child node            
 			$i=0;
 			$childs=array();
-			foreach($xml->children() as $child => $val){   
-				// $child_name =  $child->getName();  
+			foreach($xml->children() as $child => $val){  
 				$values =(array)$val;
 				if(empty($values)){
 					if (!in_array($child, $childs,true))
@@ -392,8 +391,7 @@ class Smackuci_Cli{
                 //Update Log
                 if(!empty($get_arr)){     
                 $this->maintainlog($templatekey,$hash_key,$file_name,$total_rows,$i,'Processing',$get_arr['id']);
-                }                                          
-            // $i++;
+                }
          }
          return $get_arr;
       }
@@ -417,7 +415,6 @@ class Smackuci_Cli{
                                 'Created' => $values['created'],
                                 'Updated' => $values['updated'],
                                 'Skipped' => $values['skipped'],
-                                //'Deleted' => $values['deleted'],
                                 'Processed' => $values['processing_records'],
                                 'Records' => $values['total_records']
                             ];

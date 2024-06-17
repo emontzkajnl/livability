@@ -1,18 +1,18 @@
-=== Styles & Layouts for Gravity Forms - Best Gravity Forms Styler, Designer ===
+=== Gravity Booster - Styles & Layouts for Gravity Forms - Best Gravity Forms Styler, Designer ===
 Contributors: wpmonks
 Donate link: https://www.paypal.me/wpmonks
-Tags: Gravity Forms CSS, gravity forms themes, gravity forms styler, Gravity Forms Design, Gravity Forms Multi Column Layouts, Gravity Forms Material Design, Gravity Forms Tooltips
+Tags: Gravity Forms CSS, gravity forms themes, gravity forms styler, Gravity Forms Design, Gravity Forms Material Design, Gravity Forms Tooltips
 Requires at least: 4.0
-Tested up to: 6.2
-Stable tag: 4.3.11
+Tested up to: 6.5
+Stable tag: 5.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Styles and Layouts for Gravity Forms plugin lets you design and style Gravity Forms without CSS coding. 
+Gravity Booster - Styles and Layouts for Gravity Forms plugin lets you design and style Gravity Forms without CSS coding. You can also use it for adding material, checkbox & radio styler, bootstrap, theme pack 
 
 == Description ==
 
-**Styles and Layouts for Gravity Forms lets you create beautiful designs for Gravity forms.** It uses WordPress Customizer for providing styling options with easy to use controls. The design changes you make with this Gravity Forms Styler plugin are instantaneously visible so, you can see how the form looks in real time.
+**Introducing Gravity Booster formerly Styles and Layouts for Gravity Forms. It  you lets you create beautiful designs for Gravity forms.** It provides you and easy to use interface for designing forms that works with all themes and builders. It is compatible with Divi, Elmentor, Visual composer, Thrive Architect Beaver Builder, Astra, GeneratePress, Oxygen Builder, Avada theme, OceanWP theme, Genesis Framework, The7, Salient and more. The design changes you make with this Gravity Forms Styler plugin are instantaneously visible so, you can see how the form looks in real time.
 
 [youtube https://www.youtube.com/watch?v=bkiBdaxIPjY]
 
@@ -21,7 +21,7 @@ Styles and Layouts for Gravity Forms plugin lets you design and style Gravity Fo
 * [ **Checkbox & Radio Styler** ](https://wpmonks.com/downloads/checkbox-radio-styler-for-gravity-forms/)
 * [ **Bootstrap Design** ](https://wpmonks.com/downloads/gravity-forms-bootstrap-addon/)
 * [ **Theme Pack** ](https://wpmonks.com/downloads/theme-pack/) 
-* [ **Tooltips** ](https://wpmonks.com/downloads/tooltips//)
+* [ **Tooltips** ](https://wpmonks.com/downloads/tooltips/)
 * [ **Field Icons** ](https://wpmonks.com/downloads/field-icons/) 
 * [ **Custom Themes** ](https://wpmonks.com/downloads/custom-themes/)
 * [ **Addon Bundle**](https://wpmonks.com/downloads/addon-bundle/)
@@ -114,6 +114,31 @@ Yes, Gravity Forms embedded in Divi themes is also supported. Please check the t
 4. Options in settings
 
 == Changelog ==
+= 5.5 (10th June 2024) =
+* Added support for AI for Gravity Forms
+* Added option to modify settings directly from booster backend.
+
+= 5.4 (15th May 2024) =
+* Fixed a compatability bug with custom themes
+
+= 5.3 (13th May 2024) =
+* If you try to switch panel without saving then you will get alert popup
+* Booster now waits for addons to load their settings
+* Fixed compatability with older addons
+* Fixed link for the 'open plugins' popup button.
+
+= 5.2 (12th May 2024) =
+* Added option to open any panel in booster directly from query param
+
+= 5.1 (10th May 2024) =
+* Fixed an issue in getting field labels
+
+= 5.0 (5th May 2024) =
+* Added a new interface for styling the forms
+* Customizer styling is now deprecated
+* Added ability to view and design multiple gravity forms pages
+* Added Booster menu item under Gravity Forms
+
 = 4.3.11 (18 May 2023) =
 * Minor fix
 

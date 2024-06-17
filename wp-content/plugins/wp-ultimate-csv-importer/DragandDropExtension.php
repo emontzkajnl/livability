@@ -31,8 +31,7 @@ class DragandDropExtension {
         check_ajax_referer('smack-ultimate-csv-importer', 'securekey');
         $hashkey = sanitize_key($_POST['HashKey']);
         $templatename = isset($_POST['templatename']) ? sanitize_text_field($_POST['templatename']) : "";        
-        $get_row = intval($_POST['row']);
-        
+        $get_row = isset($_POST['row']) ? intval(sanitize_text_field($_POST['row'])) : 0;    
         global $wpdb;
         $file_table_name = $wpdb->prefix ."smackcsv_file_events";
         $template_table_name = $wpdb->prefix . "ultimate_csv_importer_mappingtemplate";

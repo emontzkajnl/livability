@@ -9,6 +9,12 @@ require_once(dirname(__FILE__) . '/file-based-page-cache-functions.php');
 
 if (!defined('WPO_CACHE_DIR')) define('WPO_CACHE_DIR', untrailingslashit(WP_CONTENT_DIR) . '/wpo-cache');
 
+if (wpo_is_activity_stream_requested()) return;
+if (wpo_is_robots_txt_requested()) return;
+
+// Fix for compatibility issue with Jetpack's infinity scroll feature
+if (isset($_GET['infinity']) && 'scrolling' === $_GET['infinity']) return;
+
 /**
  * Load extensions.
  */
@@ -53,7 +59,7 @@ $file_extension = preg_replace('#^(.*?)\?.*$#', '$1', $file_extension);
 $file_extension = trim(preg_replace('#^.*\.(.*)$#', '$1', $file_extension));
 
 // Don't cache disallowed extensions. Prevents wp-cron.php, xmlrpc.php, etc.
-if (!preg_match('#index\.php$#i', $_SERVER['REQUEST_URI']) && !preg_match('#sitemap([a-zA-Z0-9_-]+)?\.xml$#i', $_SERVER['REQUEST_URI']) && in_array($file_extension, array('php', 'xml', 'xsl'))) {
+if (!preg_match('#index\.php$#i', $_SERVER['REQUEST_URI']) && preg_match('#sitemap([a-zA-Z0-9_-]+)?\.xml$#i', $_SERVER['REQUEST_URI']) && in_array($file_extension, array('php', 'xml', 'xsl'))) {
 	$no_cache_because[] = 'The request extension is not suitable for caching';
 }
 
@@ -122,12 +128,17 @@ if (!empty($no_cache_because)) {
 
 	// Add http header
 	if (!defined('DOING_CRON') || !DOING_CRON) {
-		wpo_cache_add_nocache_http_header($no_cache_because_message);
+		wpo_cache_add_nocache_http_header_with_send_headers_action($no_cache_because_message);
 	}
 
-	// Only output if the user has turned on debugging output
-	if (((defined('WP_DEBUG') && WP_DEBUG) || isset($_GET['wpo_cache_debug'])) && (!defined('DOING_CRON') || !DOING_CRON)) {
-		wpo_cache_add_footer_output("Page not served from cache because: ".htmlspecialchars($no_cache_because_message));
+	if ((!defined('DOING_CRON') || !DOING_CRON)) {
+		$not_cached_details = "";
+		
+		// Output the reason only when the user has turned on debugging
+		if (((defined('WP_DEBUG') && WP_DEBUG) || isset($_GET['wpo_cache_debug']))) {
+			$not_cached_details = "because: ".htmlspecialchars($no_cache_because_message);
+		}
+		wpo_cache_add_footer_output(sprintf("Page not served from cache %s", $not_cached_details));
 	}
 	return;
 }

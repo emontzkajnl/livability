@@ -9,6 +9,7 @@ var wdtChartColumnsData = {};
     var wdtChart = null;
     var nextStepButton = $('#wdt-chart-wizard-next-step');
     var previousStepButton = $('#wdt-chart-wizard-previous-step');
+    let chartSourcePicker = $('#wpdatatables-chart-source');
 
     $('.wdt-chart-wizard-chart-selecter-block .card').on('click', function () {
         $('.wdt-chart-wizard-chart-selecter-block .card').removeClass('selected').addClass('not-selected');
@@ -197,7 +198,7 @@ var wdtChartColumnsData = {};
 
                 previousStepButton.prop('disabled', false);
                 previousStepButton.animateFadeIn();
-                $('#wpdatatables-chart-source').change();
+                chartSourcePicker.change();
                 $('.wdt-preload-layer').animateFadeOut();
                 break;
             case 'step2':
@@ -206,7 +207,7 @@ var wdtChartColumnsData = {};
                 applyDragula();
                 nextStepButton.prop('disabled', true);
                 nextStepButton.hide();
-                constructedChartData.wpdatatable_id = $('#wpdatatables-chart-source').val();
+                constructedChartData.wpdatatable_id = chartSourcePicker.val();
                 $('div.chart-wizard-step.step3').show();
                 $('li.chart_wizard_breadcrumbs_block.step3').addClass('active');
 
@@ -757,12 +758,19 @@ var wdtChartColumnsData = {};
     /**
      * Pick the data type
      */
-    $('#wpdatatables-chart-source').change(function (e) {
+    chartSourcePicker.change(function (e) {
         e.preventDefault();
+        let selectedTable = $(this).find('option:selected');
+        let tableType = selectedTable.data('table-type');
         if ($(this).val() == '') {
             nextStepButton.prop('disabled', true);
+            $('#wdt-simple-source-chart').hide();
+        } else if (tableType === 'simple') {
+            nextStepButton.prop('disabled', true);
+            $('#wdt-simple-source-chart').show();
         } else {
             nextStepButton.prop('disabled', false);
+            $('#wdt-simple-source-chart').hide();
         }
     });
 
@@ -923,7 +931,7 @@ var wdtChartColumnsData = {};
             constructedChartData.title = editing_chart_data.title;
             // General settings
             $('.charts-type').find("[data-type='" + editing_chart_data.type + "']").click();
-            $('#wpdatatables-chart-source').val(editing_chart_data.wpdatatable_id);
+            chartSourcePicker.val(editing_chart_data.wpdatatable_id);
 
             if (editing_chart_data.range_type == 'picked_range') {
                 $('#wdt-chart-row-range-type').val('pick_rows').change();

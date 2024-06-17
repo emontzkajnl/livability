@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Internal information field class.
  *
@@ -630,7 +634,7 @@ class WPForms_Field_Internal_Information extends WPForms_Field {
 
 		wp_enqueue_script(
 			'wpforms-internal-information-field',
-			WPFORMS_PLUGIN_URL . "assets/js/components/admin/fields/internal-information-field{$min}.js",
+			WPFORMS_PLUGIN_URL . "assets/js/admin/builder/fields/internal-information{$min}.js",
 			[ 'wpforms-builder', 'wpforms-md5-hash', 'wpforms-builder-drag-fields' ],
 			WPFORMS_VERSION
 		);
@@ -803,16 +807,17 @@ class WPForms_Field_Internal_Information extends WPForms_Field {
 
 		$dom           = new DOMDocument();
 		$form_data     = wpforms()->get( 'form' )->get( $this->form_id, [ 'content_only' => true ] );
-		$template_data = wpforms()->get( 'builder_templates' )->get_template( $form_data['meta']['template'] );
+		$template_data = ! empty( $form_data['meta'] ) ? wpforms()->get( 'builder_templates' )->get_template( $form_data['meta']['template'] ) : [];
+		$template_name = ! empty( $template_data ) ? $template_data['name'] : '';
 
-		$dom->loadHTML( mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' ), LIBXML_NOWARNING | LIBXML_NOERROR );
+		$dom->loadHTML( htmlspecialchars_decode( htmlentities( $content ) ) );
 
 		$links = $dom->getElementsByTagName( 'a' );
 
 		foreach ( $links as $link ) {
 			$href          = $link->getAttribute( 'href' );
 			$text          = $link->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-			$modified_href = wpforms_utm_link( $href, 'Form Template Information Note', $template_data['name'], $text );
+			$modified_href = wpforms_utm_link( $href, 'Form Template Information Note', $template_name, $text );
 
 			$link->setAttribute( 'href', $modified_href );
 			$link->setAttribute( 'target', '_blank' );

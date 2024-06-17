@@ -156,7 +156,12 @@
         $('#wdt-info-block').change(function(e){
             wpdatatable_config.setInfoBlock( $(this).is(':checked') ? 1 : 0 );
         });
-
+        /**
+         * Enable to go on the top of the table after clicking the pagination buttons
+         */
+        $('#wdt-pagination-top').change(function (e) {
+            wpdatatable_config.setPaginationOnTop($(this).is(':checked') ? 1 : 0);
+        });
         /**
          * Enable pagination
          */

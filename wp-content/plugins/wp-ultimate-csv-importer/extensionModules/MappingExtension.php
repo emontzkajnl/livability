@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) )
 class MappingExtension{
 	private static $instance = null;
 	private static $extension = [];
-	private static $validatefile = [];
+	private static $validatefile;
 
 	private function __construct(){
 		$plugin_pages = ['com.smackcoders.csvimporternew.menu'];
@@ -50,6 +50,7 @@ class MappingExtension{
 		check_ajax_referer('smack-ultimate-csv-importer', 'securekey');
 		$import_type = sanitize_text_field($_POST['Types']);
 		$hash_key = sanitize_key($_POST['HashKey']);
+		$get_key = get_option('openAI_settings');
 		$mode = sanitize_text_field($_POST['Mode']);
 		global $wpdb;
 
@@ -74,7 +75,9 @@ class MappingExtension{
 		$smackcsv_instance = SmackCSV::getInstance();
 		$upload_dir = $smackcsv_instance->create_upload_dir();
 		if($file_extension == 'csv' || $file_extension == 'txt'){
-			ini_set("auto_detect_line_endings", true);
+			if (!ini_get("auto_detect_line_endings")) {
+				ini_set("auto_detect_line_endings", true);
+			}
 			$info = [];
 			if (($h = fopen($upload_dir.$hash_key.'/'.$hash_key, "r")) !== FALSE) 
 			{
@@ -87,25 +90,50 @@ class MappingExtension{
 				if($array_index == 5){
 					$delimiters[$array_index] = ' ';
 				}
-				while (($data = fgetcsv($h, 0, $delimiters[$array_index])) !== FALSE) 
-				{		
-					// Read the data from a single line
-					$trimmed_info = array_map('trim', $data);
-					array_push($info , $trimmed_info);
-					$exp_line = $info[0];
+				if($delimiter == '\t'){
+					$delimiter ='~';
+					 $temp=$file_path.'temp';
+					 if (($handles = fopen($temp, 'r')) !== FALSE){
+						while (($data = fgetcsv($handles, 0, $delimiter)) !== FALSE)
+						{
+							$trimmed_array = array_map('trim', $data);
+							array_push($info , $trimmed_array);	
+							$exp_line = $info[0];
+							$response['success'] = true;
+							$response['show_template'] = false;
+							$response['csv_fields'] = $exp_line;
+							$response['currentuser']=$current_user_role;
+							$value = $this->mapping_fields($import_type);
+							$response['fields'] = $value;					
+							echo wp_json_encode($response);
+							wp_die();  			  			
+						}
+					}
 
-					$response['success'] = true;
-					$response['show_template'] = false;
-					$response['csv_fields'] = $exp_line;
+					fclose($handles);
+				}
+				else{
+					while (($data = fgetcsv($h, 0, $delimiters[$array_index])) !== FALSE) 
+					{		
+						// Read the data from a single line
+						$trimmed_info = array_map('trim', $data);
+						array_push($info , $trimmed_info);
+						$exp_line = $info[0];
 
-					$value = $this->mapping_fields($import_type);
-					$response['fields'] = $value;
-					$response['total_records'] = (int)$total_rows;
-					echo wp_json_encode($response);
-					wp_die();  			
-				}	
-				// Close the file
-				fclose($h);
+						$response['success'] = true;
+						$response['get_key'] = $get_key;
+						$response['show_template'] = false;
+						$response['csv_fields'] = $exp_line;
+						$value = $this->mapping_fields($import_type);
+
+						$response['fields'] = $value;
+						$response['total_records'] = (int)$total_rows;
+						echo wp_json_encode($response);
+						wp_die();  			
+					}	
+					// Close the file
+					fclose($h);
+				}
 			}
 		}
 		if($file_extension == 'xml'){
@@ -125,6 +153,7 @@ class MappingExtension{
 			}
 			$parse_xml = $xml_class->parse_xmls($hash_key);
 			$i = 0;
+			$headers=[];
 			foreach($parse_xml as $xml_key => $xml_value){
 				if(is_array($xml_value)){
 					foreach ($xml_value as $e_key => $e_value){
@@ -136,9 +165,7 @@ class MappingExtension{
 			$response['success'] = true;
 			$response['show_template'] = false;
 			$response['csv_fields'] = $headers;
-
 			$value = $this->mapping_fields($import_type);
-
 			$response['fields'] = $value;
 			$response['total_records'] = (int)$total_rows;
 			echo wp_json_encode($response);

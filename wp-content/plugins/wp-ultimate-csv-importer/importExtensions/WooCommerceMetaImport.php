@@ -7,6 +7,8 @@
  *******************************************************************************************/
 
 namespace Smackcoders\WCSV;
+use Smackcoders\FCSV\CoreFieldsImport;
+use Smackcoders\FCSV\MediaHandling;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit; // Exit if accessed directly
@@ -17,7 +19,7 @@ class WooCommerceMetaImport {
 	public static function getInstance() {		
 		if (WooCommerceMetaImport::$woocommerce_meta_instance == null) {
 			WooCommerceMetaImport::$woocommerce_meta_instance = new WooCommerceMetaImport;
-			WooCommerceMetaImport::$media_instance = new MediaHandling();
+			WooCommerceMetaImport::$media_instance = new MediaHandling;
 			return WooCommerceMetaImport::$woocommerce_meta_instance;
 		}
 		return WooCommerceMetaImport::$woocommerce_meta_instance;

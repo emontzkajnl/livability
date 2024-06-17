@@ -70,7 +70,31 @@ class LifterLmsImport
             $lifter_course_setting_array['_llms_multiple_reviews_disabled'] = isset($post_values['_llms_multiple_reviews_disabled']) ? $post_values['_llms_multiple_reviews_disabled'] : '';
                         
             foreach ($lifter_course_setting_array as $course_key => $course_value) {
-                update_post_meta($post_id, $course_key, $course_value);
+                if($course_key == '_llms_instructors'){
+                    $data =array();
+                   $inst_value = explode('|',$course_value);
+                   foreach($inst_value as $ins){
+                       $arr =array();
+                         $instructor = explode(',',$ins);
+                           $arr['label'] = 'Author';
+                           $arr['visibility'] = $instructor[0];
+                           $user_name =$instructor[1];
+                           $user_id = $wpdb->get_var("SELECT ID FROM {$wpdb->prefix}users WHERE display_name='$user_name'");
+                           $arr['id'] = $user_id;
+                           $arr['name'] = $user_name;
+                          
+                          
+                           array_push($data,$arr);
+                           
+                   }
+                   update_post_meta($post_id, $course_key, $data);
+                 
+               }
+               else{
+                   update_post_meta($post_id, $course_key, $course_value);
+               }
+
+                
             }
 		
 
@@ -238,7 +262,15 @@ class LifterLmsImport
         $question_meta_array['_llms_plan_type'] = isset($post_values['_llms_plan_type']) ? $post_values['_llms_plan_type'] : '';
 
         foreach ($question_meta_array as $question_key => $question_value) {
-            update_post_meta($question_post_id, $question_key, $question_value);
+            if($question_key == '_llms_coupon_courses'){
+                $course_data = explode('|',$question_value);
+
+update_post_meta($question_post_id, $question_key, $course_data);
+            }
+            else{
+                update_post_meta($question_post_id, $question_key, $question_value);
+            }
+            
         }
 
         if(isset($post_values['quiz_id'])){

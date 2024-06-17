@@ -425,8 +425,18 @@ class LangFR {
 			'SampleCSVXML' => 'Exemple CSV&XML',
 			'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => 'Attention : Certains addons manquent, il est recommandé de',
 			'DragDropyourfilesor' => 'Faites glisser et déposez vos fichiers ou',
+                        'WPCompleteFields' => 'Champs WPComplete'
 		        );
                 return $response;
+        }
+        public static function notice_contents()
+        {
+        $result =array(
+                'UpgradetoPROusingcode' => 'Mettre à niveau vers PRO en utilisant du code',
+                'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>"Débloquer des fonctionnalités telles que l'importation en vrac, l'exportation avancée, la planification, la mise à jour de contenu, et plus, plus la prise en charge à vie",
+                'upgradenow' => 'mise à niveau maintenant'
+        );
+        return $result;
         }
 }
 

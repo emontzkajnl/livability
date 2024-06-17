@@ -75,6 +75,7 @@ var wpdatatable_config = {
     wpdbPlaceholder: jQuery('#wdt-wpdb-placeholder').val(),
     table_wcag: 0,
     simple_template_id: 0,
+    pagination_top: 0,
     /**
      * Method to set the data source type - hides all dependent controls
      * @param type mysql, google_spreadsheet, xml, json, serialized, csv, excel
@@ -403,6 +404,14 @@ var wpdatatable_config = {
         jQuery('#wdt-table-tools-include-title').prop( 'checked', showTableToolsIncludeTitle );
     },
     /**
+     * Enable or disable pagination on top of the table
+     * @param paginationTop 1 or 0
+     */
+    setPaginationOnTop: function (paginationTop) {
+        wpdatatable_config.pagination_top = paginationTop;
+        jQuery('#wdt-pagination-top').prop('checked', paginationTop);
+    },
+    /**
      * Enable or disable responsiveness
      * @param responsive 1 or 0
      */
@@ -525,11 +534,13 @@ var wpdatatable_config = {
         if (pagination == 1) {
             jQuery('.pagination-align-settings-block').removeClass('hidden');
             jQuery('.pagination-layout-settings-block').removeClass('hidden');
+            jQuery('.pagination-on-top').removeClass('hidden');
         } else {
             wpdatatable_config.setPaginationAlign('right');
             wpdatatable_config.setPaginationLayout('full_numbers');
             jQuery('.pagination-align-settings-block').addClass('hidden');
             jQuery('.pagination-layout-settings-block').addClass('hidden');
+            jQuery('.pagination-on-top').addClass('hidden');
         }
     },
     /**
@@ -1112,6 +1123,7 @@ var wpdatatable_config = {
         wpdatatable_config.setPlaceholderVar3(tableJSON.var3);
         wpdatatable_config.setWCAG(tableJSON.table_wcag);
         wpdatatable_config.setSimpleTemplateId(tableJSON.simple_template_id);
+        wpdatatable_config.setPaginationOnTop(parseInt(tableJSON.pagination_top));
     },
     /**
      * Method which draws the "column settings" and "delete formula" buttons in wpDataTable

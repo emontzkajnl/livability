@@ -69,11 +69,19 @@ class UsersExtension extends ExtensionHandler{
             $response['custom_fields_wp_members'] = $wp_members_fields;       
         }
         if(is_plugin_active( 'members/members.php')){
-            $response['custom_fields_members'] = null;        
+            $members_fields = $this->custom_fields_by_members();
+            if(!empty($members_fields)){
+                $response['custom_fields_members'] = null;        
+            }
+            
         } 
-        if(is_plugin_active( 'ultimate-member/ultimate-member.php')){
-            $response['custom_ultimate_members'] =  null;     
-        } 
+        // if(is_plugin_active( 'ultimate-member/ultimate-member.php')){
+        //     $members_fields = $this->custom_fields_by_ultimate_member();
+        //     if(!empty($members_fields)){
+        //         $response['custom_ultimate_members'] =  null;     
+        //     }
+            
+        // } 
 		return $response;	
     }
 
@@ -101,7 +109,26 @@ class UsersExtension extends ExtensionHandler{
         $wp_mem_fields = $this->convert_fields_to_array($WPMemberFields);
         return $wp_mem_fields;
     }
+    public function custom_fields_by_members () {
+		$MemberFields = array();
+		$MemberFields['MULTIROLE']['multi_user_role']['label'] = 'Multi User Role';
+        $MemberFields['MULTIROLE']['multi_user_role']['name'] = 'multi_user_role';
+        $mem_fields = $this->convert_fields_to_array($MemberFields);
+		return $mem_fields;
+    }
     
+    // public function custom_fields_by_ultimate_member () {
+	// 	$WPUltimateMember = array();
+	// 	$get_WPUltimateMember = get_option('um_fields');
+	// 	if(is_array($get_WPUltimateMember) && !empty($get_WPUltimateMember)) {
+	// 		foreach($get_WPUltimateMember as $get_fields) {
+	// 			$WPUltimateMember['ULTIMATEMEMBER'][$get_fields['metakey']]['label'] = $get_fields['label'];
+	// 			$WPUltimateMember['ULTIMATEMEMBER'][$get_fields['metakey']]['name'] = $get_fields['metakey'];
+	// 		}
+    //     }
+    //     $ultimate_member_fields = $this->convert_fields_to_array($WPUltimateMember);
+	// 	return $ultimate_member_fields;
+	// }
     /**
 	* Users extension supported import types
 	* @param string $import_type - selected import type

@@ -19,9 +19,9 @@ class SmackUCIUnInstall {
 	/**
 	 * UnInstall UCI Pro.
 	 */
-	protected static $instance = null;
+	protected static $instance = null,$plugin;
 	public function __construct() {
-		$this->plugin = Plugin::getInstance();
+		$plugin = Plugin::getInstance();
 	}
 
 	public static function getInstance() {

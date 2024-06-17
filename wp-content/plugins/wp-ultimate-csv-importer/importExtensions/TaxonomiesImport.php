@@ -39,6 +39,7 @@ class TaxonomiesImport {
 		$skipped_count = $updated_row_counts['skipped'];
 		
 		$terms_table = $wpdb->term_taxonomy;
+        //$taxonomy = $importAs;
         $taxonomy = $importType;
 		
 		$term_children_options = get_option("$taxonomy" . "_children");
@@ -72,7 +73,8 @@ class TaxonomiesImport {
 				$parent_term_id = $get_parent['term_id'];
 			}
 			else{
-				$termid_value = $wpdb->get_results("SELECT term_id FROM {$wpdb->prefix}terms WHERE slug = '$_slug'");
+				// $termid_value = $wpdb->get_results("SELECT term_id FROM {$wpdb->prefix}terms WHERE slug = '$_slug'");
+				$termid_value = $wpdb->get_results($wpdb->prepare("SELECT term.term_id FROM {$wpdb->prefix}terms AS term INNER JOIN {$wpdb->prefix}term_taxonomy AS tax ON term.term_id = tax.term_id WHERE term.slug = %s AND tax.taxonomy = %s", $_slug, $taxonomy));
 				if(isset($termid_value[0]->term_id)){
 					$termid_val = $termid_value[0]->term_id;
 					$term_parent_value = $wpdb->get_results("SELECT parent FROM {$wpdb->prefix}term_taxonomy WHERE term_id = '$termid_val'");
@@ -96,7 +98,8 @@ class TaxonomiesImport {
 		if($_display_type){
 			$_display_type = $_display_type;
 		}else{
-			$term_id_value = $wpdb->get_results("SELECT term_id FROM {$wpdb->prefix}terms WHERE slug = '$_slug'");
+			// $term_id_value = $wpdb->get_results("SELECT term_id FROM {$wpdb->prefix}terms WHERE slug = '$_slug'");
+			$term_id_value =$wpdb->get_results($wpdb->prepare("SELECT term.term_id FROM {$wpdb->prefix}terms AS term INNER JOIN {$wpdb->prefix}term_taxonomy AS tax ON term.term_id = tax.term_id WHERE term.slug = %s AND tax.taxonomy = %s", $_slug, $taxonomy));
 			if(isset($term_id_value[0]->term_id)){
 				$term_id_val = $term_id_value[0]->term_id;
 				// $term_display_type_value = $wpdb->get_results("SELECT display_type FROM {$wpdb->prefix}termmeta WHERE term_id = '$term_id_val'");

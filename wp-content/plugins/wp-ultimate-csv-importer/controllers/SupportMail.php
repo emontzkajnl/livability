@@ -16,7 +16,7 @@ exit; // Exit if accessed directly
  */
 class SupportMail {
 
-	protected static $instance = null;
+	protected static $instance = null,$plugin;
 
 	public static function getInstance() {
 		if ( null == self::$instance ) {
@@ -30,7 +30,7 @@ class SupportMail {
 	 * SupportMail constructor.
 	 */
 	public function __construct() {
-		$this->plugin = Plugin::getInstance();
+		$plugin = Plugin::getInstance();
 	}
 
 	/**
@@ -68,26 +68,26 @@ class SupportMail {
 	}
 
 	public static function sendSubscribeEmail(){
-		check_ajax_referer('smack-ultimate-csv-importer', 'securekey');
-		if($_POST){
+				check_ajax_referer('smack-ultimate-csv-importer', 'securekey');
+				if($_POST){
 			$email = sanitize_email($_POST['subscribe_email']);
 			$url = get_option('siteurl');
 			$site_name = get_option('blogname');
 			$headers = "From: " . $site_name . "<$email>" . "\r\n";
 			$headers.= 'MIME-Version: 1.0' . "\r\n";
 			$headers.= "Content-type: text/html; charset=iso-8859-1 \r\n";
-			$to = 'support@smackcoders.com';
-			$subject = 'Newsletter Subscription';
+			$to = 'marketing@smackcoders.com';
+			$subject = 'New Newsletter Subscription';
 			$message = "Site URL: " . $url . "\r\n<br>";
 			$message .= "Email: " . $email . "\r\n<br>";
-			$message .= "Plugin Name: " . SM_UCI_SETTINGS . "\r\n<br>";
+			 $message .= "Plugin Name: WP Ultimate CSV Importer" . "\r\n<br>";
 			$message .= "Message: Hi Team, I want to subscribe to your newsletter." . "\r\n<br>";
-			if(wp_mail($to, $subject, $message, $headers)) {
+						if(wp_mail($to, $subject, $message, $headers)) {
 				$success_message = 'Mail Sent!';
-				echo wp_json_encode($success_message);
+								echo wp_json_encode($success_message);
 			} else {
-				$error_message = "Please draft a mail to support@smackcoders.com. If you doesn't get any acknowledgement within an hour!";
-				echo wp_json_encode($error_message);
+				$error_message = "Please draft a mail to marketing@smackcoders.com. If you doesn't get any acknowledgement within an hour!";
+								echo wp_json_encode($error_message);
 			} 
 			wp_die();
 		}

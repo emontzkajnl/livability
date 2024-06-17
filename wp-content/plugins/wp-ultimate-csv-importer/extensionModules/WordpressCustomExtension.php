@@ -198,6 +198,21 @@ class WordpressCustomExtension extends ExtensionHandler{
             return false;
         }
 
+        if(!is_plugin_active('wpml-import/plugin.php')){
+            $active_plugin = array(
+                "masterstudy-lms-learning-management-system/masterstudy-lms-learning-management-system.php",  
+                "seo-by-rank-math/rank-math.php",
+                "seo-by-rank-math-pro/rank-math-pro.php"
+            );
+        }
+
+        foreach($active_plugin as $value){
+            if(is_plugin_active("$value")){
+                return false;
+            }
+        }
+
+
         $import_type = $this->import_name_as($import_type);
         if($import_type == 'Posts' || $import_type == 'Pages' || $import_type == 'CustomPosts' || $import_type == 'Users' || $import_type == 'WooCommerce') {
 			return true;

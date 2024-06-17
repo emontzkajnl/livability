@@ -22,7 +22,7 @@ class TotalpressExtension extends ExtensionHandler{
     }
 
 	/**
-	* Provides Totalpress fields for specific post type
+	* Provides SEOPress fields for specific post type
 	* @param string $data - selected import type
 	* @return array - mapping fields
 	*/
@@ -60,7 +60,7 @@ class TotalpressExtension extends ExtensionHandler{
     }
 
 	/**
-	* Totalpress extension supported import types
+	* Yoast SEOPress extension supported import types
 	* @param string $import_type - selected import type
 	* @return boolean
 	*/

@@ -31,8 +31,13 @@ class ACFExtension extends ExtensionHandler{
 		$response = [];
 		$import_type = $this->import_type_as($import_type);
 		$acf_pro_fields =  $this->ACFFields($import_type , 'ACF');
-		$response['acf_fields'] = $acf_pro_fields;
-		$response['acf_group_fields'] = null;
+		$acf_group_fields=$this->ACFFields($import_type  , 'GF');
+		if(!empty($acf_pro_fields)){
+			$response['acf_fields'] = $acf_pro_fields;
+		}
+		if(!empty($acf_group_fields)){
+			$response['acf_group_fields'] = null;
+		}
 		return $response;
 	}
 
@@ -68,17 +73,32 @@ class ACFExtension extends ExtensionHandler{
 				}
 			}
 		}
-	
 		if ( !empty($group_id_arr) ) {
 			foreach($group_id_arr as $groupId) {
+				//$get_acf_fields = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_title, post_content, post_excerpt, post_name FROM {$wpdb->prefix}posts where post_status != %s AND post_parent in (%s)",'trash' , array($groupId) ) );	
 				$get_acf_fields = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_title, post_content, post_excerpt, post_name FROM {$wpdb->prefix}posts where post_status != 'trash' AND post_parent in (%s)", array($groupId) ) );			
 			
 				if ( ! empty( $get_acf_fields ) ) {	
 					$group_field_arr = array();						
 					foreach ( $get_acf_fields as $acf_pro_fields ) {
-						$get_field_content = unserialize( $acf_pro_fields->post_content );						
-						 if ( $acf_pro_fields->post_excerpt != null || $acf_pro_fields->post_excerpt != '' ) {
-							if($get_field_content['type'] !== 'group' && $get_field_content['type'] !== 'message' && $get_field_content['type'] !== 'tab' && $get_field_content['type'] !== 'image' && $get_field_content['type'] !== 'file' && $get_field_content['type'] !== 'wysiwyg' && $get_field_content['type'] !== 'oembed' && $get_field_content['type'] !== 'link'&& $get_field_content['type'] !== 'post_object' && $get_field_content['type'] !== 'page_link' && $get_field_content['type'] !== 'relationship' && $get_field_content['type'] !== 'taxonomy' && $get_field_content['type'] !== 'user' ){
+						$get_field_content = unserialize( $acf_pro_fields->post_content );	
+						if ( $get_field_content['type'] == 'group' ) {
+							$group_field_arr[] = $acf_pro_fields->ID . ",";		
+							foreach($group_field_arr as $group_field){		
+							//$get_sub_fields = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_title, post_content, post_excerpt, post_name FROM {$wpdb->prefix}posts where post_status != %s AND post_parent in (%s)", 'trash',array($group_field) ) );	
+							$get_sub_fields = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_title, post_content, post_excerpt, post_name FROM {$wpdb->prefix}posts where post_status != 'trash' AND post_parent in (%s)",array($group_field) ) );			
+							foreach ( $get_sub_fields as $get_sub_key ) {
+									$get_sub_field_content = unserialize( $get_sub_key->post_content );	
+										
+									if ( $get_sub_field_content['type'] == 'group' ) {
+										$group_field_arr[] = $get_sub_key->ID . ",";
+									}
+								}
+							}
+									
+						} 					
+						 elseif ( $acf_pro_fields->post_excerpt != null || $acf_pro_fields->post_excerpt != '' ) {
+							if($get_field_content['type'] !== 'group' && $get_field_content['type'] !== 'message' && $get_field_content['type'] !== 'tab' && $get_field_content['type'] !== 'image' && $get_field_content['type'] !== 'file' && $get_field_content['type'] !== 'wysiwyg' && $get_field_content['type'] !== 'oembed' && $get_field_content['type'] !== 'link' && $get_field_content['type'] !== 'page_link'){
 								if($get_field_content['type'] == 'select'){
 									if($get_field_content['multiple'] == 0){
 										$customFields["ACF"][ $acf_pro_fields->post_name ]['label'] = $acf_pro_fields->post_title;

@@ -100,7 +100,9 @@ $globalAutoUpdateOption = get_option('wdtAutoUpdateOption');
                     </a>
                 </li>
 
-                <?php do_action('wdt_add_table_configuration_tab'); ?>
+                <?php do_action_deprecated( 'wdt_add_table_configuration_tab', array(), WDT_INITIAL_LITE_VERSION, 'wpdatatables_add_table_configuration_tab' ); ?>
+                <?php do_action( 'wpdatatables_add_table_configuration_tab' ); ?>
+
 
             </ul>
             <!-- /ul .tab-nav -->
@@ -134,7 +136,8 @@ $globalAutoUpdateOption = get_option('wdtAutoUpdateOption');
                                             <option value="json"><?php esc_html_e('JSON file', 'wpdatatables'); ?></option>
                                             <option value="nested_json"><?php esc_html_e('Nested JSON', 'wpdatatables'); ?></option>
                                             <option value="serialized"><?php esc_html_e('Serialized PHP array', 'wpdatatables'); ?></option>
-                                            <?php do_action('wdt_add_table_type_option'); ?>
+                                            <?php do_action_deprecated( 'wdt_add_table_type_option', array(), WDT_INITIAL_LITE_VERSION, 'wpdatatables_add_table_type_option' ); ?>
+                                            <?php do_action( 'wpdatatables_add_table_type_option' ); ?>
                                         </select>
                                     </div>
                                 </div>
@@ -223,7 +226,9 @@ $globalAutoUpdateOption = get_option('wdtAutoUpdateOption');
                             <!-- /Server side processing toggle -->
                         </div>
 
-                        <?php do_action('wdt_add_data_source_elements'); ?>
+                        <?php do_action_deprecated( 'wdt_add_data_source_elements', array(), WDT_INITIAL_LITE_VERSION, 'wpdatatables_add_data_source_elements' ); ?>
+                        <?php do_action( 'wpdatatables_add_data_source_elements' ); ?>
+
 
                     </div>
                     <!-- /.row -->
@@ -785,7 +790,32 @@ $globalAutoUpdateOption = get_option('wdtAutoUpdateOption');
                             </div>
 
                         </div>
+                        <div class="col-sm-4 m-b-16 pagination-on-top">
 
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e( 'Return to table top', 'wpdatatables' ); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-popover-content="#pagination-top-hint"
+                                   data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
+                            </h4>
+
+                            <!-- Hidden popover with image hint -->
+                            <div class="hidden" id="pagination-top-hint">
+                                <div class="popover-heading">
+                                    <?php esc_html_e( 'Return to table top', 'wpdatatables' ); ?>
+                                </div>
+                                <div class="popover-body">
+                                    <?php esc_html_e( 'Activate this option to automatically scroll users to the top of the table after the pagination button clicks.', 'wpdatatables' ); ?>
+                                </div>
+                            </div>
+                            <!-- /Hidden popover with image hint -->
+
+                            <div class="toggle-switch" data-ts-color="blue">
+                                <input id="wdt-pagination-top" type="checkbox">
+                                <label for="wdt-pagination-top"
+                                       class="ts-label"><?php esc_html_e( 'Return to table top after pagination click', 'wpdatatables' ); ?></label>
+                            </div>
+
+                        </div>
                         <div class="col-sm-4 m-b-16">
 
                             <h4 class="c-title-color m-b-2">
@@ -1894,7 +1924,8 @@ $globalAutoUpdateOption = get_option('wdtAutoUpdateOption');
                                 </li>
 
 
-                                <?php do_action('wdt_add_customize_table_configuration_tab'); ?>
+                                <?php do_action_deprecated( 'wdt_add_customize_table_configuration_tab', array(), WDT_INITIAL_LITE_VERSION, 'wpdatatables_add_customize_table_configuration_tab' ); ?>
+                                <?php do_action( 'wpdatatables_add_customize_table_configuration_tab' ); ?>
 
                             </ul>
                             <!-- /ul .tab-nav -->
@@ -2544,7 +2575,8 @@ $globalAutoUpdateOption = get_option('wdtAutoUpdateOption');
                                 <!-- /Custom CSS settings -->
 
 
-                                <?php do_action('wdt_add_customize_table_configuration_tabpanel'); ?>
+                                <?php do_action_deprecated( 'wdt_add_customize_table_configuration_tabpanel', array(), WDT_INITIAL_LITE_VERSION, 'wpdatatables_add_customize_table_configuration_tabpanel' ); ?>
+                                <?php do_action( 'wpdatatables_add_customize_table_configuration_tabpanel' ); ?>
 
                             </div>
                             <!-- /.tab-content - end of table settings tabs -->
@@ -2742,7 +2774,9 @@ $globalAutoUpdateOption = get_option('wdtAutoUpdateOption');
                 </div>
                 <!-- /Advanced table settings -->
 
-                <?php do_action('wdt_add_table_configuration_tabpanel'); ?>
+                <?php do_action_deprecated( 'wdt_add_table_configuration_tabpanel', array(), WDT_INITIAL_LITE_VERSION, 'wpdatatables_add_table_configuration_tabpanel' ); ?>
+                <?php do_action( 'wpdatatables_add_table_configuration_tabpanel' ); ?>
+
 
             </div>
             <!-- /.tab-content - end of table settings tabs -->

@@ -47,9 +47,14 @@ class RankMathExtension extends ExtensionHandler{
 				'Facebook Title' =>'rank_math_facebook_title',
 				'Facebook Description' =>'rank_math_facebook_description',
 				'Facebook Image' => 'rank_math_facebook_image',
-				'Add icon overlay to thumbnail'=>'rank_math_facebook_enable_image_overlay',
-				'Icon overlay'=>'rank_math_facebook_image_overlay',					
+				'Facebook Add icon overlay to thumbnail'=>'rank_math_facebook_enable_image_overlay',
+				'Facebook Icon overlay'=>'rank_math_facebook_image_overlay',
 				'Use Data from Facebook Tab'=>'rank_math_twitter_use_facebook',
+				'Twitter Title' =>'rank_math_twitter_title',
+				'Twitter Description' =>'rank_math_twitter_description',
+				'Twitter Image' => 'rank_math_twitter_image',
+				'Twitter Add icon overlay to thumbnail'=>'rank_math_twitter_enable_image_overlay',
+				'Twitter Icon overlay'=>'rank_math_twitter_image_overlay',
 				'Card Type'=>'rank_math_twitter_card_type',
 				'App Description'=>'rank_math_twitter_app_description',
 				'iPhone App Name'=>'rank_math_twitter_app_iphone_name',
@@ -66,7 +71,7 @@ class RankMathExtension extends ExtensionHandler{
 				'Player Size'=>'rank_math_twitter_player_size',
 				'Stream URL'=>'rank_math_twitter_player_stream',
 				'Stream Content Type'=>'rank_math_twitter_player_stream_ctype'			
-			);
+			);																																							
 
 			if(in_array($data , get_taxonomies())){
 				unset($rankmathFields['Cornerstone Content']);

@@ -3,7 +3,7 @@
 Plugin Name: wpDataTables - Tables & Table Charts
 Plugin URI: https://wpdatatables.com
 Description: Create responsive, sortable tables & charts from Excel, CSV or PHP. Add tables & charts to any post in minutes with DataTables.
-Version: 3.4.2.8
+Version: 3.4.2.17
 Author: TMS-Plugins
 Author URI: https://tmsproducts.io
 Text Domain: wpdatatables
@@ -92,17 +92,23 @@ function wpdatatables_load()
     require_once(WDT_ROOT_PATH . 'source/class.wpdatachart.php');
     require_once(WDT_ROOT_PATH . 'source/class.wdtbrowsetable.php');
     require_once(WDT_ROOT_PATH . 'source/class.wdtbrowsechartstable.php');
-    require_once(WDT_ROOT_PATH . 'integrations/page_builders/gutenberg/GutenbergBlock.php');
-    require_once(WDT_ROOT_PATH . 'integrations/page_builders/gutenberg/WpDataTablesGutenbergBlock.php');
-    require_once(WDT_ROOT_PATH . 'integrations/page_builders/gutenberg/WpDataChartsGutenbergBlock.php');
+    require_once(WDT_ROOT_PATH . 'integrations/page_builders/gutenberg/WDTGutenbergBlocks.php');
     require_once(WDT_ROOT_PATH . 'integrations/page_builders/elementor/class.wdtelementorblock.php');
     require_once(WDT_ROOT_PATH . 'integrations/page_builders/divi-wpdt/divi-wpdt.php');
     require_once(WDT_ROOT_PATH . 'integrations/page_builders/avada/class.wdtavadaelements.php');
     require_once(WDT_ROOT_PATH . 'integrations/page_builders/wpbakery/wdtBakeryBlock.php');
     require_once(WDT_ROOT_PATH . 'source/class.wpdatatablestemplates.php');
 
-    add_action('plugins_loaded', 'wdtLoadTextdomain');
+    add_action('plugins_loaded', function () {
+        // instantiate Gutenberg blocks
+        WDTGutenbergBlocks::getInstance();
 
+        // Loads the translations
+        load_plugin_textdomain('wpdatatables',
+            false,
+            dirname(plugin_basename(dirname(__FILE__))) . '/languages/' . get_locale() . '/'
+        );
+    });
     if (is_admin()) {
 
         if (WDT_CURRENT_VERSION !== get_option('wdtVersion')) {

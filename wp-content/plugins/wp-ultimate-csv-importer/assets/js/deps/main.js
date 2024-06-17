@@ -28,7 +28,30 @@ jQuery(document).ready(function() {
     //     radioClass: 'iradio_square-green',
     //     increaseArea: '20%' // optional
     // });
-
+    jQuery('#upgrade_notices_csv_bro').click(function() {
+    // jQuery.ajax({
+    //     type: "post",
+    //     url: ajaxurl, //this is wordpress ajax file which is already avaiable in wordpress
+    //     data: {
+    //         action:'upgrade_notices_csv_bro' //this value is first parameter of add_action
+    //     },
+    //     success: function(msg){
+    //         console.log(msg);
+    //     }
+    // });
+    console.log("smack_nonce_object",smack_nonce_object);
+    jQuery.ajax({
+        type: "post",
+        url: window.smack_nonce_object.url, // Use the URL from the localized object
+        data: {
+            action: 'upgrade_notices_csv_bro',
+            nonce: window.smack_nonce_object.url  // Include the nonce in the data
+        },
+        success: function(msg){
+            location.reload();
+        }
+    });
+})
     // Setting Page Slide Menu jQuery
     jQuery('.setting-tab-list').click(function() {
         jQuery(this)

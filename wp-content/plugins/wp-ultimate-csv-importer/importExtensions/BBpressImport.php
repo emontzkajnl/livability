@@ -74,9 +74,12 @@ class BBPressImport
 						$post_values['_bbp_forum_id'] = $forum_id;
 					}
 				}
-				$topic_status = isset($post_values['topic_status']) ? $post_values['topic_status'] : 'open';  
+				$topic_status = isset($post_values['topic_status']) ? $post_values['topic_status'] : 'publish';  
 				$forum_id = isset($post_values['_bbp_forum_id']) ? $post_values['_bbp_forum_id'] : '';  
 				$author = isset($post_values['author']) ? $post_values['author'] : ''; 
+				if($topic_status == 'Open'){
+					$topic_status = 'publish';
+				}
 				if(!is_numeric($author)){
 				$author = $wpdb->get_var("SELECT ID FROM {$wpdb->prefix}users WHERE user_login = '$author'");
 				}

@@ -386,4 +386,13 @@ class LangTR {
         );
 		return $response;
 	}
+	public static function notice_contents()
+	{
+	$result =array(
+			'UpgradetoPROusingcode' => "PRO'ya kod kullanarak yükseltme",
+			'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Toplu ithalat, gelişmiş ihracat, zamanlama, içerik güncellemesi, ve daha fazlası gibi özelliklerin kilidini açın, artı ömür boyu desteği',
+			'upgradenow' => 'şimdi yükselt'
+	);
+	return $result;
+	}
 }

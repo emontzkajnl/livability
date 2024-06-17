@@ -217,7 +217,13 @@ class WDTTools
         return $returnArray;
     }
 
-
+    public static function getTranslationStringsPlugin()
+    {
+        return array(
+            'success' => __('Success!', 'wpdatatables'),
+            'error' => __('Error!', 'wpdatatables'),
+        );
+    }
     /**
      * Helper function that returns array of translation strings used for localization of JavaScript files
      * @return array

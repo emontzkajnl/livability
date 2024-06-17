@@ -32,19 +32,20 @@ class FIFUExtension extends ExtensionHandler{
 		if(is_plugin_active('featured-image-from-url/featured-image-from-url.php')){
             if($import_type == 'Posts'){
                 $fifu_meta_fields = array(
-                            'Fifu image url' => 'fifu_image_url',
-                            'Fifu image alt' => 'fifu_image_alt',                                
+                    'Fifu image url' => 'fifu_image_url',
+                    'Fifu image alt' => 'fifu_image_alt',                                
                 );
-        }
-        if($import_type == 'Pages'){
+        }elseif($import_type == 'Pages'){
             $fifu_meta_fields = array(
                 'Fifu image url' => 'fifu_image_url',
                 'Fifu image alt' => 'fifu_image_alt',                                
-
             );
-
-    }
-  
+        }else{
+            $fifu_meta_fields = array(
+                'Fifu image url' => 'fifu_image_url',
+                'Fifu image alt' => 'fifu_image_alt',                                
+            );                
+        }
 
     }
     $fifu_meta_fields_line = $this->convert_static_fields_to_array($fifu_meta_fields);
@@ -52,9 +53,10 @@ class FIFUExtension extends ExtensionHandler{
     
         if($data == 'Posts'){
             $response['fifu_post_settings_fields'] = $fifu_meta_fields_line; 
-        }
-        if($data == 'Pages'){
+        }elseif($data == 'Pages'){
             $response['fifu_page_settings_fields'] = $fifu_meta_fields_line; 
+        }else{
+            $response['fifu_custompost_settings_fields'] = $fifu_meta_fields_line; 
         }
       
 		return $response;
@@ -67,7 +69,10 @@ class FIFUExtension extends ExtensionHandler{
 	*/
     public function extensionSupportedImportType($import_type){
 		if(is_plugin_active('featured-image-from-url/featured-image-from-url.php')){
-			if($import_type == 'Posts' || $import_type == 'Pages') {
+
+            $import_type = $this->import_name_as($import_type);
+
+			if($import_type == 'Posts' || $import_type == 'Pages' || $import_type == 'CustomPosts') {
 				return true;
 			}
 			else{

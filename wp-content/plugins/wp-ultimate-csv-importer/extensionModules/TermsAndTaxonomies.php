@@ -97,7 +97,7 @@ class TermsAndTaxonomies extends ExtensionHandler{
 	* @return boolean
 	*/
     public function extensionSupportedImportType($import_type ){
-		if($import_type == 'nav_menu_item'){
+		if($import_type == 'nav_menu_item' || $import_type == 'elementor_library'){
 			return false;
 		}
 

@@ -18,10 +18,10 @@ exit; // Exit if accessed directly
 class InstallAddons {
 	
     protected static $instance = null;
-    private static $smack_csv_instance = null;
+    private static $smack_csv_instance = null,$plugin;
 
 		public function __construct() {
-					$this->plugin = Plugin::getInstance();
+					$plugin = Plugin::getInstance();
 		}
 
 		public static function getInstance() {

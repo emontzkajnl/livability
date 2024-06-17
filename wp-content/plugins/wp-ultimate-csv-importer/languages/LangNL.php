@@ -451,8 +451,18 @@ class LangNL {
 			'SampleCSVXML' => 'Voorbeeld van CSV en XML',
 			'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => 'Waarschuwing: sommige add-ons ontbreken, het wordt aanbevolen om dit te doen',
 			'DragDropyourfilesor' => 'Drag & Drop uw bestanden of',
+                        'WPCompleteFields' => 'WPVolledige velden'
                 );
         return $response;
+        }
+        public static function notice_contents()
+        {
+        $result =array(
+                'UpgradetoPROusingcode' => 'Upgrade naar PRO met code',
+                'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Ontgrendeling functies zoals bulk import, geavanceerde export, planning, inhoud update, en meer, plus levenslange ondersteuning',
+                'upgradenow' => 'upgrade nu'
+        );
+        return $result;
         }
 }
 

@@ -375,7 +375,8 @@ function wdtEditEnqueue() {
     wp_localize_script('wdt-wpdatatables', 'wpdatatables_frontend_strings', WDTTools::getTranslationStrings());
     wp_localize_script('wdt-advanced-filter', 'wpdatatables_frontend_strings', WDTTools::getTranslationStrings());
 
-    do_action('wdt_enqueue_on_edit_page');
+    do_action_deprecated( 'wdt_enqueue_on_edit_page', array(), WDT_INITIAL_LITE_VERSION, 'wpdatatables_enqueue_on_edit_page' );
+    do_action('wpdatatables_enqueue_on_edit_page');
 }
 
 /**
@@ -476,7 +477,8 @@ function wdtDashboardEnqueue()
     wp_enqueue_script('wdt-common');
     wp_enqueue_script('wdt-doc-js');
 
-    do_action('wdt_enqueue_on_dashboard_page');
+    do_action_deprecated( 'wdt_enqueue_on_dashboard_page', array(), WDT_INITIAL_LITE_VERSION, 'wpdatatables_enqueue_on_dashboard_page' );
+    do_action('wpdatatables_enqueue_on_dashboard_page');
 }
 
 /**

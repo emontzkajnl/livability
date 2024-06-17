@@ -10,7 +10,7 @@
  *
  * @wordpress-plugin
  * Plugin Name: WP Ultimate CSV Importer
- * Version:     7.9.10.5
+ * Version:     7.11.1
  * Plugin URI:  https://www.smackcoders.com/wp-ultimate-csv-importer-pro.html
  * Description: Seamlessly create posts, custom posts, pages, media, SEO and more from your CSV data with ease.
  * Author:      Smackcoders
@@ -73,6 +73,10 @@ class SmackCSV{
 	private static $russian_instance = null;
 	private	static $portuguese_instance = null;
 	private static $turkish_instance = null;
+	private static $nz_instance = null;
+	private static $pl_instance = null;
+	private static $aus_instance = null;
+	private static $enpi_instance = null;
 	private static $japanese_instance = null;
 	private static $dutch_instance = null;
 	private static $en_ZA_instance = null;
@@ -81,14 +85,21 @@ class SmackCSV{
 	private static $persian_instance = null;
 	private static $chinese_instance = null;
 	private static $addon_instance = null;
-	public $version = '7.9.10.5';
+	public $version = '7.11.1';
 
-	public function __construct(){ 
-
+	public function __construct() { 
 		add_action('init', array(__CLASS__, 'show_admin_menus'));
-
 		//action to register in wordpress tools
-		add_action( 'admin_init', array( __CLASS__, 'csv_register_importers' ) );
+		add_action('admin_init', array(__CLASS__, 'csv_register_importers'));
+		$current_date_and_time = date("Y-m-d H:i:s");
+		$nextnoticedate =get_option('close_date');
+		if(!empty($nextnoticedate)){
+			$nextnotice=strtotime("+3 day", strtotime($nextnoticedate));
+		}
+		if (isset($nextnotice) && (strtotime($current_date_and_time) >= $nextnotice) || empty($nextnoticedate)) {
+			add_action('admin_notices', array(__CLASS__, 'upgrade_notice'));
+		}
+		add_action('admin_post_dismiss_upgrade_notice', array(__CLASS__, 'dismiss_upgrade_notice'));
 	}
 
 	public static function csv_register_importers() {
@@ -156,6 +167,10 @@ class SmackCSV{
 			SmackCSV::$japanese_instance = LangJA::getInstance();
 			SmackCSV::$dutch_instance = LangNL::getInstance();
 			SmackCSV::$turkish_instance = LangTR::getInstance();
+			SmackCSV::$nz_instance = LangNZ::getInstance();
+			SmackCSV::$pl_instance = LangPL::getInstance();
+			SmackCSV::$enpi_instance = LangPI::getInstance();
+			SmackCSV::$aus_instance = LangAUS::getInstance();
 			SmackCSV::$en_ZA_instance = LangEN_ZA::getInstance();
 			SmackCSV::$tamil_instance = LangTA::getInstance();
 			SmackCSV::$arabic_instance = LangAR::getInstance();
@@ -223,6 +238,116 @@ class SmackCSV{
 		add_action('admin_enqueue_scripts',array(__CLASS__,'csv_enqueue_function'));
 	}
 
+	public static function upgrade_notice() {
+		//$language = get_locale();
+		$user_id = get_current_user_id();
+		$language = get_user_meta($user_id, 'locale', true);
+		if($language == 'it_IT'){
+			SmackCSV::$italy_instance = LangIT::getInstance();
+			$notice_content = SmackCSV::$italy_instance->notice_contents();
+		}
+		elseif($language == 'fr_FR' || $language == 'fr_BE'){
+			SmackCSV::$france_instance = LangFR::getInstance();
+			$notice_content = SmackCSV::$france_instance->notice_contents();
+		}
+		elseif($language == 'de_DE' || $language == 'de_AT'){
+			SmackCSV::$german_instance = LangGE::getInstance();
+			$notice_content = SmackCSV::$german_instance->notice_contents();
+		}
+		elseif ($language == 'es_ES') {
+			SmackCSV::$spanish_instance = LangES::getInstance();
+			$notice_content = SmackCSV::$spanish_instance->notice_contents();
+		}
+		elseif ($language == 'en_CA') {
+			SmackCSV::$en_CA_instance = LangEN_CA::getInstance();
+			$notice_content = SmackCSV::$en_CA_instance->notice_contents();
+		}
+		elseif ($language == 'en_GB') {
+			SmackCSV::$en_GB_instance = LangEN_GB::getInstance();
+			$notice_content = SmackCSV::$en_GB_instance->notice_contents();
+		}
+		elseif ($language == 'tr_TR') {
+			SmackCSV::$turkish_instance = LangTR::getInstance();
+			$notice_content = SmackCSV::$turkish_instance->notice_contents();
+		}
+		elseif ($language == 'en_NZ') {
+			SmackCSV::$nz_instance = LangNZ::getInstance();
+			$notice_content = SmackCSV::$nz_instance->notice_contents();
+		}
+		elseif ($language == 'pl_PL') {
+			SmackCSV::$pl_instance = LangPL::getInstance();
+			$notice_content = SmackCSV::$pl_instance->notice_contents();
+		}
+		elseif ($language == 'en_AU') {
+			SmackCSV::$aus_instance = LangAUS::getInstance();
+			$notice_content = SmackCSV::$aus_instance->notice_contents();
+		}
+		elseif ($language == 'art_xpirate') {
+			SmackCSV::$enpi_instance = LangPI::getInstance();
+			$notice_content = SmackCSV::$enpi_instance->notice_contents();
+		}
+		elseif ($language == 'en_ZA') {
+			SmackCSV::$en_ZA_instance = LangEN_ZA::getInstance();
+			$notice_content = SmackCSV::$en_ZA_instance->notice_contents();
+		}
+		elseif ($language == 'ru_RU') {
+			SmackCSV::$russian_instance = LangRU::getInstance();
+			$notice_content = SmackCSV::$russian_instance->notice_contents();
+		}
+		elseif($language == 'pt_BR') {
+			SmackCSV::$portuguese_instance = LangPT::getInstance();
+			$notice_content = SmackCSV::$portuguese_instance->notice_contents();
+		}
+		elseif ($language == 'ja') {
+			SmackCSV::$japanese_instance = LangJA::getInstance();
+			$notice_content = SmackCSV::$japanese_instance->notice_contents();
+		}
+		elseif ($language == 'nl_NL') {
+			SmackCSV::$dutch_instance = LangNL::getInstance();
+			$notice_content = SmackCSV::$dutch_instance->notice_contents();
+		}
+		elseif ($language == 'ta_IN') {
+			SmackCSV::$tamil_instance = LangTA::getInstance();
+			$notice_content = SmackCSV::$tamil_instance-->notice_contents();
+		}
+		elseif ($language == 'ar') {
+			SmackCSV::$arabic_instance = LangAR::getInstance();
+			$notice_content = SmackCSV::$arabic_instance->notice_contents();
+		}
+		elseif ($language == 'fa_IR') {
+			SmackCSV::$persian_instance = LangFA::getInstance();
+			$notice_content = SmackCSV::$persian_instance->notice_contents();
+		}
+		elseif ($language == 'zh_CN') {
+			SmackCSV::$chinese_instance = LangZH::getInstance();
+			$notice_content = SmackCSV::$chinese_instance->notice_contents();
+		}
+		else{
+			SmackCSV::$en_instance = LangEN::getInstance();
+			$notice_content = SmackCSV::$en_instance->notice_contents();
+		}
+		$test=translate('apple',$language);
+		?>
+		<div class="notice notice-warning is-dismissible" >
+		<p> <?php echo sanitize_text_field($notice_content['UpgradetoPROusingcode'])?> <b>WPCSVFREE2PRO</b>. <?php echo sanitize_text_field($notice_content['Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'])?>&nbsp <a href="https://www.smackcoders.com/wp-ultimate-csv-importer-pro.html?utm_source=csv-importer-free-admin-notice&utm_medium=wp_org_readme&utm_campaign=csv-pro-coupon" class="button button-pro promo-btn" target="_blank"><?php echo sanitize_text_field($notice_content['upgradenow'])?></a>
+        </p>
+			
+			<button type="button"class="notice-dismiss" onclick="location.href='<?php echo esc_url(admin_url('admin-post.php?action=dismiss_upgrade_notice')); ?>'">
+				<span class="screen-reader-text">Dismiss this notice.</span>
+			</button>
+		</div>
+		<?php
+	}
+	public static function is_upgrade_notice_dismissed() {
+		return get_option('csv_upgrade_notice_dismissed', false);
+	}
+	public static function dismiss_upgrade_notice() {
+		$current_date_and_time = date("Y-m-d H:i:s");
+		update_option('close_date', $current_date_and_time);
+		wp_safe_redirect(wp_get_referer() ?: admin_url());
+		exit();
+	}
+
 	public static function editor_menu (){
 
 		remove_menu_page('com.smackcoders.csvimporternew.menu');
@@ -238,7 +363,7 @@ class SmackCSV{
 	public static function csv_enqueue_function(){
 		$upload = wp_upload_dir();
 		$upload_base_url = $upload['baseurl'];
- 
+	
 		wp_enqueue_script('jquery-ui-droppable');
 		wp_register_script(SmackCSV::$plugin_instance->getPluginSlug().'popper',plugins_url( 'assets/js/deps/popper.js', __FILE__), array('jquery'));
 		wp_enqueue_script(SmackCSV::$plugin_instance->getPluginSlug().'popper');
@@ -265,7 +390,9 @@ class SmackCSV{
 		wp_enqueue_script(SmackCSV::$plugin_instance->getPluginSlug().'main-js');
 		wp_register_script(SmackCSV::$plugin_instance->getPluginSlug().'script_csv_importer',plugins_url( 'assets/js/admin-v6.1.js', __FILE__), array('jquery'));
 		wp_enqueue_script(SmackCSV::$plugin_instance->getPluginSlug().'script_csv_importer');
-		$language = get_locale();
+		//$language = get_locale();
+		$user_id = get_current_user_id();
+		$language = get_user_meta($user_id, 'locale', true);
 		if($language == 'it_IT'){
 			$contents = SmackCSV::$italy_instance->contents();
 			$response = wp_json_encode($contents);
@@ -298,6 +425,26 @@ class SmackCSV{
 		}
 		elseif ($language == 'tr_TR') {
 			$contents = SmackCSV::$turkish_instance->contents();
+			$response = wp_json_encode($contents);
+			wp_localize_script(SmackCSV::$plugin_instance->getPluginSlug() . 'script_csv_importer', 'wpr_object', array('file' => $response, __FILE__, 'imagePath' => plugins_url('/assets/images/', __FILE__),'logfielpath' => $upload_url));
+		}
+		elseif ($language == 'en_NZ') {
+			$contents = SmackCSV::$nz_instance->contents();
+			$response = wp_json_encode($contents);
+			wp_localize_script(SmackCSV::$plugin_instance->getPluginSlug() . 'script_csv_importer', 'wpr_object', array('file' => $response, __FILE__, 'imagePath' => plugins_url('/assets/images/', __FILE__),'logfielpath' => $upload_url));
+		}
+		elseif ($language == 'pl_PL') {
+			$contents = SmackCSV::$pl_instance->contents();
+			$response = wp_json_encode($contents);
+			wp_localize_script(SmackCSV::$plugin_instance->getPluginSlug() . 'script_csv_importer', 'wpr_object', array('file' => $response, __FILE__, 'imagePath' => plugins_url('/assets/images/', __FILE__),'logfielpath' => $upload_url));
+		}
+		elseif ($language == 'en_AU') {
+			$contents = SmackCSV::$aus_instance->contents();
+			$response = wp_json_encode($contents);
+			wp_localize_script(SmackCSV::$plugin_instance->getPluginSlug() . 'script_csv_importer', 'wpr_object', array('file' => $response, __FILE__, 'imagePath' => plugins_url('/assets/images/', __FILE__),'logfielpath' => $upload_url));
+		}
+		elseif ($language == 'art_xpirate') {
+			$contents = SmackCSV::$enpi_instance->contents();
 			$response = wp_json_encode($contents);
 			wp_localize_script(SmackCSV::$plugin_instance->getPluginSlug() . 'script_csv_importer', 'wpr_object', array('file' => $response, __FILE__, 'imagePath' => plugins_url('/assets/images/', __FILE__),'logfielpath' => $upload_url));
 		}
@@ -401,8 +548,19 @@ class SmackCSV{
 			}
 
 			$exports_dir = $upload['basedir'] . '/smack_uci_uploads/exports/';
+			$htaccess_content = "deny from all\n";
+			$htaccess_file = $exports_dir . '.htaccess';
+			if (!file_exists($htaccess_file)) {
+				if (file_put_contents($htaccess_file, $htaccess_content) === false) {
+				}
+			}
       	  if (!is_dir($exports_dir)) {
             wp_mkdir_p($exports_dir);
+			$htaccess_content = "deny from all\n";
+			$htaccess_file = $exports_dir . '.htaccess';
+			if (!file_exists($htaccess_file)) {
+				file_put_contents($htaccess_file, $htaccess_content);
+			}
             chmod($exports_dir, 0755);
 
             $index_php_file = $exports_dir . 'index.php';
@@ -467,6 +625,10 @@ include_once('languages/LangFR.php');
 include_once('languages/LangRU.php');
 include_once('languages/LangPT.php');
 include_once('languages/LangTR.php');
+include_once('languages/LangNZ.php');
+include_once('languages/LangPL.php');
+include_once('languages/LangAUS.php');
+include_once('languages/LangPI.php');
 include_once('languages/LangES.php');
 include_once('languages/LangJA.php');
 include_once('languages/LangNL.php');

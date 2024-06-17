@@ -54,6 +54,7 @@ class WP_Optimize_Minify_Cache_Functions {
 		// get latest time stamp
 		$cache_time = wp_optimize_minify_config()->get('last-cache-update');
 
+		$cache_base_dir = WPO_CACHE_MIN_FILES_DIR . "/$cache_time";
 		$cache_dir_url = WPO_CACHE_MIN_FILES_URL . "/$cache_time/assets";
 		$tmp_dir      = WPO_CACHE_MIN_FILES_DIR . "/tmp";
 		$header_dir   = WPO_CACHE_MIN_FILES_DIR . "/$cache_time/header";
@@ -73,7 +74,8 @@ class WP_Optimize_Minify_Cache_Functions {
 			'tmpdir' => $tmp_dir,
 			'cachedir' => $cache_dir,
 			'cachedirurl' => $cache_dir_url,
-			'headerdir' => $header_dir
+			'headerdir' => $header_dir,
+			'cachebasedir' => $cache_base_dir
 		);
 	}
 
@@ -322,7 +324,7 @@ class WP_Optimize_Minify_Cache_Functions {
 	 */
 	public static function purge_old() {
 		if (!class_exists('WP_Optimize_Minify_Config')) {
-			include_once WPO_PLUGIN_MAIN_PATH . '/minify/class-wp-optimize-minify-config.php';
+			include_once WPO_PLUGIN_MAIN_PATH . 'minify/class-wp-optimize-minify-config.php';
 		}
 		$cache_time = wp_optimize_minify_config()->get('last-cache-update');
 		$cache_lifespan = wp_optimize_minify_config()->get('cache_lifespan');

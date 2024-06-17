@@ -447,8 +447,18 @@ class LangJA {
 			'SampleCSVXML' => 'サンプル CSV&XML',
 			'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => '警告: 一部のアドオンが不足しています。',
 			'DragDropyourfilesor' => 'ファイルをドラッグ & ドロップするか、',
+                        'WPCompleteFields' => 'WPComplete フィールド'
                 );
         return $response;
+        }
+        public static function notice_contents()
+        {
+        $result =array(
+                'UpgradetoPROusingcode' => 'コードを使ってPROにアップグレードします。',
+                'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'大量の輸入、高度輸出、予定、コンテンツ更新、さらに生涯サポートなどの機能を解除する。',
+                'upgradenow' => 'アップグレードしろ'
+        );
+        return $result;
         }
 }
 

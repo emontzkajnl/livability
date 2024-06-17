@@ -29,7 +29,7 @@ class XmlHandler {
 
 	public function parse_xml(){
 		check_ajax_referer('smack-ultimate-csv-importer', 'securekey');
-		$row_count = intval($_POST['row']);
+		$row_count = isset($_POST['row']) ? intval(sanitize_text_field($_POST['row'])) : 0;
 		$hash_key = sanitize_key($_POST['HashKey']);
 
 		$smack_csv_instance = SmackCSV::getInstance();
@@ -94,7 +94,11 @@ class XmlHandler {
 		$total_xml_count = $this->get_xml_count($path , $child_name);
 		$doc = new \DOMDocument();
 		$doc->load($path);
-		$node = $doc->getElementsByTagName($child_name)->item($line_number);
+		if ($line_number !== null) {
+			$node = $doc->getElementsByTagName($child_name)->item((int)$line_number);
+		} else {
+			$node = $doc->getElementsByTagName($child_name)->item(0);
+		}
 		$this->tableNodes($node);
 		$response['xml_array'] = $this->result_xml;
 		$response['success'] = true;

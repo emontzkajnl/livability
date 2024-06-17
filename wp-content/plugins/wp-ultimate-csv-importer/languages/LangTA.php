@@ -400,5 +400,14 @@ class LangTA
                 );
                 return $response;
         }
+		public static function notice_contents()
+        {
+        $result =array(
+                'UpgradetoPROusingcode' => 'குறியீடு பயன்படுத்தி PRO மேம்படுத்தவும்',
+                'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'மொத்தமாக இறக்குமதி, மேம்பட்ட ஏற்றுமதி, திட்டமிடல், உள்ளடக்க மேம்படுத்தல், மற்றும் மேலும் வாழ்நாள் ஆதரவு போன்ற அம்சங்களை திறக்கவும்',
+                'upgradenow' => 'இப்போது மேம்படுத்தவும்'
+        );
+        return $result;
+        }
 }
 

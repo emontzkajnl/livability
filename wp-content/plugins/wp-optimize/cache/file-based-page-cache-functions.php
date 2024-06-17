@@ -33,8 +33,13 @@ function wpo_cache($buffer, $flags) {
 	}
 
 	// Don't cache pages for logged in users.
-	if (!wpo_cache_loggedin_users() && (!function_exists('is_user_logged_in') || (function_exists('wp_get_current_user') && is_user_logged_in()))) {
-		$no_cache_because[] = __('User is logged in', 'wp-optimize');
+	if (!function_exists('is_user_logged_in') || (function_exists('wp_get_current_user') && is_user_logged_in())) {
+		if (!wpo_cache_loggedin_users()) {
+			$no_cache_because[] = __('User is logged in', 'wp-optimize');
+		} elseif (!empty($GLOBALS['wpo_cache_config']['enable_user_caching'])) {
+			// Will only run when "Serve cached pages to logged in users" is checked
+			$no_cache_because[] = __('User is logged in, this works only when the cache is preloaded', 'wp-optimize');
+		}
 	}
 
 	$restricted_page_type_cache = apply_filters('wpo_restricted_cache_page_type', false);
@@ -137,9 +142,15 @@ function wpo_cache($buffer, $flags) {
 		// Add http headers
 		wpo_cache_add_nocache_http_header($message);
 
-		// Only output if the user has turned on debugging output
-		if (((defined('WP_DEBUG') && WP_DEBUG) || isset($_GET['wpo_cache_debug'])) && (!defined('DOING_CRON') || !DOING_CRON) && (!defined('REST_REQUEST') || !REST_REQUEST)) {
-			$buffer .= "\n<!-- WP Optimize page cache - https://getwpo.com - page NOT cached because: ".htmlspecialchars($message)." -->\n";
+		if ((!defined('DOING_CRON') || !DOING_CRON) && (!defined('REST_REQUEST') || !REST_REQUEST)) {
+			$not_cached_details = "";
+			
+			// Output the reason only when the user has turned on debugging
+			if (((defined('WP_DEBUG') && WP_DEBUG) || isset($_GET['wpo_cache_debug']))) {
+				$not_cached_details = "because: ".htmlspecialchars($message) . " ";
+			}
+
+			$buffer .= sprintf("\n<!-- WP Optimize page cache - https://getwpo.com - page NOT cached %s-->\n", $not_cached_details);
 		}
 		
 		return $buffer;
@@ -157,7 +168,7 @@ function wpo_cache($buffer, $flags) {
 
 		$modified_time = time(); // Take this as soon before writing as possible
 		$timezone_string = '';
-		$utc = (float) $GLOBALS['wpo_cache_config']['gmt_offset'];
+		$utc = isset($GLOBALS['wpo_cache_config']['gmt_offset']) ? (float) $GLOBALS['wpo_cache_config']['gmt_offset'] : 0;
 		$modified_time += $utc * 3600;
 		
 		if (!empty($GLOBALS['wpo_cache_config']['timezone_string'])) {
@@ -179,7 +190,11 @@ function wpo_cache($buffer, $flags) {
 		 * @return boolean
 		 */
 		if (preg_match('#</html>#i', $buffer) && (apply_filters('wpo_cache_show_cached_by_comment', true) || (defined('WP_DEBUG') && WP_DEBUG))) {
-			$date_time_format = $GLOBALS['wpo_cache_config']['date_format'] . ' ' . $GLOBALS['wpo_cache_config']['time_format'];
+			$date_time_format = 'F j, Y g:i a';
+			if (!empty($GLOBALS['wpo_cache_config']['date_format']) && !empty($GLOBALS['wpo_cache_config']['time_format'])) {
+				$date_time_format = $GLOBALS['wpo_cache_config']['date_format'] . ' ' . $GLOBALS['wpo_cache_config']['time_format'];
+			}
+			
 			if (!empty($GLOBALS['wpo_cache_config']['enable_mobile_caching']) && wpo_is_mobile()) {
 				$add_to_footer .= "\n<!-- Cached by WP-Optimize - for mobile devices - https://getwpo.com - Last modified: " . gmdate($date_time_format, $modified_time) . " " . $timezone_postfix . "  -->\n";
 			} else {
@@ -604,6 +619,26 @@ if (!function_exists('wpo_is_using_webp_images_redirection')) :
 endif;
 
 /**
+ * Verify if the current request is related to the Activity Stream
+ *
+ * @return bool
+ */
+if (!function_exists('wpo_is_activity_stream_requested')) :
+	function wpo_is_activity_stream_requested() {
+		return (isset($_SERVER['HTTP_ACCEPT']) && false !== strpos($_SERVER['HTTP_ACCEPT'], 'application/activity+json'));
+	}
+endif;
+
+/**
+ * Verify if the current request is robots.txt
+ */
+if (!function_exists('wpo_is_robots_txt_requested')) :
+	function wpo_is_robots_txt_requested() {
+		return (isset($_SERVER['REQUEST_URI']) && 'robots.txt' === basename($_SERVER['REQUEST_URI']));
+	}
+endif;
+
+/**
  * Serves the cache and exits
  */
 if (!function_exists('wpo_serve_cache')) :
@@ -711,6 +746,9 @@ if (!function_exists('wpo_is_canonical_redirection_needed')) :
 	function wpo_is_canonical_redirection_needed() {
 		$permalink_structure = isset($GLOBALS['wpo_cache_config']['permalink_structure']) ? $GLOBALS['wpo_cache_config']['permalink_structure'] : '';
 		$site_url = wpo_site_url();
+
+		// Exit if server variables are not available.
+		if (!isset($_SERVER['HTTP_HOST'])) return false;
 		
 		$schema = isset($_SERVER['HTTPS']) && 'on' === $_SERVER['HTTPS'] ? "https" : "http";
 		$url_part = "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -718,7 +756,7 @@ if (!function_exists('wpo_is_canonical_redirection_needed')) :
 		$url_parts = parse_url($requested_url);
 		$extension = pathinfo($url_parts['path'], PATHINFO_EXTENSION);
 		
-		if (!empty($permalink_structure) && $requested_url != $site_url) {
+		if (!empty($permalink_structure) && $requested_url != $site_url && ((isset($url_parts['path']) && '/' !== $url_parts['path']) || isset($url_parts['query']))) {
 			$request_uri = rtrim($_SERVER['REQUEST_URI'], '?');
 			if ('/' == substr($permalink_structure, -1) && empty($extension) && empty($url_parts['query']) && empty($url_parts['fragment'])) {
 				$url = preg_replace('/(.+?)([\/]*)(\[\?\#][^\/]+|$)/', '$1/$3', $request_uri);
@@ -954,10 +992,10 @@ function wpo_url_in_exceptions($url) {
 endif;
 
 /**
- * Check if url string match with exception.
+ * Checks if an URL matches against listed exceptions.
  *
- * @param string $url       - complete url string i.e. http(s):://domain/path
- * @param string $exception - complete url or absolute path, can consist (.*) wildcards
+ * @param string $url       - complete url string i.e. http(s)://domain/path
+ * @param string $exception - complete url or absolute path, can contain (.*) wildcards; Sometimes can be urlencoded
  *
  * @return bool
  */
@@ -971,10 +1009,10 @@ function wpo_url_exception_match($url, $exception) {
 
 	$exception = trim($exception);
 
-	// used to test websites placed in subdirectories.
+	// Used to test websites placed in subdirectories.
 	$sub_dir = '';
 
-	// if exception defined from root i.e. /page1 then remove domain part in url.
+	// If exception defined from root i.e. /page1 then remove domain part in url.
 	if (preg_match('/^\//', $exception)) {
 		// get site sub directory.
 		$sub_dir = preg_replace('#^(http|https):\/\/.*\/#Ui', '', wpo_site_url());
@@ -984,18 +1022,26 @@ function wpo_url_exception_match($url, $exception) {
 		$url = preg_replace('#^(http|https):\/\/.*\/#Ui', '/', $url);
 	}
 
-	$url = rtrim($url, '/') . '/';
+	$url = urldecode(rtrim($url, '/')) . '/';
 	$exception = rtrim($exception, '/');
 
-	// if we have no wildcat in the end of exception then add slash.
+	// if we have no wildcard in the end of exception then add slash.
 	if (!preg_match('#\(\.\*\)$#', $exception)) $exception .= '/';
 
 	$exception = preg_quote($exception);
+	
+	// fix - unescape some possibly escaped mask characters
+	$search = array(
+		'\\.\\*',
+		'\\-',
+	);
+	$replace = array(
+		'.*',
+		'-',
+	);
+	$exception = urldecode(str_replace($search, $replace, $exception));
 
-	// fix - unescape possible escaped mask .*
-	$exception = str_replace('\\.\\*', '.*', $exception);
-
-	return preg_match('#^'.$exception.'$#i', $url) || preg_match('#^'.$sub_dir.$exception.'$#i', $url);
+	return (preg_match('#^'.$exception.'$#i', $url) || preg_match('#^'.$sub_dir.$exception.'$#i', $url));
 }
 endif;
 
@@ -1212,7 +1258,7 @@ function wpo_cache_add_footer_output($output = null) {
 		// Only add the line if it was a page, not something else (e.g. REST response)
 		if (function_exists('did_action') && did_action('wp_footer')) {
 			echo "\n<!-- WP Optimize page cache - https://getwpo.com - ".$buffered." -->\n";
-		} elseif (defined('WPO_CACHE_DEBUG') && WPO_CACHE_DEBUG) {
+		} elseif (defined('WPO_CACHE_DEBUG') && WPO_CACHE_DEBUG && (!defined('REST_REQUEST') || !REST_REQUEST)) {
 			error_log('[CACHE DEBUG] '.wpo_current_url() . ' - ' . $buffered);
 		}
 	} else {
@@ -1342,13 +1388,28 @@ endif;
  */
 if (!function_exists('wpo_cache_add_nocache_http_header')) :
 	function wpo_cache_add_nocache_http_header($message = '') {
+		if (!headers_sent()) {
+			header('WPO-Cache-Status: not cached');
+			header('WPO-Cache-Message: '. trim(str_replace(array("\r", "\n", ':'), ' ', strip_tags($message))));
+		}
+	}
+endif;
+
+/**
+ * Add the headers indicating why the page is not cached or served from cache by integrating with the send_headers filter
+ *
+ * @param string $message - The headers
+ *
+ * @return void
+ */
+if (!function_exists('wpo_cache_add_nocache_http_header_with_send_headers_action')) :
+	function wpo_cache_add_nocache_http_header_with_send_headers_action($message = '') {
 		static $buffered_message = null;
 
 		if (function_exists('current_filter') && 'send_headers' === current_filter() && $buffered_message && !headers_sent()) {
-			header('WPO-Cache-Status: not cached');
-			header('WPO-Cache-Message: '. trim(str_replace(array("\r", "\n", ':'), ' ', strip_tags($buffered_message))));
+			wpo_cache_add_nocache_http_header($buffered_message);
 		} else {
-			if (!$buffered_message && function_exists('add_action')) add_action('send_headers', 'wpo_cache_add_nocache_http_header', 11);
+			if (!$buffered_message && function_exists('add_action')) add_action('send_headers', 'wpo_cache_add_nocache_http_header_with_send_headers_action', 11);
 			$buffered_message = $message;
 		}
 	}

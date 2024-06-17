@@ -22,13 +22,24 @@ class PolylangExtension extends ExtensionHandler{
 
     
 	public function processExtension($data) {
-        if(is_plugin_active('polylang/polylang.php')){
+        if(is_plugin_active('polylang/polylang.php') || is_plugin_active('polylang-pro/polylang.php')){
         $response = [];
         $import_type = $this->import_name_as($data);
-        if($import_type == 'Taxonomies' || $import_type =='Tags' || $import_type =='Categories'){
+        $poly_settings=get_option('polylang');
+        if($import_type =='Tags' || $import_type =='Categories'){
         	$polylangFields = array(
-			'Language Code' => 'language_code',
-			'Translated Post Title' => 'translated_taxonomy_title');
+			'LANGUAGE_CODE' => 'language_code',
+			'TRANSLATED_TAXONOMY_TITLE' => 'translated_taxonomy_title');
+        }
+        else if($import_type == 'Images' ){
+            if($poly_settings['media_support'] == 1){
+                $polylangFields = array(
+                    'LANGUAGE_CODE' => 'language_code');
+            }
+            else{
+                return true;
+            }
+          
         }
         else{
         	$polylangFields = array(
@@ -48,9 +59,9 @@ class PolylangExtension extends ExtensionHandler{
 	 */
 	public function extensionSupportedImportType($import_type){
       
-        if(is_plugin_active('polylang/polylang.php')){
+        if(is_plugin_active('polylang/polylang.php') || is_plugin_active('polylang-pro/polylang.php')){
             $import_type = $this->import_name_as($import_type);
-            if($import_type == 'Posts' || $import_type == 'WooCommerce' || $import_type =='Pages'|| $import_type =='CustomPosts' ) { 
+            if($import_type == 'Posts' || $import_type == 'WooCommerce' || $import_type =='Pages'|| $import_type =='CustomPosts' || $import_type =='Tags' || $import_type =='Categories'|| $import_type =='Images') { 
                  return true;
             }else{
                  return false;

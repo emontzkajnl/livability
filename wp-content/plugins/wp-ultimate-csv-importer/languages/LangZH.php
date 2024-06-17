@@ -399,5 +399,14 @@ class LangZH
                 );
                 return $response;
         }
+		public static function notice_contents()
+        {
+        $result =array(
+                'UpgradetoPROusingcode' => '使用代碼升級到PRO。',
+                'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'解鎖諸如批量導入、高級導齣、調度、內容更新等功能，以及更多功能，以及終身支持。',
+                'upgradenow' => '現在升級。'
+        );
+        return $result;
+        }
 }
 

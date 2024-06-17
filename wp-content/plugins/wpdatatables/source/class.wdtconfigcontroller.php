@@ -183,6 +183,7 @@ class WDTConfigController {
             $table->show_table_description = isset($advancedSettings->show_table_description) ? $advancedSettings->show_table_description : false;
             $table->table_description = isset($advancedSettings->table_description) ? $advancedSettings->table_description : '';
             $table->table_wcag = isset($table->table_wcag) || isset($advancedSettings->table_wcag) ? $advancedSettings->table_wcag : 0;
+            $table->pagination_top = (isset($advancedSettings->pagination_top)) ? $advancedSettings->pagination_top : 0;
 
             $table = self::sanitizeTableConfig($table);
 
@@ -316,6 +317,7 @@ class WDTConfigController {
                     'show_table_description' => $table->show_table_description,
                     'table_wcag' =>  $table->table_wcag,
                     'simple_template_id' =>  $table->simple_template_id,
+                    'pagination_top' => $table->pagination_top,
                 )
             )
         );
@@ -402,6 +404,7 @@ class WDTConfigController {
         $table->pdfPageOrientation = sanitize_text_field($table->pdfPageOrientation);
         $table->table_wcag = (int)($table->table_wcag);
         $table->simple_template_id = (int)$table->simple_template_id;
+        $table->pagination_top = (int)$table->pagination_top;
         $table->userid_column_id = $table->userid_column_id != null ?
             (int)$table->userid_column_id : null;
 
@@ -1164,6 +1167,7 @@ class WDTConfigController {
         $table->auto_refresh = 0;
         $table->info_block = 1;
         $table->responsiveAction = 'icon';
+        $table->pagination_top = 0;
         $table->pagination = 1;
         $table->paginationAlign = 'right';
         $table->paginationLayout = 'full_numbers';

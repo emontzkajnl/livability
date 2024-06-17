@@ -36,7 +36,6 @@ class FIFUImport
 
     public function fifu_values_import($post_values, $post_id, $type, $mode){
         global $wpdb;	
-       if($type == 'Posts' || $type == 'Pages'){
         $fifu_array = [];
       
         $author_id = get_option('fifu_author');
@@ -65,5 +64,4 @@ class FIFUImport
        update_post_meta($attachment_id, '_wp_attachment_image_alt', $post_values['fifu_image_alt']);
    
       }
-}
 }

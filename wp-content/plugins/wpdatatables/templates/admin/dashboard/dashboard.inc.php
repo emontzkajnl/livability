@@ -337,12 +337,12 @@ $tableChartsCount = (int)WDTTools::getTablesCount('chart');
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with new features and bug fixes:
+                            New update with bugfixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> Templates for Simple tables.</li>
+                                <li>Minor CSS fixes.</li>
                                 <li>Other small bug fixes and stability improvements</li>
                             </ul>
                         </div>

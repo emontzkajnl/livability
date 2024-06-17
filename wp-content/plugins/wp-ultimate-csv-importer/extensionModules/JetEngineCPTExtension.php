@@ -44,6 +44,7 @@ class JetEngineCPTExtension extends ExtensionHandler{
 	public function JetEngineCPTFields($import_type) {	
 		global $wpdb;
 
+		//$get_meta_fields = $wpdb->get_results($wpdb->prepare("SELECT id, meta_fields FROM {$wpdb->prefix}jet_post_types WHERE slug = %s AND status = %s", $import_type, 'publish'));
 		$import_type = $this->import_post_types($import_type);
 		if($import_type == 'WooCommerce Product'){
 			$import_type = 'product';
@@ -77,7 +78,6 @@ class JetEngineCPTExtension extends ExtensionHandler{
 		return $jet_value;		
 	}
 
-
 	/**
 	* Jet Engine extension supported import types
 	* @param string $import_type - selected import type
@@ -92,7 +92,6 @@ class JetEngineCPTExtension extends ExtensionHandler{
 			if($import_type =='Posts' || $import_type =='Pages' || $import_type =='CustomPosts' || $import_type =='event' || $import_type =='location' || $import_type == 'event-recurring' || $import_type =='Users' || $import_type =='WooCommerce'  || $import_type =='WooCommerceCategories' || $import_type =='WooCommerceattribute' || $import_type =='WooCommercetags' || $import_type =='WPeCommerce' || $import_type =='Taxonomies' || $import_type =='Tags' || $import_type =='Categories' || $import_type == 'CustomerReviews' || $import_type ='Comments') {		
 				return true;
 			}
-		
 			else{
 				return false;
 			}

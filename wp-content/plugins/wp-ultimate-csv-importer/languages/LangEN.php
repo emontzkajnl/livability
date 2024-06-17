@@ -94,6 +94,7 @@ class LangEN {
                 'RankMathFields'=>'Rank Math Fields',
                 'RankMathProFields'=>'Rank Math Pro Fields',
                 'SeoPressFields' => 'SEOPress Fields',
+                'ElementorFields' => 'Elementor Fields',
                 'TotalPressFields' => 'TotalPress Fields',
                 'replyattributesfields' => 'Reply Attributes Fields',
                 'forumattributesfields' => 'Forum Attributes Fields',
@@ -412,10 +413,21 @@ class LangEN {
                 'LifterLessonSettingsFields' => 'Lifter Lesson Settings Fields',
                 'FifuPostFields' => 'Fifu Post Fields',
                 'FifuPageFields' => 'Fifu Page Fields',
+                'FifuCustomPostFields' => 'Fifu Custom Post Fields',
                 'polylangfields' => 'Polylang Settings Fields',
-                'BuddyFields' => 'BuddyPress Fields'
+                'BuddyFields' => 'BuddyPress Fields',
+                'WPCompleteFields' => 'WPComplete Fields'
                 );
         return $response;
+        }
+        public static function notice_contents()
+        {
+        $result =array(
+                'UpgradetoPROusingcode' => 'Upgrade to PRO using code',
+                'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Unlock features like bulk import, advanced export, scheduling, content update, & more, plus lifetime support',
+                'upgradenow' => 'upgrade now'
+        );
+        return $result;
         }
 }
 

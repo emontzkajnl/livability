@@ -24,6 +24,7 @@ $plugin_ajax_hooks = [
     'get_post_types',
     'get_taxonomies',
     'get_authors',
+    'get_download',
     'mappingfields',
     'display_log',
     'download_log',
@@ -54,7 +55,10 @@ $plugin_ajax_hooks = [
     'DeactivateMail',
     'get_ftp_details',
     'delete_log',
-    'install_addon'
+    'install_addon',
+    'get_setting',
+    'get_plugin_notice',
+    'dismiss_notice'
 ];  
 }
 else {

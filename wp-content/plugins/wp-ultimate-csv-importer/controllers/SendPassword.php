@@ -16,7 +16,7 @@ exit; // Exit if accessed directly
  */
 class SendPassword {
 
-	protected static $instance = null;
+	protected static $instance = null,$plugin;
 
 	public static function getInstance() {
 		if ( null == self::$instance ) {
@@ -30,7 +30,7 @@ class SendPassword {
 	 * SendPassword constructor.
 	 */
 	public function __construct() {
-		$this->plugin = Plugin::getInstance();
+		$plugin = Plugin::getInstance();
 	}
 
 	/**
@@ -39,6 +39,7 @@ class SendPassword {
 	public function doHooks(){
 		add_action('wp_ajax_settings_options', array($this,'settingsOptions'));
 		add_action('wp_ajax_get_options', array($this,'showOptions'));
+		add_action('wp_ajax_get_setting', array($this,'showsetting'));
 	}
 
 	/**
@@ -67,6 +68,11 @@ class SendPassword {
 		wp_die();
 	}
 	}
+	public function showsetting(){
+		$result['setting'] = get_option('openAI_settings');
+		echo wp_json_encode($result);
+		wp_die();
+	}
 
 	/**
 	 * Function for show settings options
@@ -74,6 +80,17 @@ class SendPassword {
 	 */
 	public function showOptions() {
 		check_ajax_referer('smack-ultimate-csv-importer', 'securekey');
+		if (isset($_POST['prefixValue'])) {
+			$prefixValue = sanitize_text_field($_POST['prefixValue']);
+		}
+		if(!empty($prefixValue)){
+			update_option('openAI_settings', $prefixValue);
+		}
+		if(!empty($prefixValue)){
+			if($prefixValue == 'delete'){
+				delete_option('openAI_settings');
+			}
+		}
 		$ucisettings = get_option('sm_uci_pro_settings');
 		foreach ($ucisettings as $key => $val) {
 			$settings[$key] = json_decode($val);

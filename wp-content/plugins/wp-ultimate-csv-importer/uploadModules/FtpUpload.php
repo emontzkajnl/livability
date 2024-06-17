@@ -35,7 +35,7 @@ class FtpUpload implements Uploads{
     public function upload_function(){
         check_ajax_referer('smack-ultimate-csv-importer', 'securekey');
         $host_name = sanitize_text_field($_POST['HostName']);
-        $host_port = intval($_POST['HostPort']);
+        $host_port = isset($_POST['HostPort']) ? intval(sanitize_text_field($_POST['HostPort'])) : 0;
         $host_username = sanitize_text_field($_POST['HostUserName']);
         $host_password = sanitize_text_field($_POST['HostPassword']);
         $host_path = sanitize_text_field($_POST['HostPath']);

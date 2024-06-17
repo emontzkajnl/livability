@@ -387,9 +387,19 @@ class LangGE {
                 'SampleCSVXML' => 'Beispiel-CSV und XML',
                 'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => 'Warnung: Der Import einiger Daten ist deaktiviert. Installieren und aktivieren Sie zuerst die folgenden Plugins',
                 'DragDropyourfilesor' => 'Ziehen Sie Ihre Dateien per Drag & Drop oder',
+                'WPCompleteFields' => 'WPComplete-Felder'
 
         );
                 return $response;
+        }
+        public static function notice_contents()
+        {
+        $result =array(
+                'UpgradetoPROusingcode' => 'Upgrade auf PRO mit Code',
+                'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Entsperren Sie Funktionen wie Großimport, erweiterte Export, Planung, Content Update, & mehr, plus lebenslange Unterstützung',
+                'upgradenow' => 'jetzt aktualisieren'
+        );
+        return $result;
         }
 }
 

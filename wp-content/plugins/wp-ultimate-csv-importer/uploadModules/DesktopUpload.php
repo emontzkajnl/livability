@@ -44,6 +44,12 @@ class DesktopUpload implements Uploads{
         $validate_format = $validate_instance->validate_file_format($file_name);
         
         $response =[];
+        if (!extension_loaded('xml')) {
+            $response['success'] = false;
+            $response['message'] = 'The required PHP module xml is not installed. Please install it.';
+            echo wp_json_encode($response);
+            wp_die();
+        }
         if($validate_format == 'yes'){
         
             $upload_dir = DesktopUpload::$smack_csv_instance->create_upload_dir();

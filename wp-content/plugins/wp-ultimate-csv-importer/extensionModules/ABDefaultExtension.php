@@ -56,12 +56,41 @@ class DefaultExtension extends ExtensionHandler{
 				$wordpressfields['Comment Status'] = 'comment_status';
 				$wordpressfields['Ping Status'] = 'ping_status';
 			}
+		
+
 			if ($import_type === 'CustomPosts') { 
-				$wordpressfields['Format'] = 'post_format';
-				$wordpressfields['Comment Status'] = 'comment_status';
-				$wordpressfields['Ping Status'] = 'ping_status';
-				$wordpressfields['Parent'] = 'post_parent';
-				$wordpressfields['Order'] = 'menu_order';
+				if($import_types == 'elementor_library'){
+				
+					$wordpressfields = array(
+						'ID' => 'ID',
+						'Template title' => 'Template title',
+						'Template content' => 'Template content',
+						'Style'=> 'Style',
+						'Template type' => 'Template type',
+						'Created time' => 'Created time',
+						'Created by' => 'Created by',
+						'Template status' => 'Template status',
+						'Category'=> 'Category'
+						);		
+				}
+				else{
+					$wordpressfields = array(
+						'Title' => 'post_title',
+						'ID' => 'ID',
+						'Content' => 'post_content',
+						'Short Description' => 'post_excerpt',
+						'Publish Date' => 'post_date',
+						'Slug' => 'post_name',
+						'Author' => 'post_author',
+						'Status' => 'post_status',
+						'Featured Image' => 'featured_image'    
+						);	
+					$wordpressfields['Format'] = 'post_format';
+					$wordpressfields['Comment Status'] = 'comment_status';
+					$wordpressfields['Ping Status'] = 'ping_status';
+					$wordpressfields['Parent'] = 'post_parent';
+					$wordpressfields['Order'] = 'menu_order';
+				}
 			}
 			if ($import_type === 'Pages') {
 				$wordpressfields['Parent'] = 'post_parent';

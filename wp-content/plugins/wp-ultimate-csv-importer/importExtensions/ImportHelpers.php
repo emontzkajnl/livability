@@ -7,8 +7,13 @@
 
 namespace Smackcoders\FCSV;
 
+use PhpParser\Error;
+use PhpParser\ParserFactory;
+use NXP\MathExecutor;
+
 if ( ! defined( 'ABSPATH' ) )
     exit; // Exit if accessed directly
+	require_once(__DIR__.'/../lib/autoload.php');
 
 class ImportHelpers {
     private static $helpers_instance = null;
@@ -206,11 +211,13 @@ class ImportHelpers {
 		$current_user = wp_get_current_user();
 		$current_user_role = $current_user->roles[0];
 		if($current_user_role == 'administrator'){
+		
 		$post_values = [];
 		$trim_content = array(
 			'->static' => '', 
 			'->math' => '', 
-			'->cus1' => ''
+			'->cus1' => '',
+			'->openAI' => '',
 		);
 		if(is_array($map)){
 			foreach($map as $header_keys => $value){
@@ -229,13 +236,16 @@ class ImportHelpers {
 				}
 			}
 	
-			foreach($map as $key => $value){
+			foreach($map as $key => $value){	
 				$csv_value= trim($map[$key]);
+
 				if(!empty($csv_value)){
+					//$pattern = "/({([a-z A-Z 0-9 | , _ -]+)(.*?)(}))/";
 					$pattern1 = '/{([^}]*)}/';
 					$pattern2 = '/\[([^\]]*)\]/';
 
-					if(preg_match_all($pattern1, $csv_value, $matches, PREG_PATTERN_ORDER)){	
+					if(preg_match_all($pattern1, $csv_value, $matches, PREG_PATTERN_ORDER)){		
+						
 						//check for inbuilt or custom function call -> enclosed in []
 						if(preg_match_all($pattern2, $csv_value, $matches2)){
 							$matched_element = $matches2[1][0];
@@ -246,44 +256,40 @@ class ImportHelpers {
 								$get_value = "'".$get_value."'";
 								$matched_element = str_replace($values, $get_value, $matched_element);
 							}
-						
-							$csv_element = @eval("return " . $matched_element . ";" );
-							$wp_element= trim($key);
-							if(!empty($csv_element) && !empty($wp_element)){
-								$post_values[$wp_element] = $csv_element;
-							}
+							$csv_element = $this->evalPhp($matched_element);
 						}
 						else{
 							$csv_element = $csv_value;
-							
+
 							//foreach($matches[2] as $value){
-							foreach($matches[1] as $value){	
+							foreach($matches[1] as $value){
 								$get_key = array_search($value , $header_array);
 								if(isset($value_array[$get_key])){
 									$csv_value_element = $value_array[$get_key];	
+									//}
 									$value = '{'.$value.'}';
 									$csv_element = str_replace($value, $csv_value_element, $csv_element);
 								}
 							}
-							
-								$math = 'MATH';
-								if (strpos($csv_element, $math) !== false) {		
-									$equation = str_replace('MATH', '', $csv_element);
-									$csv_element = $this->evalmath($equation);
-								}
-									$wp_element= trim($key);
-									if(!empty($csv_element) && !empty($wp_element)){
-										$post_values[$wp_element] = $csv_element;
-									}
+							$math = 'MATH';
+							if (strpos($csv_element, $math) !== false) {
+
+								$equation = str_replace('MATH', '', $csv_element);
+								$csv_element = $this->evalMath($equation);
+							}
 						}
+						$wp_element= trim($key);
+						if(!empty($csv_element) && !empty($wp_element)){
+							$post_values[$wp_element] = $csv_element;
+						}	
 					}
-					
+
 					// for custom function without headers in it
 					elseif(preg_match_all($pattern2, $csv_value, $matches2)){
 						$matched_element = $matches2[1][0];
 					
 						$wp_element= trim($key);
-						$csv_element1 = @eval("return " . $matched_element . ";" );
+						$csv_element1 = $this->evalPhp($matched_element);
 						$post_values[$wp_element] = $csv_element1;
 					}
 					
@@ -291,18 +297,18 @@ class ImportHelpers {
 						$wp_element= trim($key);
 						$post_values[$wp_element] = $csv_value;
 					}
-					
-					
+
 					else{
-							$get_key= array_search($csv_value , $header_array);		
-							if(!empty($value_array[$get_key])){
-								$csv_element = $value_array[$get_key];	
-								$wp_element = trim($key);
-								if(!empty($csv_element) && !empty($wp_element)){
-									$post_values[$wp_element] = $csv_element;
-								}
+						$get_key = array_search($csv_value , $header_array);
+
+						if(isset($value_array[$get_key])){
+							$csv_element = $value_array[$get_key];		
+							//}
+							$wp_element = trim($key);
+							if(isset($csv_element) && !empty($wp_element)){
+								$post_values[$wp_element] = $csv_element;
 							}
-						
+						}
 					}
 				}
 			}
@@ -311,32 +317,43 @@ class ImportHelpers {
 		return $post_values;
 	}
 
-	public function evalmath($equation) {
-		
-		$result = 0;
-		
-		// sanitize imput
-		$equation = preg_replace("/[^0-9+\-.*\/()%]/","",$equation);
-	
-		// convert percentages to decimal
-		$equation = preg_replace("/([+-])([0-9]{1})(%)/","*(1\$1.0\$2)",$equation);
-		$equation = preg_replace("/([+-])([0-9]+)(%)/","*(1\$1.\$2)",$equation);	
-		if ( $equation != "" )
-		{
-			$result = @eval("return " . $equation . ";" );
-		}
-	
-		if ($result === null)
-		{
-			//throw new Exception("Unable to calculate equation");
-			$result = "Unable to calculate equation";
-		}
-		if($result === FALSE){
-			$result = 'false';
-		}
-		
-		return $result;	
+	/**
+	 * Function to evaluate Math equations
+	 */
+	public function evalMath($equation) {
+	    // Sanitize input
+	    $equation = preg_replace("/[^0-9+\-.*\/()%]/", "", $equation);
+
+	    // Convert percentages to decimal
+	    $equation = preg_replace("/([+-])([0-9]{1})(%)/", "*(1$1.0$2)", $equation);
+	    $equation = preg_replace("/([+-])([0-9]+)(%)/", "*(1$1.$2)", $equation);
+
+	    try {
+	    	$executor = new MathExecutor();
+
+			return	$executor->execute($equation);
+	    } catch (Exception $e) {
+	        $return("Unable to calculate equation");
+	    }
 	}
+
+	/**
+	 * Function to evaluate PHP expressions
+	 */
+	public function evalPhp($expression)	{
+		$parser = (new ParserFactory)->createForNewestSupportedVersion();
+		try {
+    		$parser->parse($expression);
+			$value=$parser->parse($expression);
+			if(!empty($value)){
+				$expression=sanitize_text_field($expression);
+				return eval('return '.$expression.';');
+			}
+    	} catch (Error $error) {
+    		return 'Parse Error: '. $error->getMessage();
+		}
+	}
+
 
 	public function get_post_ids($post_id , $eventKey,$templatekey = null){
 		$smack_instance = SmackCSV::getInstance();

@@ -318,7 +318,20 @@ var wdtRenderDataTable = null;
                 wpDataTables[tableDescription.tableId].rowGrouping({iGroupingColumnIndex: tableDescription.groupingColumnIndex});
             }
 
+            $(document).on('click', '.paginate_button', function () {
+                var tableSelector = $(this)[0].attributes[1].value;
+                if (JSON.parse($('#' + $('#' + tableSelector).data('described-by')).val()).pagination_top) {
+                    function paginateScroll() {
+                        $('html, body').animate({
+                            scrollTop: $('#' + tableSelector + "_wrapper.wpDataTablesWrapper").offset().top
+                        }, 100);
+                    }
 
+                    paginateScroll();
+
+                    $(this).closest(tableDescription.selector + "_paginate.paginate_button").off('click').on('click', paginateScroll);
+                }
+            });
 
             return wpDataTables[tableDescription.tableId];
 

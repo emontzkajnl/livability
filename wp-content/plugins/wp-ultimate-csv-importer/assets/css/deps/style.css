@@ -8,11 +8,15 @@ Author: Mohamed Fariz
 @font-face {
   font-family: "csvimporter";
   src: url("../fonts/csvimporter.eot?f4xnj1");
-  src: url("../fonts/csvimporter.eot?f4xnj1#iefix") format("embedded-opentype"), url("../fonts/csvimporter.ttf?f4xnj1") format("truetype"), url("../fonts/csvimporter.woff?f4xnj1") format("woff"), url("../fonts/csvimporter.svg?f4xnj1#csvimporter") format("svg");
+  src: url("../fonts/csvimporter.eot?f4xnj1#iefix") format("embedded-opentype"),
+    url("../fonts/csvimporter.ttf?f4xnj1") format("truetype"),
+    url("../fonts/csvimporter.woff?f4xnj1") format("woff"),
+    url("../fonts/csvimporter.svg?f4xnj1#csvimporter") format("svg");
   font-weight: normal;
   font-style: normal;
 }
-[class^=csv-icon-], [class*=" csv-icon-"] {
+[class^="csv-icon-"],
+[class*=" csv-icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: "csvimporter" !important;
   speak: none;
@@ -659,6 +663,14 @@ Author: Mohamed Fariz
   color: #0073aa;
 }
 
+.inlinecolor {
+  color: #f3f5f8;
+}
+
+.cardbanner {
+  color: #fff;
+}
+
 .wp-ultimate-csv-importer {
   /*  Margin & Padding Start */
   /* Margin & Padding END */
@@ -677,6 +689,7 @@ Author: Mohamed Fariz
   font-family: "Roboto", sans-serif;
   color: #2d3748;
 }
+
 .wp-ultimate-csv-importer .h1,
 .wp-ultimate-csv-importer .h2,
 .wp-ultimate-csv-importer .h3,
@@ -709,7 +722,6 @@ Author: Mohamed Fariz
   text-decoration: none;
 }
 .wp-ultimate-csv-importer .csv-link {
-
   color: #00a699;
   text-decoration: underline;
 }
@@ -766,7 +778,10 @@ Author: Mohamed Fariz
 .wp-ultimate-csv-importer .btn-select .btn {
   background-color: #fff;
 }
-.wp-ultimate-csv-importer .btn-select .btn:hover, .wp-ultimate-csv-importer .btn-select .btn:focus, .wp-ultimate-csv-importer .btn-select .btn:active, .wp-ultimate-csv-importer .btn-select .btn:active:focus {
+.wp-ultimate-csv-importer .btn-select .btn:hover,
+.wp-ultimate-csv-importer .btn-select .btn:focus,
+.wp-ultimate-csv-importer .btn-select .btn:active,
+.wp-ultimate-csv-importer .btn-select .btn:active:focus {
   background: #fff !important;
   border-color: #00a699 !important;
   box-shadow: none !important;
@@ -970,7 +985,7 @@ Author: Mohamed Fariz
 }
 .wp-ultimate-csv-importer .mb30 {
   margin-bottom: 30px !important;
-  padding : 16px;
+  padding: 16px;
 }
 .wp-ultimate-csv-importer .ml30 {
   margin-left: 30px !important;
@@ -1124,7 +1139,7 @@ Author: Mohamed Fariz
 .wp-ultimate-csv-importer .csv-icon-trash-2 {
   color: #e04b4a;
 }
-.wp-ultimate-csv-importer [data-display=none] {
+.wp-ultimate-csv-importer [data-display="none"] {
   display: none;
 }
 .wp-ultimate-csv-importer .modal .modal-content .modal-header .main-heading {
@@ -1182,78 +1197,84 @@ Author: Mohamed Fariz
 .wp-ultimate-csv-importer .form_export_file_type label:hover {
   border-color: #00c0b1;
 }
-.wp-ultimate-csv-importer .form_export_file_type input[type=radio] + label:before, .wp-ultimate-csv-importer .form_export_file_type input[type=radio] + label:after {
+.wp-ultimate-csv-importer
+  .form_export_file_type
+  input[type="radio"]
+  + label:before,
+.wp-ultimate-csv-importer
+  .form_export_file_type
+  input[type="radio"]
+  + label:after {
   display: none;
 }
-.wp-ultimate-csv-importer .form_export_file_type input[type=radio]:checked + label {
+.wp-ultimate-csv-importer
+  .form_export_file_type
+  input[type="radio"]:checked
+  + label {
   border-color: #00a699;
 }
 u {
   text-decoration: underline;
-  color:#00a699;
+  color: #00a699;
 }
 button.btn.btn-outline {
   border: 2px solid;
 }
-.import_new_advanced{
-  
+.import_new_advanced {
   text-align: center;
-  margin-top:20px;
-
+  margin-top: 20px;
 }
-.import_new{
- 
+.import_new {
   text-align: center;
 }
-.import_new p{
-  color:red;
- 
+.import_new p {
+  color: red;
 }
-.import_new a{
-  color:#00a699;
+.import_new a {
+  color: #00a699;
   text-decoration: underline;
 }
 
 .import_new_advanced p {
-  color:red;
+  color: red;
 }
 .import_new_advanced a {
-  color:#00a699;
+  color: #00a699;
   text-decoration: underline;
 }
-svg.bi.bi-plus{
-  width:50px;
-  height:50px;
+svg.bi.bi-plus {
+  width: 50px;
+  height: 50px;
 }
-.csv-importer-panel .footer{
-  margin-top:150px;
+.csv-importer-panel .footer {
+  margin-top: 150px;
   justify-content: space-around;
-  
 }
-.csv-importer-panel h4{
-
-  margin-top:20px;
-  }
-.csv-importer-panel h2{
-
-  font-size:18px;
+.csv-importer-panel h4 {
+  margin-top: 20px;
+}
+.csv-importer-panel h2 {
+  font-size: 18px;
   margin-top: 10px;
 }
 .csv-importer-panel h4 a {
   color: #2e504e;
 }
 .csv-importer-panel .footer a {
-    color: #00a699;
-    text-decoration: underline;
+  color: #00a699;
+  text-decoration: underline;
 }
-.wp-ultimate-csv-importer .form_export_file_type input[type=radio]:checked + label:before {
+.wp-ultimate-csv-importer
+  .form_export_file_type
+  input[type="radio"]:checked
+  + label:before {
   content: "";
   font-family: "csvimporter";
   width: 22px;
   height: 22px;
   font-size: 13px;
   background: #d8e2e1;
- display:none;
+  display: none;
   border: none;
   border-radius: 50%;
   color: #fff;
@@ -1270,7 +1291,7 @@ svg.bi.bi-plus{
   margin-top: 150px;
   font-size: 23px;
 }
-.csv-importer-panel button.close{
+.csv-importer-panel button.close {
   margin-top: 0px !important;
 }
 .wp-ultimate-csv-importer .bg-gray-section {
@@ -1304,20 +1325,17 @@ svg.bi.bi-plus{
   border-color: #00a699;
   margin-bottom: 25px;
   color: #ffffff;
-
 }
 .wp-ultimate-csv-importer .smack-btn.smack-btn-primary_2 {
   background-color: #00a699;
   border-color: #00a699;
   margin-bottom: 25px;
   color: #ffffff;
-  margin-top:40px;
+  margin-top: 40px;
 }
-.wp-ultimate-csv-importer .float-left_back{
-
-display:flex;
-justify-content: space-between;
-
+.wp-ultimate-csv-importer .float-left_back {
+  display: flex;
+  justify-content: space-between;
 }
 .wp-ultimate-csv-importer .smack-btn.smack-btn-primary_4 {
   background-color: #00a699;
@@ -1326,11 +1344,10 @@ justify-content: space-between;
   color: #ffffff;
   margin-right: 35px;
 }
-.wp-ultimate-csv-importer .float-left_move{
+.wp-ultimate-csv-importer .float-left_move {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  
 }
 .wp-ultimate-csv-importer .smack-btn.smack-btn-primary:hover {
   background-color: #00a699;
@@ -1354,7 +1371,8 @@ justify-content: space-between;
   border: 1px solid #a0aec0;
   background: #edf2f7;
 }
-.wp-ultimate-csv-importer .smack-btn.smack-btn-info:hover, .wp-ultimate-csv-importer .smack-btn.smack-btn-info:active {
+.wp-ultimate-csv-importer .smack-btn.smack-btn-info:hover,
+.wp-ultimate-csv-importer .smack-btn.smack-btn-info:active {
   background: #e2e8f0;
 }
 .wp-ultimate-csv-importer .smack-btn.btn-default {
@@ -1368,25 +1386,29 @@ justify-content: space-between;
   border: 1px solid #a0aec0;
   color: #4a5568;
   margin-top: 40px;
-  margin-left:20px;
-}.wp-ultimate-csv-importer .smack-btn.btn-default_4 {
+  margin-left: 20px;
+}
+.wp-ultimate-csv-importer .smack-btn.btn-default_4 {
   background: #ffffff;
   border: 1px solid #a0aec0;
   color: #4a5568;
 
-  margin-left:20px;
-  height:40px;
+  margin-left: 20px;
+  height: 40px;
 }
 .wp-ultimate-csv-importer .smack-btn.btn-default:hover {
   background-color: #e2e8f0;
 }
-.wp-ultimate-csv-importer .smack-btn.btn-default:active, .wp-ultimate-csv-importer .smack-btn.btn-default.active {
+.wp-ultimate-csv-importer .smack-btn.btn-default:active,
+.wp-ultimate-csv-importer .smack-btn.btn-default.active {
   background-color: #cbd5e0;
 }
 .wp-ultimate-csv-importer .smack-btn.btn-default:focus {
   background-color: #cbd5e0;
 }
-.wp-ultimate-csv-importer .smack-btn.btn-default:disabled, .wp-ultimate-csv-importer .smack-btn.btn-default.disabled, .wp-ultimate-csv-importer .smack-btn.btn-default[disabled] {
+.wp-ultimate-csv-importer .smack-btn.btn-default:disabled,
+.wp-ultimate-csv-importer .smack-btn.btn-default.disabled,
+.wp-ultimate-csv-importer .smack-btn.btn-default[disabled] {
   background-color: #edf2f7;
   color: #cbd5e0;
 }
@@ -1398,7 +1420,8 @@ justify-content: space-between;
 .wp-ultimate-csv-importer .smack-btn.smack-btn-warning:hover {
   background-color: #ec971f;
 }
-.wp-ultimate-csv-importer .smack-btn.smack-btn-warning:active, .wp-ultimate-csv-importer .smack-btn.smack-btn-warning.active {
+.wp-ultimate-csv-importer .smack-btn.smack-btn-warning:active,
+.wp-ultimate-csv-importer .smack-btn.smack-btn-warning.active {
   background-color: #ec971f;
   border: 1px solid #ec971f;
 }
@@ -1406,7 +1429,9 @@ justify-content: space-between;
   background-color: #ec971f;
   border: 1px solid #ec971f;
 }
-.wp-ultimate-csv-importer .smack-btn.smack-btn-warning:disabled, .wp-ultimate-csv-importer .smack-btn.smack-btn-warning.disabled, .wp-ultimate-csv-importer .smack-btn.smack-btn-warning[disabled] {
+.wp-ultimate-csv-importer .smack-btn.smack-btn-warning:disabled,
+.wp-ultimate-csv-importer .smack-btn.smack-btn-warning.disabled,
+.wp-ultimate-csv-importer .smack-btn.smack-btn-warning[disabled] {
   background: #f0ad4e;
   border-color: #f0ad4e;
 }
@@ -1418,7 +1443,8 @@ justify-content: space-between;
 .wp-ultimate-csv-importer .smack-btn.smack-btn-danger:hover {
   background-color: #d32524;
 }
-.wp-ultimate-csv-importer .smack-btn.smack-btn-danger:active, .wp-ultimate-csv-importer .smack-btn.smack-btn-danger.active {
+.wp-ultimate-csv-importer .smack-btn.smack-btn-danger:active,
+.wp-ultimate-csv-importer .smack-btn.smack-btn-danger.active {
   background-color: #d32524;
   border: 1px solid #d32524;
 }
@@ -1426,7 +1452,9 @@ justify-content: space-between;
   background-color: #d32524;
   border: 1px solid #d32524;
 }
-.wp-ultimate-csv-importer .smack-btn.smack-btn-danger:disabled, .wp-ultimate-csv-importer .smack-btn.smack-btn-danger.disabled, .wp-ultimate-csv-importer .smack-btn.smack-btn-danger[disabled] {
+.wp-ultimate-csv-importer .smack-btn.smack-btn-danger:disabled,
+.wp-ultimate-csv-importer .smack-btn.smack-btn-danger.disabled,
+.wp-ultimate-csv-importer .smack-btn.smack-btn-danger[disabled] {
   background: #e04b4a;
   border-color: #e04b4a;
 }
@@ -1446,7 +1474,9 @@ justify-content: space-between;
 .wp-ultimate-csv-importer .react-datepicker-wrapper {
   display: block;
 }
-.wp-ultimate-csv-importer .react-datepicker-wrapper .react-datepicker__input-container {
+.wp-ultimate-csv-importer
+  .react-datepicker-wrapper
+  .react-datepicker__input-container {
   display: block;
 }
 .wp-ultimate-csv-importer .react-datepicker-popper .react-datepicker {
@@ -1454,40 +1484,69 @@ justify-content: space-between;
   border-color: #e8e8e8;
   box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.1);
 }
-.wp-ultimate-csv-importer .react-datepicker-popper .react-datepicker .react-datepicker__triangle {
+.wp-ultimate-csv-importer
+  .react-datepicker-popper
+  .react-datepicker
+  .react-datepicker__triangle {
   border-bottom-color: #fff;
 }
-.wp-ultimate-csv-importer .react-datepicker-popper .react-datepicker .react-datepicker__triangle:before {
+.wp-ultimate-csv-importer
+  .react-datepicker-popper
+  .react-datepicker
+  .react-datepicker__triangle:before {
   border-top-color: #e8e8e8;
 }
-.wp-ultimate-csv-importer .react-datepicker-popper .react-datepicker .react-datepicker__navigation--previous {
+.wp-ultimate-csv-importer
+  .react-datepicker-popper
+  .react-datepicker
+  .react-datepicker__navigation--previous {
   border-right-color: #303030;
 }
-.wp-ultimate-csv-importer .react-datepicker-popper .react-datepicker .react-datepicker__navigation--next {
+.wp-ultimate-csv-importer
+  .react-datepicker-popper
+  .react-datepicker
+  .react-datepicker__navigation--next {
   border-left-color: #303030;
 }
-.wp-ultimate-csv-importer .react-datepicker-popper .react-datepicker__month-container {
+.wp-ultimate-csv-importer
+  .react-datepicker-popper
+  .react-datepicker__month-container {
   width: 100%;
 }
 .wp-ultimate-csv-importer .react-datepicker-popper .react-datepicker__header {
   background: #fff;
   border: none;
 }
-.wp-ultimate-csv-importer .react-datepicker-popper .react-datepicker__header .react-datepicker__day-name {
+.wp-ultimate-csv-importer
+  .react-datepicker-popper
+  .react-datepicker__header
+  .react-datepicker__day-name {
   font-weight: 600;
   font-size: 16px;
   margin: 0px 7px;
 }
-.wp-ultimate-csv-importer .react-datepicker-popper .react-datepicker__month .react-datepicker__week {
+.wp-ultimate-csv-importer
+  .react-datepicker-popper
+  .react-datepicker__month
+  .react-datepicker__week {
   font-size: 16px;
 }
-.wp-ultimate-csv-importer .react-datepicker-popper .react-datepicker__month .react-datepicker__day {
+.wp-ultimate-csv-importer
+  .react-datepicker-popper
+  .react-datepicker__month
+  .react-datepicker__day {
   margin: 0px 7px;
 }
-.wp-ultimate-csv-importer .react-datepicker-popper .react-datepicker__month .react-datepicker__day.react-datepicker__day--selected {
+.wp-ultimate-csv-importer
+  .react-datepicker-popper
+  .react-datepicker__month
+  .react-datepicker__day.react-datepicker__day--selected {
   background-image: linear-gradient(to bottom, #00a699, #00736a) !important;
 }
-.wp-ultimate-csv-importer .react-datepicker-popper .react-datepicker__month .react-datepicker__day.react-datepicker__day--outside-month {
+.wp-ultimate-csv-importer
+  .react-datepicker-popper
+  .react-datepicker__month
+  .react-datepicker__day.react-datepicker__day--outside-month {
   opacity: 0.5;
 }
 .wp-ultimate-csv-importer .form-control {
@@ -1558,7 +1617,7 @@ justify-content: space-between;
   display: none;
   margin-left: 60px;
 }
-.wp-ultimate-csv-importer .fieldset input[type=checkbox] {
+.wp-ultimate-csv-importer .fieldset input[type="checkbox"] {
   display: none;
 }
 .wp-ultimate-csv-importer .fieldset label i {
@@ -1575,7 +1634,11 @@ justify-content: space-between;
   box-shadow: 0 0 0 1px #edf2f7, 0 3px 2px rgba(0, 0, 0, 0.25);
   pointer-events: none;
 }
-.wp-ultimate-csv-importer .fieldset input[type=checkbox]:checked + .switch-ios > i {
+.wp-ultimate-csv-importer
+  .fieldset
+  input[type="checkbox"]:checked
+  + .switch-ios
+  > i {
   margin-left: 18px;
   box-shadow: 0 3px 2px rgba(0, 0, 0, 0.25);
   cursor: pointer;
@@ -1586,7 +1649,10 @@ justify-content: space-between;
 .wp-ultimate-csv-importer .switch-ios:active > i {
   width: 20px;
 }
-.wp-ultimate-csv-importer .fieldset input[type=checkbox]:checked + .switch-ios {
+.wp-ultimate-csv-importer
+  .fieldset
+  input[type="checkbox"]:checked
+  + .switch-ios {
   box-shadow: inset 0 0 0 20px #00a699;
   border: none;
 }
@@ -1624,27 +1690,29 @@ justify-content: space-between;
 .wp-ultimate-csv-importer .form-group {
   position: relative;
 }
-.wp-ultimate-csv-importer .form-group input[type=radio] {
+.wp-ultimate-csv-importer .form-group input[type="radio"] {
   position: absolute;
   opacity: 0;
 }
 .cardbanner.col-md-3.mt20.border-rad.ml40 {
   width: 25%;
 }
-.wp-ultimate-csv-importer .form-group input[type=radio] + label {
+.wp-ultimate-csv-importer .form-group input[type="radio"] + label {
   display: inline-block;
   padding-left: 40px;
   transition: all 0.2s;
   cursor: pointer;
-
 }
 
-.wp-ultimate-csv-importer .form_export_file_type input[type=radio]:checked + label {
+.wp-ultimate-csv-importer
+  .form_export_file_type
+  input[type="radio"]:checked
+  + label {
   border-color: #00a699;
   color: #fff;
   background-color: #00a699;
 }
-.wp-ultimate-csv-importer .form-group input[type=radio] + label:before {
+.wp-ultimate-csv-importer .form-group input[type="radio"] + label:before {
   content: "";
   width: 23px;
   height: 23px;
@@ -1654,13 +1722,19 @@ justify-content: space-between;
   left: 5px;
   top: 0px;
 }
-.wp-ultimate-csv-importer .form-group input[type=radio] + label:hover:before {
+.wp-ultimate-csv-importer .form-group input[type="radio"] + label:hover:before {
   border: 2px solid #00a699;
 }
-.wp-ultimate-csv-importer .form-group input[type=radio]:checked + label:before {
+.wp-ultimate-csv-importer
+  .form-group
+  input[type="radio"]:checked
+  + label:before {
   border: 2px solid #00a699;
 }
-.wp-ultimate-csv-importer .form-group input[type=radio]:checked + label:after {
+.wp-ultimate-csv-importer
+  .form-group
+  input[type="radio"]:checked
+  + label:after {
   content: "";
   width: 13px;
   height: 13px;
@@ -1670,15 +1744,15 @@ justify-content: space-between;
   top: 5px;
   left: 10px;
 }
-.wp-ultimate-csv-importer .checkbox input[type=checkbox] {
+.wp-ultimate-csv-importer .checkbox input[type="checkbox"] {
   position: absolute;
   opacity: 0;
 }
-.wp-ultimate-csv-importer .checkbox input[type=checkbox] + label {
+.wp-ultimate-csv-importer .checkbox input[type="checkbox"] + label {
   position: relative;
   padding-left: 35px;
 }
-.wp-ultimate-csv-importer .checkbox input[type=checkbox] + label:before {
+.wp-ultimate-csv-importer .checkbox input[type="checkbox"] + label:before {
   content: "";
   width: 22px;
   height: 22px;
@@ -1688,10 +1762,16 @@ justify-content: space-between;
   left: 0;
   top: 0;
 }
-.wp-ultimate-csv-importer .checkbox input[type=checkbox] + label:hover:before {
+.wp-ultimate-csv-importer
+  .checkbox
+  input[type="checkbox"]
+  + label:hover:before {
   border: 2px solid #00a699;
 }
-.wp-ultimate-csv-importer .checkbox input[type=checkbox]:checked + label:after {
+.wp-ultimate-csv-importer
+  .checkbox
+  input[type="checkbox"]:checked
+  + label:after {
   content: "";
   font-family: "csvimporter";
   width: 22px;
@@ -2010,13 +2090,30 @@ justify-content: space-between;
   cursor: pointer;
   position: relative;
 }
-.wp-ultimate-csv-importer .table.table-mapping tbody tr td.action .action-icon i {
+.wp-ultimate-csv-importer
+  .table.table-mapping
+  tbody
+  tr
+  td.action
+  .action-icon
+  i {
   font-size: 22px;
 }
-.wp-ultimate-csv-importer .table.table-mapping tbody tr td.action .action-icon i:hover {
+.wp-ultimate-csv-importer
+  .table.table-mapping
+  tbody
+  tr
+  td.action
+  .action-icon
+  i:hover {
   color: #4a5568;
 }
-.wp-ultimate-csv-importer .table.table-mapping tbody tr td.action .manipulation-screen {
+.wp-ultimate-csv-importer
+  .table.table-mapping
+  tbody
+  tr
+  td.action
+  .manipulation-screen {
   padding: 20px;
   padding-top: 10px;
   background: #fff;
@@ -2030,14 +2127,31 @@ justify-content: space-between;
   transition: all 0.5s;
   display: none;
 }
-.wp-ultimate-csv-importer .table.table-mapping tbody tr td.action .manipulation-screen.active {
+.wp-ultimate-csv-importer
+  .table.table-mapping
+  tbody
+  tr
+  td.action
+  .manipulation-screen.active {
   animation: scale_animate 0.3s;
   display: block;
 }
-.wp-ultimate-csv-importer .table.table-mapping tbody tr td.action .manipulation-screen .close {
+.wp-ultimate-csv-importer
+  .table.table-mapping
+  tbody
+  tr
+  td.action
+  .manipulation-screen
+  .close {
   margin-bottom: 15px;
 }
-.wp-ultimate-csv-importer .table.table-mapping tbody tr td.action .manipulation-screen .csv-hint {
+.wp-ultimate-csv-importer
+  .table.table-mapping
+  tbody
+  tr
+  td.action
+  .manipulation-screen
+  .csv-hint {
   padding: 10px;
   background: rgba(0, 166, 153, 0.2);
   color: #00a699;
@@ -2069,7 +2183,11 @@ justify-content: space-between;
 .wp-ultimate-csv-importer #wordpress-custom-fields-body .table td:last-child a {
   margin: 5px 0px 5px 0px;
 }
-.wp-ultimate-csv-importer #wordpress-custom-fields-body .table td:last-child .csv-hint {
+.wp-ultimate-csv-importer
+  #wordpress-custom-fields-body
+  .table
+  td:last-child
+  .csv-hint {
   text-align: left;
 }
 @keyframes scale_animate {
@@ -2098,13 +2216,18 @@ justify-content: space-between;
   color: #62656c;
   font-weight: normal;
 }
-.wp-ultimate-csv-importer .table.table-manager .list-inline-item:not(:last-child) {
+.wp-ultimate-csv-importer
+  .table.table-manager
+  .list-inline-item:not(:last-child) {
   margin-right: 0px;
 }
 .wp-ultimate-csv-importer .table.table-manager .action-icon i {
   font-size: 20px;
 }
-.wp-ultimate-csv-importer .table.table-manager .action-icon i.csv-icon-highlight_off {
+.wp-ultimate-csv-importer
+  .table.table-manager
+  .action-icon
+  i.csv-icon-highlight_off {
   font-size: 22px;
 }
 .wp-ultimate-csv-importer .table.table-manager td ul {
@@ -2448,7 +2571,10 @@ justify-content: space-between;
   text-align: center;
   cursor: pointer;
 }
-.wp-ultimate-csv-importer .mapping-sidebar .mapping-sidebar-arrow [class^=csv-icon-] {
+.wp-ultimate-csv-importer
+  .mapping-sidebar
+  .mapping-sidebar-arrow
+  [class^="csv-icon-"] {
   font-size: 24px;
   color: #cbd5e0;
   -moz-transition: all 0.3s ease;
@@ -2457,13 +2583,19 @@ justify-content: space-between;
   -ms-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
-.wp-ultimate-csv-importer .mapping-sidebar .mapping-sidebar-arrow [class^=csv-icon-]:hover {
+.wp-ultimate-csv-importer
+  .mapping-sidebar
+  .mapping-sidebar-arrow
+  [class^="csv-icon-"]:hover {
   color: #718096;
 }
 .wp-ultimate-csv-importer .mapping-sidebar .mapping-sidebar-arrow a {
   text-decoration: none;
 }
-.wp-ultimate-csv-importer .mapping-sidebar .mapping-sidebar-textbox-section input[type=text] {
+.wp-ultimate-csv-importer
+  .mapping-sidebar
+  .mapping-sidebar-textbox-section
+  input[type="text"] {
   width: 40px;
   text-align: center;
   border: 1px solid #a0aec0;
@@ -2555,7 +2687,9 @@ justify-content: space-between;
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
 }
-.wp-ultimate-csv-importer .ck.ck-editor__main > .ck-editor__editable.ck-focused {
+.wp-ultimate-csv-importer
+  .ck.ck-editor__main
+  > .ck-editor__editable.ck-focused {
   border-color: #00a699 !important;
   box-shadow: none;
 }
@@ -2621,7 +2755,8 @@ justify-content: space-between;
   margin-top: 25px;
 }
 .wp-ultimate-csv-importer .progress-bar {
-  background: #00a699 linear-gradient(to right, #65cd8d, #4fc492, #38ba96, #21b098, #00a699);
+  background: #00a699
+    linear-gradient(to right, #65cd8d, #4fc492, #38ba96, #21b098, #00a699);
   border-radius: inherit;
 }
 .wp-ultimate-csv-importer .progress {
@@ -2634,7 +2769,11 @@ justify-content: space-between;
   left: 0;
   z-index: 1000;
 }
-.wp-ultimate-csv-importer #v-pills-tabContent .filepond--wrapper .filepond--drop-label label:after {
+.wp-ultimate-csv-importer
+  #v-pills-tabContent
+  .filepond--wrapper
+  .filepond--drop-label
+  label:after {
   content: "Supported file types .csv .xml .txt .zip";
   position: absolute;
   bottom: -20px;
@@ -2673,12 +2812,19 @@ justify-content: space-between;
   border-radius: 6px;
   font-weight: 600;
 }
-.wp-ultimate-csv-importer .filepond--wrapper .filepond--drop-label label span:hover {
+.wp-ultimate-csv-importer
+  .filepond--wrapper
+  .filepond--drop-label
+  label
+  span:hover {
   transition: all 0.3s;
   transform: translateY(-5px);
   box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.1);
 }
-.wp-ultimate-csv-importer .filepond--wrapper .filepond--drop-label label:before {
+.wp-ultimate-csv-importer
+  .filepond--wrapper
+  .filepond--drop-label
+  label:before {
   content: "";
   font-size: 50px;
   color: #cbd5e0;
@@ -2691,32 +2837,77 @@ justify-content: space-between;
   background: #fff;
   opacity: 1;
 }
-.wp-ultimate-csv-importer .filepond--wrapper .filepond--root[data-hopper-state=drag-over] .filepond--drop-label {
+.wp-ultimate-csv-importer
+  .filepond--wrapper
+  .filepond--root[data-hopper-state="drag-over"]
+  .filepond--drop-label {
   transition: all 0.2s;
   border: 2px dashed rgba(0, 166, 153, 0.7);
   transform: scale(1.005);
   box-shadow: 0 2px 60px rgba(0, 0, 0, 0.1);
 }
-.wp-ultimate-csv-importer .filepond--wrapper .filepond--list-scroller .filepond--list .filepond--item {
+.wp-ultimate-csv-importer
+  .filepond--wrapper
+  .filepond--list-scroller
+  .filepond--list
+  .filepond--item {
   max-height: 70px;
 }
-.wp-ultimate-csv-importer .filepond--wrapper .filepond--list-scroller .filepond--list .filepond--item[data-filepond-item-state=processing-error] .filepond--file-wrapper {
+.wp-ultimate-csv-importer
+  .filepond--wrapper
+  .filepond--list-scroller
+  .filepond--list
+  .filepond--item[data-filepond-item-state="processing-error"]
+  .filepond--file-wrapper {
   background: #dc3545;
 }
-.wp-ultimate-csv-importer .filepond--wrapper .filepond--list-scroller .filepond--list .filepond--item .filepond--file-wrapper {
+.wp-ultimate-csv-importer
+  .filepond--wrapper
+  .filepond--list-scroller
+  .filepond--list
+  .filepond--item
+  .filepond--file-wrapper {
   height: auto;
   background: #00a699;
   color: #fff;
   border-radius: 6px;
   padding: 5px 15px;
 }
-.wp-ultimate-csv-importer .filepond--wrapper .filepond--list-scroller .filepond--list .filepond--item .filepond--file-wrapper .filepond--file-info .filepond--file-info-main,
-.wp-ultimate-csv-importer .filepond--wrapper .filepond--list-scroller .filepond--list .filepond--item .filepond--file-wrapper .filepond--file-info .filepond--file-info-sub {
+.wp-ultimate-csv-importer
+  .filepond--wrapper
+  .filepond--list-scroller
+  .filepond--list
+  .filepond--item
+  .filepond--file-wrapper
+  .filepond--file-info
+  .filepond--file-info-main,
+.wp-ultimate-csv-importer
+  .filepond--wrapper
+  .filepond--list-scroller
+  .filepond--list
+  .filepond--item
+  .filepond--file-wrapper
+  .filepond--file-info
+  .filepond--file-info-sub {
   font-size: 17px;
   opacity: 1;
 }
-.wp-ultimate-csv-importer .filepond--wrapper .filepond--list-scroller .filepond--list .filepond--item .filepond--file-wrapper .filepond--file-status .filepond--file-status-main,
-.wp-ultimate-csv-importer .filepond--wrapper .filepond--list-scroller .filepond--list .filepond--item .filepond--file-wrapper .filepond--file-status .filepond--file-status-sub {
+.wp-ultimate-csv-importer
+  .filepond--wrapper
+  .filepond--list-scroller
+  .filepond--list
+  .filepond--item
+  .filepond--file-wrapper
+  .filepond--file-status
+  .filepond--file-status-main,
+.wp-ultimate-csv-importer
+  .filepond--wrapper
+  .filepond--list-scroller
+  .filepond--list
+  .filepond--item
+  .filepond--file-wrapper
+  .filepond--file-status
+  .filepond--file-status-sub {
   font-size: 17px;
   opacity: 1;
 }
@@ -2770,7 +2961,8 @@ justify-content: space-between;
 }
 .wp-ultimate-csv-importer .Toastify .Toastify__toast {
   font-family: inherit;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 .wp-ultimate-csv-importer .Toastify .Toastify__toast--info {
   background: #0073aa;
@@ -2839,7 +3031,8 @@ justify-content: space-between;
   position: relative;
   margin: 0 auto;
 }
-.wp-ultimate-csv-importer .loader-1:before, .wp-ultimate-csv-importer .loader-1:after {
+.wp-ultimate-csv-importer .loader-1:before,
+.wp-ultimate-csv-importer .loader-1:after {
   content: "";
   position: absolute;
   top: -10px;
@@ -2864,7 +3057,8 @@ justify-content: space-between;
   position: relative;
   margin-right: 80px;
 }
-.wp-ultimate-csv-importer .ajax-loader.loading:before, .wp-ultimate-csv-importer .ajax-loader.loading:after {
+.wp-ultimate-csv-importer .ajax-loader.loading:before,
+.wp-ultimate-csv-importer .ajax-loader.loading:after {
   content: "";
   position: absolute;
   top: 5px;
@@ -3154,13 +3348,19 @@ justify-content: space-between;
   align-items: center;
   padding-left: 0;
 }
-.wp-ultimate-csv-importer .csv-importer-provider .form-group input[type=radio] {
+.wp-ultimate-csv-importer
+  .csv-importer-provider
+  .form-group
+  input[type="radio"] {
   position: absolute;
   opacity: 0;
   width: 100%;
   height: 100%;
 }
-.wp-ultimate-csv-importer .csv-importer-provider .form-check-inline .form-check-input {
+.wp-ultimate-csv-importer
+  .csv-importer-provider
+  .form-check-inline
+  .form-check-input {
   margin-top: 0;
   margin-right: 0.3125rem;
   margin-left: 0;
@@ -3171,7 +3371,11 @@ justify-content: space-between;
   font-size: inherit;
   font-weight: inherit;
 }
-.wp-ultimate-csv-importer .csv-importer-provider .form-group input[type=radio] + label {
+.wp-ultimate-csv-importer
+  .csv-importer-provider
+  .form-group
+  input[type="radio"]
+  + label {
   display: inline-block;
   transition: all 0.2s;
   padding-left: 20px;
@@ -3183,16 +3387,29 @@ justify-content: space-between;
 }
 .wp-ultimate-csv-importer .csv-importer-provider label {
   cursor: pointer;
-  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   font-size: 1rem;
 }
-.wp-ultimate-csv-importer .csv-importer-provider .form-group input[type=radio]:checked + label::before {
+.wp-ultimate-csv-importer
+  .csv-importer-provider
+  .form-group
+  input[type="radio"]:checked
+  + label::before {
   border: 2px solid #1caf9a;
 }
-.wp-ultimate-csv-importer .csv-importer-provider .form-group.synctype input[type=radio] + label::before {
+.wp-ultimate-csv-importer
+  .csv-importer-provider
+  .form-group.synctype
+  input[type="radio"]
+  + label::before {
   opacity: 0;
 }
-.wp-ultimate-csv-importer .csv-importer-provider .form-group input[type=radio] + label::before {
+.wp-ultimate-csv-importer
+  .csv-importer-provider
+  .form-group
+  input[type="radio"]
+  + label::before {
   content: "";
   width: 23px;
   height: 23px;
@@ -3201,7 +3418,11 @@ justify-content: space-between;
   left: 5px;
   top: 0px;
 }
-.wp-ultimate-csv-importer .csv-importer-provider .form-group.synctype input[type=radio]:checked + label::after {
+.wp-ultimate-csv-importer
+  .csv-importer-provider
+  .form-group.synctype
+  input[type="radio"]:checked
+  + label::after {
   background: #1caf9a;
   width: 25px;
   height: 25px;
@@ -3302,23 +3523,50 @@ justify-content: space-between;
 .wp-ultimate-csv-importer .bucket-list li:hover {
   cursor: pointer;
 }
-.wp-ultimate-csv-importer.rtl .csv-importer-panel .export-section .form-group input[type=radio] + label {
+.wp-ultimate-csv-importer.rtl
+  .csv-importer-panel
+  .export-section
+  .form-group
+  input[type="radio"]
+  + label {
   padding-right: 40px;
   padding-left: 0px;
 }
-.wp-ultimate-csv-importer.rtl .csv-importer-panel .export-section .form-group input[type=radio] + label:before {
+.wp-ultimate-csv-importer.rtl
+  .csv-importer-panel
+  .export-section
+  .form-group
+  input[type="radio"]
+  + label:before {
   right: 5px;
 }
-.wp-ultimate-csv-importer.rtl .csv-importer-panel .export-section .form-group input[type=radio] + label:after {
+.wp-ultimate-csv-importer.rtl
+  .csv-importer-panel
+  .export-section
+  .form-group
+  input[type="radio"]
+  + label:after {
   right: 10px;
 }
-.wp-ultimate-csv-importer.rtl .csv-importer-panel .export-section .form-group.row {
+.wp-ultimate-csv-importer.rtl
+  .csv-importer-panel
+  .export-section
+  .form-group.row {
   padding-right: 15px;
 }
-.wp-ultimate-csv-importer.rtl .csv-importer-panel .export-section .form-group.row input[type=radio] + label {
+.wp-ultimate-csv-importer.rtl
+  .csv-importer-panel
+  .export-section
+  .form-group.row
+  input[type="radio"]
+  + label {
   padding-right: 25px;
 }
-.wp-ultimate-csv-importer.rtl .fieldset input[type=checkbox]:checked + .switch-ios > i {
+.wp-ultimate-csv-importer.rtl
+  .fieldset
+  input[type="checkbox"]:checked
+  + .switch-ios
+  > i {
   margin-right: 18px;
 }
 .wp-ultimate-csv-importer.rtl .form-group .input-icon {
@@ -3328,20 +3576,37 @@ justify-content: space-between;
 .wp-ultimate-csv-importer.rtl .importing-details .import-progress {
   justify-content: space-between;
 }
-.wp-ultimate-csv-importer.rtl .importing-details .import-progress .progress-timing {
+.wp-ultimate-csv-importer.rtl
+  .importing-details
+  .import-progress
+  .progress-timing {
   position: relative;
 }
-.wp-ultimate-csv-importer.rtl .wp-ultimate-csv-importer .importer-log .table td.text-left {
+.wp-ultimate-csv-importer.rtl
+  .wp-ultimate-csv-importer
+  .importer-log
+  .table
+  td.text-left {
   text-align: right !important;
 }
-.wp-ultimate-csv-importer.rtl .wp-ultimate-csv-importer .importer-log .table td.text-right {
+.wp-ultimate-csv-importer.rtl
+  .wp-ultimate-csv-importer
+  .importer-log
+  .table
+  td.text-right {
   text-align: left !important;
 }
-.wp-ultimate-csv-importer.rtl .table.table-mapping tbody tr td.action .manipulation-screen {
+.wp-ultimate-csv-importer.rtl
+  .table.table-mapping
+  tbody
+  tr
+  td.action
+  .manipulation-screen {
   right: unset;
   left: 25px;
 }
-.wp-ultimate-csv-importer.rtl .ajax-loader.loading:before, .wp-ultimate-csv-importer.rtl .ajax-loader.loading:after {
+.wp-ultimate-csv-importer.rtl .ajax-loader.loading:before,
+.wp-ultimate-csv-importer.rtl .ajax-loader.loading:after {
   left: 0;
   right: -35px;
 }
@@ -3358,30 +3623,184 @@ justify-content: space-between;
 .datepicker table tbody > tr > td span.active {
   background-image: linear-gradient(to bottom, #00a699, #00736a) !important;
 }
-.table >:not(caption)>:last-child{
-  border-bottom:white;
+.table > :not(caption) > :last-child {
+  border-bottom: white;
 }
-.table > :not(:last-child) > :last-child > *{
+.table > :not(:last-child) > :last-child > * {
   border-bottom-color: rgb(237, 242, 247);
 }
-.form-group{
+.form-group {
   margin-bottom: 1rem;
 }
-.export-information{
-  opacity: 0.7;  
+.export-information {
+  opacity: 0.7;
   color: #00a699;
 }
-#upload_csv button.close{
-  margin-top:0px !important;
+#upload_csv button.close {
+  margin-top: 0px !important;
 }
-.prevent_action .action-icon:active{
+.prevent_action .action-icon:active {
   pointer-events: none;
   opacity: 0.5;
 }
-.prevent_action .action-icon{
+.prevent_action .action-icon {
   opacity: 0.5;
 }
-.switch-ios.inline{
+.switch-ios.inline {
   display: none;
 }
 /*# sourceMappingURL=style.css.map */
+/* openAI setting */
+
+.row .openAIsetting {
+  width: 330px;
+}
+.row .openaibutton {
+  margin-left: 20%;
+}
+.row .openaibutton_revoke {
+  margin-left: 50px;
+}
+i.removeapikey {
+  color: red;
+  cursor: pointer;
+}
+.api_url {
+  text-decoration: underline !important;
+  font-size: small;
+}
+.mapping_popup_save {
+  margin-top: 18px;
+  text-align: center;
+  height: 30px;
+  width: 17%;
+  font-size: medium;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #1caf9a;
+  border-radius: 5px;
+  color: white;
+  border: none;
+}
+.mapping_popup_cancel {
+  margin-top: 18px;
+  margin-left: 17px;
+  text-align: center;
+  height: 30px;
+  width: 21%;
+  font-size: medium;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #1caf9a;
+  border-radius: 5px;
+  color: white;
+  border: none;
+}
+.popup_close {
+  background-color: white;
+  color: #1caf9a;
+  border: none;
+  font-size: large;
+  margin-left: 89%;
+  font-weight: bold;
+}
+#chatgpt_icon {
+  padding-right: 12px;
+}
+.icon-Ai_icons-05 {
+  font-size: 21px;
+}
+.wp-ultimate-csv-importer .chatgpt_close {
+  color: #00a699;
+}
+.wp-ultimate-csv-importer .chatgpt_close:hover {
+  text-decoration: underline;
+}
+.wp-ultimate-csv-importer .chatgpt-notify {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 15px auto;
+  padding: 10px 15px;
+  border-radius: 0px 6px 6px 0px;
+  background: #fff;
+  border-left: 3px solid #00a699;
+}
+.wp-ultimate-csv-importer .chatgpt-notify button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.wp-ultimate-csv-importer .chatgpt-notify span img {
+  width: 22px;
+  height: 22px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+.custom-popup div {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem;
+}
+.custom-popup div label {
+  width: 50%;
+}
+/*OpenAI Setting alignment*/
+.api_row {
+  display: flex;
+}
+.setting_tab {
+  display: flex;
+}
+.openai_head {
+  /* padding: 10px; */
+  color: #00a699;
+  border-radius: 6px;
+  font-size: 14px;
+}
+/*OpenAI Note alignment*/
+.openai_note p {
+  font-style: italic;
+}
+.pro_tag_upgrade .modal-header {
+  border-top: 4px solid #00a699;
+  position: relative;
+  border-bottom: none;
+}
+.pro_tag_upgrade .modal-header .btn-close {
+  position: absolute;
+  right: 8px;
+  top: 9px;
+  font-size: 12px;
+  font-weight: bolder;
+}
+.pro_tag_upgrade .modal-header img {
+  width: 100px;
+}
+
+.pro_tag_upgrade .btn.btn-primary:hover {
+  background-color: #00a699;
+  border-color: #178d7c;
+  color: #ffffff;
+}
+
+.pro_tag_upgrade .btn.btn-primary {
+  background-color: #00a699;
+  border-color: #00a699;
+  margin-bottom: 18px;
+  color: #ffffff;
+}
+.pro_tag_upgrade .modal-body {
+  padding-top: 0px;
+  text-align: right;
+  padding-bottom: 0px;
+}
+.pro_tag_upgrade p {
+  margin-left: 10px;
+  font-size: 17px;
+  margin-bottom: 0px;
+}
+.export_filter_category input,.export_filter_category input:focus{
+  border: none;
+  box-shadow: none;
+}

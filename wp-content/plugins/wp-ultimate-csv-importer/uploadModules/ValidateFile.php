@@ -138,30 +138,73 @@ class ValidateFile {
             return FALSE;
             $header = array();
             $data = array();
-            if (($handle = fopen($file_path, 'r')) !== FALSE)
-            {
-                while (($row = fgetcsv($handle, 0, $delimiter)) !== FALSE)
-                {
+            if($delimiter == '\t'){
+                $delimiter = '~';
+                if (($f_handle = fopen($file_path, 'r')) !== FALSE){
+                    $temp=$file_path.'temp';
+                    $temphandle =fopen($temp, 'w+');
+                    chmod($temp, 0777);
+               
+                    while (($line = fgets($f_handle)) !== false) {
+                        $line= str_replace("\t", '~', $line);
+                        fwrite($temphandle, $line);
+                    }
+                    fclose($temphandle);
+                    if (($handles = fopen($temp, 'r')) !== FALSE){
+                        while (($row = fgetcsv($handles, 0, $delimiter)) !== FALSE)
+                        {
+                            if(!$header)
+                                $header = $row;
+                            else{    
+                                $data[] = array_combine($header, $row);
+                                break;
+                            }    
+                        }  
                     
-                    if(!$header)
-                        $header = $row;
-                    else{    
-                        $data[] = array_combine($header, $row);
-                        break;
-                    }      
-                }   
-                $handle = fopen($file_path, 'r');   
-                if(array_key_exists(null,$data[0])){
-                    $valid = 'No';
-                }else{
-                    $valid = 'Yes';
+                        $handle = fopen($file_path, 'r');   
+                        if(array_key_exists(null,$data[0])){
+                            $valid = 'No';
+                        }
+                        else{
+                            $valid = 'Yes';
+                        }
+                        if(empty($data[0])){
+                            $valid = 'No';
+                        }
+                    }
+                // fclose($handle);
+                return $valid;
+                   
                 }
-                if(empty($data[0])){
-                    $valid = 'No';
-                }
-            fclose($handle);    
+                fclose($temphandle);
+            }
+            else{
+                if (($handle = fopen($file_path, 'r')) !== FALSE)
+                {
+                    while (($row = fgetcsv($handle, 0, $delimiter)) !== FALSE)
+                    {
+                        
+                        if(!$header)
+                            $header = $row;
+                        else{    
+                            $data[] = array_combine($header, $row);
+                            break;
+                        }      
+                    }   
+                    $handle = fopen($file_path, 'r');   
+                    if(array_key_exists(null,$data[0])){
+                        $valid = 'No';
+                    }else{
+                        $valid = 'Yes';
+                    }
+                    if(empty($data[0])){
+                        $valid = 'No';
+                    }
+                fclose($handle);    
+            }
+            return $valid;
         }
-        return $valid;
+        
     }
 
 
@@ -249,11 +292,10 @@ class ValidateFile {
         $result = array();
         $extension_instance = new ExtensionHandler;
         $get_post = $extension_instance->get_import_post_types();
-           
+        $get_taxo = get_taxonomies();
         $import_record_post = array_keys($get_post);
-    
+        $import_record_taxonomy = array_keys($get_taxo);
         $get_type = $extension_instance->set_post_types($hashkey , $filename);
-        $import_record_taxonomy = array('category','post_tag');
         $result['Post Type'] = $import_record_post;
         $result['Taxonomy'] = $import_record_taxonomy;
         $result['selected type'] = $get_type;

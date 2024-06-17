@@ -394,5 +394,14 @@ class LangAR
                 );
                 return $response;
         }
+		public static function notice_contents()
+        {
+        $result =array(
+                'UpgradetoPROusingcode' => 'الترقية إلى PRO باستخدام الرمز',
+                'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'افتح ميزات مثل الاستيراد المجمع، والتصدير المتقدم، والجدولة الزمنية، وتحديث المحتوى، والمزيد، بالإضافة إلى دعم مدى الحياة',
+                'upgradenow' => 'قم بالترقية الآن'
+        );
+        return $result;
+        }
 }
 

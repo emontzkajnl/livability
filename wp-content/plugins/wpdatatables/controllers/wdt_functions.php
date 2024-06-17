@@ -978,29 +978,6 @@ function wdtSanitizeQuery($query) {
     return $query;
 }
 
-function initPageBuildersBlocks (){
-    WpDataTablesGutenbergBlock::init();
-    WpDataChartsGutenbergBlock::init();
-    add_filter( 'block_categories_all', 'addWpDataTablesBlockCategory', 10, 2);
-}
-
-add_action('plugins_loaded', 'initPageBuildersBlocks');
-
-/**
- * Creating wpDataTables block category in Gutenberg
- */
-function addWpDataTablesBlockCategory ($categories, $post) {
-    return array_merge(
-        array(
-            array(
-                'slug' => 'wpdatatables-blocks',
-                'title' => 'wpDataTables',
-            ),
-        ),
-        $categories
-    );
-}
-
 /**
  * Buttons for "insert wpDataTable" and "insert wpDataCharts" in WP MCE editor
  */
@@ -1034,12 +1011,6 @@ function wdtRegisterButtons($buttons) {
     return $buttons;
 }
 
-/**
- * Loads the translations
- */
-function wdtLoadTextdomain() {
-    load_plugin_textdomain('wpdatatables', false, dirname(plugin_basename(dirname(__FILE__))) . '/languages/' . get_locale() . '/');
-}
 /**
  * Redirect on Welcome page after activate plugin
  */

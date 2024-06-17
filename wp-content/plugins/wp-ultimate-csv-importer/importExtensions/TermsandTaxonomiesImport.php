@@ -21,22 +21,24 @@ class TermsandTaxonomiesImport {
 		}
 		return TermsandTaxonomiesImport::$terms_taxo_instance;
     }
-    function set_terms_taxo_values($header_array ,$value_array , $map, $post_id , $type, $mode , $line_number){
+    function set_terms_taxo_values($header_array ,$value_array , $map, $post_id , $type, $mode , $line_number,$poly_array = null){
 		$post_values = [];
 		$helpers_instance = ImportHelpers::getInstance();
 		$post_values = $helpers_instance->get_header_values($map , $header_array , $value_array);
-		
-		$this->terms_taxo_import_function($post_values,$type, $post_id , $mode , $line_number);
+		$poly_values = $helpers_instance->get_header_values($poly_array , $header_array , $value_array);
+		$this->terms_taxo_import_function($post_values,$type, $post_id , $mode , $line_number,$poly_values);
 	
     }
 
-    public function terms_taxo_import_function ($data_array, $type ,$pID , $mode , $line_number) {
+    public function terms_taxo_import_function ($data_array, $type ,$pID , $mode , $line_number,$poly_values) {
 		
 		
 		$core_instance = CoreFieldsImport::getInstance();
 		$helpers_instance = ImportHelpers::getInstance();
 		global $core_instance;
-		
+		if($type== 'WooCommerce Product'){
+			$data_array['product_category'] = empty($data_array['product_category']) ? 'Uncategorized' : $data_array['product_category'];
+		}
 		unset($data_array['post_format']);
 		unset($data_array['product_type']);
 		$categories = $tags = array();
@@ -63,7 +65,7 @@ class TermsandTaxonomiesImport {
 
 					// Create / Assign categories to the post types
 					if(isset($categories[$termKey]) && $categories[$termKey] != '')
-						$this->assignTermsAndTaxonomies($categories, $category_name, $pID);
+						$this->assignTermsAndTaxonomies($categories, $category_name, $pID,$poly_values);
 					//Get Default Category id
                     $default_category_id = get_option('default_category');
                    
@@ -112,7 +114,7 @@ class TermsandTaxonomiesImport {
 
 					// Create / Assign categories to the post types
 					if(isset($categories[$termKey]) && $categories[$termKey] != '')
-						$this->assignTermsAndTaxonomies($categories, $category_name, $pID);
+						$this->assignTermsAndTaxonomies($categories, $category_name, $pID,$poly_values);
 					break;
 				case 'event_tags':
 					$eventtags [$termKey] = $data_array [$termKey];
@@ -174,13 +176,13 @@ class TermsandTaxonomiesImport {
 					$smack_taxonomy[$termKey] = $data_array[$termKey];
 
 					if($termKey != 'post_format')
-					$core_instance->detailed_log[$line_number][$termKey] = $data_array[$termKey];
+					$term_space = '&nbsp'.$termKey;
+					$core_instance->detailed_log[$line_number][$term_space] =  $data_array[$termKey]  ;
 
 					$taxonomy_name = $termKey;
-
 					// Create / Assign taxonomies to the post types
 					if(isset($smack_taxonomy[$termKey]) && $smack_taxonomy[$termKey] != '')
-						$this->assignTermsAndTaxonomies($smack_taxonomy, $taxonomy_name, $pID);
+						$this->assignTermsAndTaxonomies($smack_taxonomy, $taxonomy_name, $pID,$poly_values);
 					break;
 			}
 		}
@@ -207,7 +209,11 @@ class TermsandTaxonomiesImport {
 		}
     }
     
-    public function assignTermsAndTaxonomies($categories, $category_name, $pID) {
+    public function assignTermsAndTaxonomies($categories, $category_name, $pID,$poly_values = '') {
+		if(!empty($poly_values)){
+			$lang_list = pll_languages_list();
+		}
+		
 		$get_category_list = $category_list = array();
 		// Create / Assign categories to the post types
 		if (!empty($categories)) {
@@ -254,14 +260,17 @@ class TermsandTaxonomiesImport {
 					if ( isset( $category_set[ $item - 1 ] ) ) {
 						$checkParent1 = trim( $category_set[ $item - 1 ] );
 						$checkParent1 = (string) $checkParent1;
-						$parent_term  = term_exists( "$checkParent1", "$category_name" );
+						// $parent_term  = term_exists( "$checkParent1", "$category_name" );
+						$parent_new =get_term_by('name',$category_set[ $item - 2],$category_name);
+						$parents_id=$parent_new->term_id;
+						$parent_term  = term_exists( "$checkParent1", "$category_name", $parents_id);
 						if ( isset( $parent_term['term_id'] ) ) {
 							$parent_term_id1 = $parent_term['term_id'];
                         }
                         
 					}
 					if ( isset( $category_set[ $item - 2 ] ) ) {
-						$parent_term_id1   = 0;
+						// $parent_term_id1   = 0;
 						$checkSuperParent  = trim( $category_set[ $item - 2 ] );
 						$checkSuperParent  = (string) $checkSuperParent;
 						$super_parent_term = term_exists( "$checkSuperParent", "$category_name" );
@@ -292,6 +301,14 @@ class TermsandTaxonomiesImport {
 							if(!is_wp_error($taxonomyID)){
 								$parent_term_id2 = $retID = $taxonomyID['term_id'];
 								wp_set_object_terms( $pID, $retID, $category_name, true );
+								if(!empty($poly_values)){
+									$lang = $poly_values['language_code'];
+									if(empty($lang) || !in_array($lang,$lang_list)){
+										$lang=pll_default_language();
+									}
+									$t_id=$taxonomyID['term_id'];
+									pll_set_term_language($t_id,$lang);
+								}
 							}
                             
 						} else {
@@ -300,7 +317,6 @@ class TermsandTaxonomiesImport {
 							$exist_term_id = array_unique( $exist_term_id );
 							$parent_term_id2 = $checkAvailable['term_id'];
                             wp_set_object_terms( $pID, $exist_term_id, $category_name, true );
-                            
 						}
 					}
 					unset( $checkAvailable );
@@ -315,6 +331,14 @@ class TermsandTaxonomiesImport {
 						if(!is_wp_error($taxonomyID)){
 							$retID  = $taxonomyID['term_id'];
                         	wp_set_object_terms( $pID, $retID, $category_name, true );
+							if(!empty($poly_values)){
+								$lang = $poly_values['language_code'];
+								if(empty($lang) || !in_array($lang,$lang_list)){
+									$lang=pll_default_language();
+								}
+								$t_id=$taxonomyID['term_id'];
+								pll_set_term_language($t_id,$lang);
+							}
 						}
 						    
 					} else {
@@ -340,6 +364,14 @@ class TermsandTaxonomiesImport {
 						if(!is_wp_error($taxonomyID)){
 							$retID  = $taxonomyID['term_id'];
                         	wp_set_object_terms( $pID, $retID, $category_name, true );
+							if(!empty($poly_values)){
+								$lang = $poly_values['language_code'];
+								if(empty($lang) || !in_array($lang,$lang_list)){
+									$lang=pll_default_language();
+								}
+								$t_id=$taxonomyID['term_id'];
+								pll_set_term_language($t_id,$lang);
+							}
 						}    
                         
 					} else {
@@ -348,7 +380,7 @@ class TermsandTaxonomiesImport {
 						$exist_term_id = array_map( 'intval', $exist_term_id );
 						$exist_term_id = array_unique( $exist_term_id );
                         wp_set_object_terms( $pID, $exist_term_id, $category_name, true );
-                        
+						
 					}
 					unset( $checkAvailable );
 				}
@@ -364,6 +396,14 @@ class TermsandTaxonomiesImport {
 							if(!is_wp_error($taxonomyID)){
 								$retID  = $taxonomyID['term_id'];
 								wp_set_object_terms( $pID, $retID, $category_name, true );
+								if(!empty($poly_values)){
+									$lang = $poly_values['language_code'];
+									if(empty($lang) || !in_array($lang,$lang_list)){
+										$lang=pll_default_language();
+									}
+									$t_id=$taxonomyID['term_id'];
+									pll_set_term_language($t_id,$lang);
+								}
 							}	
 							
 						} else {

@@ -4,6 +4,7 @@ namespace WPForms\Integrations\UsageTracking;
 
 use WPForms\Admin\Builder\Templates;
 use WPForms\Integrations\IntegrationInterface;
+use WPForms\Integrations\LiteConnect\Integration;
 
 /**
  * Usage Tracker functionality to understand what's going on on client's sites.
@@ -103,10 +104,11 @@ class UsageTracking implements IntegrationInterface {
 	public function settings_misc_option( $settings ) {
 
 		$settings['misc'][ self::SETTINGS_SLUG ] = [
-			'id'   => self::SETTINGS_SLUG,
-			'name' => esc_html__( 'Allow Usage Tracking', 'wpforms-lite' ),
-			'desc' => esc_html__( 'By allowing us to track usage data, we can better help you, as we will know which WordPress configurations, themes, and plugins we should test.', 'wpforms-lite' ),
-			'type' => 'checkbox',
+			'id'     => self::SETTINGS_SLUG,
+			'name'   => esc_html__( 'Allow Usage Tracking', 'wpforms-lite' ),
+			'desc'   => esc_html__( 'By allowing us to track usage data, we can better help you, as we will know which WordPress configurations, themes, and plugins we should test.', 'wpforms-lite' ),
+			'type'   => 'toggle',
+			'status' => true,
 		];
 
 		return $settings;
@@ -165,7 +167,7 @@ class UsageTracking implements IntegrationInterface {
 			'theme_name'                     => $theme_data->name,
 			'theme_version'                  => $theme_data->version,
 			'locale'                         => get_locale(),
-			'timezone_offset'                => $this->get_timezone_offset(),
+			'timezone_offset'                => wp_timezone_string(),
 			// WPForms-specific data.
 			'wpforms_version'                => WPFORMS_VERSION,
 			'wpforms_license_key'            => wpforms_get_license_key(),
@@ -188,10 +190,16 @@ class UsageTracking implements IntegrationInterface {
 			'wpforms_multiple_confirmations' => count( $this->get_forms_with_multiple_confirmations( $forms ) ),
 			'wpforms_multiple_notifications' => count( $this->get_forms_with_multiple_notifications( $forms ) ),
 			'wpforms_ajax_form_submissions'  => count( $this->get_ajax_form_submissions( $forms ) ),
+			'wpforms_notification_count'     => wpforms()->get( 'notifications' )->get_count(),
+			'wpforms_stats'                  => $this->get_additional_stats(),
 		];
 
 		if ( ! empty( $first_form_date ) ) {
 			$data['wpforms_forms_first_created'] = $first_form_date;
+		}
+
+		if ( $data['is_multisite'] ) {
+			$data['url_primary'] = network_site_url();
 		}
 
 		return $data;
@@ -269,6 +277,10 @@ class UsageTracking implements IntegrationInterface {
 					'stripe-test-publishable-key',
 					'stripe-live-secret-key',
 					'stripe-live-publishable-key',
+					'stripe-webhooks-secret-test',
+					'stripe-webhooks-secret-live',
+					'stripe-webhooks-id-test',
+					'stripe-webhooks-id-live',
 					'authorize_net-test-api-login-id',
 					'authorize_net-test-transaction-key',
 					'authorize_net-live-api-login-id',
@@ -285,6 +297,7 @@ class UsageTracking implements IntegrationInterface {
 					'hcaptcha-site-key',
 					'hcaptcha-secret-key',
 					'hcaptcha-fail-msg',
+					'pdf-ninja-api_key',
 				]
 			)
 		);
@@ -300,48 +313,21 @@ class UsageTracking implements IntegrationInterface {
 			$data[ $key ] = $value;
 		}
 
+		$lite_connect_data = get_option( Integration::get_option_name() );
+
+		// If lite connect has been restored, set lite connect data.
+		if (
+			isset( $lite_connect_data['import']['status'] ) &&
+			$lite_connect_data['import']['status'] === 'done'
+		) {
+			$data['lite_connect'] = [
+				'restore_date'         => $lite_connect_data['import']['ended_at'],
+				'restored_entry_count' => Integration::get_entries_count(),
+			];
+		}
+
 		// Add favorite templates to the settings array.
 		return array_merge( $data, $this->get_favorite_templates() );
-	}
-
-	/**
-	 * Get timezone offset.
-	 * We use `wp_timezone_string()` when it's available (WP 5.3+),
-	 * otherwise fallback to the same code, copy-pasted.
-	 *
-	 * @see wp_timezone_string()
-	 *
-	 * @since 1.6.1
-	 *
-	 * @return string
-	 */
-	private function get_timezone_offset() {
-
-		// It was added in WordPress 5.3.
-		if ( function_exists( 'wp_timezone_string' ) ) {
-			return wp_timezone_string();
-		}
-
-		/*
-		 * The code below is basically a copy-paste from that function.
-		 */
-
-		$timezone_string = get_option( 'timezone_string' );
-
-		if ( $timezone_string ) {
-			return $timezone_string;
-		}
-
-		$offset  = (float) get_option( 'gmt_offset' );
-		$hours   = (int) $offset;
-		$minutes = ( $offset - $hours );
-
-		$sign      = ( $offset < 0 ) ? '-' : '+';
-		$abs_hour  = abs( $hours );
-		$abs_mins  = abs( $minutes * 60 );
-		$tz_offset = sprintf( '%s%02d:%02d', $sign, $abs_hour, $abs_mins );
-
-		return $tz_offset;
 	}
 
 	/**
@@ -356,7 +342,9 @@ class UsageTracking implements IntegrationInterface {
 		if ( ! function_exists( 'get_plugins' ) ) {
 			include ABSPATH . '/wp-admin/includes/plugin.php';
 		}
-		$active  = get_option( 'active_plugins', [] );
+		$active  = is_multisite() ?
+			array_merge( get_option( 'active_plugins', [] ), array_flip( get_site_option( 'active_sitewide_plugins', [] ) ) ) :
+			get_option( 'active_plugins', [] );
 		$plugins = array_intersect_key( get_plugins(), array_flip( $active ) );
 
 		return array_map(
@@ -545,26 +533,22 @@ class UsageTracking implements IntegrationInterface {
 	 *
 	 * @return int
 	 */
-	private function get_entries_total( $period = 'all' ) {
+	private function get_entries_total( string $period = 'all' ): int {
 
 		if ( ! wpforms()->is_pro() ) {
-
-			switch ( $period ) {
-				case '7days':
-				case '30days':
-					$count = 0;
-					break;
-
-				default:
-					global $wpdb;
-					$count = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
-						"SELECT SUM(meta_value)
-						FROM $wpdb->postmeta
-						WHERE meta_key = 'wpforms_entries_count';"
-					);
+			if ( $period === '7days' || $period === '30days' ) {
+				return 0;
 			}
 
-			return $count;
+			global $wpdb;
+
+			$count = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
+				"SELECT SUM(meta_value)
+				FROM $wpdb->postmeta
+				WHERE meta_key = 'wpforms_entries_count';"
+			);
+
+			return (int) $count;
 		}
 
 		$args = [];
@@ -589,7 +573,9 @@ class UsageTracking implements IntegrationInterface {
 				break;
 		}
 
-		return wpforms()->entry->get_entries( $args, true );
+		$entry_obj = wpforms()->get( 'entry' );
+
+		return $entry_obj ? $entry_obj->get_entries( $args, true ) : 0;
 	}
 
 	/**
@@ -726,6 +712,7 @@ class UsageTracking implements IntegrationInterface {
 		// phpcs:disable WPForms.PHP.ValidateHooks.InvalidHookName
 		/** This filter is documented in wp-includes/class-wp-http-streams.php */
 		$sslverify = apply_filters( 'https_local_ssl_verify', false );
+		// phpcs:enable WPForms.PHP.ValidateHooks.InvalidHookName
 
 		$url      = rest_url( 'wp/v2/types/post' );
 		$response = wp_remote_get(
@@ -758,5 +745,64 @@ class UsageTracking implements IntegrationInterface {
 
 		// We are all set. Confirm the connection.
 		return true;
+	}
+
+	/**
+	 * Retrieves additional statistics.
+	 *
+	 * @since 1.8.8
+	 *
+	 * @return array
+	 */
+	private function get_additional_stats(): array {
+
+		// Initialize an empty array to store the statistics.
+		$stats = [];
+
+		return $this->get_admin_pointer_stats( $stats );
+	}
+
+	/**
+	 * Retrieves statistics for admin pointers.
+	 * This function retrieves statistics for admin pointers based on their engagement or dismissal status.
+	 *
+	 * Note: Pointers can only be engaged (interacted with) or dismissed.
+	 *
+	 * - If the value is 1 or true, it means the pointer is shown and interacted with (engaged).
+	 * - If the value is 0 or false, it means the pointer is dismissed.
+	 * - If there is no pointer ID in the stats, it means the user hasn't seen the pointer yet.
+	 *
+	 * @since 1.8.8
+	 *
+	 * @param array $stats An array containing existing statistics.
+	 *
+	 * @return array
+	 */
+	private function get_admin_pointer_stats( array $stats ): array {
+
+		$pointers = get_option( 'wpforms_pointers', [] );
+
+		// If there are no pointers, return empty statistics.
+		if ( empty( $pointers ) ) {
+			return $stats;
+		}
+
+		// Pointers can only be interacted with or dismissed.
+
+		// If there are engagement pointers, process them.
+		if ( isset( $pointers['engagement'] ) ) {
+			foreach ( $pointers['engagement'] as $pointer ) {
+				$stats[ sanitize_key( $pointer ) ] = true;
+			}
+		}
+
+		// If there are dismiss pointers, process them.
+		if ( isset( $pointers['dismiss'] ) ) {
+			foreach ( $pointers['dismiss'] as $pointer ) {
+				$stats[ sanitize_key( $pointer ) ] = false;
+			}
+		}
+
+		return $stats;
 	}
 }

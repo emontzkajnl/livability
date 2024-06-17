@@ -102,6 +102,7 @@ class WPDataTable
     private $_table_wcag = 0;
     public $column_id;
     private $_simple_template_id = 0;
+    private $_pagination_top = 0;
     public static $allowedTableTypes = array('xls', 'csv', 'manual', 'mysql', 'json','nested_json', 'google_spreadsheet', 'xml', 'serialized', 'simple');
 
     /**
@@ -546,6 +547,18 @@ class WPDataTable
     public function getRefreshInterval()
     {
         return (int)$this->_autoRefreshInterval;
+    }
+
+    /**
+     * @param boolean $paginationOnTop
+     */
+    public function setPaginationOnTop($paginationOnTop)
+    {
+        $this->_pagination_top = (int)$paginationOnTop;
+    }
+    public function getPaginationOnTop()
+    {
+        return $this->_pagination_top;
     }
 
     public function paginationEnabled()
@@ -1371,6 +1384,13 @@ class WPDataTable
             }
         }
 
+        foreach ($wdtColumnTypes as $key => $columnType){
+            foreach ($this->_dataRows as &$dataRow) {
+                if (isset($dataRow[$key])) {
+                    $dataRow[$key] = wp_kses_post($dataRow[$key]);
+                }
+            }
+        }
 
         return true;
 
@@ -1752,6 +1772,9 @@ class WPDataTable
             $highestColumn = $objWorksheet->getHighestDataColumn();
 
             $headingsArray = $objWorksheet->rangeToArray('A1:' . $highestColumn . '1', null, true, true, true);
+            while (!end($headingsArray[1])) {
+                array_pop($headingsArray[1]);
+            };
             foreach ($headingsArray[1] as $heading) {
                 if ($heading === '' || $heading === null)
                     throw new WDTException(esc_html__('One or more columns doesn\'t have a header. Please enter headers for all columns in order to proceed.'));
@@ -1768,6 +1791,7 @@ class WPDataTable
 					foreach ($headingsArray as $dataColumnIndex => $dataColumnHeading) {
 						$dataColumnHeading = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ", $dataColumnHeading)));
                         $namedDataArray[$r][$dataColumnHeading] = trim(isset($dataRows[$row][$dataColumnIndex]) ? $dataRows[$row][$dataColumnIndex] : '');
+                        $namedDataArray[$r][$dataColumnHeading] = wp_kses_post($namedDataArray[$r][$dataColumnHeading]);
 						$currentDateFormat = isset($wdtParameters['dateInputFormat'][$dataColumnHeading]) ? $wdtParameters['dateInputFormat'][$dataColumnHeading] : null;
 						if (!empty($wdtParameters['data_types'][$dataColumnHeading]) && in_array($wdtParameters['data_types'][$dataColumnHeading], array('date', 'datetime', 'time'))) {
 							if ($format === 'xls' || $format === 'ods') {
@@ -2423,6 +2447,7 @@ class WPDataTable
             isset($advancedSettings->table_description) ? $this->setDescription($advancedSettings->table_description) : $this->setDescription('');
             isset($advancedSettings->table_wcag) ? $this->setTableWCAG($advancedSettings->table_wcag) : $this->setTableWCAG(0);
             isset($advancedSettings->simple_template_id) ? $this->setSimpleTemplateId($advancedSettings->simple_template_id) : $this->setSimpleTemplateId(0);
+            isset($advancedSettings->pagination_top) ? $this->setPaginationOnTop($advancedSettings->pagination_top) : $this->setPaginationOnTop(0);
         } else {
             $this->setInfoBlock(true);
             $this->setGlobalSearch(true);
@@ -2446,6 +2471,7 @@ class WPDataTable
             $this->setShowDescription(false);
             $this->setDescription('');
             $this->setTableWCAG(0);
+            $this->setPaginationOnTop(0);
         }
 
         if (!empty($columnData['columnOrder'])) {
@@ -2591,6 +2617,7 @@ class WPDataTable
         $obj->globalSearch = $this->isGlobalSearch();
         $obj->showRowsPerPage = $this->isShowRowsPerPage();
         $obj->hideBeforeLoad = $this->doHideBeforeLoad();
+        $obj->pagination_top = $this->getPaginationOnTop();
         $obj->number_format = (int)(get_option('wdtNumberFormat') ? get_option('wdtNumberFormat') : 1);
         $obj->decimalPlaces = (int)(get_option('wdtDecimalPlaces') ? get_option('wdtDecimalPlaces') : 2);
 

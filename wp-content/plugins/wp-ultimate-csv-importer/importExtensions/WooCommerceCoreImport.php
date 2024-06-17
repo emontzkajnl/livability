@@ -8,6 +8,10 @@
 
 namespace Smackcoders\WCSV;
 
+use Smackcoders\FCSV\CoreFieldsImport;
+use Smackcoders\FCSV\ImportHelpers;
+use Smackcoders\FCSV\MediaHandling;
+
 if ( ! defined( 'ABSPATH' ) )
     exit; // Exit if accessed directly
 
@@ -17,7 +21,7 @@ class WooCommerceCoreImport {
     public static function getInstance() {
 		if (WooCommerceCoreImport::$woocommerce_core_instance == null) {
 			WooCommerceCoreImport::$woocommerce_core_instance = new WooCommerceCoreImport;
-			WooCommerceCoreImport::$media_instance = new MediaHandling();
+			WooCommerceCoreImport::$media_instance = new MediaHandling;
 			return WooCommerceCoreImport::$woocommerce_core_instance;
 		}
 		return WooCommerceCoreImport::$woocommerce_core_instance;
@@ -181,6 +185,7 @@ class WooCommerceCoreImport {
 					
 				}
 			}
+			//$variation_data=isset($variation_data)?$variation_data:'';
 			$variationid = wp_insert_post($variation_data);					
 			if(empty($variation_count)){
 				$core_instance->detailed_log[$line_number]['Message'] = 'Inserted Variation ID: ' . $variationid;

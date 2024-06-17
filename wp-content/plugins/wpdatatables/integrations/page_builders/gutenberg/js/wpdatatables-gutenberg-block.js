@@ -2,8 +2,8 @@
 
     var el = wp.element.createElement;
     var components = wp.components;
-    var blockControls = wp.editor.BlockControls;
-    var inspectorControls = wp.editor.InspectorControls;
+    var blockControls = wp.blockEditor.BlockControls;
+    var inspectorControls = wp.blockEditor.InspectorControls;
     var allTables = wpdatatables.data;
 
     var tables = [];
@@ -19,7 +19,7 @@
         tables = []
     }
 
-    // Registering the Block for wpDataTables shortcode
+    // Registering the Block for catalog shortcode
     wp.blocks.registerBlockType('wpdatatables/wpdatatables-gutenberg-block', {
         title: wpdatatables.title,
         description: wpdatatables.description,
@@ -109,6 +109,7 @@
             function getShortCode(props, attributes) {
                 var short_code = '';
                 var export_file_name = '';
+
 
                 if (attributes.export_file_name)  {
                     export_file_name = ' export_file_name=' + attributes.export_file_name;

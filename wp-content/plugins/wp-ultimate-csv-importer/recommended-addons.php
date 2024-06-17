@@ -12,6 +12,10 @@ if ( !defined( 'ABSPATH' ) ) {
 
 
 ?>
+<?php
+  $img_Url=WP_PLUGIN_URL . '/wp-ultimate-csv-importer/assets/images/pro.png';
+?>
+  <h3 class="manage_addon_main_page"><img src="<?php echo $img_Url; ?>" width="60px" alt="">Ultimate CSV Importer Free</h3>
   <div class="settings dark">
    
   <?php  
@@ -21,7 +25,7 @@ if ( !defined( 'ABSPATH' ) ) {
   ?>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
     
     <div class="row">
     <section class="music">
@@ -98,9 +102,16 @@ if ( !defined( 'ABSPATH' ) ) {
 
         
   </div>
+  <div class="setting_back">
+    <a href='admin.php?page=com.smackcoders.csvimporternew.menu' ><button class="btn_install">Back to Our Plugin</button></a>
+  </div>
+
 <style>
   
-
+  .manage_addon_main_page {
+  text-align: center;
+  margin-top: 20px;
+}
 *, *:before, *:after {
   box-sizing: border-box;
 }
@@ -116,7 +127,7 @@ if ( !defined( 'ABSPATH' ) ) {
 }
 #btn_install_act{
     color: #fff;
-    border:1px solid #2271b1;
+    border:none;
     background: #00a699;
     opacity:0.65;
     vertical-align: top;
@@ -134,7 +145,7 @@ if ( !defined( 'ABSPATH' ) ) {
 }
 .btn_install{
     color: #fff;
-    border:1px solid #2271b1;
+    border:none;
     background: #00a699;
     vertical-align: top;
     width:150px;
@@ -204,6 +215,18 @@ margin-top:50px;
 
   padding: 5px 15px;
   border-radius:10px;
+  
+}
+.setting_back{
+  width: 650px;
+  display: flex;
+  justify-content: flex-end;
+  margin: auto;
+  margin-top: 30px;
+}
+.setting_back .btn_install{
+  height: 40px;
+  width: 160px;
   
 }
 
@@ -384,7 +407,7 @@ section span  {
   background-color: #ffffff;
   color: #e1e1e1;
   margin: 0 auto;
-  margin-top: 50px;
+  margin-top: 20px;
   height:625px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 

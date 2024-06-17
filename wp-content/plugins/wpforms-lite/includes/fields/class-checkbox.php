@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Checkbox field.
  *
@@ -65,53 +69,6 @@ class WPForms_Field_Checkbox extends WPForms_Field {
 
 		// This field requires fieldset+legend instead of the field label.
 		add_filter( "wpforms_frontend_modern_is_field_requires_fieldset_{$this->type}", '__return_true', PHP_INT_MAX, 2 );
-	}
-
-	/**
-	 * Return images, if any, for HTML supported values.
-	 *
-	 * @since 1.4.5
-	 *
-	 * @param string $value     Field value.
-	 * @param array  $field     Field settings.
-	 * @param array  $form_data Form data and settings.
-	 * @param string $context   Value display context.
-	 *
-	 * @return string
-	 */
-	public function field_html_value( $value, $field, $form_data = [], $context = '' ) {
-
-		// Only use HTML formatting for checkbox fields, with image choices
-		// enabled, and exclude the entry table display. Lastly, provides a
-		// filter to disable fancy display.
-		if (
-			! empty( $field['value'] ) &&
-			$this->type === $field['type'] &&
-			! empty( $field['images'] ) &&
-			'entry-table' !== $context &&
-			apply_filters( 'wpforms_checkbox_field_html_value_images', true, $context )
-		) {
-
-			$items  = [];
-			$values = explode( "\n", $field['value'] );
-
-			foreach ( $values as $key => $val ) {
-
-				if ( ! empty( $field['images'][ $key ] ) ) {
-					$items[] = sprintf(
-						'<span style="max-width:200px;display:block;margin:0 0 5px 0;"><img src="%s" style="max-width:100%%;display:block;margin:0;"></span>%s',
-						esc_url( $field['images'][ $key ] ),
-						$val
-					);
-				} else {
-					$items[] = $val;
-				}
-			}
-
-			return implode( '<br><br>', $items );
-		}
-
-		return $value;
 	}
 
 	/**
@@ -517,6 +474,7 @@ class WPForms_Field_Checkbox extends WPForms_Field {
 		);
 
 			foreach ( $choices as $key => $choice ) {
+				$label = $this->get_choices_label( $choice['label']['text'] ?? '', $key );
 
 				if ( wpforms_is_amp() && ( $using_image_choices || $using_icon_choices ) ) {
 					$choice['container']['attr']['[class]'] = sprintf(
@@ -566,14 +524,18 @@ class WPForms_Field_Checkbox extends WPForms_Field {
 							wpforms_html_attributes( $choice['label']['id'], $choice['label']['class'], $choice['label']['data'], $choice['label']['attr'] )
 						);
 
+							echo '<span class="wpforms-image-choices-image">';
+
 							if ( ! empty( $choice['image'] ) ) {
 								printf(
-									'<span class="wpforms-image-choices-image"><img src="%s" alt="%s"%s></span>',
+									'<img src="%s" alt="%s"%s>',
 									esc_url( $choice['image'] ),
-									esc_attr( $choice['label']['text'] ),
-									! empty( $choice['label']['text'] ) ? ' title="' . esc_attr( $choice['label']['text'] ) . '"' : ''
+									esc_attr( $label ),
+									! empty( $label ) ? ' title="' . esc_attr( $label ) . '"' : ''
 								);
 							}
+
+							echo '</span>';
 
 							if ( $field['choices_images_style'] === 'none' ) {
 								echo '<br>';
@@ -596,7 +558,7 @@ class WPForms_Field_Checkbox extends WPForms_Field {
 								checked( '1', $choice['default'], false )
 							);
 
-							echo '<span class="wpforms-image-choices-label">' . wp_kses_post( $choice['label']['text'] ) . '</span>';
+							echo '<span class="wpforms-image-choices-label">' . wp_kses_post( $label ) . '</span>';
 
 						echo '</label>';
 
@@ -629,7 +591,7 @@ class WPForms_Field_Checkbox extends WPForms_Field {
 						printf(
 							'<label %s>%s%s</label>',
 							wpforms_html_attributes( $choice['label']['id'], $choice['label']['class'], $choice['label']['data'], $choice['label']['attr'] ),
-							wp_kses_post( $choice['label']['text'] ),
+							wp_kses_post( $label ),
 							wp_kses(
 								$required,
 								[
@@ -690,7 +652,7 @@ class WPForms_Field_Checkbox extends WPForms_Field {
 		}
 
 		if ( ! empty( $error ) ) {
-			wpforms()->process->errors[ $form_data['id'] ][ $field_id ] = $error;
+			wpforms()->get( 'process' )->errors[ $form_data['id'] ][ $field_id ] = $error;
 		}
 	}
 
@@ -812,7 +774,7 @@ class WPForms_Field_Checkbox extends WPForms_Field {
 		}
 
 		// Push field details to be saved.
-		wpforms()->process->fields[ $field_id ] = $data;
+		wpforms()->get( 'process' )->fields[ $field_id ] = $data;
 	}
 }
 

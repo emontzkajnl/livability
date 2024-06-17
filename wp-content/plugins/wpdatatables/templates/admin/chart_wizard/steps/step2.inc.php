@@ -13,9 +13,10 @@
                     <select class="selectpicker" name="wpdatatables-chart-source" id="wpdatatables-chart-source"
                             data-live-search="true">
                         <option value=""><?php _e('Pick a wpDataTable', 'wpdatatables'); ?></option>
-                        <?php foreach (WPDataTable::getAllTablesExceptSimple() as $table) { ?>
-                            <option value="<?php echo esc_html_e($table['id']) ?>">
-                                <?php echo esc_html("{$table['title']} (id: {$table['id']})");?>
+                        <?php foreach (WPDataTable::getAllTables() as $table) { ?>
+                            <option value="<?php echo esc_attr($table['id']) ?>"
+                                    data-table-type="<?php echo esc_attr($table['table_type']) ?>">
+                            <?php echo esc_html("{$table['title']} (id: {$table['id']})");?>
                             </option>
                         <?php } ?>
                     </select>
@@ -24,4 +25,8 @@
             </div>
         </div>
     </div>
+</div>
+<div id="wdt-simple-source-chart" class="alert alert-info" role="alert" style="width: fit-content;">
+    <i class="wpdt-icon-info-circle-full"></i>
+    <span class="wdt-alert-title f-600"><?php esc_html_e('You are trying to use a Simple table to create a chart, which is not possible at the moment. Please try using any other data table to create a chart.', 'wpdatatables'); ?><br></span>
 </div>

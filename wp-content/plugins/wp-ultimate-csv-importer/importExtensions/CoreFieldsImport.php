@@ -7,12 +7,16 @@
 
 namespace Smackcoders\FCSV;
 
+use Smackcoders\WCSV\WooCommerceCoreImport;
+
 if ( ! defined( 'ABSPATH' ) )
 	exit; // Exit if accessed directly
 
 class CoreFieldsImport {
 	private static $core_instance = null,$media_instance;
 	public $detailed_log;
+	public $generated_content;
+	public $openAI_response=array();
 	public static function getInstance() {
 
 		if (CoreFieldsImport::$core_instance == null) {
@@ -25,9 +29,10 @@ class CoreFieldsImport {
 
 	function set_core_values($header_array ,$value_array , $map , $type , $mode , $line_number , $check , $hash_key, $unmatched_row, $gmode, $templatekey, $wpml_array = null){
 		global $wpdb;
-		global $uci_woocomm_instance;
+		global $uci_woocomm_instance,$woocommerce_core_instance;
 		global $userimp_class;
 		global $sitepress;
+		$post_id = null;
 
 		$helpers_instance = ImportHelpers::getInstance();
 		CoreFieldsImport::$media_instance->header_array = $header_array;
@@ -53,14 +58,19 @@ class CoreFieldsImport {
 			$type = 'Taxonomies';
 		endif;
 		}
-		$post_id = isset($result['ID']) ? $result['ID'] :'';
+		if($type == 'elementor_library'){
+			$elementor_import=new ElementorImport;
+			$elementor_import->set_elementor_values($header_array ,$value_array , $map, $post_id , $type, $mode, $line_number , $hash_key);
+			wp_die();
+		}
 		if(($type == 'WooCommerce Product') || ($type == 'WooCommerce Product Variations')|| ($type == 'Categories') || ($type == 'Tags') || ($type == 'Taxonomies') || ($type == 'Comments') || ($type == 'Users') || ($type == 'Customer Reviews') || ($type == 'lp_order') || ($type == 'nav_menu_item') || ($type == 'widgets')){
 
 			$comments_instance = CommentsImport::getInstance();
 			$customer_reviews_instance = CustomerReviewsImport::getInstance();
 			$learnpress_instance = LearnPressImport::getInstance();
 			$taxonomies_instance = TaxonomiesImport::getInstance();
-			
+			$woocommerce_core_instance = WooCommerceCoreImport::getInstance();
+
 			$post_values = [];
 			$post_values = $helpers_instance->get_header_values($map , $header_array , $value_array);
 			$wpml_values = $helpers_instance->get_header_values($wpml_array , $header_array , $value_array);
@@ -71,7 +81,7 @@ class CoreFieldsImport {
 				$result = $woocommerce_core_instance->woocommerce_orders_import($post_values , $mode , $check , $unikey_value ,$unikey_name, $line_number);
 			}
 			if($type == 'WooCommerce Product Variations'){
-				$result = $uci_woocomm_instance->woocommerce_variations_import($post_values , $mode , $check ,$unikey_value ,  $unikey_name, $line_number, $variation_count);
+				$result = $uci_woocomm_instance->woocommerce_variations_import($post_values , $mode , $check ,$unikey_value ,  $unikey_name, $line_number, $variation_count =null);
 			}
 			if($type == 'WooCommerce Coupons'){
 				$result = $woocommerce_core_instance->woocommerce_coupons_import($post_values , $mode , $check , $unikey_value , $unikey_name, $line_number);
@@ -79,7 +89,7 @@ class CoreFieldsImport {
 			if($type == 'WooCommerce Refunds'){
 				$result = $woocommerce_core_instance->woocommerce_refunds_import($post_values , $mode , $check , $unikey_value , $unikey_name, $line_number);
 			}
-			if(($type == 'Categories') || ($type == 'Tags')){
+			if(($type == 'Categories') || ($type == 'Tags') || ($type == 'Taxonomies')){
 				$result = $taxonomies_instance->taxonomies_import_function($post_values , $mode , $import_type , $unmatched_row, $check , $unikey_value , $unikey_name ,$line_number ,$header_array ,$value_array);
 			}
 			if($type == 'Users'){
@@ -100,7 +110,6 @@ class CoreFieldsImport {
 			if($type == 'widgets'){
 				$comments_instance->widget_import_function($post_values , $mode ,$unikey_value , $unikey_name , $line_number);
 			}
-
 			$last_import_id = isset($result['ID']) ? $result['ID'] : '';
 			$post_id = isset($result['ID']) ? $result['ID'] :'';
 			if($gmode != 'CLI')
@@ -119,36 +128,51 @@ class CoreFieldsImport {
 					$featured_image=$post_values['featured_image'];
 				}
 				if ( preg_match_all( '/\b[-A-Z0-9+&@#\/%=~_|$?!:,.]*[A-Z0-9+&@#\/%=~_|$]/i', $featured_image, $matchedlist, PREG_PATTERN_ORDER ) ) {	
-					$image_type = 'Featured';		
+					$image_type = 'Featured';  
 					$attach_id = CoreFieldsImport::$media_instance->media_handling( $featured_image , $post_id ,$post_values,$type,$image_type,$hash_key,$templatekey,$header_array,$value_array);	
 				}
-			}	
-
-			if(preg_match("(Can't|Skipped|Duplicate)", $this->detailed_log[$line_number]['Message']) === 0) {  
+			}
+			$this->detailed_log[$line_number]['Message'] = isset($this->detailed_log[$line_number]['Message']) ? $this->detailed_log[$line_number]['Message'] : '';
+			if (preg_match("/(Can't|Skipped|Duplicate)/", $this->detailed_log[$line_number]['Message']) === 0) { 	
 				if ( $type == 'WooCommerce Product') {
 					if ( ! isset( $post_values['post_title'] ) ) {
 						$post_values['post_title'] = '';
 					}
-					$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+					if (!empty($post_id)) {
+						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+					}
 				}
 				elseif( $type == 'Users'){
-					$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_edit_user_link( $post_id , true ) . "' target='_blank' title='" . esc_attr( 'Edit this item' ) . "'> User Profile </a>";
+					if (!empty($post_id)) {
+						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_edit_user_link( $post_id , true ) . "' target='_blank' title='" . esc_attr( 'Edit this item' ) . "'> User Profile </a>";
+					}
 				}
-				elseif($type == 'Tags' || $type == 'Categories' || $type == 'post_tag' || $type =='Post_category'){
-					$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_edit_term_link( $post_id, $import_type ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+				elseif($type == 'Tags' || $type == 'Categories' || $type == 'post_tag' || $type =='Post_category'|| $type == 'Taxonomies'){
+					if (!empty($post_id)) {
+						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_edit_term_link( $post_id, $import_type ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+					}
 				}
 				elseif($type == 'lp_order'){
-					$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+					if (!empty($post_id)) {
+						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+					}
 				}
 				elseif($type == 'WooCommerce Product Variations' ){
 					$post_values['post_title']=isset($post_values['post_title'])?$post_values['post_title']:'';
-					$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> ";
+					if (!empty($post_id)) {
+						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> ";
+					}
 				}
+				// else if($type == )
 				elseif($type != 'nav_menu_item' && isset($post_values['post_title'])){
-					$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+					if (!empty($post_id)) {
+						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+					}
 				}
-				elseif($type == 'Comments'){					
-					$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_comment_link( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_comment_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+				elseif($type == 'Comments'){
+					if (!empty($post_id)) {
+						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_comment_link( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_comment_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+					}					
 				}
 				if(isset($post_values['post_status'])){
 
@@ -166,11 +190,14 @@ class CoreFieldsImport {
 			$post_values = [];
 			$get_result = null;
 			$post_values['post_content'] = '';
+			$map = $this->filterNumKeys($map);
+			$map=$this->replaceValues($map);
 			
 			$trim_content = array(
 				'->static' => '', 
 				'->math' => '', 
-				'->cus1' => ''
+				'->cus1' => '',
+				'->openAI' => '', 
 			);
 
 			foreach($map as $header_keys => $value){
@@ -196,6 +223,7 @@ class CoreFieldsImport {
 				$import_as = $extension_object->import_post_types($import_type );
 				if(!empty($csv_value)){
 
+					//$pattern = "/({([a-z A-Z 0-9 | , _ -]+)(.*?)(}))/";
 					$pattern1 = '/{([^}]*)}/';
 					$pattern2 = '/\[([^\]]*)\]/';
 
@@ -211,8 +239,7 @@ class CoreFieldsImport {
 								$get_value = "'".$get_value."'";
 								$matched_element = str_replace($values, $get_value, $matched_element);
 							}
-						
-							$csv_element = @eval("return " . $matched_element . ";" );
+							$csv_element = $helpers_instance->evalPhp($matched_element);
 						}
 						else{
 
@@ -230,13 +257,14 @@ class CoreFieldsImport {
 							$math = 'MATH';
 							if (strpos($csv_element, $math) !== false) {	
 								$equation = str_replace('MATH', '', $csv_element);
-								$csv_element = $helpers_instance->evalmath($equation);
+								$csv_element = $helpers_instance->evalMath($equation);
 							}
 						}
 						$wp_element= trim($key);
 						if(!empty($csv_element) && !empty($wp_element)){
 							$post_values[$wp_element] = $csv_element;
 							$post_values['post_type'] = $import_as;
+							//$post_values = $this->import_core_fields($post_values);
 						}
 					}
 					// for custom function without headers in it
@@ -244,13 +272,14 @@ class CoreFieldsImport {
 						$matched_element = $matches2[1][0];
 
 						$wp_element= trim($key);
-						$csv_element1 = @eval("return " . $matched_element . ";" );
+						$csv_element1 = $helpers_instance->evalPhp($matched_element);
 						$post_values[$wp_element] = $csv_element1;
 					}
 					elseif(!in_array($csv_value , $header_array)){
 						$wp_element= trim($key);
 						$post_values[$wp_element] = $csv_value;
 						$post_values['post_type'] = $import_as;
+						//$post_values = $this->import_core_fields($post_values,$mode);
 					}
 
 					else{
@@ -280,57 +309,80 @@ class CoreFieldsImport {
 			}
 			$post_values = $this->import_core_fields($post_values);
 			if($check == 'ID'){	
-				$ID = $post_values['ID'];	
-				$get_result =  $wpdb->get_results("SELECT ID FROM {$wpdb->prefix}posts WHERE ID = '$ID' AND post_type = '$import_as' AND post_status != 'trash' order by ID DESC ");			
+				if(isset($post_values['ID'])){
+					$ID = $post_values['ID'];	
+					$get_result =  $wpdb->get_results("SELECT ID FROM {$wpdb->prefix}posts WHERE ID = '$ID' AND post_type = '$import_as' AND post_status != 'trash' order by ID DESC ");
+				}			
 			}
 			if($check == 'post_title'){
-				$title = $post_values['post_title'];
-				$title = $wpdb->_real_escape($title);
-				
-				if($sitepress != null && is_plugin_active('wpml-ultimate-importer/wpml-ultimate-importer.php')){
-					$get_result =  $wpdb->get_results("SELECT ID FROM {$wpdb->prefix}posts WHERE post_title = '$title' AND post_type = '$import_as' AND post_status != 'trash' order by ID DESC ");		
-					foreach($get_result as $wpml_result){
-						$wpml_id[] = $wpml_result->ID;
-					}	
-					$template_table_name = $wpdb->prefix . "ultimate_csv_importer_mappingtemplate";
-					$background_values = $wpdb->get_results("SELECT mapping FROM $template_table_name WHERE `eventKey` = '$hash_key' ");
-					foreach ($background_values as $values) {
-						$mapped_fields_values = $values->mapping;
-					}
-					$map_wpml = unserialize($mapped_fields_values);
+				if(isset($post_values['post_title'])){
+					$title = $post_values['post_title'];
+					$title = $wpdb->_real_escape($title);
 					
-					$wpml_values = $helpers_instance->get_header_values($map_wpml['WPML'], $header_array , $value_array);
-					$get_results =array();
-					$w = 0;
-					foreach($wpml_id as $w_id){
-						$languagecode =  $wpdb->get_var("SELECT language_code FROM {$wpdb->prefix}icl_translations WHERE element_id = '$w_id'");		
-						if($wpml_values['language_code'] == $languagecode){
-							$get_results[$w]['ID']= $w_id;
-
-							$w++;
+					if($sitepress != null && is_plugin_active('wpml-ultimate-importer/wpml-ultimate-importer.php')){
+						$get_result =  $wpdb->get_results("SELECT ID FROM {$wpdb->prefix}posts WHERE post_title = '$title' AND post_type = '$import_as' AND post_status != 'trash' order by ID DESC ");		
+						foreach($get_result as $wpml_result){
+							$wpml_id[] = $wpml_result->ID;
+						}	
+						$template_table_name = $wpdb->prefix . "ultimate_csv_importer_mappingtemplate";
+						$background_values = $wpdb->get_results("SELECT mapping FROM $template_table_name WHERE `eventKey` = '$hash_key' ");
+						foreach ($background_values as $values) {
+							$mapped_fields_values = $values->mapping;
+						}
+						$map_wpml = unserialize($mapped_fields_values);
+						
+						$wpml_values = $helpers_instance->get_header_values($map_wpml['WPML'], $header_array , $value_array);
+						$get_results =array();
+						$w = 0;
+						foreach($wpml_id as $w_id){
+							$languagecode =  $wpdb->get_var("SELECT language_code FROM {$wpdb->prefix}icl_translations WHERE element_id = '$w_id'");		
+							if($wpml_values['language_code'] == $languagecode){
+								$get_results[$w]['ID']= $w_id;
+	
+								$w++;
+							}
+						}
+						foreach($get_results as $g_result){
+							$getresult[] = (object) $g_result;
 						}
 					}
-					foreach($get_results as $g_result){
-						$getresult[] = (object) $g_result;
+					else{
+						$get_result =  $wpdb->get_results("SELECT ID FROM {$wpdb->prefix}posts WHERE post_title = '$title' AND post_type = '$import_as' AND post_status != 'trash' order by ID DESC ");		
 					}
-				}
-				else{
-					$get_result =  $wpdb->get_results("SELECT ID FROM {$wpdb->prefix}posts WHERE post_title = '$title' AND post_type = '$import_as' AND post_status != 'trash' order by ID DESC ");		
 				}		
 			}
 			if($check == 'post_name'){
-				$name = $post_values['post_name'];
-				$get_result =  $wpdb->get_results("SELECT ID FROM {$wpdb->prefix}posts WHERE post_name = '$name' AND post_type = '$import_as' AND post_status != 'trash' order by ID DESC ");	
+				if(isset($post_values['post_name'])){
+					$name = $post_values['post_name'];
+					$get_result =  $wpdb->get_results("SELECT ID FROM {$wpdb->prefix}posts WHERE post_name = '$name' AND post_type = '$import_as' AND post_status != 'trash' order by ID DESC ");
+				}
+	
 			}
 			if($check == 'post_content'){
-				$content = $post_values['post_content'];
-				$get_result =  $wpdb->get_results("SELECT ID FROM {$wpdb->prefix}posts WHERE post_content = '$content' AND post_type = '$import_as' AND post_status != 'trash' order by ID DESC ");	
+				if(isset($post_values['post_content'])){
+					$content = $post_values['post_content'];
+					$get_result =  $wpdb->get_results("SELECT ID FROM {$wpdb->prefix}posts WHERE post_content = '$content' AND post_type = '$import_as' AND post_status != 'trash' order by ID DESC ");
+				}
+	
 			}
 
 			$updated_row_counts = $helpers_instance->update_count($unikey_value,$unikey_name);
 			$created_count = $updated_row_counts['created'];
 			$updated_count = $updated_row_counts['updated'];
 			$skipped_count = $updated_row_counts['skipped'];
+
+			if($this->generated_content){
+				$generated_content = $post_values['post_content'];
+				if($generated_content == 401 ||$generated_content == 429 ||$generated_content == 500 ||$generated_content == 503 ||$generated_content == 400){
+					$post_values['post_content'] = '';
+				}
+			}
+			if($this->generated_content){
+				$generated_short_description = $post_values['post_excerpt'];
+				if($generated_short_description == 401 ||$generated_short_description == 429 ||$generated_short_description == 500 ||$generated_short_description == 503 ||$generated_short_description == 400){
+					$post_values['post_excerpt'] = '';
+				}
+			}
 
 			if($mode == 'Insert'){
 				$orig_img_src = [];
@@ -413,6 +465,8 @@ class CoreFieldsImport {
 							$post_values['post_content']=isset($post_values['post_content'])?$post_values['post_content']:'';
 							$post_values['post_content'] = html_entity_decode($post_values['post_content']);													
 							$post_id = wp_insert_post($post_values);
+							$status = $post_values['post_status'];
+							$update=$wpdb->get_results("UPDATE {$wpdb->prefix}posts set post_status = '$status' where id = $post_id");
 						}
 
 						if(!empty($post_values['wp_page_template']) && $type == 'Pages'){
@@ -445,6 +499,7 @@ class CoreFieldsImport {
 						
 						if(!empty($orig_img_src)){						
 							foreach ($orig_img_src as $img => $img_val){
+								//$shortcode  = $shortcode_img[$img][$img];
 								$shortcode  = 'inline';
 								$wpdb->get_results("INSERT INTO $shortcode_table (image_shortcode , original_image , post_id,hash_key,templatekey) VALUES ( '{$shortcode}', '{$img_val}', $post_id  ,'{$hash_key}','{$templatekey}')");
 							}
@@ -479,7 +534,54 @@ class CoreFieldsImport {
 					}	
 					else{
 						$post_values['specific_author'] = isset($post_values['specific_author'])?$post_values['specific_author']:'';
-						$this->detailed_log[$line_number]['Message'] = 'Inserted ' . $post_values['post_type'] . ' ID: ' . $post_id . ', ' . $post_values['specific_author'];
+
+						$content=$this->openAI_response;
+						if(!empty($content)){
+							if($generated_content == 401) {
+								$this->detailed_log[$line_number]['Message'] = 'Inserted ' . $post_values['post_type'] . ' ID: ' . $post_id . ', ' . $post_values['specific_author']. 	"<b style='color: red;'> Notice : </b>Cannot create Content. Invalid API key provided. Please check your API key.";	
+							}
+							else if($generated_content == 429) {
+								$this->detailed_log[$line_number]['Message'] = 'Inserted ' . $post_values['post_type'] . ' ID: ' . $post_id . ', ' . $post_values['specific_author']. 	"<b style='color: red;'> Notice : </b>Cannot create Content. Rate limit reached for requests or You exceeded your current quota.";	
+							}
+							else if($generated_content == 400) {
+								$this->detailed_log[$line_number]['Message'] = 'Inserted ' . $post_values['post_type'] . ' ID: ' . $post_id . ', ' . $post_values['specific_author']. 	"<b style='color: red;'> Notice : </b>Cannot create Content. Please check your Inputs.";	
+							}
+							else if($generated_content == 500) {
+								$this->detailed_log[$line_number]['Message'] = 'Inserted ' . $post_values['post_type'] . ' ID: ' . $post_id . ', ' . $post_values['specific_author']. 	"<b style='color: red;'> Notice : </b>Cannot create Content. The server had an error while processing your request.";	
+							}
+							else if($generated_content == 503) {
+								$this->detailed_log[$line_number]['Message'] = 'Inserted ' . $post_values['post_type'] . ' ID: ' . $post_id . ', ' . $post_values['specific_author']. 	"<b style='color: red;'> Notice : </b>Cannot create Content. The engine is currently overloaded, please try again later.";	
+							}
+							else if($generated_short_description == 401) {
+								$this->detailed_log[$line_number]['Message'] = 'Inserted ' . $post_values['post_type'] . ' ID: ' . $post_id . ', ' . $post_values['specific_author']. 	"<b style='color: red;'> Notice : </b>Cannot create short description. Invalid API key provided. Please check your API key.";	
+							}
+							else if($generated_short_description == 429) {
+								$this->detailed_log[$line_number]['Message'] = 'Inserted ' . $post_values['post_type'] . ' ID: ' . $post_id . ', ' . $post_values['specific_author']. 	"<b style='color: red;'> Notice : </b>Cannot create short description. Rate limit reached for requests or You exceeded your current quota.";	
+							}
+							else if($generated_short_description == 400) {
+								$this->detailed_log[$line_number]['Message'] = 'Inserted ' . $post_values['post_type'] . ' ID: ' . $post_id . ', ' . $post_values['specific_author']. 	"<b style='color: red;'> Notice : </b>Cannot create short description. Please check your Inputs.";	
+							}
+							else if($generated_short_description == 500) {
+								$this->detailed_log[$line_number]['Message'] = 'Inserted ' . $post_values['post_type'] . ' ID: ' . $post_id . ', ' . $post_values['specific_author']. 	"<b style='color: red;'> Notice : </b>Cannot create short description. The server had an error while processing your request.";	
+							}
+							else if($generated_short_description == 503) {
+								$this->detailed_log[$line_number]['Message'] = 'Inserted ' . $post_values['post_type'] . ' ID: ' . $post_id . ', ' . $post_values['specific_author']. 	"<b style='color: red;'> Notice : </b>Cannot create short description. The engine is currently overloaded, please try again later.";	
+							}
+							else{
+								$this->detailed_log[$line_number]['Message'] = 'Inserted ' . $post_values['post_type'] . ' ID: ' . $post_id . ', ' . $post_values['specific_author'];
+							}
+						}
+						else{
+							$this->detailed_log[$line_number]['Message'] = 'Inserted ' . $post_values['post_type'] . ' ID: ' . $post_id . ', ' . $post_values['specific_author'];
+						}
+					}
+					if( $post_values['post_type'] == 'page'){
+						$status = $post_values['post_status'];
+						$wpdb->get_results("UPDATE {$wpdb->prefix}posts set post_status = '$status' where id = $post_id");
+					}
+					if( $post_values['post_type'] == 'page'){
+						$status = $post_values['post_status'];
+						$wpdb->get_results("UPDATE {$wpdb->prefix}posts set post_status = '$status' where id = $post_id");
 					}
 				}
 			}
@@ -535,10 +637,18 @@ class CoreFieldsImport {
 					if ( ! isset( $post_values['post_title'] ) ) {
 						$post_values['post_title'] = '';
 					}
-					$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+					
+						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+					
+					
 				}
 				else{
-					$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+					if($type == 'llms_coupon'){
+						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+					}
+					else{
+						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+					}
 				}
 				$this->detailed_log[$line_number]['  Status'] = $post_values['post_status'];
 			}
@@ -557,8 +667,14 @@ class CoreFieldsImport {
 				}
 
 				if ( preg_match_all( '/\b[-A-Z0-9+&@#\/%=~_|$?!:,.]*[A-Z0-9+&@#\/%=~_|$]/i', $featured_image, $matchedlist, PREG_PATTERN_ORDER ) ) {	
-					$image_type = 'Featured';		
+					$image_type = 'Featured';  
 					$attach_id = CoreFieldsImport::$media_instance->media_handling( $featured_image , $post_id ,$post_values,$type,$image_type,$hash_key,$header_array,$value_array);	
+				}
+				if(preg_match("(Can't|Skipped|Duplicate)", $this->detailed_log[$line_number]['Message']) === 0) {  
+					if ( $type == 'Images') {
+						
+						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $attach_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_post_link( $attach_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+					}
 				}
 			}
 		}
@@ -588,6 +704,30 @@ class CoreFieldsImport {
 		$post_id = wp_insert_post($post_values);
 		$wpdb->get_results("INSERT INTO {$wpdb->prefix}mltlngg_translate (post_ID , post_content , post_excerpt, post_title,`language`) VALUES ( $post_id, '{$lang_content}', '{$lang_excerpt}' , '{$lang_title}', '{$lang_code}')");
 		return $post_id;
+	}
+
+	function replaceValues($array) {
+		foreach ($array as $innerKey => $innerValue) {
+			if (strpos($innerKey, '->openAI') !== false) {
+				$newKey = str_replace('->openAI', '', $innerKey);
+				$array[$newKey] = $newKey;
+				unset($array[$innerKey]);
+			}
+		}
+		return $array;
+	}
+
+	function filterNumKeys($array) {
+		foreach ($array as $key => $value) {
+			if (is_array($value)) {
+				$array[$key] = $this->filterNumKeys($value);
+			} else {
+				if (strpos($key, '->num') !== false) {
+					unset($array[$key]);
+				}
+			}
+		}
+		return $array;
 	}
 
 	public function postExpirator($post_id,$post_values){
@@ -662,10 +802,13 @@ class CoreFieldsImport {
 	function import_core_fields($data_array){
 		$helpers_instance = ImportHelpers::getInstance();
 
-		if(!isset( $data_array['post_date'] )) {
+		if(empty( $data_array['post_date'] )) {
 			$data_array['post_date'] = current_time('Y-m-d H:i:s');
 		} else {
 			if(strtotime( $data_array['post_date'] )) {
+				if (strpos($data_array['post_date'], '.') !== false) {
+					$data_array['post_date'] = str_replace('.', '-', $data_array['post_date']);
+				}
 				$data_array['post_date'] = date( 'Y-m-d H:i:s', strtotime( $data_array['post_date'] ) );
 			} else {
 				$data_array['post_date'] = current_time('Y-m-d H:i:s');

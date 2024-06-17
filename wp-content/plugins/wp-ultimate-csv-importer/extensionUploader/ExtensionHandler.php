@@ -67,7 +67,7 @@ class ExtensionHandler{
 	public function get_import_custom_post_types(){
 		$custompost = array();
 		$custom_array = array('post', 'page', 'wpsc-product', 'product_variation', 'shop_order', 'shop_coupon', 'shop_order_refund', 'mp_product_variation', 'ngg_pictures');
-		$other_posttypes = array('attachment','revision','wpsc-product-file','mp_order','shop_webhook');
+		$other_posttypes = array('attachment','revision','wpsc-product-file','mp_order','shop_webhook','llms_quiz','llms_question');
 		$all_post_types = get_post_types();
 		foreach($other_posttypes as $ptkey => $ptvalue) {
 			if (in_array($ptvalue, $all_post_types)) {
@@ -85,7 +85,7 @@ class ExtensionHandler{
 	public function get_import_post_types(){
 		global $wpdb;
 		$custom_array = array('post', 'page', 'wpsc-product', 'product_variation', 'shop_order', 'shop_coupon', 'shop_order_refund','mp_product_variation');
-		$other_posttypes = array('attachment','revision','wpsc-product-file','mp_order','shop_webhook','custom_css','customize_changeset','oembed_cache','user_request','_pods_template','wpmem_product','wp-types-group','wp-types-user-group','wp-types-term-group','gal_display_source','display_type','displayed_gallery','wpsc_log','lightbox_library','scheduled-action','cfs','_pods_pod','_pods_field','acf-field','acf-field-group','wp_block','ngg_album','ngg_gallery','nf_sub','wpcf7_contact_form','iv_payment');
+		$other_posttypes = array('attachment','revision','wpsc-product-file','mp_order','shop_webhook','custom_css','customize_changeset','oembed_cache','user_request','_pods_template','wpmem_product','wp-types-group','wp-types-user-group','wp-types-term-group','gal_display_source','display_type','displayed_gallery','wpsc_log','lightbox_library','scheduled-action','cfs','_pods_pod','_pods_field','acf-field','acf-field-group','wp_block','ngg_album','ngg_gallery','nf_sub','wpcf7_contact_form','iv_payment','llms_quiz','llms_question','llms_membership','llms_engagement','llms_order','llms_transaction','llms_achievement','llms_my_achievement','llms_my_certificate','llms_email','llms_voucher','llms_access_plan','llms_form','section','llms_certificate');
 		$importas = array(
 			'Posts' => 'Posts',
 			'Pages' => 'Pages',			
@@ -105,8 +105,8 @@ class ExtensionHandler{
 		}
 		foreach($all_post_types as $key => $value) {
 			if(!in_array($value, $custom_array)) {
-				if($value == 'event') {
-
+				if(is_plugin_active('events-manager/events-manager.php') && $value == 'event') {
+					$importas['Events'] = $value;
 				} else {
 					$importas[$value] = $value;
 
@@ -133,7 +133,9 @@ class ExtensionHandler{
 		if(is_plugin_active('woocommerce/woocommerce.php') && is_plugin_active('import-woocommerce/import-woocommerce.php')){
 			$importas['WooCommerce Product'] ='WooCommerce';
 			$importas['WooCommerce Product Variations'] ='WooCommerceVariations';
-		
+			//$importas['WooCommerce Orders'] = 'WooCommerceOrders';
+			//$importas['WooCommerce Coupons'] = 'WooCommerceCoupons';
+			//$importas['WooCommerce Refunds'] = 'WooCommerceRefunds';
 		}
 
 		if(array_key_exists('location' , $importas) && array_key_exists('event-recurring' , $importas)){
@@ -170,10 +172,10 @@ class ExtensionHandler{
 			endif;
 		}
 
-		if(array_key_exists($import_type , $import_type_as ) && !in_array($import_type, $customposts)){
+		else if(array_key_exists($import_type , $import_type_as ) && !in_array($import_type, $customposts)){ 
 			$import_type = $import_type_as[$import_type];
 		}
-		if (in_array($import_type, $customposts)) {
+		else if (in_array($import_type, $customposts)) { // else if added becuase "event" module cannot refer while used if condition
 			$import_type = 'CustomPosts';
 		}
 		
@@ -199,7 +201,9 @@ class ExtensionHandler{
 			$file_extension = 'xml';
 		}
 		if($file_extension == 'csv' || $file_extension == 'txt'){
-			ini_set("auto_detect_line_endings", true);
+			if (!ini_get("auto_detect_line_endings")) {
+				ini_set("auto_detect_line_endings", true);
+			}
 			$info = [];
 			if (($h = fopen($upload_dir.$hashkey.'/'.$hashkey, "r")) !== FALSE) 
 			{
@@ -215,6 +219,30 @@ class ExtensionHandler{
 				if($array_index == 5){
 					$delimiters[$array_index] = ' ';
 				}
+				if($delimiter == '\t'){
+					$delimiter ='~';
+					 $temp=$file_path.'temp';
+					 if (($handles = fopen($temp, 'r')) !== FALSE){
+						while (($data = fgetcsv($handles, 0, $delimiter)) !== FALSE)
+						{
+							$trimmed_info = array_map('trim', $data);
+				
+							array_push($info , $trimmed_info);
+
+							if($line_number == 0){
+								$Headers = $info[$line_number];
+								$type = $this->select_import_type($Headers);	
+							}
+							else{
+								$values = $info[$line_number];
+							}
+							$line_number ++; 			  			
+						}
+					}
+
+					fclose($handles);
+				}
+				else{
 				while (($data = fgetcsv($h, 0, $delimiters[$array_index])) !== FALSE)  
 				{		
 					// Read the data from a single line
@@ -234,6 +262,7 @@ class ExtensionHandler{
 				}	
 				// Close the file
 				fclose($h);
+			}
 			}
 			$total_rows = $line_number - 1;
 		}
@@ -333,6 +362,17 @@ class ExtensionHandler{
 					$type = 'WPeCommerce Products';
 				}
 			}	
+			if(is_plugin_active('lifterlms/lifterlms.php')){
+				if(in_array('_llms_instructors',$Headers) || in_array('_llms_course_opens_message',$Headers)){
+					$type = 'course';
+				}
+				elseif(in_array('_llms_parent_course',$Headers) || in_array('_llms_free_lesson',$Headers)){
+					$type = 'lesson';
+				}
+				elseif(in_array('_llms_coupon_courses',$Headers) || in_array('_llms_coupon_amount',$Headers)){
+					$type = 'llms_coupon';
+				}
+			}
 		}
 		return $type;
 	}

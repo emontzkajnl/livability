@@ -1,10 +1,10 @@
 === WP Add Mime Types ===
-Contributors: Kimiya Kitani
+Contributors: kimipooh
 Tags: mime,file extention
-Requires at least: 5.4
-Requires PHP: 5.6
-Tested up to: 6.1
-Stable tag: 3.0.3
+Requires at least: 6.2
+Requires PHP: 7.4
+Tested up to: 6.5.2
+Stable tag: 3.1.1
 License: GPL v2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,10 +88,16 @@ The files which has "bmp" file extention becomes not to be able to upload.
 4. Security Options
 
 == Changelog ==
+= 3.1.1 =
+- Fixes the type format mismatch issues since PHP 8.1 or later.
+= 3.1.0 =
+- Fixes type format mismatch issues in variable initialisation.
+- Tested up WordPress 6.4.2 with PHP 8.2.0.
+- Changed to require WordPress 6.2+ and PHP 7.4+.
+- Tested up WordPress 6.5.2 with PHP 8.3.6.
+
 = 3.0.3 =
-- Fixed warning checking when retrieving serialized data.
-- Tested up to WordPress 6.1
-- Changed the supported version of WordPress from 4.0 to 5.4 or higher.
+-  Fixed warning checking when retrieving serialized data.
 
 = 3.0.2 =
 -  Enhanced error checking when retrieving serialized data.

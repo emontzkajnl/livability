@@ -16,7 +16,7 @@ exit; // Exit if accessed directly
  */
 class Security {
 
-	protected static $instance = null;
+	protected static $instance = null,$plugin;
 
 	public static function getInstance() {
 		if ( null == self::$instance ) {
@@ -30,7 +30,7 @@ class Security {
 	 * Security constructor.
 	 */
 	public function __construct() {
-		$this->plugin = Plugin::getInstance();
+		$plugin = Plugin::getInstance();
 	}
 
 	/**

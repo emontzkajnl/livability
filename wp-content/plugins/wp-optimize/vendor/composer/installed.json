@@ -125,17 +125,17 @@
         },
         {
             "name": "matthiasmullie/minify",
-            "version": "dev-master",
-            "version_normalized": "dev-master",
+            "version": "1.3.73",
+            "version_normalized": "1.3.73.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/DavidAnderson684/minify.git",
-                "reference": "aa9c91d9f7d871b8f886e553da568e9b6768d01b"
+                "url": "https://github.com/matthiasmullie/minify.git",
+                "reference": "cb7a9297b4ab070909cefade30ee95054d4ae87a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DavidAnderson684/minify/zipball/aa9c91d9f7d871b8f886e553da568e9b6768d01b",
-                "reference": "aa9c91d9f7d871b8f886e553da568e9b6768d01b",
+                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/cb7a9297b4ab070909cefade30ee95054d4ae87a",
+                "reference": "cb7a9297b4ab070909cefade30ee95054d4ae87a",
                 "shasum": ""
             },
             "require": {
@@ -144,15 +144,15 @@
                 "php": ">=5.3.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "~2.0",
-                "matthiasmullie/scrapbook": "dev-master",
-                "phpunit/phpunit": ">=4.8"
+                "friendsofphp/php-cs-fixer": ">=2.0",
+                "matthiasmullie/scrapbook": ">=1.3",
+                "phpunit/phpunit": ">=4.8",
+                "squizlabs/php_codesniffer": ">=3.0"
             },
             "suggest": {
                 "psr/cache-implementation": "Cache implementation to use with Minify::cache"
             },
-            "time": "2021-12-17T17:04:13+00:00",
-            "default-branch": true,
+            "time": "2024-03-15T10:27:10+00:00",
             "bin": [
                 "bin/minifycss",
                 "bin/minifyjs"
@@ -164,33 +164,35 @@
                     "MatthiasMullie\\Minify\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
                     "name": "Matthias Mullie",
-                    "homepage": "http://www.mullie.eu",
                     "email": "minify@mullie.eu",
+                    "homepage": "https://www.mullie.eu",
                     "role": "Developer"
                 }
             ],
             "description": "CSS & JavaScript minifier, in PHP. Removes whitespace, strips comments, combines files (incl. @import statements and small assets in CSS files), and optimizes/shortens a few common programming patterns.",
-            "homepage": "http://www.minifier.org",
+            "homepage": "https://github.com/matthiasmullie/minify",
             "keywords": [
+                "JS",
                 "css",
                 "javascript",
-                "js",
                 "minifier",
                 "minify"
             ],
             "support": {
-                "source": "https://github.com/DavidAnderson684/minify/tree/master"
+                "issues": "https://github.com/matthiasmullie/minify/issues",
+                "source": "https://github.com/matthiasmullie/minify/tree/1.3.73"
             },
             "funding": [
                 {
-                    "type": "github",
-                    "url": "https://github.com/matthiasmullie"
+                    "url": "https://github.com/matthiasmullie",
+                    "type": "github"
                 }
             ],
             "install-path": "../matthiasmullie/minify"
@@ -542,6 +544,127 @@
             "install-path": "../mrclay/props-dic"
         },
         {
+            "name": "phpseclib/phpseclib",
+            "version": "1.0.23",
+            "version_normalized": "1.0.23.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpseclib/phpseclib.git",
+                "reference": "86990d518f4434719271fadd112d34b20208f3a9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/86990d518f4434719271fadd112d34b20208f3a9",
+                "reference": "86990d518f4434719271fadd112d34b20208f3a9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0"
+            },
+            "require-dev": {
+                "phing/phing": "~2.7",
+                "phpunit/phpunit": "^4.8.35|^5.7|^6.0|^9.4",
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "suggest": {
+                "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
+                "ext-mcrypt": "Install the Mcrypt extension in order to speed up a wide variety of cryptographic operations.",
+                "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations.",
+                "ext-xml": "Install the XML extension to load XML formatted public keys.",
+                "pear-pear/PHP_Compat": "Install PHP_Compat to get phpseclib working on PHP < 5.0.0."
+            },
+            "time": "2024-02-26T04:44:00+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "phpseclib/bootstrap.php",
+                    "phpseclib/Crypt/Random.php"
+                ],
+                "psr-0": {
+                    "Net": "phpseclib/",
+                    "File": "phpseclib/",
+                    "Math": "phpseclib/",
+                    "Crypt": "phpseclib/",
+                    "System": "phpseclib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "include-path": [
+                "phpseclib/"
+            ],
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jim Wigginton",
+                    "email": "terrafrost@php.net",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Patrick Monnerat",
+                    "email": "pm@datasphere.ch",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Andreas Fischer",
+                    "email": "bantu@phpbb.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Hans-Jürgen Petrich",
+                    "email": "petrich@tronic-media.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Graham Campbell",
+                    "email": "graham@alt-three.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.",
+            "homepage": "http://phpseclib.sourceforge.net",
+            "keywords": [
+                "BigInteger",
+                "aes",
+                "asn.1",
+                "asn1",
+                "blowfish",
+                "crypto",
+                "cryptography",
+                "encryption",
+                "rsa",
+                "security",
+                "sftp",
+                "signature",
+                "signing",
+                "ssh",
+                "twofish",
+                "x.509",
+                "x509"
+            ],
+            "support": {
+                "issues": "https://github.com/phpseclib/phpseclib/issues",
+                "source": "https://github.com/phpseclib/phpseclib/tree/1.0.23"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/terrafrost",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/phpseclib",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/phpseclib/phpseclib",
+                    "type": "tidelift"
+                }
+            ],
+            "install-path": "../phpseclib/phpseclib"
+        },
+        {
             "name": "pimple/pimple",
             "version": "v3.5.0",
             "version_normalized": "3.5.0.0",
@@ -865,17 +988,17 @@
         },
         {
             "name": "rosell-dk/image-mime-type-guesser",
-            "version": "1.1.1",
-            "version_normalized": "1.1.1.0",
+            "version": "1.1.2",
+            "version_normalized": "1.1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rosell-dk/image-mime-type-guesser.git",
-                "reference": "72f7040e95a78937ae2edece452530224fcacea6"
+                "reference": "9cac5a19e799a0ef1f7cffbce36ec33485080b39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rosell-dk/image-mime-type-guesser/zipball/72f7040e95a78937ae2edece452530224fcacea6",
-                "reference": "72f7040e95a78937ae2edece452530224fcacea6",
+                "url": "https://api.github.com/repos/rosell-dk/image-mime-type-guesser/zipball/9cac5a19e799a0ef1f7cffbce36ec33485080b39",
+                "reference": "9cac5a19e799a0ef1f7cffbce36ec33485080b39",
                 "shasum": ""
             },
             "require": {
@@ -884,11 +1007,11 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.11",
-                "phpstan/phpstan": "^1.5",
+                "phpstan/phpstan": "^1.10",
                 "phpunit/phpunit": "^9.3",
                 "squizlabs/php_codesniffer": "3.*"
             },
-            "time": "2022-05-19T09:57:15+00:00",
+            "time": "2024-04-06T13:55:15+00:00",
             "type": "library",
             "extra": {
                 "scripts-descriptions": {
@@ -926,7 +1049,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rosell-dk/image-mime-type-guesser/issues",
-                "source": "https://github.com/rosell-dk/image-mime-type-guesser/tree/1.1.1"
+                "source": "https://github.com/rosell-dk/image-mime-type-guesser/tree/1.1.2"
             },
             "funding": [
                 {
@@ -1331,17 +1454,17 @@
         },
         {
             "name": "team-updraft/common-libs",
-            "version": "3.0.6",
-            "version_normalized": "3.0.6.0",
+            "version": "3.0.7",
+            "version_normalized": "3.0.7.0",
             "source": {
                 "type": "git",
-                "url": "https://source.updraftplus.com/team-updraft/common-libs.git",
-                "reference": "38ac0cd5b7f7b712ddfb6cb49919668fe810dc07"
+                "url": "ssh://git@source.updraftplus.com:20022/team-updraft/common-libs.git",
+                "reference": "30a5b39a3043cc12a6e1358183682d24376b3fdd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://source.updraftplus.com/api/v4/projects/28/packages/composer/archives/team-updraft/common-libs.zip?sha=38ac0cd5b7f7b712ddfb6cb49919668fe810dc07",
-                "reference": "38ac0cd5b7f7b712ddfb6cb49919668fe810dc07",
+                "url": "https://source.updraftplus.com/api/v4/projects/28/packages/composer/archives/team-updraft/common-libs.zip?sha=30a5b39a3043cc12a6e1358183682d24376b3fdd",
+                "reference": "30a5b39a3043cc12a6e1358183682d24376b3fdd",
                 "shasum": ""
             },
             "require-dev": {

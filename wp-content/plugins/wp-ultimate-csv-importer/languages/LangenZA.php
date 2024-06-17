@@ -52,7 +52,7 @@ class LangEN_ZA {
                         'Browse' => 'Browse',
                         'NewItem' => 'New Item',
                         'ExistingItems' => 'Existing Items',
-                        'ImportEachRecordAs'=> 'Importa each record as',
+                        'ImportEachRecordAs'=> 'Import each record as',
                         'Continue' => 'Continue',
                         'Search' => 'Search',
                         'FromDate' => 'From Date',
@@ -393,8 +393,18 @@ class LangEN_ZA {
                         'GetSupport' => 'Get Assistance',
                         'SampleCSVXML' => 'Example CSV & XML',
                         'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => 'Caution: Some add-ons are missing, it is advisable to',
+                        'WPCompleteFields' => 'WPComplete Fields'
 
                 );
         return $response;
+        }
+        public static function notice_contents()
+        {
+        $result =array(
+                'UpgradetoPROusingcode' => 'Upgrade to PRO using code',
+                'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Unlock features like bulk import, advanced export, scheduling, content update, & more, plus lifetime support',
+                'upgradenow' => 'upgrade now'
+        );
+        return $result;
         }
 }

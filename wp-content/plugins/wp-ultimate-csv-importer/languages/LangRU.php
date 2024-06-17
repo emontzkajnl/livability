@@ -389,5 +389,14 @@ class LangRU {
                 );
         return $response;
         }
+        public static function notice_contents()
+        {
+        $result =array(
+                'UpgradetoPROusingcode' => 'Upgrade to PRO using code',
+                'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Разблокировка таких функций, как импорт оптовых товаров, расширенный экспорт, планирование, обновление контента и многое другое, а также поддержка жизни',
+                'upgradenow' => 'модернизируйте'
+        );
+        return $result;
+        }
 }
 

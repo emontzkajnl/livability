@@ -60,7 +60,8 @@ class ProductAttributeExtension extends ExtensionHandler{
         // }
 		
         $pro_attr_fields_line = $this->convert_static_fields_to_array($pro_attr_fields);
-		$response['product_attr_fields'] = $pro_attr_fields_line; 
+		// $response['product_attr_fields'] = $pro_attr_fields_line; 
+		$response['product_attr_fields'] = null;
 		return $response;	
 	}
 

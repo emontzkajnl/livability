@@ -37,13 +37,7 @@ class ProductMetaExtension extends ExtensionHandler{
 					'Visibility' => 'visibility',
 					'Tax Status' => 'tax_status',
 					'Product Type' => 'product_type',
-					// 'Product Attribute Name' => 'product_attribute_name',
-					// 'Product Attribute Value' => 'product_attribute_value',
-					// 'Product Attribute Visible' => 'product_attribute_visible',
-					// 'Product Attribute Variation' => 'product_attribute_variation',
-					// 'Product Attribute Position' => 'product_attribute_position',
 					'Featured Product' => 'featured_product',
-					//'Product Attribute Taxonomy' => 'product_attribute_taxonomy',
 					'Tax Class' => 'tax_class',
 					'File Paths' => 'file_paths',
 					'Edit Last' => 'edit_last',
@@ -99,11 +93,6 @@ class ProductMetaExtension extends ExtensionHandler{
 			}
 			if($import_type == 'WooCommerceVariations'){            
 				$pro_meta_fields = array(
-					// 'Product Attribute Name' => 'product_attribute_name',
-					// 'Product Attribute Value' => 'product_attribute_value',
-					// 'Product Attribute Visible' => 'product_attribute_visible',
-					// 'Product Attribute Variation' => 'product_attribute_variation',
-					// 'Product Attribute Position' => 'product_attribute_position',
 					'Featured' => 'featured',
 					'Downloadable Files' => 'downloadable_files',
 					'Download Limit' => 'download_limit',

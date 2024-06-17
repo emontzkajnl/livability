@@ -17,12 +17,13 @@ function wamt_network_admin_settings_page(){
 	$admin_permission = 'manage_network_options';
 	// Loading the stored setting data (wp_add_mime_types_network_array) from WordPress database.
 	$settings = get_site_option(WAMT_SITEADMIN_SETTING_FILE);
+	if($settings === false) $settings = array();
 
 	$permission = false;
 	// The user who can manage the WordPress option can only access the Setting menu of this plugin.
 	if(current_user_can($admin_permission)) $permission = true; 
 	// If the adding data is not set, the value "mime_type_values" sets "empty".
-	$mime_type_values = "";
+	$mime_type_values = array();
 	if(isset($settings['mime_type_values']) && !empty($settings['mime_type_values']))
 		$mime_type_values = unserialize($settings['mime_type_values']);
 	// When the adding data is saved (posted) at the setting menu, the data will update to the WordPress database after the security check
