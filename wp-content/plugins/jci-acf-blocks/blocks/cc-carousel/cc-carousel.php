@@ -44,9 +44,16 @@ $ID = get_the_ID();
 // print_r($cc_posts);
 foreach ($cc_posts as $cc_post) {
     $place = get_post_meta($cc_post->ID, 'place_relationship', true);
-    $s = wp_get_post_parent_id( $place[0] );
-    if ($s == $ID  || $place[0] == $ID) {
-        array_push($cc_array, $cc_post);
+    if (!empty($place)){
+        $type = get_post_meta($place[0], 'place_type', true);
+        if ($type == 'state') {
+            array_push($cc_array, $cc_post);
+        } elseif ($type == 'city') {
+            $s = wp_get_post_parent_id( $place[0] );
+            if ($s == $ID) {
+                array_push($cc_array, $cc_post);
+            }
+        }
     }
 } 
 $cc_query->posts = $cc_array; // posts of same city or state

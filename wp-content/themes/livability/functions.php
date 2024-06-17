@@ -1205,14 +1205,13 @@ function get_topic_sponsors() {
 		$ID = get_the_ID();
 		$sponsors = get_field('sponsorships', 'options');
 		$sponsor_array = array();
-		// print_r($sponsors);
 		if ($sponsors) {
 			foreach($sponsors as $s) {
 				//  print_r($s);
 				//  echo '<br />';
 				// echo ($s['place'][0]);
 				// if (array_key_exists('place', $s)) {
-					if ($s['place'][0] == $ID) {
+					if (!empty($s['place']) && $s['place'][0] == $ID) {
 						$sponsor_array[] = array(
 							'sponsor'	=> $s['sponsor'],
 							'url'		=> $s['sponsor_url'],
