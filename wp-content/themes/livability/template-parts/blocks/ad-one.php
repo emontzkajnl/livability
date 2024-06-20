@@ -6,5 +6,6 @@
             });
         }
     </script> -->
+    <?php echo the_ad_group(698); ?>
 </div>
 <!-- <div class="wp-block-jci-ad-area-one" id="<?php //echo get_the_ID(); ?>-1"></div> -->

@@ -753,20 +753,19 @@ function jci_blocks_render_featured_image() {
 }
 
 function jci_blocks_render_ad_one() {
-    $ID = get_the_ID();
+    // $ID = get_the_ID();
     // $all_ads = get_field( 'all_ads', $ID);
-    if ($aa) {
-        return the_ad_group(698); 
-    } else {
-
-   
-    $html = '';
-    $html .= '<div class="wp-block-jci-blocks-ad-area-one" id="div-gpt-ad-1568929479747-0">';
-$html .= '</div>';
-    // if ($all_ads) {
-        return $html;
-    // }
-    }
+//     if ($aa) {
+//         return the_ad_group(698); 
+//     } else {
+//     $html = '';
+//     $html .= '<div class="wp-block-jci-blocks-ad-area-one" id="div-gpt-ad-1568929479747-0">';
+// $html .= '</div>';
+//     // if ($all_ads) {
+//         return $html;
+//     // }
+//     }
+return the_ad_group(698); 
 }
 
 function jci_blocks_render_ad_two() {
