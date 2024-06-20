@@ -35,25 +35,7 @@
 	gtag('config', 'G-HVXCXLTZK1');
 	</script> -->
 	<script>(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,"script","https://www.google-analytics.com/analytics.js","ga");ga("create", "UA-12112020-1", {"cookieDomain":"auto"});ga("set", "anonymizeIp", true);ga("send", "pageview");</script>
-	<?php //if ( !is_page('city-data-iframe') && !is_single(159696) ) : ?>
-	<!-- <script src="https://ads.cordlessmedia.com/ad-wrapper/25419/cm.min.js"></script> -->
-	<?php //endif; ?>
-	<?php //if (!is_single() && !is_page('city-data-iframe') && !is_single('159696')): ?>
-	<!-- <script>
-	var cmWrapper = cmWrapper || {};
-	cmWrapper.que = cmWrapper.que || [];
-	cmWrapper.que.push(function () {
-	// Define all needed units
-	
-	cmWrapper.ads.defineUnit("div-gpt-ad-1568929479747-0");
-	cmWrapper.ads.defineUnit("div-gpt-ad-1568929535248-0");
-	cmWrapper.ads.defineUnit("div-gpt-ad-1568929556599-0");
-	cmWrapper.ads.define("CordlessMedia_Livability_ROS_OutOfPage_0");
 
-	cmWrapper.ads.requestUnits();
-	});
-	</script> -->
-	<?php //endif; ?>
 	<meta name="p:domain_verify" content="2957482f3b41217c5c23ec119b32a1d5"/>
 </head>
 
