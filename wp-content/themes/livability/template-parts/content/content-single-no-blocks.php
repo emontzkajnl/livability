@@ -96,7 +96,7 @@
         <div class="wp-block-columns full-width-off-white">
             <div class="wp-block-column">
                 <?php //get_template_part('template-parts/blocks/ad-one' ); ?>
-                <div class="wp-block-jci-ad-area-one" >
+                <div class="wp-block-jci-ad-area-one" style="display: flex; justify-content: center;" >
                 <?php echo the_ad_group(698); ?>
                 </div>
             </div>
