@@ -758,14 +758,14 @@ function jci_blocks_render_ad_one() {
 //     if ($aa) {
 //         return the_ad_group(698); 
 //     } else {
-//     $html = '';
-//     $html .= '<div class="wp-block-jci-blocks-ad-area-one" id="div-gpt-ad-1568929479747-0">';
-// $html .= '</div>';
+    $html = '';
+    $html .= '<div class="wp-block-jci-blocks-ad-area-one">';
+    $html .= the_ad_group(698); 
+    $html .= '</div>';
 //     // if ($all_ads) {
-//         return $html;
+        return $html;
 //     // }
 //     }
-return the_ad_group(698); 
 }
 
 function jci_blocks_render_ad_two() {
@@ -773,10 +773,11 @@ function jci_blocks_render_ad_two() {
     $all_ads = get_field( 'all_ads', $ID);
     
     // $html .= '<div class="wp-block-jci-blocks-ad-area-two" id="'.$ID.'-3"></div>';
-    $html = '<div class="wp-block-jci-ad-area-two" id="div-gpt-ad-1568929535248-0">';
+    $html = '<div class="wp-block-jci-ad-area-two">';
     // $html .= '<script>
     // googletag.cmd.push(function() { googletag.display("div-gpt-ad-1568929535248-0"); });
     // </script>';
+    $html .= the_ad_group(699); 
     $html .= '</div>';
     // if ($all_ads) {
         return $html;
