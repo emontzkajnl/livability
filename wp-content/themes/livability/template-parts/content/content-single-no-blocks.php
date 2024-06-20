@@ -9,17 +9,17 @@
  * @since Twenty Twenty-One 1.0
  */
 ?>
-<script>
+<!-- <script>
         var cmWrapper = cmWrapper || {};
         cmWrapper.que = cmWrapper.que || [];
-</script>
+</script> -->
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <?php $ID = get_the_ID(); ?>
 
     <!-- <script>
         cmWrapper.que.push(function() {
-            cmWrapper.ads.define("ROS_ATF_300x600", "<?php echo $ID; ?>-3");
-            cmWrapper.ads.define("ROS_ATF_970x250","<?php echo $ID; ?>-1" );
+            cmWrapper.ads.define("ROS_ATF_300x600", "<?php //echo $ID; ?>-3");
+            cmWrapper.ads.define("ROS_ATF_970x250","<?php //echo $ID; ?>-1" );
             // cmWrapper.ads.define("ROS_BTF_300x600", "<?php //echo $ID; ?>-2");
             cmWrapper.ads.requestUnits();
         });
@@ -201,7 +201,7 @@
             <div class="wp-block-column">
             <?php //get_template_part('template-parts/blocks/ad-two' ); ?>
             <div class="wp-block-jci-ad-area-two">
-                <?php echo the_ad_group(698); ?>
+                <?php echo the_ad_group(699); ?>
             </div>
             </div> 
             </div> <!-- wp-block-columns -->
