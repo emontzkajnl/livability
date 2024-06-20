@@ -97,7 +97,7 @@
             <div class="wp-block-column">
                 <?php //get_template_part('template-parts/blocks/ad-one' ); ?>
                 <div class="wp-block-jci-ad-area-one" >
-                <?php echo echo the_ad_group(698); ?>
+                <?php echo the_ad_group(698); ?>
                 </div>
             </div>
         </div>
@@ -201,7 +201,7 @@
             <div class="wp-block-column">
             <?php //get_template_part('template-parts/blocks/ad-two' ); ?>
             <div class="wp-block-jci-ad-area-two">
-                <?php echo echo the_ad_group(698); ?>
+                <?php echo the_ad_group(698); ?>
             </div>
             </div> 
             </div> <!-- wp-block-columns -->
