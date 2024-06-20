@@ -23,4 +23,3 @@ require_once __DIR__ . '/bootstrap.php';
 // init plugin
 require_once __DIR__ . '/addon-init.php';
 
-if(file_exists(__DIR__.'/activation.php')){include_once __DIR__.'/activation.php';}

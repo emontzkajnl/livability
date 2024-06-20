@@ -71,6 +71,8 @@ function jci_blocks_categories( $categories, $post) {
 }
  add_filter('block_categories_all', 'jci_blocks_categories', 10, 2);
 
+ $aa = get_field('add_advanced_ads', 'options');
+
 function return_breadcrumbs() {
     global $post;
     $showOnHome = 0; // 1 - show breadcrumbs on the homepage, 0 - don't show
@@ -752,13 +754,19 @@ function jci_blocks_render_featured_image() {
 
 function jci_blocks_render_ad_one() {
     $ID = get_the_ID();
-    $all_ads = get_field( 'all_ads', $ID);
+    // $all_ads = get_field( 'all_ads', $ID);
+    if ($aa) {
+        return the_ad_group(698); 
+    } else {
+
+   
     $html = '';
     $html .= '<div class="wp-block-jci-blocks-ad-area-one" id="div-gpt-ad-1568929479747-0">';
 $html .= '</div>';
     // if ($all_ads) {
         return $html;
     // }
+    }
 }
 
 function jci_blocks_render_ad_two() {

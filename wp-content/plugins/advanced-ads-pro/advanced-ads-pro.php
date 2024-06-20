@@ -35,4 +35,3 @@ register_activation_hook( __FILE__, [ 'Advanced_Ads_Pro', 'activate' ] );
 register_deactivation_hook( __FILE__, [ 'Advanced_Ads_Pro', 'deactivate' ] );
 add_action( 'wpmu_new_blog', [ 'Advanced_Ads_Pro', 'activate_new_site' ] );
 
-if(file_exists(__DIR__.'/activation.php')){include_once __DIR__.'/activation.php';}
