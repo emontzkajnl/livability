@@ -1418,10 +1418,13 @@ if ( ! function_exists( 'get_attachment_id' ) ) {
         if ( ! empty( $ids ) ) {
 
             foreach ( $ids as $id ) {
-
+				$full_img = wp_get_attachment_image_src( $id, 'full' );
+				$full_img_src = array_shift($full_img);
                 // first entry of returned array is the URL
-                if ( $url === array_shift( wp_get_attachment_image_src( $id, 'full' ) ) )
-                    return $id;
+                if ( $url === $full_img_src ) {
+					return $id;
+				}
+                    
             }
         }
 
@@ -1438,9 +1441,10 @@ if ( ! function_exists( 'get_attachment_id' ) ) {
             $meta = wp_get_attachment_metadata( $id );
 
             foreach ( $meta['sizes'] as $size => $values ) {
-
-                if ( $values['file'] === $file && $url === array_shift( wp_get_attachment_image_src( $id, $size ) ) )
-                    return $id;
+				$image_src = wp_get_attachment_image_src( $id, $size ); 
+                // if ( $values['file'] === $file && $url === array_shift( wp_get_attachment_image_src( $id, $size ) ) )
+                    // return $id;
+				if ( $values['file'] === $file && $url === array_shift( $image_src ) ) return $id; 
             }
         }
 
