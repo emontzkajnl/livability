@@ -777,7 +777,7 @@ function jci_blocks_render_ad_two() {
     // $html .= '<script>
     // googletag.cmd.push(function() { googletag.display("div-gpt-ad-1568929535248-0"); });
     // </script>';
-    $html .= the_ad_group(699); 
+    $html .= do_shortcode('[the_ad_group id="699"]');
     $html .= '</div>';
     // if ($all_ads) {
         return $html;
