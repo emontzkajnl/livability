@@ -216,6 +216,8 @@
   margin: 0 auto;
   padding-top: 30px;
   overflow-x: hidden;
+  display: flex;
+  justify-content: center;
   iframe {
     max-width: 970px !important;
   }

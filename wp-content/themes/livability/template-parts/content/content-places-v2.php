@@ -20,11 +20,6 @@ $topic_args = array(
             'value'     => '"' . get_the_ID() . '"',
             'compare'   => 'LIKE'
         ),
-    //     array(
-    //        'key'       => 'sponsored',
-    //        'value'     => 0
-    //    ),
-    //    'relation'      => 'AND'
     )
    );
    $topics = new WP_Query( $topic_args );

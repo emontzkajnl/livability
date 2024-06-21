@@ -7,7 +7,7 @@
         <?php echo return_breadcrumbs(); ?> 
     </div>
      <!-- wp:paragraph {"style":{"typography":{"lineHeight":"2"},"spacing":{"padding":{"right":"35px","bottom":"15px","left":"35px","top":"15px"}}},"backgroundColor":"green"} -->
-     <p class="bp23-announcement has-green-background-color has-background" style="padding-top:15px;padding-right:35px;padding-bottom:15px;padding-left:35px;line-height:2"><strong>UPDATE</strong>: Check out our new <a href="https://livability.com/best-places/2023-top-100-best-places-to-live-in-the-us/"><strong>2023 Best Cities to Live in the U.S.</strong></a> <strong>list</strong>.</p>
+     <!-- <p class="bp23-announcement has-green-background-color has-background" style="padding-top:15px;padding-right:35px;padding-bottom:15px;padding-left:35px;line-height:2"><strong>UPDATE</strong>: Check out our new <a href="https://livability.com/best-places/2023-top-100-best-places-to-live-in-the-us/"><strong>2023 Best Cities to Live in the U.S.</strong></a> <strong>list</strong>.</p> -->
      <!-- /wp:paragraph -->
     <?php _e('<h1 class="h2">'.get_the_title().'</h1>'); ?>
     <?php if (get_field('sponsored')): 
