@@ -19,7 +19,6 @@
 		the_content();
 		get_template_part( 'template-parts/blocks/city-map' ); 
 		if (get_field('place_type') == 'state') {
-			echo 'this is state';
 			$topic_args = array(
 				'posts_per_page'    => -1,
 				'post_status'       => 'publish',
