@@ -760,7 +760,7 @@ function jci_blocks_render_ad_one() {
 //     } else {
     $html = '';
     $html .= '<div class="wp-block-jci-blocks-ad-area-one">';
-    $html .= the_ad_group(698); 
+    $html .= do_shortcode[the_ad_group id="698"];
     $html .= '</div>';
 //     // if ($all_ads) {
         return $html;
@@ -769,8 +769,8 @@ function jci_blocks_render_ad_one() {
 }
 
 function jci_blocks_render_ad_two() {
-    $ID = get_the_ID();
-    $all_ads = get_field( 'all_ads', $ID);
+    // $ID = get_the_ID();
+    // $all_ads = get_field( 'all_ads', $ID);
     
     // $html .= '<div class="wp-block-jci-blocks-ad-area-two" id="'.$ID.'-3"></div>';
     $html = '<div class="wp-block-jci-ad-area-two">';
