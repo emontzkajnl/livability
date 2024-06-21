@@ -760,7 +760,8 @@ function jci_blocks_render_ad_one() {
 //     } else {
     $html = '';
     $html .= '<div class="wp-block-jci-blocks-ad-area-one">';
-    $html .= do_shortcode('[the_ad_group id="698"]');
+    // $html .= do_shortcode('[the_ad_group id="698"]');
+    $html .= get_ad_group(698);
     $html .= '</div>';
 //     // if ($all_ads) {
         return $html;
