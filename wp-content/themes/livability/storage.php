@@ -431,3 +431,209 @@ h2 {
 }
 
 </style>
+
+function create_listing_object() {
+	$pagetype = $currentcat = $oldcategory = $place = $state = $placeid = $year = $articleid =  "";
+	$slug = get_the_permalink();
+	$global = "false";
+	$ID = get_the_ID();
+	$post_type = get_post_type();
+	$cat = get_the_category();
+	$all_cats = get_categories();
+	$topic_page_array = array();
+	
+	foreach($all_cats as $c) {
+		$p = get_field('category_page', 'category_'.$c->term_id);
+		if ($p) {
+			$topic_page_array[] = $p->ID;
+
+		}
+	}
+	$t = '';
+	// Places
+	if ($post_type == 'liv_place') {
+		$t = get_field('place_type');
+		$sc = get_field('state_code');
+		$onid = get_field('old_node_id');
+		if ($sc) {
+			$state = $sc;	
+		}
+		if ($onid) {
+			$placeid = json_encode(array($onid));	
+		}
+		if ($t == 'city') {
+			$pagetype = $t;
+		} elseif ($t == 'state') {
+			$pagetype = $t;
+		} else {
+			$pagetype = 'page';
+		}
+		$place = array(get_the_title( ));
+
+	}
+
+	//Magazines
+	if ($post_type ==  'liv_magazine') {
+		$pagetype = 'digital_magazine';
+		$mag_place_type = get_field('mag_place_type');
+		// $placeid = get_field('mag_old_node_id');
+		$mag_place_array = get_field('place_relationship');
+		if ($mag_place_array) {
+		$mag_places = array();
+		$mag_ids = array();
+		foreach ($mag_place_array as $mpa) {
+			$mpa_parent = wp_get_post_parent_id($mpa);
+			if ($mag_place_type == 'State' && $mpa_parent < 1) {
+				$mag_places[] = get_the_title($mpa);
+				$mag_ids[] = get_field('old_node_id', $mpa);
+			} elseif ($mag_place_type != 'State' && $mpa_parent > 0) {
+				$mag_places[] = get_the_title($mpa);
+				$mag_ids[] = get_field('old_node_id', $mpa);
+			}
+		}
+		$place = $mag_places;
+		$placeid = json_encode($mag_ids);
+		// $placeid = get_field('mag_old_node_id') ? get_field('mag_old_node_id') : get_the_ID( );
+
+	}
+	}
+	// Best Places 
+	if ($post_type == 'best_places') {
+		$pagetype = 'best_places';
+		if (has_post_parent( )) {
+			$parent = get_post_parent(  );
+			// print_r($parent);
+			$currentcat = $parent->post_title;
+		} else {
+			$currentcat = get_the_title(  );
+			$global = "true";
+
+		}
+		$year_tax = get_the_terms($ID, 'best_places_years' );
+
+		if ($year_tax) {
+			$year = $year_tax[0]->name;
+		}
+
+		$bp_place = get_field('place_relationship');
+		// $bp_places = array();
+		// print_r($bp_place);
+		if ($bp_place) {
+			$bpp_Id = $bp_place[0];
+			$place = get_the_title($bpp_Id);
+			// $placeid = get_field('old_node_id',$bpp_Id);
+			// $placeid = json_encode($bp_place);
+			$placeid = $bp_place[0];
+			$t = get_field('place_type', $bpp_Id);
+			if ($t == 'state') { 
+				$state = get_field('state_code',$bp_place);
+			} elseif ($t == 'city') {
+				$p = get_post_parent($bpp_Id);
+				$state = get_field('state_code',$p->ID);
+			}
+		}
+	}
+
+	// Pages
+	if ($post_type == 'page') {
+		if ( in_array($ID, $topic_page_array)) {
+			$pagetype = 'topic';
+		} elseif (is_front_page()) {
+			$pagetype = 'home';
+			$global = "true";
+		} else {
+			$pagetype = 'page';
+		}
+	}
+	// Articles
+	if ($post_type == 'post') {
+		$articleid = $ID;
+		$pagetype = 'article';
+		$currentcat = $cat[0]->name;
+		$article_place_rel = get_field('place_relationship');
+		$post_places = array();
+		$place_ids = array();
+		$state_names = array();
+		// $placeid = get_field('article_node_id');
+		if ($article_place_rel) {
+			foreach($article_place_rel as $apr) {
+				// $post_places[] = "'".get_the_title($apr)."'";
+				$apr_parent = wp_get_post_parent_id($apr);
+				if ($apr_parent && $apr_parent > 0) {
+					$state_names[] = get_field('state_code', $apr_parent);
+				} else {
+					$state_names[] = get_field('state_code', $apr);
+				}
+
+				$post_places[] = get_the_title($apr);
+				$place_ids[] = strval(get_field('old_node_id',$apr));
+			}
+			if (!empty($state_names)) {
+				$state = $state_names[0];
+			}
+			// print_r($post_places);
+			// $place = implode(",", $post_places);
+			$place = $post_places;
+			// $placeid = implode(",",$place_ids);
+			$placeid = json_encode($place_ids);
+			// $placeid = get_field('old_node_id', $article_place_rel[0]);
+		} else  {
+			$global = 'true';
+			$placeid = "";
+		}
+		if (get_field('sponsored')) {
+			$global = 'sponsored';
+		}
+		switch ($cat[0]->term_id) {
+			case 11: //exp. and adventures
+				$oldcategory = 'things-to-do';
+				break;
+			case 32: // affordable places
+				$oldcategory = 'affordable-places-to-live';
+				break;
+			case 12: // Ed, careers and op
+				$oldcategory = 'business';
+				break;
+			case 16: // food scenes
+				$oldcategory = 'foodscenes';
+				break;	
+			case 13: // healthy places
+				$oldcategory = 'health';
+				break;	
+			case 14: // love where you live
+				$oldcategory = 'community';
+				break;	
+			case 47: // where to live now
+				$oldcategory = 'real-estate';
+				break;	
+			default: 
+				$oldcategory = '';
+
+	}
+		
+	}
+	$currentcat = str_replace('&amp;',' ', $currentcat);
+	?>
+<script>
+		if (!window.ListingObj) {
+	var ListingObj = {
+		"pageslug" : window.location.pathname,
+		"pagetype" : "<?php echo $pagetype; ?>",
+		"currentcat": "<?php echo $currentcat; ?>",
+		"place"		: <?php echo json_encode($place); ?>,
+		"placeid"	: "",
+		"state"		: "<?php echo $state; ?>",
+		"oldcategory"	: "<?php echo $oldcategory; ?>",
+		"global"	: "<?php echo strval($global); ?>",
+		"year"	: "<?php echo $year; ?>",
+		"articleid":	"<?php echo $articleid; ?>"
+	}
+	<?php if (strlen($placeid) > 0) { ?>
+	ListingObj['placeid'] = <?php echo $placeid; ?>;	
+	<?php } ?>
+	}
+	
+</script>
+<?php }
+ //echo strlen($placeid) > 0 ? $placeid : ''; 
+add_action('wp_head','create_listing_object');

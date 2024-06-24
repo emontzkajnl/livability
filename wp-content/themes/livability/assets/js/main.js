@@ -490,13 +490,6 @@
       var post = alm.single_post_array;
       if (post !== undefined) {
         // console.log(post);
-        if (ListingObj) {
-          ListingObj.articleid = post.id;
-          ListingObj.pageslug = post.slug;
-          updateListingObj(post.id)
-        } else {
-          console.warn('ListingObj not defined');
-        }
         var host = location.hostname+'/',
            url = host+post.slug,
                   urlref = host+alm.slug;
@@ -668,26 +661,7 @@
     // }
   });
 
-  function updateListingObj(id) {
-    const data = {
-      id: id, 
-      action: "updateLO"
-    }
-    $.ajax({
-      url: params.ajaxurl,
-      data: data,
-      type: "POST",
-      dataType: "JSON",
-      success: data => {
-        if (data) {
-          window.ListingObj.place = data['place'];
-          window.ListingObj.placeid = data['placeid'];
-        } else {
-          console.warn('did not get ajax data');
-        }
-      }
-    })
-  }
+
 
   // Ken Burns
   const kbContainer = $('#kb-slide-container');
