@@ -1254,7 +1254,7 @@ function livability_add_image_meta( $content ) {
 	// if (get_post_type() == 'liv_place' ) {
 		// return $html;
 	// } elseif(is_front_page()) {	
-	if (is_front_page()) {
+	if (is_front_page() || get_post_type() == 'liv_place') {
 		// $homepage_obj = get_page_by_title( 'Homepage Output');
 		// if ($homepage_obj && file_exists(WP_CONTENT_DIR.'/uploads/homepage-content/homepage-output.html')){
 		// 	include(WP_CONTENT_DIR.'/uploads/homepage-content/homepage-output.html');
@@ -1290,6 +1290,20 @@ function livability_add_image_meta( $content ) {
 }
 
 add_filter( 'the_content', 'livability_add_image_meta' );
+
+
+/**
+ * Attachment ID on Images
+ *
+ * @author Bill Erickson
+ * @link http://www.billerickson.net/code/add-attachment-id-class-images/
+ */
+function be_attachment_id_on_images( $attr, $attachment ) {
+	if( !strpos( $attr['class'], 'wp-image-' . $attachment->ID ) )
+		$attr['class'] .= ' wp-image-' . $attachment->ID;
+	return $attr;
+}
+add_filter( 'wp_get_attachment_image_attributes', 'be_attachment_id_on_images', 10, 2 );
 
 
 // add_filter('the_content', 'content_test');

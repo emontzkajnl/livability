@@ -71,8 +71,6 @@ function jci_blocks_categories( $categories, $post) {
 }
  add_filter('block_categories_all', 'jci_blocks_categories', 10, 2);
 
- $aa = get_field('add_advanced_ads', 'options');
-
 function return_breadcrumbs() {
     global $post;
     $showOnHome = 0; // 1 - show breadcrumbs on the homepage, 0 - don't show

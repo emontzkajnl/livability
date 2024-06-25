@@ -42,12 +42,16 @@ $cc_array = array();
 $cc_posts = $cc_query->posts;
 $ID = get_the_ID();
 // print_r($cc_posts);
+
 foreach ($cc_posts as $cc_post) {
     $place = get_post_meta($cc_post->ID, 'place_relationship', true);
     if (!empty($place)){
         $type = get_post_meta($place[0], 'place_type', true);
         if ($type == 'state') {
-            array_push($cc_array, $cc_post);
+            if (in_array($ID, $place)) {
+                array_push($cc_array, $cc_post);
+            }
+            
         } elseif ($type == 'city') {
             $s = wp_get_post_parent_id( $place[0] );
             if ($s == $ID) {
@@ -72,7 +76,7 @@ $ID = get_the_ID();
 
 // $proceed = false;
 // if (!$parent_place) {
-//     $proceed = true;
+    // $proceed = true;
 // } else {
 //     $places = get_field('place_relationship', $ID);
 //     // print_r($places);
@@ -83,7 +87,7 @@ $ID = get_the_ID();
 //        }
 //     }
 // }
-//if ($proceed):
+// if ($proceed):
 $slidebkgrnd = get_the_post_thumbnail_url( $ID, 'rel_article' ); ?> 
 <li>
 <a href="<?php echo get_the_permalink($ID); ?>">

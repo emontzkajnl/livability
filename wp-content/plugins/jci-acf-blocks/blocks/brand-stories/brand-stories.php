@@ -9,6 +9,7 @@ $args = array(
     'posts_per_page'    => -1,
     'orderby'           => 'rand',
     'meta_query'        => array(
+        'relation'      => 'AND',
         array(
             'key'           => 'place_relationship',
             'value'         => '"' . get_the_ID() . '"',
