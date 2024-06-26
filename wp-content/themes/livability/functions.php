@@ -1254,7 +1254,7 @@ function livability_add_image_meta( $content ) {
 	// if (get_post_type() == 'liv_place' ) {
 		// return $html;
 	// } elseif(is_front_page()) {	
-	if (is_front_page()) {
+	if (is_front_page() || get_post_type() == 'liv_place') {
 		// $homepage_obj = get_page_by_title( 'Homepage Output');
 		// if ($homepage_obj && file_exists(WP_CONTENT_DIR.'/uploads/homepage-content/homepage-output.html')){
 		// 	include(WP_CONTENT_DIR.'/uploads/homepage-content/homepage-output.html');
@@ -1300,7 +1300,7 @@ add_filter( 'the_content', 'livability_add_image_meta' );
  */
 function be_attachment_id_on_images( $attr, $attachment ) {
 	if( !strpos( $attr['class'], 'wp-image-' . $attachment->ID ) )
-		$attr['class'] .= ' wp-image-' . $attachment->ID;
+		$attr['class'] .= 'test wp-image-' . $attachment->ID;
 	return $attr;
 }
 add_filter( 'wp_get_attachment_image_attributes', 'be_attachment_id_on_images', 10, 2 );
@@ -1786,6 +1786,23 @@ if ( ! function_exists('local_insights') ) {
 
 	add_action('wp_ajax_loadbp23', 'load_bp_23');
 	add_action('wp_ajax_nopriv_loadbp23', 'load_bp_23');
+
+	function add_img_byline(){
+		$attachmentId = $_POST['attachmentId'];
+		$img_byline = get_field('img_byline', $attachmentId);
+		$img_place_name = get_field('img_place_name', $attachmentId);
+		if ($img_byline || $img_place_name) {
+			echo '<div class="livability-image-meta">';
+			echo $img_place_name ? $img_place_name : '' ;
+			echo $img_place_name && $img_byline ? ' / ' : '';
+			echo $img_byline ?  strip_tags($img_byline, "<a>") : '' ;
+			echo '</div>';
+		}
+		wp_die();
+	}
+
+	add_action('wp_ajax_addImgByline', 'add_img_byline');
+	add_action('wp_ajax_nopriv_addImgByline', 'add_img_byline');
 
 	add_filter( 'gform_enable_credit_card_field', 'enable_creditcard', 11 );
 	function enable_creditcard( $is_enabled ) {

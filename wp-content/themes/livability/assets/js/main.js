@@ -1205,5 +1205,34 @@ const sideNavFunc = () => {
 if ( $('body').hasClass('single-liv_place')) {
   sideNavFunc();
 } 
+
+const images = $("img[class^='wp-image-']");
+images.each(function(i, e){
+  let classes = e.className;
+  let start = classes.indexOf('wp-image-');
+  let str = classes.substring(start + 9);
+  if (str.indexOf(' ') >= 0) {
+    console.log('has space');
+    str = str.substring(0, str.indexOf(' '));
+  }
+  const data = {
+    action: "addImgByline",
+    attachmentId: str
+  }
+  $.ajax({
+    url: params.ajaxurl,
+    data: data,
+    type: "POST",
+    dataType: "html",
+    success: function(res) {
+      console.log(res);
+      // $(e).append(res);
+      
+      $(e).wrap('<div class="img-container"></div>');
+      $(res).insertAfter($(e));
+    }
+  })
+
+}); // end each
   
 })(jQuery);
