@@ -1227,8 +1227,8 @@ if ( !$('body').hasClass('single-post')) {
       type: "POST",
       dataType: "html",
       success: function(res) {
-        $(e).wrap('<div class="img-container">'+res+'</div>');
-        // $(res).insertAfter($(e));
+        $(e).wrap('<div class="img-container"></div>');
+        $(res).insertAfter($(e));
       }
     })
 
