@@ -1251,17 +1251,7 @@ if ( ! function_exists( 'get_attachment_id' ) ) {
 // Add image meta to images in content
 function livability_add_image_meta( $content ) {
 	$html = str_get_html($content);
-	// if (get_post_type() == 'liv_place' ) {
-		// return $html;
-	// } elseif(is_front_page()) {	
-	if (is_front_page() || get_post_type() == 'liv_place') {
-		// $homepage_obj = get_page_by_title( 'Homepage Output');
-		// if ($homepage_obj && file_exists(WP_CONTENT_DIR.'/uploads/homepage-content/homepage-output.html')){
-		// 	include(WP_CONTENT_DIR.'/uploads/homepage-content/homepage-output.html');
-		// } else {
-			return $html;
-		// }
-	} else {
+	if (get_post_type() == 'post') {
 		if (gettype($html) != 'boolean') {
 			foreach($html->find('img') as $img){
 				 
