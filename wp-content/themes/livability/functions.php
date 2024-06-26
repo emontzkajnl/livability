@@ -1276,6 +1276,8 @@ function livability_add_image_meta( $content ) {
 			}
 		}
 		return $html;
+	} else {
+		return $html;
 	}
 }
 
