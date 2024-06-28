@@ -217,6 +217,7 @@
   overflow-x: hidden;
   display: flex;
   justify-content: center;
+  margin-top: 30px;
   iframe {
     max-width: 970px !important;
   }
@@ -2168,7 +2169,8 @@ border-bottom: 1px solid $green;
       border: none;
       margin-top: 20px;
       padding-bottom: 0;
-      display: block !important;
+      display: table;
+      // display: block !important;
       // max-height: 35px; //test
       legend {
         font-family: "Jost",Arial,Helvetica,sans-serif;
@@ -3653,6 +3655,9 @@ border-bottom: 1px solid $green;
       .brand-stories__card {
         display: flex;
         margin: 0;
+        p {
+          display: none;
+        }
       }
       .brand-stories__img {
         display: block;

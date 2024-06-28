@@ -7,6 +7,7 @@
 @import "iframe";
 @import "ken-burns";
 @import "table-of-contents";
+@import "woocommerce";
 
 .green-circle {
   color: white;
@@ -70,6 +71,12 @@
     }
   }
 }
+
+.liv-bottom-adhesive {
+  display: flex;
+justify-content: center;
+}
+
 
 .livbox {
   background-color: $green;
