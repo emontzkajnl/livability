@@ -34,6 +34,9 @@
   position: relative;
   overflow-x: hidden;
   margin-top: 0;
+  img {
+    max-width: none !important;
+  }
   .home-hero-text {
     position: relative;
     padding: 30px 40px;
@@ -315,7 +318,14 @@
   margin-top: 0;
 }
 
-
+@media only screen and (max-width: 920px) {
+	.hero-section .video-wrap {
+		margin-top: 30px;
+	}
+	.hero-section .container {
+		min-height: 0;
+	}
+}
 
 @media all and (max-width: 1030px) {
   .has-badge > .container {
