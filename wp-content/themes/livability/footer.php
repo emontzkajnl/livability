@@ -17,7 +17,7 @@
 	</div><!-- #content -->
 
 
-	<?php get_template_part('template-parts/content/content-newsletter-two'); ?>
+	<?php get_template_part('template-parts/content/content-newsletter-three'); ?>
 
 
 	<footer id="colophon" class="site-footer" role="contentinfo">

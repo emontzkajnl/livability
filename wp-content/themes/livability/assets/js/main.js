@@ -1207,7 +1207,6 @@ if ( $('body').hasClass('single-liv_place')) {
 } 
 
 if ( !$('body').hasClass('single-post')) {
-  console.log('byline function run');
   const images = $("img[class^='wp-image-']");
   images.each(function(i, e){
     let classes = e.className;
@@ -1234,5 +1233,22 @@ if ( !$('body').hasClass('single-post')) {
 
   }); // end each
 } // end if has class
+
+// if ($('body').hasClass('page-id-91275')) { // newsletter page
+//   console.log('newsletter page');
+//   const url = new URLSearchParams(window.location.search);
+//   const params = window.location.search.substring(1);
+//   const pos = params.indexOf('=');
+//   const email = params.substring(pos+1);
+//   console.log(pos);
+//   console.log('email ',email);
+//   console.log(decodeURI(email));
+//   // const searchParams = new URLSearchParams(paramsString);
+
+//   // Iterating the search parameters
+//   // for (const p of url) {
+//     // console.log(p);
+//   // }
+// }
   
 })(jQuery);
