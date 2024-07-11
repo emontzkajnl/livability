@@ -886,7 +886,7 @@ function jci_blocks_city_map() {
     $place_query = str_replace(',','',get_the_title());
     $place_query = str_replace(' ','+', $place_query);
     $html = '<div class="city-map-block">';
-    $html .= '<iframe width="100%" height="500" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA-VaZnsUyefqTA8Nu4LZOB6rKJcQoTRgQ&amp;q='.$place_query.'" allowfullscreen=""></iframe>';
+    $html .= '<iframe width="100%" height="500" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA-VaZnsUyefqTA8Nu4LZOB6rKJcQoTRgQ&amp;q='.$place_query.'+USA" allowfullscreen=""></iframe>';
     $html .= '</div>';
     return $html;
 
