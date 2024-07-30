@@ -68,18 +68,18 @@
         }
     }
     
-    echo '<div style="display: none;">';
-    print_r($city_result);
-    echo '<br />';
-    print_r($state_result);
-    echo '<br />';
-    print_r($global_sponsors);
-    echo '<br />';
+    // echo '<div style="display: none;">';
+    // print_r($city_result);
+    // echo '<br />';
+    // print_r($state_result);
+    // echo '<br />';
+    // print_r($global_sponsors);
+    // echo '<br />';
 
-    $local_sponsors = array_merge($city_result, $state_result, $global_sponsors);
+    // $local_sponsors = array_merge($city_result, $state_result, $global_sponsors);
 
-    print_r($local_sponsors);
-    echo '</div>';
+    // print_r($local_sponsors);
+    // echo '</div>';
 
     else: //end if $locale, is global
         $local_sponsors = $global_sponsors;

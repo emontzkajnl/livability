@@ -448,6 +448,17 @@ function my_acf_init_block_types() {
             'keywords'          => array( 'block', 'related', 'article', 'post' ),
         ));
 
+        acf_register_block_type(array(
+            'name'              => 'Best Places in State Map',
+            'title'             => __('Best Places in State Map', 'acf-blocks'),
+            'description'       => __('Best Places in State Map', 'acf-blocks'),
+            'mode'              => 'preview',
+            'render_template'   => plugin_dir_path( __FILE__ ) . 'blocks/best-places-state-map/best-places-state-map.php',
+            'category'          => 'jci-category',
+            'icon'              => 'layout',
+            'keywords'          => array( 'block', 'related', 'article', 'post' ),
+        ));
+
         // acf_register_block_type(array(
         //     'name'              => 'listicle',
         //     'title'             => __('Listicle Block', 'acf-blocks'),
