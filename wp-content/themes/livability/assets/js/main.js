@@ -392,13 +392,6 @@
     if (typeof ga === "function") { 
       ga('send','pageview', newPage);
     }
-    if (typeof PARSELY !== 'undefined') {
-      PARSELY.beacon.trackPageView({
-        url: newPage,
-        urlref: href,
-        js: 1
-      });
-    }
  
     
 
@@ -487,24 +480,28 @@
   if ($('body').hasClass('single-post')) {
     window.almOnChange = function (alm) {
       console.log("Ajax Load More is loading...");
-      var post = alm.single_post_array;
-      if (post !== undefined) {
-        // console.log(post);
-        var host = location.hostname+'/',
-           url = host+post.slug,
-                  urlref = host+alm.slug;
-        // console.log('url is ',url);
-        // console.log('urlref is ',urlref);
+      console.log("Url is ", window.location.href);
+      // console.dir(alm);
+
+
+      // var post = alm.single_post_array;
+      // if (post !== undefined) {
+      //   // console.log(post);
+      //   var host = location.hostname+'/',
+      //      url = host+post.slug,
+      //             urlref = host+alm.slug;
+      //   // console.log('url is ',url);
+      //   // console.log('urlref is ',urlref);
         
-         PARSELY.beacon.trackPageView({
-                  url: url,
-                  urlref: urlref,
-                  js: 1
-              });
-              return true;
-      } else {
-        console.warn('alm post is undefined');
-      }
+      //    PARSELY.beacon.trackPageView({
+      //             url: url,
+      //             urlref: urlref,
+      //             js: 1
+      //         });
+      //         return true;
+      // } else {
+      //   console.warn('alm post is undefined');
+      // }
       // initiate sponsor carousel
       // console.log('alm is ',post);
       // initPwlSlick();
@@ -581,16 +578,9 @@
 
   window.almComplete = function(alm){
     console.log("Ajax Load More Complete");
-    // console.dir(alm);
-    // initPwlSlick();
-    // console.dir(alm.content.innerHTML);
-    // if (ScrollTrigger.length) {
-      // let triggers = ScrollTrigger.getAll();
-      // triggers.forEach( trigger => {      
-        // trigger.kill();
-        // trigger.enable();
-      // });
-    // }
+    
+
+
     if (document.querySelectorAll('.pwl-slick')) {
       // initPwlSlick();
       let pwl = $('body').find('.pwl-slick').last();
@@ -628,11 +618,6 @@
       // console.log('has slider');
       horizontalSlides();
     } 
-
-  
-
-    // ScrollTrigger.refresh();
-    // setTimeout(ScrollTrigger.refresh, 1000);
   };
 
   $('#widget-finder').on('submit', function(e) {

@@ -1810,43 +1810,15 @@ if ( ! function_exists('local_insights') ) {
 	} );
 	
 
-
-	// function connected_communities_payment($entry, $form ) {
-		// error_log(print_r($entry, true));
-	// };
-	// add_action('gform_after_submission_11', 'connected_communities_payment', 10, 2);	
+// remove Woo Zoom
+add_action( 'after_setup_theme', 'bc_remove_magnifier', 100 ); function bc_remove_magnifier() { remove_theme_support( 'wc-product-gallery-zoom' ); }
 
 
-	/**
-	 * Gravity Perks // GP Populate Anything // Change The Query Limit
-	 * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
-	 */
-	// add_filter( 'gppa_query_limit_11_16', function() {
-		// Update "750" to whatever you would like the query limit to be.
-		// return 50;
-	// } );
-// add_action( 'init', 'make_places_csv');
-
-
-
-// function get_coordinates() {
-// 	// loop through rows
-// 	$csvFile = get_stylesheet_directory(  ).'/places-demo.csv';
-// 	$resultFile = get_stylesheet_directory(  ).'/result.csv';
-// 	ini_set('auto_detect_line_endings', true);
-// 	$ran = false;
-// 	if (!$ran) {
-// 		if ($handle = fopen($csvFile, 'r') !== false){
-
-// 		$ran = true;
-// 		}
-// 	}
-// 	//close php and use php variables to send ajax request in js
-
-// 	// open php and close function
-
-// 	// write ajax handling in new function
-// }
-
-// add_action('init', 'get_coordinates');
-
+// ADD THIS TO REPO ... removed checkout functionality while developing
+add_action( 'template_redirect', 'redirect_to_cart' );
+function redirect_to_cart() {
+    if ( is_checkout() && ! is_wc_endpoint_url() ) {
+        wp_redirect( wc_get_cart_url() );
+        exit;
+    }
+}

@@ -179,9 +179,7 @@ if (get_field('enable_mega_hero', $ID)):
     <div class="entry-content">
    <div class="wp-block-columns">
             <div class="wp-block-column">
-            <?php if ($cat[0]->slug == 'connected-communities') {
-                get_template_part( 'template-parts/blocks/cc-global-carousel' ); 
-            }
+           <?php
             // get_template_part( 'template-parts/blocks/local-sponsored', null, array('city' => $args['city'], 'global' => $args['global'], 'state' => $args['state'])); ?>
             </div>
         </div> 
