@@ -53,9 +53,9 @@ while ( have_posts() ) :
 	// echo 'here are sponsored ids';
 	// print_r($sponsored_ids);
 	?>
-	<!-- <div id="article-wrapper"> -->
-	<?php //get_template_part( 'template-parts/content/content-single-no-blocks', null, array('city' => $sponsored_ids, 'global' =>$sponsored_global_ids, 'state' => $sponsored_state_ids )); ?>
-	<!-- </div>  -->
+	<div id="article-wrapper">
+	<?php get_template_part( 'template-parts/content/content-single-no-blocks', null, array('city' => $sponsored_ids, 'global' =>$sponsored_global_ids, 'state' => $sponsored_state_ids )); ?>
+	</div> 
 	
 		<!-- place_relationship -->
 		<?php $places = get_field('place_relationship'); 
@@ -67,7 +67,7 @@ while ( have_posts() ) :
 			$place_rel_query = '';
 		}
 		// echo 'place rel query '.$place_rel_query; ?>
-	<?php echo do_shortcode( '[ajax_load_more single_post="true" single_post_id="'.get_the_ID().'" '.$place_rel_query.' single_post_order="previous" single_post_taxonomy="category"  theme_repeater="alm_single_template.php"  post_type="post" pause_override="true" loading_style="infinite classic" scroll_distance="100"]' );
+	<?php echo do_shortcode( '[ajax_load_more single_post="true" single_post_id="'.get_the_ID().'" '.$place_rel_query.' single_post_order="previous" single_post_taxonomy="category"  single_post_target="#article-wrapper"  post_type="post" pause_override="true" loading_style="infinite classic" scroll_distance="100"]' );
 
 endwhile; // End of the loop.
 
