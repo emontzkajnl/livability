@@ -3010,6 +3010,30 @@ border-bottom: 1px solid $green;
       }
     }
   }
+  &__img-container {
+    position: relative;
+    height: 55vw;
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100% !important;
+      object-fit: cover;
+    }
+  }
+}
+.c4l {
+  &__load-more-container {
+    text-align: center;
+  }
+  &__load-more-btn {
+    color: white;
+    background-color: $green !important;
+  }
+  &__hidden {
+    
+  }
 }
 .handheld {
   .bp2l__tab-nav {
@@ -3222,6 +3246,9 @@ border-bottom: 1px solid $green;
   .bp2l {
     &__bpl {
       flex-basis: 50%;
+    }
+    &__img-container {
+      height: 27vw;
     }
   }
   .quick-facts-block, .quick-facts-2-block {
@@ -3624,6 +3651,9 @@ border-bottom: 1px solid $green;
     }
     &__mobile-tab {
       display: none;
+    }
+    &__img-container {
+      height: 14vw;
     }
   }
 

@@ -66,7 +66,7 @@ while ( have_posts() ) :
 		} else {
 			$place_rel_query = '';
 		}
-		// echo 'place rel query '.$place_rel_query; ?>
+		echo 'place rel query '.$place_rel_query; ?>
 	<?php echo do_shortcode( '[ajax_load_more single_post="true" single_post_id="'.get_the_ID().'" '.$place_rel_query.' single_post_order="previous" single_post_taxonomy="category"  single_post_target="#article-wrapper"  post_type="post" pause_override="true" loading_style="infinite classic" scroll_distance="100"]' );
 
 endwhile; // End of the loop.

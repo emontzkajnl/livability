@@ -1219,6 +1219,12 @@ if ( !$('body').hasClass('single-post')) {
   }); // end each
 } // end if has class
 
+$(".c4l__load-more-btn").on("click", function(){
+  console.log('load more clicked');
+  $(this).remove();
+  $('.bp2l__hidden').css('display','flex');
+});
+
 // if ($('body').hasClass('page-id-91275')) { // newsletter page
 //   console.log('newsletter page');
 //   const url = new URLSearchParams(window.location.search);

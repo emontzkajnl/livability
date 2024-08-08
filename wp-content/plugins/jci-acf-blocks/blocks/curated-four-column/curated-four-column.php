@@ -17,6 +17,7 @@ if( !empty($block['className']) ) {
 
 <div id="<?php echo esc_attr($id); ?>" class="<?php echo esc_attr($className); ?>">
 <?php 
+$count = 1;
 // post_object_id, curated_posts
 if (have_rows('curated_posts')):
     echo '<div class="bp2l__row">';
@@ -28,8 +29,14 @@ if (have_rows('curated_posts')):
     </div>
     <h4 class="bp2l__bpl-title"><a class="unstyle-link" href="<?php echo get_the_permalink($obj); ?>"><?php echo get_the_title($obj); ?></a></h4>
 </div>
-    <?php endwhile;
-    echo '</div>';
+    <?php if ($count == 8): ?>
+        </div> <!-- bp2l__row -->
+        <div class="c4l__load-more-container"><button class="c4l__load-more-btn">Load More</button></div>
+        <div class="bp2l__row bp2l__hidden" style="display: none;">
+    <?php endif;
+    $count++;
+    endwhile;
+    echo '</div>'; // bp2l__row
 endif;
 ?>
 </div>
