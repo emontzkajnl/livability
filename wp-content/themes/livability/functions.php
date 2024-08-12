@@ -1822,3 +1822,24 @@ function redirect_to_cart() {
         exit;
     }
 }
+
+function single_query($args, $id ) {
+	$places = get_field('place_relationship'); 
+	$cat = get_the_categories();
+	if ($places) {
+		$implode_places = implode(',', $places);
+		$args['meta_query'] = array(
+			array(
+				'key'		=> 'place_relationship',
+				'value'		=> $implode_places,
+				'compare'	=> 'IN'
+			)
+		);
+	} 
+	if ( ! empty( $categories ) ) {
+		$args['cat'] = $categories[0]->ID;
+	}
+	return $args;
+}
+
+add_filter('alm_query_args_custom_single_query', 'single_query', 10, 2);

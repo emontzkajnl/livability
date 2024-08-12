@@ -1021,3 +1021,40 @@ if (get_field('enable_mega_hero', $ID)):
     </div><!-- .entry-content -->
 
 </article>
+
+
+
+<?php
+$test_args = array(
+	'post_type'		=> 'post',
+	'posts_per_page'	=> -1,
+	// 'meta_query'		=> array(
+	// 	array(
+	// 		'key'		=> 'place_relationship',
+	// 		'value'		=> array(54161,54182,54186,54234,54254,54257),
+	// 		'compare'	=> 'IN'
+	// 	)
+	// ),
+	'meta_key'			=> 'place_relationship',
+	'meta_value_num'		=> 54161,54182,54186,54234,54254,54257
+	// 'meta_compare'		=> 'IN'
+);
+$test_query = new WP_Query($test_args);
+echo '<div style="margin-top: 100px;">start test query</div>';
+if ($test_query->have_posts()):
+	while ($test_query->have_posts()): $test_query->the_post();
+	echo 'title: '.get_the_title().'<br />link: '.get_the_permalink().get_the_ID().'<br />';
+	
+	// $postmetas = get_post_meta(get_the_ID());
+
+	// foreach($postmetas as $meta_key=>$meta_value) {
+	// 	echo $meta_key . ' : ' . $meta_value[0] . '<br/>';
+	// }
+	$test_pr = get_post_meta(get_the_ID(), 'place_relationship');
+	print_r($test_pr[0]);
+	echo '<br /><br />';
+endwhile;
+else: 
+	echo 'no posts here';
+endif;
+wp_reset_query(  );

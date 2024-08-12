@@ -14,6 +14,7 @@ get_header();
 
 
 
+
 /* Start the Loop */
 
 while ( have_posts() ) :
@@ -53,21 +54,25 @@ while ( have_posts() ) :
 	// echo 'here are sponsored ids';
 	// print_r($sponsored_ids);
 	?>
+
 	<div id="article-wrapper">
 	<?php get_template_part( 'template-parts/content/content-single-no-blocks', null, array('city' => $sponsored_ids, 'global' =>$sponsored_global_ids, 'state' => $sponsored_state_ids )); ?>
 	</div> 
-	
-		<!-- place_relationship -->
-		<?php $places = get_field('place_relationship'); 
 
-		if ($places) {
-			$implode_places = implode(',', $places);
-			$place_rel_query = 'meta_key="place_relationship" meta_compare="IN" meta_value="'.$implode_places.'"';
-		} else {
-			$place_rel_query = '';
-		}
-		echo 'place rel query '.$place_rel_query; ?>
-	<?php echo do_shortcode( '[ajax_load_more single_post="true" single_post_id="'.get_the_ID().'" '.$place_rel_query.' single_post_order="previous" single_post_taxonomy="category"  single_post_target="#article-wrapper"  post_type="post" pause_override="true" loading_style="infinite classic" scroll_distance="100"]' );
+
+		<!-- place_relationship -->
+		<?php 
+
+		// CODE MOVED TO FUNCTIONS.PHP
+		// $places = get_field('place_relationship'); 
+		// if ($places) {
+		// 	$implode_places = implode(',', $places); // franklin id: 54186
+		// 	$place_rel_query = 'meta_key="place_relationship" meta_compare="IN" meta_value_num="'.$implode_places.'"';
+		// } else {
+		// 	$place_rel_query = '';
+		// }
+?>
+	<?php echo do_shortcode( '[ajax_load_more id="custom_single_query" single_post_taxonomy="category" single_post="true" single_post_id="'.get_the_ID().'"  single_post_order="previous" cache="false" single_post_target="#article-wrapper"  post_type="post" pause_override="true" loading_style="infinite classic" scroll_distance="100"]' );
 
 endwhile; // End of the loop.
 
