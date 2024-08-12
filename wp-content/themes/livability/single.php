@@ -72,7 +72,7 @@ while ( have_posts() ) :
 		// 	$place_rel_query = '';
 		// }
 ?>
-	<?php echo do_shortcode( '[ajax_load_more id="custom_single_query" single_post_taxonomy="category" single_post="true" single_post_id="'.get_the_ID().'"  single_post_order="previous" cache="false" single_post_target="#article-wrapper"  post_type="post" pause_override="true" loading_style="infinite classic" scroll_distance="100"]' );
+	<?php echo do_shortcode( '[ajax_load_more id="custom_single_query" single_post_taxonomy="category" single_post="true" single_post_id="'.get_the_ID().'"  single_post_order="previous" cache="true" single_post_target="#article-wrapper"  post_type="post" pause_override="true" loading_style="infinite classic" scroll_distance="100"]' );
 
 endwhile; // End of the loop.
 
