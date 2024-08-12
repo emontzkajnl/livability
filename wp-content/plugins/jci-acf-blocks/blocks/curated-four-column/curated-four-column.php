@@ -20,6 +20,8 @@ if( !empty($block['className']) ) {
 $count = 1;
 // post_object_id, curated_posts
 if (have_rows('curated_posts')):
+    // print_r(get_field('curated_posts'));
+    $total = count(get_field('curated_posts'));
     echo '<div class="bp2l__row">';
     while(have_rows('curated_posts')): the_row();
     $obj = get_sub_field('post_object_id'); ?>
@@ -29,7 +31,7 @@ if (have_rows('curated_posts')):
     </div>
     <h4 class="bp2l__bpl-title"><a class="unstyle-link" href="<?php echo get_the_permalink($obj); ?>"><?php echo get_the_title($obj); ?></a></h4>
 </div>
-    <?php if ($count == 8): ?>
+    <?php if ($total > 8 && $count == 8): ?>
         </div> <!-- bp2l__row -->
         <div class="c4l__load-more-container"><button class="c4l__load-more-btn">Load More</button></div>
         <div class="bp2l__row bp2l__hidden" style="display: none;">
