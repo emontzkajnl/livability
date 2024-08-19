@@ -12,8 +12,8 @@ class Permalink_Manager_Pro_Functions {
 		$plugin_name = preg_replace( '/(.*)\/([^\/]+\/[^\/]+.php)$/', '$2', PERMALINK_MANAGER_FILE );
 
 		// Stop words
-		add_filter( 'permalink_manager_filter_default_post_slug', array( $this, 'remove_stop_words' ), 9, 3 );
-		add_filter( 'permalink_manager_filter_default_term_slug', array( $this, 'remove_stop_words' ), 9, 3 );
+		add_filter( 'permalink_manager_filter_default_post_uri', array( $this, 'remove_stop_words' ), 9, 3 );
+		add_filter( 'permalink_manager_filter_default_term_uri', array( $this, 'remove_stop_words' ), 9, 3 );
 
 		// Custom fields in permalinks
 		add_filter( 'permalink_manager_filter_default_post_uri', array( $this, 'replace_custom_field_tags' ), 9, 5 );
@@ -669,8 +669,6 @@ class Permalink_Manager_Pro_Functions {
 	 * @param WC_Coupon $coupon
 	 */
 	public static function woocommerce_save_coupon_uri( $post_id, $coupon ) {
-		global $permalink_manager_uris;
-
 		// Verify nonce at first
 		if ( ! isset( $_POST['permalink-manager-nonce'] ) || ! wp_verify_nonce( $_POST['permalink-manager-nonce'], 'permalink-manager-coupon-uri-box' ) ) {
 			return;
@@ -681,7 +679,7 @@ class Permalink_Manager_Pro_Functions {
 			return;
 		}
 
-		$old_uri = Permalink_Manager_URI_Functions::get_single_uri( $post_id, false, true );
+		$old_uri = Permalink_Manager_URI_Functions::get_single_uri( $post_id, false, true, false );
 		$new_uri = ( ! empty( $_POST['custom_uri'] ) ) ? $_POST['custom_uri'] : "";
 
 		if ( $old_uri !== $new_uri ) {

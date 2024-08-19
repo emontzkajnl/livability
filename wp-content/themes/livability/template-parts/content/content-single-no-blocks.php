@@ -140,7 +140,7 @@
                             <a class="a2a_button_copy_link"></a>
                             <a class="a2a_button_linkedin"></a>
                             <a class="a2a_button_facebook"></a>
-                            <a class="a2a_button_twitter"></a>
+                            <a class="a2a_button_x"></a>
                             <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
                         </div>
                         <script>

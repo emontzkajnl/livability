@@ -198,7 +198,7 @@ class Permalink_Manager_Tax_Uri_Editor_Table extends WP_List_Table {
 			$sql_parts['where'] = "WHERE (LOWER(t.name) LIKE LOWER('%{$search_query}%') ";
 
 			// Search in array with custom URIs
-			$found = Permalink_Manager_Admin_Functions::search_uri( $search_query, 'taxonomies' );
+			$found = Permalink_Manager_URI_Functions::find_uri( $search_query, false, 'taxonomies' );
 			if ( $found ) {
 				$sql_parts['where'] .= sprintf( "OR t.term_id IN (%s) ", implode( ',', $found ) );
 			}
