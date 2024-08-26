@@ -153,10 +153,10 @@
                     <div class="wp-block-column">
                      
                         <?php if (has_excerpt(  )): ?>
-                            <p class="article-excerpt"><?php echo wp_strip_all_tags(get_the_excerpt()); ?></p>
+                            <div class="article-excerpt"><?php echo wp_strip_all_tags(get_the_excerpt()); ?></div>
                         <?php endif; ?>
                       
-                        <p class="author">By <?php echo esc_html__( get_the_author(), 'livibility' ).' on '.esc_html( get_the_date() ); ?></p>
+                        <div class="author">By <?php echo esc_html__( get_the_author(), 'livibility' ).' on '.esc_html( get_the_date() ); ?></div>
                         <?php if (get_field('sponsored')): 
                             $sponsor_text = get_field('sponsor_text') ? get_field('sponsor_text') : 'Sponsored by';
                             $name = get_field('sponsor_name');
