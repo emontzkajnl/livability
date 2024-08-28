@@ -44,6 +44,7 @@
 			$instagram = get_option('options_instagram');
 			$pinterest = get_option('options_pinterest');
 			$linkedin = get_option('options_linkedin');
+			$youtube = get_option('options_youtube');
 			?>
 			<ul>
 				<?php 
@@ -52,6 +53,7 @@
 				if($instagram) {echo '<li><a href="'.esc_url($instagram).'" target="_blank" ><i class="fab fa-instagram"></i></a></li>';} 
 				if($pinterest) {echo '<li><a href="'.esc_url($pinterest).'" target="_blank" ><i class="fab fa-pinterest-p"></i></a></li>';} 
 				if($linkedin) {echo '<li><a href="'.esc_url($linkedin).'" target="_blank" ><i class="fab fa-linkedin-in"></i></a></li>';} 
+				if ($youtube) {echo '<li><a href="'.esc_url($youtube).'" target="_blank" ><i class="fab fa-youtube"></i></a></li>';}
 				?>
 			</ul>
 			</div>
