@@ -776,7 +776,10 @@ function jci_blocks_render_ad_two() {
     // $html .= '<script>
     // googletag.cmd.push(function() { googletag.display("div-gpt-ad-1568929535248-0"); });
     // </script>';
-    $html .= do_shortcode('[the_ad_group id="699"]');
+    // $html .= do_shortcode('[the_ad_group id="699"]');
+    if( function_exists('the_ad_placement') ) { 
+       $html .=  the_ad_placement('manual-right-rail'); 
+        } 
     $html .= '</div>';
     // if ($all_ads) {
         return $html;
