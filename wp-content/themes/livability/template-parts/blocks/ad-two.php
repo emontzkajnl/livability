@@ -6,6 +6,8 @@
 <!-- <script>
 googletag.cmd.push(function() { googletag.display('div-gpt-ad-1568929535248-0'); });
 </script> -->
-<?php echo the_ad_group(699); ?>
+<?php if( function_exists('the_ad_placement') ) { 
+    the_ad_placement('manual-right-rail'); 
+    } ?>
 
 </div>
