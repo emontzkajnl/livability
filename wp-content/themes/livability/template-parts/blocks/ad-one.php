@@ -6,6 +6,6 @@
             });
         }
     </script> -->
-    <?php echo the_ad_group(698); ?>
+    <?php if( function_exists('the_ad_placement') ) { the_ad_placement('top-leaderboard'); } ?>
 </div>
 <!-- <div class="wp-block-jci-ad-area-one" id="<?php //echo get_the_ID(); ?>-1"></div> -->
