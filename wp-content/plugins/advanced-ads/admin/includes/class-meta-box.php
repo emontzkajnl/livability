@@ -1,7 +1,6 @@
 <?php
 // phpcs:ignoreFile
 
-use AdvancedAds\Assets_Registry;
 use AdvancedAds\Entities;
 use AdvancedAds\Utilities\WordPress;
 
@@ -69,7 +68,7 @@ class Advanced_Ads_Admin_Meta_Boxes {
 		global $pagenow;
 
 		if ( 'index.php' === $pagenow ) {
-			Assets_Registry::enqueue_script( 'wp-widget-adsense' );
+			wp_advads()->registry->enqueue_script( 'wp-widget-adsense' );
 		}
 	}
 
@@ -272,8 +271,8 @@ class Advanced_Ads_Admin_Meta_Boxes {
 				$hndlelinks                   .= '<a href="https://wpadvancedads.com/manual/visitor-conditions/?utm_source=advanced-ads&utm_medium=link&utm_campaign=edit-visitor" target="_blank" class="advads-manual-link">' . __( 'Visitor Conditions', 'advanced-ads' ) . '</a>';
 				$videomarkup                  = '<iframe width="420" height="315" src="https://www.youtube-nocookie.com/embed/VjfrRl5Qn4I?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
 				$ad_options                   = $ad->options();
-				$display_conditions           = is_array( $ad_options['conditions'] ) ? $ad_options['conditions'] : []; // default value for older version is `""` (empty string)
-				$visitor_conditions           = is_array( $ad_options['visitors'] ) ? $ad_options['visitors'] : []; // default value for older version is `""` (empty string)
+				$display_conditions           = ! empty( $ad_options['conditions'] ) && is_array( $ad_options['conditions'] ) ? $ad_options['conditions'] : []; // default value for older version is `""` (empty string)
+				$visitor_conditions           = ! empty( $ad_options['visitors'] ) && is_array( $ad_options['visitors'] ) ? $ad_options['visitors'] : []; // default value for older version is `""` (empty string)
 				$display_conditions_available = ( empty( $display_conditions ) );
 				$visitor_conditions_available = ( empty( $visitor_conditions ) );
 				break;
@@ -609,7 +608,6 @@ class Advanced_Ads_Admin_Meta_Boxes {
 		self::dashboard_cached_rss_widget();
 
 		?>
-		<p><a href="https://wpadvancedads.com/category/tutorials/?utm_source=advanced-ads&utm_medium=link&utm_campaign=dashboard" target="_blank"><?php esc_html_e( 'Visit our blog for more articles about ad optimization', 'advanced-ads' ); ?></a></p>
 		<?php
 
 		// add markup for utm variables.
@@ -653,7 +651,25 @@ class Advanced_Ads_Admin_Meta_Boxes {
 	 * Create the rss output of the widget
 	 */
 	public static function dashboard_widget_function_output() {
+		$adsense_num = 0;
+		$currency    = '';
+		$adsense_obj = Advanced_Ads_AdSense_Report_Data::get_data_from_options( 'domain' );
 
+		if ( $adsense_obj->get_currency() !== '' ) {
+			$adsense_num = $adsense_obj->get_sums()['28days'] ?? 0;
+			$currency    = $adsense_obj->get_currency() ?? '';
+		}
+
+		$currencies  = [ 'EUR', 'USD' ];
+		$feed_url    = 'https://wpadvancedads.com/category/tutorials/feed/';
+		$campaign    = 'dashboard';
+		if ( $adsense_num > 1000 && in_array( $currency, $currencies ) ) {
+			$feed_url = 'https://wpadvancedads.com/category/adsense-motors/feed/';
+			$campaign = 'dashboard-adsense-motors';
+		} elseif ( $adsense_num > 100 && in_array( $currency, $currencies ) ) {
+			$feed_url = 'https://wpadvancedads.com/category/adsense/feed/';
+			$campaign = 'dashboard-adsense';
+		}
 		check_ajax_referer( 'advanced-ads-admin-ajax-nonce', 'nonce' );
 
 		$cache_key = 'dash_' . md5( 'advads_dashboard_widget' );
@@ -661,9 +677,9 @@ class Advanced_Ads_Admin_Meta_Boxes {
 		$feeds = [
 			[
 				'link'         => 'https://wpadvancedads.com/',
-				'url'          => 'https://wpadvancedads.com/category/tutorials/feed/',
+				'url'          => $feed_url,
 				'title'        => sprintf(
-					// translators: %s is our URL.
+				// translators: %s is our URL.
 					__( 'Latest posts on wpadvancedads.com', 'advanced-ads' ),
 					'https://wpadvancedads.com/'
 				),
@@ -682,6 +698,7 @@ class Advanced_Ads_Admin_Meta_Boxes {
 			echo '<h4>' . esc_html( $_feed['title'] ) . '</h4>';
 			wp_widget_rss_output( $_feed['url'], $_feed );
 			echo '</div>';
+			echo '<p><a href="https://wpadvancedads.com/category/tutorials/?utm_source=advanced-ads&utm_medium=link&utm_campaign=' . $campaign . '" target="_blank">' . esc_html( 'Visit our blog for more articles about ad optimization', 'advanced-ads' ) . '</a></p>';
 		}
 
 		$feed_content = ob_get_clean();

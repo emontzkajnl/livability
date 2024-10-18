@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace ACP\Sorting\Model\Post;
 
-use ACP\Search\Query\Bindings;
-use ACP\Sorting\AbstractModel;
+use ACP\Query\Bindings;
 use ACP\Sorting\Model\QueryBindings;
 use ACP\Sorting\Model\SqlOrderByFactory;
 use ACP\Sorting\Type\Order;
 
-class Depth extends AbstractModel implements QueryBindings
+class Depth implements QueryBindings
 {
 
     use PostRequestTrait;
@@ -19,8 +18,6 @@ class Depth extends AbstractModel implements QueryBindings
 
     public function __construct(string $post_type)
     {
-        parent::__construct();
-
         $this->post_type = $post_type;
     }
 
@@ -69,7 +66,7 @@ class Depth extends AbstractModel implements QueryBindings
         $values = [];
 
         foreach (array_keys($ids) as $id) {
-            $values[$id] = $this->get_depth($id, $ids);
+            $values[$id] = $this->get_depth((int)$id, $ids);
         }
 
         asort($values, SORT_NUMERIC);

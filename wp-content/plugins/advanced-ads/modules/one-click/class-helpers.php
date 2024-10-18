@@ -9,8 +9,9 @@
 
 namespace AdvancedAds\Modules\OneClick;
 
-use AdvancedAds\Utilities\Str;
+use AdvancedAds\Constants;
 use AdvancedAds\Utilities\WordPress;
+use AdvancedAds\Framework\Utilities\Str;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -18,17 +19,6 @@ defined( 'ABSPATH' ) || exit;
  * Helpers.
  */
 class Helpers {
-
-	/**
-	 * Is module enabled.
-	 *
-	 * @param string $name name of module.
-	 *
-	 * @return bool
-	 */
-	public static function is_module_enabled( $name ): bool {
-		return boolval( get_option( "pubguru_module_{$name}" ) );
-	}
 
 	/**
 	 * Check if config has traffic cop subscription
@@ -57,9 +47,11 @@ class Helpers {
 	 * Get config file
 	 *
 	 * Cases
-	 *  1. For mobile prefix => pg.mobile
-	 *  2. For desktop prefix => pg.desktop
-	 *  3. If none of the prefix is found than go with the first one
+	 *  1. For auto_created
+	 *  2. For mobile prefix
+	 *  3. For desktop prefix
+	 *  4. If none of the prefix is found than go with the first one
+	 *  5. No configuration found => pg.{domain}.js
 	 *
 	 * @return bool|string
 	 */
@@ -73,13 +65,29 @@ class Helpers {
 		$pubguru_config_name = false;
 		$configs             = Options::pubguru_config();
 
+		// 1. For auto_created  => pg.{domain}_auto_created.js
+		foreach ( $configs['configs'] as $config ) {
+			if ( isset( $config['auto_created'] ) && $config['auto_created'] ) {
+				$pubguru_config_name = $config['name'];
+				return $pubguru_config_name;
+			}
+		}
+
+		// 5. No configuration found => pg.{domain}.js
 		if ( ! isset( $configs['configs'] ) || empty( $configs['configs'] ) ) {
 			$domain = WordPress::get_site_domain( 'name' );
 			return "pg.{$domain}.js";
 		}
 
-		$pubguru_config_name = wp_is_mobile() ? self::config_contains( 'mobile' ) : self::config_contains( 'desktop' );
-		$pubguru_config_name = false !== $pubguru_config_name ? $pubguru_config_name : $configs['configs'][0]['name'];
+		$pubguru_config_name = wp_is_mobile()
+			// 2. For mobile prefix
+			? self::config_contains( 'mobile' )
+			// 3. For desktop prefix
+			: self::config_contains( 'desktop' );
+		$pubguru_config_name = false !== $pubguru_config_name
+			? $pubguru_config_name
+			// 4. If none of the prefix is found than go with the first one
+			: $configs['configs'][0]['name'];
 
 		return $pubguru_config_name;
 	}
@@ -95,7 +103,7 @@ class Helpers {
 		$configs = Options::pubguru_config();
 
 		foreach ( $configs['configs'] as $config ) {
-			if ( Str::str_contains( $needle, $config['name'] ) ) {
+			if ( Str::contains( $needle, $config['name'] ) ) {
 				return $config['name'];
 			}
 		}
@@ -111,13 +119,18 @@ class Helpers {
 	public static function start_auto_ad_creation(): void {
 		$ads = self::get_ads_from_config();
 
-		if ( $ads && ! wp_next_scheduled( 'advanced-ads-pghb-auto-ad-creation' ) ) {
-			wp_schedule_single_event( current_datetime()->getTimestamp() + MINUTE_IN_SECONDS, 'advanced-ads-pghb-auto-ad-creation' );
+		if ( $ads && ! wp_next_scheduled( Constants::CRON_API_ADS_CREATION ) ) {
+			wp_schedule_single_event( current_datetime()->getTimestamp() + 5, Constants::CRON_API_ADS_CREATION );
 		}
 	}
 
 	/**
 	 * Get ads from saved config.
+	 *
+	 * In this order
+	 *   1. Get ads from auto_created = true
+	 *   2. Get ads from first config
+	 *   3. Get ads from default config
 	 *
 	 * @return bool|array
 	 */
@@ -131,14 +144,55 @@ class Helpers {
 
 		$pubguru_config_ads = false;
 
-		if ( isset( $config['configs'][0]['ad_units'] ) && ! empty( $config['configs'][0]['ad_units'] ) ) {
-			$pubguru_config_ads = [];
-
-			foreach ( $config['configs'] as $config ) {
-				foreach ( $config['ad_units'] as $ad_id => $ad ) {
-					$pubguru_config_ads[ $ad_id ] = $ad;
-				}
+		// 1. Get ads from auto_created = true
+		foreach ( $config['configs'] as $config ) {
+			if ( isset( $config['auto_created'] ) && $config['auto_created'] ) {
+				$pubguru_config_ads = $config['ad_units'];
+				return $pubguru_config_ads;
 			}
+		}
+
+		// 2. Get ads from first config
+		if ( isset( $config['configs'][0]['ad_units'] ) && ! empty( $config['configs'][0]['ad_units'] ) ) {
+			$pubguru_config_ads = $config['configs'][0]['ad_units'];
+		} else {
+			// 3. Get ads from default config
+			$domain             = WordPress::get_site_domain();
+			$pubguru_config_ads = [
+				$domain . '_leaderboard'  => [
+					'ad_unit'              => $domain . '_leaderboard',
+					'slot'                 => $domain . '_leaderboard',
+					'device'               => 'All',
+					'placement'            => 'Before Content',
+					'placement_conditions' => 'All',
+					'in_content_position'  => 'Before',
+					'in_content_count'     => 1,
+					'in_content_element'   => 'p',
+					'in_content_repeat'    => false,
+				],
+				$domain . '_in_content_1' => [
+					'ad_unit'              => $domain . '_in_content_1',
+					'slot'                 => $domain . '_in_content_1',
+					'device'               => 'All',
+					'placement'            => 'Before Content',
+					'placement_conditions' => 'All',
+					'in_content_position'  => 'Before',
+					'in_content_count'     => 1,
+					'in_content_element'   => 'p',
+					'in_content_repeat'    => false,
+				],
+				$domain . '_in_content_2' => [
+					'ad_unit'              => $domain . '_in_content_2',
+					'slot'                 => $domain . '_in_content_2',
+					'device'               => 'All',
+					'placement'            => 'After Content',
+					'placement_conditions' => 'All',
+					'in_content_position'  => 'Aefore',
+					'in_content_count'     => 3,
+					'in_content_element'   => 'p',
+					'in_content_repeat'    => true,
+				],
+			];
 		}
 
 		return $pubguru_config_ads;
@@ -153,6 +207,10 @@ class Helpers {
 	 */
 	public static function is_ad_disabled( $post_id = 0 ): bool {
 		global $post;
+
+		if ( ! $post ) {
+			return false;
+		}
 
 		if ( ! $post_id ) {
 			$post_id = $post->ID;

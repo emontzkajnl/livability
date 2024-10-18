@@ -8,12 +8,16 @@ return [
     ACP\Column\Post\AuthorName::class,
     ACP\Column\Post\DatePublished::class,
     ACP\Column\Post\ID::class,
+    ACP\Column\Post\Modified::class,
     ACP\Column\Post\LastModifiedAuthor::class,
     ACP\Column\Post\Slug::class,
     ACP\Column\Post\Status::class,
     ACP\Column\Post\TitleRaw::class,
 
     Column\Product\ShippingClass::class,
+    Column\Product\Sales::class,
+    Column\Product\LowOnStock::class,
+    Column\Product\StockThreshold::class,
 
     Column\ProductVariation\Attribute::class,
     Column\ProductVariation\Description::class,
@@ -25,6 +29,7 @@ return [
     Column\ProductVariation\Order::class,
     Column\ProductVariation\Price::class,
     Column\ProductVariation\Product::class,
+    Column\ProductVariation\ParentProduct::class,
     Column\ProductVariation\ShippingClass::class,
     Column\ProductVariation\SKU::class,
     Column\ProductVariation\Stock::class,
@@ -34,5 +39,5 @@ return [
     Column\ProductVariation\Variation::class,
     Column\ProductVariation\Virtual::class,
     Column\ProductVariation\Weight::class,
-    Column\Product\Sales::class,
+
 ];

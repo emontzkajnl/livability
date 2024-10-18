@@ -2,12 +2,12 @@
 # This file is distributed under the same license as the Advanced Ads Pro package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2024-01-10 09:35:55+0000\n"
+"PO-Revision-Date: 2024-02-06 10:18:57+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: GlotPress/3.0.0\n"
+"X-Generator: GlotPress/4.0.0\n"
 "Language: de\n"
 "Project-Id-Version: Advanced Ads Pro\n"
 
@@ -2077,7 +2077,7 @@ msgstr "Anzeigen nur auf Seiten einblenden, die eine bestimmte Mitgliedsrolle vo
 
 #: modules/paid-memberships-pro/main.class.php:29
 msgid "PMP page level"
-msgstr "PMP Seitenebene"
+msgstr "PMP Mitgliedschaft"
 
 #: modules/inject-content/inject-content.class.php:100
 msgid "Display the ad between posts on post lists, e.g. home, archives, search etc."

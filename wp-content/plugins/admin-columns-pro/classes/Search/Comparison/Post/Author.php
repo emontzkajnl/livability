@@ -2,60 +2,63 @@
 
 namespace ACP\Search\Comparison\Post;
 
-use AC;
+use AC\Helper\Select\Options\Paginated;
 use ACP\Helper\Select;
-use ACP\Helper\Select\Formatter;
-use ACP\Helper\Select\Group;
+use ACP\Helper\Select\User\LabelFormatter\UserName;
+use ACP\Helper\Select\User\PaginatedFactory;
 use ACP\Search\Comparison\SearchableValues;
 use ACP\Search\Operators;
 
 class Author extends PostField
-	implements SearchableValues {
+    implements SearchableValues
+{
 
-	/**
-	 * @var string
-	 */
-	private $post_type;
+    private $post_type;
 
-	public function __construct( $post_type ) {
-		$operators = new Operators( [
-			Operators::EQ,
-			Operators::CURRENT_USER,
-		] );
+    public function __construct(string $post_type)
+    {
+        $operators = new Operators([
+            Operators::EQ,
+            Operators::NEQ,
+            Operators::CURRENT_USER,
+        ]);
 
-		$this->post_type = $post_type;
+        $this->post_type = $post_type;
 
-		parent::__construct( $operators );
-	}
+        parent::__construct($operators);
+    }
 
-	protected function get_field() {
-		return 'post_author';
-	}
+    private function formatter(): UserName
+    {
+        return new UserName();
+    }
 
-	/**
-	 * @param string $post_type
-	 *
-	 * @return int[]
-	 */
-	private function get_author_ids( $post_type ) {
-		global $wpdb;
+    public function format_label($value): string
+    {
+        return $value ? $this->formatter()->format_label(get_userdata($value)) : '';
+    }
 
-		return $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT post_author FROM {$wpdb->posts} WHERE post_type = %s;", $post_type ) );
-	}
+    protected function get_field(): string
+    {
+        return 'post_author';
+    }
 
-	public function get_values( $search, $paged ) {
-		$entities = new Select\Entities\User( [
-			'search'  => $search,
-			'paged'   => $paged,
-			'include' => $this->get_author_ids( $this->post_type ),
-		] );
+    private function get_author_ids(string $post_type): array
+    {
+        global $wpdb;
 
-		return new AC\Helper\Select\Options\Paginated(
-			$entities,
-			new Group\UserRole(
-				new Formatter\UserName( $entities )
-			)
-		);
-	}
+        return $wpdb->get_col(
+            $wpdb->prepare("SELECT DISTINCT post_author FROM $wpdb->posts WHERE post_type = %s;", $post_type)
+        );
+    }
+
+    public function get_values(string $search, int $page): Paginated
+    {
+        return (new PaginatedFactory())->create([
+            'search' => $search,
+            'paged' => $page,
+            'include' => $this->get_author_ids($this->post_type),
+        ], $this->formatter());
+    }
 
 }
