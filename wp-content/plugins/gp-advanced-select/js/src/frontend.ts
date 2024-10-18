@@ -154,9 +154,7 @@ class GPAdvancedSelect implements GPAdvancedSelectInitArgs {
 		if (gpadvs.fieldType === 'multiselect') {
 			// @ts-ignore because with the RecursivePartial type, TS cannot infer that this IS an array based on what is hardcoded in the settings object above.
 			settings.plugins?.remove_button = {
-				options: {
-					title: window.GPADVS.strings?.remove_this_item,
-				},
+				title: window.GPADVS.strings?.remove_this_item,
 			};
 		}
 

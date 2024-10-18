@@ -1,15 +1,15 @@
 <?php
-/*
-Plugin Name: Gravity Booster ( Style & Layouts )
-Plugin URI:  http://wpmonks.com/styles-layouts-gravity-forms
-Description: Create beautiful styles for your gravity forms
-Version:     5.5
-Author:      Sushil Kumar
-Author URI:  http://wpmonks.com/
-License:     GPL2License URI: https://www.gnu.org/licenses/gpl-2.0.html
-*/
+/**
+ * Plugin Name: Gravity Booster ( Style & Layouts )
+ * Plugin URI:  http://wpmonks.com/styles-layouts-gravity-forms
+ * Description: Create beautiful styles for your gravity forms
+ * Version:     5.18
+ * Author:      Sushil Kumar
+ * Author URI:  http://wpmonks.com/
+ * License:     GPL2License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ */
 
-// don't load directly
+// Don't load directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
@@ -17,30 +17,46 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'GF_STLA_DIR', WP_PLUGIN_DIR . '/' . basename( __DIR__ ) );
 define( 'GF_STLA_URL', plugins_url() . '/' . basename( __DIR__ ) );
 define( 'GF_STLA_STORE_URL', 'https://wpmonks.com' );
-define( 'GF_STLA_VERSION', '5.5' );
+define( 'GF_STLA_VERSION', '5.18' );
 
 if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) ) {
 	include_once GF_STLA_DIR . '/admin-menu/EDD_SL_Plugin_Updater.php';
 }
-// include_once 'helpers/customizer-controls/margin-padding.php';
 require_once 'helpers/utils/responsive.php';
 require_once 'helpers/utils/class-gf-stla-review.php';
 
-require_once GF_STLA_DIR . '/admin-menu/licenses.php';
-require_once GF_STLA_DIR . '/admin-menu/addons.php';
-require_once GF_STLA_DIR . '/admin-menu/welcome-page.php';
-
-require_once GF_STLA_DIR . '/includes/admin/fetch/content-area.php';
+require_once GF_STLA_DIR . '/admin-menu/class-stla-license-page.php';
+require_once GF_STLA_DIR . '/admin-menu/class-stla-addons-page.php';
+require_once GF_STLA_DIR . '/admin-menu/class-gf-stla-welcome-page.php';
+require_once GF_STLA_DIR . '/includes/admin/fetch/stla-admin-fetch-content-area.php';
 
 class Gravity_customizer_admin {
 
+	/**
+	 * The page trigger.
+	 *
+	 * @var string
+	 */
 	private $trigger;
+	/**
+	 * The form id.
+	 *
+	 * @var int
+	 */
 	private $stla_form_id;
+
+	/**
+	 * The styles added on froms.
+	 *
+	 * @var array
+	 */
 	private $form_styles_processed = array();
 
+	/**
+	 * Execute all the actions and filters.
+	 */
 	public function __construct() {
 		global $wp_version;
-		// $this->all_found_forms_ids = '';
 		add_action( 'customize_register', array( $this, 'customize_register' ) );
 		add_action( 'customize_controls_enqueue_scripts', array( $this, 'customize_controls_enqueue_scripts' ) );
 		add_action( 'customize_preview_init', array( $this, 'customize_preview_init' ) );
@@ -50,13 +66,11 @@ class Gravity_customizer_admin {
 		add_action( 'customize_save_after', array( $this, 'customize_save_after' ) );
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 		add_filter( 'gform_toolbar_menu', array( $this, 'gform_toolbar_menu' ), 10, 2 );
-		add_action( 'gform_enqueue_scripts', array( $this, 'gform_enqueue_scripts' ), 10, 2 );
-		add_action( 'upgrader_process_complete', array( $this, 'stla_upgrade_completed' ), 10, 2 );
+		add_action( 'gform_enqueue_scripts', array( $this, 'gform_enqueue_scripts' ), 10 );
 		if ( class_exists( 'GFForms' ) ) {
-			// add_action( 'template_redirect', array( $this, 'gf_stla_preview_template' ) );
 			add_filter( 'template_include', array( $this, 'gf_stla_preview_template' ) );
 			$this->trigger = 'stla-gravity-forms-customizer';
-			// only load controls for this plugin
+			// only load controls for this plugin.
 			if ( isset( $_GET[ $this->trigger ] ) ) {
 				if ( ! empty( $_GET['stla_form_id'] ) ) {
 					$this->stla_form_id = sanitize_text_field( wp_unslash( $_GET['stla_form_id'] ) );
@@ -69,19 +83,23 @@ class Gravity_customizer_admin {
 	}
 
 
+	/**
+	 * Enqueue admin scripts and styles.
+	 *
+	 * @return void
+	 */
+	public function admin_enqueue_scripts() {
 
-	function admin_enqueue_scripts() {
+		if ( is_admin() || defined( 'REST_REQUEST' ) || class_exists( 'GFAPI' ) ) {
 
-		if ( is_admin() || defined( 'REST_REQUEST' ) ) {
-
-			if ( ( ! isset( $_GET['page'] ) || $_GET['page'] !== 'stla_gravity_booster' ) ) {
+			if ( ( ! isset( $_GET['page'] ) || 'stla_gravity_booster' !== $_GET['page'] ) ) {
 				return;
 			}
 		}
 
 		$asset_file = include GF_STLA_DIR . '/build/index.asset.php';
 
-		wp_enqueue_style( 'stla-admin-styles', GF_STLA_URL . '/build/index.css', array( 'wp-components' ) );
+		wp_enqueue_style( 'stla-admin-styles', GF_STLA_URL . '/build/index.css', array( 'wp-components' ), GF_STLA_VERSION );
 
 		$addons_info = $this->get_booster_admin_js_addons_info();
 
@@ -89,25 +107,31 @@ class Gravity_customizer_admin {
 		wp_enqueue_script( 'stla-admin-gravity-booster-js', GF_STLA_URL . '/build/index.js', $asset_file['dependencies'], $asset_file['version'], true );
 		wp_enqueue_script( 'stla-admin-gravity-booster', GF_STLA_URL . '/build/index.js', $addons_info['dependencies'], $asset_file['version'], true );
 
-		// Generate a nonce
+		// Generate a nonce.
 		$nonce = wp_create_nonce( 'stla_gravity_booster_nonce' );
 
 		$form_id = 0;
 		if ( ! empty( $_GET['formId'] ) ) {
-			$form_id = $_GET['formId'];
+			$form_id = sanitize_text_field( wp_unslash( $_GET['formId'] ) );
 		}
 		$panel_id = 'styler';
 		if ( ! empty( $_GET['panelId'] ) ) {
-			$panel_id = $_GET['panelId'];
+			$panel_id = sanitize_text_field( wp_unslash( $_GET['panelId'] ) );
 		}
 
 		$section_id = '';
 		if ( ! empty( $_GET['sectionId'] ) ) {
-			$section_id = $_GET['sectionId'];
+			$section_id = sanitize_text_field( wp_unslash( $_GET['sectionId'] ) );
 		}
 
 		$customizer_url = $this->_set_customizer_url( $form_id );
-		// Pass the nonce to your React script using wp_localize_script()
+		$merge_tags     = array();
+		$form           = GFAPI::get_form( $form_id );
+		if ( $form ) {
+			$merge_tags = GFCommon::get_merge_tags( $form['fields'], '', false );
+		}
+
+		// Pass the nonce to your React script using wp_localize_script().
 		wp_localize_script(
 			'stla-admin-gravity-booster-js',
 			'stlaAdminGravityBooster',
@@ -118,14 +142,20 @@ class Gravity_customizer_admin {
 				'sectionId'     => $section_id,
 				'status'        => $addons_info['status'],
 				'version'       => $addons_info['version'],
+				'isRtl'         => is_rtl(),
 				'customizerUrl' => $customizer_url,
 				'adminUrl'      => get_admin_url(),
-				// 'settings' => $settings,
+				'mergeTags'     => $merge_tags,
 			)
 		);
 	}
 
-	function get_booster_admin_js_addons_info() {
+	/**
+	 * Get version and instalattion status of all the addons.
+	 *
+	 * @return array
+	 */
+	public function get_booster_admin_js_addons_info() {
 
 		$asset_file        = include GF_STLA_DIR . '/build/index.asset.php';
 		$js_dependencies   = $asset_file['dependencies'];
@@ -211,6 +241,7 @@ class Gravity_customizer_admin {
 
 		if ( is_plugin_active( 'gravityforms/gravityforms.php' ) ) {
 			$addon_dependecies[] = 'gform_gravityforms';
+
 		}
 		$dependencies = array_merge( $addon_dependecies, $js_dependencies );
 
@@ -221,8 +252,13 @@ class Gravity_customizer_admin {
 		);
 	}
 
-
-	function add_menu_item( $menu_items ) {
+	/**
+	 * Add "Booster" menu item under Forms in dashboard.
+	 *
+	 * @param array $menu_items GF menu items.
+	 * @return array
+	 */
+	public function add_menu_item( $menu_items ) {
 
 		$menu_items[] = array(
 			'name'       => 'stla_gravity_booster',
@@ -234,35 +270,37 @@ class Gravity_customizer_admin {
 		return $menu_items;
 	}
 
-	function stla_gravity_booster_submenu_callback() {
+
+	/**
+	 * The content of Booster page at backend.
+	 *
+	 * @return void
+	 */
+	public function stla_gravity_booster_submenu_callback() {
 		echo '<style>
-		body.forms_page_stla_gravity_booster {
+		body.wp-admin {
 			overflow: hidden;
 		}
-		body.forms_page_stla_gravity_booster #adminmenumain{
+		body.wp-admin #adminmenumain{
 			display: none;
 		}
-
-		body.forms_page_stla_gravity_booster #wpcontent #wpadminbar{
+		body.wp-admin #wpcontent #wpadminbar{
 			display: none;
 		}
-
 		#wpbody-content{
 			overflow: hidden;
 		}
-			
 		</style>';
 
-		// echo $form;
 		if ( ! empty( $_GET['formId'] ) ) {
-			GFForms::enqueue_form_scripts( $_GET['formId'] );
+			GFForms::enqueue_form_scripts( sanitize_text_field( wp_unslash( $_GET['formId'] ) ) );
 		}
 
 		echo '<div id="stla-gravity-booster"></div>';
 	}
 
 	/**
-	 * Enqueue styles and scripts for customizer specifically
+	 * Enqueue styles and scripts for customizer specifically.
 	 *
 	 * @return void
 	 */
@@ -272,25 +310,28 @@ class Gravity_customizer_admin {
 		}
 	}
 
-
-
 	/**
 	 * Runs when plugin is updated.
+	 *
+	 * @param array $upgrader_object WP upgrade instance.
+	 * @param array $options update data.
+	 * @return void
 	 */
 	public function stla_upgrade_completed( $upgrader_object, $options ) {
-		// The path to our plugin's main file
+		// The path to our plugin's main file.
 		$our_plugin = plugin_basename( __FILE__ );
-		// If an update has taken place and the updated type is plugins and the plugins element exists
-		if ( $options['action'] == 'update' && $options['type'] == 'plugin' && isset( $options['plugins'] ) ) {
-			// Iterate through the plugins being updated and check if ours is there
+		// If an update has taken place and the updated type is plugins and the plugins element exists.
+		if ( 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {
+			// Iterate through the plugins being updated and check if ours is there.
 			foreach ( $options['plugins'] as $plugin ) {
-				if ( $plugin == $our_plugin ) {
-					// Set a transient to record that our plugin has just been updated
-					// array_push( $updated_plugins, $plugin );
+				if ( $plugin === $our_plugin ) {
+					// Set a transient to record that our plugin has just been updated.
 					if ( class_exists( 'RGFormsModel' ) ) {
 						$forms       = RGFormsModel::get_forms( null, 'title' );
 						$field_names = array( 'padding', 'margin' );
+
 						$field_types = array( 'form-wrapper', 'checkbox-inputs', 'confirmation-message', 'dropdown-fields', 'error-message', 'field-descriptions', 'field-labels', 'field-sub-labels', 'form-description', 'form-header', 'form-title', 'form-wrapper', 'list-field', 'paragraph-textarea', 'placeholders', 'radio-inputs', 'section-break-description', 'section-break-title', 'submit-button', 'text-fields' );
+
 						foreach ( $forms as $form ) {
 							$form_id      = $form->id;
 							$stla_options = get_option( 'gf_stla_form_id_' . $form_id );
@@ -301,7 +342,7 @@ class Gravity_customizer_admin {
 										if ( isset( $stla_options[ $field_type ][ $field_name ] ) ) {
 											$value  = trim( $stla_options[ $field_type ][ $field_name ] );
 											$values = preg_split( '/[\s]+/', $value );
-											$count  = sizeof( $values );
+											$count  = count( $values );
 											switch ( $count ) {
 												case 4:
 													$stla_options[ $field_type ][ $field_name . '-top' ]    = $values[0];
@@ -351,24 +392,24 @@ class Gravity_customizer_admin {
 									update_option( 'gf_stla_form_id_' . $form_id, $stla_options );
 								}
 
-								// change the gradient field value from hsl to hex
+								// Change the gradient field value from hsl to hex.
 								if ( isset( $stla_options['form-wrapper']['gradient-color-1'] ) ) {
 									$gradient1 = $stla_options['form-wrapper']['gradient-color-1'];
 									$is_hex    = preg_match( '/^#[0-9A-F]{6}$/i', $gradient1 );
 
-									if ( $is_hex === 0 ) { // not hex
-										$stla_options['form-wrapper']['gradient-color-1'] = $this->hslToRgba( $gradient1, .5, .4 );
+									if ( 0 === $is_hex ) { // Not hex.
+										$stla_options['form-wrapper']['gradient-color-1'] = $this->hsl_to_rgba( $gradient1, .5, .4 );
 										update_option( 'gf_stla_form_id_' . $form_id, $stla_options );
 									}
 								}
 
-								// change the gradient field value from hsl to hex
+								// Change the gradient field value from hsl to hex.
 								if ( isset( $stla_options['form-wrapper']['gradient-color-1'] ) ) {
 									$gradient2 = $stla_options['form-wrapper']['gradient-color-2'];
 									$is_hex    = preg_match( '/^#[0-9A-F]{6}$/i', $gradient2 );
 
-									if ( $is_hex === 0 ) { // not hex
-										$stla_options['form-wrapper']['gradient-color-2'] = $this->hslToRgba( $gradient2, .5, .4 );
+									if ( 0 === $is_hex ) { // Not hex.
+										$stla_options['form-wrapper']['gradient-color-2'] = $this->hsl_to_rgba( $gradient2, .5, .4 );
 										update_option( 'gf_stla_form_id_' . $form_id, $stla_options );
 									}
 								}
@@ -380,28 +421,42 @@ class Gravity_customizer_admin {
 		}
 	}
 
-	public function gform_enqueue_scripts( $form, $is_ajax ) {
+	/**
+	 * Enqueue scripts for Gravity forms.
+	 *
+	 * @param array $form The GF form array.
+	 * @return void
+	 */
+	public function gform_enqueue_scripts( $form ) {
+
 		if ( is_customize_preview() ) {
 			wp_enqueue_style( 'stla_live_preview', GF_STLA_URL . '/css/live-preview.css', '', GF_STLA_VERSION );
 		}
 
 		$style_current_form = get_option( 'gf_stla_form_id_' . $form['id'] );
 
-		// is_admin doesn't work in gutenberg. used REST_REQUEST for this
+		// is_admin doesn't work in gutenberg. used REST_REQUEST for this.
 		$css_form_id = $form['id'];
 
 		if ( ! is_admin() && ! defined( 'REST_REQUEST' ) && ! $this->is_material_active( $css_form_id ) ) {
 
 			// including styling file only once for each form.
-			// if( ! empty( $style_current_form ) && array_search( $form['id'], $this->form_styles_processed ) === false ) {
 			array_push( $this->form_styles_processed, $css_form_id );
 			$main_class_object = $this;
 			include 'display/class-styles.php';
+			include 'display/class-fields-styles.php';
 			// }
 		}
+
 		do_action( 'gf_stla_after_post_style_display', $this );
 	}
 
+	/**
+	 * Check wether the material is active.
+	 *
+	 * @param int $form_id Form on which need to check the material.
+	 * @return boolean
+	 */
 	public function is_material_active( $form_id ) {
 		$is_active = false;
 
@@ -417,24 +472,25 @@ class Gravity_customizer_admin {
 	}
 
 	/**
-	 *  enqueue js file that autosaves the form selection in database
+	 *  Enqueue js file that autosaves the form selection in database.
 	 *
 	 * @since  v1.0
 	 * @author Sushil Kumar
-	 * @return null
+	 * @return void
 	 */
 	public function customize_controls_enqueue_scripts() {
 		wp_enqueue_style( 'stla-customizer-css', GF_STLA_URL . '/css/customizer/stla-customizer-controls.css', '', GF_STLA_VERSION );
+		wp_enqueue_style( 'stla-customizer-control-css', GF_STLA_URL . '/css/customizer-controls.css', '', GF_STLA_VERSION );
 		wp_enqueue_script( 'gf_stla_auto_save_form', GF_STLA_URL . '/js/customizer-controls/auto-save-form.js', array( 'jquery' ), GF_STLA_VERSION, true );
 		wp_enqueue_script( 'gf_stla_customize_controls', GF_STLA_URL . '/js/customizer-controls/customizer-controls.js', array( 'jquery' ), GF_STLA_VERSION, true );
 	}
 
 	/**
-	 *  shows live preview of css changes
+	 *  Shows live preview of css changes.
 	 *
 	 * @since  v1.0
 	 * @author Sushil Kumar
-	 * @return null
+	 * @return void
 	 */
 	public function customize_preview_init() {
 		$current_form_id = get_option( 'gf_stla_select_form_id' );
@@ -448,15 +504,13 @@ class Gravity_customizer_admin {
 		wp_localize_script( 'gf_stla_customizer_edit_shortcuts', 'gf_stla_localize_edit_shortcuts', array( 'formId' => $current_form_id ) );
 	}
 
-	/**
-	 *  Function that adds panels, sections, settings and controls
-	 *
-	 * @since  v1.0
-	 * @author Sushil Kumar
-	 * @param main       wp customizer object
-	 * @return null
-	 */
 
+	/**
+	 * Function that adds panels, sections, settings and controls.
+	 *
+	 * @param [type] $wp_customize WP customizer object.
+	 * @return void
+	 */
 	public function customize_register( $wp_customize ) {
 		if ( isset( $this->stla_form_id ) ) {
 			update_option( 'gf_stla_select_form_id', $this->stla_form_id );
@@ -464,7 +518,6 @@ class Gravity_customizer_admin {
 		include 'helpers/fonts.php';
 		$current_form_id = get_option( 'gf_stla_select_form_id' );
 		$border_types    = array(
-			// 'inherit' => 'Inherit',
 			'solid'  => 'Solid',
 			'dotted' => 'Dotted',
 			'dashed' => 'Dashed',
@@ -497,8 +550,7 @@ class Gravity_customizer_admin {
 			)
 		);
 		include 'includes/form-select.php';
-		if ( ! array_key_exists( 'autofocus', $_GET ) || ( array_key_exists( 'autofocus', $_GET ) && $_GET['autofocus']['panel'] !== 'gf_stla_panel' ) ) {
-			// write_log($_GET);
+		if ( ! array_key_exists( 'autofocus', $_GET ) || ( array_key_exists( 'autofocus', $_GET ) && array_key_exists( 'panel', $_GET['autofocus'] ) && 'gf_stla_panel' !== $_GET['autofocus']['panel'] ) ) {
 			$wp_customize->add_setting(
 				'gf_stla_hidden_field_for_form_id',
 				array(
@@ -522,12 +574,12 @@ class Gravity_customizer_admin {
 			);
 		}
 		include_once GF_STLA_DIR . '/helpers/customizer-controls/margin-padding.php';
-		include_once GF_STLA_DIR . '/helpers/customizer-controls/desktop-text-input.php';
+		include_once GF_STLA_DIR . '/helpers/customizer-controls/class-stla-desktop-text-input-option.php';
 		include_once GF_STLA_DIR . '/helpers/customizer-controls/tab-text-input.php';
 		include_once GF_STLA_DIR . '/helpers/customizer-controls/mobile-text-input.php';
-		include_once GF_STLA_DIR . '/helpers/customizer-controls/text-alignment.php';
-		include_once GF_STLA_DIR . '/helpers/customizer-controls/font-style.php';
-		include_once GF_STLA_DIR . '/helpers/customizer-controls/range-slider.php';
+		include_once GF_STLA_DIR . '/helpers/customizer-controls/class-stla-text-alignment-option.php';
+		include_once GF_STLA_DIR . '/helpers/customizer-controls/class-stla-font-style-option.php';
+		include_once GF_STLA_DIR . '/helpers/customizer-controls/class-stla-customize-control-range-slider.php';
 		include_once GF_STLA_DIR . '/helpers/customizer-controls/custom-controls.php';
 		include_once GF_STLA_DIR . '/includes/customizer-addons.php';
 		include_once GF_STLA_DIR . '/includes/general-settings.php';
@@ -536,8 +588,6 @@ class Gravity_customizer_admin {
 		include_once GF_STLA_DIR . '/includes/form-header.php';
 		include_once GF_STLA_DIR . '/includes/form-title.php';
 		include_once GF_STLA_DIR . '/includes/form-description.php';
-		// include 'includes/outer-shadow.php';
-		// include 'includes/inner-shadow.php';
 		include_once GF_STLA_DIR . '/includes/field-labels.php';
 		include_once GF_STLA_DIR . '/includes/field-sub-labels.php';
 		include_once GF_STLA_DIR . '/includes/placeholders.php';
@@ -553,11 +603,18 @@ class Gravity_customizer_admin {
 		include_once GF_STLA_DIR . '/includes/submit-button.php';
 		include_once GF_STLA_DIR . '/includes/confirmation-message.php';
 		include_once GF_STLA_DIR . '/includes/error-message.php';
-	} // main customizer function ends here
+	} // Main customizer function ends here.
 
+	/**
+	 * Check if the value exist in CSS properties.
+	 *
+	 * @param array  $setting The saved style settings.
+	 * @param string $property The key to check.
+	 * @return boolean
+	 */
 	public function is_css_not_set( $setting, $property ) {
 
-		if ( isset( $setting[ $property ] ) && $setting[ $property ] !== '' ) {
+		if ( isset( $setting[ $property ] ) && '' !== $setting[ $property ] ) {
 			return false;
 		}
 
@@ -565,20 +622,38 @@ class Gravity_customizer_admin {
 	}
 
 
-	public function gf_sb_get_saved_styles( $form_id, $category, $important = '' ) {
+	/**
+	 * Retrieves the saved styles for a specific form, category, and optionally a field ID.
+	 *
+	 * @param int    $form_id   The ID of the Gravity Forms form.
+	 * @param string $category  The category of the styles to retrieve.
+	 * @param string $important Whether to add the '!important' flag to the styles.
+	 * @param string $field_id  The ID of the field to retrieve styles for (optional).
+	 *
+	 * @return string The CSS styles for the specified form, category, and field.
+	 */
+	public function gf_sb_get_saved_styles( $form_id, $category, $important = '', $field_id = '' ) {
+
 		if ( is_customize_preview() ) {
 			$important = '';
 		}
 
 		$settings = get_option( 'gf_stla_form_id_' . $form_id );
-		if ( empty( $settings ) ) {
-			return;
+
+		// get the styler settings specific to fields.
+		if ( ! empty( $field_id ) ) {
+			$settings = get_option( 'gf_stla_field_id_' . $form_id );
+
+			// get the settings of field id whoes css has to be printed.
+			$settings = $settings[ $field_id ];
 		}
+
 		$input_styles = '';
 
-		if ( isset( $settings[ $category ]['font-style'] ) ) {
+		if ( isset( $settings[ $category ]['font-style'] ) && '' === $field_id ) {
 			$input_styles .= 'font-weight: normal' . $important . '; ';
 		}
+
 		if ( ! empty( $settings[ $category ]['font-style'] ) ) {
 			$font_styles = explode( '|', $settings[ $category ]['font-style'] );
 
@@ -603,10 +678,11 @@ class Gravity_customizer_admin {
 		}
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'color' ) ? '' : 'color:' . $settings[ $category ]['color'] . $important . ';';
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'background-color' ) ? '' : 'background-color:' . $settings[ $category ]['background-color'] . $important . ';';
-		// Gradient for themes
+
+		// Gradient for themes.
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'background-color1' ) ? '' : 'background:-webkit-linear-gradient(to left,' . $settings[ $category ]['background-color'] . ',' . $settings[ $category ]['background-color1'] . ') ' . $important . ';';
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'background-color1' ) ? '' : 'background:linear-gradient(to left,' . $settings[ $category ]['background-color'] . ',' . $settings[ $category ]['background-color1'] . ') ' . $important . ';';
-		// $input_styles.= $this->is_css_not_set( $settings[$category]['padding'] )?'':'padding:'. $settings[$category]['padding'].';';
+
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'width' ) ? '' : 'width:' . $settings[ $category ]['width'] . $this->gf_stla_add_px_to_value( $settings[ $category ]['width'] ) . $important . ';';
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'height' ) ? '' : 'height:' . $settings[ $category ]['height'] . $this->gf_stla_add_px_to_value( $settings[ $category ]['height'] ) . $important . ';';
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'title-position' ) ? '' : 'text-align:' . $settings[ $category ]['title-position'] . $important . ';';
@@ -627,15 +703,17 @@ class Gravity_customizer_admin {
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'padding' ) ? '' : 'padding:' . $this->gf_stla_add_px_to_padding_margin( $settings[ $category ]['padding'] ) . $important . ';';
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'border-size' ) ? '' : 'border-width:' . $settings[ $category ]['border-size'] . $this->gf_stla_add_px_to_value( $settings[ $category ]['border-size'] ) . $important . ';';
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'border-color' ) ? '' : 'border-color:' . $settings[ $category ]['border-color'] . $important . ';';
-		if ( isset( $settings[ $category ]['border-size'] ) ) {
+
+		if ( ! empty( $settings[ $category ]['border-size'] ) ) {
 			$input_styles .= $this->is_css_not_set( $settings[ $category ], 'border-type' ) ? 'border-style:solid;' : 'border-style:' . $settings[ $category ]['border-type'] . $important . ';';
 		}
-		// $input_styles .= $this->is_css_not_set( $settings[ $category ], 'border-type' ) ? '' : 'border-style:' . $settings[ $category ]['border-type'] . $important . ';';
+
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'border-bottom' ) ? '' : 'border-bottom-style:' . $settings[ $category ]['border-bottom'] . $important . ';';
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'border-bottom-size' ) ? '' : 'border-bottom-width:' . $settings[ $category ]['border-bottom-size'] . $this->gf_stla_add_px_to_value( $settings[ $category ]['border-bottom-size'] ) . $important . ';';
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'border-bottom-color' ) ? '' : 'border-bottom-color:' . $settings[ $category ]['border-bottom-color'] . $important . ';';
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'background-image-url' ) ? '' : 'background: url(' . $settings[ $category ]['background-image-url'] . ') no-repeat ' . $important . ';';
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'border-bottom-color' ) ? '' : 'border-bottom-color:' . $settings[ $category ]['border-bottom-color'] . ';';
+
 		if ( isset( $settings[ $category ]['display'] ) ) {
 			$input_styles .= $settings[ $category ]['display'] ? 'display:none ' . $important . ';' : '';
 		}
@@ -645,10 +723,12 @@ class Gravity_customizer_admin {
 		}
 
 		if ( isset( $settings[ $category ]['border-radius'] ) ) {
-			$input_styles .= 'border-radius:' . $settings[ $category ]['border-radius'] . $this->gf_stla_add_px_to_value( $settings[ $category ]['border-radius'] ) . $important . ';';
-			$input_styles .= '-web-border-radius:' . $settings[ $category ]['border-radius'] . $this->gf_stla_add_px_to_value( $settings[ $category ]['border-radius'] ) . $important . ';';
-			$input_styles .= '-moz-border-radius:' . $settings[ $category ]['border-radius'] . $this->gf_stla_add_px_to_value( $settings[ $category ]['border-radius'] ) . $important . ';';
+			$input_styles .= $this->is_css_not_set( $settings[ $category ], 'border-radius' ) ? '' : 'border-radius:' . $settings[ $category ]['border-radius'] . $this->gf_stla_add_px_to_value( $settings[ $category ]['border-radius'] ) . $important . ';';
+
+			$input_styles .= $this->is_css_not_set( $settings[ $category ], 'border-radius' ) ? '' : '-web-border-radius:' . $settings[ $category ]['border-radius'] . $this->gf_stla_add_px_to_value( $settings[ $category ]['border-radius'] ) . $important . ';';
+			$input_styles .= $this->is_css_not_set( $settings[ $category ], 'border-radius' ) ? '' : '-moz-border-radius:' . $settings[ $category ]['border-radius'] . $this->gf_stla_add_px_to_value( $settings[ $category ]['border-radius'] ) . $important . ';';
 		}
+
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'custom-css' ) ? '' : $settings[ $category ]['custom-css'] . ';';
 
 		$input_styles .= $this->is_css_not_set( $settings[ $category ], 'padding-left' ) ? '' : 'padding-left:' . $settings[ $category ]['padding-left'] . $this->gf_stla_add_px_to_value( $settings[ $category ]['padding-left'] ) . $important . ';';
@@ -663,11 +743,28 @@ class Gravity_customizer_admin {
 		return $input_styles;
 	}
 
-	public function gf_sb_get_saved_styles_tab( $form_id, $category, $important = '' ) {
+	/**
+	 * Retrieves the saved styles for a Gravity Forms field on a tablet device.
+	 *
+	 * @param int    $form_id   The ID of the Gravity Forms form.
+	 * @param string $category  The category of the field (e.g. 'input', 'label', etc.).
+	 * @param string $important Whether to add the '!important' flag to the CSS.
+	 * @param string $field_id  The ID of the field.
+	 *
+	 * @return string The CSS styles for the field on a tablet device.
+	 */
+	public function gf_sb_get_saved_styles_tab( $form_id, $category, $important = '', $field_id = '' ) {
+
 		$settings = get_option( 'gf_stla_form_id_' . $form_id );
-		if ( ! isset( $settings ) ) {
-			return;
+
+		// get the styler settings specific to fields.
+		if ( ! empty( $field_id ) ) {
+			$settings = get_option( 'gf_stla_field_id_' . $form_id );
+
+			// get the settings of field id whoes css has to be printed.
+			$settings = $settings[ $field_id ];
 		}
+
 		$input_styles  = '';
 		$input_styles .= ! isset( $settings[ $category ]['width-tab'] ) ? '' : 'width:' . $settings[ $category ]['width-tab'] . $this->gf_stla_add_px_to_value( $settings[ $category ]['width-tab'] ) . $important . ';';
 		$input_styles .= ! isset( $settings[ $category ]['max-width-tab'] ) ? '' : 'width:' . $settings[ $category ]['max-width-tab'] . $this->gf_stla_add_px_to_value( $settings[ $category ]['max-width-tab'] ) . $important . ';';
@@ -679,11 +776,27 @@ class Gravity_customizer_admin {
 		return $input_styles;
 	}
 
-	public function gf_sb_get_saved_styles_phone( $form_id, $category, $important = '' ) {
+	/**
+	 * Retrieves the saved styles for a Gravity Forms field on a phone device.
+	 *
+	 * @param int    $form_id   The ID of the Gravity Forms form.
+	 * @param string $category  The category of the field (e.g. 'input', 'label', etc.).
+	 * @param string $important Whether to add the '!important' flag to the CSS.
+	 * @param string $field_id  The ID of the field.
+	 *
+	 * @return string The CSS styles for the field on a phone device.
+	 */
+	public function gf_sb_get_saved_styles_phone( $form_id, $category, $important = '', $field_id = '' ) {
+
 		$settings = get_option( 'gf_stla_form_id_' . $form_id );
-		if ( ! isset( $settings ) ) {
-			return;
+		// get the styler settings specific to fields.
+		if ( ! empty( $field_id ) ) {
+			$settings = get_option( 'gf_stla_field_id_' . $form_id );
+
+			// get the settings of field id whoes css has to be printed.
+			$settings = $settings[ $field_id ];
 		}
+
 		$input_styles  = '';
 		$input_styles .= ! isset( $settings[ $category ]['width-phone'] ) ? '' : 'width:' . $settings[ $category ]['width-phone'] . $this->gf_stla_add_px_to_value( $settings[ $category ]['width-phone'] ) . $important . ';';
 		$input_styles .= ! isset( $settings[ $category ]['max-width-phone'] ) ? '' : 'width:' . $settings[ $category ]['max-width-phone'] . $this->gf_stla_add_px_to_value( $settings[ $category ]['max-width-phone'] ) . $important . ';';
@@ -696,9 +809,11 @@ class Gravity_customizer_admin {
 	}
 
 	/**
-	 * Function to add px if not available (not for padding and margin)
+	 * Function to add px if not available (not for padding and margin).
+	 *
+	 * @param string $value Wether to add px or custom value.
+	 * @return string
 	 */
-
 	public function gf_stla_add_px_to_value( $value ) {
 		$int_parsed = (int) $value;
 		if ( ctype_digit( $value ) ) {
@@ -709,11 +824,14 @@ class Gravity_customizer_admin {
 		return $value;
 	}
 
-	/**
-	 * Function to add px if not available for padding and margin
-	 * [deprecated] No longer used since v4.0
-	 */
 
+	/**
+	 * Function to add px if not available for padding and margin.
+	 *
+	 * @param string $value The unit value to add.
+	 * @deprecated 4.0.0 No longer used.
+	 * @return string
+	 */
 	public function gf_stla_add_px_to_padding_margin( $value ) {
 		$margin_padding     = explode( ' ', $value );
 		$new_margin_padding = '';
@@ -728,9 +846,15 @@ class Gravity_customizer_admin {
 	}
 
 	/**
-	 * Convert HSL colors into RGBA (used to convert gradient colors), Opacity is fetched from database
+	 * Convert HSL colors into RGBA (used to convert gradient colors), Opacity is fetched from database.
+	 *
+	 * @param int     $h Hue value.
+	 * @param int     $s Saturation value.
+	 * @param int     $l Light Value.
+	 * @param boolean $to_hex Wether to convert in RGBA or HEX.
+	 * @return string
 	 */
-	public function hslToRgba( $h, $s, $l, $toHex = true ) {
+	public function hsl_to_rgba( $h, $s, $l, $to_hex = true ) {
 		$h /= 360;
 		$r  = $l;
 		$g  = $l;
@@ -791,7 +915,7 @@ class Gravity_customizer_admin {
 		$g = round( $g * 255, 0 );
 		$b = round( $b * 255, 0 );
 
-		if ( $toHex ) {
+		if ( $to_hex ) {
 			$r = ( $r < 15 ) ? '0' . dechex( $r ) : dechex( $r );
 			$g = ( $g < 15 ) ? '0' . dechex( $g ) : dechex( $g );
 			$b = ( $b < 15 ) ? '0' . dechex( $b ) : dechex( $b );
@@ -801,8 +925,17 @@ class Gravity_customizer_admin {
 
 	/**
 	 * Convert Hex to rgba
+	 *
+	 * @param string $hex_code the hex code.
+	 * @param string $background_opacity The opacity to add.
+	 * @return string
 	 */
 	public function hex_rgba( $hex_code, $background_opacity ) {
+
+		if ( empty( $hex_code ) ) {
+			return '';
+		}
+
 		$r               = '';
 		$g               = '';
 		$b               = '';
@@ -811,130 +944,162 @@ class Gravity_customizer_admin {
 	}
 
 	/**
-	 * Set Gradient properties for all browsers
+	 * Set Gradient properties for all browsers.
+	 *
+	 * @param string $gradient_color1 First Gradient Color.
+	 * @param string $gradient_color2 Second Gradient Color.
+	 * @param string $direction Gradient Direction.
+	 * @return string
 	 */
-	public function set_gradient_properties( $gradientColor1, $gradientColor2, $direction ) {
+	public function set_gradient_properties( $gradient_color1, $gradient_color2, $direction ) {
 		switch ( $direction ) {
 			case 'left':
-				$gradientDirection         = 'right,';
-				$gradientDirectionSafari   = 'left,';
-				$gradientDirectionStandard = 'to right,';
+				$gradient_direction          = 'right,';
+				$gradient_direction_safari   = 'left,';
+				$gradient_direction_standard = 'to right,';
 				break;
 			case 'diagonal':
-				$gradientDirection         = 'bottom right,';
-				$gradientDirectionSafari   = 'left top,';
-				$gradientDirectionStandard = 'to bottom right,';
+				$gradient_direction          = 'bottom right,';
+				$gradient_direction_safari   = 'left top,';
+				$gradient_direction_standard = 'to bottom right,';
 				break;
 			default:
-				$gradientDirection         = '';
-				$gradientDirectionSafari   = '';
-				$gradientDirectionStandard = '';
+				$gradient_direction          = '';
+				$gradient_direction_safari   = '';
+				$gradient_direction_standard = '';
 		}
-		$gradient_css  = 'background: linear-gradient(' . "$gradientDirectionStandard" . "$gradientColor1" . ',' . $gradientColor2 . ');';
-		$gradient_css .= 'background: -o-linear-gradient(' . "$gradientDirection" . "$gradientColor1" . ',' . $gradientColor2 . ');';
-		$gradient_css .= 'background: -moz-linear-gradient(' . "$gradientDirection" . "$gradientColor1" . ',' . $gradientColor2 . ');';
-		$gradient_css .= 'background: -webkit-linear-gradient(' . "$gradientDirectionSafari" . "$gradientColor1" . ',' . $gradientColor2 . ');';
-		// $gradient_css='apple';
+		// $gradient_css = 'background: linear-gradient(' . "$gradient_direction_standard" . "$gradient_color1" . ',' . $gradient_color2 . ');';
+		$gradient_css  = 'background: linear-gradient(' . $gradient_direction_standard . ' ' . $gradient_color1 . ', ' . $gradient_color2 . ');';
+		$gradient_css .= 'background: -o-linear-gradient( ' . $gradient_direction . ' ' . $gradient_color1 . ', ' . $gradient_color2 . ' );';
+		$gradient_css .= 'background: -moz-linear-gradient( ' . $gradient_direction . ' ' . $gradient_color1 . ', ' . $gradient_color2 . ' );';
+		$gradient_css .= 'background: -webkit-linear-gradient( ' . $gradient_direction_safari . ' ' . $gradient_color1 . ', ' . $gradient_color2 . ' );';
 		return $gradient_css;
 	}
+
+	/**
+	 * After activating the plugin set transit to redirect.
+	 *
+	 * @return void
+	 */
 	public function gf_stla_welcome_screen_activate() {
 		set_transient( 'gf_stla_welcome_activation_redirect', true, 30 );
 	}
 
-
+	/**
+	 * Redirect after the plugin is activated based on transit.
+	 *
+	 * @return void
+	 */
 	public function gf_stla_welcome_screen_do_activation_redirect() {
-		// Bail if no activation redirect
+		// Bail if no activation redirect.
 		if ( ! get_transient( 'gf_stla_welcome_activation_redirect' ) ) {
 			return;
 		}
-		// Delete the redirect transient
+		// Delete the redirect transient.
 		delete_transient( 'gf_stla_welcome_activation_redirect' );
-		// Bail if activating from network, or bulk
+		// Bail if activating from network, or bulk.
 		if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
 			return;
 		}
-		// Redirect to welcome about page
+		// Redirect to welcome about page.
 		wp_safe_redirect( add_query_arg( array( 'page' => 'stla-documentation' ), admin_url( 'admin.php' ) ) );
 	}
 
+	/**
+	 * Check wether to reset the styles after customizer saved.
+	 *
+	 * @return void
+	 */
 	public function customize_save_after() {
 
-		// get name of style to be deleted
+		// Get name of style to be deleted.
 		$style_to_be_deleted = get_option( 'gf_stla_general_settings' );
-		if ( $style_to_be_deleted['reset-styles'] != -1 || ! empty( $style_to_be_deleted['reset-styles'] ) ) {
+		if ( -1 !== $style_to_be_deleted['reset-styles'] || ! empty( $style_to_be_deleted['reset-styles'] ) ) {
 			delete_option( 'gf_stla_form_id_' . $style_to_be_deleted['reset-styles'] );
 			$style_to_be_deleted['reset-styles'] = -1;
 			update_option( 'gf_stla_general_settings', $style_to_be_deleted );
 		}
 	}
 
-	/*
-	 * Check if the form is opened in frontend
+	/**
+	 * Check if the form is opened in frontend.
+	 *
+	 * @param object $form The GF form object.
+	 * @return object
 	 */
 	public function gf_stla_show_css_frontend( $form ) {
 		$this->is_this_frontend = true;
 		return $form;
 	}
 
+	/**
+	 * The admin notice when GF not installed.
+	 *
+	 * @return void
+	 */
 	public function admin_notices() {
 		if ( ! class_exists( 'GFForms' ) ) {
 			$class   = 'notice notice-error';
-			$message = '<a href="http://www.gravityforms.com/">Gravity Forms</a> not installed. <strong>Styles & Layouts for Gravity Forms</strong> can\'t work without Gravity Forms ';
-			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), $message );
+			$message = ' <a href = "http:// www.gravityforms.com/" > Gravity Forms < / a > not installed . < strong > Styles & Layouts for Gravity Forms < / strong > can\'t work without Gravity Forms ';
+			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
 		}
 	}
 
 	/**
 	 * Adds Styles & Layouts to Toolbar in  Gravity form edit screen
+	 *
+	 * @param array $menu_items The GF editor menu items.
+	 * @param int   $form_id The form id.
+	 * @return array
 	 */
-
 	public function gform_toolbar_menu( $menu_items, $form_id ) {
 		$menu_items['styles-layouts-gravity-forms'] = array(
 			'icon'         => '<i class="fa fa-paint-brush fa-lg"></i>',
-			'label'        => 'Styles & Layouts', // the text to display on the menu for this link
-			'title'        => 'Styles & Layouts', // the text to be displayed in the title attribute for this link
-			'url'          => $this->get_booster_url( $form_id ), // the URL this link should point to
-			'menu_class'   => 'sk-style', // optional, class to apply to menu list item (useful for providing a custom icon)
-			'link_class'   => rgget( 'page' ) == 'my_custom_page' ? 'gf_toolbar_active' : '*', // class to apply to link (useful for specifying an active style when this link is the current page)
-			'capabilities' => array( 'gravityforms_edit_forms' ), // the capabilities the user should possess in order to access this page
-			'priority'     => 500, // optional, use this to specify the order in which this menu item should appear; if no priority is provided, the menu item will be append to end
+			'label'        => 'Styles & Layouts', // the text to display on the menu for this link.
+			'title'        => 'Styles & Layouts', // the text to be displayed in the title attribute for this link.
+			'url'          => $this->get_booster_url( $form_id ), // the URL this link should point to.
+			'menu_class'   => 'sk-style', // Optional, class to apply to menu list item (useful for providing a custom icon).
+			'link_class'   => 'my_custom_page' === rgget( 'page' ) ? 'gf_toolbar_active' : '*', // Class to apply to link (useful for specifying an active style when this link is the current page).
+			'capabilities' => array( 'gravityforms_edit_forms' ), // The capabilities the user should possess in order to access this page.
+			'priority'     => 500, // Optional, use this to specify the order in which this menu item should appear; if no priority is provided, the menu item will be append to end.
 		);
 		return $menu_items;
 	}
 
 
 	/**
-	 * Add custom variables to the available query vars
+	 * Add custom variables to the available query vars.
 	 *
 	 * @since 1.0.0
-	 * @param mixed $vars
-	 * @return mixed
+	 * @param array $vars Add query.
+	 * @return array
 	 */
 	public function add_query_vars( $vars ) {
 		$vars[] = $this->trigger;
 		return $vars;
 	}
 
+
 	/**
 	 * If the right query var is present load the Gravity Forms preview template
 	 *
-	 * @since 1.0.0
+	 * @param string $template the file url.
+	 * @return string
 	 */
 	public function gf_stla_preview_template( $template ) {
 
-		// load this conditionally based on the query var
+		// Load this conditionally based on the query var.
 		if ( get_query_var( $this->trigger ) ) {
-
 			$template = GF_STLA_DIR . '/helpers/utils/html-template-preview.php';
-
 		}
 		return $template;
 	}
 
 	/**
-	 * Set the booster url
+	 * Set the booster url.
 	 *
-	 * @since 1.0.0
+	 * @param int $form_id The form id.
+	 * @return string
 	 */
 	private function get_booster_url( $form_id ) {
 		$url = admin_url( 'admin.php' );
@@ -945,9 +1110,10 @@ class Gravity_customizer_admin {
 	}
 
 	/**
-	 * Set the customizer url
+	 * Set the customizer url.
 	 *
-	 * @since 1.0.0
+	 * @param int $form_id the form id.
+	 * @return string
 	 */
 	private function _set_customizer_url( $form_id ) {
 		$url            = admin_url( 'customize.php' );
@@ -991,6 +1157,11 @@ class Gravity_customizer_admin {
 
 register_activation_hook( __FILE__, 'stla_set_migrate_transient' );
 
+/**
+ * Set update transit.
+ *
+ * @return void
+ */
 function stla_set_migrate_transient() {
 	set_transient( 'stla_updated', 1 );
 }

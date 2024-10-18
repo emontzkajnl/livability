@@ -1,6 +1,11 @@
 <?php
-/* Template Name: Stla Preview Template */ 
-$form_id = sanitize_text_field( $_GET['stla_form_id'] );
+/**
+ * Preview template under customizer.
+ */
+
+/* Template Name: Stla Preview Template */
+$form_id = isset( $_GET['stla_form_id'] ) ? sanitize_text_field( wp_unslash( $_GET['stla_form_id'] ) ) : '';
+
 ?>
 <html class="no-js" <?php language_attributes(); ?>>
 
@@ -21,7 +26,7 @@ $form_id = sanitize_text_field( $_GET['stla_form_id'] );
 		wp_body_open();
 		?>
 <div class="stla-gravity-preview" id="stla-gravity-preview" style="width:80%; margin:auto; margin-top: 80px;">
-    <?php echo do_shortcode('[gravityform id="'.$form_id.'" title="true" description="true"  ]'); ?>
+	<?php echo do_shortcode( '[gravityform id="' . $form_id . '" title="true" description="true"  ]' ); ?>
 </div>
 
 <?php wp_footer(); ?>

@@ -43,7 +43,7 @@ $wp_customize->add_control(
 			'type'        => 'text',
 			'priority'    => 10, // Within the section.
 			'section'     => 'gf_stla_form_id_error_message', // Required, core or custom.
-			'label'       => __( '' ),
+			'label'       => '',
 			'input_attrs' => array(
 				'placeholder' => 'Ex: 400px',
 			),
@@ -68,7 +68,7 @@ $wp_customize->add_control(
 			'type'        => 'text',
 			'priority'    => 10, // Within the section.
 			'section'     => 'gf_stla_form_id_error_message', // Required, core or custom.
-			'label'       => __( '' ),
+			'label'       => '',
 			'input_attrs' => array(
 				'placeholder' => 'Ex: 400px',
 			),
@@ -94,7 +94,7 @@ $wp_customize->add_control(
 			'type'        => 'text',
 			'priority'    => 10, // Within the section.
 			'section'     => 'gf_stla_form_id_error_message', // Required, core or custom.
-			'label'       => __( '' ),
+			'label'       => '',
 			'input_attrs' => array(
 				'placeholder' => 'Ex: 400px',
 			),
@@ -182,7 +182,7 @@ $wp_customize->add_control(
 			'type'        => 'text',
 			'priority'    => 10, // Within the section.
 			'section'     => 'gf_stla_form_id_error_message', // Required, core or custom.
-			'label'       => __( '' ),
+			'label'       => '',
 			'input_attrs' => array(
 				'placeholder' => 'Ex: 40px',
 			),
@@ -208,7 +208,7 @@ $wp_customize->add_control(
 					'type'        => 'text',
 					'priority'    => 10, // Within the section.
 					'section'     => 'gf_stla_form_id_error_message', // Required, core or custom.
-					'label'       => __( '' ),
+					'label'       => '',
 					'input_attrs' => array(
 						'placeholder' => 'Ex: 40px',
 					),
@@ -234,7 +234,7 @@ $wp_customize->add_control(
 					'type'        => 'text',
 					'priority'    => 10, // Within the section.
 					'section'     => 'gf_stla_form_id_error_message', // Required, core or custom.
-					'label'       => __( '' ),
+					'label'       => '',
 					'input_attrs' => array(
 						'placeholder' => 'Ex: 40px',
 					),
@@ -275,7 +275,7 @@ $wp_customize->add_control(
 					'type'        => 'text',
 					'priority'    => 10, // Within the section.
 					'section'     => 'gf_stla_form_id_error_message', // Required, core or custom.
-					'label'       => __( '' ),
+					'label'       => '',
 					'input_attrs' => array(
 						'placeholder' => 'Ex: 40px',
 					),
@@ -300,7 +300,7 @@ $wp_customize->add_control(
 					'type'        => 'text',
 					'priority'    => 10, // Within the section.
 					'section'     => 'gf_stla_form_id_error_message', // Required, core or custom.
-					'label'       => __( '' ),
+					'label'       => '',
 					'input_attrs' => array(
 						'placeholder' => 'Ex: 40px',
 					),
@@ -327,7 +327,7 @@ $wp_customize->add_control(
 					'type'        => 'text',
 					'priority'    => 10, // Within the section.
 					'section'     => 'gf_stla_form_id_error_message', // Required, core or custom.
-					'label'       => __( '' ),
+					'label'       => '',
 					'input_attrs' => array(
 						'placeholder' => 'Ex: 40px',
 					),
@@ -336,22 +336,25 @@ $wp_customize->add_control(
 		);
 
 		/* Start of Section */
-		$wp_customize->add_setting( 'gf_stla_form_id_'.$current_form_id.'[error-message][font-color]' , array(
-			'default'     => '',
-			'transport'   => 'postMessage',
-			'type' => 'option'
-		) );
-		
+		$wp_customize->add_setting(
+			'gf_stla_form_id_' . $current_form_id . '[error-message][font-color]',
+			array(
+				'default'   => '',
+				'transport' => 'postMessage',
+				'type'      => 'option',
+			)
+		);
+
 		$wp_customize->add_control(
 			new WP_Customize_Color_Control(
-				$wp_customize, // WP_Customize_Manager
-				'gf_stla_form_id_'.$current_form_id.'[error-message][font-color]', // Setting id
+				$wp_customize, // WP_Customize_Manager.
+				'gf_stla_form_id_' . $current_form_id . '[error-message][font-color]', // Setting id.
 				array( // Args, including any custom ones.
-					'label' => __( 'Font Color' ),
+					'label'   => __( 'Font Color' ),
 					'section' => 'gf_stla_form_id_error_message',
 				)
 			)
-  		);
+		);
 
 		/*
 		Start of Section
@@ -413,41 +416,44 @@ $wp_customize->add_control(
 		);
 
 		/* Start of Section */
-		$wp_customize->add_setting( 'gf_stla_form_id_'.$current_form_id.'[error-message][border-radius]',
+		$wp_customize->add_setting(
+			'gf_stla_form_id_' . $current_form_id . '[error-message][border-radius]',
 			array(
-				'default'     => '',
-				'transport'   => 'postMessage',
-				'type' => 'option'
-			) 
+				'default'   => '',
+				'transport' => 'postMessage',
+				'type'      => 'option',
+			)
 		);
-		
-		$wp_customize->add_control('gf_stla_form_id_'.$current_form_id.'[error-message][border-radius]',
+
+		$wp_customize->add_control(
+			'gf_stla_form_id_' . $current_form_id . '[error-message][border-radius]',
 			array(
-				'type' => 'text',
-				'priority' => 10, // Within the section.
-				'section' => 'gf_stla_form_id_error_message', // Required, core or custom.
-				'label' => __( 'Radius' ),
+				'type'        => 'text',
+				'priority'    => 10, // Within the section.
+				'section'     => 'gf_stla_form_id_error_message', // Required, core or custom.
+				'label'       => __( 'Radius' ),
 				'input_attrs' => array(
-					'placeholder' => 'Example: 4px or 10%'
-				)
+					'placeholder' => 'Example: 4px or 10%',
+				),
 			)
 		);
 
 		/* Start of Section */
-		$wp_customize->add_setting( 'gf_stla_form_id_'.$current_form_id.'[error-message][border-color]',
+		$wp_customize->add_setting(
+			'gf_stla_form_id_' . $current_form_id . '[error-message][border-color]',
 			array(
-				'default'     => '',
-				'transport'   => 'postMessage',
-				'type' => 'option'
-			) 
+				'default'   => '',
+				'transport' => 'postMessage',
+				'type'      => 'option',
+			)
 		);
 
 		$wp_customize->add_control(
 			new WP_Customize_Color_Control(
-				$wp_customize, // WP_Customize_Manager
-				'gf_stla_form_id_'.$current_form_id.'[error-message][border-color]', // Setting id
+				$wp_customize, // WP_Customize_Manager.
+				'gf_stla_form_id_' . $current_form_id . '[error-message][border-color]', // Setting id.
 				array( // Args, including any custom ones.
-					'label' => __( 'Border Color' ),
+					'label'   => __( 'Border Color' ),
 					'section' => 'gf_stla_form_id_error_message',
 				)
 			)

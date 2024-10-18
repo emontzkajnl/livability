@@ -3,9 +3,9 @@ Contributors: magazine3
 Donate link: https://tocwp.com/
 Tags: table of contents, toc
 Requires at least: 5.0
-Tested up to: 6.5
+Tested up to: 6.6
 Requires PHP: 5.6.20
-Stable tag: 2.0.66.1
+Stable tag: 2.0.70
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,6 +18,7 @@ A user friendly, featured focused [Easy Table of Contents](https://tocwp.com/) p
 [Home](https://tocwp.com/) | [Help & Tech Support](https://tocwp.com/contact/) | [Documentation](https://tocwp.com/docs/)  | [Pro version Features](https://tocwp.com/pricing/)
 
 ### Features 
+* <strong>NEW </strong>: Migration Tool to import all the settings from other plugins like Table of Content Plus & more
 * Automatically generate a table of contents for your posts, pages and custom post types by parsing its contents for headers.
 * Supports the `<!--nextpage-->` tag.
 * Supports the Rank Math plugin.
@@ -72,6 +73,7 @@ Below are the attibutes we support and could be useful in configuring the table 
 [display_counter="no"] – no counter for the table of contents
 [post_types="post,page"] – post types seperated by ,(comma)
 [post_in="1,2"] – ID's of the posts|pages seperated by ,(comma)
+[post_not_in="1,2"] – ID's of the posts|pages seperated by ,(comma)
 [device_target="desktop"] – mobile or desktop device support for the table of contents
 [view_more="5"] – 5, is the number of headings loads on first view, before user interaction (PRO)
 
@@ -129,6 +131,50 @@ Easy Table Contents is a fork of the excellent [Table of Contents Plus](https://
 4. Activate the plugin on the Plugins admin page.
 
 == Changelog ==
+
+= 2.0.70 17/10/2024 =
+* New: One click migration for Table of Contents plus plugin #826
+* New: Add missing parameters in sticky widget shortcode #812
+* Bug: Timber theme TOC links not working on all pages and When ACF compatibility is on homepage gives 500 error #814
+* Bug: Incorrect Symbols Displaying When Adding %PAGE_NAME% as Header Label #816
+* Fix: Preserve-Linebreaks is broken. #806
+
+= 2.0.69.1 05/09/2024 =
+* Fix: Fatal error #803
+
+= 2.0.69 28/08/2024 =
+* Fix: Php warning. #788
+* Bug: Sticky ETOC CSS automatically added in homepage #777
+* Fix: Latest Version 2.0.68.1 causing functionality of "Inline CSS" Option in ETOC. #787
+* Fix: SiteNavigation markup issue with Easy TOC #764
+* Bug: The Sticky toggle appears on the homepage If the device target is set as desktop and its apparency is disabled on the Homepage #789
+* Bug: Generate related keyphrase and Keyphrase synonyms are not appearing if the plugin is active #791
+* Tweak: Clean the autoloaded data "ez-toc-post-content-core-level from the database. #793
+* Fix: Auto TOC not getting insert in Product Category Description #797
+* Fix: Copy Shortcode buttons are not working #798
+
+= 2.0.68.1 21/07/2024 =
+* Fix: Fatal error when inline css is enabled in  version 2.0.68
+
+= 2.0.68 20/07/2024 =
+* Fix: Stored XSS Security Vulnerability disclosed by Cleantalk (Dmitrii Ignatyev)
+* Compatibility: Tested with WordPress version 6.6  #780
+
+= 2.0.67.1 19/06/2024 =
+* Bug: Plugin Does Not Save Changes in recent version 2.0.67 #771
+
+= 2.0.67 18/06/2024 =
+* New: Read Time in Minutes option for individual posts and set the translation for reading time. #763
+* New: Exclude heading by id option #768
+* New: Exclude TOC added using shortcode on specific pages/posts [post_not_in="1,2"] #758
+* Compatibility: Added compatibility with the theme StoreHub #760
+* Compatibility: Conflict issue with custom theme(user specific issue) #750
+* Compatibility: Conflict issue with DIVI theme #749
+* Bug: Highlight Heading colors are not getting customized #755
+* Bug: Sticky TOC appears on homepage without enabling option when front page is set #754
+* Bug: TOC is showing on homepage's post's excerpt Avada theme conflict #757
+* Fix: Passing null to parameter #1 ($string) of type string is deprecated #769
+* Fix: Patched Security Vulnerability disclosed by Dmitrii Ignatyev from cleantalk.org
 
 = 2.0.66.1 15/05/2024 =
 * Bug: ETOC version 2.0.66 giving **Fatal error**: Uncaught TypeError: method_exists() #752
@@ -215,41 +261,6 @@ Easy Table Contents is a fork of the excellent [Table of Contents Plus](https://
 * Bug: A sticky toggle appears on the Author pages and it contains the headings of the latest post published by them. #640
 * Bug: Heading are not working if the plugin Molongui Authorship is activated ad if the heading contains "..." in it #642
 
-= 2.0.59 29/11/2023 =
-* New: An option to show TOC on Tag #489
-* New: Toc support for custom taxonomy description #512
-* New: Apply default anchor prefix in the Japanese language #528
-* New: An option to restrict the toc if any part of url match with saved limit path #560
-* New: An option to use the TOC without anchor links in the URL. #587
-* New: An option which Preserve Line Breaks in TOC. #591
-* New: Collapsable sub heading #622
-* New: Enable support attributes inside shortcode #624
-* New: Filter to hide and show metabox #645
-* Bug: The WP Bakery image gallery is getting braked on first reload #627
-* Bug: Warning in debug log #636
-* Bug: When we set the counter as a disc while using the viewMore option, then TOC CSS is not working fine. #638
-* Bug: Fix CSS Style Placement for Easy-Table-of-Contents WordPress Plugin #639
-* Bug: Fatal error while activating pro version #644
-* Bug: Conflict issue with the Smooth Scroll Offset option #646
-* Bug: Critical Error with READ TIME Option when Set to "0"(Zero) #648
-
-= 2.0.58 15/11/2023 =
-* New: Generate schema/SiteNavigationElement for Table of contents #592
-* New: An option to show estimated time to read the full article #594
-* New: An option of TOC not crawl the paragraphs in blockquotes #601
-* New: Add the View More feature compatibility with the Shortcode #628
-* Bug: Widget Auto-Highlight Issue After Update 2.0.56.1 #610
-* Bug: Conflict with the plugin Perfmatters's option "Enable FastClick" #612
-* Bug: Add compatibility with the theme Oliver Lohse #615
-* Bug: Sticky TOC is showing on Blog pages #617
-* Bug: Toc not showing if AMP Page Builder is used #619
-* Bug: Smooth Scroll offset issue after latest update #620
-* Bug: JSON error when we try to added the ETOC in page/post section #621
-* Bug: The WP Bakery image gallery is getting braked on first reload #627
-* Bug: Issue showing on the page speed tool as Lists do not contain only <li> elements and script-supporting elements #630
-
-= 2.0.57.1 27/10/2023 =
-* Bug: Incomplete CSS Classes in Version 2.0.57 Causing Style Issues #614
 
 Full changelog available at [changelog.txt](https://plugins.svn.wordpress.org/easy-table-of-contents/trunk/changelog.txt)
 

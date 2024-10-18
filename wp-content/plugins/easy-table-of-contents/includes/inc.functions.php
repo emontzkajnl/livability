@@ -43,7 +43,7 @@ function get_ez_toc_list( $post = null, $apply_content_filter = true ) {
  * @param bool         $apply_content_filter Whether or not to apply `the_content` filter when processing post for headings.
  */
 function ez_toc_list( $post = null, $apply_content_filter = true ) {
-
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason : Already escaped
 	echo get_ez_toc_list( $post, $apply_content_filter );
 }
 
@@ -87,7 +87,7 @@ function get_ez_toc_block( $post = null, $apply_content_filter = true ) {
  * @param bool         $apply_content_filter Whether or not to apply `the_content` filter when processing post for headings.
  */
 function ez_toc_block( $post = null, $apply_content_filter = true ) {
-
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason : Already escaped
 	echo get_ez_toc_block( $post, $apply_content_filter );
 }
 // Non amp checker
@@ -114,16 +114,16 @@ if ( ! function_exists('ez_toc_non_amp') ) {
 
         $non_amp = true;
 
-        if( function_exists('ampforwp_is_amp_endpoint') && @ampforwp_is_amp_endpoint() ) {                
+        if( function_exists('ampforwp_is_amp_endpoint') && ampforwp_is_amp_endpoint() ) {                
             $non_amp = false;                       
         }     
-        if( function_exists('is_amp_endpoint') && @is_amp_endpoint() ){
+        if( function_exists('is_amp_endpoint') && is_amp_endpoint() ){
             $non_amp = false;           
         }
-        if( function_exists('is_better_amp') && @is_better_amp() ){       
+        if( function_exists('is_better_amp') && is_better_amp() ){       
             $non_amp = false;           
         }
-        if( function_exists('is_amp_wp') && @is_amp_wp() ){       
+        if( function_exists('is_amp_wp') && is_amp_wp() ){       
             $non_amp = false;           
         }
 
@@ -193,7 +193,7 @@ function ez_toc_export_all_settings()
     if(!empty($export_settings_data)){
         header('Content-type: application/json');
         header('Content-disposition: attachment; filename=ez_toc_settings_backup.json');
-        echo json_encode($export_settings_data);   
+        echo wp_json_encode($export_settings_data);   
     }                             
     wp_die();
 }
@@ -216,6 +216,7 @@ add_action('shutdown', function() {
         for ($i = 0; $i < $levels; $i++) {
             $final .= ob_get_clean();
         }
+        //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason : This if final output buffer
         echo apply_filters('eztoc_wordpress_final_output', $final);
     }
  
@@ -260,7 +261,7 @@ add_filter('eztoc_wordpress_final_output', function($content){
         if ( $heading ) {
             $heading = apply_filters( 'ez_toc_url_anchor_target_before', $heading );
             $return = html_entity_decode( $heading, ENT_QUOTES, get_option( 'blog_charset' ) );
-            $return = trim( strip_tags( $return ) );
+            $return = trim( wp_strip_all_tags( $return ) );
             $return = remove_accents( $return );
             $return = str_replace( array( "\r", "\n", "\n\r", "\r\n" ), ' ', $return );
             $return = htmlentities2( $return );
@@ -346,86 +347,102 @@ function ez_toc_auto_device_target_status(){
  * Check for the enable support of sticky toc/toggle
  * @since 2.0.60
  */
-function ez_toc_stikcy_enable_support_status(){
+function ez_toc_stikcy_enable_support_status() {
 
     $status = false;
 
-    $stickyPostTypes = apply_filters('ez_toc_sticky_post_types', ezTOC_Option::get('sticky-post-types'));
+    if ( ezTOC_Option::get('sticky-toggle') ) {
 
-    if(!empty($stickyPostTypes)){
-        if(is_singular()){
+    $sticky_post_types = apply_filters( 'ez_toc_sticky_post_types', ezTOC_Option::get( 'sticky-post-types' ) );
+
+    if ( ! empty( $sticky_post_types ) ){
+
+        if ( is_singular() && !is_front_page() ) {
+
             $postType = get_post_type();
-            if(in_array($postType,$stickyPostTypes)){
+
+            if ( in_array($postType,$sticky_post_types) ) {
+
                 $status = true;
+
             }
         }										
     }
 
-    if(ezTOC_Option::get('sticky_include_homepage')){
-        if ( is_front_page() ) {
+    if ( ezTOC_Option::get( 'sticky_include_homepage' ) ) {
+
+        if ( is_front_page() || is_home() ) {
             $status = true;
         }
     }
 
-    if(ezTOC_Option::get('sticky_include_category')){
+    if ( ezTOC_Option::get( 'sticky_include_category' ) ) {
         if ( is_category() ) {
             $status = true;
         }
     }
 
-    if(ezTOC_Option::get('sticky_include_tag')){
+    if ( ezTOC_Option::get( 'sticky_include_tag' ) ) {
         if ( is_tag() ) {
             $status = true;
         }
     }
     
-    if(ezTOC_Option::get('sticky_include_product_category')){
+    if ( ezTOC_Option::get( 'sticky_include_product_category' ) ) {
         if ( is_tax( 'product_cat' ) ) {
             $status = true;
         }
     }
 
-    if(ezTOC_Option::get('sticky_include_custom_tax')){
+    if ( ezTOC_Option::get( 'sticky_include_custom_tax' ) ) {
         if ( is_tax() ) {
             $status = true;
         }
     }
+    
+    if ( ezTOC_Option::get( 'sticky_restrict_url_text' ) && ezTOC_Option::get( 'sticky_restrict_url_text' ) != '' ){
+        $all_urls = nl2br( ezTOC_Option::get( 'sticky_restrict_url_text' ) );
+        $all_urls = str_replace( '<br />', '', $all_urls );
+        $urls_arr = explode( PHP_EOL, $all_urls );
 
-    //Device Eligibility
-    //@since 2.0.60
-    if(ezTOC_Option::get( 'sticky_device_target' ) == 'mobile'){
-        if(function_exists('wp_is_mobile') && wp_is_mobile()){
-            $status = true;
-        }else{
-            $status = false;
-        }
-    }
+        if ( is_array($urls_arr) ) {
 
-    if(ezTOC_Option::get( 'sticky_device_target' ) == 'desktop'){
-        if(function_exists('wp_is_mobile') && wp_is_mobile()){
-            $status = false;
-        }else{
-            $status = true;
-        }
-    }
-
-    if( ezTOC_Option::get( 'sticky_restrict_url_text' ) && ezTOC_Option::get( 'sticky_restrict_url_text' ) != '' ){
-        $all_urls = nl2br(ezTOC_Option::get( 'sticky_restrict_url_text' ));
-        $all_urls = str_replace('<br />', '', $all_urls);
-        $urls_arr = explode(PHP_EOL, $all_urls);
-        if(is_array($urls_arr)){
-            foreach ($urls_arr as $url_arr) {
-                if ( isset($_SERVER['REQUEST_URI']) && false !== strpos( $_SERVER['REQUEST_URI'], trim($url_arr) ) ) {
+            foreach ( $urls_arr as $url_arr ) {
+                if ( isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], trim( $url_arr ) ) ) {
                     $status = false;
                     break;
                 }
             }
         }
     }
+
+    if ( $status ) {
+        //Device Eligibility
+        //@since 2.0.60
+        if ( ezTOC_Option::get( 'sticky_device_target' ) == 'mobile' ) {
+            if ( function_exists( 'wp_is_mobile' ) && wp_is_mobile() ) {
+                $status = true;
+            }else{
+                $status = false;
+            }
+        }
+
+        if ( ezTOC_Option::get( 'sticky_device_target' ) == 'desktop' ) {
+            if( function_exists( 'wp_is_mobile' ) && wp_is_mobile() ) {
+                $status = false;
+            }else{
+                $status = true;
+            }
+        }
+
+      }    
+
+    }
     
-    return apply_filters('ez_toc_sticky_enable_support', $status);
+    return apply_filters( 'ez_toc_sticky_enable_support', $status );
 
 }
+
 
 /**
  * Helps exclude blockquote
@@ -449,18 +466,6 @@ function ez_toc_para_blockquote_replace($blockquotes, $content, $step){
     }
     return $content;
 }
-}
-
-/**
- * Helps allow line breaks
- * @since 2.0.59
- */
-add_filter('ez_toc_title_allowable_tags', 'ez_toc_link_allow_br_tag');
-function ez_toc_link_allow_br_tag($tags){
-    if(ezTOC_Option::get( 'prsrv_line_brk' )){
-        $tags = '<br>';
-    }
-    return $tags;
 }
 
 /**
@@ -495,6 +500,23 @@ function ez_toc_shortcode_enable_support_status($atts){
             if(is_singular()){
                 $ID = get_the_ID();
                 if(in_array($ID, $exp_post_ids )){
+                    $status = true;
+                }else{
+                    $status = false;
+                }
+            }else{
+                $status = false;
+            }       
+        }
+    }
+
+    if(isset($atts['post_not_in'])){
+        $exp_post_ids = explode(',', $atts['post_not_in']);
+        if(!empty($exp_post_ids)){
+            $exp_post_ids = array_map("trim",$exp_post_ids);
+            if(is_singular()){
+                $ID = get_the_ID();
+                if(!in_array($ID, $exp_post_ids )){
                     $status = true;
                 }else{
                     $status = false;
@@ -539,4 +561,127 @@ function eztoc_shortcode_html_no_heading_text($html){
 		}
     }
     return $html;
+}
+
+/**
+ * Added [no-ez-toc] to disbale TOC on specific page/post
+ * @since 2.0.56
+ */
+add_shortcode( 'no-ez-toc', 'ez_toc_noeztoc_callback' );
+function ez_toc_noeztoc_callback( $atts, $content = "" ) {
+	add_filter(
+		'ez_toc_maybe_apply_the_content_filter',	function( $apply ) {
+			return false;
+		}
+		,999
+	);
+	//  condition when  `the_content` filter is not used by the theme
+	add_filter(
+		'ez_toc_modify_process_page_content',	function( $apply ) {
+			return '';
+		}
+		,999
+	);
+	return $content;
+}
+
+/**
+ * Added [no-toc] to support migrated shortcode from TOC+
+ * @since 2.0.70
+ */
+add_shortcode( 'no-toc', 'ez_toc_notoc_callback' );
+function ez_toc_notoc_callback( $atts, $content = "" ) {
+	add_filter(
+		'ez_toc_maybe_apply_the_content_filter',	function( $apply ) {
+			return false;
+		}
+		,999
+	);
+	//  condition when  `the_content` filter is not used by the theme
+	add_filter(
+		'ez_toc_modify_process_page_content',	function( $apply ) {
+			return '';
+		}
+		,999
+	);
+	return $content;
+}
+
+add_action( 'admin_init' , 'ez_toc_redirect' );
+function ez_toc_redirect( ) {
+    if ( get_option( 'ez_toc_do_activation_redirect' , false ) ) {
+        delete_option( 'ez_toc_do_activation_redirect' );
+		//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reason: Nonce not required here
+        if( !isset( $_GET['activate-multi'] ) )
+        {
+            wp_safe_redirect( "options-general.php?page=table-of-contents#welcome" );
+        }
+    }
+}
+
+/**
+ * ez_toc_wp_strip_all_tags method inspired by WordPress actual wp_strip_all_tags
+ * to strip all tags from the given text
+ * Access Public
+ * @since 2.0.70
+ * @param $text, $remove_breaks
+ * @return string
+*/
+
+function ez_toc_wp_strip_all_tags( $text, $remove_breaks = false ) {
+    
+	if ( is_null( $text ) ) {
+		return '';
+	}
+
+	if ( ! is_scalar( $text ) ) {
+		/*
+		 * To maintain consistency with pre-PHP 8 error levels,
+		 * wp_trigger_error() is used to trigger an E_USER_WARNING,
+		 * rather than _doing_it_wrong(), which triggers an E_USER_NOTICE.
+		 */
+		wp_trigger_error(
+			'',
+			sprintf(
+				/* translators: 1: The function name, 2: The argument number, 3: The argument name, 4: The expected type, 5: The provided type. */
+				__( 'Warning: %1$s expects parameter %2$s (%3$s) to be a %4$s, %5$s given.' ),
+				__FUNCTION__,
+				'#1',
+				'$text',
+				'string',
+				gettype( $text )
+			),
+			E_USER_WARNING
+		);
+
+		return '';
+	}
+
+	$text = preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $text );
+	$text = strip_tags( $text, apply_filters( 'ez_toc_allowable_tags', '' ) );
+
+	if ( $remove_breaks ) {
+		$text = preg_replace( '/[\r\n\t ]+/', ' ', $text );
+	}
+
+	return trim( $text );
+}
+
+/**
+ * Helps allow line breaks
+ * @since 2.0.59
+ */
+
+add_filter( 'ez_toc_allowable_tags', 'ez_toc_link_allow_br_tag' );
+
+function ez_toc_link_allow_br_tag( $tags ) {
+
+    if ( ezTOC_Option::get( 'prsrv_line_brk' ) ) {
+
+        $tags = '<br>';
+
+    }
+
+    return $tags;
+    
 }

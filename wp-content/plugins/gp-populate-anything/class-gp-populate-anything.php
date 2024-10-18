@@ -445,17 +445,6 @@ class GP_Populate_Anything extends GP_Plugin {
 	 * @return bool
 	 */
 	public function should_enqueue_frontend_scripts( $form ) {
-		// Do not enqueue if we're inside the Elementor editor. For some reason with the add-on framework, our scripts
-		// are getting enqueued while gform_gravityforms is not.
-		if (
-			class_exists( '\Elementor\Plugin' )
-			// @phpstan-ignore-next-line
-			&& method_exists( '\Elementor\Plugin', 'instance' )
-			&& \Elementor\Plugin::$instance->editor->is_edit_mode()
-		) {
-			return false;
-		}
-
 		/* form_has_lmts() is dependent on the LMT whitelist being populated. */
 		$this->live_merge_tags->populate_lmt_whitelist( $form );
 
@@ -598,6 +587,7 @@ class GP_Populate_Anything extends GP_Plugin {
 				'price'                             => __( 'Price', 'gp-populate-anything' ),
 				'image'                             => __( 'Image', 'gp-populate-anything' ),
 				'loadingEllipsis'                   => __( 'Loading...', 'gp-populate-anything' ),
+				'defaultOrdering'                   => __( 'Default', 'gp-populate-anything' ),
 				/**
 				 * Using HTML entity (&#9998;) does not work with esc_html__ so the pencil has been pasted in directly.
 				 */
@@ -776,7 +766,7 @@ class GP_Populate_Anything extends GP_Plugin {
 					if ( $filter_value_exploded[0] === 'gf_field' ) {
 						$dependent_fields[] = $filter_value_exploded[1];
 					} elseif ( preg_match_all( '/{\w+:gf_field_(\d+)}/', rgar( $filter, 'value' ), $field_matches ) ) {
-						if ( count( $field_matches ) && ! empty( $field_matches[1] ) ) {
+						if ( ! empty( $field_matches[1] ) ) {
 							$dependent_fields = $field_matches[1];
 						}
 					}
@@ -1656,7 +1646,7 @@ class GP_Populate_Anything extends GP_Plugin {
 				$filter_value = rgar( $filter, 'value' );
 
 				if ( preg_match_all( '/{\w+:gf_field_(\d+)}/', $filter_value, $field_matches ) ) {
-					if ( count( $field_matches ) && ! empty( $field_matches[1] ) ) {
+					if ( ! empty( $field_matches[1] ) ) {
 						$dependent_fields[ $filter_group_index ] = array_merge( $dependent_fields[ $filter_group_index ], $field_matches[1] );
 					}
 				} elseif ( strpos( $filter_value, 'gf_field:' ) === 0 ) {
@@ -2628,6 +2618,11 @@ class GP_Populate_Anything extends GP_Plugin {
 				$fake_entry['form_id']           = $form['id'];
 				$field_value[ "{$field->id}.2" ] = GFCommon::calculate( $field, $form, $fake_entry );
 				break;
+			case 'number':
+				// Ensure that number is correctly formatted when loaded into the form. By default, the saved value
+				// will always come through with periods for the decimal place and commas for thousand separator.
+				$field_value = $field->get_value_entry_detail( $field_value );
+				break;
 		}
 
 		/**
@@ -3507,7 +3502,7 @@ class GP_Populate_Anything extends GP_Plugin {
 	}
 
 	public function get_current_entry() {
-		if ( ! class_exists( 'GFEntryDetail' ) || ! GFCommon::is_entry_detail_edit() ) {
+		if ( ! class_exists( 'GFEntryDetail' ) || ! ( GFCommon::is_entry_detail_edit() || GFCommon::is_entry_detail_view() ) ) {
 			return false;
 		}
 
@@ -4163,6 +4158,14 @@ class GP_Populate_Anything extends GP_Plugin {
 			sleep( 1 );
 		}
 
+		/*
+		 * Reset field values to prevent conflicts. Sometimes if entries are loaded beforehand (such as with GSPC), this
+		 * variable can already have contents based on existing entries.
+		 */
+		if ( isset( $GLOBALS['gppa-field-values'] ) ) {
+			$GLOBALS['gppa-field-values'] = array();
+		}
+
 		$data = self::maybe_decode_json( WP_REST_Server::get_raw_data() );
 
 		// Copy $data onto $_REQUEST and $_POST
@@ -4259,6 +4262,21 @@ class GP_Populate_Anything extends GP_Plugin {
 		$_POST = add_magic_quotes( $_POST );
 
 		$fake_lead = $GLOBALS['gppa-field-values'][ $form['id'] ];
+
+		$referer         = rgar( $_SERVER, 'HTTP_REFERER' );
+		$referer_post_id = url_to_postid( $referer );
+
+		// Add the HTTP referrer as the source_url to the fake lead.
+		$fake_lead['source_url'] = $referer;
+
+		// setup the post object and ensure query object on post reflects singular context.
+		if ( $referer_post_id ) {
+			$GLOBALS['post'] = get_post( $referer_post_id );
+			setup_postdata( $GLOBALS['post'] );
+
+			global $wp_query;
+			$wp_query->is_singular = true;
+		}
 
 		/**
 		 * Allow throwing out field values during hydration using a filter.

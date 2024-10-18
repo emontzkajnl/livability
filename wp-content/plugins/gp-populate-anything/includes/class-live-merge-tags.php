@@ -978,9 +978,12 @@ class GP_Populate_Anything_Live_Merge_Tags {
 				continue;
 			}
 
-			if ( $field->get_input_type() === 'number' ) {
-				/** @var \GF_Field_Number $field */
-				$entry_values[ $input_id ] = $field->clean_number( $entry_value );
+			if ( $field->get_input_type() === 'number' && ! rgblank( $entry_value ) ) {
+				if ( GFCommon::is_numeric( $entry_value, 'decimal_dot' ) ) {
+					$entry_values[ $input_id ] = GFCommon::clean_number( $entry_value, 'decimal_dot' );
+				} else if ( GFCommon::is_numeric( $entry_value, 'decimal_comma' ) ) {
+					$entry_values[ $input_id ] = GFCommon::clean_number( $entry_value, 'decimal_comma' );
+				}
 				continue;
 			}
 
@@ -1131,6 +1134,25 @@ class GP_Populate_Anything_Live_Merge_Tags {
 				$form['fields'] = $fields;
 			}
 
+			// LMT on checkbox value (like 1.1) on form load may result in PHP warning if not set, ensure that value is alteast set albeit empty on form load.
+			preg_match_all( '/{[^{]*?:(\d+(\.\w+)?)(:(.*?))?}/mi', $merge_tag, $matches, PREG_SET_ORDER );
+			$input_id = isset( $matches[0] ) ? rgar( $matches[0], '1' ) : '';
+			if ( ! isset( $entry_values[ $input_id ] ) ) {
+				$entry_values[ $input_id ] = '';
+			}
+
+			// If we have an entry from something like Entry Details, GPEB, or GV, use it instead.
+			$entry_values = gf_apply_filters(
+				array(
+					'gppa_populate_form_entry',
+					$form['id'],
+				),
+				$entry_values,
+				$form,
+				false,
+				$entry_values
+			);
+
 			$merge_tag_match_value_html = GFCommon::replace_variables( $merge_tag, $form, $entry_values, false, false, false );
 
 			/**
@@ -1166,7 +1188,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 			$fallback = rgar( $merge_tag_modifiers, 'fallback' );
 
-			if ( $fallback && ! $merge_tag_match_value ) {
+			if ( ! rgblank( $fallback ) && ! $merge_tag_match_value ) {
 				$merge_tag_match_value = $fallback;
 			}
 
@@ -1352,14 +1374,6 @@ class GP_Populate_Anything_Live_Merge_Tags {
 				// Registration of text/label will happen in another method.
 				if ( preg_match( $this->live_merge_tag_regex, $choice['gppaOriginalValue'] ) ) {
 					$this->register_lmt_on_page( $form['id'], 'data-gppa-live-merge-tag-value' );
-				}
-
-				// If the value is empty, change POST params to prevent it from becoming checked on multi-page forms.
-				$input_id = sprintf( 'input_%d_%d', $field->id, $choice_index + 1 );
-
-				if ( rgpost( 'is_submit_' . $form['id'] ) && rgar( $choice, 'value' ) === '' && rgar( $_POST, $input_id ) === '' ) {
-					// An empty string will not suffice here as GFFormsModel::choice_value_match() will still check it.
-					$_POST[ $input_id ] = 'gppa-unchecked';
 				}
 			}
 		}

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.8 | July 9, 2024
+
+- Fixed issue where the `Remove this item` button was not using localized strings.
+
 ## 1.1.7 | May 22, 2024
 
 - Fixed issue where Lazy Load setting with Dynamic Values did not render field values on Entry Detail Edit page.

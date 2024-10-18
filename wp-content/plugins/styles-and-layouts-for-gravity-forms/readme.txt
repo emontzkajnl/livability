@@ -3,8 +3,8 @@ Contributors: wpmonks
 Donate link: https://www.paypal.me/wpmonks
 Tags: Gravity Forms CSS, gravity forms themes, gravity forms styler, Gravity Forms Design, Gravity Forms Material Design, Gravity Forms Tooltips
 Requires at least: 4.0
-Tested up to: 6.5
-Stable tag: 5.5
+Tested up to: 6.6
+Stable tag: 5.18
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,6 +17,7 @@ Gravity Booster - Styles and Layouts for Gravity Forms plugin lets you design an
 [youtube https://www.youtube.com/watch?v=bkiBdaxIPjY]
 
 = Styles & Layouts for Gravity Forms Premium Addons: =
+* [ **AI for Gravity Forms** ](https://wpmonks.com/downloads/ai-for-gravity-forms/)
 * [ **Material Design** ](https://wpmonks.com/downloads/material-design/)
 * [ **Checkbox & Radio Styler** ](https://wpmonks.com/downloads/checkbox-radio-styler-for-gravity-forms/)
 * [ **Bootstrap Design** ](https://wpmonks.com/downloads/gravity-forms-bootstrap-addon/)
@@ -36,17 +37,29 @@ You can easily create responsive designs like having different font size, widths
 
 = Premium Addons to Extend the Functionality =
 
+* [ **AI for Gravity Forms** ](https://wpmonks.com/downloads/ai-for-gravity-forms/)
+**This addon will add AI capabilities in your Gravity Forms.** You can generate AI text on form submission. You can optimize field labels. You can generate AI images on form submission with prompts that support merge tags. It also lets you use OpenAI's vision capabilities to images uploaded using Gravity Forms File Upload field.
+
+Checkout the below video to have a quick glance of AI for Gravity Forms addon
+[youtube https://www.youtube.com/watch?v=DhPTo93ICHQ]
+
 * [ **Material Design** ](https://wpmonks.com/downloads/material-design/): [Online Demo](https://wpmonks.com/gravity-forms-material-design-demo/)
 **This addon will add material design to Gravity Form with single click of button**. Checkboxes can be converted into material design compatible switch buttons with ripple effect. Color of material design theme can be easily changed using color picker.
 
 Checkout the below video to have a quick glance of Material Design addon
-[youtube https://www.youtube.com/watch?v=xa_SN3SdRLQ]
+[youtube https://www.youtube.com/watch?v=dVmKGGqUdlQ]
 
 * [ **Checkbox & Radio Styler** ](https://wpmonks.com/downloads/checkbox-radio-styler-for-gravity-forms/): [Online Demo](https://wpmonks.com/checkbox-radio-styler-for-gravity-forms-demo/)
 **This addon lets you change the design of checkbox and radio buttons**. There are plenty of design options to customize color, animations and style. You can use solid colors, images , switches or fontawesome icons inside checkbox and radio buttons.
 
+Checkout the below video to have a quick glance of Checkbox & Radio addon
+[youtube https://www.youtube.com/watch?v=osG2MTgt8YA]
+
 * [**Bootstrap Design**](https://wpmonks.com/downloads/gravity-forms-bootstrap-addon/):[Online Demo](https://wpmonks.com/gravity-form-bootstrap-design-demo/)
 **Bootstrap Design for Gravity Forms removes all the complexity and adds bootstrap to your form with one click** . This plugin uses Bootstrap 4. The bootsrap design will be applied to all fields, submit button, error & confirmation messages as well as progress bar. 
+
+Checkout the below video to have a quick glance of Bootstrap Design addon
+[youtube https://www.youtube.com/watch?v=drR_U-7YPxg]
 
 * [ **Theme Pack** ](https://wpmonks.com/downloads/theme-pack/): 
 **Theme Pack for Styles and Layouts for Gravity Forms has a collection of 30+ beautifully crafted themes.** You will no longer need to change settings for each and every element of form. Gravity Forms Theme pack addon is highly configurable as you can modify the form design even after applying a theme. This addon has themes which uses gradient as background.
@@ -58,13 +71,13 @@ Checkout the below video to have a quick glance of themes addon
 **Tooltips addon lets you add tooltips next to field labels in Gravity Forms from customizer**. There are multiple colors, icons, animation effects, position options to make your tooltips look beautiful and resonate with your theme. 
 
 Checkout the below video to have a quick glance of Tooltips addon
-[youtube https://www.youtube.com/watch?v=XTRO1FzgN7E]
+[youtube https://www.youtube.com/watch?v=Nu_hK3Lo9CU]
 
 * [ **Field Icons** ](https://wpmonks.com/downloads/field-icons/): [Online Demo](https://wpmonks.com/gravity-forms-field-icons-demo/)
 **Field Icons addon lets you add images as well as fontawesome icons to Gravity Form fields**. It supports image and fontawesome icons for phone, single line input, quantity, custom post fields, post tags, post title, date, email, website, address, name and number fields. It will automatically detect all the fields present inside the form and give you the option to set icons for them. You can also change the position of icons from left to right. It also comes with an option to set padding for icon fields so that the form text doesn't overlap with the icon. 
 
 Checkout the below video to have a quick glance of Field Icons addon
-[youtube https://www.youtube.com/watch?v=EZ4TADXar2A]
+[youtube https://www.youtube.com/watch?v=KcMMW4ps_ts]
 
 * [ **Custom Themes** ](https://wpmonks.com/downloads/custom-themes/): 
 **Custom Themes addon for Styles and Layouts for Gravity Forms lets you save your own form designs as themes.** You can create unlimited themes and apply them on unlimited forms. This addon will save a lot of time if you want to make two forms with same styling. You are free to modify the form design even after you have applied a theme.
@@ -72,8 +85,6 @@ Checkout the below video to have a quick glance of Field Icons addon
 * [ **Addon Bundle**](https://wpmonks.com/downloads/addon-bundle/):
 Addon Bundle is a collection of all the addons of Styles and Layouts for Gravity Forms and you will get it a special discounted price. 
 
-* [ **Gravity Forms Conversational Addon** ](https://gravityconversational.com/downloads/gravity-conversational-form/): 
-**Convert Gravity Forms design to Typeform style with one click of button**. You can customize the design of the conversational form by changing colors. The form will be shown on a distraction free layout.
 
 
 == Installation ==
@@ -114,6 +125,59 @@ Yes, Gravity Forms embedded in Divi themes is also supported. Please check the t
 4. Options in settings
 
 == Changelog ==
+= 5.18 (15th September 2024) =
+* Fixed form preview not showing with conditional logic and Gravity Forms Material Design
+
+= 5.17 (27th August 2024) =
+* Fixed custom CSS not working
+
+= 5.16 (27th August 2024) =
+* Fixed review link
+* Fixed minor code issues
+
+= 5.15 (24th August 2024) =
+* Fixed width of checkbox & radio labels
+
+= 5.14 (24th August 2024) =
+* Fixed support for checkbox & radio styler buttons in backend
+* Fixed minor css issues
+* Fixed text align not working for labels
+
+= 5.13 (23rd August 2024) =
+* Fixed /n getting removed when saving custom css
+* Fixed minor css issues
+* Fixed text align not working for labels
+
+= 5.12 (21st August 2024) =
+* Fixed position of RTL sidebar
+* Removed some unnecassry CSS output
+* Added compatability with checkbox & radio styler latest features
+* Fixed bold option not working
+* Fixed form wrapper padding getting reset with updates
+* Fixed background color not working for form wrapper
+* Removed text field settings from total field
+
+= 5.11 (19th July 2024) =
+* Fixed form selection drowpown in older WordPress versions
+* Fixed position of sidebar settings in rtl
+
+= 5.10 (28th June 2024) =
+* Added support for styling individual fields
+* Added fixes for AI support
+
+= 5.9 (21st June 2024) =
+* Added support confirmation text container border color
+* Added support for OpenAI vision
+
+= 5.8 (18th June 2024) =
+* Added support for field labels fontawesome icons 
+
+= 5.7 (17th June 2024) =
+* Added support for AI Image generation addon
+
+= 5.6 (12th June 2024) =
+* Fixed styler settings not saving
+
 = 5.5 (10th June 2024) =
 * Added support for AI for Gravity Forms
 * Added option to modify settings directly from booster backend.

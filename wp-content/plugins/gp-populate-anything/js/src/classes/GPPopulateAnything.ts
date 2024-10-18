@@ -571,6 +571,17 @@ export default class GPPopulateAnything {
 	}
 
 	bindPageConditionalLogic() {
+		// Ensure we don't bind the same event multiple times
+		window.gform.removeAction(
+			'gform_frontend_pages_evaluated',
+			'gppaPageConditionalLogic'
+		);
+
+		window.gform.removeAction(
+			'gform_frontend_page_visible',
+			'gppaPageConditionalLogic'
+		);
+
 		window.gform.addAction(
 			'gform_frontend_pages_evaluated',
 			(pages: any, formId: number, self: any) => {
@@ -578,13 +589,15 @@ export default class GPPopulateAnything {
 				if (formId == this.formId) {
 					this.gfPageConditionalLogic = self;
 				}
-			}
+			},
+			10,
+			'gppaPageConditionalLogic'
 		);
 
 		window.gform.addAction(
 			'gform_frontend_page_visible',
 			(
-				page: {
+				currentPage: {
 					conditionalLogic: any;
 					fieldId: number;
 					isUpdated: boolean;
@@ -598,13 +611,17 @@ export default class GPPopulateAnything {
 					return;
 				}
 
+				if (!currentPage.isUpdated || !currentPage.isVisible) {
+					return;
+				}
+
 				// Get the page number from the page field ID from this.gfPageConditionalLogic.options.pages
 				let pageNumber = 1; // Start at 1 since the first page of the form is not a "page"
 
 				for (const page of this.gfPageConditionalLogic.options.pages) {
 					pageNumber++;
 
-					if (page.fieldId === page.fieldId) {
+					if (currentPage.fieldId === page.fieldId) {
 						break;
 					}
 				}
@@ -618,7 +635,9 @@ export default class GPPopulateAnything {
 						)
 					);
 				}
-			}
+			},
+			10,
+			'gppaPageConditionalLogic'
 		);
 	}
 
@@ -956,10 +975,7 @@ export default class GPPopulateAnything {
 
 						if (fieldDetails.hasChosen) {
 							window.gformInitChosenFields(
-								('#input_{0}_{1}' as any).gformFormat(
-									this.formId,
-									fieldID
-								),
+								`#input_${this.formId}_${fieldID}`,
 								window.GPPA.I18N.chosen_no_results
 							);
 						}

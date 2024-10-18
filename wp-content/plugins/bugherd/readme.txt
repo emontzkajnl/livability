@@ -4,7 +4,7 @@ Tags: admin, administration, tracking, integration, api, bug, bugtracking, bughe
 Requires at least: 4.7
 Requires PHP: 5.6
 Tested up to: 6.4
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -120,6 +120,10 @@ Absolutely! Our support team would love to help you out. You can email us at sup
 [View more information here](https://support.bugherd.com/en/articles/84872-Install-the-BugHerd-Wordpress-plugin).
 
 == Changelog ==
+
+= 1.0.9 =
+* Bump stable tag
+* Updated readme
 
 = 1.0.8 =
 * Bump stable tag
