@@ -58,9 +58,28 @@ function getWooProductPriceToDisplay( $product_id, $qty = 1 ) {
     // take min price for variable product
     if($product->get_type() == "variable") {
         $prices = $product->get_variation_prices( true );
-        if(!empty( $prices['price'] )) {
-            $productPrice = current( $prices['price'] );
+        if(empty( $prices['price'] )) {
+            $productPrice = $product->get_price();
+        } else {
+            $variation_id = key($prices['price']); // Getting the variation ID
+            $variation = wc_get_product($variation_id); // Creating a Variation Instance
+
+            if ($variation && is_a($variation, 'WC_Product')) { // Check if $variation is a valid product object
+                $args = array(
+                    'price' => $variation->get_price(),
+                    'qty'   => 1
+                );
+
+                $productPrice = wc_get_price_excluding_tax($variation, $args);
+            } else {
+                // Handle the case where no valid variation is found
+                // For example, fallback to the parent product's price or set a default price
+                $productPrice = $product->get_price(); // Fallback to the parent product's price
+            }
         }
+
+    } else {
+        $productPrice = $product->get_price();
     }
 
     return (float) wc_get_price_to_display( $product, array( 'qty' => $qty,'price'=>$productPrice ) );
@@ -88,7 +107,7 @@ function getWooEventCartSubtotal($event) {
     return pys_round($subTotal);
 }
 function getWooCartSubtotal() {
-
+    WC()->cart->calculate_totals();
 	// subtotal is always same value on front-end and depends on PYS options
 	$include_tax = get_option( 'woocommerce_tax_display_cart' ) == 'incl';
 

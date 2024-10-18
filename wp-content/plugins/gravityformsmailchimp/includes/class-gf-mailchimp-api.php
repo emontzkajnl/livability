@@ -249,10 +249,16 @@ class GF_MailChimp_API {
 			throw Exception( __METHOD__ . '(): Method must be one of PUT or PATCH.' );
 		}
 
-		// Prepare subscriber hash.
-		$subscriber_hash = md5( strtolower( $email_address ) );
+		$path = 'lists/' . $list_id . '/members/' . md5( strtolower( $email_address ) );
 
-		return $this->process_request( 'lists/' . $list_id . '/members/' . $subscriber_hash, $subscription, $method );
+		if ( isset( $subscription['skip_merge_validation'] ) ) {
+			if ( $subscription['skip_merge_validation'] ) {
+				$path = add_query_arg( 'skip_merge_validation', 'true', $path );
+			}
+			unset( $subscription['skip_merge_validation'] );
+		}
+
+		return $this->process_request( $path, $subscription, $method );
 
 	}
 

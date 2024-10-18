@@ -23,7 +23,7 @@ final class PYS extends Settings implements Plugin {
     private $registeredPlugins = array();
 
     private $adminPagesSlugs = array();
-
+    private $externalId;
     /**
      * @var PYS_Logger
      */
@@ -57,6 +57,7 @@ final class PYS extends Settings implements Plugin {
 
 	    // Priority 9 used to keep things same as on PRO version
         add_action( 'wp', array( $this, 'controllSessionStart'), 10);
+        add_action( 'init', array( $this, 'set_pbid'), 8);
         add_action( 'init', array( $this, 'init' ), 9 );
         add_action( 'init', array( $this, 'afterInit' ), 11 );
 
@@ -97,22 +98,59 @@ final class PYS extends Settings implements Plugin {
         add_action( 'deactivate_pixel-cost-of-goods/pixel-cost-of-goods.php',array($this,"restoreSettingsAfterCog"));
         add_action( 'woocommerce_checkout_create_order', array( $this,'add_order_external_meta_data'), 10, 2 );
 
+		/**
+		 * For Woo
+		 */
+		add_action( 'woocommerce_checkout_order_processed', array( $this, 'woo_checkout_process' ), 10, 3 );
+
+		/**
+		 * For EDD
+		 */
+		if(!$this->isCachePreload()){
+			add_action( 'edd_recurring_record_payment', array( $this, 'edd_recurring_payment' ), 10, 1 );
+		}
+
         $this->logger = new PYS_Logger();
 
     }
 
     public function init() {
-        if ( isset( $_GET[ 'clear_plugin_logs' ] ) ) {
-            PYS()->getLog()->remove();
-            $actual_link = ( isset( $_SERVER[ 'HTTPS' ] ) && $_SERVER[ 'HTTPS' ] === 'on' ? "https" : "http" ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-            wp_redirect( remove_query_arg( 'clear_plugin_logs', $actual_link ) );
-            exit;
-        } elseif ( isset( $_GET[ 'clear_pinterest_logs' ] ) ) {
-            Pinterest()->getLog()->remove();
-            $actual_link = ( isset( $_SERVER[ 'HTTPS' ] ) && $_SERVER[ 'HTTPS' ] === 'on' ? "https" : "http" ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-            wp_redirect( remove_query_arg( 'clear_pinterest_logs', $actual_link ) );
-            exit;
+
+        $loggers = [
+            'meta' => [PYS()->getLog(), 'downloadLogFile'],
+        ];
+
+        $clearLoggers = [
+            'clear_plugin_logs' => [PYS()->getLog(), 'remove'],
+        ];
+
+        if (class_exists('Pinterest')) {
+            $loggers['pinterest'] = [Pinterest()->getLog(), 'downloadLogFile'];
+            $clearLoggers['clear_pinterest_logs'] = [Pinterest()->getLog(), 'remove'];
         }
+
+        if (isset($_GET['download_logs']) && array_key_exists($_GET['download_logs'], $loggers)) {
+            $logger = $loggers[$_GET['download_logs']];
+            if (is_callable($logger)) {
+                call_user_func($logger);
+            } elseif (is_callable([$logger[0], $logger[1]])) {
+                call_user_func([$logger[0], $logger[1]]);
+            }
+        }
+
+        foreach ($clearLoggers as $key => $logger) {
+            if (isset($_GET[$key]) && (is_callable($logger) || (is_callable([$logger[0], $logger[1]]) && method_exists($logger[0], $logger[1])))) {
+                if (is_callable($logger)) {
+                    call_user_func($logger);
+                } else {
+                    call_user_func([$logger[0], $logger[1]]);
+                }
+                $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                wp_redirect(remove_query_arg($key, $actual_link));
+                exit;
+            }
+        }
+
         register_post_type( 'pys_event', array(
             'public' => false,
             'supports' => array( 'title' )
@@ -200,10 +238,14 @@ final class PYS extends Settings implements Plugin {
             $integration->setCodeOptOut('');
         }
     }
+
     function controllSessionStart(){
+        if(PYS()->getOption('session_disable')) return;
+
+        // Checking if the directory exists and is writable
         if (!is_admin() && php_sapi_name() !== 'cli' && session_status() != PHP_SESSION_DISABLED) {
             if (!headers_sent() && session_status() == PHP_SESSION_NONE) {
-                session_start();
+                if(!session_start()) return;
             }
             if (empty($_SESSION['TrafficSource'])) {
                 $_SESSION['TrafficSource'] = getTrafficSource();
@@ -220,70 +262,49 @@ final class PYS extends Settings implements Plugin {
             if (empty($_SESSION['TrafficUtmsId'])) {
                 $_SESSION['TrafficUtmsId'] = getUtmsId();
             }
-            session_write_close();
         }
     }
 
     function get_pbid(){
-        $pbidCookieName = 'pbid';
-        if (isset($_COOKIE[$pbidCookieName])) {
-            return $_COOKIE[$pbidCookieName];
-        }
-        else return false;
-
+        return $this->externalId;
     }
-    public function set_pbid()
-    {
+    function set_pbid() {
         $pbidCookieName = 'pbid';
-        $encryptedUniqueId = false;
-        $externalIdExpire = PYS()->getOption("external_id_expire");
         $isTrackExternalId = EventsManager::isTrackExternalId();
+        $user = wp_get_current_user();
 
-        if (!$isTrackExternalId) {
-            if (isset($_COOKIE[$pbidCookieName])) {
-                setcookie($pbidCookieName, '', time() - 3600, '/');
+        if ($user && $isTrackExternalId) {
+            $userExternalId = $user->get('external_id');
+            if (!empty($userExternalId)) {
+                $this->externalId = $userExternalId;
+                return;
             }
         }
-        if ((!isset($_COOKIE[$pbidCookieName]) || empty($_COOKIE[$pbidCookieName])) && $isTrackExternalId) {
-            $uniqueId = bin2hex(random_bytes(16));
-            $encryptedUniqueId = hash('sha256', $uniqueId);
 
-        }
+        if ($isTrackExternalId) {
 
-        ob_start();
-        ?>
-        <script id="set-pbid-for-pys">
-            function pys_get_pbid(name) {
-                var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-                return v ? v[2] : null;
+            if (!empty($_COOKIE[$pbidCookieName])) {
+                $this->externalId = $_COOKIE[$pbidCookieName];
+            } elseif ( PYS()->getOption('external_id_use_transient') && get_transient('externalId-' . PYS()->get_user_ip())) {
+                $this->externalId = get_transient('externalId-' . PYS()->get_user_ip());
             }
-            function pys_set_pbid(name, value, days) {
-                var d = new Date;
-                d.setTime(d.getTime() + 24*60*60*1000*days);
-                document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
-            }
-            var name = 'pbid';
-            var pbidHash = "<?=$encryptedUniqueId?>";
-
-            if(pys_get_pbid(name) != pbidHash || pys_get_pbid(name) == '') { // prevent re send event if user update page
-                pys_set_pbid(name,pbidHash,<?=$externalIdExpire?>)
-            }
-        </script>
-        <?php
-
-
-        ob_end_flush();
-    }
-    public function get_pbid_ajax(){
-        if(defined('DOING_AJAX') && wp_doing_ajax()){
-            $pbidCookieName = 'pbid';
-            $isTrackExternalId = EventsManager::isTrackExternalId();
-
-
-            if (!isset($_COOKIE[$pbidCookieName]) && $isTrackExternalId) {
+            else {
                 $uniqueId = bin2hex(random_bytes(16));
                 $encryptedUniqueId = hash('sha256', $uniqueId);
-                wp_send_json_success( array('pbid'=>$encryptedUniqueId));
+                $this->externalId = $encryptedUniqueId;
+                if(PYS()->getOption('external_id_use_transient')){
+                    set_transient('externalId-' . PYS()->get_user_ip(), $this->externalId, 60 * 10);
+                }
+            }
+        }
+    }
+
+    public function get_pbid_ajax(){
+        if(defined('DOING_AJAX') && DOING_AJAX){
+            $isTrackExternalId = EventsManager::isTrackExternalId();
+            if ($isTrackExternalId && !empty($this->externalId)) {
+                $transient = get_transient('externalId-'.PYS()->get_user_ip());
+                wp_send_json_success( array('pbid'=> $this->externalId, 'transient' => !empty($transient) ? $transient : false ));
             }
         }
     }
@@ -334,7 +355,7 @@ final class PYS extends Settings implements Plugin {
 		    $this->addOption( 'general_event_on_' . $post_type->name . '_enabled', 'checkbox', false );
 
 	    }
-	    
+
 	    maybeMigrate();
 
     }
@@ -379,6 +400,17 @@ final class PYS extends Settings implements Plugin {
      */
     function userLogin($user_login, $user) {
         update_user_meta($user->ID,'pys_just_login',true);
+
+		if ( !apply_filters( 'pys_disable_advanced_form_data_cookie', false ) && !apply_filters( 'pys_disable_advance_data_cookie', false ) ) {
+			$user_persistence_data = get_persistence_user_data( $user->user_email, $user->first_name, $user->last_name, '' );
+			$userData = array(
+				'first_name' => $user_persistence_data[ 'fn' ],
+				'last_name'  => $user_persistence_data[ 'ln' ],
+				'email'      => $user_persistence_data[ 'em' ],
+				'phone'      => $user_persistence_data[ 'tel' ]
+			);
+			setcookie( "pys_advanced_form_data", json_encode( $userData ), 2147483647, '/' );
+		}
     }
 
     public function userRegisterHandler( $user_id ) {
@@ -429,7 +461,10 @@ final class PYS extends Settings implements Plugin {
         if (is_admin() || is_customize_preview() || is_preview()) {
             return;
         }
-
+        if($this->is_user_agent_bot())
+        {
+            return;
+        }
         // disable Events Manager on Elementor editor
         if (did_action('elementor/preview/init')
             || did_action('elementor/editor/init')
@@ -442,10 +477,7 @@ final class PYS extends Settings implements Plugin {
         if (function_exists('et_core_is_fb_enabled') && et_core_is_fb_enabled()) {
             return;
         }
-        if(PYS()->getOption( 'block_robot_enabled') && $this->is_user_agent_bot())
-        {
-            return;
-        }
+
         if(PYS()->getOption( 'block_ip_enabled') && in_array($this->get_user_ip(), PYS()->getOption('blocked_ips')))
         {
             return;
@@ -501,29 +533,38 @@ final class PYS extends Settings implements Plugin {
     function is_user_agent_bot(){
         if (!empty($_SERVER['HTTP_USER_AGENT'])) {
             $options = array(
-                'YandexBot', 'YandexAccessibilityBot', 'YandexMobileBot','YandexDirectDyn',
-                'YandexScreenshotBot', 'YandexImages', 'YandexVideo', 'YandexVideoParser',
-                'YandexMedia', 'YandexBlogs', 'YandexFavicons', 'YandexWebmaster',
-                'YandexPagechecker', 'YandexImageResizer','YandexAdNet', 'YandexDirect',
-                'YaDirectFetcher', 'YandexCalendar', 'YandexSitelinks', 'YandexMetrika',
-                'YandexNews', 'YandexNewslinks', 'YandexCatalog', 'YandexAntivirus',
-                'YandexMarket', 'YandexVertis', 'YandexForDomain', 'YandexSpravBot',
-                'YandexSearchShop', 'YandexMedianaBot', 'YandexOntoDB', 'YandexOntoDBAPI',
-                'Googlebot', 'Googlebot-Image', 'Googlebot-News', 'Googlebot-Video',
-                'Mediapartners-Google', 'AdsBot-Google', 'Chrome-Lighthouse', 'Lighthouse',
-                'Mail.RU_Bot', 'bingbot', 'Accoona', 'ia_archiver', 'Ask Jeeves',
-                'OmniExplorer_Bot', 'W3C_Validator', 'WebAlta', 'YahooFeedSeeker', 'Yahoo!',
-                'Ezooms', 'Tourlentabot', 'MJ12bot', 'AhrefsBot', 'SearchBot', 'SiteStatus',
-                'Nigma.ru', 'Baiduspider', 'Statsbot', 'SISTRIX', 'AcoonBot', 'findlinks',
-                'proximic', 'OpenindexSpider','statdom.ru', 'Exabot', 'Spider', 'SeznamBot',
-                'oBot', 'C-T bot', 'Updownerbot', 'Snoopy', 'heritrix', 'Yeti',
-                'DomainVader', 'DCPbot', 'PaperLiBot', 'APIs-Google', 'AdsBot-Google-Mobile',
-                'AdsBot-Google-Mobile', 'AdsBot-Google-Mobile-Apps', 'FeedFetcher-Google',
-                'Google-Read-Aloud', 'DuplexWeb-Google', 'Storebot-Google', 'lscache_runner'
+                'YandexBot', 'YandexAccessibilityBot', 'YandexMobileBot', 'YandexDirectDyn', 'YandexScreenshotBot',
+                'YandexImages', 'YandexVideo', 'YandexVideoParser', 'YandexMedia', 'YandexBlogs',
+                'YandexFavicons', 'YandexWebmaster', 'YandexPagechecker', 'YandexImageResizer', 'YandexAdNet',
+                'YandexDirect', 'YaDirectFetcher', 'YandexCalendar', 'YandexSitelinks', 'YandexMetrika',
+                'YandexNews', 'YandexNewslinks', 'YandexCatalog', 'YandexAntivirus', 'YandexMarket',
+                'YandexVertis', 'YandexForDomain', 'YandexSpravBot', 'YandexSearchShop', 'YandexMedianaBot',
+                'YandexOntoDB', 'YandexOntoDBAPI', 'Googlebot', 'Googlebot-Image', 'Googlebot-News',
+                'Googlebot-Video', 'Mediapartners-Google', 'AdsBot-Google', 'Chrome-Lighthouse', 'Lighthouse',
+                'Mail.RU_Bot', 'bingbot', 'Accoona', 'ia_archiver', 'Ask Jeeves', 'OmniExplorer_Bot',
+                'W3C_Validator', 'WebAlta', 'YahooFeedSeeker', 'Yahoo!', 'Ezooms', 'Tourlentabot', 'MJ12bot',
+                'AhrefsBot', 'SearchBot', 'SiteStatus', 'Nigma.ru', 'Baiduspider', 'Statsbot', 'SISTRIX',
+                'AcoonBot', 'findlinks', 'proximic', 'OpenindexSpider', 'statdom.ru', 'Exabot', 'Spider',
+                'SeznamBot', 'oBot', 'C-T bot', 'Updownerbot', 'Snoopy', 'heritrix', 'Yeti', 'DomainVader',
+                'DCPbot', 'PaperLiBot', 'APIs-Google', 'AdsBot-Google-Mobile', 'AdsBot-Google-Mobile-Apps',
+                'FeedFetcher-Google', 'Google-Read-Aloud', 'DuplexWeb-Google', 'Storebot-Google',
+                'ClaudeBot', 'SeekportBot', 'GPTBot', 'Applebot',
+                'DuckDuckBot', 'Sogou', 'facebookexternalhit', 'Swiftbot', 'Slurp', 'CCBot', 'Go-http-client',
+                'Sogou Spider', 'Facebot', 'Alexa Crawler', 'Cốc Cốc Bot', 'Majestic-12', 'SemrushBot',
+                'DotBot', 'Qwantify', 'Pinterest', 'GrapeshotCrawler', 'archive.org_bot', 'LinkpadBot',
+                'uptimebot', 'Wget', 'curl', 'Google-Structured-Data-Testing-Tool', 'Google-PageSpeed Insights',
+                'Google-Site-Verification', 'BingPreview', 'Slackbot', 'TelegramBot', 'DiscordBot', 'WhatsApp',
+                'RedditBot', 'Yahoo! Slurp', 'Tumblr', 'PetalBot', 'FlipboardProxy', 'LinkedInBot',
+                'SkypeUriPreview', 'Google-Firebase-Storage', 'BitlyBot', 'FeedlyBot', 'AppleNewsBot',
+                'ZyBorg', 'ia_archiver-web.archive.org', 'Mediatoolkitbot', 'DeuSu', 'SMTBot', 'MegaIndex.ru',
+                'Seomoz', 'BLEXBot', 'YisouSpider', '360Spider', 'AddThis', 'TweetmemeBot', 'ContextAd Bot',
+                'Screaming Frog SEO Spider', 'Nutch', 'Baiduspider-image', 'Panscient.com', 'Twitterbot',
+                'YoudaoBot', 'OpenSiteExplorer', 'Linkfluence', 'YaK', 'ContentKing', 'Spinn3r', 'PhantomJS',
+                'HeadlessChrome', 'Snapchat', 'Pingdom', 'Googlebot-Mobile'
             );
 
             foreach($options as $row) {
-                if (stripos($_SERVER['HTTP_USER_AGENT'], $row) !== false) {
+                if (stripos(strtolower($_SERVER['HTTP_USER_AGENT']), strtolower($row)) !== false) {
                     return true;
                 }
             }
@@ -543,7 +584,7 @@ final class PYS extends Settings implements Plugin {
                 'externalID_disabled_by_api' => apply_filters( 'pys_disable_externalID_by_gdpr', false ),
                 'disabled_all_cookie'       => apply_filters( 'pys_disable_all_cookie', false ),
                 'disabled_start_session_cookie' => apply_filters( 'pys_disabled_start_session_cookie', false ),
-                'disabled_advanced_form_data_cookie' => apply_filters( 'pys_disable_advanced_form_data_cookie', false ),
+                'disabled_advanced_form_data_cookie' => apply_filters( 'pys_disable_advanced_form_data_cookie', false ) || apply_filters( 'pys_disable_advance_data_cookie', false ),
                 'disabled_landing_page_cookie'  => apply_filters( 'pys_disable_landing_page_cookie', false ),
                 'disabled_first_visit_cookie'  => apply_filters( 'pys_disable_first_visit_cookie', false ),
                 'disabled_trafficsource_cookie' => apply_filters( 'pys_disable_trafficsource_cookie', false ),
@@ -562,7 +603,8 @@ final class PYS extends Settings implements Plugin {
 
         add_menu_page( 'PixelYourSite', 'PixelYourSite', 'manage_pys', 'pixelyoursite',
             array( $this, 'adminPageMain' ), PYS_FREE_URL . '/dist/images/favicon.png' );
-
+        add_submenu_page( 'pixelyoursite', 'Global Settings', 'Global Settings',
+            'manage_pys', 'pixelyoursite_settings', array( $this, 'settingsTemplate' ) );
         $addons = $this->registeredPlugins;
 
         if ( $addons['head_footer'] ) {
@@ -593,6 +635,7 @@ final class PYS extends Settings implements Plugin {
         // core admin pages
         $this->adminPagesSlugs = array(
             'pixelyoursite',
+            'pixelyoursite_settings',
             'pixelyoursite_licenses',
             'pixelyoursite_report',
             'pixelyoursite_woo_reports',
@@ -659,7 +702,9 @@ final class PYS extends Settings implements Plugin {
 
 		include 'views/html-licenses.php';
 	}
-
+    public function settingsTemplate() {
+        include 'views/html-main-settings.php';
+    }
 
 
     public function updatePlugin() {
@@ -848,7 +893,7 @@ final class PYS extends Settings implements Plugin {
 	        	/** @var Plugin|Pixel|Settings $obj */
 		        $obj->updateOptions();
 	        }
-
+            GATags()->updateOptions();
 	        purgeCache();
 
         }
@@ -978,6 +1023,47 @@ final class PYS extends Settings implements Plugin {
 
         return false;
     }
+	public function isCachePreload() {
+		if(!empty($_SERVER['HTTP_USER_AGENT'])){
+			$options = array('WP Rocket/Preload', 'WP-Rocket-Preload', 'WP Rocket/Homepage_Preload', 'lscache_runner', 'LiteSpeed Cache', 'LiteSpeed-Cache');
+			foreach($options as $row) {
+				if (stripos(strtolower($_SERVER['HTTP_USER_AGENT']), strtolower($row)) !== false) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param $order_id
+	 * @param $posted_data
+	 * @param \WC_Order $order
+	 */
+	public function woo_checkout_process( $order_id, $posted_data, $order ) {
+		if ( !apply_filters( 'pys_disable_advanced_form_data_cookie', false ) && !apply_filters( 'pys_disable_advance_data_cookie', false ) ) {
+			$first_name = $order->get_billing_first_name();
+			$last_name = $order->get_billing_last_name();
+			$email = $order->get_billing_email();
+			$phone = $order->get_billing_phone();
+			$phone = preg_replace( '/[^0-9.]+/', '', $phone );
+
+			$user_persistence_data = get_persistence_user_data( $email, $first_name, $last_name, $phone );
+			$userData = array(
+				'first_name' => $user_persistence_data[ 'fn' ],
+				'last_name'  => $user_persistence_data[ 'ln' ],
+				'email'      => $user_persistence_data[ 'em' ],
+				'phone'      => $user_persistence_data[ 'tel' ]
+			);
+
+			setcookie( "pys_advanced_form_data", json_encode( $userData ), 2147483647, '/' );
+		}
+	}
+
+	function edd_recurring_payment( $payment_id ) {
+		EnrichOrder()->edd_save_subscription_meta( $payment_id );
+	}
+
 }
 
 /**

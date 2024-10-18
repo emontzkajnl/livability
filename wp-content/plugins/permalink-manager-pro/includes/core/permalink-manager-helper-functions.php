@@ -58,8 +58,12 @@ class Permalink_Manager_Helper_Functions {
 
 			$primary_term = ( is_numeric( $yoast_primary_term_id ) ) ? get_term( $yoast_primary_term_id, $taxonomy ) : '';
 		} // B. The SEO Framework
-		else if ( function_exists( 'the_seo_framework' ) ) {
-			$primary_term = the_seo_framework()->get_primary_term( $post_id, $taxonomy );
+		else if ( function_exists( 'the_seo_framework' ) || function_exists( 'tsf' ) ) {
+			if ( class_exists( 'The_SEO_Framework\Data\Plugin\Post' ) ) {
+				$primary_term = The_SEO_Framework\Data\Plugin\Post::get_primary_term( $post_id, $taxonomy );
+			} elseif ( function_exists( 'the_seo_framework' ) && method_exists( the_seo_framework(), 'get_primary_term' ) ) {
+				$primary_term = the_seo_framework()->get_primary_term( $post_id, $taxonomy );
+			}
 		} // C. RankMath
 		else if ( class_exists( 'RankMath' ) ) {
 			$primary_cat_id = get_post_meta( $post_id, "rank_math_primary_{$taxonomy}", true );
@@ -200,6 +204,10 @@ class Permalink_Manager_Helper_Functions {
 	static function get_disabled_post_types( $include_user_excluded = true ) {
 		global $wp_post_types, $permalink_manager_options;
 
+		$allowed_post_types = array(
+			'shop_coupon'
+		);
+
 		$disabled_post_types = array(
 			'revision',
 			'nav_menu_item',
@@ -220,11 +228,16 @@ class Permalink_Manager_Helper_Functions {
 			'elementor_library',
 			'elementor_menu_item',
 			'cms_block',
-			'nooz_coverage'
+			'nooz_coverage',
+			'bricks_template'
 		);
 
 		// 1. Disable post types that are not publicly_queryable
 		foreach ( $wp_post_types as $post_type ) {
+			if ( in_array( $post_type->name, $allowed_post_types ) ) {
+				continue;
+			}
+
 			if ( ! is_post_type_viewable( $post_type ) || ( empty( $post_type->query_var ) && empty( $post_type->rewrite ) && empty( $post_type->_builtin ) && ! empty( $permalink_manager_options['general']['partial_disable_strict'] ) ) ) {
 				$disabled_post_types[] = $post_type->name;
 			}
@@ -254,7 +267,8 @@ class Permalink_Manager_Helper_Functions {
 			'fl-builder-template-category',
 			'post_format',
 			'nav_menu',
-			'language'
+			'language',
+			'template_bundle'
 		);
 
 		// 1. Disable taxonomies that are not publicly_queryable
@@ -829,6 +843,40 @@ class Permalink_Manager_Helper_Functions {
 		$default_uri           = str_replace( "//", "/", $default_uri );
 
 		return trim( $default_uri, "/" );
+	}
+
+	/**
+	 * Replace the string in custom permalink or native slug
+	 *
+	 * @param string $old_string
+	 * @param string $new_string
+	 * @param string $old_slug
+	 * @param string $old_uri
+	 * @param string $mode
+	 *
+	 * @return array|void
+	 */
+	public static function replace_uri_slug( $old_string, $new_string, $old_slug, $old_uri, $mode ) {
+		if ( preg_match( "/^\#.+\#$/i", $old_string ) ) {
+			$old_string = trim( $old_string, '#' );
+
+			$allowed_in_chars  = '/[\w\d\s\.\*\+\-\?\!\/\|\(\)\{\}\[\]^$]/';
+			$allowed_out_chars = '/^[a-zA-Z0-9\.\/\$\-\_]+$/';
+
+			if ( ! preg_match( $allowed_in_chars, $old_string ) || ! preg_match( $allowed_out_chars, $new_string ) ) {
+				die( 'Invalid characters in REGEX formula.' );
+			}
+
+			$pattern = "#{$old_string}#";
+
+			$new_slug = ( $mode == 'slugs' ) ? preg_replace( $pattern, $new_string, $old_slug ) : $old_slug;
+			$new_uri  = ( $mode != 'slugs' ) ? preg_replace( $pattern, $new_string, $old_uri ) : $old_uri;
+		} else {
+			$new_slug = ( $mode == 'slugs' ) ? str_replace( $old_string, $new_string, $old_slug ) : $old_slug;
+			$new_uri  = ( $mode != 'slugs' ) ? str_replace( $old_string, $new_string, $old_uri ) : $old_uri;
+		}
+
+		return array( $new_slug, $new_uri );
 	}
 
 	/**

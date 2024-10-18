@@ -1,9 +1,8 @@
 <?php
 
-use PublishPress\WordPressBanners\BannersMain;
-use PublishPress\Future\Modules\Settings\HooksAbstract;
-
 defined('ABSPATH') or die('Direct access not allowed.');
+
+// phpcs:disable Generic.Files.LineLength.TooLong
 
 // Get Option
 $expirationdateDefaultDateFormat = get_option('expirationdateDefaultDateFormat', POSTEXPIRATOR_DATEFORMAT);
@@ -51,6 +50,8 @@ if ($expiredemailnotificationadmins == 0) {
     $expiredemailnotificationadminsenabled = 'checked="checked"';
 }
 
+$calendarHiddenByDefault = (bool) get_option('expirationdateHideCalendarByDefault', false);
+
 $user_roles = wp_roles()->get_names();
 $plugin_facade = PostExpirator_Facade::getInstance();
 ?>
@@ -71,18 +72,42 @@ $plugin_facade = PostExpirator_Facade::getInstance();
                             echo esc_attr($expirationdateDefaultDateCustom); ?>" name="expired-custom-expiration-date"
                                    id="expired-custom-expiration-date"/>
                             <p class="description"><?php
+                                // translators: %1$s is the link to the PHP strtotime function documentation, %2$s and %3$s are the opening and closing code tags. Please, do not translate the date format text, since PHP will not be able to calculate using non-english terms.
+                                $description = esc_html__(
+                                    'Set the offset to use for the default action date and time. For information on formatting, see %1$s
+                                    . For example, you could enter %2$s+1 month%3$s or %2$s+1 week 2 days 4 hours 2 seconds%3$s or %2$snext Thursday%3$s. Please, use only terms in English.',
+                                    'post-expirator'
+                                );
+
                                 echo sprintf(
-                                    // translators: %1$s is the link to the PHP strtotime function documentation, %2$s and %3$s are the opening and closing code tags. Please, do not translate the date format text, since PHP will not be able to calculate using non-english terms.
-                                    esc_html__(
-                                        'Set the offset to use for the default action date and time. For information on formatting, see %1$s
-                                        . For example, you could enter %2$s+1 month%3$s or %2$s+1 week 2 days 4 hours 2 seconds%3$s or %2$snext Thursday%3$s. Please, use only terms in English.',
-                                        'post-expirator'
-                                    ),
+                                    $description, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                     '<a href="https://www.php.net/manual/en/function.strtotime.php" target="_new">' . esc_html__('PHP strtotime function', 'post-expirator') . '</a>',
                                     '<code>',
                                     '</code>'
                                 ); ?></p>
+
+                                <div id="expiration-date-preview"></div>
                         </div>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><label for="expired-hide-calendar-by-default"><?php
+                            esc_html_e('Calendar Visibility', 'post-expirator'); ?></label></th>
+                    <td>
+                        <div class="pp-settings-field-row">
+                            <input type="radio" name="expired-hide-calendar-by-default" id="expired-hide-calendar-by-default-false"
+                                value="0" <?php echo $calendarHiddenByDefault ? '' : 'checked="checked"'; ?>/> <label
+                                    for="expired-hide-calendar-by-default-false"><?php
+                                    esc_html_e('Remember last state', 'post-expirator'); ?></label>
+                        </div>
+                        <p class="description"><?php esc_html_e('Shows or hides the calendar based on the last user interaction.', 'post-expirator'); ?></p>
+                        <div class="pp-settings-field-row">
+                            <input type="radio" name="expired-hide-calendar-by-default" id="expired-hide-calendar-by-default-true"
+                                value="1" <?php echo $calendarHiddenByDefault ? 'checked="checked"' : ''; ?>/> <label
+                                    for="expired-hide-calendar-by-default-true"><?php
+                                    esc_html_e('Always hidden', 'post-expirator'); ?></label>
+                        </div>
+                        <p class="description"><?php esc_html_e('The calendar is always hidden by default.', 'post-expirator'); ?></p>
                     </td>
                 </tr>
             </table>
@@ -103,17 +128,17 @@ $plugin_facade = PostExpirator_Facade::getInstance();
                             <input type="radio" name="expired-email-notification" id="expired-email-notification-true"
                                 value="1" <?php
                             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                            echo $expiredemailnotificationenabled; ?>/> <label
+                                echo $expiredemailnotificationenabled; ?>/> <label
                                     for="expired-email-notification-true"><?php
-                                esc_html_e('Enabled', 'post-expirator'); ?></label>
+                                    esc_html_e('Enabled', 'post-expirator'); ?></label>
                         </div>
                         <div class="pp-settings-field-row">
                             <input type="radio" name="expired-email-notification" id="expired-email-notification-false"
                                 value="0" <?php
                             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                            echo $expiredemailnotificationdisabled; ?>/> <label
+                                echo $expiredemailnotificationdisabled; ?>/> <label
                                     for="expired-email-notification-false"><?php
-                                esc_html_e('Disabled', 'post-expirator'); ?></label>
+                                    esc_html_e('Disabled', 'post-expirator'); ?></label>
                         </div>
                         <p class="description"><?php
                             esc_html_e(
@@ -131,18 +156,18 @@ $plugin_facade = PostExpirator_Facade::getInstance();
                                 id="expired-email-notification-admins-true"
                                 value="1" <?php
                             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                            echo $expiredemailnotificationadminsenabled; ?>/> <label
+                                echo $expiredemailnotificationadminsenabled; ?>/> <label
                                     for="expired-email-notification-admins-true"><?php
-                                esc_html_e('Enabled', 'post-expirator'); ?></label>
+                                    esc_html_e('Enabled', 'post-expirator'); ?></label>
                         </div>
                         <div class="pp-settings-field-row">
                             <input type="radio" name="expired-email-notification-admins"
                                 id="expired-email-notification-admins-false"
                                 value="0" <?php
                             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                            echo $expiredemailnotificationadminsdisabled; ?>/> <label
+                                echo $expiredemailnotificationadminsdisabled; ?>/> <label
                                     for="expired-email-notification-admins-false"><?php
-                                esc_html_e('Disabled', 'post-expirator'); ?></label>
+                                    esc_html_e('Disabled', 'post-expirator'); ?></label>
                         </div>
                         <p class="description"><?php
                             esc_html_e(
@@ -154,12 +179,12 @@ $plugin_facade = PostExpirator_Facade::getInstance();
                 <tr valign="top">
                     <th scope="row"><label
                                 for="expired-email-notification-list"><?php
-                            esc_html_e('Who to Notify', 'post-expirator'); ?></label>
+                                esc_html_e('Who to Notify', 'post-expirator'); ?></label>
                     </th>
                     <td>
                         <input class="large-text" type="text" name="expired-email-notification-list"
                                id="expired-email-notification-list" value="<?php
-                        echo esc_attr($expiredemailnotificationlist); ?>"/>
+                                echo esc_attr($expiredemailnotificationlist); ?>"/>
                         <p class="description"><?php
                             esc_html_e(
                                 'Enter a comma separate list of emails that you would like to be notified when the action runs.  This will be applied to ALL post types.  You can set post type specific emails on the Defaults tab.',
@@ -172,7 +197,7 @@ $plugin_facade = PostExpirator_Facade::getInstance();
             <p class="submit">
                 <input type="submit" name="expirationdateSave" class="button-primary"
                        value="<?php
-                       esc_attr_e('Save Changes', 'post-expirator'); ?>"/>
+                        esc_attr_e('Save Changes', 'post-expirator'); ?>"/>
             </p>
         </form>
     </div>
@@ -183,3 +208,5 @@ $plugin_facade = PostExpirator_Facade::getInstance();
     }
     ?>
 </div>
+<?php
+// phpcs:enable

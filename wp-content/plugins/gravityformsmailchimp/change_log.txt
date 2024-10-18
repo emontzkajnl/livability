@@ -1,3 +1,8 @@
+### 5.5.0 | 2024-09-23
+- Added support for instructing the Mailchimp API to skip merge field validation by using the [gform_mailchimp_subscription](https://docs.gravityforms.com/gform_mailchimp_subscription/) filter to add the `skip_merge_validation` argument to the request.
+- Updated the status indicator component to be compatible with Gravity Forms v2.8.8.
+- Removed the deprecated gform_mailchimp_args_pre_subscribe filter.
+
 ### 5.4.0 | 2024-04-17
 - Fixed an issue where the status of an existing subscribed list/audience member changes to pending when double opt-in is enabled on the feed.
 - Reminder: The gform_mailchimp_args_pre_subscribe filter is deprecated and will be removed in a future version. Please use the [gform_mailchimp_subscription](https://docs.gravityforms.com/gform_mailchimp_subscription/) filter instead.

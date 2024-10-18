@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2022. PublishPress, All rights reserved.
  */
@@ -14,6 +15,10 @@ defined('ABSPATH') or die('Direct access not allowed.');
 
 class PluginsListController implements InitializableInterface
 {
+    public const SETTINGS_PAGE_CAPABILITY = 'manage_options';
+
+    public const TRANSIENT_REDIRECT_AFTER_ACTIVATION = 'publishpress_future_redirect_after_activation';
+
     /**
      * @var HookableInterface
      */
@@ -30,6 +35,8 @@ class PluginsListController implements InitializableInterface
     public function initialize()
     {
         $this->hooks->addFilter(CoreHooksAbstract::FILTER_PLUGIN_ACTION_LINKS, [$this, 'addPluginActionLinks'], 10, 2);
+
+        $this->redirectAfterActivate();
     }
 
     public function addPluginActionLinks($links, $file)
@@ -40,5 +47,21 @@ class PluginsListController implements InitializableInterface
         }
 
         return $links;
+    }
+
+    private function redirectAfterActivate()
+    {
+        if (! current_user_can(self::SETTINGS_PAGE_CAPABILITY)) {
+            return;
+        }
+
+        if (! get_transient(self::TRANSIENT_REDIRECT_AFTER_ACTIVATION)) {
+            return;
+        }
+
+        delete_transient(self::TRANSIENT_REDIRECT_AFTER_ACTIVATION);
+
+        wp_safe_redirect(admin_url('admin.php?page=publishpress-future'));
+        exit;
     }
 }

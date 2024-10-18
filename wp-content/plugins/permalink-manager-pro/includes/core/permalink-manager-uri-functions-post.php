@@ -68,9 +68,9 @@ class Permalink_Manager_URI_Functions_Post {
 		}
 
 		// Do not run when metaboxes are loaded with Gutenberg
-		if ( ! empty( $_REQUEST['meta-box-loader'] ) && empty( $_POST['custom_uri'] ) ) {
+		/* if ( ! empty( $_REQUEST['meta-box-loader'] ) && empty( $_POST['custom_uri'] ) ) {
 			return $permalink;
-		}
+		}*/
 
 		// Do not filter if $permalink_manager_ignore_permalink_filters global is set
 		if ( ! empty( $permalink_manager_ignore_permalink_filters ) ) {
@@ -79,8 +79,8 @@ class Permalink_Manager_URI_Functions_Post {
 
 		$post = ( is_integer( $post ) ) ? get_post( $post ) : $post;
 
-		// Do not run if post object is invalid
-		if ( empty( $post ) || empty( $post->ID ) || empty( $post->post_type ) ) {
+		// Do not run if post object is invalid or the permalink is not string
+		if ( empty( $post ) || empty( $post->ID ) || empty( $post->post_type ) || ! is_string( $permalink ) ) {
 			return $permalink;
 		}
 
@@ -527,18 +527,7 @@ class Permalink_Manager_URI_Functions_Post {
 						$new_post_name = $old_post_name;
 					}
 				} else {
-					// Do replacement on slugs (non-REGEX)
-					if ( preg_match( "/^\/.+\/[a-z]*$/i", $old_string ) ) {
-						$regex   = stripslashes( trim( sanitize_text_field( $_POST['old_string'] ), "/" ) );
-						$regex   = preg_quote( $regex, '~' );
-						$pattern = "~{$regex}~";
-
-						$new_post_name = ( $mode == 'slugs' ) ? preg_replace( $pattern, $new_string, $old_post_name ) : $old_post_name;
-						$new_uri       = ( $mode != 'slugs' ) ? preg_replace( $pattern, $new_string, $old_uri ) : $old_uri;
-					} else {
-						$new_post_name = ( $mode == 'slugs' ) ? str_replace( $old_string, $new_string, $old_post_name ) : $old_post_name; // Post name is changed only in first mode
-						$new_uri       = ( $mode != 'slugs' ) ? str_replace( $old_string, $new_string, $old_uri ) : $old_uri;
-					}
+					list( $new_post_name, $new_uri ) = Permalink_Manager_Helper_Functions::replace_uri_slug( $old_string, $new_string, $old_post_name, $old_uri, $mode );
 				}
 
 				// Check if native slug should be changed
@@ -597,7 +586,7 @@ class Permalink_Manager_URI_Functions_Post {
 				// Get default & native URL
 				$native_uri  = self::get_default_post_uri( $this_post, true );
 				$default_uri = ( $is_draft ) ? '' : self::get_default_post_uri( $this_post );
-				$old_uri     = Permalink_Manager_URI_Functions::get_single_uri( $id, false, true );
+				$old_uri     = Permalink_Manager_URI_Functions::get_single_uri( $this_post, false, true );
 
 				// Process new values - empty entries will be treated as default values
 				$new_uri = Permalink_Manager_Helper_Functions::sanitize_title( $new_uri );
@@ -658,9 +647,13 @@ class Permalink_Manager_URI_Functions_Post {
 			// B. Do not change anything if post is not saved yet (display sample permalink instead)
 			if ( $autosave || empty( $post->post_status ) ) {
 				$sample_permalink_uri = self::get_default_post_uri( $id );
-			} // C. Display custom URI if set
+			} // C. Display custom URI (if set) or default custom URI
 			else {
-				$sample_permalink_uri = Permalink_Manager_URI_Functions::get_single_uri( $post, true );
+				$sample_permalink_uri = Permalink_Manager_URI_Functions::get_single_uri( $post, false, false );
+			}
+
+			if ( empty( $sample_permalink_uri ) && $post->post_type !== 'attachment' ) {
+				return $html;
 			}
 
 			// Decode URI & allow to filter it
@@ -690,6 +683,7 @@ class Permalink_Manager_URI_Functions_Post {
 		// 4. Append hidden field with native slug
 		$new_html .= ( ! empty( $post->post_name ) && strpos( $new_html, 'editable-post-name-full' ) === false ) ? "<span id=\"editable-post-name-full\">{$post->post_name}</span>" : "";
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		return $new_html;
 	}
 
@@ -737,7 +731,7 @@ class Permalink_Manager_URI_Functions_Post {
 			}
 
 			$uri = ( ! empty( $permalink_manager_uris[ $post_id ] ) ) ? rawurldecode( $permalink_manager_uris[ $post_id ] ) : self::get_post_uri( $post_id, true, $is_draft );
-			printf( '<span class="permalink-manager-col-uri" data-disabled="%s">%s</span>', intval( $disabled ), $uri );
+			printf( '<span class="permalink-manager-col-uri" data-disabled="%s">%s</span>', esc_attr( intval( $disabled ) ), esc_html( $uri ) );
 		}
 	}
 

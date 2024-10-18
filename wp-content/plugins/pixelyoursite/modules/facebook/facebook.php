@@ -21,7 +21,6 @@ class Facebook extends Settings implements Pixel {
 	private static $_instance;
 	
 	private $configured;
-	
 	public static function instance() {
 		
 		if ( is_null( self::$_instance ) ) {
@@ -46,16 +45,14 @@ class Facebook extends Settings implements Pixel {
 
 	    	$core->registerPixel( $this );
 	    } );
+        add_filter('pys_facebook_settings_sanitize_verify_meta_tag_field', array($this, 'sanitize_verify_meta_tag_field'));
         add_action( 'wp_head', array( $this, 'output_meta_tag' ) );
-
     }
 
-
-    
     public function enabled() {
 	    return $this->getOption( 'enabled' );
     }
-	
+
 	public function configured() {
 		
 		if ( $this->configured === null ) {
@@ -96,7 +93,7 @@ class Facebook extends Settings implements Pixel {
             'formEventEnabled' => $this->getOption( 'form_event_enabled' ),
             'serverApiEnabled'    => $this->isServerApiEnabled() && count($this->getApiToken()) > 0,
             'wooCRSendFromServer' => $this->getOption("woo_complete_registration_send_from_server") && $this->getOption("woo_complete_registration_fire_every_time"),
-		    'send_external_id'          => $this->getOption('send_external_id')
+		    'send_external_id'          => $this->getOption('send_external_id'),
         );
 		
 	}
@@ -385,6 +382,11 @@ class Facebook extends Settings implements Pixel {
                     if(isset($event->args['productId'])) {
                         $eventData =  $this->getWooAddToCartOnButtonClickEventParams( $event->args );
                         $event->addParams($eventData["params"]);
+                        if($eventData) {
+                            $event->addParams($eventData["params"]);
+                            unset($eventData["params"]);
+                            $event->addPayload($eventData);
+                        }
                     }
                     $event->addPayload(array(
                         'name'=>"AddToCart",
@@ -459,6 +461,8 @@ class Facebook extends Settings implements Pixel {
 	
 	private function getPageViewEventParams() {
 	    $data = array();
+        $cpt = get_post_type();
+        if(!$cpt) return false;
 		return array(
 			'name'  => 'PageView',
 			'data'  => $data,
@@ -822,7 +826,8 @@ class Facebook extends Settings implements Pixel {
             $order_id = (int) wc_get_order_id_by_order_key( $order_key );
             set_transient( $cache_key, $order_id, HOUR_IN_SECONDS );
         }
-        $order    = new \WC_Order( $order_id );
+        $order    = wc_get_order( $order_id );
+        if(!$order) return false;
         
         $content_ids        = array();
         $content_names      = array();
@@ -1300,6 +1305,28 @@ class Facebook extends Settings implements Pixel {
         foreach ($metaTags as $tag) {
             echo $tag;
         }
+    }
+    function sanitize_verify_meta_tag_field($values) {
+        $values = is_array( $values ) ? $values : array();
+        $sanitized = array();
+        $allowed_html = array(
+            'meta' => array(
+                'name' => array(),
+                'content' => array(),
+            ),
+        );
+        foreach ( $values as $key => $value ) {
+
+            $value = wp_kses($value, $allowed_html);
+            $new_value = $this->sanitize_textarea_field( $value );
+
+            if ( ! empty( $new_value ) && ! in_array( $new_value, $sanitized ) ) {
+                $sanitized[ $key ] = $new_value;
+            }
+
+        }
+
+        return $sanitized;
     }
 }
 

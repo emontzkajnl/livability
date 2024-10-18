@@ -3,6 +3,11 @@
   "is_enable_debug_mode": "",
   "tracking_id": "",
 
+  "enable_server_container": false,
+  "first_party_collection": true,
+  "server_container_url": "",
+  "transport_url": "",
+
   "cross_domain_enabled": false,
   "cross_domain_accept_incoming": false,
   "cross_domain_domains": [],
@@ -48,5 +53,6 @@
   "automatic_event_time_on_page_enabled": true,
   "automatic_event_search_enabled": true,
 
-  "disable_noscript" : false
+  "disable_noscript" : false,
+  "custom_page_view_event": false
 }

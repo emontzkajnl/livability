@@ -1,17 +1,17 @@
-===PixelYourSite - Your smart PIXEL (TAG) Manager===
+===PixelYourSite - Your smart PIXEL (TAG) & API Manager===
 Contributors: PixelYourSite
-Tags: Meta Pixel, Facebook Pixel, Facebook Conversion API, CAPI, Facebook Pixel Events, Facebook Dynamic Product Ads, Facebook Conversion Value, WooCommerce Facebook Pixel, Easy Digital Downloads Facebook Pixel, Google Analytics, Google Analytics Enhanced Ecommerce, GA4, WooCommerce Google Analytics, Easy Digital Downloads Google Analytics, Google Consent Mode, head & footer scripts, Pinterest tag
+Tags: Meta Pixel, Meta Conversion API, Google Analytics 4, GA4, Google Consent Mode V2
 Requires at least: 3.0.1
 Requires PHP: 5.4
-Tested up to: 6.4
-Stable tag: 9.5.1
+Tested up to: 6.6
+Stable tag: 9.7.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Meta Pixel (Facebook Pixel) & Conversion API (CAPI), Google Analytics 4 (GA4) or the old Universal, plus ANY other script. WooCommerce and EDD with Facebook Dynamic Product Ads and Google Magnetisation tracking. Track any action with events. Pinterest Tag support via a dedicated paid add-on. Dedicated paid Bing Tag add-on.
+Add your Meta Pixel (old Facebook Pixel) with Conversion API events, Google Analytics (GA4) with Consent Mode support, and ANY script (Head & Footer).
 
 == Description ==
-**Manage your Meta Pixel (Facebook Pixel), implement Facebook Conversion API, add your Google Analytics 4 (GA4) or an old Universal property with a single plugin. Add ANY other script (Head & Footer feature). The Pinterest Tag can be implemented via [paid add-on](https://www.pixelyoursite.com/pinterest-tag).**
+**Manage your Meta Pixel (Facebook Pixel), implement Facebook Conversion API, or add your Google Analytics 4 (GA4) with a single plugin. Add ANY other script (Head & Footer feature). The Pinterest Tag can be implemented via [paid add-on](https://www.pixelyoursite.com/pinterest-tag).**
 
 PixelYourSite's Automatic Events will track important actions and send them to all your configured pixels (searches, form submit, comments, downloads). Use these events to understand your visitors' behaviour inside Google Analytics, or to create audiences and conversions for Meta (Facebook), or Google.
 
@@ -19,11 +19,13 @@ You can fire your own events with zero coding.
 
 Google Consent Mode V2 support: [check this dedicated page for more details](https://www.pixelyoursite.com/google-consent-mode-v2-wordpress)
 
+NEW: Google Tag Manager Server-Side Tagging BETA support: [more details here](https://www.pixelyoursite.com/google-server-side-tagging-with-pixelyoursite)
+
 **WooCommerce** and **Easy Digital Downloads** are fully supported, with Facebook Dynamic Ads pixel setup and Google Analytics Enhanced Ecommerce.
 
-Take a look at this video to see Facebook Conversion API in action:
+We have a YouTube channel called PixelYourSite where we explain a lot of stuff about the plugin, Meta API, Google Analytics, Google Ads, TikTok and so on. Check this one about a Meta Events Manager option that can RUIN your conversion tracking:
 
-[youtube https://www.youtube.com/watch?v=k_bL53qDE0E]
+[youtube https://www.youtube.com/watch?v=4eMKGxT7qMk]
 
 IMPORTANT:: Facebook Pixel Conversion API: [Learn how to enable and test Conversion API events](https://www.pixelyoursite.com/facebook-conversion-api-capi)
 
@@ -469,6 +471,157 @@ NO, absolutely not! We don't track any type of data about your website. We simpl
 
 
 == Changelog ==
+
+= PixelYourSite 9.7.2 =
+
+August 28, 2024
+
+* Fix for a possible bug related to Litespeed cache. 
+
+* Fix for a possible bug related to Funnelkit checkout pages.
+
+* Fix related to the URL parameters events trigger logic.
+
+* Security enhancement related to the API logs. Now access is restricted based on the plugin’s permission settings. Only user types with permission can download the logs. 
+
+* UI changes to reflect some of the new PRO version features (Google Tag user data support  for multiple values, URL parameters tracking for API user data events, form fields tracking for events parameters, data persistency option for API user data, WSForm integration). 
+
+
+= PixelYourSite 9.7.1 =
+
+July 31, 2024
+
+* New Global Settings page. We move all the global settings from the dashboard to this dedicated page. 
+
+* New options regarding external IDs. We now store a temporary value for external IDs using transients for up to 10 minutes, creating the premises to detect returning traffic based on IP addresses even when it’s done from a different browser or device. This can be turned OFF on the Global Settings page.
+
+* Improved way to generate external IDs to fix missing values in some instances.
+
+* Possible improvements to the way we fire the Purhcase event for some particular WooCommerce setups. 
+
+* Various UI changes to reflect new features in the pro version, like the page view number trigger for events. 
+
+* Declaring compatibility with WordPress 6.6.
+
+= PixelYourSite 9.7.0.1 =
+
+July 15, 2024
+
+* Fixing possible error, Uncaught Error: Call to a member function get_price() on bool
+
+* Fixing possible error, database error The SELECT would examine more than MAX_JOIN_SIZE rows
+
+* Fixing possible error, PHP Warning: Undefined array key "HTTP_USER_AGENT"
+
+* Declaring WooCommerce 9.1 compatibility.
+
+= PixelYourSite 9.7.0 =
+
+July 9, 2024
+
+* Unified event ID logic that can help with Google Tag Manager server-side integration when browser and APIs are used. 
+
+* Fixing possible  issues with WPRocket.
+
+* Fixing a possible issue with Fluent Form events. 
+
+* Declaring compatibility for the current WooCommerce version.
+
+* Other small code improvements.
+
+
+= PixelYourSite 9.6.2 =
+
+* The GA4 server container URL option is OFF by default.
+ 
+* Code improvements.
+
+* New video links.
+
+* WooCommerce 9.0 support declared. 
+
+= PixelYourSite 9.6.1.1 =
+
+* Improving the way the plugin works when caches or multiple caches are used. Fixing possible issues with event IDs, and API events. 
+
+* Fixing a possible issue with WooCommerce ViewContent value.
+
+* Fixing a possible issue with the GA4 server container URL. 
+
+* Fixing other small bugs and warnings. 
+
+
+= PixelYourSite 9.6.1 =
+
+* New options for the Google Analytics tags related to GTM server containers. This is still in beta.
+
+* New ON/OFF Ajax option for API events. It allows you to disable Ajax for static API events if there are problems when loading the page (such as updating the WooCommerce cart).
+
+* Fixing a possible problem with API events triggered by crawlers, or other non-visitor-related activities. This resulted in a very large number or API events compared to browser events. 
+
+* The crawler filter for API events is always turned ON. 
+
+* Improving the way we track and generate fbp. This can lead in time to better conversion tracking.
+
+* New video links and small UI changes.
+
+
+
+
+= PixelYourSite 9.6.0.1 =
+
+* Fix for a possible error when no Meta pixel ID was configured. 
+
+* WooCommerce 8.9 compatibility declared. 
+
+* Video updated on the plugin's Description page. 
+
+
+= PixelYourSite 9.6.0 =
+
+* Google Analytics server container Url: you can send GA4 data to a GTM server side container. 
+
+* Notifications will be closed for all users, not just the one clicking on the hide option.
+
+* Fixing various warnings and small bugs( PHP Warning: Undefined array key)
+
+
+= PixelYourSite 9.5.5 =
+
+* Fixing a possible issue where the tags were permanently blocked by some consent plugins.
+
+
+= PixelYourSite 9.5.4 =
+
+* Improvements in how we track Meta Conversion API fbc parameters. 
+
+* Changes regarding ConsentMagic cache option. 
+
+* WooCommerce 8.7 compatibility. 
+
+
+= PixelYourSite 9.5.3 =
+
+* Google Consent Mode is activated by default. You can change this on the Google Tags Settings page. The plugin sends Google events with consent parameters values as “granted”. It’s recommended you have a consent plugin that manages users’ consent. Our own solution is called ConsentMagic. 
+
+* New option to disable PHP session use. If you have problems with PHP sessions, turn this OFF. 
+
+* Fixing various bugs and code improvements. 
+
+= PixelYourSite 9.5.2 =
+
+* Automated events parameters for Google tags were updated to match the data sent to the other type of tags. These parameters can be used to create custom dimensions.
+
+* Fixing a possible issue on WooCommerce order confirmation pages for non-existing order IDs.
+
+* Fixing a possible issue related to importing Google custom events configured with the free plugin when the pro version is installed.
+
+* Video links updated.
+
+= PixelYourSite 9.5.1.1 =
+
+* Fix for an issue related to PHP sessions.
+
 
 = PixelYourSite 9.5.1 =
 

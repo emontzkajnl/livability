@@ -88,9 +88,9 @@ class PYS_Logger
 
         if ( $file ) {
             if ( ! file_exists( $file ) ) {
-				if( !is_dir( $this->log_path ) ) {
-					mkdir( $this->log_path, 0777, true );
-				}
+                if( !is_dir( $this->log_path ) ) {
+                    mkdir( $this->log_path, 0777, true );
+                }
                 $temphandle = @fopen( $file, 'w+' ); // @codingStandardsIgnoreLine.
                 if ( is_resource( $temphandle ) ) {
                     @fclose( $temphandle ); // @codingStandardsIgnoreLine.
@@ -123,7 +123,32 @@ class PYS_Logger
         return trailingslashit( PYS_FREE_URL ) .'logs/'. static::get_log_file_name( );
     }
 
+    public function downloadLogFile() {
+        if ( ! current_user_can( 'manage_pys' ) ) {
+            return;
+        }
+        $file = static::get_log_file_path();
+        if ($file) {
 
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="'.basename($file).'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+
+            if (file_exists($file)) {
+                readfile($file);
+            } else {
+                error_log("File not found: " . $file);
+            }
+            exit;
+        } else {
+            http_response_code(404);
+            echo "File not found.";
+        }
+    }
 
     /**
      * Get a log file name.
@@ -191,6 +216,9 @@ class PYS_Logger
      */
     public function remove( )
     {
+        if ( ! current_user_can( 'manage_pys' ) ) {
+            return;
+        }
         $removed = false;
         $file = realpath($this::get_log_file_path());
         if (is_file($file) && is_writable($file)) { // phpcs:ignore WordPress.VIP.FileSystemWritesDisallow.file_ops_is_writable

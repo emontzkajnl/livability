@@ -518,14 +518,28 @@ class GFMailChimp extends GFFeedAddOn {
 
 		$account = $this->api->account_details();
 		$name    = isset( $account['account_name'] ) ? $account['account_name'] : false;
-		$html    .= '<p><span class="gform-status-indicator gform-status--active gform-status--static">';
 
-		if ( $name ) {
-			$html .= esc_html__( 'Connected to Mailchimp as: ', 'gravityformsmailchimp' );
-			$html .= esc_html( $name ) . '</span></p>';
+		if ( $this->is_gravityforms_supported( '2.8.8' ) ) {
+			$html  = '<p><span class="gform-status-indicator gform-status-indicator--size-sm gform-status-indicator--theme-cosmos gform-status--active gform-status--no-icon gform-status--no-hover">';
+			$html .= '<span class="gform-status-indicator-status gform-typography--weight-medium gform-typography--size-text-xs">';
+
+			if ( $name ) {
+				$html .= esc_html__( 'Connected to Mailchimp as: ', 'gravityformsmailchimp' );
+				$html .= esc_html( $name ) . '</span></span></p>';
+			} else {
+				$html .= esc_html__( 'Connected to Mailchimp.', 'gravityformsmailchimp' );
+				$html .= '</span></span></p>';
+			}
 		} else {
-			$html .= esc_html__( 'Connected to Mailchimp.', 'gravityformsmailchimp' );
-			$html .= '</span></p>';
+			$html .= '<p><span class="gform-status-indicator gform-status--active gform-status--static">';
+
+			if ( $name ) {
+				$html .= esc_html__( 'Connected to Mailchimp as: ', 'gravityformsmailchimp' );
+				$html .= esc_html( $name ) . '</span></p>';
+			} else {
+				$html .= esc_html__( 'Connected to Mailchimp.', 'gravityformsmailchimp' );
+				$html .= '</span></p>';
+			}
 		}
 
 		/**
@@ -1415,26 +1429,6 @@ class GFMailChimp extends GFFeedAddOn {
 	// # FEED PROCESSING -----------------------------------------------------------------------------------------------
 
 	/**
-	 * Triggers processing of feeds or adds them to the async processing queue.
-	 *
-	 * Temporarily overridden to add a deprecation notice in a way that won't cause the async processor to abort processing.
-	 *
-	 * @since 5.4
-	 *
-	 * @param array $entry The entry currently being processed.
-	 * @param array $form  The form currently being processed.
-	 *
-	 * @return array
-	 */
-	public function maybe_process_feed( $entry, $form ) {
-		if ( gf_has_filters( array( 'gform_mailchimp_args_pre_subscribe', rgar( $form, 'id' ) ) ) ) {
-			_deprecated_hook( 'gform_mailchimp_args_pre_subscribe', '4.0', 'gform_mailchimp_subscription', 'gform_mailchimp_args_pre_subscribe will be removed soon.' );
-		}
-
-		return parent::maybe_process_feed( $entry, $form );
-	}
-
-	/**
 	 * Process the feed, subscribe the user to the list/audience.
 	 *
 	 * @since  3.0
@@ -1474,383 +1468,54 @@ class GFMailChimp extends GFFeedAddOn {
 			return $entry;
 		}
 
-		/**
-		 * Prevent empty form fields erasing values already stored in the mapped Mailchimp MMERGE fields
-		 * when updating an existing subscriber.
-		 *
-		 * @param bool  $override If the merge field should be overridden.
-		 * @param array $form     The form object.
-		 * @param array $entry    The entry object.
-		 * @param array $feed     The feed object.
-		 */
-		$override_empty_fields = gf_apply_filters( 'gform_mailchimp_override_empty_fields', array( $form['id'] ), true, $form, $entry, $feed );
-
-		// Log that empty fields will not be overridden.
-		if ( ! $override_empty_fields ) {
-			$this->log_debug( __METHOD__ . '(): Empty fields will not be overridden.' );
-		}
-
-		// Initialize array to store merge vars.
-		$merge_vars = array();
-
-		// Loop through field map.
-		foreach ( $field_map as $name => $field_id ) {
-
-			// If no field is mapped, skip it.
-			if ( rgblank( $field_id ) ) {
-				continue;
-			}
-
-			// If this is the email field, skip it.
-			if ( strtoupper( $name ) === 'EMAIL' ) {
-				continue;
-			}
-
-			// Set merge var name to current field map name.
-			$this->merge_var_name = $name;
-
-			// Get field object.
-			$field = GFFormsModel::get_field( $form, $field_id );
-
-			// Get field value.
-			$field_value = $this->get_field_value( $form, $entry, $field_id );
-
-			// If field value is empty and we are not overriding empty fields, skip it.
-			if ( empty( $field_value ) && ( ! $override_empty_fields || ( is_object( $field ) && 'address' === $field->get_input_type() ) ) ) {
-				continue;
-			}
-
-			// Get merge field.
-			$merge_field = $this->get_list_merge_field( $feed['meta']['mailchimpList'], $name );
-
-			// Format date field.
-			if ( ! empty( $field_value ) && ! empty( $merge_field ) && in_array( $merge_field['type'], array( 'date', 'birthday' ) ) ) {
-
-				// Get date format.
-				$date_format = $merge_field['options']['date_format'];
-
-				// Convert field value to timestamp.
-				$field_value_timestamp = strtotime( $field_value );
-
-				// Format date.
-				switch ( $date_format ) {
-
-					case 'DD/MM':
-					case 'MM/DD':
-						$field_value = date( 'm/d', $field_value_timestamp );
-						break;
-
-					case 'DD/MM/YYYY':
-					case 'MM/DD/YYYY':
-						$field_value = date( 'm/d/Y', $field_value_timestamp );
-						break;
-
-				}
-
-			}
-
-			$merge_vars[ $name ] = $field_value;
-
-		}
-
-		// Define initial member, member found and member status variables.
-		$member        = false;
-		$member_found  = false;
-		$member_status = null;
-
-		try {
-
-			// Log that we are checking if user is already subscribed to list/audience.
-			$this->log_debug( __METHOD__ . "(): Checking to see if $email is already on the audience." );
-
-			// Get member info.
-			$member = $this->api->get_list_member( $feed['meta']['mailchimpList'], $email );
-
-			// Set member found status to true.
-			$member_found = true;
-
-			// Set member status.
-			$member_status = $member['status'];
-
-			// Log member status.
-			$this->log_debug( __METHOD__ . "(): $email was found on audience. Status: $member_status" );
-
-		} catch ( Exception $e ) {
-
-			// If the exception code is not 404, abort feed processing.
-			if ( 404 !== $e->getCode() ) {
-
-				// Log that we could not get the member information.
-				$this->add_feed_error( sprintf( esc_html__( 'Unable to check if email address is already used by a member: %s', 'gravityformsmailchimp' ), $e->getMessage() ), $feed, $entry, $form );
-
-				return $entry;
-
-			}
-
-			// Log member status.
-			$this->log_debug( __METHOD__ . "(): $email was not found on audience." );
-
+		$member = $this->get_existing_member( $email, $feed, $entry, $form );
+		if ( is_wp_error( $member ) ) {
+			return $entry;
 		}
 
 		/**
 		 * Modify whether a user that currently has a status of unsubscribed on your list/audience is resubscribed.
 		 * By default, the user is resubscribed.
 		 *
-		 * @param bool  $allow_resubscription If the user should be resubscribed.
-		 * @param array $form                 The form object.
-		 * @param array $entry                The entry object.
-		 * @param array $feed                 The feed object.
+		 * @param bool $allow_resubscription If the user should be resubscribed.
+		 * @param array $form                The form object.
+		 * @param array $entry               The entry object.
+		 * @param array $feed                The feed object.
 		 */
 		$allow_resubscription = gf_apply_filters( array( 'gform_mailchimp_allow_resubscription', $form['id'] ), true, $form, $entry, $feed );
 
-		// If member is unsubscribed and resubscription is not allowed, exit.
-		if ( 'unsubscribed' == $member_status && ! $allow_resubscription ) {
+		if ( 'unsubscribed' === rgar( $member, 'status' ) && ! $allow_resubscription ) {
 			$this->log_debug( __METHOD__ . '(): User is unsubscribed and resubscription is not allowed.' );
 
-			return;
+			return $entry;
 		}
 
-		/**
-		 * Modify whether a user that is already subscribed to your list/audience has their groups replaced when submitting the form a second time.
-		 *
-		 * @since 1.9
-		 *
-		 * @param bool  $keep_existing_interests Should user keep existing interest categories?
-		 * @param array $form                    The form object.
-		 * @param array $entry                   The entry object.
-		 * @param array $feed                    The feed object.
-		 */
-		$keep_existing_interests = gf_apply_filters( array( 'gform_mailchimp_keep_existing_groups', $form['id'] ), true, $form, $entry, $feed );
-
-		// Initialize interests to keep array.
-		$interests_to_keep = array();
-
-		// Initialize interests array.
-		$interests = $existing_interests = rgar( $member, 'interests', array() );
-
-		// If member was found, has existing interests and we are not keeping existing interest categories, remove them.
-		if ( $member_found && $existing_interests ) {
-
-			// Loop through existing interests.
-			foreach ( $existing_interests as $interest_id => $interest_enabled ) {
-
-				// If interest is not enabled, skip it.
-				if ( ! $interest_enabled ) {
-					continue;
-				}
-
-				// If we are keeping existing interests, add to array.
-				if ( $keep_existing_interests ) {
-
-					$interests_to_keep[] = $interest_id;
-					continue;
-
-				} else if ( ! $keep_existing_interests ) {
-
-					// Disable interest in new subscription.
-					$interests[ $interest_id ] = false;
-
-				}
-
-			}
-
-		}
-
-		// Get interest categories.
-		$categories = $this->get_feed_setting_conditions( $feed );
-
-		// Loop through categories.
-		foreach ( $categories as $category_id => $category_meta ) {
-
-			// If category is not enabled or the category is one we are keeping, skip it.
-			if ( ! rgar( $category_meta, 'enabled' ) || in_array( $category_id, $interests_to_keep ) ) {
-				continue;
-			}
-
-			// Log that we are evaluating the category conditions.
-			$this->log_debug( __METHOD__ . '(): Evaluating condition for interest category "' . $category_id . '": ' . print_r( $category_meta, true ) );
-
-			// Get condition evaluation.
-			$condition_evaluation = $this->is_category_condition_met( $category_meta, $form, $entry );
-
-			// Set interest category based on evaluation.
-			$interests[ $category_id ] = $condition_evaluation;
-
-		}
-
-		// Get tags.
-		$tags = explode( ',', rgars( $feed, 'meta/tags' ) );
-		$tags = array_map( 'trim', $tags );
-
-		// Prepare tags.
-		if ( ! empty( $tags ) ) {
-
-			// Loop through tags, replace merge tags.
-			foreach ( $tags as &$tag ) {
-				$tag = GFCommon::replace_variables( $tag, $form, $entry, false, false, false, 'text' );
-				$tag = trim( $tag );
-			}
-
-			// Remove empty tags.
-			$tags = array_filter( $tags );
-
-		}
-
-		// If member status is not defined or is anything other than pending, set to subscribed.
-		$member_status = isset( $member_status ) && $member_status === 'pending' ? $member_status : 'subscribed';
-
-		// Prepare subscription arguments.
 		$subscription = array(
-			'id'           => $feed['meta']['mailchimpList'],
-			'email'        => array( 'email' => $email ),
-			'merge_vars'   => $merge_vars,
-			'interests'    => $interests,
-			'email_type'   => 'html',
-			'double_optin' => rgars( $feed, 'meta/double_optin' ) ? true : false,
-			'status'       => $member_status,
-			'ip_signup'    => rgar( $entry, 'ip' ),
-			'vip'          => rgars( $feed, 'meta/markAsVIP' ) ? true : false,
-			'note'         => rgars( $feed, 'meta/note' ),
-			'tags'         => array(),
+			'email_address'         => $email,
+			'status_if_new'         => $this->get_subscription_status( (bool) rgars( $feed, 'meta/double_optin' ), $member, $feed, $entry, $form ),
+			'email_type'            => 'html',
+			'merge_fields'          => $this->get_subscription_merge_fields( $field_map, $feed, $entry, $form ),
+			'interests'             => $this->get_subscription_interests( $member, $feed, $entry, $form ),
+			'vip'                   => $this->is_vip( $member, $feed ),
+			'marketing_permissions' => $this->get_subscription_marketing_permissions( $member, $feed, $entry, $form ),
+			'ip_signup'             => rgar( $entry, 'ip' ),
+			'tags'                  => $this->get_subscription_tags( $member, $feed, $entry, $form ),
+			// note is not a supported property, including for filter, then removing.
+			'note'                  => rgars( $feed, 'meta/note' ),
 		);
 
-		// Get existing tags.
-		$existing_tags = $member ? wp_list_pluck( $member['tags'], 'name' ) : array();
+		// Populate the legacy status property.
+		$subscription['status'] = $subscription['status_if_new'];
 
-		// Add tags to subscription.
-		if ( ! empty( $tags ) ) {
-			$subscription['tags'] = $member ? array_merge( $existing_tags, $tags ) : $tags;
-			$subscription['tags'] = array_unique( $subscription['tags'] );
-		} else {
-			$subscription['tags'] = $member ? $existing_tags : $subscription['tags'];
-			$subscription['tags'] = array_unique( $subscription['tags'] );
-		}
+		$list_id = rgars( $feed, 'meta/mailchimpList' );
 
-		// Prepare transaction type for filter.
-		$transaction = $member_found ? 'Update' : 'Subscribe';
-
-		/**
-		 * Modify the subscription object before it is executed.
-		 *
-		 * @deprecated 4.0 @use gform_mailchimp_subscription
-		 *
-		 * @param array  $subscription Subscription arguments.
-		 * @param array  $form         The form object.
-		 * @param array  $entry        The entry object.
-		 * @param array  $feed         The feed object.
-		 * @param string $transaction  Transaction type. Defaults to Subscribe.
-		 */
-		$subscription = gf_apply_filters( array( 'gform_mailchimp_args_pre_subscribe', $form['id'] ), $subscription, $form, $entry, $feed, $transaction );
-
-		// Convert merge vars.
-		$subscription['merge_fields'] = $subscription['merge_vars'];
-		unset( $subscription['merge_vars'] );
-
-		// Converts the double_optin property to the status properties used by API v3.
-		$subscription['status_if_new'] = $this->get_subscription_status( (bool) $subscription['double_optin'], $member, $feed, $entry, $form );
-		$subscription['status']        = $subscription['status_if_new'];
-		unset( $subscription['double_optin'] );
-
-		// Extract list/audience ID.
-		$list_id = $subscription['id'];
-		unset( $subscription['id'] );
-
-		// Convert email address.
-		$subscription['email_address'] = $subscription['email']['email'];
-		unset( $subscription['email'] );
-
-		/**
-		 * Modify the subscription object before it is executed.
-		 *
-		 * @since 4.1.9 Added existing member object as $member parameter.
-		 *
-		 * @param array       $subscription Subscription arguments.
-		 * @param string      $list_id      Mailchimp list/audience ID.
-		 * @param array       $form         The form object.
-		 * @param array       $entry        The entry object.
-		 * @param array       $feed         The feed object.
-		 * @param array|false $member       The existing member object. (False if member does not currently exist in Mailchimp.)
-		 */
-		$subscription = gf_apply_filters( array( 'gform_mailchimp_subscription', $form['id'] ), $subscription, $list_id, $form, $entry, $feed, $member );
-
-		// Remove merge_fields if none are defined, otherwise allows merge_fields to be decoded.
-		if ( empty( $subscription['merge_fields'] ) ) {
-			unset( $subscription['merge_fields'] );
-		} else {
-			foreach ( $subscription['merge_fields'] as $key => $value ) {
-				if ( is_string( $value ) ) {
-					$subscription['merge_fields'][ $key ] = html_entity_decode( $value );
-				}
-			}
-		}
-
-		// Remove interests if none are defined.
-		if ( empty( $subscription['interests'] ) ) {
-			unset( $subscription['interests'] );
-		}
-
-		// Remove VIP if not enabled.
-		if ( ! $subscription['vip'] ) {
-			unset( $subscription['vip'] );
-		}
-
-		// Remove or reindex the tags.
-		if ( empty( $subscription['tags'] ) ) {
-			unset( $subscription['tags'] );
-		} else {
-			$subscription['tags'] = array_values( $subscription['tags'] );
-		}
-
-		// Add Marketing Permissions.
-		if ( $permissions = $this->get_feed_setting_conditions( $feed, 'marketingPermissions' ) ) {
-
-			// If member already exists, only update newly enabled permissions.
-			if ( $member_found ) {
-
-				// Loop through existing Marketing Permissions, check condition.
-				foreach ( $member['marketing_permissions'] as $existing_permission ) {
-
-					// If permission is already enabled, keep it that way.
-					if ( $existing_permission['enabled'] ) {
-						$subscription['marketing_permissions'][] = $existing_permission;
-						continue;
-					}
-
-					// If this permission is not configured, skip.
-					if ( ! rgar( $permissions, $existing_permission['marketing_permission_id'] ) ) {
-						continue;
-					}
-
-					// Check condition and add to subscription.
-					$subscription['marketing_permissions'][] = array(
-						'marketing_permission_id' => (string) $existing_permission['marketing_permission_id'],
-						'enabled'                 => $this->is_marketing_permission_condition_met( $permissions[ $existing_permission['marketing_permission_id'] ], $form, $entry ),
-					);
-
-				}
-
-			} else {
-
-				// Loop through permissions, add if enabled.
-				foreach ( $permissions as $permission_id => $permission ) {
-
-					// Add to subscription.
-					$subscription['marketing_permissions'][] = array(
-						'marketing_permission_id' => (string) $permission_id,
-						'enabled'                 => $this->is_marketing_permission_condition_met( $permission, $form, $entry ),
-					);
-
-				}
-
-			}
-
-		}
+		$subscription = $this->filter_subscription( $subscription, $list_id, $member, $feed, $entry, $form );
 
 		// Remove note from the subscription object and process any merge tags.
 		$note = GFCommon::replace_variables( $subscription['note'], $form, $entry, false, true, false, 'text' );
 		unset( $subscription['note'] );
 
-		$action = $member_found ? 'updated' : 'added';
+		$action = ! empty( $member ) ? 'updated' : 'added';
 
 		try {
 
@@ -1900,6 +1565,45 @@ class GFMailChimp extends GFFeedAddOn {
 	}
 
 	/**
+	 * Returns the existing member details for the given email address.
+	 *
+	 * @since 5.5
+	 *
+	 * @param string $email The email address.
+	 * @param array  $feed  The feed currently being processed.
+	 * @param array  $entry The entry currently being processed.
+	 * @param array  $form  The form currently being processed.
+	 *
+	 * @return array|false|WP_Error
+	 */
+	public function get_existing_member( $email, $feed, $entry, $form ) {
+		try {
+
+			$this->log_debug( __METHOD__ . "(): Checking to see if $email is already on the audience." );
+
+			$member = $this->api->get_list_member( rgars( $feed, 'meta/mailchimpList' ), $email );
+
+			$this->log_debug( __METHOD__ . "(): $email was found on audience. Status: {$member['status']}" );
+
+			return $member;
+
+		} catch ( Exception $e ) {
+
+			// If the exception code is not 404, abort feed processing.
+			if ( 404 !== $e->getCode() ) {
+				$this->add_feed_error( sprintf( esc_html__( 'Unable to check if email address is already used by a member: %s', 'gravityformsmailchimp' ), $e->getMessage() ), $feed, $entry, $form );
+
+				return new WP_Error( $e->getCode(), $e->getMessage(), $e->getErrors() );
+			}
+
+			$this->log_debug( __METHOD__ . "(): $email was not found on audience." );
+
+			return false;
+
+		}
+	}
+
+	/**
 	 * Returns the status to be added to the subscription array.
 	 *
 	 * Also, if the member already exists with a status is pending, and double opt-in is enabled, the status is patched to unsubscribed.
@@ -1943,6 +1647,372 @@ class GFMailChimp extends GFFeedAddOn {
 		}
 
 		return 'pending';
+	}
+
+	/**
+	 * Prepares the merge fields data for the member.
+	 *
+	 * @since 5.5
+	 *
+	 * @param array $field_map The mappings from the mappedFields setting.
+	 * @param array $feed      The feed currently being processed.
+	 * @param array $entry     The entry currently being processed.
+	 * @param array $form      The form currently being processed.
+	 *
+	 * @return array
+	 */
+	public function get_subscription_merge_fields( $field_map, $feed, $entry, $form ) {
+		/**
+		 * Prevent empty form fields erasing values already stored in the mapped Mailchimp MMERGE fields
+		 * when updating an existing subscriber.
+		 *
+		 * @param bool  $override If the merge field should be overridden.
+		 * @param array $form     The form object.
+		 * @param array $entry    The entry object.
+		 * @param array $feed     The feed object.
+		 */
+		$override_empty_fields = gf_apply_filters( 'gform_mailchimp_override_empty_fields', array( $form['id'] ), true, $form, $entry, $feed );
+
+		// Log that empty fields will not be overridden.
+		if ( ! $override_empty_fields ) {
+			$this->log_debug( __METHOD__ . '(): Empty fields will not be overridden.' );
+		}
+
+		// Initialize array to store merge vars.
+		$merge_vars = array();
+
+		// Loop through field map.
+		foreach ( $field_map as $name => $field_id ) {
+
+			// If no field is mapped, skip it.
+			if ( rgblank( $field_id ) ) {
+				continue;
+			}
+
+			// If this is the email field, skip it.
+			if ( strtoupper( $name ) === 'EMAIL' ) {
+				continue;
+			}
+
+			// Set merge var name to current field map name.
+			$this->merge_var_name = $name;
+
+			// Get field object.
+			$field = GFFormsModel::get_field( $form, $field_id );
+
+			// Get field value.
+			$field_value = $this->get_field_value( $form, $entry, $field_id );
+
+			// If field value is empty and we are not overriding empty fields, skip it.
+			if ( empty( $field_value ) && ( ! $override_empty_fields || ( is_object( $field ) && 'address' === $field->get_input_type() ) ) ) {
+				continue;
+			}
+
+			// Get merge field.
+			$merge_field = $this->get_list_merge_field( rgars( $feed, 'meta/mailchimpList' ), $name );
+
+			// Format date field.
+			if ( ! empty( $field_value ) && ! empty( $merge_field ) && in_array( $merge_field['type'], array(
+					'date',
+					'birthday',
+				) ) ) {
+
+				// Get date format.
+				$date_format = $merge_field['options']['date_format'];
+
+				// Convert field value to timestamp.
+				$field_value_timestamp = strtotime( $field_value );
+
+				// Format date.
+				switch ( $date_format ) {
+
+					case 'DD/MM':
+					case 'MM/DD':
+						$field_value = date( 'm/d', $field_value_timestamp );
+						break;
+
+					case 'DD/MM/YYYY':
+					case 'MM/DD/YYYY':
+						$field_value = date( 'm/d/Y', $field_value_timestamp );
+						break;
+
+				}
+
+			}
+
+			$merge_vars[ $name ] = $field_value;
+
+		}
+
+		return $merge_vars;
+	}
+
+	/**
+	 * Prepares the interests data for the member.
+	 *
+	 * @since 5.5
+	 *
+	 * @param false|array $member False or the existing member properties.
+	 * @param array       $feed   The feed currently being processed.
+	 * @param array       $entry  The entry currently being processed.
+	 * @param array       $form   The form currently being processed.
+	 *
+	 * @return array
+	 */
+	public function get_subscription_interests( $member, $feed, $entry, $form ) {
+		/**
+		 * Modify whether a user that is already subscribed to your list/audience has their groups replaced when submitting the form a second time.
+		 *
+		 * @since 1.9
+		 *
+		 * @param bool  $keep_existing_interests Should user keep existing interest categories?
+		 * @param array $form                    The form object.
+		 * @param array $entry                   The entry object.
+		 * @param array $feed                    The feed object.
+		 */
+		$keep_existing_interests = gf_apply_filters( array( 'gform_mailchimp_keep_existing_groups', $form['id'], ), true, $form, $entry, $feed );
+
+
+		$interests_to_keep      = array();
+		$existing_interests     = rgar( $member, 'interests', array() );
+		$subscription_interests = $existing_interests;
+
+		// If member was found, has existing interests and we are not keeping existing interest categories, remove them.
+		if ( ! empty( $existing_interests ) ) {
+
+			// Loop through existing interests.
+			foreach ( $existing_interests as $interest_id => $interest_enabled ) {
+
+				// If interest is not enabled, skip it.
+				if ( ! $interest_enabled ) {
+					continue;
+				}
+
+				// If we are keeping existing interests, add to array.
+				if ( $keep_existing_interests ) {
+
+					$interests_to_keep[] = $interest_id;
+					continue;
+
+				} else {
+
+					// Disable interest in new subscription.
+					$subscription_interests[ $interest_id ] = false;
+
+				}
+
+			}
+
+		}
+
+		// Get interest categories.
+		$categories = $this->get_feed_setting_conditions( $feed );
+
+		// Loop through categories.
+		foreach ( $categories as $category_id => $category_meta ) {
+
+			// If category is not enabled or the category is one we are keeping, skip it.
+			if ( ! rgar( $category_meta, 'enabled' ) || in_array( $category_id, $interests_to_keep ) ) {
+				continue;
+			}
+
+			// Log that we are evaluating the category conditions.
+			$this->log_debug( __METHOD__ . '(): Evaluating condition for interest category "' . $category_id . '": ' . print_r( $category_meta, true ) );
+
+			// Get condition evaluation.
+			$condition_evaluation = $this->is_category_condition_met( $category_meta, $form, $entry );
+
+			// Set interest category based on evaluation.
+			$subscription_interests[ $category_id ] = $condition_evaluation;
+
+		}
+
+		return $subscription_interests;
+	}
+
+	/**
+	 * Determines if the member is a VIP.
+	 *
+	 * @since 5.5
+	 *
+	 * @param false|array $member False or the existing member properties.
+	 * @param array       $feed   The feed currently being processed.
+	 *
+	 * @return bool
+	 */
+	public function is_vip( $member, $feed ) {
+		if ( ! empty( $member['vip'] ) ) {
+			return true;
+		}
+
+		return (bool) rgars( $feed, 'meta/markAsVIP' );
+	}
+
+	/**
+	 * Prepares the marketing permissions data for the member.
+	 *
+	 * @since 5.5
+	 *
+	 * @param false|array $member False or the existing member properties.
+	 * @param array       $feed   The feed currently being processed.
+	 * @param array       $entry  The entry currently being processed.
+	 * @param array       $form   The form currently being processed.
+	 *
+	 * @return array
+	 */
+	public function get_subscription_marketing_permissions( $member, $feed, $entry, $form ) {
+		$feed_permissions = $this->get_feed_setting_conditions( $feed, 'marketingPermissions' );
+
+		if ( empty( $feed_permissions ) ) {
+			return array();
+		}
+
+		$permissions = array();
+
+		// If member already exists, only update newly enabled permissions.
+		if ( ! empty( $member['marketing_permissions'] ) ) {
+
+			// Loop through existing Marketing Permissions, check condition.
+			foreach ( $member['marketing_permissions'] as $existing_permission ) {
+
+				// If permission is already enabled, keep it that way.
+				if ( $existing_permission['enabled'] ) {
+					$permissions[] = $existing_permission;
+					continue;
+				}
+
+				// If this permission is not configured, skip.
+				if ( ! rgar( $feed_permissions, $existing_permission['marketing_permission_id'] ) ) {
+					continue;
+				}
+
+				// Check condition and add to subscription.
+				$permissions[] = array(
+					'marketing_permission_id' => (string) $existing_permission['marketing_permission_id'],
+					'enabled'                 => $this->is_marketing_permission_condition_met( $permissions[ $existing_permission['marketing_permission_id'] ], $form, $entry ),
+				);
+
+			}
+
+		} else {
+
+			// Loop through permissions, add if enabled.
+			foreach ( $feed_permissions as $permission_id => $permission ) {
+
+				// Add to subscription.
+				$permissions[] = array(
+					'marketing_permission_id' => (string) $permission_id,
+					'enabled'                 => $this->is_marketing_permission_condition_met( $permission, $form, $entry ),
+				);
+
+			}
+
+		}
+
+		return $permissions;
+	}
+
+	/**
+	 * Prepares the tags to be assigned to the member.
+	 *
+	 * @since 5.5
+	 *
+	 * @param false|array $member False or the existing member properties.
+	 * @param array       $feed   The feed currently being processed.
+	 * @param array       $entry  The entry currently being processed.
+	 * @param array       $form   The form currently being processed.
+	 *
+	 * @return array
+	 */
+	public function get_subscription_tags( $member, $feed, $entry, $form ) {
+		$tags = explode( ',', rgars( $feed, 'meta/tags' ) );
+		$tags = array_map( 'trim', $tags );
+
+		// Prepare tags.
+		if ( ! empty( $tags ) ) {
+
+			// Loop through tags, replace merge tags.
+			foreach ( $tags as &$tag ) {
+				$tag = GFCommon::replace_variables( $tag, $form, $entry, false, false, false, 'text' );
+				$tag = trim( $tag );
+			}
+
+			// Remove empty tags.
+			$tags = array_filter( $tags );
+
+		}
+
+		// Get existing tags.
+		$existing_tags = $member ? wp_list_pluck( $member['tags'], 'name' ) : array();
+
+		if ( empty( $existing_tags ) ) {
+			return array_unique( $tags );
+		}
+
+		$tags = empty( $tags ) ? $existing_tags : array_merge( $existing_tags, $tags );
+
+		return array_unique( $tags );
+	}
+
+	/**
+	 * Allows the subscription to be filtered and cleans-up some properties.
+	 *
+	 * @since 5.5
+	 *
+	 * @param array       $subscription Subscription arguments.
+	 * @param string      $list_id      Mailchimp list/audience ID.
+	 * @param false|array $member       False or the existing member properties.
+	 * @param array       $feed         The feed currently being processed.
+	 * @param array       $entry        The entry currently being processed.
+	 * @param array       $form         The form currently being processed.
+	 *
+	 * @return array
+	 */
+	public function filter_subscription( $subscription, $list_id, $member, $feed, $entry, $form ) {
+
+		/**
+		 * Modify the subscription object before it is executed.
+		 *
+		 * @since 4.1.9 Added existing member object as $member parameter.
+		 *
+		 * @param array       $subscription Subscription arguments.
+		 * @param string      $list_id      Mailchimp list/audience ID.
+		 * @param array       $form         The form object.
+		 * @param array       $entry        The entry object.
+		 * @param array       $feed         The feed object.
+		 * @param array|false $member       The existing member object. (False if member does not currently exist in Mailchimp.)
+		 */
+		$subscription = gf_apply_filters( array( 'gform_mailchimp_subscription', $form['id'] ), $subscription, $list_id, $form, $entry, $feed, $member );
+
+		// Remove merge_fields if none are defined, otherwise allows merge_fields to be decoded.
+		if ( empty( $subscription['merge_fields'] ) ) {
+			unset( $subscription['merge_fields'] );
+		} else {
+			foreach ( $subscription['merge_fields'] as $key => $value ) {
+				if ( is_string( $value ) ) {
+					$subscription['merge_fields'][ $key ] = html_entity_decode( $value );
+				}
+			}
+		}
+
+		// Remove interests if none are defined.
+		if ( empty( $subscription['interests'] ) ) {
+			unset( $subscription['interests'] );
+		}
+
+		// Remove VIP if not enabled.
+		if ( ! $subscription['vip'] ) {
+			unset( $subscription['vip'] );
+		}
+
+		// Remove or reindex the tags.
+		if ( empty( $subscription['tags'] ) ) {
+			unset( $subscription['tags'] );
+		} else {
+			$subscription['tags'] = array_values( $subscription['tags'] );
+		}
+
+		return $subscription;
 	}
 
 	/**

@@ -1,10 +1,11 @@
 <?php
+
 /**
  * Plugin Name: PublishPress Future
  * Plugin URI: http://wordpress.org/extend/plugins/post-expirator/
  * Description: PublishPress Future allows you to schedule automatic changes to posts, pages and other content types.
  * Author: PublishPress
- * Version: 3.3.1
+ * Version: 3.4.4
  * Author URI: http://publishpress.com
  * Text Domain: post-expirator
  * Domain Path: /languages
@@ -18,7 +19,6 @@ use Exception;
 use PublishPress\Future\Core\Autoloader;
 use PublishPress\Future\Core\DI\Container;
 use PublishPress\Future\Core\DI\ServicesAbstract;
-use PublishPress\Future\Core\Plugin;
 use PublishPress\Future\Framework\WordPress\Facade\HooksFacade;
 
 defined('ABSPATH') or die('Direct access not allowed.');
@@ -50,7 +50,7 @@ if (! defined('PUBLISHPRESS_FUTURE_LOADED')) {
         }
 
         if (! defined('PUBLISHPRESS_FUTURE_VERSION')) {
-            define('PUBLISHPRESS_FUTURE_VERSION', '3.3.1');
+            define('PUBLISHPRESS_FUTURE_VERSION', '3.4.4');
         }
 
         if (! defined('PUBLISHPRESS_FUTURE_LIB_VENDOR_PATH')) {
@@ -70,7 +70,8 @@ if (! defined('PUBLISHPRESS_FUTURE_LOADED')) {
         }
 
         $autoloadFilePath = PUBLISHPRESS_FUTURE_LIB_VENDOR_PATH . '/autoload.php';
-        if (! class_exists('ComposerAutoloaderInitPublishPressFuture')
+        if (
+            ! class_exists('ComposerAutoloaderInitPublishPressFuture')
             && is_file($autoloadFilePath)
             && is_readable($autoloadFilePath)
         ) {
@@ -103,20 +104,11 @@ if (! defined('PUBLISHPRESS_FUTURE_LOADED')) {
             define('PUBLISHPRESS_FUTURE_LOADED_DEPENDENCIES', true);
         }
 
-        HooksFacade::registerActivationHook(
-            __FILE__,
-            function () {
-                Plugin::onActivate();
-            }
-        );
+        require_once __DIR__ . '/src/install.php';
+        require_once __DIR__ . '/src/uninstall.php';
 
-        HooksFacade::registerDeactivationHook(
-            __FILE__,
-            function () {
-                    loadDependencies();
-                    Plugin::onDeactivate();
-            }
-        );
+        HooksFacade::registerActivationHook(__FILE__, __NAMESPACE__ . '\\install');
+        HooksFacade::registerDeactivationHook(__FILE__, __NAMESPACE__ . '\\uninstall');
 
         add_action('init', function () {
             try {

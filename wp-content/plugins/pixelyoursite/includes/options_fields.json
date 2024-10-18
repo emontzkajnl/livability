@@ -10,6 +10,7 @@
   "cookie_duration": "number",
   "last_visit_duration": "number",
   "debug_enabled": "checkbox",
+  "session_disable": "checkbox",
   "do_not_track_user_roles": "multi_select",
   "admin_permissions": "multi_select",
 
@@ -134,6 +135,10 @@
 
   "send_external_id": "checkbox",
   "external_id_expire": "number",
+  "external_id_use_transient": "checkbox",
   "server_event_use_ajax" : "checkbox",
-  "google_consent_mode": "checkbox"
+  "server_static_event_use_ajax": "checkbox",
+  "google_consent_mode": "checkbox",
+
+  "data_persistency": "radio"
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2022. PublishPress, All rights reserved.
  */
@@ -17,11 +18,11 @@ defined('ABSPATH') or die('Direct access not allowed.');
 
 class PostTypeDefaultDataModel
 {
-    const EXPECTED_DATE_PARTS = 5;
+    public const EXPECTED_DATE_PARTS = 5;
 
-    const DEFAULT_ACTION = ExpirationActionsAbstract::CHANGE_POST_STATUS;
+    public const DEFAULT_ACTION = ExpirationActionsAbstract::CHANGE_POST_STATUS;
 
-    const DEFAULT_NEW_STATUS = 'draft';
+    public const DEFAULT_NEW_STATUS = 'draft';
 
     /**
      * @var \PublishPress\Future\Modules\Settings\SettingsFacade
@@ -72,7 +73,8 @@ class PostTypeDefaultDataModel
         $customDateTimeOffset = $this->settings->getGeneralDateTimeOffset();
 
         $postTypeSettings = $this->settings->getPostTypeDefaults($postType);
-        if (isset($postTypeSettings['default-expire-type'])
+        if (
+            isset($postTypeSettings['default-expire-type'])
             && 'custom' === $postTypeSettings['default-expire-type']
             && ! empty($postTypeSettings['default-custom-date'])
         ) {
@@ -131,9 +133,12 @@ class PostTypeDefaultDataModel
         $calculatedDate = strtotime($dateTimeOffset, (int)$baseDate);
 
         if (false === $calculatedDate) {
+            // translators: %s is the date/time offset and %s is the post type.
+            $errorMessage = esc_html__('Invalid date/time offset "%s" for post type "%s". Please ensure you use only English terms for the date/time offset, such as "3 months" or "1 week".', 'post-expirator');
+
             throw new \Exception(
                 sprintf(
-                    'Invalid date/time offset "%s" for post type "%s',
+                    $errorMessage, // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
                     esc_html($dateTimeOffset),
                     esc_html($this->postType)
                 )

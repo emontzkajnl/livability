@@ -18,7 +18,7 @@ use PixelYourSite\GA\Helpers;
         General
     </div>
     <div class="card-body">
-        <div class="row">
+        <div class="row mb-3">
             <div class="col">
 				<?php PYS()->render_switcher_input('google_consent_mode'); ?>
                 <h4 class="switcher-label">Fire Google tags with consent mode granted</h4>
@@ -26,6 +26,40 @@ use PixelYourSite\GA\Helpers;
                 <p class="mt-1 mb-0">
                     How to enable Google Consent Mode V2:
                     <a href="https://www.pixelyoursite.com/google-consent-mode-v2-wordpress?utm_source=plugin&utm_medium=free&utm_campaign=google-consent" target="_blank">click here</a>
+                </p>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <?php GA()->renderDummySwitcher(); ?>
+                <h4 class="switcher-label">Pass through ad click, client ID, and session ID information in URLs (url_passthrough) <?php renderProBadge(); ?></h4>
+                <p class="mt-1 mb-0">
+                    Reference:
+                    <a href="https://developers.google.com/tag-platform/security/guides/consent?consentmode=advanced#gtag.js_5" target="_blank">click here</a>
+                </p>
+                <p class="mt-1 mb-0">
+                    This option can improve tracking when cookies are denied: <a href="https://www.youtube.com/watch?v=wsNAbaoD5pM" target="_blank">watch video</a>
+                </p>
+            </div>
+        </div>
+        <hr>
+        <div class="row mb-3">
+            <div class="col">
+                <?php GA()->renderDummySwitcher(); ?>
+                <h4 class="switcher-label">Send user provided data when possible <?php renderProBadge(); ?></h4>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col col-offset-left">
+                <div class="mb-1">
+					<?php GA()->renderDummyCheckbox("Send multiple values when possible (up to 3 emails and phone numbers, up to 2 address fields)", true); ?>
+                </div>
+                <div class="mb-1">
+                    <?php GA()->renderDummyCheckbox("Use encoding", true); ?>
+                </div>
+                <p>
+                    <?php _e('Learn how to configure it: ', 'pys');?>
+                    <a href="https://www.youtube.com/watch?v=uQ8t7RJhVvI" target="_blank">watch video</a>
                 </p>
             </div>
         </div>
@@ -38,10 +72,19 @@ use PixelYourSite\GA\Helpers;
         Google Analytics
 	</div>
 	<div class="card-body">
-        <div class="row mb-3">
+        <div class="row mb-4">
             <div class="col">
                 <?php GA()->render_switcher_input( 'enabled' ); ?>
                 <h4 class="switcher-label">Enable Google Analytics IDs</h4>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col">
+                <?php GA()->render_switcher_input( 'custom_page_view_event' ); ?>
+                <h4 class="switcher-label">Control the page_view event</h4>
+                <p class="mt-1 mb-0">
+                    <small>Enable it if you use a GTM server container to fire API events. When we control the page_view event we can sent an event_id that is used for deduplication of API events.</small>
+                </p>
             </div>
         </div>
         <div class="row mb-3">

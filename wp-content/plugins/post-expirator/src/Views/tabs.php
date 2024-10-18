@@ -1,6 +1,6 @@
 <?php
 
-use \PublishPress\Future\Modules\Settings\HooksAbstract;
+use PublishPress\Future\Modules\Settings\HooksAbstract;
 use PublishPress\Future\Core\DI\Container;
 use PublishPress\Future\Core\DI\ServicesAbstract;
 
@@ -56,13 +56,13 @@ $tabs = $hooks->applyFilters(HooksAbstract::FILTER_SETTINGS_TABS, $tabs);
 
 <div class="wrap">
     <h2><?php
-        esc_html_e('PublishPress Future', 'post-expirator'); ?></h2>
+        esc_html_e('Action Settings', 'post-expirator'); ?></h2>
     <div id="pe-settings-tabs">
         <nav class="nav-tab-wrapper postexpirator-nav-tab-wrapper" id="postexpirator-nav">
             <?php foreach ($tabs as $tab) : ?>
                 <a href="<?php echo esc_url($tab['link']); ?>"
                    class="pe-tab nav-tab <?php
-                   echo ($current_tab === $tab['slug'] ? 'nav-tab-active' : ''); ?>"
+                    echo($current_tab === $tab['slug'] ? 'nav-tab-active' : ''); ?>"
                 >
                     <?php echo esc_html($tab['title']); ?>
                 </a>

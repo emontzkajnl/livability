@@ -4,9 +4,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 
-define( 'PYS_FREE_VERSION', '9.5.1' );
-define( 'PYS_FREE_PINTEREST_MIN_VERSION', '5.3.3' );
-define( 'PYS_FREE_BING_MIN_VERSION', '2.2.2' );
+define( 'PYS_FREE_VERSION', '9.7.2' );
+define( 'PYS_FREE_PINTEREST_MIN_VERSION', '5.4.0' );
+define( 'PYS_FREE_BING_MIN_VERSION', '3.4.0' );
 define( 'PYS_FREE_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'PYS_FREE_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'PYS_FREE_PLUGIN_FILE', __FILE__ );
@@ -55,6 +55,7 @@ require_once PYS_FREE_PATH.'/includes/class-custom-event-factory.php';
 require_once PYS_FREE_PATH.'/modules/facebook/facebook.php';
 require_once PYS_FREE_PATH.'/modules/facebook/facebook-server.php';
 require_once PYS_FREE_PATH.'/modules/google_analytics/ga.php';
+require_once PYS_FREE_PATH.'/modules/google_tags/gatags.php';
 require_once PYS_FREE_PATH.'/modules/head_footer/head_footer.php';
 require_once PYS_FREE_PATH.'/includes/enrich/class_enrich_order.php';
 
@@ -66,5 +67,6 @@ require_once PYS_FREE_PATH.'/includes/formEvents/WPForms/class-formEvent-WPForms
 require_once PYS_FREE_PATH.'/includes/formEvents/Formidable/class-formEvent-Formidable.php';
 require_once PYS_FREE_PATH.'/includes/formEvents/NinjaForm/class-formEvent-NinjaForm.php';
 require_once PYS_FREE_PATH.'/includes/formEvents/FluentForm/class-formEvent-FluentForm.php';
+require_once PYS_FREE_PATH.'/includes/formEvents/WSForm/class-formEvent-WSForm.php';
 // here we go...
 PixelYourSite\PYS();

@@ -783,7 +783,10 @@ function endsWith( $haystack, $needle ) {
 }
 
 function getCurrentPageUrl($removeQuery = false) {
-    if($removeQuery) {
+    if(!isset($_SERVER['HTTP_HOST']) || !isset($_SERVER['REQUEST_URI'])) {
+        return '';
+    }
+    if($removeQuery && isset($_SERVER['QUERY_STRING']) && isset($_SERVER['HTTP_HOST'])){
         return $_SERVER['HTTP_HOST'] . str_replace("?".$_SERVER['QUERY_STRING'],"",$_SERVER['REQUEST_URI']);
     }
     return  $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ;
@@ -1116,6 +1119,9 @@ function getStandardParams() {
             $params['page_title'] = $term->name;
         }
 
+    }elseif(is_archive()){
+        $params['page_title'] = get_the_archive_title();
+        $params['post_type'] = 'archive';
     } elseif ((isWooCommerceActive() && $cpt == 'product') ||
         (isEddActive() && $cpt == 'download') ) {
         $params['page_title'] = $post->post_title;
@@ -1240,4 +1246,42 @@ function getBrowserTime(){
 
     $dateTimeString = implode("|", $dateTime);
     return $dateTimeString;
+}
+
+/**
+ * Get persistence user data
+ * @param $em
+ * @param $fn
+ * @param $ln
+ * @param $tel
+ * @return array
+ */
+function get_persistence_user_data( $em, $fn, $ln, $tel ) {
+
+	if ( !apply_filters( 'pys_disable_advanced_form_data_cookie', false ) && !apply_filters( 'pys_disable_advance_data_cookie', false ) ) {
+		if ( isset( $_COOKIE[ "pys_advanced_form_data" ] ) ) {
+			$userData = json_decode( stripslashes( $_COOKIE[ "pys_advanced_form_data" ] ), true );
+			$data_persistence = PYS()->getOption( 'data_persistency' );
+
+			if ( isset( $userData[ "email" ] ) && $userData[ "email" ] != "" && ( $data_persistence == 'keep_data' || empty( $em ) ) ) {
+				$em = $userData[ "email" ];
+			}
+			if ( isset( $userData[ "phone" ] ) && $userData[ "phone" ] != "" && ( $data_persistence == 'keep_data' || empty( $tel ) ) ) {
+				$tel = $userData[ "phone" ];
+			}
+			if ( isset( $userData[ "first_name" ] ) && $userData[ "first_name" ] != "" && ( $data_persistence == 'keep_data' || empty( $fn ) ) ) {
+				$fn = $userData[ "first_name" ];
+			}
+			if ( isset( $userData[ "last_name" ] ) && $userData[ "last_name" ] != "" && ( $data_persistence == 'keep_data' || empty( $ln ) ) ) {
+				$ln = $userData[ "last_name" ];
+			}
+		}
+	}
+
+	return array(
+		'em'  => $em,
+		'fn'  => $fn,
+		'ln'  => $ln,
+		'tel' => $tel
+	);
 }

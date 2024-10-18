@@ -3,6 +3,11 @@
   "is_enable_debug_mode": "array",
   "tracking_id": "array",
 
+  "enable_server_container": "checkbox",
+  "first_party_collection": "checkbox",
+  "server_container_url": "array",
+  "transport_url": "array",
+
   "cross_domain_enabled": "checkbox",
   "cross_domain_accept_incoming": "checkbox",
   "cross_domain_domains": "array",
@@ -48,6 +53,7 @@
   "automatic_event_time_on_page_enabled":  "checkbox",
   "automatic_event_search_enabled":  "checkbox",
 
-  "disable_noscript": "checkbox"
+  "disable_noscript": "checkbox",
+  "custom_page_view_event": "checkbox"
 
 }

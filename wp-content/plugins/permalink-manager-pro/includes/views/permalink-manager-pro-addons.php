@@ -201,6 +201,7 @@ class Permalink_Manager_Pro_Addons {
 		// Show some additional info data
 		if ( $count_custom_permalinks > 0 ) {
 			$button = array(
+				/* translators: %s: Custom permalinks to import (count) */
 				'text'  => sprintf( __( 'Import %d URIs', 'permalink-manager' ), $count_custom_permalinks ),
 				'class' => 'primary margin-top'
 			);
@@ -222,10 +223,12 @@ class Permalink_Manager_Pro_Addons {
 	 */
 	public function support_output() {
 		$output = sprintf( "<h3>%s</h3>", __( "Technical support", "permalink-manager" ) );
+		/* translators: %s: Support section heading */
 		$output .= wpautop( sprintf( __( 'To find the answers on frequently asked questions and information about how to deal with the most common issues please go to the <strong>Knowledge Base</strong> using <a target="_blank" href="%s">this link</a>.', 'permalink-manager' ), 'https://permalinkmanager.pro/knowledge-base/' ) );
 		$output .= wpautop( __( 'If you still did not find the answer to your question, please send us your question or a detailed description of your problem/issue to <a href="mailto:support@permalinkmanager.pro">support@permalinkmanager.pro</a>.', 'permalink-manager' ) );
 		$output .= wpautop( __( 'To reduce the response time, please attach your licence key and if possible also: URL address of your website and screenshots explaining the issue.', 'permalink-manager' ) );
 
+		/* translators: %s: Support section heading */
 		$output .= sprintf( "<h3>%s</h3>", __( "Suggestions/feedback", "permalink-manager" ) );
 		$output .= wpautop( __( 'If you would like to suggest a new functionality or leave us feedback, we are open to all new ideas and would be grateful for all your comments!', 'permalink-manager' ) );
 		$output .= wpautop( __( ' Please send your remarks to <a href="mailto:contact@permalinkmanager.pro">contact@permalinkmanager.pro</a>.', 'permalink-manager' ) );
@@ -268,6 +271,7 @@ class Permalink_Manager_Pro_Addons {
 
 		// 1D. Description
 		$html .= "<div class=\"redirects-panel-description\">";
+		/* translators: %s: Homepage URL */
 		$html .= sprintf( wpautop( __( "<strong>Please use URIs only!</strong><br />For instance, to set-up a redirect for <code>%s/old-uri</code> please use <code>old-uri</code>.", "permalink-manager" ) ), home_url() );
 		$html .= "</div>";
 

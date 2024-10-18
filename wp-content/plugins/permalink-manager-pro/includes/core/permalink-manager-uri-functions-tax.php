@@ -383,18 +383,7 @@ class Permalink_Manager_URI_Functions_Tax {
 						$new_term_name = $old_term_name;
 					}
 				} else {
-					// Do replacement on slugs (non-REGEX)
-					if ( preg_match( "/^\/.+\/[a-z]*$/i", $old_string ) ) {
-						$regex   = stripslashes( trim( sanitize_text_field( $_POST['old_string'] ), "/" ) );
-						$regex   = preg_quote( $regex, '~' );
-						$pattern = "~{$regex}~";
-
-						$new_term_name = ( $mode == 'slugs' ) ? preg_replace( $pattern, $new_string, $old_term_name ) : $old_term_name;
-						$new_uri       = ( $mode != 'slugs' ) ? preg_replace( $pattern, $new_string, $old_uri ) : $old_uri;
-					} else {
-						$new_term_name = ( $mode == 'slugs' ) ? str_replace( $old_string, $new_string, $old_term_name ) : $old_term_name; // Post name is changed only in first mode
-						$new_uri       = ( $mode != 'slugs' ) ? str_replace( $old_string, $new_string, $old_uri ) : $old_uri;
-					}
+					list( $new_term_name, $new_uri ) = Permalink_Manager_Helper_Functions::replace_uri_slug( $old_string, $new_string, $old_term_name, $old_uri, $mode );
 				}
 
 				// Check if native slug should be changed
@@ -522,6 +511,7 @@ class Permalink_Manager_URI_Functions_Tax {
 			$html .= "</tr>";
 		}
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $html;
 	}
 

@@ -10,6 +10,7 @@
   "cookie_duration": 7,
   "last_visit_duration": 60,
   "debug_enabled": false,
+  "session_disable": true,
   "do_not_track_user_roles": [],
   "admin_permissions": [
     "administrator"
@@ -145,6 +146,10 @@
 
   "send_external_id": true,
   "external_id_expire": 180,
+  "external_id_use_transient": true,
   "server_event_use_ajax": true,
-  "google_consent_mode": true
+  "server_static_event_use_ajax": true,
+  "google_consent_mode": true,
+
+  "data_persistency": "keep_data"
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2022. PublishPress, All rights reserved.
  */
@@ -194,6 +195,13 @@ class Controller implements InitializableInterface
             $taxonomiesModelFactory = $this->taxonomiesModelFactory;
             $taxonomiesModel = $taxonomiesModelFactory();
 
+            // translators: %1$s is the link to the PHP strtotime function documentation, %2$s and %3$s are the opening and closing code tags. Please, do not translate the date format text, since PHP will not be able to calculate using non-english terms.
+            $fieldDefaultDateTimeOffsetDescription = esc_html__(
+                'Set the offset to use for the default action date and time. For information on formatting, see %1$s
+                . For example, you could enter %2$s+1 month%3$s or %2$s+1 week 2 days 4 hours 2 seconds%3$s or %2$snext Thursday%3$s. Please, use only terms in English.',
+                'post-expirator'
+            );
+
             wp_localize_script(
                 'publishpressfuture-settings-panel',
                 'publishpressFutureSettingsConfig',
@@ -226,12 +234,7 @@ class Controller implements InitializableInterface
                         ),
                         'fieldDefaultDateTimeOffset' => __('Default Date/Time Offset', 'post-expirator'),
                         'fieldDefaultDateTimeOffsetDescription' => sprintf(
-                            // translators: %1$s is the link to the PHP strtotime function documentation, %2$s and %3$s are the opening and closing code tags. Please, do not translate the date format text, since PHP will not be able to calculate using non-english terms.
-                            esc_html__(
-                                'Set the offset to use for the default action date and time. For information on formatting, see %1$s
-                                . For example, you could enter %2$s+1 month%3$s or %2$s+1 week 2 days 4 hours 2 seconds%3$s or %2$snext Thursday%3$s. Please, use only terms in English.',
-                                'post-expirator'
-                            ),
+                            $fieldDefaultDateTimeOffsetDescription,
                             '<a href="https://www.php.net/manual/en/function.strtotime.php" target="_new">' . esc_html__('PHP strtotime function', 'post-expirator') . '</a>',
                             '<code>',
                             '</code>'
@@ -242,6 +245,9 @@ class Controller implements InitializableInterface
                         // translators: %s is the name of the taxonomy in singular form.
                         'errorTermsRequired' => __('Please select one or more %s', 'post-expirator'),
                         'datePreview' => __('Date Preview', 'post-expirator'),
+                        'datePreviewCurrent' => __('Current Date', 'post-expirator'),
+                        'datePreviewComputed' => __('Computed Date', 'post-expirator'),
+                        'error' => __('Error', 'post-expirator'),
                     ],
                     'settings' => $settingsModel->getPostTypesSettings(),
                     'expireTypeList' => $this->actionsModel->getActionsAsOptionsForAllPostTypes(false),
@@ -251,6 +257,45 @@ class Controller implements InitializableInterface
                     ),
                     'nonce' => wp_create_nonce('postexpirator_menu_defaults'),
                     'referrer' => esc_html(remove_query_arg('_wp_http_referer')),
+                ]
+            );
+        }
+
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended
+        if (
+            (isset($_GET['page']) && $_GET['page'] === 'publishpress-future')
+            && (isset($_GET['tab']) && $_GET['tab'] === 'general')
+        ) {
+            //phpcs:enable WordPress.Security.NonceVerification.Recommended
+            wp_enqueue_script(
+                'publishpressfuture-settings-general-panel',
+                POSTEXPIRATOR_BASEURL . 'assets/js/settings-general.js',
+                [
+                    'wp-i18n',
+                    'wp-components',
+                    'wp-url',
+                    'wp-data',
+                    'wp-element',
+                    'wp-hooks',
+                    'wp-api-fetch',
+                    'wp-html-entities'
+                ],
+                POSTEXPIRATOR_VERSION,
+                true
+            );
+
+            wp_enqueue_style('wp-components');
+
+            wp_localize_script(
+                'publishpressfuture-settings-general-panel',
+                'publishpressFutureSettingsGeneralConfig',
+                [
+                    'text' => [
+                        'datePreview' => __('Date Preview', 'post-expirator'),
+                        'datePreviewCurrent' => __('Current Date', 'post-expirator'),
+                        'datePreviewComputed' => __('Computed Date', 'post-expirator'),
+                        'error' => __('Error', 'post-expirator'),
+                    ],
                 ]
             );
         }
@@ -312,7 +357,7 @@ class Controller implements InitializableInterface
         $taxonomiesModel = $taxonomiesModelFactory();
 
         $terms = explode(',', $terms);
-        $terms = array_map(function($term) use ($taxonomy, $taxonomiesModel) {
+        $terms = array_map(function ($term) use ($taxonomy, $taxonomiesModel) {
             $term = \sanitize_text_field($term);
             $termId = $taxonomiesModel->getTermIdByName($taxonomy, $term);
 
@@ -337,10 +382,12 @@ class Controller implements InitializableInterface
         $postTypes = $settingsModel->getPostTypes();
 
         if (isset($_POST['expirationdateSaveDefaults'])) {
-            if (! isset($_POST['_postExpiratorMenuDefaults_nonce']) || ! \wp_verify_nonce(
+            if (
+                ! isset($_POST['_postExpiratorMenuDefaults_nonce']) || ! \wp_verify_nonce(
                     \sanitize_key($_POST['_postExpiratorMenuDefaults_nonce']),
                     'postexpirator_menu_defaults'
-                )) {
+                )
+            ) {
                 wp_die(esc_html__('Form Validation Failure: Sorry, your nonce did not verify.', 'post-expirator'));
             }
 

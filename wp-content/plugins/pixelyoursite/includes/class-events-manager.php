@@ -16,7 +16,7 @@ class EventsManager {
     private $dynamicEvents = array();
     private $triggerEvents = array();
     private $triggerEventTypes = array();
-
+    private $uniqueId = array();
 
     public function __construct() {
 
@@ -91,6 +91,7 @@ class EventsManager {
 			'last_visit_duration'              => PYS()->getOption( 'last_visit_duration' ),
 			'enable_success_send_form'         => PYS()->getOption( 'enable_success_send_form' ),
 			'ajaxForServerEvent'               => PYS()->getOption( 'server_event_use_ajax' ),
+            "ajaxForServerStaticEvent"         => PYS()->getOption( 'server_static_event_use_ajax' ),
 			"send_external_id"                 => PYS()->getOption( 'send_external_id' ),
 			"external_id_expire"               => PYS()->getOption( 'external_id_expire' ),
 			"google_consent_mode"              => $google_consent_mode
@@ -158,7 +159,7 @@ class EventsManager {
 		$options[ 'cookie' ] = array(
 			'disabled_all_cookie'                => apply_filters( 'pys_disable_all_cookie', false ),
 			'disabled_start_session_cookie'      => apply_filters( 'pys_disabled_start_session_cookie', false ),
-			'disabled_advanced_form_data_cookie' => apply_filters( 'pys_disable_advanced_form_data_cookie', false ),
+			'disabled_advanced_form_data_cookie' => apply_filters( 'pys_disable_advanced_form_data_cookie', false ) || apply_filters( 'pys_disable_advance_data_cookie', false ),
 			'disabled_landing_page_cookie'       => apply_filters( 'pys_disable_landing_page_cookie', false ),
 			'disabled_first_visit_cookie'        => apply_filters( 'pys_disable_first_visit_cookie', false ),
 			'disabled_trafficsource_cookie'      => apply_filters( 'pys_disable_trafficsource_cookie', false ),
@@ -168,7 +169,7 @@ class EventsManager {
 
 		$options[ 'tracking_analytics' ] = array(
 			"TrafficSource"  => getTrafficSource(),
-			"TrafficLanding" => $_COOKIE[ 'pys_landing_page' ] ?? $_SESSION[ 'LandingPage' ],
+			"TrafficLanding" => $_COOKIE[ 'pys_landing_page' ] ?? $_SESSION[ 'LandingPage' ] ?? 'undefined',
 			"TrafficUtms"    => getUtms(),
 			"TrafficUtmsId"  => getUtmsId(),
 		);
@@ -225,7 +226,7 @@ class EventsManager {
 
 		// initial event
 		$initEvent = new SingleEvent('init_event',EventTypes::$STATIC,'');
-		if(get_post_type() == "post") {
+		if(get_post_type() == "post" && !is_archive()) {
 			global $post;
 			$catIds = wp_get_object_terms( $post->ID, 'category', array( 'fields' => 'names' ) );
 			$initEvent->addParams([
@@ -263,8 +264,9 @@ class EventsManager {
         }
 
 
-        if(count($this->facebookServerEvents)>0 && Facebook()->enabled()) {
+        if(count($this->facebookServerEvents)>0 && Facebook()->enabled() && Facebook()->isServerApiEnabled() && !PYS()->isCachePreload()) {
             FacebookServer()->sendEventsAsync($this->facebookServerEvents);
+            $this->facebookServerEvents = array();
         }
 
         // remove new user mark
@@ -286,6 +288,11 @@ class EventsManager {
             $pixel = PYS()->getRegisteredPixels()[$pixelSlug];
             foreach ($events as $event) {
                 // add standard params
+                if(!isset($this->uniqueId[$event->getId()])) {
+                    $this->uniqueId[$event->getId()] = EventIdGenerator::guidv4();
+                }
+                $event->addPayload(['eventID'=>$this->uniqueId[$event->getId()]]);
+
                 $event->addParams($this->standardParams);
                 //save different types of events
                 if($event->getType() == EventTypes::$STATIC) {
@@ -333,17 +340,24 @@ class EventsManager {
      * @param Event $event
      */
     function addStaticEvent($event,$pixel,$slug) {
+        $event_getId = $event->getId() == 'custom_event' ? $event->getPayloadValue('custom_event_post_id') : $event->getId();
+
+        if(!isset($this->uniqueId[$event_getId])) {
+            $this->uniqueId[$event_getId] = EventIdGenerator::guidv4();
+        }
+
+        $event->addPayload(['eventID'=>$this->uniqueId[$event_getId]]);
 
         $eventData = $event->getData();
         $eventData = $this::filterEventParams($eventData,$slug);
         // send only for FB Server events
-        if($pixel->getSlug() == "facebook" &&
+        if(Facebook()->enabled() && $pixel->getSlug() == "facebook" &&
             ($event->getId() == "woo_complete_registration") &&
             Facebook()->isServerApiEnabled() &&
             Facebook()->getOption("woo_complete_registration_send_from_server") &&
             !$this->isGdprPluginEnabled() )
         {
-            if($eventData['delay'] == 0) {
+            if($eventData['delay'] == 0 && !PYS()->getOption( "server_static_event_use_ajax" )) {
                 $this->facebookServerEvents[] = $event;
             }
             return;
@@ -352,8 +366,8 @@ class EventsManager {
         //save static event data
         $this->staticEvents[ $pixel->getSlug() ][ $event->getId() ][] = $eventData;
         // fire fb server api event
-        if($pixel->getSlug() == "facebook") {
-            if( $eventData['delay'] == 0 && !PYS()->getOption( "server_event_use_ajax" )) {
+        if($pixel->getSlug() == "facebook" && Facebook()->enabled()) {
+            if( $eventData['delay'] == 0 && !PYS()->getOption( "server_static_event_use_ajax" )) {
                 $this->facebookServerEvents[] = $event;
             }
         }

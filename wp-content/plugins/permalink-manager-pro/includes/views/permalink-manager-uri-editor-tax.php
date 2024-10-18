@@ -140,11 +140,16 @@ class Permalink_Manager_Tax_Uri_Editor_Table extends WP_List_Table {
 	 * The button that allows to save updated slugs
 	 */
 	function extra_tablenav( $which ) {
-		$button_top    = __( 'Save all the permalinks below', 'permalink-manager' );
-		$button_bottom = __( 'Save all the permalinks above', 'permalink-manager' );
+		if ( $which == "top" ) {
+			$button_text = __( 'Save all the permalinks below', 'permalink-manager' );
+			$button_name = 'update_all_slugs[top]';
+		} else {
+			$button_text = __( 'Save all the permalinks above', 'permalink-manager' );
+			$button_name = 'update_all_slugs[bottom]';
+		}
 
 		$html = '<div class="alignleft actions">';
-		$html .= get_submit_button( ${"button_$which"}, 'primary', "update_all_slugs[{$which}]", false, array( 'id' => 'doaction', 'value' => 'update_all_slugs' ) );
+		$html .= get_submit_button( $button_text, 'primary alignleft', $button_name, false, array( 'id' => 'doaction', 'value' => 'update_all_slugs' ) );
 		$html .= '</div>';
 
 		if ( $which == 'top' ) {
@@ -153,6 +158,7 @@ class Permalink_Manager_Tax_Uri_Editor_Table extends WP_List_Table {
 			$html .= '</div>';
 		}
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $html;
 	}
 

@@ -184,21 +184,24 @@ class Permalink_Manager_Pro_Functions {
 		// There is no license key defined
 		if ( empty( $license_key ) ) {
 			$settings_page_url = Permalink_Manager_Admin_Functions::get_admin_url( "&section=settings" );
+			// translators: %s is the URL to the settings page where users can manage their license keys.
 			$expiration_info   = sprintf( __( 'Please paste the licence key to access all Permalink Manager Pro updates & features <a href="%s" target="_blank">on this page</a>.', 'permalink-manager' ), $settings_page_url );
 			$expired           = 3;
 		} // License key is invalid
-		else if ( $exp_date == '-' ) {
+		else if ( $exp_date == '-' || ! preg_match( '/([A-G0-9]{4,8})-([A-G0-9]{4,8})$/', $license_key ) ) {
 			$expiration_info = __( 'Your Permalink Manager Pro licence key is invalid!', 'permalink-manager' );
 			$expired         = 3;
 		} else {
 			// Key expired
 			if ( ! empty( $exp_date ) && $exp_date < time() ) {
+				// translators: %s is the URL to the Permalink Manager page where users can manage their license keys.
 				$expiration_info = sprintf( __( 'Your Permalink Manager Pro licence key expired! Please renew your license key using <a href="%s" target="_blank">this link</a> to regain access to plugin updates and technical support.', 'permalink-manager' ), $license_info_page );
 				$expired         = 2;
 			} // License key is abused
 			else if ( ! empty( $exp_date ) && ! empty( $websites ) && $update_available === false ) {
 				$expiration_info = sprintf( __( 'Your Permalink Manager Pro license is already in use on another website and cannot be used to request automatic update for this domain.', 'permalink-manager' ), $license_info_page ) . " ";
-				$expiration_info .= sprintf( __( 'For further information, visit the <a href="%s" target="_blank"> License info</a> page.' ), $license_info_page );
+				// translators: %s is the URL to the Permalink Manager page where users can manage their license keys.
+				$expiration_info .= sprintf( __( 'For further information, visit the <a href="%s" target="_blank"> License info</a> page.', 'permalink-manager' ), $license_info_page );
 				$expired         = 2;
 			} // Valid lifetime license key
 			else if ( date( "Y", intval( $exp_date ) ) > date( 'Y', strtotime( "+10 years", time() ) ) ) {
@@ -208,12 +211,15 @@ class Permalink_Manager_Pro_Functions {
 			else if ( $exp_date ) {
 				// License key will expire in less than month & do not display the alert if the developer license key is used
 				if ( $exp_date - MONTH_IN_SECONDS < time() && ! preg_match( '/^([A-G0-9]{4,8})-([A-G0-9]{4,8})$/', $license_key ) ) {
-					$expiration_info = sprintf( __( 'Your Permalink Manager Pro license key will expire on <strong>%s</strong>. Please renew it to maintain access to plugin updates and technical support!' ), wp_date( get_option( 'date_format' ), $exp_date ) ) . " ";
-					$expiration_info .= sprintf( __( 'For further information, visit the <a href="%s" target="_blank"> License info</a> page.' ), $license_info_page );
+					// translators: %s is the Permalink Manager's license key expiry date.
+					$expiration_info = sprintf( __( 'Your Permalink Manager Pro license key will expire on <strong>%s</strong>. Please renew it to maintain access to plugin updates and technical support!', 'permalink-manager' ), wp_date( get_option( 'date_format' ), $exp_date ) ) . " ";
+					// translators: %s is the URL to the Permalink Manager page where users can manage their license keys.
+					$expiration_info .= sprintf( __( 'For further information, visit the <a href="%s" target="_blank"> License info</a> page.', 'permalink-manager' ), $license_info_page );
 					$expired         = 1;
 				} // License key can be used
 				else {
-					$expiration_info = sprintf( __( 'Your licence key is valid until %s.<br />To prolong it please go to <a href="%s" target="_blank">this page</a> for more information.', 'permalink-manager' ), date( get_option( 'date_format' ), $exp_date ), $license_info_page );
+					// Translators: %1$s is the expiration date, %2$s is the URL to the license info page.
+					$expiration_info = sprintf( __( 'Your licence key is valid until %1$s.<br />To prolong it please go to <a href="%2$s" target="_blank">this page</a> for more information.', 'permalink-manager' ), date( get_option( 'date_format' ), $exp_date ), $license_info_page );
 					$expired         = 0;
 				}
 			} // Expiration data could not be downloaded
@@ -229,7 +235,7 @@ class Permalink_Manager_Pro_Functions {
 		}
 
 		if ( ! empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'pm_get_exp_date' ) {
-			echo $expiration_info;
+			echo wp_kses_post( $expiration_info );
 			die();
 		} else {
 			return $expiration_info;
@@ -252,8 +258,8 @@ class Permalink_Manager_Pro_Functions {
 		$exp_info_code = self::get_expiration_date( true, true, false );
 
 		if ( ! empty( $exp_info_text ) && $exp_info_code >= 1 ) {
-			printf( '<tr class="plugin-update-tr permalink-manager-pro_license-info active" data-slug="%s" data-plugin="%s"><td colspan="%d" class="plugin-update colspanchange plugin_license_info_row">', $plugin_data['slug'], $plugin_file, $column_count );
-			printf( '<div class="update-message notice inline notice-error notice-alt">%s</div>', wpautop( $exp_info_text ) );
+			printf( '<tr class="plugin-update-tr permalink-manager-pro_license-info active" data-slug="%s" data-plugin="%s"><td colspan="%d" class="plugin-update colspanchange plugin_license_info_row">', esc_attr( $plugin_data['slug'] ), esc_attr( $plugin_file ), esc_attr( $column_count ) );
+			printf( '<div class="update-message notice inline notice-error notice-alt">%s</div>', wp_kses_post( wpautop( $exp_info_text ) ) );
 			printf( '</td></tr>' );
 		}
 	}
@@ -449,6 +455,8 @@ class Permalink_Manager_Pro_Functions {
 									$custom_field_value = Permalink_Manager_Helper_Functions::force_custom_slugs( $rel_post_object->post_name, $rel_post_object, false, $custom_field_arg );
 								} else if ( ! empty( $custom_field_arg ) && $custom_field_arg == 'id' ) {
 									$custom_field_value = $rel_post_object->ID;
+								} else if ( ! empty( $custom_field_arg ) && $custom_field_arg == 'custom_permalink' ) {
+									$custom_field_value = Permalink_Manager_URI_Functions::get_single_uri( $rel_post_object );
 								} else {
 									$custom_field_value = Permalink_Manager_Helper_Functions::force_custom_slugs( $rel_post_object->post_name, $rel_post_object );
 								}
@@ -597,17 +605,6 @@ class Permalink_Manager_Pro_Functions {
 	}
 
 	/**
-	 * Remove "Coupons" from hard-coded list of disabled post types
-	 *
-	 * @param array $post_types
-	 *
-	 * @return array
-	 */
-	public static function woocommerce_coupon_uris( $post_types ) {
-		return array_diff( $post_types, array( 'shop_coupon' ) );
-	}
-
-	/**
 	 * Add a new tab to the WooCommerce coupon edit page
 	 *
 	 * @param array $tabs The tabs array.
@@ -659,6 +656,7 @@ class Permalink_Manager_Pro_Functions {
 
 		$html .= "</div>";
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $html;
 	}
 
