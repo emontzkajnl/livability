@@ -16,6 +16,7 @@
  */
 function alm_filters_list_terms( $obj, $querystring, $id ) {
 	$return         = '';
+	$terms          = [];
 	$items          = [];
 	$items_count    = 0;
 	$field_type     = $obj['field_type'];
@@ -85,7 +86,7 @@ function alm_filters_list_terms( $obj, $querystring, $id ) {
 
 	// Taxonomy.
 	if ( $key === 'taxonomy' ) {
-		$match_key = alm_filters_add_underscore() . '' . $obj['taxonomy']; // Set $match_key to taxonomy slug.
+		$match_key = alm_filters_add_underscore( $id ) . '' . $obj['taxonomy']; // Set $match_key to taxonomy slug.
 		$tax_args  = [
 			'order'      => 'ASC',
 			'orderby'    => 'name',
@@ -167,15 +168,15 @@ function alm_filters_list_terms( $obj, $querystring, $id ) {
  * Term render method.
  * List elements in ul -> li
  *
- * @param string  $id Filter ID.
- * @param object  $obj Filter object.
- * @param array   $match_array Array of items to match.
- * @param array   $terms Tax terms.
- * @param boolean $init Is this the first run.
+ * @param string $id Filter ID.
+ * @param array  $obj Filter array.
+ * @param array  $match_array Array of items to match.
+ * @param array  $terms Tax terms.
+ * @param bool   $init Is this the first run.
  * @return mixed
  * @since 1.10.2
  */
-function alm_filters_build_terms_list( $id, $obj, $match_array, $terms, $init ) {
+function alm_filters_build_terms_list( $id, $obj = [], $match_array = [], $terms = [], $init = true ) {
 	if ( empty( $terms ) ) {
 		// Bail early if empty terms.
 		return;
@@ -241,7 +242,7 @@ function alm_filters_build_terms_list( $id, $obj, $match_array, $terms, $init ) 
 
 		// Build `<li/>`.
 		echo '<li class="alm-filter--' . esc_attr( $field_type ) . esc_attr( $field_level ) . ' field-' . esc_attr( $index ) . esc_attr( $past_limit_class ) . '"' . wp_kses_post( $past_limit ) . '>';
-		echo '<div class="alm-filter--link field-' . esc_attr( $field_type ) . ' field-' . esc_attr( $slug ) . ' ' . esc_attr( $active ) . '" id="' . esc_attr( $field_type ) . '-' . esc_attr( sanitize_title( $slug ) ) . '-' . esc_attr( $obj['count'] ) . '" data-type="' . esc_attr( $field_type ) . '" data-value="' . esc_attr( $slug ) . '" role="' . esc_attr( $field_type ) . '" tabindex="0" ' . esc_attr( $aria_checked ) . '>';
+		echo '<div class="alm-filter--link field-' . esc_attr( $field_type ) . ' field-' . esc_attr( $slug ) . ' ' . esc_attr( $active ) . '" id="' . esc_attr( $field_type ) . '-' . esc_attr( sanitize_title( $slug ) ) . '-' . esc_attr( $obj['count'] ) . '" data-type="' . esc_attr( $field_type ) . '" data-value="' . esc_attr( $slug ) . '" role="' . esc_attr( $field_type ) . '" tabindex="0" ' . wp_kses_post( $aria_checked ) . '>';
 		echo wp_kses_post( $name . $total );
 		echo '</div>';
 
@@ -260,13 +261,13 @@ function alm_filters_build_terms_list( $id, $obj, $match_array, $terms, $init ) 
  *
  * @param string $id          The filter ID.
  * @param array  $obj         Filter object array.
- * @param string $match_array The array to match for 'selected'.
+ * @param array  $match_array The array to match for 'selected'.
  * @param string $selected    The selected item.
  * @param array  $terms       The terms to display.
  * @since 10.1.2
  */
-function alm_filters_build_terms_select( $id, $obj, $match_array, $selected, $terms ) {
-	if ( ! $terms ) {
+function alm_filters_build_terms_select( $id, $obj, $match_array, $selected, $terms = [] ) {
+	if ( empty( $terms ) ) {
 		// Bail early if empty.
 		return;
 	}

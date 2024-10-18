@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Ajax Search Lite plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ajax Search Lite 4.12\n"
+"Project-Id-Version: Ajax Search Lite 4.12.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ajax-search-lite\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-05-25T15:50:25+00:00\n"
+"POT-Creation-Date: 2024-09-10T09:26:37+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: ajax-search-lite\n"
@@ -811,20 +811,22 @@ msgid "Date ascending"
 msgstr ""
 
 #: backend/tabs/instance/general/ordering.php:10
+#: backend/tabs/instance/general/ordering.php:46
 msgid "Menu order descending"
 msgstr ""
 
 #: backend/tabs/instance/general/ordering.php:11
+#: backend/tabs/instance/general/ordering.php:47
 msgid "Menu order ascending"
 msgstr ""
 
 #: backend/tabs/instance/general/ordering.php:12
-#: backend/tabs/instance/general/ordering.php:46
+#: backend/tabs/instance/general/ordering.php:48
 msgid "Random"
 msgstr ""
 
 #: backend/tabs/instance/general/ordering.php:13
-#: backend/tabs/instance/general/ordering.php:47
+#: backend/tabs/instance/general/ordering.php:49
 msgid "Custom Field descending"
 msgstr ""
 
@@ -833,22 +835,22 @@ msgid "Custom Field  ascending"
 msgstr ""
 
 #: backend/tabs/instance/general/ordering.php:22
-#: backend/tabs/instance/general/ordering.php:56
+#: backend/tabs/instance/general/ordering.php:58
 msgid "custom field"
 msgstr ""
 
 #: backend/tabs/instance/general/ordering.php:25
-#: backend/tabs/instance/general/ordering.php:59
+#: backend/tabs/instance/general/ordering.php:61
 msgid "type"
 msgstr ""
 
 #: backend/tabs/instance/general/ordering.php:28
-#: backend/tabs/instance/general/ordering.php:62
+#: backend/tabs/instance/general/ordering.php:64
 msgid "numeric"
 msgstr ""
 
 #: backend/tabs/instance/general/ordering.php:29
-#: backend/tabs/instance/general/ordering.php:63
+#: backend/tabs/instance/general/ordering.php:65
 msgid "string or date"
 msgstr ""
 
@@ -856,11 +858,11 @@ msgstr ""
 msgid "Secondary ordering"
 msgstr ""
 
-#: backend/tabs/instance/general/ordering.php:48
+#: backend/tabs/instance/general/ordering.php:50
 msgid "Custom Field ascending"
 msgstr ""
 
-#: backend/tabs/instance/general/ordering.php:71
+#: backend/tabs/instance/general/ordering.php:73
 msgid "If two elements match the primary ordering criteria, the <b>Secondary ordering</b> is used."
 msgstr ""
 

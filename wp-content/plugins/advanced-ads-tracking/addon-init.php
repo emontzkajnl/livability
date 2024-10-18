@@ -23,7 +23,11 @@ function advanced_ads_tracking_init_plugin() {
 	}
 
 	// instantiate the public class.
-	new Advanced_Ads_Tracking( $is_admin, $is_ajax );
+	$tracking = new Advanced_Ads_Tracking( $is_admin, $is_ajax );
+
+	if ( ! $is_admin ) {
+		new \AdvancedAdsTracking\Compatibility( $tracking );
+	}
 
 	// only admin, not ajax (which is always admin)
 	if ( $is_admin && ! $is_ajax ) {

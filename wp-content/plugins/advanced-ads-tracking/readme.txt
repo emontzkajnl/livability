@@ -1,7 +1,7 @@
 === Advanced Ads – Tracking ===
 Requires at least: 4.9
 Tested up to: 6.1
-Stable tag: 2.7.0
+Stable tag: 2.8.1
 Requires PHP: 7.2
 
 Track ad impressions and clicks.
@@ -62,15 +62,16 @@ The Tracking add-on is based on the Advanced Ads plugin, a simple and powerful a
 
 == Changelog ==
 
-= 2.7.0 (February 13, 2024) =
+= 2.8.1 (August 12, 2024) =
+
+- Fix: address 'undefined index' notice when inserting ads via Gutenberg or shortcode
+
+= 2.8.0 (August 6, 2024) =
 
 - Improvement: update Slovenian translations
-- Improvement: improve Statistics Column in Ad Overview
-- Improvement: change Google Analytics event names and allow customizing them
-- Improvement: allow sorting ads by clicks, impressions, or CTR
-- Improvement: show preview of image ad in shareable statistics
-- Improvement: add the ad name into individual email report subject
-- Improvement: allow disabling tracking by user roles
-- Fix: show correct statistics for custom periods grouped by week
+- Improvement: add a shareable statistic link of each ad to the ad overview page
+- Fix: correct the links to groups on the statistic page
+- Fix: allow impression and click tracking with PeepSo Stream placement
+- Fix: ensure group filter appears on statistics page with only one group
 
-Build: 2024-03-5d3a7ccf
+Build: 2024-10-956fc661

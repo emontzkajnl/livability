@@ -4,8 +4,8 @@ Donate link: http://wp-dreams.com
 Tags: search, better search, live search, product search, woocommerce search
 Requires at least: 3.5
 Requires PHP: 7.4
-Tested up to: 6.5
-Stable tag: 4.12
+Tested up to: 6.6
+Stable tag: 4.12.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -115,6 +115,18 @@ notify the developers of this plugin.
 2. Administrator area - nice and smooth
 
 == Changelog ==
+= 4.12.3 =
+* Added the missing Menu ordering ASC/DESC for the secondary ordering as well
+* Corrected the previous fix for the low rist XSS issue
+
+= 4.12.2 =
+* Fixed a possible XSS security issue - reported by Dmitrii Ignatyev from cleantalk
+
+= 4.12.1 =
+* Fixed a dependency issue with the old widgets screen and the search bocks
+* Fixed the widget title output, so when it's empty, it no longer outputs the widget title
+* Fixed a potential XSS vulnerability for the back-end options interface
+
 = 4.12 =
 * Added support for Block Editor - the Ajax Search Lite block should be available for Gutenberg
 * WPML String translations updates

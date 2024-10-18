@@ -4,15 +4,14 @@ Contributors: dcooney
 Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/search-engine-optimization/
-Requires at least: 4.0
-Tested up to: 5.4.1
+Requires at least: 5.0
+Tested up to: 6.4
 Stable tag: trunk
 Homepage: https://connekthq.com
-Version: 1.9.4
-
+Version: 1.9.6
 
 == Copyright ==
-Copyright 2022 Darren Cooney
+Copyright 2024 Connekt Media
 
 This software is NOT to be distributed, but can be INCLUDED in WP themes: Premium or Contracted.
 This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -47,6 +46,17 @@ http://connekthq.com/plugins/ajax-load-more/seo/
 
 
 == Changelog ==
+
+= 1.9.6 - January 16, 2024 =
+* UPGRADE NOTICE: This update is affected by the core Ajax Load More 7.0 release. Updating this plugin will require updating Ajax Load More to 7.0.
+* UPDATE: Updated JS parameters to match updates in ALM 7.0.
+* UPDATE: Code cleanup and oragnization.
+* FIX: Fixed issue with SEO Offset not working to update URL params.
+
+
+= 1.9.5 - September 27, 2023 =
+* UPDATE: Updated SEO JavaScript to support new Google Analytics 4 implementation.
+
 
 = 1.9.4 - March 7, 2022 =
 * NEW: Adding new setting (`seo_offset`) that allows for offsetting the SEO pagination to start at page/2. This allows for users to run a query before ALM and still use SEO as they normally would.

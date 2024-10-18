@@ -6,10 +6,10 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.9.4
+ * Version: 1.9.6
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
- */ // phpcs:ignore
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -17,8 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_SEO_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_SEO_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_SEO_VERSION', '1.9.4' );
-define( 'ALM_SEO_RELEASE', 'March 7, 2022' );
+define( 'ALM_SEO_VERSION', '1.9.6' );
+define( 'ALM_SEO_RELEASE', 'January 16, 2024' );
 
 /**
  * Install the SEO add-on
@@ -53,7 +53,6 @@ function alm_seo_admin_notice() {
 }
 add_action( 'admin_notices', 'alm_seo_admin_notice' );
 
-
 if ( ! class_exists( 'ALMSEO' ) ) :
 
 	/**
@@ -65,10 +64,10 @@ if ( ! class_exists( 'ALMSEO' ) ) :
 		 * Construct function.
 		 */
 		public function __construct() {
-			add_action( 'alm_seo_installed', array( &$this, 'alm_is_seo_installed' ) );
-			add_action( 'wp_enqueue_scripts', array( &$this, 'alm_seo_enqueue_scripts' ) );
-			add_action( 'alm_seo_settings', array( &$this, 'alm_seo_settings' ) );
-			add_filter( 'alm_seo_shortcode', array( &$this, 'alm_seo_shortcode' ), 10, 4 );
+			add_action( 'alm_seo_installed', [ &$this, 'alm_is_seo_installed' ] );
+			add_action( 'wp_enqueue_scripts', [ &$this, 'alm_seo_enqueue_scripts' ] );
+			add_action( 'alm_seo_settings', [ &$this, 'alm_seo_settings' ] );
+			add_filter( 'alm_seo_shortcode', [ &$this, 'alm_seo_shortcode' ], 10, 4 );
 			load_plugin_textdomain( 'ajax-load-more-seo', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
 		}
 
@@ -84,7 +83,6 @@ if ( ! class_exists( 'ALMSEO' ) ) :
 		 * @since 1.2
 		 */
 		public function alm_seo_shortcode( $seo, $preloaded, $options, $seo_offset ) {
-
 			$seo_scrolltop = '30';
 			if ( isset( $options['_alm_seo_scrolltop'] ) ) {
 				$seo_scrolltop = $options['_alm_seo_scrolltop'];
@@ -107,18 +105,6 @@ if ( ! class_exists( 'ALMSEO' ) ) :
 				$seo_enable_scroll = 'false';
 			}
 
-			// GA send Pageview.
-			if ( isset( $options['_alm_seo_ga'] ) ) {
-				$seo_send_pageview = $options['_alm_seo_ga'];
-				if ( '1' === $seo_send_pageview ) {
-					$seo_send_pageview = 'true';
-				} else {
-					$seo_send_pageview = 'false';
-				}
-			} else {
-				$seo_send_pageview = 'true';
-			}
-
 			// Permalink Structure.
 			$permalink_structure = get_option( 'permalink_structure' );
 			$seo_permalink       = empty( $permalink_structure ) ? 'default' : 'pretty';
@@ -137,13 +123,12 @@ if ( ! class_exists( 'ALMSEO' ) ) :
 
 			// Build data atts.
 			$return  = ' data-seo="true"';
-			$return .= 'true' === $seo_offset ? ' data-seo-offset="true"' : '';
+			$return .= $seo_offset === 'true' ? ' data-seo-offset="true"' : ''; // phpcs:ignore
 			$return .= ' data-seo-start-page="' . $current_page . '"';
 			$return .= ' data-seo-scroll="' . $seo_enable_scroll . '"';
 			$return .= ' data-seo-scrolltop="' . $seo_scrolltop . '"';
 			$return .= ' data-seo-controls="' . $seo_controls . '"';
 			$return .= ' data-seo-permalink="' . $seo_permalink . '"';
-			$return .= ' data-seo-pageview="' . $seo_send_pageview . '"';
 
 			/**
 			 * This function will remove the trailing slash from the URL.
@@ -183,7 +168,7 @@ if ( ! class_exists( 'ALMSEO' ) ) :
 		public function alm_seo_enqueue_scripts() {
 			// Use minified libraries if SCRIPT_DEBUG is turned off.
 			$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-			wp_register_script( 'ajax-load-more-seo', plugins_url( '/js/alm-seo' . $suffix . '.js', __FILE__ ), array( 'ajax-load-more' ), ALM_SEO_VERSION, true );
+			wp_register_script( 'ajax-load-more-seo', plugins_url( '/js/alm-seo' . $suffix . '.js', __FILE__ ), [ 'ajax-load-more' ], ALM_SEO_VERSION, true );
 		}
 
 		/**
@@ -193,9 +178,9 @@ if ( ! class_exists( 'ALMSEO' ) ) :
 		 * @since 1.0
 		 */
 		public function alm_is_seo_installed() {
-			 // phpcs:disable
+			// phpcs:disable
 			// Empty return.
-			 // phpcs:enable
+			// phpcs:enable
 		}
 
 		/**
@@ -215,13 +200,6 @@ if ( ! class_exists( 'ALMSEO' ) ) :
 				'SEO Settings',
 				'alm_seo_settings_callback',
 				'ajax-load-more'
-			);
-			add_settings_field(
-				'_alm_seo_ga',
-				__( 'Google Analytics', 'ajax-load-more-seo' ),
-				'alm_seo_ga_callback',
-				'ajax-load-more',
-				'alm_seo_settings'
 			);
 			add_settings_field(
 				'_alm_seo_scroll',
@@ -245,7 +223,6 @@ if ( ! class_exists( 'ALMSEO' ) ) :
 				'alm_seo_settings'
 			);
 		}
-
 	}
 
 	/**
@@ -257,22 +234,6 @@ if ( ! class_exists( 'ALMSEO' ) ) :
 	function alm_seo_settings_callback() {
 		$html = '<p>' . __( 'Customize your installation of the <a href="http://connekthq.com/plugins/ajax-load-more/seo/">Search Engine Optimization</a> add-on.', 'ajax-load-more-seo' ) . '</p>';
 		echo wp_kses_post( $html );
-	}
-
-	/**
-	 * Send pageviews to Google Analytics.
-	 *
-	 * @author ConnektMedia
-	 * @since 1.2
-	 */
-	function alm_seo_ga_callback() {
-		$options = get_option( 'alm_settings' );
-		if ( ! isset( $options['_alm_seo_ga'] ) ) {
-			$options['_alm_seo_ga'] = '1';
-		}
-		$html  = '<input type="hidden" name="alm_settings[_alm_seo_ga]" value="0" /><input type="checkbox" id="alm_seo_ga" name="alm_settings[_alm_seo_ga]" value="1"' . ( ( $options['_alm_seo_ga'] ) ? ' checked="checked"' : '' ) . ' />';
-		$html .= '<label for="alm_seo_ga">' . __( 'Send page views to Google Analytics.', 'ajax-load-more-seo' ) . '<br/><span>' . __( 'Must have a reference to your Google Analytics tracking code on the page.', 'ajax-load-more-seo' ) . '</span></label>';
-		echo $html; // phpcs:ignore
 	}
 
 	/**
@@ -314,7 +275,6 @@ if ( ! class_exists( 'ALMSEO' ) ) :
 	 * @since 1.7
 	 */
 	function alm_seo_browser_controls_callback() {
-
 		$options = get_option( 'alm_settings' );
 
 		if ( ! isset( $options['_alm_seo_browser_controls'] ) ) {
@@ -331,16 +291,16 @@ if ( ! class_exists( 'ALMSEO' ) ) :
 	/**
 	 *  Sanitize our license activation.
 	 *
-	 * @param string $new The new license key.
+	 * @param string $key The new license key.
 	 * @author ConnektMedia
 	 * @since 1.3.0
 	 */
-	function alm_seo_sanitize_license( $new ) {
+	function alm_seo_sanitize_license( $key ) {
 		$old = get_option( 'alm_seo_license_key' );
-		if ( $old && $old !== $new ) {
+		if ( $old && $old !== $key ) {
 			delete_option( 'alm_seo_license_status' );
 		}
-		return $new;
+		return $key;
 	}
 
 	/**
@@ -370,12 +330,12 @@ function alm_seo_plugin_updater() {
 		$edd_updater = new EDD_SL_Plugin_Updater(
 			ALM_STORE_URL,
 			__FILE__,
-			array(
+			[
 				'version' => ALM_SEO_VERSION,
 				'license' => $license_key,
 				'item_id' => ALM_SEO_ITEM_NAME,
 				'author'  => 'Darren Cooney',
-			)
+			]
 		);
 	}
 }

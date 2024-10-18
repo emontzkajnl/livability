@@ -113,7 +113,59 @@ var AdvAdsImpressionTracker = {
 		}
 	};
 
-	if ( typeof advads !== 'undefined' && advads.privacy.get_state() === 'unknown' ) {
+	/**
+	 * Add a single ad into an ad list object
+	 *
+	 * @param {object} list the ad list.
+	 * @param {int} bid blog ID.
+	 * @param {int} ad ad ID.
+	 * @returns {object}
+	 */
+	function addSingleAd( list, bid, ad ) {
+		if ( 'undefined' === typeof list[bid] ) {
+			list[bid] = [];
+		}
+		list[bid].push( ad );
+		return list;
+	}
+
+	/**
+	 * Whether privacy policy allows us to track
+	 *
+	 * @returns {boolean}
+	 */
+	function privacyRedLight() {
+		return typeof advads !== 'undefined' && advads.privacy.get_state() === 'unknown';
+	}
+
+	document.addEventListener( 'advads_track_async', function ( ev ) {
+		const bid = ev.detail.bid, ad = ev.detail.ad;
+		switch ( advads_tracking_methods[bid] ) {
+			case 'frontend':
+				if ( 'undefined' === typeof advads_tracking_ads ) {
+					advads_tracking_ads = {};
+				}
+				advads_tracking_ads = addSingleAd( advads_tracking_ads, bid, ad );
+				if ( ! privacyRedLight() ) {
+					// If red light, tracker will be called on approval.
+					localTracker();
+				}
+				break;
+			case 'ga':
+				if ( 'undefined' === typeof advadsGATracking.delayedAds ) {
+					advadsGATracking.delayedAds = {};
+				}
+				advadsGATracking.delayedAds = addSingleAd( advadsGATracking.delayedAds, bid, ad );
+				if ( ! privacyRedLight() ) {
+					// If red light, delayed ad list is up to date and GA tracker will be instantiated on approval.
+					AdvAdsImpressionTracker.triggerEvent( 'advadsGADelayedTrack' );
+				}
+				break;
+			default:
+		}
+	} );
+
+	if ( privacyRedLight() ) {
 		document.addEventListener( 'advanced_ads_privacy', function ( event ) {
 			if ( event.detail.previousState === 'unknown' ) {
 				localTracker();

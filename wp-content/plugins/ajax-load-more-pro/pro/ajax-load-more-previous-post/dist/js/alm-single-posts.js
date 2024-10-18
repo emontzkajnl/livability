@@ -103,6 +103,7 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos, @connekthq
  */
+
 var almSinglePosts = {};
 
 (function () {
@@ -125,7 +126,6 @@ var almSinglePosts = {};
 		almSinglePosts.active = true;
 		almSinglePosts.target = "";
 		almSinglePosts.first = document.querySelector(".alm-single-post");
-		almSinglePosts.isIE = navigator.appVersion.indexOf("MSIE 10") !== -1 ? true : false;
 		almSinglePosts.showProgressBar = false;
 	};
 
@@ -135,8 +135,7 @@ var almSinglePosts = {};
   * @since 2.0
   */
 	almSinglePosts.onScroll = function () {
-		var scrollTop = window.pageYOffset;
-
+		var scrollTop = window.scrollY;
 		if (almSinglePosts.active && !almSinglePosts.popstate && scrollTop > 1 && !almSinglePosts.disableOnScroll) {
 			// Get container scroll position
 			var fromTop = scrollTop + almSinglePosts.offset;
@@ -177,7 +176,7 @@ var almSinglePosts = {};
 			}
 
 			// Set URL, if applicible.
-			if (url !== permalink) {
+			if (url !== permalink && !hasNextPageAddon()) {
 				almSinglePosts.setURL(id, permalink, title, page, currentPost);
 			}
 		}
@@ -274,7 +273,6 @@ var almSinglePosts = {};
 			// On init.
 			almSinglePosts.siteTitle = alm.addons.single_post_siteTitle; // Site Title
 			almSinglePosts.siteTagline = alm.addons.single_post_siteTagline; // Site Tagline
-			almSinglePosts.pageview = alm.addons.single_post_pageview && alm.addons.single_post_pageview === "true" ? true : false; // Send pageviews
 			almSinglePosts.scroll = alm.addons.single_post_scroll; // Scroll
 			almSinglePosts.offset = parseInt(alm.addons.single_post_scroll_top); // Scroll Top
 			almSinglePosts.controls = alm.addons.single_post_controls; // Enable back/fwd button controls
@@ -289,7 +287,7 @@ var almSinglePosts = {};
 				var singlePostTarget = document.querySelector(almSinglePosts.target);
 				if (singlePostTarget) {
 					// Get .alm-single div
-					var singlePostWrap = document.querySelector(".alm-reveal.alm-single-post");
+					var singlePostWrap = document.querySelector(".alm-single-post");
 
 					// InsertBefore
 					singlePostTarget.parentNode.insertBefore(singlePostWrap, singlePostTarget);
@@ -331,7 +329,7 @@ var almSinglePosts = {};
 			return false; // Exit if ID null
 		}
 
-		var progressDiv = document.querySelector('.alm-reveal.alm-single-post[data-id="' + id + '"]');
+		var progressDiv = document.querySelector('.alm-single-post[data-id="' + id + '"]');
 
 		if (progressDiv) {
 			var elHeight = Math.round(progressDiv.offsetHeight);
@@ -370,8 +368,8 @@ var almSinglePosts = {};
 			return false; // Exit, not the correct amount of parameters
 		}
 
-		var transition = "all 0.3s linear";
-		var transition2 = "all 0.15s linear";
+		var transition = "all 0.3s ease";
+		var transition2 = "all 0.2s ease";
 		var body = document.body;
 
 		almSinglePosts.progressWrap = document.createElement("div");
@@ -475,6 +473,9 @@ var almSinglePosts = {};
   * @param {event} event The window event.
   */
 	window.addEventListener("popstate", function (event) {
+		if (hasNextPageAddon()) {
+			return; // Exit if Next Page instance exists.
+		}
 		if (typeof window.history.pushState == "function") {
 			almSinglePosts.onpopstate(event);
 		}
@@ -492,7 +493,7 @@ var almSinglePosts = {};
   */
 	almSinglePosts.setURL = function (id, permalink, title, page, element) {
 		// If pushstate & not IE10 is enabled
-		if (typeof window.history.pushState === "function" && !almSinglePosts.isIE) {
+		if (typeof window.history.pushState === "function") {
 			var nested = element && element.classList.contains("alm-nextpage") ? true : false;
 
 			var state = {
@@ -511,9 +512,9 @@ var almSinglePosts = {};
 			// Set page title.
 			almSinglePosts.setPageTitle(title);
 
-			// almUrlUpdate (Core ALM Callback)
-			if (typeof almUrlUpdate === "function") {
-				window.almUrlUpdate(permalink, "single-post");
+			// Trigger analytics.
+			if (typeof ajaxloadmore.analytics === "function") {
+				ajaxloadmore.analytics("single-posts");
 			}
 		}
 
@@ -521,40 +522,16 @@ var almSinglePosts = {};
 		if (almSinglePosts.is_disqus) {
 			almSinglePosts.disqusLoad(id, permalink, title, page);
 		}
-
-		// Send pageviews to Google Analytics.
-		if (almSinglePosts.pageview) {
-			var path = "/" + window.location.pathname;
-			if (typeof ajaxloadmore.tracking === "function") {
-				ajaxloadmore.tracking(path);
-			} else {
-				// Gtag GA Tracking
-				if (typeof gtag === "function") {
-					gtag("event", "page_view", {
-						page_path: path
-					});
-				}
-
-				// Deprecated GA Tracking
-				if (typeof ga === "function") {
-					ga("send", "pageview", path);
-				}
-
-				// Monster Insights
-				if (typeof __gaTracker === "function") {
-					__gaTracker("send", "pageview", path);
-				}
-			}
-		}
 	};
 
 	/**
   * Smooth scroll user to current post.
+  *
   * @since 1.0
-  * @param {string} id
+  * @param {string} id The post ID.
   */
 	almSinglePosts.scrollToPost = function (id) {
-		var target = document.querySelector(".alm-reveal.alm-single-post.post-" + id);
+		var target = document.querySelector(".alm-single-post.post-" + id);
 		if (target) {
 			// Confirm target has children, if not move to top of page. (offset fix_
 			target = target.hasChildNodes() ? target : document.querySelector("body");
@@ -594,8 +571,9 @@ var almSinglePosts = {};
 
 	/**
   * Set the page title.
+  *
   * @since 1.0
-  * @param {string} title
+  * @param {string} title The page title.
   */
 	almSinglePosts.setPageTitle = function (title) {
 		if (!almSinglePosts.titleTemplate) {
@@ -613,7 +591,7 @@ var almSinglePosts = {};
   * Load Disqus comments on page init
   *
   * @since 1.2
-  * @param {object} container
+  * @param {object} container The ALM container.
   */
 	almSinglePosts.disqusInit = function (container) {
 		var disqus_shortname = container.dataset.disqusShortname; // get Disqus shortname from container
@@ -641,10 +619,10 @@ var almSinglePosts = {};
   * Load Disqus comments when page comes into view.
   *
   * @since 1.2
-  * @param {string} id
-  * @param {string} permalink
-  * @param {string} title
-  * @param {string} page
+  * @param {string} id        ALM ID.
+  * @param {string} permalink Post permalink.
+  * @param {string} title     Post title.
+  * @param {string} page      Current page.
   */
 	almSinglePosts.disqusLoad = function (id, permalink, title, page) {
 		var disqus_thread = document.getElementById("disqus_thread");
@@ -677,6 +655,18 @@ var almSinglePosts = {};
 			});
 		}
 	};
+
+	/**
+  * Does the instance contain an nested Next Page.
+  *
+  * @return {boolean} True if Next Page exists.
+  */
+	function hasNextPageAddon() {
+		if (document.querySelector(".ajax-load-more-wrap .alm-nextpage")) {
+			return true;
+		}
+		return false;
+	}
 
 	// Initiate script.
 	if (document.querySelector(".alm-single-post")) {

@@ -151,6 +151,7 @@ class Advanced_Ads_Tracking_Admin {
 		$clauses['fields']  .= ", imp.count as impressions, cl.count as clicks, cl.count / imp.count as ctr";
 		$clauses['join']    .= " LEFT JOIN (SELECT ad_id, SUM(count) as count from {$prefix}advads_impressions GROUP BY {$prefix}advads_impressions.ad_id) as imp ON {$prefix}posts.ID = imp.ad_id";
 		$clauses['join']    .= " LEFT JOIN (SELECT ad_id, SUM(count) as count from {$prefix}advads_clicks GROUP BY {$prefix}advads_clicks.ad_id) as cl ON imp.ad_id = cl.ad_id";
+		$clauses['groupby'] .= empty( trim( $clauses['groupby'] ) ) ? '' : ',';
 		$clauses['groupby'] .= " {$prefix}posts.ID";
 
 		$order = [

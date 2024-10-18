@@ -2,28 +2,22 @@
 Author URI:        https://www.nickdiego.com/?bv_query=readme
 Contributors:      ndiego, outermostdesign
 Tags:              visibility, dynamic content, conditional content, conditional blocks, restrict blocks
-Requires at least: 6.3
-Tested up to:      6.5
+Requires at least: 6.4
+Tested up to:      6.6
 Requires PHP:      7.4
-Stable tag:        3.4.0
+Stable tag:        3.6.1
 License:           GPL-2.0
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
-Show or hide any WordPress block with ease. Schedule when blocks should be visible. Restrict blocks to specific screen sizes, user roles, post types, and more.
+Easily show or hide any WordPress block. Schedule block visibility. Restrict blocks to specific screen sizes, user roles, post types, and more.
 
 == Description ==
 
-Effortlessly create dynamic content in WordPress that will increase conversions, enhance the user experience, and improve your workflow.
+Easily create dynamic content in WordPress that will increase conversions, enhance the user experience, and improve your workflow.
 
 With this **no-code** solution, control which blocks are visible on your website and who can see them. Schedule content to show or hide at a specific time. Display exclusive promotions to your customers or members. Restrict blocks to specific user roles, screen sizes, query strings, WooCommerce products, EDD downloads, ACF fields, WP Fusion tags, and more.
 
 Block Visibility is built exclusively for the WordPress Editor (Gutenberg) and is designed to work with **any** WordPress block. This includes blocks natively provided by WordPress, third-party blocks, and even block-based widgets.
-
-=== See How It Works ===
-
-https://youtu.be/CW1L4vBpXjw
-
-For more informational videos, visit our [YouTube channel](https://www.youtube.com/channel/UCDsTrm-1766AmNqwdzwJ4KQ).
 
 === Create Conditional Blocks in Seconds! ===
 
@@ -109,24 +103,6 @@ Block Visibility is designed to work with **any** block and is tested with these
 * [Easy Digital Downloads](https://blockvisibilitywp.com/knowledge-base/how-to-use-the-how-to-use-the-easy-digital-downloads-control/?bv_query=readme&utm_source=block_visibility&utm_medium=plugin&utm_campaign=readme)
 * [WP Fusion](https://blockvisibilitywp.com/knowledge-base/how-to-use-the-wp-fusion-control/)
 
-**Compatibility**
-
-* Jetpack
-* CoBlocks
-* Redux Framework
-* Ultimate Add-ons for Gutenberg
-* Kadence Blocks
-* GenerateBlocks
-* Otter Blocks
-* Atomic Blocks
-* Gutentor
-* Stackable
-* Getwid
-* EditorsKit
-* Genesis Blocks
-
-Find an issue? Let us know in the plugin support forum, and we will investigate ASAP. Excellent compatibility with the greater WordPress block ecosystem is a top priority.
-
 === Stay Connected ===
 
 Stay up-to-date on Block Visibility using the links below. The plugin is also being developed transparently on GitHub, so give it a star and follow along! 😉
@@ -191,25 +167,72 @@ The **one exception** to this is the Screen Size block controls. Visibility by s
 
 == Changelog ===
 
+= 3.6.1 - 2024-09-06 =
+
+**Fixed**
+
+* [ACF] Fixed bug where ACF fields were not being displayed following the v3.6.0 update.
+
+= 3.6.0 - 2024-09-05 =
+
+**Added**
+
+* [Location] Added ability to show/hide blocks in archive templates based on taxonomy attributes (Hierarchy, Relative Hierarchy, and Supports).
+* [Location] Added ability to show/hide blocks if the current post has an excerpt.
+
+**Changed**
+
+* Front-end classes are now implemented using the HTML API.
+* Updated the `render_block` callback function to only fetch plugin settings if a block has visibility conditions set. 
+* Updated deprecated Button component variant and size properties.
+* Updated popover placement and offsets.
+* Updated general component styling to match Core.
+* Updated React Select component to match Select controls in Core.
+* Refactored the main plugin class.
+* Refactored the setting tabs.
+* Refactored the link utility and updated all plugin links.
+* Removed control filters deprecated in v2.5.1.
+* Removed all usage of `get_file_data()`.
+
+**Fixed**
+
+* Fixed backward compatibility error due to the unified extensibility APIs in WordPress 6.6.
+* Fixed Widget Editor notice in WordPress 6.6+.
+* Fixed spacing in the Day of Week control.
+* Fixed Firefox content overflow issue with the React Select component.
+
+= 3.5.0 - 2024-07-20 =
+
+**Changed**
+
+* Updated "Tested up to" to WordPress 6.6. 
+* Updated "Requires at least" to WordPress 6.4.
+* Updated the `PluginMoreMenuItem` slot usage to support unified slots in 6.6 and ensure backward compatibility.
+
+**Fixed**
+
+* [Date & Time] Fixed style bug in the day-of-week controls.
+* Fixed the `useCommand` import now that 6.4 is the minimum version.
+
 = 3.4.0 - 2024-04-01 =
 
 **Added**
 
-* [Date & Time] Add the ability to set seasonal (year-agnostic) schedules.
+* [Date & Time] Added the ability to set seasonal (year-agnostic) schedules.
 
 **Changed**
 
-* Update Playground blueprint with improved demo content.
-* Update "Tested up to" to WordPress 6.5. 
-* Update "Requires at least" to WordPress 6.3.
+* Updated Playground blueprint with improved demo content.
+* Updated "Tested up to" to WordPress 6.5. 
+* Updated "Requires at least" to WordPress 6.3.
 * To use conditional opacity, you now must also have conditional indicators active. 
 * Set rewrites to false for the `visibility_preset` post type.
-* Update the deprecated `__experimentalGetSettings` function with the stable `__getSettings` version.
+* Updated the deprecated `__experimentalGetSettings` function with the stable `__getSettings` version.
 * [WooCommerce] When retrieving orders, both processing and completed orders are now included.
 
 **Fixed**
 
-* Fix enqueue styles console errors by enqueuing the conditional indicator stylesheet using `enqueue_block_assets`.
+* Fixed enqueue styles console errors by enqueuing the conditional indicator stylesheet using `enqueue_block_assets`.
 
 = 3.3.0 - 2024-01-18 =
 

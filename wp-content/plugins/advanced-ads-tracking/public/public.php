@@ -1,5 +1,7 @@
 <?php
 
+use AdvancedAds\Framework\Utilities\Params;
+
 /**
  * Class Advanced_Ads_Tracking
  */
@@ -185,10 +187,10 @@ class Advanced_Ads_Tracking {
 		$options = $ad->options();
 		if (
 			( ! isset( $options['placement_type'] ) || false === strpos( $options['placement_type'], 'sticky' ) || ! isset( $options['sticky']['trigger'] ) || 'timeout' !== $options['sticky']['trigger'] ) &&
-			( ! isset( $options['layer_placement'] ) || empty( $options['layer_placement']['trigger'] ) )
+			( ! isset( $options['layer_placement'] ) || empty( $options['layer_placement']['trigger'] ) ) &&
+			( empty( $options['placement_type'] ) || 'peepso_stream' !== $options['placement_type'] )
 		) {
-
-			// If not sticky, or sticky but no timeout, AND not layer ad or no trigger, abort
+			// If not sticky, or sticky but no timeout, AND not layer ad or no trigger, AND not PeepSo abort.
 			return $wrapper;
 		}
 
@@ -197,8 +199,10 @@ class Advanced_Ads_Tracking {
 			$wrapper[ 'data-' . $frontend_prefix . 'impression' ] = true;
 		}
 
-		// Add delayed marker.
-		$wrapper['data-delayed'] = 1;
+		if ( empty( $options['placement_type'] ) || 'peepso_stream' !== $options['placement_type'] ) {
+			// Add delayed marker.
+			$wrapper['data-delayed'] = 1;
+		}
 
 		return $wrapper;
 	}

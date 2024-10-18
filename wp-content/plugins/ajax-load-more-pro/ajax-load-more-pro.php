@@ -6,7 +6,7 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.2.19
+ * Version: 1.2.25
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
  *
@@ -17,8 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'ALM_PRO_VERSION', '1.2.19' );
-define( 'ALM_PRO_RELEASE', 'July 27, 2023' );
+define( 'ALM_PRO_VERSION', '1.2.25' );
+define( 'ALM_PRO_RELEASE', 'May 30, 2024' );
 
 /**
  * Plugin installation hook
@@ -170,7 +170,7 @@ if ( ! class_exists( 'ALMPro' ) ) :
 				$return = array(
 					'success' => false,
 					'slug'    => $slug,
-					'result'  => $result,
+					'result'  => 'error',
 					'msg'     => esc_html__( 'Add-on status NOT updated', 'ajax-load-more-pro' ),
 				);
 				wp_send_json( $return );

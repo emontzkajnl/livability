@@ -5,13 +5,13 @@ Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/filters/
 Requires at least: 5.0
-Tested up to: 6.1
+Tested up to: 6.5
 Stable tag: trunk
 Homepage: https://connekthq.com/
-Version: 2.1.0
+Version: 2.2.1
 
 == Copyright ==
-Copyright 2023 Darren Cooney
+Copyright 2024 Connekt Media
 
 This software is NOT to be distributed, but can be INCLUDED in WP themes: Premium or Contracted.
 This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -46,10 +46,46 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/filters/
 5. Activate the plugin in the WP plugin dashboard.
 
 
-== Upgrade Notice ==
-
-
 == Changelog ==
+
+= 2.2.1 - May 30, 2024 =
+* NEW: Added new hook that allows for modifying the query args used when creating the facet index. [View Docs](https://connekthq.com/plugins/ajax-load-more/docs/add-ons/filters/facets/#alm_filters_facets_index_args)
+* NEW: Added new `almfilters.getActiveFilters()` public JS function that returns an object of active filters.
+* NEW: Added new `alm_filters_redirect_underscore_{filter_id}` hook that is used with the Redirect functionality to remove the underscores in URLs on archive pages.
+
+
+= 2.2.0 - March 21, 2024 =
+* NEW: Added Posts Per Page filter.
+* NEW: Added support for Post Type facet filtering.
+* NEW: Added Filters WordPress Block for Ajax Load More rendering filters directly to the Block Editor.
+* NEW: When "Hide Inactive Filter Options" is enabled with facet filtering, the entire filter group (radio & checkboxes only) will now be hidden if no filter options are returned.
+* NEW: Added support for deeplink URLs when using multiple Filter instances.
+* NEW: Added new `redirect` parameter for redirecting users to a new page after a filter action. e.g. `[ ajax_load_more_filters redirect="https://website.com/results" ...]`
+* UPDATE: Added console warning when filters is missing the core Ajax Load More instance.
+* UPDATE: Added support for search with use of archive="true".
+* FIX: Fixed issue with Facet checkbox/radios and the Show/Hide More buttons not always functioning correctly.
+* FIX: Fixed issue with sortKey not resetting after clearing the sort value.
+* FIX: Fixed issue with restoring the default value of a filter after a change event.
+* UPDATE: Accessibility updates to filter checkbox/radios.
+* UPDATE: Various UI/UX updates throughout plugin admin and frontend.
+
+
+= 2.1.2 - January 16, 2024 =
+* UPGRADE NOTICE: This update is affected by the core Ajax Load More 7.0 release. Updating this plugin will require updating Ajax Load More to 7.0.
+* UPDATE: Remove all references and output of `alm-reveal` divs.
+* UPDATE: Updated JS parameters to match updates in ALM 7.0.
+
+
+= 2.1.1 - September 27, 2023 =
+* NEW: Added support for facets and Post Type filtering.
+* UPDATE: Removed Analytics shortcode parameter as Google Analytics 4 (GA4) now handles pageviews automatically.
+* UPDATE: Updated Filters JavaScript to support new Google Analytics 4.
+* FIX: Fixed issue with aria-checked attribute being encoded incorrectly on the frontend.
+* FIX: Fixed issue where taxonomy filter could return a fatal error if no terms exist on the taxonomy.
+* FIX: Fixed issue with category and tag filters on frontpage or homepage not parsing the querystring parameters correctly.
+* FIX: Stopped frontpage URLs from being encoded by the core WP `redirect_canonical` hook when using a static homepage. e.g. /?category=design+development was being encoded to /?category=design%20development
+* UPDATE: Removed legacy IE support for IE10 and IE11.
+
 
 = 2.1.0 - July 27, 2023 =
 * FIX: Fixed issue with `attachment` post type and facets not returning results due to `post_status` not being set to `inherit`.
@@ -412,3 +448,6 @@ When updating to Filters 1.7.0 you must also update core [Ajax Load More](https:
 = 1.0 - February 13, 2018 =
 
 -  Initial Release.
+
+
+== Upgrade Notice ==

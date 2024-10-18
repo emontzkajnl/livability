@@ -96,34 +96,46 @@
 "use strict";
 
 
-/*
- * Ajax Load More - Paging
- * connekthq.com/plugins/ajax-load-more/paging/
- * Copyright Connekt Media - http://connekthq.com
- * Author: Darren Cooney
- * Twitter: @KaptonKaos, @connekthq
- */
+var _setHref = __webpack_require__(/*! ./functions/setHref */ "./src/js/functions/setHref.js");
 
-var almPaging = {};
+var _setHref2 = _interopRequireDefault(_setHref);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var almPaging = {}; /**
+                     * Ajax Load More - Paging
+                     * connekthq.com/plugins/ajax-load-more/paging/
+                     * Copyright Connekt Media - http://connekthq.com
+                     * Author: Darren Cooney
+                     * Twitter: @KaptonKaos, @connekthq
+                     */
 
 (function () {
 	"use strict";
 
 	almPaging.init = true;
+	almPaging.height = 0;
+	almPaging.urlType = "default"; // default `/3` or querystring `?pg=3`
+	var init = true;
 
 	/**
   * Build the pagination for the menu.
   *
-  * @param {string} data The total number of pages.
-  * @param {object} alm The ALM object.
+  * @param {string} total             The total number of pages.
+  * @param {object} alm               The ALM object.
+  * @param {boolean} dispatchCallback Whether to dispatch the callback.
   */
-	window.almBuildPagination = function (data, alm) {
-		var posts_per_page = alm.orginal_posts_per_page,
-		    start = parseInt(alm.start_page),
-		    obj = alm.listing,
-		    alm_paging_controls = alm.addons.paging_controls;
+	window.almBuildPagination = function (total, alm) {
+		var dispatchCallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
-		alm.alm_show_at_most = alm.addons.paging_show_at_most;
+		var posts_per_page = alm.orginal_posts_per_page;
+		var start = parseInt(alm.start_page);
+		var obj = alm.listing;
+		var alm_paging_controls = alm.addons.paging_controls;
+
+		almPaging.urlType = alm.content.dataset.nextpageBreak === "true" ? "querystring" : "default";
+
+		var show_at_most = alm.addons.paging_show_at_most || 6;
 
 		// Next Page, set posts_per_page to 1
 		if (alm.addons.nextpage) {
@@ -137,10 +149,8 @@ var almPaging = {};
 			start = start == 0 ? 1 : start;
 		}
 
-		var total = parseInt(data),
-		    pages = Math.ceil(total / posts_per_page);
-
-		var showFirstLastBtns = pages > parseInt(alm.alm_show_at_most) ? true : false;
+		var pages = Math.ceil(parseInt(total) / posts_per_page);
+		var showFirstLastBtns = pages > parseInt(show_at_most);
 
 		var ul = document.createElement("ul");
 		ul.setAttribute("class", "alm-paging " + alm.addons.paging_classes);
@@ -149,23 +159,26 @@ var almPaging = {};
 		ul.style.opacity = "0";
 
 		if (pages < 2) {
+			// Zero pages. Hide navigation.
 			ul.classList.add("empty");
-
-			// Zero pages
 			alm.btnWrap[0].innerHTML = "";
 		} else {
 			// First / Previous
 			if (alm_paging_controls) {
 				// First Button
-				var firstBtnLabel = alm.addons.paging_first_label ? alm.addons.paging_first_label : "";
+				var firstBtnLabel = alm.addons.paging_first_label || "";
 				if (firstBtnLabel !== "" && showFirstLastBtns) {
 					var first = document.createElement("li");
 					first.setAttribute("class", "first");
+
 					var firstLink = document.createElement("a");
-					firstLink.setAttribute("data-page", "1");
-					firstLink.href = almPaging.setHref(alm, "1");
+					firstLink.dataset.page = 1;
+					firstLink.href = (0, _setHref2.default)(alm, 1, almPaging.urlType);
+					firstLink.role = "button";
+
 					var firstSpan = document.createElement("span");
 					firstSpan.innerHTML = firstBtnLabel;
+
 					firstLink.appendChild(firstSpan);
 					first.appendChild(firstLink);
 					ul.appendChild(first);
@@ -175,22 +188,24 @@ var almPaging = {};
 						e.preventDefault();
 						var parent = this.parentNode;
 						if (!parent.classList.contains("disabled") && !obj.classList.contains("loading")) {
-							var page = this.dataset.page;
-							window.almSetCurrentPage(page, obj, alm);
+							window.almSetCurrentPage(this.dataset.page, obj, alm);
 						}
 					});
 				}
 
-				// Prev Button
-				var prevBtnLabel = alm.addons.paging_previous_label ? alm.addons.paging_previous_label : "";
+				// Previous Button
+				var prevBtnLabel = alm.addons.paging_previous_label || "";
 				var prev = document.createElement("li");
 				prev.setAttribute("class", "prev");
+
 				var prevLink = document.createElement("a");
-				prevLink.setAttribute("data-page", "prev");
+				prevLink.dataset.page = "prev";
 				prevLink.href = "#";
+				prevLink.role = "button";
 
 				var prevSpan = document.createElement("span");
 				prevSpan.innerHTML = prevBtnLabel;
+
 				prevLink.appendChild(prevSpan);
 				prev.appendChild(prevLink);
 				ul.appendChild(prev);
@@ -215,8 +230,9 @@ var almPaging = {};
 				li.dataset.pageNumber = pageNum;
 
 				var btn = document.createElement("a");
-				btn.setAttribute("data-page", pageNum);
-				btn.href = almPaging.setHref(alm, pageNum);
+				btn.dataset.page = pageNum;
+				btn.href = (0, _setHref2.default)(alm, pageNum, almPaging.urlType);
+				btn.role = "button";
 
 				var span = document.createElement("span");
 				span.innerHTML = pageNum;
@@ -239,14 +255,18 @@ var almPaging = {};
 			// Next / Last
 			if (alm_paging_controls) {
 				// Next Button
-				var nextBtnLabel = alm.addons.paging_next_label ? alm.addons.paging_next_label : "";
+				var nextBtnLabel = alm.addons.paging_next_label || "";
 				var next = document.createElement("li");
 				next.setAttribute("class", "next");
+
 				var nextLink = document.createElement("a");
-				nextLink.setAttribute("data-page", "next");
+				nextLink.dataset.page = "next";
 				nextLink.href = "#";
+				nextLink.role = "button";
+
 				var nextSpan = document.createElement("span");
 				nextSpan.innerHTML = nextBtnLabel;
+
 				nextLink.appendChild(nextSpan);
 				next.appendChild(nextLink);
 				ul.appendChild(next);
@@ -262,20 +282,24 @@ var almPaging = {};
 				});
 
 				// Last Button
-				var lastBtnLabel = alm.addons.paging_last_label ? alm.addons.paging_last_label : "";
+				var lastBtnLabel = alm.addons.paging_last_label || "";
 				if (lastBtnLabel !== "" && showFirstLastBtns) {
 					var last = document.createElement("li");
 					last.setAttribute("class", "last");
+
 					var lastLink = document.createElement("a");
-					lastLink.setAttribute("data-page", pages);
-					lastLink.href = almPaging.setHref(alm, pages);
+					lastLink.dataset.page = pages;
+					lastLink.href = (0, _setHref2.default)(alm, pages, almPaging.urlType);
+					lastLink.role = "button";
+
 					var lastSpan = document.createElement("span");
 					lastSpan.innerHTML = lastBtnLabel;
+
 					lastLink.appendChild(lastSpan);
 					last.appendChild(lastLink);
 					ul.appendChild(last);
 
-					// Next Click Event
+					// Last Click Event
 					lastLink.addEventListener("click", function (e) {
 						e.preventDefault();
 						var parent = this.parentNode;
@@ -295,7 +319,7 @@ var almPaging = {};
 		alm.btnWrap[0].appendChild(ul);
 
 		// Set current page
-		window.almSetCurrentPage(start, obj, alm);
+		window.almSetCurrentPage(start, obj, alm, dispatchCallback);
 	};
 
 	/**
@@ -313,21 +337,21 @@ var almPaging = {};
 			var next = container.querySelector("li.next a");
 			if (next) {
 				var upNext = current < total ? parseInt(current) + 1 : total;
-				next.href = almPaging.setHref(alm, upNext);
+				next.href = (0, _setHref2.default)(alm, upNext, almPaging.urlType);
 			}
 
 			var prev = container.querySelector("li.prev a");
 			if (prev) {
 				var upPrev = current > 1 ? parseInt(current) - 1 : 1;
-				prev.href = almPaging.setHref(alm, upPrev);
+				prev.href = (0, _setHref2.default)(alm, upPrev, almPaging.urlType);
 			}
 		}
 	};
 
 	/**
-  * showFirstLast
-  * Determine whether to show/hide the first and last buttons
-  * @param {object} alm The ALM object.
+  * Determine whether to show/hide the first and last buttons.
+  *
+  * @param {object}  alm        The ALM object.
   * @param {Element} pagingWrap The wrapper HTML element.
   */
 	almPaging.showFirstLast = function (alm, pagingWrap) {
@@ -336,7 +360,6 @@ var almPaging = {};
 
 		if (alm_paging_controls && pagingWrap) {
 			var totalPages = parseInt(pagingWrap.dataset.totalPages);
-
 			var firstBtn = pagingWrap.querySelector("li.first");
 			var lastBtn = pagingWrap.querySelector("li.last");
 			var firstPage = pagingWrap.querySelector('li[data-page-number="1"]');
@@ -364,28 +387,10 @@ var almPaging = {};
 	};
 
 	/**
-  * Set the href of the button links.
-  *
-  * @param {object} alm The ALM object.
-  * @param {Number} page Page number.
-  */
-	almPaging.setHref = function (alm, page) {
-		var href = "";
-		if (alm.addons.seo) {
-			href = alm.canonical_url + alm.addons.seo_leading_slash + "page/" + page + alm.addons.seo_trailing_slash;
-		} else if (alm.addons.nextpage) {
-			href = alm.canonical_url + window.alm_nextpage_localize.leading_slash + page + window.alm_nextpage_localize.trailing_slash;
-		} else {
-			href = "#";
-		}
-		return href;
-	};
-
-	/**
   * Fade in element.
   *
   * @param {Element} element Target HTML element.
-  * @param {number} speed Transition speed.
+  * @param {Number} speed    Transition speed.
   */
 	almPaging.fadeIn = function (element, speed) {
 		speed = speed / 10;
@@ -406,28 +411,22 @@ var almPaging = {};
 	};
 
 	/**
-  * Fade in pagination after content is loaded.
-  *
-  * @param {HTMLElement} nav The navigation HTML element
-  */
-	window.almFadePageControls = function (controls, speed) {
-		if (controls) {
-			var almPagingWrap = controls[0].querySelector(".alm-paging");
-			almPaging.fadeIn(almPagingWrap, speed);
-		}
-	};
-
-	/**
   * Set current navigation item (Click Event)
   *
-  * @param {string} current Current page number.
-  * @param {HTMLElement} obj The main ALM element `.alm-listing`.
-  * @param {object} alm The ALM object.
+  * @param {string}      current          Current page number.
+  * @param {HTMLElement} obj              The main ALM element `.alm-listing`.
+  * @param {Object}      alm              The ALM object.
+  * @param {boolean}     dispatchCallback Whether to dispatch the callback.
   */
-	var firstRun = true;
 	window.almSetCurrentPage = function (current, obj, alm) {
-		current = parseInt(current);
-		var page = current - 1;
+		var dispatchCallback = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+
+		var page = parseInt(current) - 1;
+		var _alm$addons = alm.addons,
+		    preloaded = _alm$addons.preloaded,
+		    seo = _alm$addons.seo,
+		    filters = _alm$addons.filters;
+
 
 		var pagingWrap = alm.btnWrap[0].querySelector(".alm-paging");
 		var totalPages = parseInt(pagingWrap.dataset.totalPages); // get total pages
@@ -442,13 +441,7 @@ var almPaging = {};
 		}
 
 		// Add 1 page if preloaded and SEO because start_page = 0;
-		current = alm.addons.preloaded === "true" && alm.addons.seo && almPaging.init ? current + 1 : current;
-
-		// Add loading class
-		var almReveal = obj.querySelector(".alm-reveal");
-		if (almReveal) {
-			obj.querySelector(".alm-reveal").classList.add("loading");
-		}
+		current = preloaded && seo && almPaging.init ? current + 1 : current;
 
 		// Set current page data attribute
 		pagingWrap.dataset.currentPage = current;
@@ -456,7 +449,7 @@ var almPaging = {};
 		// First/Prev Buttons
 		var firstBtn = pagingWrap.querySelector(".first");
 		var prevBtn = pagingWrap.querySelector(".prev");
-		if ((prevBtn || firstBtn) && current === 1) {
+		if ((prevBtn || firstBtn) && parseInt(current) === 1) {
 			if (firstBtn) {
 				firstBtn.classList.add("disabled");
 			}
@@ -475,7 +468,7 @@ var almPaging = {};
 		// Next/Last Buttons
 		var nextBtn = pagingWrap.querySelector(".next");
 		var lastBtn = pagingWrap.querySelector(".last");
-		if ((nextBtn || lastBtn) && current === totalPages) {
+		if ((nextBtn || lastBtn) && parseInt(current) === totalPages) {
 			if (nextBtn) {
 				nextBtn.classList.add("disabled");
 			}
@@ -492,11 +485,11 @@ var almPaging = {};
 		}
 
 		// Preloaded
-		if (alm.addons.preloaded === "true") {
+		if (preloaded) {
 			if (almPaging.init) {
 				// if almPaging.init, add 1 to page to select the correct nav item
 				almPaging.init = false;
-				page = alm.addons.seo ? page + 1 : page; // If SEO, add 1 page;
+				page = seo ? page + 1 : page; // If SEO, add 1 page;
 			}
 		}
 
@@ -513,44 +506,57 @@ var almPaging = {};
 		}
 
 		// Trigger callback
-		if (typeof almUpdateCurrentPage === "function") {
+		if (dispatchCallback && typeof almUpdateCurrentPage === "function") {
 			window.almUpdateCurrentPage(page, obj, alm); // Update current page
 		}
 
 		// Filters Add-on
-		if (alm.addons.paging && alm.addons.filters && typeof almFiltersPaged === "function") {
-			almFiltersPaged(alm, firstRun);
+		if (filters && typeof almFiltersPaged === "function") {
+			almFiltersPaged(alm, init);
 		}
 
 		// Position paging nav
-		almPaging.positionPager(obj, alm, totalPages, current); // Position element
+		almPaging.positionPager(alm, totalPages, current);
 
 		// Update Next/Prev links
 		almPaging.updateNextPrevLinks(alm, pagingWrap);
 
-		firstRun = false;
+		init = false;
+	};
+
+	/**
+  * Fade in pagination after content is loaded.
+  *
+  * @param {HTMLElement} nav The navigation HTML element
+  */
+	window.almFadePageControls = function (controls, speed) {
+		if (!controls) {
+			return;
+		}
+		var almPagingWrap = controls[0].querySelector(".alm-paging");
+		if (almPagingWrap) {
+			almPaging.fadeIn(almPagingWrap, speed);
+		}
 	};
 
 	/**
   * Display paging buttons in proper location
   *
-  * @param {HTMLElement} obj The main ALM element container.
   * @param {object} alm The ALM object.
   * @param {string} totalPages Total pages.
   * @param {string} current Current page number.
   * @return null
   */
-
-	almPaging.positionPager = function (obj, alm, totalPages, current) {
+	almPaging.positionPager = function (alm, totalPages, current) {
 		setTimeout(function () {
-			if (alm.alm_show_at_most !== "0" && alm.alm_show_at_most < totalPages) {
-				var show_at_most = parseInt(alm.alm_show_at_most),
-				    c = current ? current : 1,
-				    start = 0;
+			var show_at_most = parseInt(alm.addons.paging_show_at_most);
 
+			if (show_at_most && show_at_most < totalPages) {
+				var c = current ? current : 1;
+				var start = 0;
 				var pagingWrap = alm.btnWrap[0].querySelector(".alm-paging");
 
-				// hide all buttons
+				// Hide all buttons
 				var numbers = pagingWrap.querySelectorAll("li.num"); // All Paging links
 				for (var i = 0; i < numbers.length; i++) {
 					numbers[i].style.display = "none";
@@ -593,19 +599,16 @@ var almPaging = {};
 	};
 
 	/**
-  * Paging Complete - when paging has completed and posts have been loaded.
+  * Paging Complete.
+  * After paging has completed and posts have been loaded.
   *
   * @param {object} alm The ALM object.
   */
 	window.almOnPagingComplete = function (alm) {
-		var container = alm.main.querySelector(".alm-reveal");
-
+		var container = alm.main.querySelector(".alm-paging-content");
 		if (!container) {
-			// Exit if not exists
-			return false;
+			return; // Exit if container does not exist.
 		}
-
-		almPaging.setHeight(alm);
 
 		var almDoScroll = false;
 		var almScrollTop = 100;
@@ -616,8 +619,6 @@ var almPaging = {};
 		}
 
 		setTimeout(function () {
-			container.classList.remove("loading"); // remove 'loading' class from .alm-reveal
-
 			if (almDoScroll) {
 				var offset = typeof ajaxloadmore.getOffset === "function" ? ajaxloadmore.getOffset(container).top : container.offsetTop;
 				var top = offset - almScrollTop + 1;
@@ -648,38 +649,128 @@ var almPaging = {};
 	};
 
 	/**
-  * Set the height of the paging containers.
+  * Callback dispatched from core ALM to initiate the resize observer on the paging div.
   *
-  * @param {object} alm The ALM object.
+  * @param {Element} container Container to watch for height changes.
   */
-	almPaging.setHeight = function (alm) {
-		var container = alm.main.querySelector(".alm-reveal");
-
-		if (!container) {
-			// Exit if not exists
-			return false;
-		}
-
-		var h = container.offsetHeight;
-
-		// Get padding top/bottom of alm-listing element
-		var styles = window.getComputedStyle(alm.listing);
-		var pTop = parseInt(styles.getPropertyValue("padding-top").replace("px", ""));
-		var pBtm = parseInt(styles.getPropertyValue("padding-bottom").replace("px", ""));
-
-		// Listing Div
-		alm.listing.style.height = h + pTop + pBtm + "px"; // Set `.alm-reveal` height
+	window.almPagingSetHeight = function (container) {
+		resizeObserver.observe(container);
 	};
 
 	/**
-  * Window Resize function - resize container on resize.
+  * Resize observer for the ALM element height resize.
   *
-  * @param {object} alm The ALM object.
+  * @see https://developer.mozilla.org/en-US/docs/Web/API/Resize_Observer_API
   */
-	window.almOnWindowResize = function (alm) {
-		almPaging.setHeight(alm);
-	};
+	var resizeObserver = new ResizeObserver(function (entries) {
+		var _iteratorNormalCompletion = true;
+		var _didIteratorError = false;
+		var _iteratorError = undefined;
+
+		try {
+			for (var _iterator = entries[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+				var entry = _step.value;
+				var target = entry.target;
+				var height = entry.contentRect.height;
+
+
+				if (height === almPaging.height) {
+					return;
+				}
+
+				if (target && height) {
+					almPaging.height = height;
+					var parent = entry.target.parentNode;
+
+					// Get padding of parent (alm-listing) element.
+					var s = window.getComputedStyle(parent);
+					var pTop = s.getPropertyValue("padding-top").replace("px", "");
+					var pBtm = s.getPropertyValue("padding-bottom").replace("px", "");
+
+					// Set element height.
+					var h = parseInt(height) + parseInt(pTop) + parseInt(pBtm);
+					parent.style.height = h + "px";
+				}
+			}
+		} catch (err) {
+			_didIteratorError = true;
+			_iteratorError = err;
+		} finally {
+			try {
+				if (!_iteratorNormalCompletion && _iterator.return) {
+					_iterator.return();
+				}
+			} finally {
+				if (_didIteratorError) {
+					throw _iteratorError;
+				}
+			}
+		}
+	});
 })();
+
+/***/ }),
+
+/***/ "./src/js/functions/setHref.js":
+/*!*************************************!*\
+  !*** ./src/js/functions/setHref.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = setHref;
+/**
+ * Create the href destination of the pagination links.
+ *
+ * @param {object} alm The ALM object.
+ * @param {Number} page Page number.
+ */
+function setHref(alm, page) {
+	var urlType = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "default";
+	var base_url = alm.canonical_url,
+	    addons = alm.addons;
+
+	// Filters
+
+	if (addons.filters) {
+		var querystring = window.location.search;
+		if (querystring.indexOf("pg=") > -1) {
+			// If querystring contains pg=x, replace it.
+			querystring = querystring.replace(/pg=\d+/g, "pg=" + page);
+		} else {
+			querystring = querystring ? querystring + "&pg=" + page : "?pg=" + page;
+		}
+
+		return base_url + querystring;
+	}
+
+	// Nextpage
+	if (addons.nextpage) {
+		var _window$alm_nextpage_ = window.alm_nextpage_localize,
+		    leading_slash = _window$alm_nextpage_.leading_slash,
+		    trailing_slash = _window$alm_nextpage_.trailing_slash;
+
+		if (urlType === "querystring") {
+			return base_url + leading_slash + "?pg=" + page; // website.com?pg=3
+		} else {
+			return base_url + leading_slash + page + trailing_slash; // website.com/3/
+		}
+	}
+
+	// SEO
+	if (addons.seo) {
+		return base_url + addons.seo_leading_slash + "page/" + page + addons.seo_trailing_slash;
+	}
+
+	// Default
+	return "#";
+}
 
 /***/ })
 

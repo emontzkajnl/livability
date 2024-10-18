@@ -33,6 +33,7 @@ if ( $alm_filters_array ) {
 					break;
 
 				case 'category':
+				case '_category':
 					$category = $category ? "$category, $value" : $value;
 					break;
 
@@ -72,6 +73,10 @@ if ( $alm_filters_array ) {
 				case 'search':
 				case 's':
 					$search = $value;
+					break;
+
+				case 'perPage':
+					$posts_per_page = $value;
 					break;
 
 				case 'sort':

@@ -5,13 +5,13 @@ Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/ajax-load-more/add-ons/next-page/
 Requires at least: 4.0
-Tested up to: 6.2
+Tested up to: 6.5
 Stable tag: trunk
 Homepage: https://connekthq.com/ajax-load-more/
-Version: 1.6.4
+Version: 1.8.0
 
 == Copyright ==
-Copyright 2023 Connekt Media
+Copyright 2024 Connekt Media
 
 This software is NOT to be distributed, but can be INCLUDED in WP themes: Premium or Contracted.
 This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -43,6 +43,27 @@ The Next Page add-on for Ajax Load More works by using <!-‒nextpage‒-> Quick
 5. Activate the plugin in the Plugin dashboard.
 
 == Changelog ==
+
+= 1.8.0 - May 10, 2024 =
+* NEW: Added official support for using Next Page add-on with Single Posts add-on.
+* NEW: Added global `alm_nextpage_post_id` PHP variable for use in filters/shortcodes etc. This will allow the current post ID to be accessed within the Ajax request.
+* UPDATE: Code clean up.
+
+
+= 1.7.1 - January 16, 2024 =
+* FIX: Fixed issue with the Auto implementation method attempting to run in the_excerpt() requests. This issue resulted from a core WP bug with excerpt display in Ajax requests.
+
+
+= 1.7.0 - September 27, 2023 =
+* NEW: Added ability to load full post content and split into pages for URL updates without infinite scroll. Use `nextpage_type="fullpage"` shortcode parameter to implement full article pagination URLs.
+* NEW: Added `alm_nextpage_retain_querystring` hook to prevent querystring params from being added on pages being loaded via Ajax request. e.g. `add_filter( 'alm_nextpage_retain_querystring', '__return_false' );`
+* FIX: Fixed issue with browser fwd/back (popstate) events and first page not moving user to first page.
+* FIX: Fixed issue with possible not retaining correct querystring params as pages are loaded.
+* Fixed issue with paged URLs when using auto page break functionality not working in WP 6.1. Solution is to move to ?pg=%num% URL format when using auto page break.
+* UPDATE: Added compatibility support for PHP 8.2.
+* UPDATE: Removed Analytics shortcode parameter as Google Analytics 4 now handles pageviews automatically.
+* UPDATE: Major code refactoring, cleanup and organization for the long-term health of the add-on.
+
 
 = 1.6.4 - June 11, 2023 =
 * UPDATE: Updated to add compatibility with Cache Add-on 2.0 and Ajax Load More 6.0.

@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Advanced Ads – Tracking plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Advanced Ads – Tracking 2.6.0\n"
+"Project-Id-Version: Advanced Ads – Tracking 2.8.0\n"
 "Report-Msgid-Bugs-To: https://wpadvancedads.com/support/\n"
 "Last-Translator: Thomas Maier <post@webzunft.de>\n"
 "Language-Team: webgilde <support@wpadvancedads.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-02-13T10:13:55+00:00\n"
+"POT-Creation-Date: 2024-08-12T14:09:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: advanced-ads-tracking\n"
@@ -34,127 +34,127 @@ msgstr ""
 msgid "https://wpadvancedads.com"
 msgstr ""
 
-#: addon-init.php:119
+#: addon-init.php:123
 msgid "Settings"
 msgstr ""
 
 #: admin/admin.php:109
-#: admin/admin.php:480
-#: admin/admin.php:711
-#: admin/views/ad-list-stats-column.php:26
+#: admin/admin.php:481
+#: admin/admin.php:712
 #: admin/views/ad-list-stats-column.php:30
+#: admin/views/ad-list-stats-column.php:34
 #: classes/amp.php:104
 msgid "Impressions"
 msgstr ""
 
 #: admin/admin.php:110
-#: admin/admin.php:481
-#: admin/admin.php:708
-#: admin/views/ad-list-stats-column.php:36
+#: admin/admin.php:482
+#: admin/admin.php:709
 #: admin/views/ad-list-stats-column.php:40
+#: admin/views/ad-list-stats-column.php:44
 msgid "Clicks"
 msgstr ""
 
 #: admin/admin.php:111
-#: admin/admin.php:482
-#: admin/admin.php:724
-#: admin/views/ad-list-stats-column.php:51
+#: admin/admin.php:483
+#: admin/admin.php:725
+#: admin/views/ad-list-stats-column.php:55
 #: public/views/email-report-body.php:52
 #: public/views/email-report-body.php:117
 msgid "CTR"
 msgstr ""
 
-#: admin/admin.php:208
+#: admin/admin.php:209
 msgid "With the latest update, we adjusted the event names used by Google Analytics to track ad clicks and impressions. This change aims to reduce confusion and enhance the clarity of reports. \"Clicks\" and \"Impressions\" will now be referred to as \"advanced-ads-click\" and \"advanced-ads-impression\". If you prefer the original names or wish to customize them further, use a filter. %1$sManual%2$s"
 msgstr ""
 
-#: admin/admin.php:324
+#: admin/admin.php:325
 msgctxt "current time format on stats page"
 msgid "Y-m-d H:i:s"
 msgstr ""
 
-#: admin/admin.php:371
+#: admin/admin.php:372
 msgid "processing..."
 msgstr ""
 
-#: admin/admin.php:372
+#: admin/admin.php:373
 msgid "search:"
 msgstr ""
 
-#: admin/admin.php:373
+#: admin/admin.php:374
 msgid "show _MENU_ entries"
 msgstr ""
 
-#: admin/admin.php:374
+#: admin/admin.php:375
 msgid "showing _START_ to _END_ of _TOTAL_ entries"
 msgstr ""
 
-#: admin/admin.php:375
+#: admin/admin.php:376
 msgid "no element to show"
 msgstr ""
 
-#: admin/admin.php:376
+#: admin/admin.php:377
 msgid "filtered from _MAX_ total entries"
 msgstr ""
 
-#: admin/admin.php:378
+#: admin/admin.php:379
 msgid "Loading..."
 msgstr ""
 
-#: admin/admin.php:379
+#: admin/admin.php:380
 msgid "no matching records found"
 msgstr ""
 
-#: admin/admin.php:380
+#: admin/admin.php:381
 msgid "no data available in table"
 msgstr ""
 
-#: admin/admin.php:382
+#: admin/admin.php:383
 msgid "first"
 msgstr ""
 
-#: admin/admin.php:383
+#: admin/admin.php:384
 msgid "previous"
 msgstr ""
 
-#: admin/admin.php:384
+#: admin/admin.php:385
 msgid "next"
 msgstr ""
 
-#: admin/admin.php:385
+#: admin/admin.php:386
 msgid "last"
 msgstr ""
 
-#: admin/admin.php:388
+#: admin/admin.php:389
 msgid ": activate to sort column ascending"
 msgstr ""
 
-#: admin/admin.php:389
+#: admin/admin.php:390
 msgid ": activate to sort column descending"
 msgstr ""
 
-#: admin/admin.php:479
-#: admin/admin.php:802
-#: admin/admin.php:1372
+#: admin/admin.php:480
+#: admin/admin.php:803
 #: admin/admin.php:1373
+#: admin/admin.php:1374
 msgid "Statistics"
 msgstr ""
 
-#: admin/admin.php:615
+#: admin/admin.php:616
 msgid "Activate Now"
 msgstr ""
 
-#: admin/admin.php:622
+#: admin/admin.php:623
 msgid "Install Now"
 msgstr ""
 
 #. Translators: 1: this plugins' name, 2: link to main plugin
-#: admin/admin.php:629
+#: admin/admin.php:630
 msgid "%1$s requires the %2$s plugin to be installed and activated on your site."
 msgstr ""
 
-#: admin/admin.php:668
-#: admin/admin.php:709
+#: admin/admin.php:669
+#: admin/admin.php:710
 #: admin/views/db-operations.php:43
 #: admin/views/metabox-limiter.php:31
 #: admin/views/metabox-limiter.php:74
@@ -169,8 +169,8 @@ msgstr ""
 msgid "impressions"
 msgstr ""
 
-#: admin/admin.php:669
-#: admin/admin.php:706
+#: admin/admin.php:670
+#: admin/admin.php:707
 #: admin/views/db-operations.php:49
 #: admin/views/metabox-limiter.php:42
 #: admin/views/metabox-limiter.php:79
@@ -185,181 +185,181 @@ msgstr ""
 msgid "clicks"
 msgstr ""
 
-#: admin/admin.php:697
+#: admin/admin.php:698
 msgid "Select file"
 msgstr ""
 
-#: admin/admin.php:699
+#: admin/admin.php:700
 msgid "invalid file type"
 msgstr ""
 
-#: admin/admin.php:707
+#: admin/admin.php:708
 msgid "clicks for \"%s\""
 msgstr ""
 
-#: admin/admin.php:710
+#: admin/admin.php:711
 msgid "impressions for \"%s\""
 msgstr ""
 
-#: admin/admin.php:712
+#: admin/admin.php:713
 msgid "previous day"
 msgstr ""
 
-#: admin/admin.php:713
-msgid "next day"
-msgstr ""
-
 #: admin/admin.php:714
-#: admin/admin.php:747
-msgid "previous month"
+msgid "next day"
 msgstr ""
 
 #: admin/admin.php:715
 #: admin/admin.php:748
-msgid "next month"
+msgid "previous month"
 msgstr ""
 
 #: admin/admin.php:716
-msgid "previous year"
+#: admin/admin.php:749
+msgid "next month"
 msgstr ""
 
 #: admin/admin.php:717
-msgid "next year"
+msgid "previous year"
 msgstr ""
 
 #: admin/admin.php:718
-#: admin/admin.php:745
-msgid "previous %d days"
+msgid "next year"
 msgstr ""
 
 #: admin/admin.php:719
 #: admin/admin.php:746
-msgid "next %d days"
+msgid "previous %d days"
 msgstr ""
 
 #: admin/admin.php:720
-msgid "clicks from %1$s to %2$s"
+#: admin/admin.php:747
+msgid "next %d days"
 msgstr ""
 
 #: admin/admin.php:721
-msgid "impressions from %1$s to %2$s"
+msgid "clicks from %1$s to %2$s"
 msgstr ""
 
 #: admin/admin.php:722
-msgid "There is no data for %1$s to %2$s"
+msgid "impressions from %1$s to %2$s"
 msgstr ""
 
 #: admin/admin.php:723
+msgid "There is no data for %1$s to %2$s"
+msgstr ""
+
+#: admin/admin.php:724
 msgid "ad"
 msgstr ""
 
-#: admin/admin.php:725
+#: admin/admin.php:726
 msgid "deleted ads"
 msgstr ""
 
-#: admin/admin.php:726
+#: admin/admin.php:727
 #: public/views/ad-stats.php:282
 #: public/views/email-report-body.php:47
 msgid "date"
 msgstr ""
 
-#: admin/admin.php:727
+#: admin/admin.php:728
 msgid "%1$s to %2$s"
 msgstr ""
 
-#: admin/admin.php:728
+#: admin/admin.php:729
 msgid "total"
 msgstr ""
 
-#: admin/admin.php:729
+#: admin/admin.php:730
 msgid "There is no record for this period :("
 msgstr ""
 
-#: admin/admin.php:730
-#: admin/admin.php:743
+#: admin/admin.php:731
+#: admin/admin.php:744
 #: admin/views/db-operations.php:67
 msgid "The period you have chosen is not consistent"
 msgstr ""
 
-#: admin/admin.php:731
+#: admin/admin.php:732
 msgid "Some fields are missing for the custom period"
 msgstr ""
 
-#: admin/admin.php:732
+#: admin/admin.php:733
 msgid "One or more invalid records have been found in the database"
 msgstr ""
 
-#: admin/admin.php:733
+#: admin/admin.php:734
 #: admin/views/stats.php:162
 msgid "no file selected"
 msgstr ""
 
-#: admin/admin.php:734
+#: admin/admin.php:735
 msgid "group"
 msgstr ""
 
-#: admin/admin.php:741
-#: admin/admin.php:780
+#: admin/admin.php:742
+#: admin/admin.php:781
 msgid "An unexpected error occurred."
 msgstr ""
 
-#: admin/admin.php:742
+#: admin/admin.php:743
 msgid "stats from %1$s to %2$s"
 msgstr ""
 
-#: admin/admin.php:744
+#: admin/admin.php:745
 msgid "No stats found in file"
 msgstr ""
 
-#: admin/admin.php:761
+#: admin/admin.php:762
 msgid "The server failed to respond to your request. Link structure not available."
 msgstr ""
 
-#: admin/admin.php:762
+#: admin/admin.php:763
 msgid "An unexpected error occurred. Link structure not available."
 msgstr ""
 
-#: admin/admin.php:763
+#: admin/admin.php:764
 msgid "Link structure available."
 msgstr ""
 
-#: admin/admin.php:764
+#: admin/admin.php:765
 msgid "email sent"
 msgstr ""
 
-#: admin/admin.php:765
+#: admin/admin.php:766
 msgid "email not sent. Please check your server configuration"
 msgstr ""
 
-#: admin/admin.php:779
+#: admin/admin.php:780
 msgid "The server failed to respond to your request."
 msgstr ""
 
-#: admin/admin.php:781
+#: admin/admin.php:782
 msgid "Please choose an ad"
 msgstr ""
 
-#: admin/admin.php:782
+#: admin/admin.php:783
 msgid "Are you sure you want to reset the stats for"
 msgstr ""
 
-#: admin/admin.php:783
+#: admin/admin.php:784
 msgid "The plugin was not able to perform some requests on the database"
 msgstr ""
 
-#: admin/admin.php:784
+#: admin/admin.php:785
 msgid "Data were compressed but the tracking tables can not be optimized automatically. Please ask the server&#39;s admin on how to proceed."
 msgstr ""
 
-#: admin/admin.php:869
+#: admin/admin.php:870
 msgid "<a href=\"https://wpadvancedads.com/share-custom-reports-google-analytics/?utm_source=advanced-ads&utm_medium=link&utm_campaign=edit-ad-reports-google-analytics\" target=\"_blank\">How to share Google Analytics ad reports with your customers.</a>"
 msgstr ""
 
-#: admin/admin.php:876
+#: admin/admin.php:877
 msgid "The number of impressions and clicks can vary from those in your AdSense account."
 msgstr ""
 
-#: admin/admin.php:878
+#: admin/admin.php:879
 #: admin/views/ad_tracking_options.php:34
 #: admin/views/ad_tracking_options.php:51
 #: admin/views/ad_tracking_options.php:58
@@ -369,241 +369,246 @@ msgstr ""
 msgid "Manual"
 msgstr ""
 
-#: admin/admin.php:933
-#: admin/admin.php:957
-#: admin/admin.php:2036
+#: admin/admin.php:934
+#: admin/admin.php:958
+#: admin/admin.php:2037
 msgid "Tracking"
 msgstr ""
 
-#: admin/admin.php:941
+#: admin/admin.php:942
 msgid "Email Reports"
 msgstr ""
 
-#: admin/admin.php:949
+#: admin/admin.php:950
 msgid "Advanced"
 msgstr ""
 
-#: admin/admin.php:966
+#: admin/admin.php:967
 msgid "Choose tracking method"
 msgstr ""
 
-#: admin/admin.php:975
+#: admin/admin.php:976
 #: admin/views/setting_method.php:20
 msgid "Google Analytics"
 msgstr ""
 
-#: admin/admin.php:986
+#: admin/admin.php:987
 msgid "What to track by default"
 msgstr ""
 
-#: admin/admin.php:995
+#: admin/admin.php:996
 msgid "Disable tracking for user roles"
 msgstr ""
 
-#: admin/admin.php:1003
+#: admin/admin.php:1004
 #: admin/views/ad_tracking_options.php:133
 msgid "Add “nofollow”"
 msgstr ""
 
-#: admin/admin.php:1011
+#: admin/admin.php:1012
 #: admin/views/ad_tracking_options.php:162
 msgid "Add “sponsored”"
 msgstr ""
 
-#: admin/admin.php:1021
+#: admin/admin.php:1022
 msgid "Database Management"
 msgstr ""
 
-#: admin/admin.php:1030
+#: admin/admin.php:1031
 msgid "Click-link base"
 msgstr ""
 
-#: admin/admin.php:1039
+#: admin/admin.php:1040
 msgid "Link base for public reports"
 msgstr ""
 
-#: admin/admin.php:1052
+#: admin/admin.php:1053
 msgid "Track bots"
 msgstr ""
 
-#: admin/admin.php:1062
+#: admin/admin.php:1063
 msgid "Delete data on uninstall"
 msgstr ""
 
-#: admin/admin.php:1071
+#: admin/admin.php:1072
 msgid "Recipients"
 msgstr ""
 
-#: admin/admin.php:1081
+#: admin/admin.php:1082
 msgid "Frequency"
 msgstr ""
 
-#: admin/admin.php:1091
+#: admin/admin.php:1092
 msgid "Statistics period"
 msgstr ""
 
-#: admin/admin.php:1101
+#: admin/admin.php:1102
 msgid "From name"
 msgstr ""
 
-#: admin/admin.php:1111
+#: admin/admin.php:1112
 msgid "From address"
 msgstr ""
 
-#: admin/admin.php:1121
+#: admin/admin.php:1122
 msgid "Email subject"
 msgstr ""
 
-#: admin/admin.php:1131
+#: admin/admin.php:1132
 msgid "Send test email"
 msgstr ""
 
-#: admin/admin.php:1188
-#: admin/admin.php:1995
+#: admin/admin.php:1189
+#: admin/admin.php:1996
 msgid "Ads Statistics"
 msgstr ""
 
-#: admin/admin.php:1230
+#: admin/admin.php:1231
 #: admin/views/ad_tracking_options.php:112
 #: admin/views/ad_tracking_options.php:136
 #: admin/views/ad_tracking_options.php:166
 msgid "default"
 msgstr ""
 
-#: admin/admin.php:1231
-#: admin/views/ad-list-stats-column.php:31
-#: admin/views/ad-list-stats-column.php:41
+#: admin/admin.php:1232
+#: admin/views/ad-list-stats-column.php:35
+#: admin/views/ad-list-stats-column.php:45
 #: classes/plugin.php:379
 #: classes/plugin.php:390
 msgid "disabled"
 msgstr ""
 
-#: admin/admin.php:1235
+#: admin/admin.php:1236
 #: admin/views/setting_everything.php:5
 #: classes/plugin.php:385
 msgid "clicks only"
 msgstr ""
 
-#: admin/admin.php:1236
+#: admin/admin.php:1237
 #: admin/views/setting_everything.php:4
 #: classes/plugin.php:384
 msgid "impressions only"
 msgstr ""
 
-#: admin/admin.php:1237
+#: admin/admin.php:1238
 #: admin/views/setting_everything.php:2
 #: classes/plugin.php:386
 msgid "impressions & clicks"
 msgstr ""
 
-#: admin/admin.php:1239
+#: admin/admin.php:1240
 msgid "enabled"
 msgstr ""
 
-#: admin/admin.php:1268
+#: admin/admin.php:1269
 msgid "Use the <code>URL field</code> or remove <code>%link%</code> parameter from your editor."
 msgstr ""
 
-#: admin/admin.php:1274
+#: admin/admin.php:1275
 msgid "The link found in the ad code is used as the target URL. If you replace it with the <code>%link%</code> placeholder, the ad will be linked to the address specified in the Target URL field."
 msgstr ""
 
-#: admin/admin.php:1284
+#: admin/admin.php:1285
 msgid "Add <code>target=\"_blank\"</code> to the ad code in order to open it in a new window. E.g. <code>&lt;a href=\"%link%\" target=\"_blank\"&gt;</code>"
 msgstr ""
 
-#: admin/admin.php:1381
+#: admin/admin.php:1382
 msgid "Tracking database"
 msgstr ""
 
-#: admin/admin.php:1430
+#: admin/admin.php:1431
 msgid "today"
 msgstr ""
 
-#: admin/admin.php:1431
+#: admin/admin.php:1432
 msgid "yesterday"
 msgstr ""
 
-#: admin/admin.php:1432
+#: admin/admin.php:1433
 msgid "last 7 days"
 msgstr ""
 
-#: admin/admin.php:1433
+#: admin/admin.php:1434
 msgid "this month"
 msgstr ""
 
-#: admin/admin.php:1434
+#: admin/admin.php:1435
 #: admin/views/metabox.php:156
 #: admin/views/setting_email_report_stats_period.php:3
 #: public/views/ad-stats.php:63
 msgid "last month"
 msgstr ""
 
-#: admin/admin.php:1435
+#: admin/admin.php:1436
 #: classes/db-operations.php:50
 #: classes/db-operations.php:650
 msgid "this year"
 msgstr ""
 
-#: admin/admin.php:1436
+#: admin/admin.php:1437
 #: classes/db-operations.php:49
 #: classes/db-operations.php:649
 msgid "last year"
 msgstr ""
 
-#: admin/admin.php:1438
+#: admin/admin.php:1439
 #: classes/db-operations.php:664
 #: public/views/ad-stats.php:65
 msgid "custom"
 msgstr ""
 
-#: admin/admin.php:1443
+#: admin/admin.php:1444
 #: classes/ajax.php:422
 msgid "day"
 msgstr ""
 
-#: admin/admin.php:1443
 #: admin/admin.php:1444
+#: admin/admin.php:1445
 #: classes/ajax.php:422
 #: classes/ajax.php:423
 msgctxt "date format on stats page"
 msgid "Y-m-d"
 msgstr ""
 
-#: admin/admin.php:1444
+#: admin/admin.php:1445
 #: classes/ajax.php:423
 msgid "week"
 msgstr ""
 
-#: admin/admin.php:1445
+#: admin/admin.php:1446
 #: classes/ajax.php:424
 msgid "month"
 msgstr ""
 
-#: admin/admin.php:1445
+#: admin/admin.php:1446
 #: classes/ajax.php:424
 msgctxt "date format on stats page"
 msgid "Y-m"
 msgstr ""
 
-#: admin/admin.php:1773
+#: admin/admin.php:1774
 msgid " <a href=\"https://wpadvancedads.com/share-custom-reports-google-analytics/?utm_source=advanced-ads&utm_medium=link&utm_campaign=settings-reports-google-analytics\" target=\"_blank\">How to share Google Analytics ad reports with your customers.</a>"
 msgstr ""
 
-#: admin/admin.php:2237
+#: admin/admin.php:2238
 msgid "The selected tracking method is not compatible with the TCF 2.0 integration."
 msgstr ""
 
-#: admin/views/ad-list-stats-column.php:58
+#: admin/views/ad-list-stats-column.php:62
 msgid "Target url"
 msgstr ""
 
-#: admin/views/ad-list-stats-column.php:63
+#: admin/views/ad-list-stats-column.php:67
 msgid "show"
 msgstr ""
 
-#: admin/views/ad-list-stats-column.php:71
+#: admin/views/ad-list-stats-column.php:75
 msgid "Statistics for the last 30 days"
+msgstr ""
+
+#: admin/views/ad-list-stats-column.php:78
+#: admin/views/metabox.php:117
+msgid "Shareable Link"
 msgstr ""
 
 #: admin/views/ad_tracking_options.php:15
@@ -937,10 +942,6 @@ msgstr ""
 msgid "Dashboard"
 msgstr ""
 
-#: admin/views/metabox.php:117
-msgid "Shareable Link"
-msgstr ""
-
 #: admin/views/metabox.php:118
 msgid "Generate a new sharable link"
 msgstr ""
@@ -980,7 +981,7 @@ msgstr ""
 
 #: admin/views/metabox.php:155
 #: admin/views/setting_email_report_stats_period.php:2
-#: public/public.php:1508
+#: public/public.php:1512
 #: public/views/ad-stats.php:62
 msgid "last 30 days"
 msgstr ""
@@ -989,7 +990,7 @@ msgstr ""
 #: admin/views/setting_email_report_stats_period.php:4
 #: classes/db-operations.php:48
 #: classes/db-operations.php:648
-#: public/public.php:1510
+#: public/public.php:1514
 #: public/views/ad-stats.php:64
 msgid "last 12 months"
 msgstr ""
@@ -1348,11 +1349,11 @@ msgid " the last 12 months"
 msgstr ""
 
 #. translators: 1. statistics period 2. ad name
-#: public/public.php:1447
+#: public/public.php:1451
 msgid "Ad statistics for %1$s for %2$s"
 msgstr ""
 
-#: public/public.php:1509
+#: public/public.php:1513
 msgid "the last month"
 msgstr ""
 

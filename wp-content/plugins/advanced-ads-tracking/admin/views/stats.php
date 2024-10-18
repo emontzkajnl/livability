@@ -202,7 +202,7 @@ $formated_number = number_format_i18n( 12345.678, 3 );
 			</script>
 		</div>
 		<div id="group-filter-wrap">
-			<?php if ( $groups_to_ads['length'] > 1 ) : ?>
+			<?php if ( $groups_to_ads['length'] > 0 ) : ?>
 				<label><strong><?php esc_html_e( 'Filter by group', 'advanced-ads-tracking' ); ?></strong></label><br/>
 				<input id="group-filter" class="donotreversedisable" type="text" value=""/>
 			<?php endif; ?>

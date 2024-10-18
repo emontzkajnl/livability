@@ -3,9 +3,9 @@
 * Contributors: nko
 * Tags: parallax, video, youtube, background, gutenberg
 * Requires at least: 6.2
-* Tested up to: 6.5
+* Tested up to: 6.6
 * Requires PHP: 7.2
-* Stable tag: 1.12.3
+* Stable tag: 1.12.4
 * License: GPLv2 or later
 * License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 
@@ -66,6 +66,10 @@ The manual installation method involves downloading our AWB plugin and uploading
 5. Extended WPBakery Page Builder ROW options
 
 ## Changelog
+
+= 1.12.4 - Sep 7, 2024 =
+
+* added escaping to imageTag attribute in the AWB block to prevent xss vulnerability
 
 = 1.12.3 - Mar 27, 2024 =
 

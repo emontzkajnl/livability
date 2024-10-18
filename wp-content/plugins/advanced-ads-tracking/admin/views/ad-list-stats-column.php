@@ -12,6 +12,10 @@ $ad               = new Advanced_Ads_Ad( $ad_id );
 $ad_options       = $ad->options();
 $tracking_options = Advanced_Ads_Tracking_Plugin::get_instance()->options();
 $target           = Advanced_Ads_Tracking_Util::get_link( $ad );
+// public stats
+$public      = new Advanced_Ads_Tracking_Public_Stats( $ad_id );
+$public_id   = $public->get_id();
+$public_link = $public->get_url();
 
 // no tracking for Yielscale ad type.
 if ( in_array( $ad->type, [ 'yieldscale' ], true ) ) {
@@ -68,6 +72,10 @@ $published = $post_data->post_status === 'publish';
 <?php if ( $published ) : // avoid admin stats for non published ads ?>
 	<div class="row-actions">
 		<a target="blank"
-		   href="<?php echo Advanced_Ads_Tracking_Admin::admin_30days_stats_url( $ad_id ); ?>"><?php _e( 'Statistics for the last 30 days', 'advanced-ads-tracking' ); ?></a>
+		   href="<?php echo Advanced_Ads_Tracking_Admin::admin_30days_stats_url( $ad_id ); ?>"><?php _e( 'Statistics for the last 30 days', 'advanced-ads-tracking' ); ?>
+		</a>
+		<?php if ( ! defined( 'ADVANCED_ADS_TRACKING_NO_PUBLIC_STATS' ) && $public_id ) : ?>
+			<br /><a id="ad-public-link" href="<?php echo esc_url( $public_link ); ?>" target="_blank"><?php _e( 'Shareable Link', 'advanced-ads-tracking' ); ?></a>
+		<?php endif; ?>
 	</div>
 <?php endif; ?>

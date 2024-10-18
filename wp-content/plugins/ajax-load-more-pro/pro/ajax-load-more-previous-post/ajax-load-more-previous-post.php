@@ -6,7 +6,7 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.5.5
+ * Version: 1.7.0
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
  *
@@ -19,8 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_PREV_POST_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_PREV_POST_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_PREV_POST_VERSION', '1.5.5' );
-define( 'ALM_PREV_POST_RELEASE', 'June 11, 2023' );
+define( 'ALM_PREV_POST_VERSION', '1.7.0' );
+define( 'ALM_PREV_POST_RELEASE', 'May 10, 2024' );
 
 /**
  * Activation hook.
@@ -41,7 +41,6 @@ register_activation_hook( __FILE__, 'alm_single_post_install' );
  */
 function alm_single_post_admin_notice() {
 	$slug   = 'ajax-load-more';
-	$plugin = $slug . '-previous-post';
 	// Ajax Load More Notice.
 	if ( get_transient( 'alm_single_post_admin_notice' ) ) {
 		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
@@ -65,16 +64,16 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 * Construct class function.
 		 */
 		public function __construct() {
-			add_action( 'alm_prev_post_installed', array( &$this, 'alm_prev_post_installed' ) );
-			add_action( 'alm_single_post_installed', array( &$this, 'alm_single_post_installed' ) );
-			add_action( 'wp_ajax_alm_get_single', array( &$this, 'alm_get_single_post' ) );
-			add_action( 'wp_ajax_nopriv_alm_get_single', array( &$this, 'alm_get_single_post' ) );
-			add_filter( 'alm_single_post_inc', array( &$this, 'alm_single_post_inc' ), 10, 5 );
-			add_filter( 'alm_single_post_args', array( &$this, 'alm_single_post_args' ), 10, 2 );
-			add_filter( 'alm_single_post_shortcode', array( &$this, 'alm_single_post_shortcode' ), 10, 10 );
-			add_action( 'alm_prev_post_settings', array( &$this, 'alm_prev_post_settings' ) );
-			add_action( 'wp_enqueue_scripts', array( &$this, 'alm_single_post_enqueue_scripts' ) );
-			add_action( 'posts_where', array( &$this, 'alm_single_query_where' ), 10, 2 );
+			add_action( 'alm_prev_post_installed', [ &$this, 'alm_prev_post_installed' ] );
+			add_action( 'alm_single_post_installed', [ &$this, 'alm_single_post_installed' ] );
+			add_action( 'wp_ajax_alm_get_single', [ &$this, 'alm_get_single_post' ] );
+			add_action( 'wp_ajax_nopriv_alm_get_single', [ &$this, 'alm_get_single_post' ] );
+			add_filter( 'alm_single_post_inc', [ &$this, 'alm_single_post_inc' ], 10, 5 );
+			add_filter( 'alm_single_post_args', [ &$this, 'alm_single_post_args' ], 10, 2 );
+			add_filter( 'alm_single_post_shortcode', [ &$this, 'alm_single_post_shortcode' ], 10, 10 );
+			add_action( 'alm_prev_post_settings', [ &$this, 'alm_prev_post_settings' ] );
+			add_action( 'wp_enqueue_scripts', [ &$this, 'alm_single_post_enqueue_scripts' ] );
+			add_action( 'posts_where', [ &$this, 'alm_single_query_where' ], 10, 2 );
 			load_plugin_textdomain( 'ajax-load-more-single-post', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
 		}
 
@@ -110,7 +109,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 */
 		public function alm_single_post_enqueue_scripts() {
 			$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-			wp_register_script( 'alm-single-posts', plugins_url( '/dist/js/alm-single-posts' . $suffix . '.js', __FILE__ ), array( 'ajax-load-more' ), ALM_PREV_POST_VERSION, true );
+			wp_register_script( 'alm-single-posts', plugins_url( '/dist/js/alm-single-posts' . $suffix . '.js', __FILE__ ), [ 'ajax-load-more' ], ALM_PREV_POST_VERSION, true );
 		}
 
 		/**
@@ -120,7 +119,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 * @return void
 		 */
 		public function alm_get_single_post() {
-			$params = filter_input_array( INPUT_GET, FILTER_SANITIZE_STRING );
+			$params = filter_input_array( INPUT_GET );
 
 			$init            = isset( $params['init'] ) ? $params['init'] : false;
 			$id              = isset( $params['id'] ) ? $params['id'] : '';
@@ -214,7 +213,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 			}
 
 			// Reset global $post object.
-			$post = $old_global;
+			$post = $old_global; //phpcs:ignore
 
 			// Build the $data object.
 			$data = self::alm_build_data_object( $id, $previous_post );
@@ -278,17 +277,17 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 			// Get post object.
 			$post = get_post( $id ); // phpcs:ignore
 
-			// Get Previous Post.
+			// Get next post.
 			$next_post = ! empty( $tax ) ? get_next_post( true, $exclude_terms, $tax ) : get_next_post( false, $exclude_terms );
 
-			// If Previous Post === Original post.
+			// If next === original post.
 			if ( $next_post && $next_post->ID === $exclude_post_id ) {
-				$post      = get_post( $previous_post->ID );
+				$post      = get_post( $next_post->ID ); //phpcs:ignore
 				$next_post = ( ! empty( $tax ) ) ? get_next_post( true, $exclude_terms, $tax ) : get_next_post( false, $exclude_terms );
 			}
 
 			// Reset global $post object.
-			$post = $old_global;
+			$post = $old_global; //phpcs:ignore
 
 			// Build the $data object.
 			$data = self::alm_build_data_object( $id, $next_post );
@@ -335,7 +334,6 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 * @since 1.3
 		 */
 		public static function alm_query_latest_post_id( $id, $post_type, $taxonomy, $exclude_terms ) {
-
 			// Get latest post not including the current.
 			$args = [
 				'post_type'        => $post_type,
@@ -355,12 +353,12 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 					foreach ( $terms as $term ) {
 						$found_terms[] = $term->slug;
 					}
-					$args['tax_query'][] = array(
+					$args['tax_query'][] = [
 						'taxonomy' => $taxonomy,
 						'field'    => 'slug',
 						'terms'    => $found_terms,
 						'operator' => 'IN',
-					);
+					];
 				}
 			}
 
@@ -370,12 +368,12 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 				foreach ( $exclude_terms as $id ) {
 					$term_data = get_term( $id );
 					if ( $term_data ) {
-						$args['tax_query'][] = array(
+						$args['tax_query'][] = [
 							'taxonomy' => $term_data->taxonomy,
 							'field'    => 'term_id',
 							'terms'    => $id,
 							'operator' => 'NOT IN',
-						);
+						];
 					}
 				}
 			}
@@ -399,7 +397,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 * @since 1.3
 		 */
 		public static function alm_build_data_object( $id, $previous_post ) {
-			$data = array();
+			$data = [];
 			if ( $previous_post ) {
 				$data['has_previous_post'] = true;
 				$data['prev_id']           = $previous_post->ID;
@@ -454,11 +452,11 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 *  @since 1.0
 		 */
 		public function alm_single_post_args( $id, $post_type ) {
-			$args = array(
-				'post__in'       => array( $id ),
+			$args = [
+				'post__in'       => [ $id ],
 				'post_type'      => $post_type,
 				'posts_per_page' => 1,
-			);
+			];
 			return $args;
 		}
 
@@ -472,7 +470,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 * @param string $post_type      The post type.
 		 * @since 1.0
 		 */
-		public function alm_single_post_inc( $repeater, $repeater_type, $theme_repeater, $id, $post_type ) {
+		public function alm_single_post_inc( $repeater, $repeater_type, $theme_repeater, $id, $post_type ) { // phpcs:ignore
 			ob_start();
 			if ( $theme_repeater !== 'null' && has_filter( 'alm_get_theme_repeater' ) ) {
 				// Theme Repeater.
@@ -541,12 +539,10 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 			$single_post_enable_scroll = isset( $options['_alm_prev_post_scroll'] ) ? $options['_alm_prev_post_scroll'] : 'false';
 			if ( ! isset( $single_post_enable_scroll ) ) {
 				$single_post_enable_scroll = 'false';
-			} else {
-				if ( $single_post_enable_scroll == '1' ) {
+			} elseif ( $single_post_enable_scroll === '1' ) {
 					$single_post_enable_scroll = 'true';
-				} else {
-					$single_post_enable_scroll = 'false';
-				}
+			} else {
+				$single_post_enable_scroll = 'false';
 			}
 
 			$single_post_controls = '1';
@@ -560,18 +556,6 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 				$single_post_title_template = $options['_alm_prev_post_title'];
 			}
 
-			// GA send Pageview.
-			if ( ! isset( $options['_alm_prev_post_ga'] ) ) {
-				$single_post_send_pageview = 'true';
-			} else {
-				$single_post_send_pageview = $options['_alm_prev_post_ga'];
-				if ( $single_post_send_pageview == '1' ) {
-					$single_post_send_pageview = 'true';
-				} else {
-					$single_post_send_pageview = 'false';
-				}
-			}
-
 			$return .= ' data-single-post-title-template="' . $single_post_title_template . '"';
 			$return .= ' data-single-post-site-title="' . get_bloginfo( 'name' ) . '"';
 			$return .= ' data-single-post-site-tagline="' . get_bloginfo( 'description' ) . '"';
@@ -579,7 +563,6 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 			$return .= ' data-single-post-scrolltop="' . $single_post_scrolltop . '"';
 			$return .= ' data-single-post-controls="' . $single_post_controls . '"';
 			$return .= ' data-single-post-progress-bar="' . $progress_bar . '"';
-			$return .= ' data-single-post-pageview="' . $single_post_send_pageview . '"';
 
 			return $return;
 		}
@@ -592,7 +575,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 * @param string $query_args The query to build.
 		 */
 		public static function alm_single_post_custom_query( $post_id = '', $query_order = 'previous', $query_args = null ) {
-			$params = filter_input_array( INPUT_GET, FILTER_SANITIZE_STRING );
+			$params = filter_input_array( INPUT_GET );
 
 			// Exit if this is an Ajax request as this should run on page load only.
 			if ( isset( $params ) && isset( $params['alm_page'] ) ) {
@@ -608,17 +591,17 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 			$args['fields']         = 'ids';
 			$args['orderby']        = 'date';
 			$args['order']          = 'DESC';
-			$args['post__not_in']   = array( $post_id );
+			$args['post__not_in']   = [ $post_id ];
 			$args['posts_per_page'] = apply_filters( 'alm_single_post_posts_per_page_' . $args['alm_id'], '40' ); // phpcs:ignore
 
 			// Custom Query Ordering, used with custom query ordering.
 			if ( 'previous' === $query_order ) {
-				$args['date_query'] = array(
-					array(
+				$args['date_query'] = [
+					[
 						'before' => get_the_date( 'F d Y g:i a', $post_id ),
-					),
+					],
 					'inclusive' => true,
-				);
+				];
 			}
 
 			/**
@@ -638,7 +621,6 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 			}
 
 			wp_reset_query(); // phpcs:ignore
-
 		}
 
 		/**
@@ -688,14 +670,6 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 			);
 
 			add_settings_field(
-				'_alm_prev_post_ga',
-				__( 'Google Analytics', 'ajax-load-more-single-post' ),
-				'alm_prev_post_ga_callback',
-				'ajax-load-more',
-				'alm_prev_post_settings'
-			);
-
-			add_settings_field(
 				'_alm_prev_post_scroll',
 				__( 'Scroll to Post', 'ajax-load-more-single-post' ),
 				'alm_prev_post_scroll_callback',
@@ -718,20 +692,20 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 				'alm_prev_post_settings'
 			);
 		}
-
 	}
 
 	/**
 	 * Sanitize license activation.
 	 *
+	 * @param string $key The new license key.
 	 * @since 1.0.0
 	 */
-	function alm_prev_post_sanitize_license( $new ) {
+	function alm_prev_post_sanitize_license( $key ) {
 		$old = get_option( 'alm_prev_post_license_key' );
-		if ( $old && $old !== $new ) {
+		if ( $old && $old !== $key ) {
 			delete_option( 'alm_prev_post_license_status' );
 		}
-		return $new;
+		return $key;
 	}
 
 	/* Next Post Settings (Displayed in ALM Core) */
@@ -743,23 +717,6 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 	 */
 	function alm_prev_post_callback() {
 		$html = '<p>' . __( 'Customize your installation of the <a href="http://connekthq.com/plugins/ajax-load-more/add-ons/single-post/">Single Post</a> add-on.', 'ajax-load-more-single-post' ) . '</p>';
-
-		echo $html; // phpcs:ignore
-	}
-
-	/**
-	 * Send pageviews to Google Analytics.
-	 *
-	 * @since 1.0
-	 */
-	function alm_prev_post_ga_callback() {
-		$options = get_option( 'alm_settings' );
-		if ( ! isset( $options['_alm_prev_post_ga'] ) ) {
-			$options['_alm_prev_post_ga'] = '1';
-		}
-
-		$html  = '<input type="hidden" name="alm_settings[_alm_prev_post_ga]" value="0" /><input type="checkbox" id="_alm_prev_post_ga" name="alm_settings[_alm_prev_post_ga]" value="1"' . ( ( $options['_alm_prev_post_ga'] ) ? ' checked="checked"' : '' ) . ' />';
-		$html .= '<label for="_alm_prev_post_ga">' . __( 'Send pageviews to Google Analytics.', 'ajax-load-more-single-post' ) . '<br/><span>Each time a post is loaded it will count as a pageview. You must have a reference to your Google Analytics tracking code on the page.</span></label>';
 
 		echo $html; // phpcs:ignore
 	}
@@ -805,7 +762,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 
 		$html .= '<label for="alm_prev_scroll_page">';
 		$html .= __( 'Enable Window Scrolling.', 'ajax-load-more-single-post' );
-		$html .= '<span>' . __( 'If scrolling is enabled, the users window will scroll to the current page on \'Load More\' action.</span>', 'ajax-load-more-seo' ) . '</span>';
+		$html .= '<span>' . __( 'If scrolling is enabled, the users window will scroll to the current page on \'Load More\' action.</span>', 'ajax-load-more-single-post' ) . '</span>';
 		$html .= '</label>';
 
 		echo $html; // phpcs:ignore
@@ -878,12 +835,12 @@ function alm_single_post_updater() {
 		$edd_updater = new EDD_SL_Plugin_Updater(
 			ALM_STORE_URL,
 			__FILE__,
-			array(
+			[
 				'version' => ALM_PREV_POST_VERSION,
 				'license' => $license_key,
 				'item_id' => ALM_PREV_POST_ITEM_NAME,
 				'author'  => 'Darren Cooney',
-			)
+			]
 		);
 	}
 }

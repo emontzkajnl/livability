@@ -37,7 +37,7 @@ class AslSearchBlocks {
 		wp_register_script(
 			'wd-asl-gutenberg',
 			ASL_URL_NP . 'backend/Blocks/assets/search-block.js',
-			array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-components', 'wp-editor' ),
+			array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-components', 'wp-server-side-render' ),
 			ASL_CURR_VER_STRING
 		);
 		wp_register_style(

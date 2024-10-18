@@ -5,14 +5,14 @@ Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/ajax-load-more/add-ons/single-post/
 Requires at least: 4.0
-Tested up to: 6.2
+Tested up to: 6.5
 Stable tag: trunk
 Homepage: https://connekthq.com/ajax-load-more/
-Version: 1.5.5
+Version: 1.7.0
 
 
 == Copyright ==
-Copyright 2023 Connekt Media
+Copyright 2024 Connekt Media
 
 This software is NOT to be distributed, but can be INCLUDED in WP themes: Premium or Contracted.
 This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -48,6 +48,23 @@ http://connekthq.com/plugins/ajax-load-more/single-post/
 
 
 == Changelog ==
+
+= 1.7.0 - May 10, 2024 =
+* NEW: Added official support for using Next Page add-on with Single Posts add-on.
+* FIX: Fixed issue with undefined PHP variable when using `Next` post ordering.
+* UPDATE: Code clean up.
+
+
+= 1.6.0 - January 16, 2024 =
+* UPGRADE NOTICE: This update is affected by the core Ajax Load More 7.0 release. Updating this plugin will require updating Ajax Load More to 7.0.
+* UPDATE: Remove all references and output of `alm-reveal` divs.
+* FIX: Fixed issue with Single Post preview functionality.
+
+
+= 1.5.6 - September 27, 2023 =
+* UPDATE: Updated Single Post JavaScript to support new Google Analytics 4 implementation.
+* UPDATE: Code cleanup and organization.
+
 
 = 1.5.5 - June 11, 2023 =
 * UPDATE: Updated to add compatibility with Cache Add-on 2.0 and Ajax Load More 6.0.
