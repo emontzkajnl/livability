@@ -21,18 +21,17 @@ class CFSImport {
 		}
 		return CFSImport::$cfs_instance;
     }
-    function set_cfs_values($header_array ,$value_array , $map, $post_id , $type){
+    function set_cfs_values($line_number,$header_array ,$value_array , $map, $post_id , $type,$hash_key){
 		
 		$post_values = [];
 		$helpers_instance = ImportHelpers::getInstance();	
 		$post_values = $helpers_instance->get_header_values($map , $header_array , $value_array);
 		
-		$this->cfs_import_function($post_values, $post_id);
+		$this->cfs_import_function($line_number,$post_values, $post_id,$hash_key);
 
     }
 
-    public function cfs_import_function ($data_array, $pID) {
-		
+    public function cfs_import_function ($line_number,$data_array, $pID,$hash_key) {
 		global $wpdb;
 		$helpers_instance = ImportHelpers::getInstance();
 		$media_instance = MediaHandling::getInstance();
@@ -47,7 +46,13 @@ class CFSImport {
 					$darray[$cfs_data['CFS'][$dkey]['name']] = $linksarr;
 				}
 				elseif($cfs_data['CFS'][$dkey]['type'] == 'file'){
-					$darray[$cfs_data['CFS'][$dkey]['name']] = $media_instance->media_handling($dvalue, $pID);
+					$file_type = $this->get_remote_file_mime_type($dvalue);
+					if (strpos($file_type, 'image/') === 0) {
+						$media_instance->store_image_ids($i=1);
+						$darray[$cfs_data['CFS'][$dkey]['name']] = $media_instance->image_meta_table_entry($line_number, '', $pID, $cfs_data['CFS'][$dkey]['name'], $dvalue, $hash_key, 'cfs', '', '');
+					} else{
+						$darray[$cfs_data['CFS'][$dkey]['name']] = $media_instance->media_handling($dvalue, $pID);
+					}
 				}elseif($cfs_data['CFS'][$dkey]['type'] == 'select'){
 					if( strpos($dvalue, ',') !== false )
 					{
@@ -190,7 +195,16 @@ class CFSImport {
 		}
 
 	}
-
+	public function get_remote_file_mime_type($url) {
+		$headers = get_headers($url, 1);
+		if ($headers !== false && isset($headers['Content-Type'])) {
+			if (is_array($headers['Content-Type'])) {
+				return $headers['Content-Type'][0]; // Sometimes headers might return an array
+			}
+			return $headers['Content-Type'];
+		}
+		return '';
+	}
 	public function insert_cfs_loop_values($childFieldId, $meta_id, $pID, $parentLoopId, $hierarchy){
 		global $wpdb;
 		$wpdb->insert($wpdb->prefix.'cfs_values',

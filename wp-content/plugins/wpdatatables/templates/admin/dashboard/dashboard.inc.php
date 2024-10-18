@@ -337,12 +337,13 @@ $tableChartsCount = (int)WDTTools::getTablesCount('chart');
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with bugfixes:
+                            New update:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li>Minor CSS fixes.</li>
+                                <li>Compatibility with WordPres 6.6.2 version approved.</li>
+                                <li><b>Improvement:</b> Minor CSS fixes.</li>
                                 <li>Other small bug fixes and stability improvements</li>
                             </ul>
                         </div>
@@ -392,6 +393,9 @@ $tableChartsCount = (int)WDTTools::getTablesCount('chart');
                             </p>
                             <p class="wpdt-font">
                                 <i class="wpdt-icon-check m-r-8"></i><span style="color: red;font-weight: bold;">NEW! </span><?php esc_html_e('GeoCharts', 'wpdatatables'); ?>
+                            </p>
+                            <p class="wpdt-font">
+                                <i class="wpdt-icon-check m-r-8"></i><span style="color: red;font-weight: bold;">NEW! </span><?php esc_html_e('Hidden (dynamic) columns', 'wpdatatables'); ?>
                             </p>
                             <p class="wpdt-font">
                                 <i class="wpdt-icon-check m-r-8"></i><?php esc_html_e('Create a table manually', 'wpdatatables'); ?>
@@ -748,7 +752,7 @@ $tableChartsCount = (int)WDTTools::getTablesCount('chart');
                                 <?php echo sprintf(esc_html__('Amelia Lite is a free appointment and event WordPress booking plugin that allows to set up a fully-featured automated booking system on your WordPress website and is a handy tool for small businesses and individuals that depend on stable appointment booking processes and for premium %s businesses from healthcare, beauty, sports, automotive, educational, creative, HR and other industries use Amelia to flawlessly manage %s appointments and events worldwide each month.', 'wpdatatables') ,AMELIA_NUMBER_OF_ACTIVE_INSTALLS , AMELIA_NUMBER_OF_APPOINTMENTS ); ?></p>
                             <p>
                                 <span class="wdt-stars-container stars-88">★★★★★</span>
-                                <span class="wdt-rating"> <?php esc_html_e('Rating: 4.3 - 255 reviews') ?></span>
+                                <span class="wdt-rating"> <?php esc_html_e('Rating: 4.6 - 573 reviews') ?></span>
                             </p>
                             <a href="https://downloads.wordpress.org/plugin/ameliabooking.zip" class="btn btn-primary">
                                 <?php esc_html_e('Free Download', 'wpdatatables'); ?>

@@ -23,6 +23,10 @@ class LangNL {
 
         public static function contents(){
                 $response = array('ImportUpdate' => 'Importeren / bijwerken',
+                        'SelectAllImages' => 'Selecteer alle afbeeldingen in uw importbestand om importfouten te voorkomen',
+                        'ChooseImagesToImport' => 'Kies de afbeeldingen om te importeren. Gebruik het onderstaande selectievakje om alle afbeeldingen te selecteren.',
+                        'FileName' => 'Bestandsnaam:',
+                        'OK' => 'OK',
                         'Dashboard' => 'Dashboard',
                         'Manager' => 'Manager',
                         'Exportfiltereddata' => 'Exporteer gefilterde gegevens',
@@ -114,6 +118,8 @@ class LangNL {
                         'JetEngineRFFields' => 'Jet Engine Repeater-velden',
                         'JetEngineCPTFields' => 'Straalmotor CPT-velden',
                         'jetEngineCPTRFFields' => 'Straalmotor CPT-repeatervelden',
+                        'JetEngineCCTFields' => 'Straalmotor CCT-velden',
+                        'JetEngineCCTRFFields' => 'Straalmotor CCT RF-velden',
                         'jetEngineTaxonomyFields' => 'Taxonomievelden voor straalmotoren',
                         'jetEngineTaxonomyRFFields' => 'Jet Engine Taxonomy Repeater-velden',
                         'jetEngineRelationsFields' => 'Gebied Jet Engine Relations',                        
@@ -451,14 +457,34 @@ class LangNL {
 			'SampleCSVXML' => 'Voorbeeld van CSV en XML',
 			'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => 'Waarschuwing: sommige add-ons ontbreken, het wordt aanbevolen om dit te doen',
 			'DragDropyourfilesor' => 'Drag & Drop uw bestanden of',
-                        'WPCompleteFields' => 'WPVolledige velden'
+                        'WPCompleteFields' => 'WPVolledige velden',
+                        'ChooseUploadMethod' => 'Kies uploadmethode',
+                        'Media' => 'Media',
+                        'CsvUploadFields' => 'Bestand uploaden',
+                        'Device' => 'Apparaat',
+                        'Remote' => 'Afstand',
+                        'SelectDeviceZIPfile' => 'Selecteer Apparaat om afbeeldingen direct vanaf uw apparaat als een ZIP-bestand te uploaden.',
+                        'SelectDeviceCSVfile' => 'Kies Afstand om afbeeldingen te importeren van URL\'s van externe websites.',
+                        'MediaContinue' => 'Doorgaan',
+                        'FreshImport' => 'Nieuwe import',
+                        'UpdateContent' => 'Inhoud bijwerken',
+                        'UpdateThisMappingAs' => 'Deze mapping bijwerken als',
+                        'Overwritetheavailableimages' => 'Overschrijf de beschikbare afbeeldingen',
+                        'AlwaysCreateAsNewImage' => 'Altijd als nieuwe afbeelding aanmaken',
+                        'ImportCompleted' => 'Import voltooid!',
+                        'importHasFinished' => 'Uw import is succesvol voltooid. Klik op de knop hieronder om een gedetailleerd importlogboek te downloaden en te openen.',
+                        'ImportLog' => 'Importlogboek',
+                        'FailedMedia' => 'Mislukte media',
+                        'UseTheFailedImages' => 'Gebruik de CSV van mislukte afbeeldingen om de URL\'s te corrigeren en de afbeeldingen opnieuw te importeren',
+                        'FeaturedFields' => 'Uitgelichte Afbeelding Metadata',
+                        'Summary' => 'Samenvatting',
                 );
         return $response;
         }
         public static function notice_contents()
         {
         $result =array(
-                'UpgradetoPROusingcode' => 'Upgrade naar PRO met code',
+                'UpgradetoPROusingcode' => 'Upgrade naar PREMIUM met code',
                 'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Ontgrendeling functies zoals bulk import, geavanceerde export, planning, inhoud update, en meer, plus levenslange ondersteuning',
                 'upgradenow' => 'upgrade nu'
         );

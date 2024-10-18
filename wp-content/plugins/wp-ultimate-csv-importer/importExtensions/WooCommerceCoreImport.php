@@ -207,7 +207,6 @@ class WooCommerceCoreImport {
 	}
 
 	public function woocommerce_orders_import($data_array , $mode , $check , $unikey , $unikey_name, $line_number) {
-		
 		$returnArr = array();	
 		global $wpdb;
 		$helpers_instance = ImportHelpers::getInstance();
@@ -290,7 +289,6 @@ class WooCommerceCoreImport {
 	}
 
 	public function woocommerce_coupons_import($data_array , $mode , $check , $unikey , $unikey_name, $line_number) {
-		
 		global $wpdb; 
 		$helpers_instance = ImportHelpers::getInstance();
 		$core_instance = CoreFieldsImport::getInstance();
@@ -665,7 +663,6 @@ class WooCommerceCoreImport {
 		return $returnArr;
 	}
 	public function woocommerce_product_import($data_array, $mode, $type, $unmatched_row , $check , $unikey , $unikey_name, $line_number  , $acf,$pods, $toolset, $header_array ,$value_array, $wpml_values = null) {
-
 		global $wpdb,$core_instance,$sitepress; 
 		$core_instance = CoreFieldsImport::getInstance();
 		$helpers_instance = ImportHelpers::getInstance();

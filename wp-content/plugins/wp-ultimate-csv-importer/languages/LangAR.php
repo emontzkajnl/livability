@@ -26,6 +26,10 @@ class LangAR
         public static function contents()
         {
                 $response = array(
+					'SelectAllImages' => 'حدد جميع الصور في ملف الاستيراد الخاص بك لتجنب فشل الاستيراد',
+					'ChooseImagesToImport' => 'اختر الصور للاستيراد. استخدم مربع الاختيار أدناه لاختيار جميع الصور.',
+					'FileName' => 'اسم الملف:',
+					'OK' => 'موافق',
 					'Exporterwithadvancedfilters' => 'مصدر بفلاتر متقدمة',
 					'Buynow' => 'اشتري الآن!',
 					'Exportfiltereddata' => 'تصدير البيانات المفلترة',
@@ -376,6 +380,7 @@ class LangAR
 					'Taxonomies' => 'التصنيفات',
 					'Comments' => 'تعليقات',
 					'CustomerReviews' => 'آراء العملاء',
+					'WooCommerceReviews' =>'تقييمات ووكومرس',
 					'WooCommerceCoupons' => 'كوبونات WooCommerce',
 					'WooCommerceRefunds' => 'المبالغ المستردة WooCommerce',
 					'WooCommerceVariations' => 'الاختلافات في WooCommerce',
@@ -391,13 +396,34 @@ class LangAR
 					'GetSupport' => 'احصل على الدعم',
 					'SampleCSVXML' => 'نموذج CSV & XML',
 					'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => 'تحذير: بعض الإضافات مفقودة ، فمن المستحسن',
+					'ChooseUploadMethod' => 'اختر طريقة التحميل',
+					'Media' => 'وسائط',
+					'CsvUploadFields' => 'رفع ملف',
+					'Device' => 'جهاز',
+					'Remote' => 'بعيد',
+					'SelectDeviceZIPfile' => 'اختر الجهاز لتحميل الصور مباشرة من جهازك كملف ZIP.',
+					'SelectDeviceCSVfile' => 'اختر بعيد لتحميل الصور من عناوين URL لمواقع الويب البعيدة.',
+					'MediaContinue' => 'استمر',
+					'FreshImport' => 'استيراد جديد',
+					'UpdateContent' => 'تحديث المحتوى',
+					'UpdateThisMappingAs' => 'تحديث هذا التعيين كـ',
+					'Overwritetheavailableimages' => 'استبدال الصور المتاحة',
+					'AlwaysCreateAsNewImage' => 'أنشئ دائمًا كصورة جديدة',
+					'ImportCompleted' => 'تم استيراد البيانات!',
+					'importHasFinished' => 'تم استيراد البيانات بنجاح. انقر على الزر أدناه لتنزيل والوصول إلى سجل استيراد مفصل.',
+					'ImportLog' => 'سجل الاستيراد',
+					'FailedMedia' => 'وسائط فاشلة',
+					'UseTheFailedImages' => 'استخدم ملف CSV للصور الفاشلة لتصحيح عناوين URL وإعادة استيراد الصور',
+					'FeaturedFields' => 'بيانات تعريف الصورة المميزة',
+					'Summary' => 'ملخص',
+
                 );
                 return $response;
         }
 		public static function notice_contents()
         {
         $result =array(
-                'UpgradetoPROusingcode' => 'الترقية إلى PRO باستخدام الرمز',
+                'UpgradetoPROusingcode' => 'الترقية إلى PREMIUM باستخدام الرمز',
                 'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'افتح ميزات مثل الاستيراد المجمع، والتصدير المتقدم، والجدولة الزمنية، وتحديث المحتوى، والمزيد، بالإضافة إلى دعم مدى الحياة',
                 'upgradenow' => 'قم بالترقية الآن'
         );

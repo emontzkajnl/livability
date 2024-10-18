@@ -12,7 +12,7 @@
             $('.wdt-add-column-possible-values').tagsinput({
                 tagClass: 'label label-primary'
             });
-            $addColumnBlock.find('.wdt-add-column-default-value').selectpicker('destroy');
+            $addColumnBlock.find('.wdt-add-column-default-value').wdtBootstrapSelectPicker('destroy');
             $addColumnBlock.find('.wdt-add-column-default-value')
                 .replaceWith('<select class="selectpicker wdt-add-column-default-value"></select>');
             if ($(this).val() == 'multiselect') {
@@ -20,32 +20,32 @@
             } else {
                 $addColumnBlock.find('.wdt-add-column-default-value').prepend('<option value=""></option>').removeAttr('multiple');
             }
-            $addColumnBlock.find('.wdt-add-column-default-value').selectpicker();
+            $addColumnBlock.find('.wdt-add-column-default-value').wdtBootstrapSelectPicker();
 
             if ($addColumnBlock.find('.wdt-add-column-possible-values').val() != '') {
                 var possibleValues = $addColumnBlock.find('.wdt-add-column-possible-values').val().split(',');
                 $.each(possibleValues, function (index, value) {
                     $addColumnBlock.find('select.wdt-add-column-default-value').append('<option value="' + value + '">' + value + '</option>');
                 });
-                $addColumnBlock.find('select.wdt-add-column-default-value').selectpicker('refresh');
+                $addColumnBlock.find('select.wdt-add-column-default-value').wdtBootstrapSelectPicker('refresh');
             }
 
             $possibleValuesInput.on('itemAdded', function (e) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 $addColumnBlock.find('select.wdt-add-column-default-value').append('<option value="' + e.item + '">' + e.item + '</option>')
-                    .selectpicker('refresh');
+                    .wdtBootstrapSelectPicker('refresh');
             });
 
             $possibleValuesInput.on('itemRemoved', function (e) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 $addColumnBlock.find('.wdt-add-column-default-value option[value="' + e.item + '"]').remove();
-                $addColumnBlock.find('.wdt-add-column-default-value').selectpicker('refresh');
+                $addColumnBlock.find('.wdt-add-column-default-value').wdtBootstrapSelectPicker('refresh');
             });
         } else {
             $possibleValuesBlock.hide();
-            $addColumnBlock.find('.wdt-add-column-default-value').selectpicker('destroy');
+            $addColumnBlock.find('.wdt-add-column-default-value').wdtBootstrapSelectPicker('destroy');
             $addColumnBlock.find('.wdt-add-column-default-value')
                 .replaceWith('<input type="text" class="form-control input-sm wdt-add-column-default-value" value="">');
             $addColumnBlock.find('.wdt-add-column-default-value')
@@ -72,9 +72,9 @@
             return false;
         }
 
-        var columnType = $addColumnModal.find('.wdt-add-column-column-type').selectpicker('val');
+        var columnType = $addColumnModal.find('.wdt-add-column-column-type').wdtBootstrapSelectPicker('val');
         var defaultValue = $.inArray(columnType, ['select', 'multiselect']) != -1 ?
-            $addColumnModal.find('.wdt-add-column-default-value').selectpicker('val') :
+            $addColumnModal.find('.wdt-add-column-default-value').wdtBootstrapSelectPicker('val') :
             $addColumnModal.find('.wdt-add-column-default-value').val();
         if (defaultValue != null && columnType == 'multiselect') {
             defaultValue.join('|');
@@ -83,7 +83,7 @@
         var newColumnData = {
             name: $('#wdt-add-column-column-header').val(),
             type: columnType,
-            insert_after: $('.wdt-add-column-insert-after').selectpicker('val'),
+            insert_after: $('.wdt-add-column-insert-after').wdtBootstrapSelectPicker('val'),
             possible_values: $addColumnModal.find('.wdt-add-column-possible-values').val().replace(/,/g, '|'),
             default_value: defaultValue,
             fill_default: $('#wdt-add-column-fill-with-default').is(':checked') ? 1 : 0

@@ -44,7 +44,30 @@ class ImportHelpers {
 		wp_die();
 	}
 
-    public function get_requested_term_details ($post_id, $term) {
+    public function get_requested_term_details ($post_id, $term,$taxonomy) {
+		if(is_array($term)){
+			foreach($term as $terms){
+				$termLen = strlen($terms);
+				$checktermid = intval($terms);
+				$verifiedTermLen = strlen($checktermid);
+				if($termLen == $verifiedTermLen && !is_string($terms)) {
+					return $terms;
+				} 
+			
+			}
+			$reg_term_id = wp_set_object_terms($post_id, $term, $taxonomy);
+			$terms = get_term_by('name',"$terms","$taxonomy");
+			if(isset($terms->term_id)){
+				$term_id = $terms->term_id;
+
+				//incase if term id and term taxonomy id are not same
+				// global $wpdb;
+				// $term_taxonomy_id = $reg_term_id[0];
+				// $term_id = $wpdb->get_var("SELECT term_id FROM {$wpdb->prefix}term_taxonomy WHERE term_taxonomy_id = $term_taxonomy_id");
+			}
+			return $term_id;
+		}
+		else{
 		$termLen = strlen($term);
 		$checktermid = intval($term);
 		$verifiedTermLen = strlen($checktermid);
@@ -57,6 +80,7 @@ class ImportHelpers {
 			}
 			return $term_id;
 		}
+	}
     }
     
     public function get_from_user_details($request_user) {
@@ -157,7 +181,7 @@ class ImportHelpers {
 	public function import_post_types($import_type, $importAs = null) {	
 		$import_type = trim($import_type);
 		
-		$module = array('Posts' => 'post', 'Pages' => 'page', 'Users' => 'user', 'Comments' => 'comments', 'Taxonomies' => $importAs, 'CustomerReviews' =>'wpcr3_review', 'Categories' => 'categories', 'Tags' => 'tags', 'WooCommerce' => 'product', 'WPeCommerce' => 'wpsc-product','WPeCommerceCoupons' => 'wpsc-product','WooCommerceVariations' => 'product', 'WooCommerceOrders' => 'product', 'WooCommerceCoupons' => 'product', 'WooCommerceRefunds' => 'product', 'CustomPosts' => $importAs);
+		$module = array('Posts' => 'post', 'Pages' => 'page', 'Users' => 'user', 'Comments' => 'comments', 'Taxonomies' => $importAs, 'CustomerReviews' =>'wpcr3_review', 'Categories' => 'categories', 'Tags' => 'tags', 'WooCommerce' => 'product', 'WPeCommerce' => 'wpsc-product','WPeCommerceCoupons' => 'wpsc-product','WooCommerceVariations' => 'product', 'WooCommerceOrders' => 'product', 'WooCommerceCoupons' => 'product', 'WooCommerceRefunds' => 'product', 'CustomPosts' => $importAs,'WooCommerceReviews' =>'reviews');
 		foreach (get_taxonomies() as $key => $taxonomy) {
 			$module[$taxonomy] = $taxonomy;
 		}
@@ -253,7 +277,7 @@ class ImportHelpers {
 							foreach($matches[1] as $value){
 								$get_value = $this->replace_header_with_values($value, $header_array, $value_array);
 								$values = '{'.$value.'}';
-								$get_value = "'".$get_value."'";
+								$get_value = '"'.$get_value.'"';
 								$matched_element = str_replace($values, $get_value, $matched_element);
 							}
 							$csv_element = $this->evalPhp($matched_element);
@@ -521,7 +545,7 @@ class ImportHelpers {
 
 	}
 	
-	public function write_to_customfile($csv_value, $header_array, $value_array){
+	public function write_to_customfile($csv_value, $header_array=null, $value_array=null){
 		//if(preg_match_all('/{+(.*?)}/', $csv_value, $matches)) {
 		
 			// foreach($matches[1] as $value){
@@ -544,7 +568,8 @@ class ImportHelpers {
 			}
 
 			$get_custom_content = file_get_contents($customfn_file_path);
-			if(strpos($get_custom_content, $csv_value) !== false) {
+			$exp_data =explode('{',$csv_value);
+			if(strpos($get_custom_content,$exp_data[0]) !== false) {
 			}
 			else{
 				$openFile = fopen($customfn_file_path, "a+");

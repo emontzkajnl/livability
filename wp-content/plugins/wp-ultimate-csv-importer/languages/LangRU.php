@@ -22,10 +22,15 @@ class LangRU {
 
         public static function contents(){
                 $response = array('ImportUpdate' => 'импорт',
+                        'SelectAllImages' => 'Выберите все изображения в вашем файле импорта, чтобы избежать сбоев импорта',
+                        'ChooseImagesToImport' => 'Выберите изображения для импорта. Используйте флажок ниже для выбора всех изображений.',
+                        'FileName' => 'Имя файла:',
+                        'OK' => 'ОК',
                         'Exporterwithadvancedfilters' => 'Экспортер с расширенными фильтрами',
                         'AIOWooCommerceImportSuit' => 'AIO WooCommerce Import Suit',
                         'WPMLImporter' => 'Импортер WPML',
                         'Buynow' => 'Купить сейчас!',
+                        'CouponMetaFields' => 'Купонные мета-поля',
                         'Exportfiltereddata' => 'Экспорт отфильтрованных данных',
                         'Exportfiltereddatadesc' => 'Позволяет получать только необходимые данные с помощью различных расширенных фильтров.',
                         'Backupineditableformat' => 'Бэкап в редактируемом формате',
@@ -93,6 +98,8 @@ class LangRU {
                         'JetEngineRFFields' => 'Поля ретранслятора реактивного двигателя',
                         'JetEngineCPTFields' => 'Поля CPT для реактивных двигателей',
                         'jetEngineCPTRFFields' => 'Поля повторителя CPT реактивного двигателя',
+                        'JetEngineCCTFields' => 'Поля реактивного двигателя CCT',
+                        'JetEngineCCTRFFields' => 'Поля ретранслятора CCT реактивного двигателя',
                         'jetEngineTaxonomyFields'=> 'Поля таксономии реактивных двигателей',
                         'jetEngineTaxonomyRFFields' => 'Поля повторителя таксономии реактивного двигателя',
                         'jetEngineRelationsFields' => 'Поле отношений реактивного двигателя',
@@ -386,13 +393,32 @@ class LangRU {
 			'SampleCSVXML' => 'Пример CSV и XML',
 			'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => 'Предупреждение: Импорт для некоторых daПредупреждение: некоторые дополнения отсутствуют, рекомендуется отключить их сначала. Сначала установите и активируйте следующие плагины',
 			'DragDropyourfilesor' => 'Перетащите файлы или',
+                        'ChooseUploadMethod' => 'Выберите метод загрузки',
+                        'CsvUploadFields' => 'Загрузить файл',
+                        'Device' => 'Устройство',
+                        'Remote' => 'Удаленно',
+                        'SelectDeviceZIPfile' => 'Выберите Устройство, чтобы загрузить изображения напрямую с вашего устройства в виде ZIP-файла.',
+                        'SelectDeviceCSVfile' => 'Выберите Удаленно, чтобы импортировать изображения из URL удаленных веб-сайтов.',
+                        'MediaContinue' => 'Продолжить',
+                        'FreshImport' => 'Новый импорт',
+                        'UpdateContent' => 'Обновить контент',
+                        'UpdateThisMappingAs' => 'Обновить эту сопоставление как',
+                        'Overwritetheavailableimages' => 'Перезаписать доступные изображения',
+                        'AlwaysCreateAsNewImage' => 'Всегда создавать как новое изображение',
+                        'ImportCompleted' => 'Импорт завершен!',
+                        'importHasFinished' => 'Ваш импорт успешно завершен. Нажмите кнопку ниже, чтобы скачать и получить доступ к детализированному журналу импорта.',
+                        'ImportLog' => 'Журнал импорта',
+                        'FailedMedia' => 'Неудачные медиа',
+                        'UseTheFailedImages' => 'Используйте CSV с неудачными изображениями, чтобы исправить URL и повторно импортировать изображения',
+                        'FeaturedFields' => 'Метаданные Изображения',
+                        'Summary' => 'Резюме',
                 );
         return $response;
         }
         public static function notice_contents()
         {
         $result =array(
-                'UpgradetoPROusingcode' => 'Upgrade to PRO using code',
+                'UpgradetoPROusingcode' => 'Upgrade to PREMIUM using code',
                 'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Разблокировка таких функций, как импорт оптовых товаров, расширенный экспорт, планирование, обновление контента и многое другое, а также поддержка жизни',
                 'upgradenow' => 'модернизируйте'
         );

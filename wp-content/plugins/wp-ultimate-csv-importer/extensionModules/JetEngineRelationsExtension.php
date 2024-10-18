@@ -82,7 +82,6 @@ class JetEngineRelationsExtension extends ExtensionHandler{
 				}
 			}
 		}
-		 
 		if(isset($customFields)){
 			$jet_value = $this->convert_fields_to_array($customFields);
 		}
@@ -109,7 +108,10 @@ class JetEngineRelationsExtension extends ExtensionHandler{
 				
 				$jet_relation_names = maybe_unserialize($get_rel_values['labels']);
 				$jet_relation_name = maybe_unserialize($jet_relation_names['name']);
-			if($jet_relation_name == 'one-to-one'){
+				$jet_relation_type = maybe_unserialize($get_rel_values['args']);
+				$relate_type = $jet_relation_type['type'];
+
+			if($relate_type == 'one_to_one'){
 				$jet_relation_id = $get_rel_values['id'];
 
 				$get_rel_fields_args = maybe_unserialize($get_rel_values['args']);

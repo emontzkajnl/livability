@@ -27,6 +27,10 @@ class LangTA
         {
                 $response = array(
 						'ImportUpdate' => 'இறக்குமதி மேம்படுத்தல்',
+						'SelectAllImages' => 'உங்கள் இறக்குமதி கோப்பில் அனைத்து படங்களையும் தேர்வு செய்யவும், இறக்குமதி பிழைகளை தவிர்க்கவும்',
+						'ChooseImagesToImport' => 'இறக்குமதி செய்யப்படும் படங்களைத் தேர்வு செய்யவும். அனைத்து படங்களையும் தேர்வு செய்ய கீழே உள்ள செக் பாக்ஸ் ஐப் பயன்படுத்தவும்.',
+						'FileName' => 'கோப்பின் பெயர்:',
+						'OK' => 'சரி',
 						'Updateolderpostsfromsingleimport' => 'ஒரே இறக்குமதியிலிருந்து பழைய இடுகைகளைப் புதுப்பிக்கவும்',
 						'Buynow' => 'இப்போது வாங்க!',
 						'Exportfiltereddata' => 'வடிகட்டப்பட்ட தரவை ஏற்றுமதி செய்யவும்',
@@ -113,6 +117,8 @@ class LangTA
 						'JetEngineRFFields' => 'JetEngineRFFields',
 						'JetEngineCPTFields' => 'JetEngineCPTFields',
 						'JetEngineCPTRFFields' => 'JetEngineCPTRF புலங்கள்',
+						'JetEngineCCTFields' => 'Jet Engine CCT புலங்கள்',
+						'JetEngineCCTRFFields' => 'Jet Engine CCT மீண்டும் வரும் புலங்கள்',
 						'JetEngineTaxonomyFields' => 'JetEngineTaxonomyFields',
 						'JetEngineTaxonomyRFFields' => 'JetEngineTaxonomyRF புலங்கள்',
 						'JetEngineRelationsFields' => 'JetEngineRelationsFields',
@@ -397,13 +403,34 @@ class LangTA
 						'SampleCSVXML' => 'மாதிரி CSV & XML',
 						'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => 'எச்சரிக்கை: சில துணை நிரல்களைக் காணவில்லை, இது பரிந்துரைக்கப்படுகிறது',
 						'DragDropyourfilesor' => 'உங்கள் கோப்புகளை இழுத்து விடவும் அல்லது',
+						'ChooseUploadMethod' => 'பதிவேற்றும் முறை தேர்ந்தெடுக்கவும்',
+						'Media' => 'மீடியா',
+						'CsvUploadFields' => 'கோப்பை பதிவேற்றவும்',
+						'Device' => 'சாதனம்',
+						'Remote' => 'தொலைவில்',
+						'SelectDeviceZIPfile' => 'ZIP கோப்பாக உங்கள் சாதனத்திலிருந்து நேரடியாக படங்களை பதிவேற்ற சாதனத்தை தேர்ந்தெடுக்கவும்.',
+						'SelectDeviceCSVfile' => 'தொலைவில் உள்ள வலைத்தள URLகளிலிருந்து படங்களை இறக்குமதி செய்ய தொலைவில் தேர்ந்தெடுக்கவும்.',
+						'MediaContinue' => 'தொடரவும்',
+						'FreshImport' => 'புதிய இறக்குமதி',
+						'UpdateContent' => 'உள்ளடக்கத்தை புதுப்பிக்கவும்',
+						'UpdateThisMappingAs' => 'இந்த வரைபடத்தைப் புதுப்பிக்கவும்',
+						'Overwritetheavailableimages' => 'கிடைக்கக்கூடிய படங்களை மீளெழுதவும்',
+						'AlwaysCreateAsNewImage' => 'எப்போதும் புதிய படமாக உருவாக்கவும்',
+						'ImportCompleted' => 'இறக்குமதி முடிந்தது!',
+						'importHasFinished' => 'உங்கள் இறக்குமதி வெற்றிகரமாக முடிந்தது. விரிவான இறக்குமதி பதிவேட்டைப் பதிவிறக்கம் செய்து அணுகுவதற்கு கீழே உள்ள பொத்தானைக் கிளிக் செய்க.',
+						'ImportLog' => 'இறக்குமதி பதிவு',
+						'FailedMedia' => 'தோல்வியுற்ற மீடியா',
+						'UseTheFailedImages' => 'URLகளை சரிசெய்து படங்களை மீண்டும் இறக்குமதி செய்ய தோல்வியுற்ற படங்கள் CSV ஐப் பயன்படுத்தவும்',
+						'FeaturedFields' => 'பிரதான படத்தின் மொத்ததரவு',
+						'Summary' => 'சுருக்கம்',
+
                 );
                 return $response;
         }
 		public static function notice_contents()
         {
         $result =array(
-                'UpgradetoPROusingcode' => 'குறியீடு பயன்படுத்தி PRO மேம்படுத்தவும்',
+                'UpgradetoPROusingcode' => 'குறியீடு பயன்படுத்தி PREMIUM மேம்படுத்தவும்',
                 'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'மொத்தமாக இறக்குமதி, மேம்பட்ட ஏற்றுமதி, திட்டமிடல், உள்ளடக்க மேம்படுத்தல், மற்றும் மேலும் வாழ்நாள் ஆதரவு போன்ற அம்சங்களை திறக்கவும்',
                 'upgradenow' => 'இப்போது மேம்படுத்தவும்'
         );

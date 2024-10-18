@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) )
 	exit; // Exit if accessed directly
 
 class ACFImport {
-	private static $acf_instance = null,$media_instance;
+	private static $acf_instance = null;
 
 	public static function getInstance() {
 		if (ACFImport::$acf_instance == null) {
@@ -102,7 +102,7 @@ class ACFImport {
 	 * @param string $post_id - inserted post id
 	 */
 	function acf_import_function($acf_wpname_element ,$post_values,$acf_csv_element, $importAs , $post_id,$mode, $hash_key,$line_number){
-
+		
 		$acf_wp_name = $acf_wpname_element;
 
 		$acf_csv_name = $acf_csv_element; 
@@ -110,7 +110,7 @@ class ACFImport {
 		global $wpdb;
 
 		$helpers_instance = ImportHelpers::getInstance();
-		
+		$media_instance = MediaHandling::getInstance();
 
         $plugin = 'acf';
 		$get_acf_fields = $wpdb->get_results($wpdb->prepare("select post_content, post_name from {$wpdb->prefix}posts where post_type = %s and post_excerpt = %s", 'acf-field', $acf_wp_name ), ARRAY_A);
@@ -126,6 +126,27 @@ class ACFImport {
 			if($field_type == 'text' || $field_type == 'textarea' || $field_type == 'number' || $field_type == 'email' || $field_type == 'url' || $field_type == 'password' || $field_type == 'range' || $field_type == 'radio' || $field_type == 'true_false' || $field_type == 'time_picker' || $field_type == 'color_picker' || $field_type == 'button_group' || $field_type == 'oembed' || $field_type == 'wysiwyg'){
 				$map_acf_wp_element = $acf_wp_name;
 				$map_acf_csv_element = $acf_csv_name;	
+			}
+			if ($field_type == 'icon_picker') {
+				$acf_csv_element = explode(',',$acf_csv_element);
+				$icon_pic_type = !empty($acf_csv_element[0]) ? $acf_csv_element[0] : '';
+				$map_acf_wp_element = $acf_wp_name;
+				if($icon_pic_type == 'dashicons'){
+					$dash_icon_value = !empty($acf_csv_element[1]) ? $acf_csv_element[1] : '';
+				}
+				else if($icon_pic_type == 'media_library'){
+					$dash_media_value = !empty($acf_csv_element[1]) ? $acf_csv_element[1] : '';
+					$dash_icon_value = $media_instance->image_meta_table_entry($line_number ,'', $post_id ,'', $dash_media_value, $hash_key,'media_library',$importAs,'','','', '','','','');
+				}else if($icon_pic_type == 'url'){
+					$dash_icon_value = !empty($acf_csv_element[1]) ? $acf_csv_element[1] : '';
+				}
+				if(!empty($dash_icon_value)){
+					$serialized_value = array(
+						'type'  => $icon_pic_type,
+						'value' => esc_sql($dash_icon_value)
+					);
+					$map_acf_csv_element = $serialized_value; 
+				}
 			}
 			if($field_type == 'date_time_picker'){
 
@@ -244,12 +265,18 @@ class ACFImport {
 					foreach ($exploded_relations as $relVal) {
 						$relationTerm = trim($relVal);
 						//$relTerm[] = $relationTerm;
-
+						$tax_field_type = $get_type_field['field_type'];
 						if ($field_type == 'taxonomy') {
 							$taxonomy_name =  $get_type_field['taxonomy'];
 							// $check_is_valid_term = $helpers_instance->get_requested_term_details($post_id, $relTerm, $taxonomy_name);
 							$check_is_valid_term = $helpers_instance->get_requested_term_details($post_id, array($relationTerm), $taxonomy_name);
-							$relations[] = $check_is_valid_term;
+							//$relations[] = $check_is_valid_term;
+							if(isset($tax_field_type) && ($tax_field_type == 'select' || $tax_field_type == 'radio')){
+								$single_relations  = $check_is_valid_term;
+							}
+							else{
+								$relations[]         = $check_is_valid_term;
+							}
 						} else {
 							$reldata = strlen($relationTerm);
 							$checkrelid = intval($relationTerm);
@@ -287,6 +314,24 @@ class ACFImport {
 							$update_id = unserialize($get_relation_field);
 							$update_id[] = $post_id;
 							if ($field_type == 'taxonomy') {
+									if(isset($tax_field_type) && ($tax_field_type == 'select' || $tax_field_type == 'radio')){
+										update_term_meta($relation_id, $field_value, $bidirectional_single);
+									}
+									else{
+										update_term_meta($relation_id, $field_value, $update_id);
+									}
+										update_term_meta($relation_id, '_' . $field_value, $bidirectional);
+							}
+							else{
+								if(isset($tax_field_type) && ($tax_field_type == 'select' || $tax_field_type == 'radio')){
+									update_post_meta($relation_id, $field_value, $bidirectional_single);
+								}
+								else{
+									update_post_meta($relation_id, $field_value, $update_id);
+								}
+								update_post_meta($relation_id, '_' . $field_value, $bidirectional);
+							}
+							if ($field_type == 'taxonomy') {
 								update_term_meta($relation_id, $field_value, $update_id);
 								update_term_meta($relation_id, '_' . $field_value, $bidirectional);
 							}
@@ -297,7 +342,13 @@ class ACFImport {
 						}
 					}
 				}
-				$map_acf_csv_element = $relations;
+				if(isset($tax_field_type) && ($tax_field_type == 'select' || $tax_field_type == 'radio')){
+					$map_acf_csv_element = $single_relations;
+				}
+				else{
+					$map_acf_csv_element = $relations;
+				}
+				//$map_acf_csv_element = $relations;
 				$map_acf_wp_element = $acf_wp_name;
 			}	
 			if($field_type == 'date_picker'){

@@ -79,7 +79,7 @@ class ImportConfiguration {
 		global $wpdb;
 		$file_table_name = $wpdb->prefix ."smackcsv_file_events";
 		$get_id = $wpdb->get_results( "SELECT id , mode ,file_name , total_rows FROM $file_table_name WHERE `hash_key` = '$hash_key'");
-		$total_rows = $get_id[0]->total_rows;
+		$total_rows = isset($get_id[0]->total_rows) ? $get_id[0]->total_rows : '';
 
 		$response['total_records'] = $total_rows;
         $response['update_fields'] = $fields;

@@ -22,6 +22,11 @@ class LangEN_CA {
 
         public static function contents(){
                 $response = array('ImportUpdate' => 'Import',
+                        'SelectAllImages' => 'Select all images in your import file to avoid import failures',
+                        'ChooseImagesToImport' => 'Choose images to import. Utilize the checkbox below to select all images.',
+                        'FileName' => 'File Name:',
+                        'OK' => 'OK',
+                        'OrderMetaFields' => 'Order Meta Fields',
                         'Exportfiltereddata' => 'Export filtered data',
                         'Exportfiltereddatadesc' => 'Lets you get only required data with the different advanced filters',
                         'Backupineditableformat' => 'Backup in editable format',
@@ -34,6 +39,7 @@ class LangEN_CA {
                         'Export' => 'Export',
                         'Settings' => 'Settings',
                         'Support' => 'Support',
+                        'CouponMetaFields' => 'Coupon Meta Fields',
                         'UploadfromDesktop' => 'Upload from Desktop',
                         'UploadfromFTPSFTP' => 'Upload from FTP / SFTP',
                         'UploadfromFTP' => 'Upload from FTP',
@@ -70,6 +76,8 @@ class LangEN_CA {
                         'HINT' => 'HINT',
                         'Example' => 'Example',
                         'WordPressCoreFields' => 'WordPress Core Fields',
+                        'FeaturedFields' => 'Featured Image Meta',
+                        'MediaFields' => 'Media Fields',
                         'ACFFreeFields' => 'ACF Free Fields',
                         'ACFFields' => 'ACF Fields',
                         'ACFGroupFields' => 'ACF Group Fields',
@@ -86,6 +94,8 @@ class LangEN_CA {
                         'JetEngineRFFields' => 'Jet Engine Repeater Fields',
                         'JetEngineCPTFields' => 'Jet Engine CPT Fields',
                         'jetEngineCPTRFFields' => 'Jet Engine CPT Repeater Fields',
+                        'JetEngineCCTFields' => 'Jet Engine CCT Fields',
+                        'JetEngineCCTRFFields' => 'Jet Engine CCT Repeater Fields',
                         'jetEngineTaxonomyFields' => 'Jet Engine Taxonomy Fields',
                         'jetEngineTaxonomyRFFields' => 'Jet Engine Taxonomy Repeater Fields',
                         'JetEngineRelationsFields' => 'Jet Engine Relations Fields',
@@ -140,6 +150,7 @@ class LangEN_CA {
                         'Height' => 'Height',
                         'SIMPLEMODE' => 'SIMPLE MODE',
                         'CustomerReviews' => 'Customer Reviews',
+                        'WooCommerceReviews' =>'WooCommerce Reviews',
                         'Buynow' => 'Buy now!',
                         'Addons' => 'Addons',
                         'Posts' => 'Posts',
@@ -229,7 +240,8 @@ class LangEN_CA {
                         'Totalnoofrecords' => 'Total no of records',
                         'CurrentProcessingRecord' => 'Current Processing Record',
                         'RemainingRecord' => 'Remaining Record',
-                        'Completed' => 'Completed',
+                       
+                        'Completed' => 'Completed Successfully',
                         'TimeElapsed' => 'Time Elapsed',
                         'approximate' => 'approximate',
                         'DownloadLog' => 'View Log',
@@ -414,6 +426,24 @@ class LangEN_CA {
                         'LifterCouponSettingsFields' => 'Lifter Coupon Settings Fields',
                         'LifterLessonSettingsFields' => 'Lifter Lesson Settings Fields',
                         'WPCompleteFields' => 'WPComplete Fields',
+                        'ChooseUploadMethod' => 'Choose upload method',
+                        'CsvUploadFields' => 'Upload file',
+                        'Device' => 'Device',
+                        'Remote' => 'Remote',
+                        'SelectDeviceZIPfile' => 'Select Device to upload images directly from your device as a ZIP file.',
+                        'SelectDeviceCSVfile' => 'Choose Remote to import images from URLs of remote websites.',
+                        'MediaContinue' => 'Continue',
+                        'FreshImport' => 'Fresh import',
+                        'UpdateContent' => 'Update content',
+                        'UpdateThisMappingAs' => 'Update this mapping as',
+                        'Overwritetheavailableimages' => 'Overwrite the available images',
+                        'AlwaysCreateAsNewImage' => 'Always create as new image',
+                        'ImportCompleted' => 'Import completed!',
+                        'importHasFinished' => 'Your import has successfully finished. Click the button below to download and access a detailed import log.',
+                        'ImportLog' => 'Import log',
+                        'FailedMedia' => 'Failed media',
+                        'UseTheFailedImages' => 'Use the failed images CSV to correct the URLs and re-import the images',
+                        'Summary' => 'Summary',
 
                 );
         return $response;
@@ -421,7 +451,7 @@ class LangEN_CA {
         public static function notice_contents()
         {
         $result =array(
-                'UpgradetoPROusingcode' => 'Upgrade to PRO using code',
+                'UpgradetoPROusingcode' => 'Upgrade to PREMIUM using code',
                 'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Unlock features like bulk import, advanced export, scheduling, content update, & more, plus lifetime support',
                 'upgradenow' => 'upgrade now'
         );

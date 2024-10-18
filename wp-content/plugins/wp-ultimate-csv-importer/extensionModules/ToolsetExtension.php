@@ -102,12 +102,13 @@ class ToolsetExtension extends ExtensionHandler{
 								$fields       = trim($fields, ',');
 								$types_fields = explode( ',', $fields );
 								$count        = count( $types_fields );
+								$wptypesfields = get_option('wpcf-fields');
 								if ( is_array( $types_fields ) ) {
 									for ( $i = 0; $i < $count; $i ++ ) {		
 										foreach ( $types_fields as $key => $value ) {	
 											if(!empty($value)){
 												//change repeatable_group to user readable format	
-												$value = $this->changeRepeatableGroupName($value);
+												//$value = $this->changeRepeatableGroupName($value);
 												
 												if(is_array($value)){	
 													foreach($value as $repeat_value){
@@ -118,9 +119,12 @@ class ToolsetExtension extends ExtensionHandler{
 													$relation_group_name = true;
 												}
 												else{
-													$typesFields['TYPES'][ $value ]['name']  = $value;
-													$typesFields['TYPES'][ $value ]['slug']  = $value;
-													$typesFields['TYPES'][ $value ]['label'] = $value;
+													if($wptypesfields[$value]['type'] !== 'image' && $wptypesfields[$value]['type'] !== 'file' && $wptypesfields[$value]['type'] !== 'video' && $wptypesfields[$value]['type'] !== 'post'){
+														$typesFields['TYPES'][ $value ]['name']  = $value;
+														$typesFields['TYPES'][ $value ]['slug']  = $value;
+														$typesFields['TYPES'][ $value ]['label'] = $value;
+													}
+													
 												}	
 											}
 										}
@@ -131,113 +135,113 @@ class ToolsetExtension extends ExtensionHandler{
 					}
 				}
 			} 
-			if(is_plugin_active('types/wpcf.php')){
-			$relationship_table_name = $wpdb->prefix . "toolset_relationships";
-			$get_relationship = $wpdb->get_results( "SELECT id FROM $relationship_table_name" );
+			// if(is_plugin_active('types/wpcf.php')){
+			// $relationship_table_name = $wpdb->prefix . "toolset_relationships";
+			// $get_relationship = $wpdb->get_results( "SELECT id FROM $relationship_table_name" );
 		
-			}
-			$import_type = $this->import_post_types($import_name_type);
+			// }
+			// $import_type = $this->import_post_types($import_name_type);
 		
-			if($import_type == 'CustomPosts'){
-				$import_type = $import_types;
-			}
+			// if($import_type == 'CustomPosts'){
+			// 	$import_type = $import_types;
+			// }
 
-			if(!empty($get_relationship)){
-				if($import_name_type !== 'Categories' && $import_name_type !== 'Tags' && $import_name_type !== 'Taxonomies'){
-					$check_relation_id = array();
-					$check_relationship = $wpdb->get_results("SELECT parent_types, child_types FROM $relationship_table_name WHERE origin = 'wizard' ");
-					foreach($check_relationship as $check_relationship_values){	
-						$check_relation_id[] = $check_relationship_values->parent_types;
-						$check_relation_id[] = $check_relationship_values->child_types;
-					}
-					$get_relation_types = array();
-					foreach($check_relation_id as $get_relation_id){
-						$get_relation_types[] = $wpdb->get_var("SELECT type FROM {$wpdb->prefix}toolset_type_sets WHERE set_id = $get_relation_id ");
-					}
+			// if(!empty($get_relationship)){
+			// 	if($import_name_type !== 'Categories' && $import_name_type !== 'Tags' && $import_name_type !== 'Taxonomies'){
+			// 		$check_relation_id = array();
+			// 		$check_relationship = $wpdb->get_results("SELECT parent_types, child_types FROM $relationship_table_name WHERE origin = 'wizard' ");
+			// 		foreach($check_relationship as $check_relationship_values){	
+			// 			$check_relation_id[] = $check_relationship_values->parent_types;
+			// 			$check_relation_id[] = $check_relationship_values->child_types;
+			// 		}
+			// 		$get_relation_types = array();
+			// 		foreach($check_relation_id as $get_relation_id){
+			// 			$get_relation_types[] = $wpdb->get_var("SELECT type FROM {$wpdb->prefix}toolset_type_sets WHERE set_id = $get_relation_id ");
+			// 		}
 				
-					$check_intermediate = $wpdb->get_results("SELECT slug, id, intermediary_type FROM $relationship_table_name where intermediary_type != '' ");
-					$is_intermediate = false;
-					if(!empty($check_intermediate)){
-						$intermediate_rel = array();	
-						foreach($check_intermediate as $check_value){
-							$intermediate_rel[] =$check_value->intermediary_type;
-							$intermediate_fields= get_option('wpcf-listing-fields-'.$check_value->intermediary_type.'-'.$check_value->id);
-						}
-						if(in_array($import_types , $intermediate_rel)){
-							$typesFields['TYPES']['intermediate']['label'] = 'Intermediate';
-							$typesFields['TYPES']['intermediate']['name'] = 'intermediate';
-							$typesFields['TYPES']['intermediate']['slug'] = 'intermediate';
+			// 		$check_intermediate = $wpdb->get_results("SELECT slug, id, intermediary_type FROM $relationship_table_name where intermediary_type != '' ");
+			// 		$is_intermediate = false;
+			// 		if(!empty($check_intermediate)){
+			// 			$intermediate_rel = array();	
+			// 			foreach($check_intermediate as $check_value){
+			// 				$intermediate_rel[] =$check_value->intermediary_type;
+			// 				$intermediate_fields= get_option('wpcf-listing-fields-'.$check_value->intermediary_type.'-'.$check_value->id);
+			// 			}
+			// 			if(in_array($import_types , $intermediate_rel)){
+			// 				$typesFields['TYPES']['intermediate']['label'] = 'Intermediate';
+			// 				$typesFields['TYPES']['intermediate']['name'] = 'intermediate';
+			// 				$typesFields['TYPES']['intermediate']['slug'] = 'intermediate';
 
-							$is_intermediate = true;
-						}
-					}	
+			// 				$is_intermediate = true;
+			// 			}
+			// 		}	
 			
-					$is_relation = false;
-					if(!$is_intermediate && in_array($import_type,$get_relation_types)){
-						$typesFields['TYPES']['types_relationship']['label'] = 'Types Relationship';
-						$typesFields['TYPES']['types_relationship']['name'] = 'types_relationship';
-						$typesFields['TYPES']['types_relationship']['slug'] = 'types_relationship';
+			// 		$is_relation = false;
+			// 		if(!$is_intermediate && in_array($import_type,$get_relation_types)){
+			// 			$typesFields['TYPES']['types_relationship']['label'] = 'Types Relationship';
+			// 			$typesFields['TYPES']['types_relationship']['name'] = 'types_relationship';
+			// 			$typesFields['TYPES']['types_relationship']['slug'] = 'types_relationship';
 
-						$is_relation = true;
-					}	
+			// 			$is_relation = true;
+			// 		}	
 
-					if($is_intermediate || $is_relation){
-						$typesFields['TYPES']['relationship_slug']['label'] = 'Relationship Slug';
-						$typesFields['TYPES']['relationship_slug']['name'] = 'relationship_slug';
-						$typesFields['TYPES']['relationship_slug']['slug'] = 'relationship_slug';
-					}
+			// 		if($is_intermediate || $is_relation){
+			// 			$typesFields['TYPES']['relationship_slug']['label'] = 'Relationship Slug';
+			// 			$typesFields['TYPES']['relationship_slug']['name'] = 'relationship_slug';
+			// 			$typesFields['TYPES']['relationship_slug']['slug'] = 'relationship_slug';
+			// 		}
 
-					if($relation_group_name){
-						$typesFields['TYPES']['Parent_group']['label'] = 'Parent Group';
-						$typesFields['TYPES']['Parent_group']['name'] = 'Parent_Group';
-						$typesFields['TYPES']['Parent_group']['slug'] = 'Parent_Group';
-					}
-				}
-			}
+			// 		if($relation_group_name){
+			// 			$typesFields['TYPES']['Parent_group']['label'] = 'Parent Group';
+			// 			$typesFields['TYPES']['Parent_group']['name'] = 'Parent_Group';
+			// 			$typesFields['TYPES']['Parent_group']['slug'] = 'Parent_Group';
+			// 		}
+			// 	}
+			// }
 		}
 		$tool_value = $this->convert_fields_to_array($typesFields);
 		if(!empty($tool_value)){
-			$response['types_fields'] = null;
+			$response['types_fields'] = $tool_value;
 		}
 		
 		// $response['types_fields'] = null;
 		return $response;		
 			
 	}
-	public function changeRepeatableGroupName($value) {
-        global $wpdb;
-        $explode = explode('_',$value);
-        if (count($explode)>1) {
-            if (in_array('repeatable',$explode)) {
-				$merge = [];
-				$name = $wpdb->get_results("SELECT post_name FROM ".$wpdb->prefix."posts WHERE id ='{$explode[3]}'");	
-				$types_fields = array();
-				$repeat_id = $explode[3];
-				$repeat_fields = get_post_meta( $repeat_id, '_wp_types_group_fields', true );	
-				$repeat_field  = trim($repeat_fields, ',');
-				$types_fields = explode( ',', $repeat_field );
-				array_push($types_fields ,  $name[0]->post_name);
+	// public function changeRepeatableGroupName($value) {
+    //     global $wpdb;
+    //     $explode = explode('_',$value);
+    //     if (count($explode)>1) {
+    //         if (in_array('repeatable',$explode)) {
+	// 			$merge = [];
+	// 			$name = $wpdb->get_results("SELECT post_name FROM ".$wpdb->prefix."posts WHERE id ='{$explode[3]}'");	
+	// 			$types_fields = array();
+	// 			$repeat_id = $explode[3];
+	// 			$repeat_fields = get_post_meta( $repeat_id, '_wp_types_group_fields', true );	
+	// 			$repeat_field  = trim($repeat_fields, ',');
+	// 			$types_fields = explode( ',', $repeat_field );
+	// 			array_push($types_fields ,  $name[0]->post_name);
 
-				foreach($types_fields as $keys => $type_field_value){
-					if (strpos($type_field_value, '_repeatable_group') !== false) {	
-						$type_fields = $this->changeRepeatableGroupName($type_field_value);
-						unset($types_fields[$keys]);
-					}
-				}
+	// 			foreach($types_fields as $keys => $type_field_value){
+	// 				if (strpos($type_field_value, '_repeatable_group') !== false) {	
+	// 					$type_fields = $this->changeRepeatableGroupName($type_field_value);
+	// 					unset($types_fields[$keys]);
+	// 				}
+	// 			}
 	
-				if(!empty($type_fields)){
-					$merge = array_merge($types_fields ,$type_fields);
-				}else{
-					$merge = $types_fields;
-				}
-				return $merge;
-            }else{
-				return $value;
-			}
-        }else{
-            return $value;
-		}
-	}
+	// 			if(!empty($type_fields)){
+	// 				$merge = array_merge($types_fields ,$type_fields);
+	// 			}else{
+	// 				$merge = $types_fields;
+	// 			}
+	// 			return $merge;
+    //         }else{
+	// 			return $value;
+	// 		}
+    //     }else{
+    //         return $value;
+	// 	}
+	// }
 	
 	/**
 	* Toolset extension supported import types

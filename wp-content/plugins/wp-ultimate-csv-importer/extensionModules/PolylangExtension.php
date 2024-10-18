@@ -31,7 +31,7 @@ class PolylangExtension extends ExtensionHandler{
 			'LANGUAGE_CODE' => 'language_code',
 			'TRANSLATED_TAXONOMY_TITLE' => 'translated_taxonomy_title');
         }
-        else if($import_type == 'Images' ){
+        else if($import_type == 'Media' ){
             if($poly_settings['media_support'] == 1){
                 $polylangFields = array(
                     'LANGUAGE_CODE' => 'language_code');
@@ -61,7 +61,7 @@ class PolylangExtension extends ExtensionHandler{
       
         if(is_plugin_active('polylang/polylang.php') || is_plugin_active('polylang-pro/polylang.php')){
             $import_type = $this->import_name_as($import_type);
-            if($import_type == 'Posts' || $import_type == 'WooCommerce' || $import_type =='Pages'|| $import_type =='CustomPosts' || $import_type =='Tags' || $import_type =='Categories'|| $import_type =='Images') { 
+            if($import_type == 'Posts' || $import_type == 'WooCommerce' || $import_type =='Pages'|| $import_type =='CustomPosts' || $import_type =='Tags' || $import_type =='Categories') { 
                  return true;
             }else{
                  return false;

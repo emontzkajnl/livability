@@ -30,35 +30,43 @@ class ProductBundleMetaExtension extends ExtensionHandler{
         $import_type = $data;
         $response = [];
         $import_type = $this->import_type_as($import_type);
-        if(is_plugin_active('woocommerce/woocommerce.php')){    
-            if($import_type == 'WooCommerce'){
-                $pro_meta_fields = array(
-                           
-                    'Product Bundle Items' => 'product_bundle_items',
-                    'Layout' => 'layout',
-                    'Form Location' => 'form_location',
-                    'Item Grouping' => 'item_grouping',
-                    'Edit in Cart' => 'edit_in_cart',
-                    'Product Bundle Regular Price' => 'pb_regular_price',
-                    'Product Bundle Sale Price' => 'pb_sale_price',
-                    'Optional' => 'optional',
-                    'Quantity Minimum' => 'quantity_min',
-                    'Quantity Maximum' => 'quantity_max',
-                    'Priced Individually' => 'priced_individually',
-                    'Discount' => 'discount',
-                    'Product details' => 'single_product_visibility',
-                    'Cart Visibility' => 'cart_visibility',
-                    'Order Visibility ' => 'order_visibility',
-                    'Override Title' => 'override_title',
-                    'Override Title Value' => 'override_title_value',
-                    'Override Description' => 'override_description',
-                    'Override Description Value' => 'override_description_value',
-                    'Hide Thumbnail' => 'hide_thumbnail',
-                    'Bundle Virtual'=>'_wc_pb_virtual_bundle',
-					'Bundle Min Qty '=>'_wcpb_min_qty_limit',
-					'Bundle Max Qty '=>'_wcpb_max_qty_limit'
-                   
-                );
+        if(is_plugin_active('woocommerce/woocommerce.php')){ 
+            if(is_plugin_active('woocommerce-product-bundles/woocommerce-product-bundles.php')){ 
+  
+                if($import_type == 'WooCommerce'){
+                    $pro_meta_fields = array(
+                            
+                        'Product Bundle Items' => 'product_bundle_items',
+                        'Layout' => 'layout',
+                        'Form Location' => 'form_location',
+                        'Item Grouping' => 'item_grouping',
+                        'Min Bundle Size' => 'min_bundle_size',
+                        'Max Bundle Size' => 'max_bundle_size',
+                        'Edit in Cart' => 'edit_in_cart',
+                        'Product Bundle Regular Price' => 'pb_regular_price',
+                        'Product Bundle Sale Price' => 'pb_sale_price',
+                        'Optional' => 'optional',
+                        'Quantity Minimum' => 'quantity_min',
+                        'Quantity Maximum' => 'quantity_max',
+                        'Priced Individually' => 'priced_individually',
+                        'Discount' => 'discount',
+                        'Product details' => 'single_product_visibility',
+                        'Cart Visibility' => 'cart_visibility',
+                        'Order Visibility ' => 'order_visibility',
+                        'Product Price details' => 'single_product_price_visibility',
+                        'Cart Price Visibility' => 'cart_price_visibility',
+                        'Order Price Visibility' => 'order_price_visibility',
+                        'Override Title' => 'override_title',
+                        'Override Title Value' => 'override_title_value',
+                        'Override Description' => 'override_description',
+                        'Override Description Value' => 'override_description_value',
+                        'Hide Thumbnail' => 'hide_thumbnail',
+                        'Bundle Virtual'=>'_wc_pb_virtual_bundle',
+                        'Bundle Min Qty '=>'_wcpb_min_qty_limit',
+                        'Bundle Max Qty '=>'_wcpb_max_qty_limit'
+                    
+                    );
+                }
             }
         }
 

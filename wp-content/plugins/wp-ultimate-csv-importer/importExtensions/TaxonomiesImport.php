@@ -115,6 +115,7 @@ class TaxonomiesImport {
 			if(!empty($termID)){
 
 				$core_instance->detailed_log[$line_number]['Message'] = "Skipped, Due to duplicate Term found!.";
+				$core_instance->detailed_log[$line_number]['cat_name'] = $_name;
 				$wpdb->get_results("UPDATE $log_table_name SET skipped = $skipped_count WHERE $unikey_name = '$unikey_value'");
 				return array('MODE' => $mode, 'ERROR_MSG' => 'The term already exists!');
 
@@ -123,12 +124,23 @@ class TaxonomiesImport {
 					$taxoID = wp_insert_term("$_name", "$taxonomy", array('description' => $_desc, 'slug' => $_slug));
 					if(is_wp_error($taxoID)){
 						$core_instance->detailed_log[$line_number]['Message'] = "Can't insert this " . $taxonomy . ". " . $taxoID->get_error_message();
+						$core_instance->detailed_log[$line_number]['state'] = 'Skipped';
+						$core_instance->detailed_log[$line_number]['cat_name'] = $_name;
 						$wpdb->get_results("UPDATE $log_table_name SET skipped = $skipped_count WHERE $unikey_name = '$unikey_value'");
 					}else{
 
 						$termID= $taxoID['term_id'];
 			        	$date = date("Y-m-d H:i:s");
 
+						if(isset($_image)){
+							$media_instance->store_image_ids($i=1);
+							$imageid = $media_instance->media_handling($_image , $termID ,$data_array ,'','','',$header_array ,$value_array);
+							//$imageid = $media_instance->image_meta_table_entry('', $termID, 'thumbnail_id', $_image, $hash_key, 'term', 'term',$templatekey);
+							
+							if($importType == 'product_cat'){
+								add_term_meta($termID , 'thumbnail_id' , $imageid); 
+							}
+						}
 						if(isset($_display_type)){
 							add_term_meta($termID , 'display_type' , $_display_type);
 						}
@@ -140,6 +152,9 @@ class TaxonomiesImport {
 						$returnArr = array('ID' => $termID, 'MODE' => $mode_of_affect);
 					
 						$core_instance->detailed_log[$line_number]['Message'] = 'Inserted ' . $taxonomy . ' ID: ' . $termID;
+						$core_instance->detailed_log[$line_number]['state'] = 'Inserted';
+						$core_instance->detailed_log[$line_number]['cat_name'] = $_name;
+						$core_instance->detailed_log[$line_number]['id'] = $termID;
 						$wpdb->get_results("UPDATE $log_table_name SET created = $created_count WHERE $unikey_name = '$unikey_value'");
 					}
 			}

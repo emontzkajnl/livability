@@ -932,12 +932,12 @@ WDTColumn.prototype.renderConditionalFormattingBlock = function (formattingRule)
         .appendTo('div.wdt-conditional-formatting-rules-container');
     $block.find('select.formatting-rule-if-clause')
         .val(formattingRule.ifClause)
-        .selectpicker();
+        .wdtBootstrapSelectPicker();
     $block.find('input.formatting-rule-cell-value')
         .val(formattingRule.cellVal).addClass('wdt-' + jQuery('#wdt-column-type').val() + 'picker');
     $block.find('select.formatting-rule-action')
         .val(formattingRule.action)
-        .selectpicker();
+        .wdtBootstrapSelectPicker();
     $block.find('input.formatting-rule-set-value')
         .val(formattingRule.setVal);
 
@@ -967,7 +967,7 @@ WDTColumn.prototype.renderConditionalFormattingBlock = function (formattingRule)
         }
     }).change();
 
-    $block.find('select.formatting-rule-if-clause').selectpicker('refresh');
+    $block.find('select.formatting-rule-if-clause').wdtBootstrapSelectPicker('refresh');
 };
 
 /**
@@ -1047,16 +1047,16 @@ WDTColumn.prototype.fillInputs = function () {
         jQuery('#wdt-column-type option[value="formula"]').prop('disabled', 'disabled');
         jQuery('#wdt-column-type').prop('disabled', '');
     }
-    jQuery('#wdt-column-type').selectpicker('val', this.type).change();
+    jQuery('#wdt-column-type').wdtBootstrapSelectPicker('val', this.type).change();
     if (jQuery.inArray(this.type, ['date', 'datetime']) !== -1) {
-        jQuery('#wdt-date-input-format').selectpicker('val', this.dateInputFormat);
+        jQuery('#wdt-date-input-format').wdtBootstrapSelectPicker('val', this.dateInputFormat);
     }
 
 
-    jQuery('#wdt-column-values').selectpicker('val', this.possibleValuesType).trigger('change-without-notification');
+    jQuery('#wdt-column-values').wdtBootstrapSelectPicker('val', this.possibleValuesType).trigger('change-without-notification');
     jQuery('#wdt-column-values-list').tagsinput('removeAll');
-    jQuery('#wdt-column-align-fields').selectpicker('val', this.column_align_fields).change();
-    jQuery('#wdt-column-align-header').selectpicker('val', this.column_align_header).change();
+    jQuery('#wdt-column-align-fields').wdtBootstrapSelectPicker('val', this.column_align_fields).change();
+    jQuery('#wdt-column-align-header').wdtBootstrapSelectPicker('val', this.column_align_header).change();
     if (this.possibleValuesType == 'list') {
         jQuery('#wdt-column-values-list').tagsinput('add', this.valuesList);
     } else if (this.possibleValuesType == 'foreignkey') {
@@ -1092,7 +1092,7 @@ WDTColumn.prototype.fillInputs = function () {
     jQuery('#wdt-column-default-sort').prop('checked', this.defaultSortingColumn).change();
     if (this.defaultSortingColumn) {
         jQuery('#wdt-column-default-sorting-direction')
-            .selectpicker('val', this.defaultSortingColumn);
+            .wdtBootstrapSelectPicker('val', this.defaultSortingColumn);
     }
     let filteringOptionEnabled = this.parent_table.filtering;
     let globalOptionEnabled = this.parent_table.global_search;
@@ -1121,13 +1121,13 @@ WDTColumn.prototype.fillInputs = function () {
                     jQuery('#wdt-filter-default-value-to').val(filterDefaultValues[1]);
                 } else {
                     this.filterDefaultValue = this.filter_type == 'checkbox' ? this.filterDefaultValue.split('|') : this.filterDefaultValue;
-                    jQuery('#wdt-filter-default-value-selectpicker').selectpicker('val', this.filterDefaultValue);
+                    jQuery('#wdt-filter-default-value-selectpicker').wdtBootstrapSelectPicker('val', this.filterDefaultValue);
                 }
             } else {
                 jQuery('#wdt-filter-default-value').val('');
                 jQuery('#wdt-filter-default-value-from').val('');
                 jQuery('#wdt-filter-default-value-to').val('');
-                jQuery('#wdt-filter-default-value-selectpicker').selectpicker('val', '');
+                jQuery('#wdt-filter-default-value-selectpicker').wdtBootstrapSelectPicker('val', '');
             }
         } else {
 
@@ -1136,12 +1136,12 @@ WDTColumn.prototype.fillInputs = function () {
 
     if ((this.parent_table.editable || this.parent_table.table_type == 'manual') && this.type != 'formula') {
         jQuery('li.column-editing-settings-tab').show();
-        jQuery('#wdt-column-editor-input-type').selectpicker('val', this.editor_type).change();
+        jQuery('#wdt-column-editor-input-type').wdtBootstrapSelectPicker('val', this.editor_type).change();
         jQuery('#wdt-column-not-null').prop('checked', this.editingNonEmpty);
         if (this.editingDefaultValue) {
             if (jQuery.inArray(this.editor_type, ['selectbox', 'multi-selectbox']) != -1) {
                 this.editingDefaultValue = this.editor_type == 'multi-selectbox' ? this.editingDefaultValue.split('|') : this.editingDefaultValue;
-                jQuery('#wdt-editing-default-value-selectpicker').selectpicker('val', this.editingDefaultValue);
+                jQuery('#wdt-editing-default-value-selectpicker').wdtBootstrapSelectPicker('val', this.editingDefaultValue);
             } else {
                 jQuery('#wdt-editing-default-value').val(this.editingDefaultValue);
             }
@@ -1274,7 +1274,7 @@ WDTColumn.prototype.applyChanges = function () {
     this.decimalPlaces = ((this.type == 'float' || this.type == 'formula') && jQuery('#wdt-column-decimal-places').val() != '') ?
         jQuery('#wdt-column-decimal-places').val() : -1;
     if (jQuery.inArray(this.type, ['date', 'datetime']) !== -1) {
-        this.dateInputFormat = jQuery('#wdt-date-input-format').selectpicker('val');
+        this.dateInputFormat = jQuery('#wdt-date-input-format').wdtBootstrapSelectPicker('val');
     }
     this.possibleValuesType = jQuery('#wdt-column-values').val();
     if (this.possibleValuesType == 'list') {
@@ -1314,18 +1314,18 @@ WDTColumn.prototype.applyChanges = function () {
     } else if (jQuery.inArray(this.filter_type, ['number-range', 'date-range', 'datetime-range', 'time-range']) != -1) {
         this.filterDefaultValue = jQuery('#wdt-filter-default-value-from').val() + '|' + jQuery('#wdt-filter-default-value-to').val();
     } else {
-        this.filterDefaultValue = jQuery.isArray(jQuery('#wdt-filter-default-value-selectpicker').selectpicker('val')) ?
-            jQuery('#wdt-filter-default-value-selectpicker').selectpicker('val').join('|') :
-            jQuery('#wdt-filter-default-value-selectpicker').selectpicker('val');
+        this.filterDefaultValue = jQuery.isArray(jQuery('#wdt-filter-default-value-selectpicker').wdtBootstrapSelectPicker('val')) ?
+            jQuery('#wdt-filter-default-value-selectpicker').wdtBootstrapSelectPicker('val').join('|') :
+            jQuery('#wdt-filter-default-value-selectpicker').wdtBootstrapSelectPicker('val');
     }
 
     this.editor_type = jQuery('#wdt-column-editor-input-type').val();
     this.editingNonEmpty = jQuery('#wdt-column-not-null').is(':checked') ? 1 : 0;
 
     if (jQuery.inArray(this.editor_type, ['selectbox', 'multi-selectbox']) != -1) {
-        this.editingDefaultValue = jQuery.isArray(jQuery('#wdt-editing-default-value-selectpicker').selectpicker('val')) ?
-            jQuery('#wdt-editing-default-value-selectpicker').selectpicker('val').join('|') :
-            jQuery('#wdt-editing-default-value-selectpicker').selectpicker('val');
+        this.editingDefaultValue = jQuery.isArray(jQuery('#wdt-editing-default-value-selectpicker').wdtBootstrapSelectPicker('val')) ?
+            jQuery('#wdt-editing-default-value-selectpicker').wdtBootstrapSelectPicker('val').join('|') :
+            jQuery('#wdt-editing-default-value-selectpicker').wdtBootstrapSelectPicker('val');
     } else {
         this.editingDefaultValue = jQuery('#wdt-editing-default-value').val();
     }
@@ -1551,7 +1551,7 @@ WDTColumn.prototype.populateColumnForEditing = function () {
         .appendTo($selecter);
 
     if (this.id_column) {
-        $selecter.selectpicker('val', this.id);
+        $selecter.wdtBootstrapSelectPicker('val', this.id);
         wpdatatable_config.id_editing_column = true;
     }
 };
@@ -1567,17 +1567,17 @@ WDTColumn.prototype.populateUserIdColumn = function () {
 
 WDTColumn.prototype.getPremiumPopover = function (e) {
     e.preventDefault();
-    jQuery('[data-toggle="html-input-premium-popover"]').popover('destroy').popover({
+    jQuery('[data-toggle="html-input-premium-popover"]').wdtBootstrapPopover('destroy').wdtBootstrapPopover({
         html: true,
         template: '<div class="popover wdt-premium-popover" role="tooltip">' +
             '<div class="arrow"></div>' +
             '<h3 class="popover-header">' +
             '<i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i>' +
-            wdtWpDataTablesPopoverStrings.title +
+            (wdtWpDataTablesPopoverStrings.title ? wdtWpDataTablesPopoverStrings.title : 'This is a premium feature') +
             '<button type="button" class="closePopover">' +
             '<span aria-hidden="true"><i class="wpdt-icon-times-full"></i></span></button></h3>' +
-            '<div class="popover-body"><span>' + wdtWpDataTablesPopoverStrings.description + '</span> ' +
-            '<div class="popover-footer"><a id="wdt-premium-compare-link">' + wdtWpDataTablesPopoverStrings.compare_link + '</a></div></div' +
+            '<div class="popover-body"><span>' + (wdtWpDataTablesPopoverStrings.description ? wdtWpDataTablesPopoverStrings.description : 'This feature is available only in premium version of wpDataTables') + '</span> ' +
+            '<div class="popover-footer"><a id="wdt-premium-compare-link">' + (wdtWpDataTablesPopoverStrings.compare_link ? wdtWpDataTablesPopoverStrings.compare_link : 'Compare and View Pricing') + '</a></div></div' +
             '</div>',
         content: function () {
             var content = jQuery(this).attr("data-popover-content");
@@ -1590,7 +1590,7 @@ WDTColumn.prototype.getPremiumPopover = function (e) {
     }).on('shown.bs.popover', function () {
         var $popup = jQuery(this);
         jQuery(this).next('.popover').find('button.closePopover').click(function (e) {
-            $popup.popover('hide');
+            $popup.wdtBootstrapPopover('hide');
         });
         jQuery('#wdt-premium-compare-link').click(function () {
             jQuery(location).attr('href', wdtWpDataTablesPage.liteVSPremiumUrl);

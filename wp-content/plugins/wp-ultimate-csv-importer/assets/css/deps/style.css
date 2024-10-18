@@ -872,6 +872,9 @@ Author: Mohamed Fariz
 .wp-ultimate-csv-importer .mr10 {
   margin-right: 10px !important;
 }
+.wp-ultimate-csv-importer .mr10 {
+  margin-right: 10px !important;
+}
 .wp-ultimate-csv-importer .p10 {
   padding: 10px !important;
 }
@@ -1679,6 +1682,9 @@ svg.bi.bi-plus {
     width: 100% !important;
   }
 }
+
+@media (min-width: 1200px) {
+}
 @media (min-width: 768px) and (max-width: 1024px) {
   .wp-ultimate-csv-importer .bootstrap-select {
     width: 100% !important;
@@ -2032,13 +2038,63 @@ svg.bi.bi-plus {
 .wp-ultimate-csv-importer .table td a {
   padding: 5px;
 }
+#importcofigscree {
+  margin-left: 74%;
+  margin-top: -12%;
+  padding: 0px;
+}
+.textmodalzip {
+  font-size: 15px;
+}
+#map1 {
+  margin-top: -5%;
+  margin-right: 20px;
+}
+
 @media (max-width: 768px) {
   .wp-ultimate-csv-importer .table td a {
     padding: 0px;
   }
 }
+
+@media (min-width: 1400px) and (max-width: 1601px) {
+  #uploadtwocontatiner {
+    display: flex;
+    max-width: 600px;
+    margin-left: -26px !important;
+    /* left: 105px; */
+    /* left: 128px; */
+    /* left: 108px;
+    gap: 13px; */
+    left: 95px;
+    gap: 5px;
+    position: relative;
+  }
+  div#newsm {
+    /* max-width: 50% !important; */
+    width: 536px;
+  }
+  #importcofigscree {
+    /* margin-left: 74%;
+    margin-top: -12%; */
+    margin-left: 78%;
+    margin-top: -13%;
+    gap: 13px;
+    padding: 0px;
+  }
+  #map1 {
+    margin-top: -4%;
+    margin-right: 0px;
+  }
+  #smlogmsg {
+    /* margin-bottom: 20px; */
+    height: 65px;
+    width: 1170px !important;
+  }
+}
+
 .wp-ultimate-csv-importer .table td:last-child {
-  text-align: center;
+  text-align: right;
 }
 .wp-ultimate-csv-importer .table td .badge {
   font-size: 13px;
@@ -2254,6 +2310,17 @@ svg.bi.bi-plus {
   max-width: 100% !important;
   padding: 0 !important;
 }
+
+#mediazipuploader {
+  justify-content: space-between;
+}
+
+#import-configuration {
+  height: 100%;
+  animation: wipe-enter 0.5s 1;
+  transition: all 0.5s ease;
+}
+
 .wp-ultimate-csv-importer .card .card-header {
   padding: 10px 20px;
   border-radius: 6px 6px 0 0;
@@ -2271,8 +2338,18 @@ svg.bi.bi-plus {
   border-radius: 6px;
 }
 .wp-ultimate-csv-importer #mapping-accordion {
-  margin-bottom: 30px;
+  margin-bottom: 0px;
+  /* margin-left: -4px; */
 }
+i#smsumicon {
+  margin-top: 3px;
+}
+.filepond--root.filepond--hopper {
+  margin-left: 12px;
+}
+/* .wp-ultimate-csv-importer .filepond--wrapper {
+  margin: 0px auto;
+} */
 .wp-ultimate-csv-importer .main-heading span {
   border: 1px solid #ccc;
   padding: 2px 5px;
@@ -2412,8 +2489,10 @@ svg.bi.bi-plus {
   margin-bottom: 20px;
 }
 .wp-ultimate-csv-importer .border-container {
-  padding: 35px 15px 15px;
+  /* padding: 35px 15px 15px; */
   border: 1px solid #e8e8e8;
+  padding: 15px 15px 0px 15px;
+  /* border: 1px solid #fff;  */
   position: relative;
   margin: 15px auto;
   border-radius: 6px;
@@ -2786,11 +2865,45 @@ svg.bi.bi-plus {
   width: 300px;
   font-weight: 500;
 }
+.wp-ultimate-csv-importer
+  #v-pills-tabContent1
+  .filepond--wrapper
+  .filepond--drop-label
+  label:after {
+  content: "Supported file types .csv .xml .txt .zip";
+  position: absolute;
+  bottom: -20px;
+  z-index: 1000;
+  transform: translateX(-50%);
+  left: 50%;
+  text-align: center;
+  font-family: "Poppins", sans-serif !important;
+  color: #4a5568;
+  width: 300px;
+  font-weight: 500;
+}
+.wp-ultimate-csv-importer
+  #v-pills-tabContent2
+  .filepond--wrapper
+  .filepond--drop-label
+  label:after {
+  content: "Supported file types .zip";
+  position: absolute;
+  bottom: -20px;
+  z-index: 1000;
+  transform: translateX(-50%);
+  left: 50%;
+  text-align: center;
+  font-family: "Poppins", sans-serif !important;
+  color: #4a5568;
+  width: 300px;
+  font-weight: 500;
+}
 .wp-ultimate-csv-importer .filepond--wrapper {
   margin: 20px auto;
 }
 .wp-ultimate-csv-importer .filepond--wrapper .filepond--drop-label {
-  height: 430px;
+  height: 280px;
   background: #f9fbfc;
   border: 2px dashed #cbd5e0;
   border-radius: 6px;
@@ -3767,6 +3880,35 @@ i.removeapikey {
   position: relative;
   border-bottom: none;
 }
+@media (prefers-reduced-motion: no-preference) {
+  .csv-importer-panel {
+    /* height: 100%; */
+    animation: wipe-enter 0.5s 1;
+    transition: all 0.5s ease;
+  }
+}
+@keyframes wipe-enter {
+  0% {
+    /*    transform: scale(0, .025);*/
+    /*  height:0px*/
+    transform: translateY(70%);
+  }
+  100% {
+    /*    height:100%*/
+    transform: translateY(0%);
+    /*    transform: scale(1, .025);*/
+  }
+}
+.modal-header {
+  background: #00a699;
+  color: #fff;
+}
+#textmodal {
+  font-size: 12px;
+}
+.btn-close {
+  filter: invert(1);
+}
 .pro_tag_upgrade .modal-header .btn-close {
   position: absolute;
   right: 8px;
@@ -3774,6 +3916,21 @@ i.removeapikey {
   font-size: 12px;
   font-weight: bolder;
 }
+/* .pro-tag::before, .wp-ultimate-csv-importer .upgrade-pro-tag::before {
+  content: "PRO";
+  position: absolute;
+  z-index: 1000;
+  color: white;
+  left: 105px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 3px 8px;
+  border-radius: 11px;
+  font-weight: 600;
+  background: #e04b4a;
+  font-size: 12px;
+  line-height: 1;
+} */
 .pro_tag_upgrade .modal-header img {
   width: 100px;
 }
@@ -3800,7 +3957,351 @@ i.removeapikey {
   font-size: 17px;
   margin-bottom: 0px;
 }
-.export_filter_category input,.export_filter_category input:focus{
+.export_filter_category input,
+.export_filter_category input:focus {
   border: none;
   box-shadow: none;
+}
+.hide-button {
+  display: none;
+}
+
+.csv-import-table {
+  height: 373px;
+  overflow: auto;
+}
+
+.csv-import-table::-webkit-scrollbar {
+  width: 10px;
+}
+.csv-import-table::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.csv-import-table::-webkit-scrollbar-thumb {
+  background: #369e8a;
+  border-radius: 5px;
+}
+.csv-import-table::-webkit-scrollbar-thumb:hover {
+  background: #116466;
+}
+#smscroll {
+  margin-right: 20px;
+}
+/* #smlogmsg {
+  margin-bottom: 20px;
+  height: 65px;
+  width: 1032px;
+} */
+.media-section {
+  margin-top: -10px;
+}
+.links-section {
+  margin-top: -18px;
+}
+/* #failedmedia {
+  margin-right: 20px;
+  color: red;
+}*/
+
+div#failedmedia {
+  /* margin-top: 5px; */
+}
+
+.main_log_div.d-flex.justify-content-between.id\=\"smchan\".false {
+  margin-bottom: 20px;
+  /* box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px  */
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+.logmsg {
+  margin-left: 20px;
+}
+/* General styles */
+.main_log_div {
+  /* padding: 10px; */
+  padding: 0px 5px 0px 5px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.hidden {
+  display: none;
+}
+
+.no-media {
+  /* padding-top: 20px; */
+  padding-top: 8px;
+  gap: 6px;
+  display: grid;
+}
+
+/* Skipped state styling */
+.main_log_div.skipped {
+  /* background-color: #ffe6e6;
+  border-color: #ffcccc; */
+}
+
+.mt30logmsg {
+  display: flex;
+}
+
+.wp-ultimate-csv-importer .mt30logmsg {
+  /* margin-top: 21px !important; */
+  /* margin-right: 250px; */
+  gap: 10px;
+  justify-content: center;
+}
+
+/* .skippedtext {
+  margin-top: 25px;
+} */
+
+.hide-button {
+  display: none;
+}
+svg {
+  overflow: hidden;
+  vertical-align: middle;
+  /* margin-left: 7px;
+  margin-top: -3px; */
+}
+
+#closemediaimport {
+  justify-content: center;
+}
+
+#svgdesign {
+  margin-left: 7px;
+  margin-top: -3px;
+}
+
+/* Flex container styles */
+.d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+/* Gap between items */
+.gap {
+  gap: 1rem;
+}
+
+/* Disabled link styles */
+.Disabled {
+  pointer-events: none;
+  color: #ccc;
+}
+
+/* Margin left styles */
+.ml10 {
+  margin-left: 10px;
+}
+
+/* Image styles */
+img {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Media section styles */
+.media-section span {
+  margin-right: 0.5rem;
+  font-size: 14px;
+}
+.media-section p {
+  margin-right: 0.5rem;
+  text-decoration: none;
+}
+/* Links section styles */
+.links-section span {
+  margin-right: 0.5rem;
+}
+
+.links-section a {
+  margin-right: 0.5rem;
+  color: #00a699;
+  text-decoration: none;
+}
+
+.links-section a:hover {
+  text-decoration: underline;
+}
+
+/* Scrollable section styles */
+#smscroll {
+  overflow-y: auto;
+  max-height: 150px;
+}
+
+/* Icons */
+.MdUpdateDisabled {
+  font-size: 24px;
+  color: #ff0000;
+}
+
+/* Summary styles */
+.summary span {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.space {
+  display: flex;
+  gap: 31px;
+}
+.btn {
+  display: flex;
+  /* gap: 1rem; */
+}
+.space1 {
+  display: flex;
+  gap: 4.7rem;
+}
+.bold {
+  font-weight: bold;
+}
+.custom-tooltip {
+  background-color: #00a699 !important;
+  color: white !important;
+  border-radius: 4px;
+  padding: 5px 10px;
+}
+.chatgptcontent {
+  display: flex;
+}
+#smclose {
+  margin-top: 15px;
+}
+#smstatus {
+  font-size: 18px;
+}
+.smsummarybutton {
+  /* margin-top: 5px;  */
+}
+.maintainancemodecontent {
+  display: flex;
+}
+
+#fmbutton1 {
+  text-transform: capitalize;
+  display: block;
+  color: #fff;
+  text-decoration: none;
+}
+#upload-zip-open {
+}
+div#newsm {
+  /* max-width: 50% !important; */
+  width: 500px;
+}
+#smbutton1 {
+  text-transform: capitalize;
+  /* display: block; */
+  display: flex;
+  color: #fff;
+  text-decoration: none;
+}
+
+.smlogtext {
+  text-transform: capitalize;
+}
+
+.smpipe {
+  margin-top: -3px;
+}
+
+#smmodaldown {
+  background: #00a699;
+  border: 1px solid #00a699;
+}
+#smmodaldown1 {
+  background: #00a699;
+  border: 1px solid #00a699;
+}
+#smmodalfailed {
+  background: #00a699;
+  border: 1px solid #00a699;
+}
+
+#smsumicon {
+  margin-right: 10px;
+  /* width: 20px;  
+  height: 20px; 
+  margin-top: -22px; */
+}
+
+#smsumicon1 {
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+#uploadtwocontatiner {
+  /* gap: 50px; */
+  display: flex;
+  max-width: 600px;
+  margin-left: 15px;
+}
+
+.custom-radio .form-check-input {
+  background-color: transparent;
+  margin-top: 5px;
+}
+
+.custom-radio .form-check-label {
+  display: inline-block;
+  margin-left: 5px;
+}
+#modalcontinue {
+  background: #00a699;
+  border-color: #00a699;
+  color: #fff;
+  font-size: 1rem;
+  padding: 8px 20px;
+  line-height: 1.5em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+input[type="radio"]:checked::before {
+  background: #00a699;
+}
+.form-check-input:checked {
+  border-color: #00a699;
+  background: #fff;
+}
+.download-icon-img {
+  width: 20px;
+  height: 20px;
+  margin-top: -22px;
+}
+.custom-radio.true {
+  /* display:; */
+  /* background-color: rebeccapurple; */
+}
+.custom-radio.true input::before {
+  content: "";
+  border-radius: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin: 0.1875rem;
+  background-color: #00a699 !important;
+  line-height: 1.14285714;
+  float: left;
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-font-smoothing: antialiased;
 }

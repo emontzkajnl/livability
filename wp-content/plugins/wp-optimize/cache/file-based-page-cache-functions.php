@@ -401,14 +401,18 @@ function wpo_cache_filename($ext = '.html') {
 		}
 	}
 
-	// add hash of queried cookies and variables to cache file name.
+	// Adding cache key with queried cookies and variables to the cache file name.
 	if ('' !== $cache_key) {
-		$hash = md5($cache_key);
-		$filename .= '-'.$hash;
-		$wpo_cache_filename_debug[] = 'Hash: ' . $hash;
+		// Add human-readable cache key to the filename
+		$filename .= str_replace('--', '-', '-'.$cache_key);
 	}
 
 	$filename = apply_filters('wpo_cache_filename', $filename);
+
+	// Trimming filename if it exceeds 240 characters due to filesystem limitations
+	if (strlen($filename) > 240) {
+		$filename = substr($filename, 0, 199) . '-' . sha1($filename);
+	}
 
 	$wpo_cache_filename_debug[] = 'Extension: ' . $ext;
 	$wpo_cache_filename_debug[] = 'Filename: ' . $filename.$ext;
@@ -1127,6 +1131,12 @@ function wpo_delete_files($src, $recursive = true) {
 		if (!@unlink($src) && file_exists($src)) { // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress PHP warning in case of failure
 			return false;
 		}
+
+		// Remove gzipped version of the file
+		if (file_exists("$src.gz")) {
+			unlink("$src.gz");
+		}
+
 		return true;
 	}
 

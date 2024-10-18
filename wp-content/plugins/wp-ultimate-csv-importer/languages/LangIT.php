@@ -23,6 +23,10 @@ class LangIT {
 
 	public static function contents(){
 		$response = array('ImportUpdate' => 'Importare',
+		'SelectAllImages' => 'Seleziona tutte le immagini nel file di importazione per evitare errori di importazione',
+		'ChooseImagesToImport' => 'Scegli le immagini da importare. Utilizza la casella di controllo qui sotto per selezionare tutte le immagini.',
+		'FileName' => 'Nome del file:',
+		'OK' => 'OK',
 		'Exporterwithadvancedfilters' => 'Esportatore con filtri avanzati',
 		'Exportfiltereddata' => 'Esporta i dati filtrati',
         'Exportfiltereddatadesc' => 'Consente di ottenere solo i dati richiesti con i diversi filtri avanzati',
@@ -49,6 +53,7 @@ class LangIT {
 		'Drag&Dropyourfilesor' => 'Trascina e rilascia i tuoi file o',
 		'Browse' => 'Navigare',
 		'NewItem' => 'Nuovo oggetto',
+		'CouponMetaFields' => 'Campi meta coupon',
 		'ExistingItems' => 'Articoli esistenti',
 		'ImportEachRecordAs'=> 'Importa ogni record come',
 		'Continue' => 'Continua',
@@ -103,6 +108,8 @@ class LangIT {
 		'JetEngineRFFields' => 'Campi ripetitori  Jet Engine',
 		'JetEngineCPTFields' => 'Campi CPT Jet Engine',
 		'JetEngineCPTRFFields' => 'Campi ripetitori CPT Jet Engine',
+		'JetEngineCCTFields' => 'Campi CCT per motori a reazione',
+		'JetEngineCCTRFFields' => 'Campi RF CCT del motore a reazione',
 		'JetEngineTaxonomyFields' => 'Campi della tassonomia dei motori a reazione',
 		'JetEngineTaxonomyRFFields' => 'Campi ripetitori della tassonomia dei motori a reazione',
 		'JetEngineRelationsFields' => 'Campi delle relazioni del motore a reazione',
@@ -387,14 +394,34 @@ class LangIT {
 		'SampleCSVXML' => 'Campione CSV&XML',
 		'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => 'Avvertenza: mancano alcuni componenti aggiuntivi, si consiglia di farlo',
 		'DragDropyourfilesor' => 'Trascina e rilascia i tuoi file o',
-		'WPCompleteFields' => 'Campi WPComplete'
+		'WPCompleteFields' => 'Campi WPComplete',
+		'ChooseUploadMethod' => 'Scegli il metodo di caricamento',
+		'Media' => 'Media',
+		'CsvUploadFields' => 'Carica file',
+		'Device' => 'Dispositivo',
+		'Remote' => 'Remoto',
+		'SelectDeviceZIPfile' => 'Seleziona Dispositivo per caricare immagini direttamente dal tuo dispositivo come file ZIP.',
+		'SelectDeviceCSVfile' => 'Scegli Remoto per importare immagini dagli URL di siti web remoti.',
+		'MediaContinue' => 'Continua',
+		'FreshImport' => 'Nuova importazione',
+		'UpdateContent' => 'Aggiorna contenuto',
+		'UpdateThisMappingAs' => 'Aggiorna questa mappatura come',
+		'Overwritetheavailableimages' => 'Sovrascrivi le immagini disponibili',
+		'AlwaysCreateAsNewImage' => 'Crea sempre come nuova immagine',
+		'ImportCompleted' => 'Importazione completata!',
+		'importHasFinished' => 'La tua importazione è stata completata con successo. Clicca il pulsante qui sotto per scaricare e accedere a un registro dettagliato dell\'importazione.',
+		'ImportLog' => 'Registro di importazione',
+		'FailedMedia' => 'Media falliti',
+		'UseTheFailedImages' => 'Usa il CSV delle immagini fallite per correggere gli URL e reimportare le immagini',
+		'FeaturedFields' => 'Metadati Immagine in Evidenza',
+		'Summary' => 'Riepilogo',
         );
 		return $response;
 	}
 	public static function notice_contents()
 	{
 	$result =array(
-			'UpgradetoPROusingcode' => 'Upgrade auf PRO mit Code',
+			'UpgradetoPROusingcode' => 'Upgrade auf PREMIUM mit Code',
 			'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Sblocca le funzionalità come importazione sfuso, esportazione avanzata, programmazione, aggiornamento dei contenuti, e più, oltre al supporto a vita',
 			'upgradenow' => 'aggiorna ora'
 	);

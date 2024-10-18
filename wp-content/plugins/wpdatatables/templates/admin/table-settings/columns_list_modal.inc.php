@@ -2,7 +2,7 @@
 
 <!-- #wdtColumnsListModal -->
 <div class="modal fade" id="wdt-columns-list-modal" data-backdrop="static" data-keyboard="false"
-     tabindex="-1" role="dialog" aria-hidden="true">
+     tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

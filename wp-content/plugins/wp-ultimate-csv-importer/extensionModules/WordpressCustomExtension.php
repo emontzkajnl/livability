@@ -161,7 +161,7 @@ class WordpressCustomExtension extends ExtensionHandler{
                                     ON p.ID = pm.post_id
                                     WHERE p.post_type = '{$module}' AND NOT p.post_status = 'trash'
                                     GROUP BY meta_key
-                                    HAVING meta_key NOT LIKE '\_%' and meta_key NOT LIKE 'rank_%'and meta_key NOT LIKE 'field_%' and meta_key NOT LIKE 'wpcf-%' and meta_key NOT LIKE 'wpcr3_%' and meta_key NOT LIKE '%pods%' and meta_key NOT LIKE '%group_%' and meta_key NOT LIKE '%repeat_%' and meta_key NOT LIKE 'mp_%' $acf_not_like_query $pods_not_like_query $metabox_not_like_query
+                                    HAVING meta_key NOT LIKE '\_%' and meta_key NOT LIKE 'rank_%'and meta_key NOT LIKE 'ywbc_%' and meta_key NOT LIKE 'field_%' and meta_key NOT LIKE 'wpcf-%' and meta_key NOT LIKE 'wpcr3_%' and meta_key NOT LIKE '%pods%' and meta_key NOT LIKE '%group_%' and meta_key NOT LIKE '%repeat_%' and meta_key NOT LIKE 'mp_%' $acf_not_like_query $pods_not_like_query $metabox_not_like_query
                                     ORDER BY meta_key" );
                                     
         } else {
@@ -171,7 +171,7 @@ class WordpressCustomExtension extends ExtensionHandler{
                                     GROUP BY meta_key
                                     HAVING meta_key NOT LIKE '\_%' and meta_key NOT LIKE 'field_%' and meta_key NOT LIKE 'wpcf-%' and meta_key NOT LIKE 'wpcr3_%' and meta_key NOT LIKE '%pods%' and meta_key NOT LIKE '%group_%' and meta_key NOT LIKE '%repeat_%' 
                                     and meta_key NOT LIKE 'closedpostboxes_%' and meta_key NOT LIKE 'metaboxhidden_%' and meta_key NOT LIKE 'billing_%' and meta_key NOT LIKE 'aioseop_%' and meta_key NOT LIKE 'dismissed_%' and meta_key NOT LIKE 'manageedit-%'
-                                    and meta_key NOT LIKE 'wp_%' and meta_key NOT LIKE 'wc_%' and meta_key NOT LIKE 'mp_%' and meta_key NOT LIKE 'shipping_%' and meta_key NOT LIKE 'show_%' and meta_key NOT LIKE 'acf_%' and meta_key NOT LIKE 'user_%'
+                                    and meta_key NOT LIKE 'wp_%' and AND meta_key NOT LIKE 'ywbc_%' AND meta_key NOT LIKE 'wc_%' and meta_key NOT LIKE 'mp_%' and meta_key NOT LIKE 'shipping_%' and meta_key NOT LIKE 'show_%' and meta_key NOT LIKE 'acf_%' and meta_key NOT LIKE 'user_%'
                                     ORDER BY meta_key" );                             
         }
 

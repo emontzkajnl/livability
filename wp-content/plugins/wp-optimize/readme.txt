@@ -4,8 +4,8 @@ Donate link: https://david.dw-perspective.org.uk/donate
 Tags: cache, caching, image cache, minify, performance cache, page speed, image optimizer, compress images, optimize database, clean database
 Requires PHP: 5.6
 Requires at least: 4.5
-Tested up to: 6.5
-Stable tag: 3.3.2
+Tested up to: 6.6
+Stable tag: 3.6.0
 License: GPLv2+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -394,6 +394,63 @@ If none of the above works, disable processing of JavaScript files in the minify
 
 
 == Changelog ==
+
+= 3.6.0 - 12/Sep/2024 =
+
+* FEATURE: Premium - Auto-detect images lacking dimension attributes and add them to improve CLS
+* FIX: Fixed the issue that disabled WebP conversion due to checking all shell commands for WebP compression
+* FIX: Premium - Unused Images - The unused image size deletion functionality does not work when images are not in the /yyyy/mm/ folder
+* REFACTOR: Removed unnecessary static methods in WebP class
+* TWEAK: Image compression - Rolled back to using popup error notices as in versions prior to 3.4.0
+* TWEAK: Added a more descriptive error with resolution proposals for failed gzip compression and browser cache tests
+* TWEAK: Fix broken unused image list thumbnails and download as csv link in Multisite
+* TWEAK: Fix the singleton pattern in Heartbeat class
+* TWEAK: Image compression functionality added to the Media Library page
+* TWEAK: Premium - Cache - Added support for Aelia Currency Switcher plugin
+* TWEAK: Premium - Unusued images - improve clarity in UI for images in post revisions
+* TWEAK: Added additional checks to the `implode()` function to mitigate the risk of fatal errors on certain instances
+
+= 3.5.0 - 14/Aug/2024 =
+
+* FEATURE: Premium - Host Google and minimal analytics scripts locally
+* FIX: Premium - Cache - Single page cache purge/preload feature isn't working 
+* TWEAK: Add logging for the WebP feature
+* TWEAK: Allow minification of script modules
+* TWEAK: Cache - Purge the cache when the site is migrated 
+* TWEAK: Improvements to asset minification cache logic
+* TWEAK: Improvements to reSmushIt curl error message
+* TWEAK: Minify - Added an option to disable Google Fonts processing when it causes conflicts with other plugins
+* TWEAK: Move all WPO files from the `uploads` folder to `uploads/wpo`
+* TWEAK: Style improvement of the loading modals
+
+= 3.4.2 - 03/Jul/2024 =
+
+* FIX: Removes unnecessary heartbeat calls for retrieving information about images
+
+= 3.4.1 - 26/Jun/2024 =
+
+* FIX: Issue with bulk editing on the posts and pages edit screen
+
+= 3.4.0 - 25/Jun/2024 =
+
+* FEATURE: Premium - Smush - Bulk compress / restore from media library
+* FIX: Deactivate the form for minifying JS/CSS settings when the corresponding option is disabled
+* REFACTOR: The functionality for the 'Unused Images' feature in ACF has been moved to a separate class
+* TWEAK: Add UpdraftCentral commands for the latest WP-Optimize features
+* TWEAK: Adjusted the scheduled preload time for improved performance
+* TWEAK: Auto-update advanced-cache.php settings during site migration
+* TWEAK: Cache - Human-readable file names for the cache directory
+* TWEAK: Caching related cron jobs are activated even though cache is disabled
+* TWEAK: Image compression - Updated message for restoring images action
+* TWEAK: Implement Heartbeat API for image compression progress updates
+* TWEAK: Improving vendor autoload
+* TWEAK: Introduces a hook (`wpo_force_webp_serve_using_altered_html`) for changing WebP serving method
+* TWEAK: Minify - Exclude .min files from minification
+* TWEAK: Minify - Improve list of processed files UI
+* TWEAK: Optimization of the get_uncompressed_image query
+* TWEAK: Persist script loading strategy when minifying JS files
+* TWEAK: Premium - Compatibility with Curcy WooCommerce multi currency plugin
+* TWEAK: Premium - Unused Images - Added an option to delete original images when scaled versions exist
 
 = 3.3.2 - 16/Apr/2024 =
 
@@ -1528,4 +1585,4 @@ If none of the above works, disable processing of JavaScript files in the minify
 * Fix Interface
 
 == Upgrade Notice ==
-* 3.3.2: Various fixes, and tweaks - a recommended update for all
+* 3.6.0: One premium feature added. Ability to add missing image dimension attributes to image tags, a lot of fixes and tweaks - a recommended update for all

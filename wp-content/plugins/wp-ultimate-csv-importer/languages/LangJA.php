@@ -23,6 +23,10 @@ class LangJA {
 
         public static function contents(){
                 $response = array('ImportUpdate' => 'インポート/更新',
+                        'SelectAllImages' => 'インポートファイル内のすべての画像を選択して、インポートの失敗を防ぐ',
+                        'ChooseImagesToImport' => 'インポートする画像を選択してください。以下のチェックボックスを利用して、すべての画像を選択します。',
+                        'FileName' => 'ファイル名:',
+                        'OK' => 'OK',
                         'AutoSchedulewithreusabletemplates' => '再利用可能なテンプレートによる自動スケジュール',
                         'Dashboard' => 'ダッシュボード',
                         'Exportfiltereddata' => 'フィルタリングされたデータをエクスポートする',
@@ -154,6 +158,8 @@ class LangJA {
                         'JetEngineRFFields' => 'ジェット エンジン リピーター フィールド',
                         'JetEngineCPTFields' => 'ジェット エンジンの CPT フィールド',
                         'jetEngineCPTRFFields' => 'ジェット エンジン CPT リピーター フィールド',
+                        'JetEngineCCTFields' => 'ジェットエンジンCCTフィールド',
+                        'JetEngineCCTRFFields' => 'ジェットエンジンCCTRFフィールド',
                         'jetEngineTaxonomyFields' => 'ジェット エンジン分類フィールド',
                         'jetEngineTaxonomyRFFields' => 'Jet Engine タクソノミー リピーター フィールド',
                         'jetEngineRelationsFields' => 'ジェットエンジン関連分野',
@@ -447,14 +453,34 @@ class LangJA {
 			'SampleCSVXML' => 'サンプル CSV&XML',
 			'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => '警告: 一部のアドオンが不足しています。',
 			'DragDropyourfilesor' => 'ファイルをドラッグ & ドロップするか、',
-                        'WPCompleteFields' => 'WPComplete フィールド'
+                        'WPCompleteFields' => 'WPComplete フィールド',
+                        'ChooseUploadMethod' => 'アップロード方法を選択',
+                        'Media' => 'メディア',
+                        'CsvUploadFields' => 'ファイルをアップロード',
+                        'Device' => 'デバイス',
+                        'Remote' => 'リモート',
+                        'SelectDeviceZIPfile' => 'デバイスを選択して、デバイスから直接ZIPファイルとして画像をアップロードします。',
+                        'SelectDeviceCSVfile' => 'リモートを選択して、リモートWebサイトのURLから画像をインポートします。',
+                        'MediaContinue' => '続行',
+                        'FreshImport' => '新しいインポート',
+                        'UpdateContent' => 'コンテンツを更新',
+                        'UpdateThisMappingAs' => 'このマッピングを次のように更新',
+                        'Overwritetheavailableimages' => '利用可能な画像を上書き',
+                        'AlwaysCreateAsNewImage' => '常に新しい画像として作成',
+                        'ImportCompleted' => 'インポート完了！',
+                        'importHasFinished' => 'インポートが正常に完了しました。下のボタンをクリックして、詳細なインポートログをダウンロードしてアクセスしてください。',
+                        'ImportLog' => 'インポートログ',
+                        'FailedMedia' => '失敗したメディア',
+                        'UseTheFailedImages' => '失敗した画像のCSVを使用してURLを修正し、画像を再インポートします',
+                        'FeaturedFields' => '注目画像のメタデータ',
+                        'Summary' => '概要',
                 );
         return $response;
         }
         public static function notice_contents()
         {
         $result =array(
-                'UpgradetoPROusingcode' => 'コードを使ってPROにアップグレードします。',
+                'UpgradetoPROusingcode' => 'コードを使ってPREMIUMにアップグレードします。',
                 'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'大量の輸入、高度輸出、予定、コンテンツ更新、さらに生涯サポートなどの機能を解除する。',
                 'upgradenow' => 'アップグレードしろ'
         );

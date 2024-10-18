@@ -295,7 +295,7 @@
                     wdt_current_config.wdtFontColorSettings,
                     function( color ){ return ''; }
                 );
-            $('#color-and-font-settings .selectpicker').selectpicker('val', '');
+            $('#color-and-font-settings .selectpicker').wdtBootstrapSelectPicker('val', '');
             $('input#wdt-border-input-radius').val('');
             $('input#wdt-font-size').val('');
             $('#wdt-remove-borders').prop( 'checked', false ).change();
@@ -305,9 +305,11 @@
         /**
          * Switch tabs in plugin settings
          */
-        $('.wdt-datatables-admin-wrap .plugin-settings .tab-nav:not(.mysql-serverside-settings-block) a').click(function (e) {
-            $(this).tab('show');
-        });
+        $('.wdt-datatables-admin-wrap .plugin-settings .tab-nav:not(.mysql-serverside-settings-block)  [data-toggle="tab"]').on('click', function (e) {
+            e.preventDefault()
+            $('.wdt-datatables-admin-wrap .tab-content .tab-pane').removeClass('active in')
+            $($(this)[0].hash).addClass('active in')
+        })
 
 
         /**

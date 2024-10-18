@@ -17,6 +17,7 @@ use WPForms\Integrations\Stripe\Helpers;
 use WPForms\Helpers\Crypto;
 use Exception;
 use WPForms\Vendor\Stripe\Charge;
+use WPForms\Vendor\Stripe\CountrySpec;
 
 /**
  * Stripe PaymentIntents API.
@@ -460,7 +461,12 @@ class PaymentIntents extends Common implements ApiInterface {
 
 			if ( isset( $args['customer_email'] ) || isset( $args['customer_name'] ) ) {
 				$this->set_customer( $args['customer_email'] ?? '', $args['customer_name'] ?? '', $args['customer_address'] ?? [] );
-				$this->attach_customer_to_payment();
+
+				// Stop payment processing for all.
+				// Otherwise, it might stop for WPForms, but proceed for Stripe.
+				if ( is_null( $this->attach_customer_to_payment() ) ) {
+					return;
+				}
 
 				$args['customer'] = $this->get_customer( 'id' );
 			}
@@ -569,6 +575,10 @@ class PaymentIntents extends Common implements ApiInterface {
 
 		if ( isset( $args['application_fee_percent'] ) ) {
 			$sub_args['application_fee_percent'] = $args['application_fee_percent'];
+		}
+
+		if ( isset( $args['description'] ) ) {
+			$sub_args['description'] = $args['description'];
 		}
 
 		try {
@@ -911,7 +921,7 @@ class PaymentIntents extends Common implements ApiInterface {
 	 */
 	private function set_bypass_captcha_3dsecure_token() {
 
-		$form_data = wpforms()->get( 'process' )->form_data;
+		$form_data = wpforms()->obj( 'process' )->form_data;
 
 		// Set token only if captcha is enabled for the form.
 		if ( empty( $form_data['settings']['recaptcha'] ) ) {
@@ -1036,6 +1046,40 @@ class PaymentIntents extends Common implements ApiInterface {
 
 			wpforms_log(
 				'Stripe: Unable to create Setup Intent.',
+				$e->getMessage(),
+				[
+					'type' => [ 'payment', 'error' ],
+				]
+			);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get Country Specs.
+	 *
+	 * @since 1.9.1
+	 *
+	 * @param string $country Country code.
+	 * @param array  $args    Additional arguments.
+	 *
+	 * @throws ApiErrorException If the request fails.
+	 *
+	 * @return CountrySpec|null
+	 */
+	public function get_country_specs( string $country, array $args = [] ) {
+
+		try {
+			if ( isset( $args['mode'] ) ) {
+				$auth_opts = [ 'api_key' => Helpers::get_stripe_key( 'secret', $args['mode'] ) ];
+			}
+
+			return CountrySpec::retrieve( $country, $auth_opts ?? Helpers::get_auth_opts() );
+		} catch ( Exception $e ) {
+
+			wpforms_log(
+				'Stripe: Unable to get Country specs.',
 				$e->getMessage(),
 				[
 					'type' => [ 'payment', 'error' ],

@@ -175,9 +175,9 @@ class WPMLImport {
 		}			
 
 		//added - to change lang code in admin view link
-		if(isset($core_instance->detailed_log[$line_number]['VERIFY'])){			
-			$admin_view_link = $this->check_for_wpml_urls($core_instance->detailed_log[$line_number]['VERIFY'], $data_array['language_code']);			
-			$core_instance->detailed_log[$line_number]['VERIFY'] = $admin_view_link;
+		if(isset($core_instance->detailed_log[$line_number]['adminLink'])){		
+			$admin_view_link = $this->check_for_wpml_urls($core_instance->detailed_log[$line_number]['adminLink'], $data_array['language_code']);			
+			$core_instance->detailed_log[$line_number]['adminLink'] = $admin_view_link;		
 		}
 	}
 

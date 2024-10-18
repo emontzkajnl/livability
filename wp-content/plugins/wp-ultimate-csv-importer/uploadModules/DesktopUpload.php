@@ -15,7 +15,7 @@ class DesktopUpload implements Uploads{
     private static $instance = null;
     private static $smack_csv_instance = null;
 
-    private function __construct(){
+    private function __construct(){ 
 		add_action('wp_ajax_get_desktop',array($this,'upload_function'));
     }
 
@@ -32,19 +32,23 @@ class DesktopUpload implements Uploads{
     /**
 	 * Upload file from desktop.
 	 */
-    public function upload_function(){ 
+    public function upload_function(){
         check_ajax_referer('smack-ultimate-csv-importer', 'securekey');
         $validate_instance = ValidateFile::getInstance();
         $zip_instance = ZipHandler::getInstance();
         global $wpdb;
         $file_table_name = $wpdb->prefix ."smackcsv_file_events";
           
-        $file_name = sanitize_file_name($_FILES['csvFile']['name']);    
+        $file_name = sanitize_file_name($_FILES['csvFile']['name']);
+        $media_type = '';
+        if (isset($_POST['MediaType'])) {
+            $media_type = sanitize_key($_POST['MediaType']);
+        }
         $file_extension = pathinfo($file_name, PATHINFO_EXTENSION);
         $validate_format = $validate_instance->validate_file_format($file_name);
         
         $response =[];
-        if (!extension_loaded('xml')) {
+        if (!extension_loaded('xml') && $file_extension == 'xml') {
             $response['success'] = false;
             $response['message'] = 'The required PHP module xml is not installed. Please install it.';
             echo wp_json_encode($response);
@@ -112,6 +116,9 @@ class DesktopUpload implements Uploads{
                                 $fields = $wpdb->get_results("UPDATE $file_table_name SET status='Downloaded',`lock`=false WHERE id = '$lastid'");
                                 
                                 $get_result = $validate_instance->import_record_function($event_key , $file_name);
+                                if(isset($media_type) && ($media_type == 'external' || $media_type == 'local')){
+                                    $get_result['selected type'] = 'Media';
+                                }
                                 $response['success'] = true;
                                 $response['filename'] = $file_name;
                                 $response['hashkey'] = $event_key;

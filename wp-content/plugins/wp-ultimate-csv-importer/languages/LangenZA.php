@@ -23,6 +23,10 @@ class LangEN_ZA {
 
         public static function contents(){
                 $response = array('ImportUpdate' => 'Import',
+                        'SelectAllImages' => 'Select all images in your import file to avoid import failures',
+                        'ChooseImagesToImport' => 'Choose images to import. Utilize the checkbox below to select all images.',
+                        'FileName' => 'File Name:',
+                        'OK' => 'OK',
                         'Buynow' => 'Buy now!',
                         'Exportfiltereddata' => 'Export filtered data',
                         'Exportfiltereddatadesc' => 'Lets you get only required data with the different advanced filters',
@@ -43,6 +47,8 @@ class LangEN_ZA {
                         'Export' => 'Export',
                         'Settings' => 'Settings',
                         'Support' => 'Support',
+                        'OrderMetaFields' => 'Order Meta Fields',
+                        'CouponMetaFields' => 'Coupon Meta Fields',
                         'UploadfromDesktop' => 'Upload from Desktop',
                         'UploadfromFTPSFTP' => 'Upload from FTP / SFTP',
                         'UploadfromFTP' => 'Upload from FTP',
@@ -59,7 +65,6 @@ class LangEN_ZA {
                         'BuddyFields' =>'BuddyPress Fields',
                         'ToDate' => 'To Date',
                         'SEARCH' => 'SEARCH',
-                        'Media' =>'Media',
                         'AccessKey' => 'AccessKey',
                         'SavedTemplate' => 'Saved Template',
                         'TEMPLATES' => 'TEMPLATES',
@@ -113,6 +118,8 @@ class LangEN_ZA {
                         'JetEngineRFFields' => 'Jet Engine Repeater Fields',
                         'JetEngineCPTFields' => 'Jet Engine CPT Fields',
                         'JetEngineCPTRFFields' => 'Jet Engine CPT Repeater Fields',
+                        'JetEngineCCTFields' => 'Jet Engine CCT Fields',
+                        'JetEngineCCTRFFields' => 'Jet Engine CCT Repeater Fields',
                         'JetEngineTaxonomyFields' => 'Jet Engine Taxonomy Fields',
                         'JetEngineTaxonomyRFFields' => 'Jet Engine Taxonomy Repeater Fields',
                         'JetEngineRelationsFields' => 'Jet Engine Relations Fields',
@@ -393,7 +400,27 @@ class LangEN_ZA {
                         'GetSupport' => 'Get Assistance',
                         'SampleCSVXML' => 'Example CSV & XML',
                         'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => 'Caution: Some add-ons are missing, it is advisable to',
-                        'WPCompleteFields' => 'WPComplete Fields'
+                        'WPCompleteFields' => 'WPComplete Fields',
+                        'ChooseUploadMethod' => 'Choose upload method',
+                        'Media' => 'Media',
+                        'CsvUploadFields' => 'Upload file',
+                        'Device' => 'Device',
+                        'Remote' => 'Remote',
+                        'SelectDeviceZIPfile' => 'Select Device to upload images directly from your device as a ZIP file.',
+                        'SelectDeviceCSVfile' => 'Choose Remote to import images from URLs of remote websites.',
+                        'MediaContinue' => 'Continue',
+                        'FreshImport' => 'Fresh import',
+                        'UpdateContent' => 'Update content',
+                        'UpdateThisMappingAs' => 'Update this mapping as',
+                        'Overwritetheavailableimages' => 'Overwrite the available images',
+                        'AlwaysCreateAsNewImage' => 'Always create as new image',
+                        'ImportCompleted' => 'Import completed!',
+                        'importHasFinished' => 'Your import has successfully finished. Click the button below to download and access a detailed import log.',
+                        'ImportLog' => 'Import log',
+                        'FailedMedia' => 'Failed media',
+                        'UseTheFailedImages' => 'Use the failed images CSV to correct the URLs and re-import the images',
+                        'FeaturedFields' => 'Featured Image Meta',
+                        'Summary' => 'Summary',
 
                 );
         return $response;
@@ -401,7 +428,7 @@ class LangEN_ZA {
         public static function notice_contents()
         {
         $result =array(
-                'UpgradetoPROusingcode' => 'Upgrade to PRO using code',
+                'UpgradetoPROusingcode' => 'Upgrade to PREMIUM using code',
                 'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Unlock features like bulk import, advanced export, scheduling, content update, & more, plus lifetime support',
                 'upgradenow' => 'upgrade now'
         );

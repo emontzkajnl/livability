@@ -163,7 +163,7 @@ var wpdatatable_config = {
                 jQuery('.wdt-table-settings .wdt-file-location').addClass('hidden');
                 break;
         }
-        jQuery('#wdt-table-type').val(type).selectpicker('refresh');
+        jQuery('#wdt-table-type').val(type).wdtBootstrapSelectPicker('refresh');
     },
     setFileLocation: function( fileLocation ){
         wpdatatable_config.file_location = fileLocation;
@@ -179,7 +179,7 @@ var wpdatatable_config = {
                 jQuery('#wdt-input-url').val('');
                 break;
         }
-        jQuery('#wdt-file-location').val( fileLocation ).selectpicker('refresh');
+        jQuery('#wdt-file-location').val( fileLocation ).wdtBootstrapSelectPicker('refresh');
     },
     renderCustomHeadersRow: function (row){
         var custom_headers_row = jQuery('#wdt-nested-json-custom-headers-template').html();
@@ -306,8 +306,8 @@ var wpdatatable_config = {
         if (wpdatatable_config.table_type == 'nested_json' && content != '' ) {
             let jsonParams = JSON.parse(content)
             jQuery('#wdt-nested-json-url').val(jsonParams.url);
-            jQuery('#wdt-nested-json-get-type').val(jsonParams.method).selectpicker('refresh');
-            jQuery('#wdt-nested-json-auth-option').val(jsonParams.authOption).selectpicker('refresh');
+            jQuery('#wdt-nested-json-get-type').val(jsonParams.method).wdtBootstrapSelectPicker('refresh');
+            jQuery('#wdt-nested-json-auth-option').val(jsonParams.authOption).wdtBootstrapSelectPicker('refresh');
             jQuery('.wdt-table-settings .nested-json-basic-auth-inputs').addClass('hidden');
             if (jsonParams.authOption != '') {
                 jQuery('#wdt-nested-json-username').val(jsonParams.username);
@@ -327,8 +327,8 @@ var wpdatatable_config = {
             if (typeof jsonParams.root !== 'undefined'){
                 jQuery('.wdt-table-settings .nested-json-roots').removeClass('hidden');
                 let option = '<option value="' + jsonParams.root + '">' + jsonParams.root + '</option>';
-                jQuery('.wdt-table-settings #wdt-nested-json-root').html(option).selectpicker('refresh');
-                jQuery('#wdt-nested-json-root').val(jsonParams.root).selectpicker('refresh');
+                jQuery('.wdt-table-settings #wdt-nested-json-root').html(option).wdtBootstrapSelectPicker('refresh');
+                jQuery('#wdt-nested-json-root').val(jsonParams.root).wdtBootstrapSelectPicker('refresh');
             }
         }
     },
@@ -434,7 +434,7 @@ var wpdatatable_config = {
         wpdatatable_config.responsiveAction = responsiveAction;
         jQuery('#wdt-responsive-action')
             .val(responsiveAction)
-            .selectpicker('refresh');
+            .wdtBootstrapSelectPicker('refresh');
     },
     /**
      * Enable or disable scrollable feature
@@ -507,7 +507,7 @@ var wpdatatable_config = {
         wpdatatable_config.display_length = displayLength;
         jQuery('#wdt-rows-per-page')
             .val(displayLength)
-            .selectpicker('refresh');
+            .wdtBootstrapSelectPicker('refresh');
     },
     /**
      * Show or hide "Show X entries" dropdown
@@ -551,7 +551,7 @@ var wpdatatable_config = {
         wpdatatable_config.paginationAlign = paginationAlign;
         jQuery('#wdt-pagination-align')
             .val(paginationAlign)
-            .selectpicker('refresh');
+            .wdtBootstrapSelectPicker('refresh');
     },
     /**
      * Set pagination layout
@@ -561,7 +561,7 @@ var wpdatatable_config = {
         wpdatatable_config.paginationLayout = paginationLayout;
         jQuery('#wdt-pagination-layout')
             .val(paginationLayout)
-            .selectpicker('refresh');
+            .wdtBootstrapSelectPicker('refresh');
     },
     /**
      * Enable or disable simple responsive
@@ -634,7 +634,7 @@ var wpdatatable_config = {
      */
     setBorderCollapse: function( borderCollapse ){
          wpdatatable_config.borderCollapse = borderCollapse;
-         jQuery('#wdt-border-collapse').val( borderCollapse ).selectpicker( 'refresh' );
+         jQuery('#wdt-border-collapse').val( borderCollapse ).wdtBootstrapSelectPicker( 'refresh' );
      },
     /**
      * Set border spacing value
@@ -811,7 +811,7 @@ var wpdatatable_config = {
             wpdatatable_config.editor_roles = '';
             jQuery('#wdt-editor-roles')
                 .val('')
-                .selectpicker('refresh');
+                .wdtBootstrapSelectPicker('refresh');
             wpdatatable_config.edit_only_own_rows = 0;
             wpdatatable_config.userid_column_id = null;
             if (wpdatatable_config.table_type != 'manual')
@@ -856,7 +856,7 @@ var wpdatatable_config = {
         wpdatatable_config.id_editing_column = true;
         jQuery('#wdt-id-editing-column')
             .val(idEditingColumn)
-            .selectpicker('refresh');
+            .wdtBootstrapSelectPicker('refresh');
 
         for (var i in wpdatatable_config.columns) {
             wpdatatable_config.columns[i].id_column = wpdatatable_config.columns[i].id == idEditingColumn ? 1 : 0;
@@ -870,7 +870,7 @@ var wpdatatable_config = {
         wpdatatable_config.editor_roles = editorRoles;
         jQuery('#wdt-editor-roles')
             .val(editorRoles)
-            .selectpicker('refresh');
+            .wdtBootstrapSelectPicker('refresh');
     },
     /**
      * Enable editing of only own rows for editable tables
@@ -882,7 +882,7 @@ var wpdatatable_config = {
         if (editOwnRows) {
             jQuery('.own-rows-editing-settings-block').animateFadeIn();
             if (wpdatatable_config.userid_column_id == null) {
-                jQuery('#wdt-user-id-column').selectpicker('refresh');
+                jQuery('#wdt-user-id-column').wdtBootstrapSelectPicker('refresh');
                 wpdatatable_config.setUserIdColumn(wpdatatable_config.columns[0].id);
             } else {
                 wpdatatable_config.setUserIdColumn(wpdatatable_config.userid_column_id);
@@ -900,7 +900,7 @@ var wpdatatable_config = {
     setUserIdColumn: function (userIdColumn) {
         wpdatatable_config.userid_column_id = parseInt(userIdColumn);
         if (jQuery('#wdt-user-id-column').val() != userIdColumn) {
-            jQuery('#wdt-user-id-column').val(userIdColumn).selectpicker('refresh');
+            jQuery('#wdt-user-id-column').val(userIdColumn).wdtBootstrapSelectPicker('refresh');
         }
     },
     /**
@@ -915,7 +915,7 @@ var wpdatatable_config = {
                 tabletoolsConfigVal.push(i);
         }
         if (jQuery('#wdt-table-tools-config').val() != tabletoolsConfigVal) {
-            jQuery('#wdt-table-tools-config').val(tabletoolsConfigVal).selectpicker('refresh');
+            jQuery('#wdt-table-tools-config').val(tabletoolsConfigVal).wdtBootstrapSelectPicker('refresh');
         }
     },
     /**
@@ -925,7 +925,7 @@ var wpdatatable_config = {
         wpdatatable_config.pdfPaperSize = pdfPaperSize;
         jQuery( '#wdt-pdf-paper-size' )
             .val( pdfPaperSize )
-            .selectpicker( 'refresh' );
+            .wdtBootstrapSelectPicker( 'refresh' );
     },
     /**
      * Set page orientation for PDF export
@@ -934,7 +934,7 @@ var wpdatatable_config = {
         wpdatatable_config.pdfPageOrientation = pdfPageOrientation;
         jQuery( '#wdt-pdf-page-orientation' )
             .val( pdfPageOrientation )
-            .selectpicker( 'refresh' );
+            .wdtBootstrapSelectPicker( 'refresh' );
     },
     /**
      * Set the VAR 1 placeholder value
@@ -1200,7 +1200,7 @@ var wpdatatable_config = {
         ).api();
 
         wpdatatable_config.drawColumnSettingsButtons(jQuery('#wpdatatable-preview-container table'));
-        jQuery('.wpDataTablesWrapper .dataTables_length .length_menu').selectpicker();
+        jQuery('.wpDataTablesWrapper .dataTables_length .length_menu').wdtBootstrapSelectPicker();
     },
     /**
      * Helper method that fills in the columns in he column popup
@@ -1219,11 +1219,11 @@ var wpdatatable_config = {
             }
         }
 
-        jQuery('#wdt-id-editing-column').selectpicker('refresh');
+        jQuery('#wdt-id-editing-column').wdtBootstrapSelectPicker('refresh');
         if (wpdatatable_config.id_editing_column == false)
-            jQuery('#wdt-id-editing-column').selectpicker('val', '');
+            jQuery('#wdt-id-editing-column').wdtBootstrapSelectPicker('val', '');
 
-        jQuery('#wdt-user-id-column').selectpicker('val', wpdatatable_config.userid_column_id);
+        jQuery('#wdt-user-id-column').wdtBootstrapSelectPicker('val', wpdatatable_config.userid_column_id);
 
         // Apply new tooltips
         jQuery('#wdt-columns-list-modal [data-toggle="tooltip"]').tooltip();

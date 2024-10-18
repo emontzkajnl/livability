@@ -55,7 +55,7 @@ trait FormTemplates {
 	 */
 	private function output_templates_content() {
 
-		$templates_hash        = wpforms()->get( 'builder_templates' )->get_hash();
+		$templates_hash        = wpforms()->obj( 'builder_templates' )->get_hash();
 		$templates_hash_option = get_option( Templates::TEMPLATES_HASH_OPTION, '' );
 
 		// Compare the current hash and the previous one to detect changes in the templates list.
@@ -64,11 +64,11 @@ trait FormTemplates {
 			update_option( Templates::TEMPLATES_HASH_OPTION, $templates_hash );
 
 			// Wipe both caches - for the admin page and for the Form Builder.
-			wpforms()->get( 'builder_templates_cache' )->wipe_content_cache();
+			wpforms()->obj( 'builder_templates_cache' )->wipe_content_cache();
 		}
 
 		// Attempt to get cached content.
-		$content = wpforms()->get( 'builder_templates_cache' )->get_content_cache();
+		$content = wpforms()->obj( 'builder_templates_cache' )->get_content_cache();
 
 		if ( empty( $content ) ) {
 			$content = $this->generate_templates_content_cache();
@@ -126,7 +126,7 @@ trait FormTemplates {
 
 		$content = ob_get_clean();
 
-		wpforms()->get( 'builder_templates_cache' )->save_content_cache( $content );
+		wpforms()->obj( 'builder_templates_cache' )->save_content_cache( $content );
 
 		return $content;
 	}
@@ -138,13 +138,13 @@ trait FormTemplates {
 	 */
 	private function prepare_templates_data() {
 
-		$templates = wpforms()->get( 'builder_templates' )->get_templates();
+		$templates = wpforms()->obj( 'builder_templates' )->get_templates();
 
 		if ( empty( $templates ) ) {
 			return;
 		}
 
-		wpforms()->get( 'builder_templates' )->update_favorites_list();
+		wpforms()->obj( 'builder_templates' )->update_favorites_list();
 
 		// Loop through each available template.
 		foreach ( $templates as $id => $template ) {
@@ -190,7 +190,7 @@ trait FormTemplates {
 
 		$categories = array_merge(
 			$common_categories,
-			wpforms()->get( 'builder_templates' )->get_categories()
+			wpforms()->obj( 'builder_templates' )->get_categories()
 		);
 
 		$this->output_categories( $categories, $templates_count );
@@ -206,7 +206,7 @@ trait FormTemplates {
 	 */
 	private function output_categories( $categories, $templates_count ) {
 
-		$all_subcategories = wpforms()->get( 'builder_templates' )->get_subcategories();
+		$all_subcategories = wpforms()->obj( 'builder_templates' )->get_subcategories();
 
 		foreach ( $categories as $slug => $name ) {
 
@@ -316,7 +316,7 @@ trait FormTemplates {
 		$template['source']     = $this->get_template_source( $template );
 		$template['url']        = ! empty( $template['url'] ) ? $template['url'] : '';
 		$template['has_access'] = ! empty( $template['license'] ) ? $template['has_access'] : true;
-		$template['favorite']   = $template['favorite'] ?? wpforms()->get( 'builder_templates' )->is_favorite( $template['slug'] );
+		$template['favorite']   = $template['favorite'] ?? wpforms()->obj( 'builder_templates' )->is_favorite( $template['slug'] );
 
 		$args = [];
 
@@ -397,7 +397,6 @@ trait FormTemplates {
 		$args['addons_attributes'] = $this->prepare_addons_attributes( $template );
 
 		$args['selected']    = ! empty( $this->form_data['meta']['template'] ) && $this->form_data['meta']['template'] === $args['template_id'];
-		$args['badge_text']  = $args['selected'] ? esc_html__( 'Selected', 'wpforms-lite' ) : $args['badge_text'];
 		$args['badge_class'] = ! empty( $args['badge_text'] ) ? ' badge' : '';
 		$args['template']    = $template;
 
@@ -443,6 +442,7 @@ trait FormTemplates {
 
 		$addons_attributes = '';
 		$required_addons   = false;
+		$already_installed = [];
 
 		if ( ! empty( $template['addons'] ) && is_array( $template['addons'] ) ) {
 			$required_addons = $this->addons_obj->get_by_slugs( $template['addons'] );
@@ -454,17 +454,23 @@ trait FormTemplates {
 				) {
 					unset( $required_addons[ $i ] );
 				}
+
+				if ( $addon['action'] === 'activate' ) {
+					$already_installed[] = $addon['slug'];
+				}
 			}
 		}
 
 		if ( ! empty( $required_addons ) ) {
-			$addons_names = implode( ', ', wp_list_pluck( $required_addons, 'title' ) );
-			$addons_slugs = implode( ',', wp_list_pluck( $required_addons, 'slug' ) );
+			$addons_names    = implode( ', ', wp_list_pluck( $required_addons, 'title' ) );
+			$addons_slugs    = implode( ',', wp_list_pluck( $required_addons, 'slug' ) );
+			$installed_slugs = implode( ',', $already_installed );
 
 			$addons_attributes = sprintf(
-				' data-addons-names="%1$s" data-addons="%2$s"',
+				' data-addons-names="%1$s" data-addons="%2$s" data-installed="%3$s"',
 				esc_attr( $addons_names ),
-				esc_attr( $addons_slugs )
+				esc_attr( $addons_slugs ),
+				esc_attr( $installed_slugs )
 			);
 		}
 

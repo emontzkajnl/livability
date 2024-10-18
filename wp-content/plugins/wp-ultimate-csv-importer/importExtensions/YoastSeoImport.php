@@ -23,15 +23,15 @@ class YoastSeoImport {
 			return YoastSeoImport::$yoast_instance;
 		}
 		
-    function set_yoast_values($header_array ,$value_array , $map, $post_id , $type, $hash_key,$gmode,$templatekey){	
+    function set_yoast_values($line_number,$header_array ,$value_array , $map, $post_id , $type, $hash_key,$gmode,$templatekey){	
 			$post_values = [];
 			$helpers_instance = ImportHelpers::getInstance();
 			$post_values = $helpers_instance->get_header_values($map , $header_array , $value_array);
 
-			$this->yoast_import_function($post_values,$type, $post_id, $header_array , $value_array, $hash_key,$gmode,$templatekey);
+			$this->yoast_import_function($line_number,$post_values,$type, $post_id, $header_array , $value_array, $hash_key,$gmode,$templatekey);
     }
 
-    function yoast_import_function($data_array, $importas, $pID, $header_array , $value_array, $hash_key,$gmode,$templatekey) {
+    function yoast_import_function($line_number,$data_array, $importas, $pID, $header_array , $value_array, $hash_key,$gmode,$templatekey) {
 		$createdFields = $yoastData = array();
 		$media_instance = MediaHandling::getInstance();
 	
@@ -84,8 +84,8 @@ class YoastSeoImport {
 				}
 				if(isset($data_array['opengraph-image'])) {
 					$yoastData['wpseo_opengraph-image'] = urldecode($data_array['opengraph-image']);
-
-					$image_id = $media_instance->media_handling('', $pID, 'opengraph-image', $data_array['opengraph-image'], $hash_key, 'yoast_opengraph', 'post',$templatekey,$gmode);
+					$media_instance->store_image_ids($i=1);
+					$image_id = $media_instance->image_meta_table_entry($line_number,'', $pID, 'opengraph-image', $data_array['opengraph-image'], $hash_key, 'yoast_opengraph','post',$templatekey,$gmode);
 					$yoastData['wpseo_opengraph-image-id'] = $image_id;
 				}
 				if(isset($data_array['twitter-title'])) {
@@ -96,8 +96,8 @@ class YoastSeoImport {
 				}
 				if(isset($data_array['twitter-image'])) {
 					$yoastData['wpseo_twitter-image'] = urldecode($data_array['twitter-image']);
-
-					$imageid = $media_instance->media_handling('', $pID, 'twitter-image', $data_array['twitter-image'], $hash_key, 'yoast_twitter', 'post', $templatekey, $gmode);
+					$media_instance->store_image_ids($i=1);
+					$imageid = $media_instance->image_meta_table_entry($line_number,'', $pID, 'twitter-image', $data_array['twitter-image'], $hash_key, 'twitter-image','post',$templatekey,$gmode);
 					$yoastData['wpseo_twitter-image-id'] = $imageid;
 				}
 				if(isset($data_array['google-plus-title'])) {
@@ -174,8 +174,8 @@ class YoastSeoImport {
 		}
 		if (isset($data_array['opengraph-image'])) {
 			$custom_array['_yoast_wpseo_opengraph-image'] = urldecode($data_array['opengraph-image']);
-
-			$image_id = $media_instance->media_handling('', $pID, 'opengraph-image', $data_array['opengraph-image'], $hash_key, 'yoast_opengraph', 'post', $templatekey, $gmode);
+			$media_instance->store_image_ids($i=1);
+			$image_id = $media_instance->image_meta_table_entry($line_number,'', $pID, 'opengraph-image', $data_array['opengraph-image'], $hash_key, 'yoast_opengraph','post',$templatekey,$gmode);
 			$custom_array['_yoast_wpseo_opengraph-image-id'] = $image_id;
 		}
 		if (isset($data_array['twitter-title'])) {
@@ -186,8 +186,8 @@ class YoastSeoImport {
 		}
 		if (isset($data_array['twitter-image'])) {
 			$custom_array['_yoast_wpseo_twitter-image'] = urldecode($data_array['twitter-image']);
-
-			$imageid = $media_instance->media_handling('', $pID, 'twitter-image', $data_array['twitter-image'], $hash_key, 'yoast_twitter', 'post', $templatekey, $gmode);
+			$media_instance->store_image_ids($i=1);
+			$imageid = $media_instance->image_meta_table_entry($line_number,'', $pID, 'twitter-image', $data_array['twitter-image'], $hash_key, 'twitter-image','post',$templatekey,$gmode);
 			$custom_array['_yoast_wpseo_twitter-image-id'] = $imageid;	
 		}
 		if (isset($data_array['google-plus-title'])) {

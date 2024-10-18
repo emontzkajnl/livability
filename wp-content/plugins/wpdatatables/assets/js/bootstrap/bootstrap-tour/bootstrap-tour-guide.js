@@ -1201,7 +1201,7 @@
                     $("html, body").animate({scrollTop: 0}, "slow");
                 } else if (localStorage.getItem("create-chart_current_step") == 11) {
                     $('#wdt-chart-wizard-previous-step').click();
-                    $('#wpdatatables-chart-source').val('').selectpicker('refresh');
+                    $('#wpdatatables-chart-source').val('').wdtBootstrapSelectPicker('refresh');
                 } else if (localStorage.getItem("create-chart_current_step") == 14) {
                     var observer = new MutationObserver(function (mutations) {
                         if ($("#wdt-chart-wizard-previous-step").length) {

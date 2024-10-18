@@ -10,7 +10,7 @@
  *
  * @wordpress-plugin
  * Plugin Name: WP Ultimate CSV Importer
- * Version:     7.11.1
+ * Version:     7.11.10
  * Plugin URI:  https://www.smackcoders.com/wp-ultimate-csv-importer-pro.html
  * Description: Seamlessly create posts, custom posts, pages, media, SEO and more from your CSV data with ease.
  * Author:      Smackcoders
@@ -85,7 +85,7 @@ class SmackCSV{
 	private static $persian_instance = null;
 	private static $chinese_instance = null;
 	private static $addon_instance = null;
-	public $version = '7.11.1';
+	public $version = '7.11.10';
 
 	public function __construct() { 
 		add_action('init', array(__CLASS__, 'show_admin_menus'));
@@ -524,13 +524,13 @@ class SmackCSV{
 	 * Creates a folder in uploads.
 	 * @return string path to that folder
 	 */
-	public function create_upload_dir($mode = null){
-
+	public function create_upload_dir($mode = null)
+    {
 		$upload = wp_upload_dir();
 		$upload_dir = $upload['basedir'];
 			if(!is_dir($upload_dir)){
 				return false;
-			}else{
+        } else {
 				$upload_dir = $upload_dir . '/smack_uci_uploads/imports/';
 				if (!is_dir($upload_dir)) {
 					wp_mkdir_p($upload_dir);
@@ -546,30 +546,6 @@ class SmackCSV{
             {
 				chmod($upload_dir, 0777);
 			}
-
-			$exports_dir = $upload['basedir'] . '/smack_uci_uploads/exports/';
-			$htaccess_content = "deny from all\n";
-			$htaccess_file = $exports_dir . '.htaccess';
-			if (!file_exists($htaccess_file)) {
-				if (file_put_contents($htaccess_file, $htaccess_content) === false) {
-				}
-			}
-      	  if (!is_dir($exports_dir)) {
-            wp_mkdir_p($exports_dir);
-			$htaccess_content = "deny from all\n";
-			$htaccess_file = $exports_dir . '.htaccess';
-			if (!file_exists($htaccess_file)) {
-				file_put_contents($htaccess_file, $htaccess_content);
-			}
-            chmod($exports_dir, 0755);
-
-            $index_php_file = $exports_dir . 'index.php';
-            if (!file_exists($index_php_file)) {
-                $file_content = '<?php' . PHP_EOL . '?>';
-                file_put_contents($index_php_file, $file_content);
-            }
-		}
-
 			return $upload_dir;
 		}
 	}
@@ -671,6 +647,17 @@ function onpluginsload(){
 		}
 	}
 }
+add_action('admin_head', 'Smackcoders\\FCSV\\disable_admin_notices_on_plugin_page');
+
+function disable_admin_notices_on_plugin_page() {
+
+    $page = isset($_GET['page']) ? sanitize_text_field($_GET['page']) : '';
+    if ($page === 'com.smackcoders.csvimporternew.menu') {
+        remove_all_actions('admin_notices');
+        remove_all_actions('all_admin_notices');
+    }
+}
+
 
 function loadbasic(){
 	$plugin_pages = ['com.smackcoders.csvimporternew.menu'];

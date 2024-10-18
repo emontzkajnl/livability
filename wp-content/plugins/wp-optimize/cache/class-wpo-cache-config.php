@@ -220,6 +220,7 @@ class WPO_Cache_Config {
 			'enable_user_caching'						=> false,
 			'site_url'									=> network_home_url('/'),
 			'enable_cache_per_country'					=> false,
+			'enable_cache_aelia_currency'				=> false,
 			'permalink_structure'						=> get_option('permalink_structure'),
 			'uploads'									=> wp_normalize_path(wp_upload_dir()['basedir']),
 			'gmt_offset'								=> get_option('gmt_offset'),
@@ -227,6 +228,8 @@ class WPO_Cache_Config {
 			'date_format'                               => get_option('date_format'),
 			'time_format'                               => get_option('time_format'),
 			'use_webp_images'						    => false,
+			// Auto preload feature is commented out due to possible regression in v3.5.0
+			// 'auto_preload_after_purge'					=> 'true'
 		);
 
 		return apply_filters('wpo_cache_defaults', $defaults);

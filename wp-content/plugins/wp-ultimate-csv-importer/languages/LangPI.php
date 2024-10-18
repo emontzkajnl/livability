@@ -22,6 +22,10 @@ class LangPI {
 
         public static function contents(){
                 $response = array('ImportUpdate' => 'Import',
+                'SelectAllImages' => 'Select all images in your import file to avoid import failures',
+                'ChooseImagesToImport' => 'Choose images to import. Utilize the checkbox below to select all images.',
+                'FileName' => 'File Name:',
+                'OK' => 'OK',
                 'Exportfiltereddata' => 'Export filtered data',
                 'Exportfiltereddatadesc' => 'Lets you get only required data with the different advanced filters',
                 'Backupineditableformat' => 'Backup in editable format',
@@ -412,14 +416,32 @@ class LangPI {
                 'FifuCustomPostFields' => 'Fifu Custom Post Fields',
                 'polylangfields' => 'Polylang Settings Fields',
                 'BuddyFields' => 'BuddyPress Fields',
-                'WPCompleteFields' => 'WPComplete Fields'
+                'WPCompleteFields' => 'WPComplete Fields',
+                'ChooseUploadMethod' => 'Choose upload method',
+                'CsvUploadFields' => 'Upload file',
+                'Device' => 'Device',
+                'Remote' => 'Remote',
+                'SelectDeviceZIPfile' => 'Select Device to upload images directly from your device as a ZIP file.',
+                'SelectDeviceCSVfile' => 'Choose Remote to import images from URLs of remote websites.',
+                'MediaContinue' => 'Continue',
+                'FreshImport' => 'Fresh import',
+                'UpdateContent' => 'Update content',
+                'UpdateThisMappingAs' => 'Update this mapping as',
+                'Overwritetheavailableimages' => 'Overwrite the available images',
+                'AlwaysCreateAsNewImage' => 'Always create as new image',
+                'ImportCompleted' => 'Import completed!',
+                'importHasFinished' => 'Your import has successfully finished. Click the button below to download and access a detailed import log.',
+                'ImportLog' => 'Import log',
+                'FailedMedia' => 'Failed media',
+                'UseTheFailedImages' => 'Use the failed images CSV to correct the URLs and re-import the images',
+                'Summary' => 'Summary',
                 );
         return $response;
         }
         public static function notice_contents()
         {
         $result =array(
-                'UpgradetoPROusingcode' => 'Upgrade to PRO using code',
+                'UpgradetoPROusingcode' => 'Upgrade to PREMIUM using code',
                 'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Unlock features like bulk import, advanced export, scheduling, content update, & more, plus lifetime support',
                 'upgradenow' => 'upgrade now'
         );

@@ -23,6 +23,10 @@ class LangTR {
 
 	public static function contents(){
 		$response = array('ImportUpdate' => 'Güncellemeyi İçe Aktar',
+		'SelectAllImages' => 'İçe aktarma dosyanızdaki tüm görüntüleri seçin, böylece içe aktarma hatalarını önleyin',
+		'ChooseImagesToImport' => 'İçe aktarılacak görüntüleri seçin. Aşağıdaki onay kutusunu kullanarak tüm görüntüleri seçin.',
+		'FileName' => 'Dosya Adı:',
+		'OK' => 'Tamam',
 		'Updateolderpostsfromsingleimport' => 'Tek bir içe aktarmadan eski yayınları güncelleyin',
 		'JetEngineMetaboxToolsetTypesACFproFreeandPodsFieldPostPluginsImporter' => 'JetEngine, Metabox, Toolset Types, ACF pro / Free and Pods Field/Post Eklenti İçe Aktarıcı',
 		'WPMLImporter' => 'WPML İçe Aktarıcı',
@@ -52,6 +56,7 @@ class LangTR {
 		'ExistingItems' => 'Mevcut Öğeler',
 		'ImportEachRecordAs'=> 'Her Kaydı Farklı İçe Aktar',
 		'Continue' => 'Devam et',
+		'CouponMetaFields' => 'Kupon Meta Alanları',
 		'Search' => 'Arama',
 		'FromDate' => 'İtibaren',
 		'ToDate' => 'Bugüne kadar',
@@ -92,6 +97,8 @@ class LangTR {
 		'JetEngineRFFields' => 'Jet Motoru Tekrarlayıcı Alanları',
 		'JetEngineCPTFields' => 'Jet Motoru CPT Alanları',
 		'jetEngineCPTRFFields' => 'Jet Engine CPT Tekrarlayıcı Alanları',
+		'JetEngineCCTFields' => 'Jet Engine CCT Alanları',
+		'JetEngineCCTRFFields' => 'Jet Engine CCT Tekrarlayıcı Alanları',
 		'jetEngineTaxonomyFields' => 'Jet Motoru Sınıflandırma Alanları',
 		'jetEngineTaxonomyRFFields' => 'Jet Motoru Taksonomisi Tekrarlayıcı Alanları',
 		'jetEngineRelationsFields' => 'Jet Motoru İlişkileri Alanı',
@@ -383,13 +390,33 @@ class LangTR {
 		'SampleCSVXML' => 'Örnek CSV&XML',
 		'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => 'Uyarı: Bazı eklentiler eksik, tavsiye edilir.',
 		'DragDropyourfilesor' => 'Dosyalarınızı sürükleyip bırakın veya',
+		'ChooseUploadMethod' => 'Yükleme yöntemini seçin',
+		'Media' => 'Medya',
+		'CsvUploadFields' => 'Dosya yükle',
+		'Device' => 'Cihaz',
+		'Remote' => 'Uzak',
+		'SelectDeviceZIPfile' => 'Görüntüleri cihazınızdan doğrudan ZIP dosyası olarak yüklemek için Cihazı seçin.',
+		'SelectDeviceCSVfile' => 'Uzak web sitelerinin URL\'lerinden görüntüleri almak için Uzağı seçin.',
+		'MediaContinue' => 'Devam et',
+		'FreshImport' => 'Yeni İthalat',
+		'UpdateContent' => 'İçeriği güncelle',
+		'UpdateThisMappingAs' => 'Bu eşlemeyi şu şekilde güncelleyin',
+		'Overwritetheavailableimages' => 'Mevcut görüntüleri üzerine yaz',
+		'AlwaysCreateAsNewImage' => 'Her zaman yeni görüntü olarak oluştur',
+		'ImportCompleted' => 'İthalat tamamlandı!',
+		'importHasFinished' => 'İthalatınız başarıyla tamamlandı. Ayrıntılı bir ithalat günlüğü indirmek ve erişmek için aşağıdaki düğmeye tıklayın.',
+		'ImportLog' => 'İthalat günlüğü',
+		'FailedMedia' => 'Başarısız Medya',
+		'UseTheFailedImages' => 'URL\'leri düzeltmek ve görüntüleri yeniden içe aktarmak için başarısız görüntüler CSV\'sini kullanın',
+		'FeaturedFields' => 'Öne Çıkan Görsel Meta',
+		'Summary' => 'Özet',
         );
 		return $response;
 	}
 	public static function notice_contents()
 	{
 	$result =array(
-			'UpgradetoPROusingcode' => "PRO'ya kod kullanarak yükseltme",
+			'UpgradetoPROusingcode' => "PREMIUM'ya kod kullanarak yükseltme",
 			'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Toplu ithalat, gelişmiş ihracat, zamanlama, içerik güncellemesi, ve daha fazlası gibi özelliklerin kilidini açın, artı ömür boyu desteği',
 			'upgradenow' => 'şimdi yükselt'
 	);

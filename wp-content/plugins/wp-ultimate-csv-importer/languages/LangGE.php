@@ -24,6 +24,10 @@ class LangGE {
         public static function contents(){
                 $response = array('ImportUpdate' => 'Importieren',
                 'Buynow' => 'Kaufe jetzt!',
+                'SelectAllImages' => 'Wählen Sie alle Bilder in Ihrer Importdatei aus, um Importfehler zu vermeiden',
+                'ChooseImagesToImport' => 'Wählen Sie die Bilder zum Importieren aus. Nutzen Sie das Kontrollkästchen unten, um alle Bilder auszuwählen.',
+                'FileName' => 'Dateiname:',
+                'OK' => 'OK',
                 'Exportfiltereddata' => 'Gefilterte Daten exportieren',
                 'Exportfiltereddatadesc' => 'Mit den verschiedenen erweiterten Filtern erhalten Sie nur die erforderlichen Daten',
                 'Backupineditableformat' => 'Backup in bearbeitbarem Format',
@@ -39,6 +43,7 @@ class LangGE {
                 'SEOPluginsDataImporterRankMathYoastandAllinOneSEO' => 'Datenimporteur für SEO-Plugins- RankMath, SEOPress, Yoast and All in One SEO',
                 'Dashboard' => 'Instrumententafel',
                 'Manager' => 'Manager',
+                'CouponMetaFields' => 'Coupon Meta Felder',
                 'Export' => 'Export',
                 'Settings' => 'die Einstellungen',
                 'Support' => 'Unterstützung',
@@ -103,6 +108,8 @@ class LangGE {
                 'JetEngineRFFields' => 'Jet Engine Repeater Felder',
                 'JetEngineCPTFields' => 'Jet Engine CPT Felder',
                 'JetEngineCPTRFFields' => 'Jet Engine CPT  Repeater Felde',
+                'JetEngineCCTFields' => 'CCT-Felder für Jet-Triebwerke',
+                'JetEngineCCTRFFields' => 'Jet-Engine CCT-HF-Felder',
                 'JetEngineTaxonomyFields' => 'Jet Engine Taxonomiefelder',
                 'JetEngineTaxonomyRFFields' => 'Jet Engine Taxonomie Repeater felder',
                 'JetEngineRelationsFields' => 'Jet Engine Relations-Felder',
@@ -387,7 +394,27 @@ class LangGE {
                 'SampleCSVXML' => 'Beispiel-CSV und XML',
                 'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => 'Warnung: Der Import einiger Daten ist deaktiviert. Installieren und aktivieren Sie zuerst die folgenden Plugins',
                 'DragDropyourfilesor' => 'Ziehen Sie Ihre Dateien per Drag & Drop oder',
-                'WPCompleteFields' => 'WPComplete-Felder'
+                'WPCompleteFields' => 'WPComplete-Felder',
+                'ChooseUploadMethod' => 'Wählen Sie die Upload-Methode',
+                'Media' => 'Medien',
+                'CsvUploadFields' => 'Datei hochladen',
+                'Device' => 'Gerät',
+                'Remote' => 'Remote',
+                'SelectDeviceZIPfile' => 'Wählen Sie Gerät, um Bilder direkt von Ihrem Gerät als ZIP-Datei hochzuladen.',
+                'SelectDeviceCSVfile' => 'Wählen Sie Remote, um Bilder von URLs von Remote-Websites zu importieren.',
+                'MediaContinue' => 'Fortfahren',
+                'FreshImport' => 'Neuer Import',
+                'UpdateContent' => 'Inhalt aktualisieren',
+                'UpdateThisMappingAs' => 'Dieses Mapping aktualisieren als',
+                'Overwritetheavailableimages' => 'Die verfügbaren Bilder überschreiben',
+                'AlwaysCreateAsNewImage' => 'Immer als neues Bild erstellen',
+                'ImportCompleted' => 'Import abgeschlossen!',
+                'importHasFinished' => 'Ihr Import wurde erfolgreich abgeschlossen. Klicken Sie unten auf die Schaltfläche, um ein detailliertes Importprotokoll herunterzuladen und zu öffnen.',
+                'ImportLog' => 'Importprotokoll',
+                'FailedMedia' => 'Fehlgeschlagene Medien',
+                'UseTheFailedImages' => 'Verwenden Sie die CSV der fehlgeschlagenen Bilder, um die URLs zu korrigieren und die Bilder erneut zu importieren',
+                'FeaturedFields' => 'Hervorgehobene Bild-Metadaten',
+                'Summary' => 'Zusammenfassung',
 
         );
                 return $response;
@@ -395,7 +422,7 @@ class LangGE {
         public static function notice_contents()
         {
         $result =array(
-                'UpgradetoPROusingcode' => 'Upgrade auf PRO mit Code',
+                'UpgradetoPROusingcode' => 'Upgrade auf PREMIUM mit Code',
                 'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Entsperren Sie Funktionen wie Großimport, erweiterte Export, Planung, Content Update, & mehr, plus lebenslange Unterstützung',
                 'upgradenow' => 'jetzt aktualisieren'
         );

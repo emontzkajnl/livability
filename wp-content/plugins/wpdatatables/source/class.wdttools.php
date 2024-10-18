@@ -338,6 +338,83 @@ class WDTTools
     }
 
     /**
+     * Helper function that returns all update info
+     * @return array
+     */
+    public static function getDeactivationInfo()
+    {
+        return array(
+            'version'  => get_option('wdtVersion'),
+            'wdt_nonce' => wp_nonce_field('wdtDeactivationNonce', 'wdtNonce'),
+            'titleDeactivation' => __('QUICK FEEDBACK', 'wpdatatables'),
+            'captionDeactivation' => __('If you have a moment, please let us know why you are deactivating the wpDataTables plugin:', 'wpdatatables'),
+            'captionDeactivationError' => __('Please select one option from the following list: ', 'wpdatatables'),
+            'deactivate_reasons' => [
+                0 => [
+                    'id' => 'feature_needed',
+                    'title' => esc_html__( 'The plugin doesn’t have a feature that I need' ),
+                    'input_placeholder' => esc_html__('Please explain your use case and the feature you need: '),
+                    'alert' => '',
+                ],
+                1 => [
+                    'id' => 'premium_version',
+                    'title' => esc_html__( 'I bought the premium version' ),
+                    'input_placeholder' => '',
+                    'alert' => '',
+                ],
+                2 => [
+                    'id' => 'stopped_working',
+                    'title' => esc_html__( 'The plugin suddenly stopped working' ),
+                    'input_placeholder' => esc_html__('Tell us more… '),
+                    'alert' => esc_html__('Have you reached out to our support team?'),
+                ],
+                3 => [
+                    'id' => 'broke_my_site',
+                    'title' => esc_html__( 'The plugin broke my site' ),
+                    'input_placeholder' => esc_html__('Tell us more… '),
+                    'alert' => esc_html__('Have you reached out to our support team?'),
+                ],
+                4 => [
+                    'id' => 'better_plugin',
+                    'title' => esc_html__( 'I found a better plugin' ),
+                    'input_placeholder' => esc_html__('Please share which plugin: '),
+                    'alert' => '',
+                ],
+                5 => [
+                    'id' => 'temporary_deactivation',
+                    'title' => esc_html__( 'It is a temporary deactivation - I’m troubleshooting an issue' ),
+                    'input_placeholder' => '',
+                    'alert' => '',
+                ],
+                6 => [
+                    'id' => 'able_to_work',
+                    'title' => esc_html__( 'I haven’t been able to get the plugin to work' ),
+                    'input_placeholder' => esc_html__('Tell us more… '),
+                    'alert' => esc_html__('Have you reached out to our support team?'),
+                ],
+                7 => [
+                    'id' => 'no_longer_needed',
+                    'title' => esc_html__( 'I no longer need the plugin' ),
+                    'input_placeholder' => esc_html__('Please share more about your use case: '),
+                    'alert' => '',
+                ],
+                8 => [
+                    'id' => 'conflict',
+                    'title' => esc_html__( 'The plugin has a conflict with the theme or other plugin' ),
+                    'input_placeholder' => esc_html__('Please share which plugin/theme: '),
+                    'alert' => esc_html__('Have you reached out to our support team?'),
+                ],
+                9 => [
+                    'id' => 'other',
+                    'title' => esc_html__( 'Other' ),
+                    'input_placeholder' => esc_html__('How could we improve? '),
+                    'alert' => '',
+                ],
+            ]
+        );
+    }
+
+    /**
      * Helper function that returns an array with date and time settings from wp_options
      * @return array
      */

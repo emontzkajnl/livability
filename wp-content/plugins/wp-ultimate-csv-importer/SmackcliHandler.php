@@ -170,11 +170,11 @@ class Smackuci_Cli{
                 $get_arr = $save_mapping_instance->main_import_process($map, $header_array, $value_array, $selected_type, $get_mode, $line_number,'post_title', $hash_key,'', $gmode,$templatekey);                                                                                                                                          
                 foreach ($value_array as $key => $value) {
                     if (preg_match("/<img/", $value)) {
-                        $smackcsv_instance->image_schedule();
-                        $image = $wpdb->get_results("select * from {$wpdb->prefix}ultimate_csv_importer_shortcode_manager where hash_key = '{$hash_key}'");
-                        if (!empty($image)) {
-                            $smackcsv_instance->delete_image_schedule();
-                        }
+                       // $smackcsv_instance->image_schedule();
+                        // $image = $wpdb->get_results("select * from {$wpdb->prefix}ultimate_csv_importer_shortcode_manager where hash_key = '{$hash_key}'");
+                        // if (!empty($image)) {
+                        //     $smackcsv_instance->delete_image_schedule();
+                        // }
                     }
                 }
             

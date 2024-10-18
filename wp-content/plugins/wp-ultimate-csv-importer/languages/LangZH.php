@@ -27,6 +27,10 @@ class LangZH
         {
                 $response = array(
 					'ImportUpdate' => '导入更新',
+					'SelectAllImages' => '选择导入文件中的所有图像，以避免导入失败',
+					'ChooseImagesToImport' => '选择要导入的图像。使用下面的复选框选择所有图像。',
+					'FileName' => '文件名：',
+					'OK' => '确定',
 					'Exporterwithadvancedfilters' => '具有高级过滤器的导出器',
 					'Exportfiltereddata' => '导出过滤后的数据',
                 	'Exportfiltereddatadesc' => '让您使用不同的高级过滤器仅获取所需的数据',
@@ -111,6 +115,8 @@ class LangZH
 					'JetEngineRFFields' => 'JetEngine 射频场',
 					'JetEngineCPTFields' => 'JetEngineCPT 字段',
 					'JetEngineCPTRFFields' => 'JetEngineCPTRF 字段',
+					'JetEngineCCTFields' => 'Jet Engine CCT 字段',
+					'JetEngineCCTRFFields' => 'Jet Engine CCT 重复字段',
 					'JetEngineTaxonomyFields' => 'JetEngine分类领域',
 					'JetEngineTaxonomyRFFields' => 'JetEngine 分类法RFFields',
 					'JetEngineRelationsFields' => 'JetEngine关系字段',
@@ -396,13 +402,33 @@ class LangZH
 					'SampleCSVXML' => 'CSV 和 XML 样本',
 					'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => '警告：某些数据的导入被禁用，请先安装并激活以下插件',
 					'DragDropyourfilesor' => '拖放您的文件或',
+					'ChooseUploadMethod' => '选择上传方式',
+					'Media' => '媒体',
+					'CsvUploadFields' => '上传文件',
+					'Device' => '设备',
+					'Remote' => '远程',
+					'SelectDeviceZIPfile' => '选择设备直接从您的设备上传ZIP文件。',
+					'SelectDeviceCSVfile' => '选择远程以从远程网站的URL导入图像。',
+					'MediaContinue' => '继续',
+					'FreshImport' => '新的导入',
+					'UpdateContent' => '更新内容',
+					'UpdateThisMappingAs' => '将此映射更新为',
+					'Overwritetheavailableimages' => '覆盖现有图像',
+					'AlwaysCreateAsNewImage' => '总是创建新图像',
+					'ImportCompleted' => '导入完成!',
+					'importHasFinished' => '您的导入已成功完成。点击下面的按钮下载并访问详细的导入日志。',
+					'ImportLog' => '导入日志',
+					'FailedMedia' => '失败的媒体',
+					'UseTheFailedImages' => '使用失败的图像CSV来修正URL并重新导入图像',
+					'FeaturedFields' => '特色图像元数据',
+					'Summary' => '总结',
                 );
                 return $response;
         }
 		public static function notice_contents()
         {
         $result =array(
-                'UpgradetoPROusingcode' => '使用代碼升級到PRO。',
+                'UpgradetoPROusingcode' => '使用代碼升級到PREMIUM。',
                 'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'解鎖諸如批量導入、高級導齣、調度、內容更新等功能，以及更多功能，以及終身支持。',
                 'upgradenow' => '現在升級。'
         );

@@ -72,7 +72,7 @@ var wpdatatable_plugin_config = {
             wdt_current_config.wdtInterfaceLanguage = language;
         }
         if( jQuery('#wdt-interface-language').val() != language ){
-            jQuery('#wdt-interface-language').selectpicker( 'val', language );
+            jQuery('#wdt-interface-language').wdtBootstrapSelectPicker( 'val', language );
         }
     },
 
@@ -81,7 +81,7 @@ var wpdatatable_plugin_config = {
             wdt_current_config.wdtDateFormat = dateFormat;
         }
         if( jQuery('#wdt-date-format').val() != dateFormat ){
-            jQuery('#wdt-date-format').selectpicker( 'val', dateFormat );
+            jQuery('#wdt-date-format').wdtBootstrapSelectPicker( 'val', dateFormat );
         }
     },
     setAutoUpdateOption: function ( option ) {
@@ -103,7 +103,7 @@ var wpdatatable_plugin_config = {
             wdt_current_config.wdtTablesPerPage = tablesAdmin;
         }
         if( jQuery('#wdt-tables-per-page').val() != tablesAdmin ){
-            jQuery('#wdt-tables-per-page').selectpicker( 'val', tablesAdmin );
+            jQuery('#wdt-tables-per-page').wdtBootstrapSelectPicker( 'val', tablesAdmin );
         }
     },
 
@@ -112,7 +112,7 @@ var wpdatatable_plugin_config = {
             wdt_current_config.wdtTimeFormat = timeFormat;
         }
         if( jQuery('#wdt-time-format').val() != timeFormat ){
-            jQuery('#wdt-time-format').selectpicker( 'val', timeFormat );
+            jQuery('#wdt-time-format').wdtBootstrapSelectPicker( 'val', timeFormat );
         }
     },
 
@@ -121,7 +121,7 @@ var wpdatatable_plugin_config = {
             wdt_current_config.wdtBaseSkin = baseSkin;
         }
         if( jQuery('#wdt-base-skin').val() != baseSkin ){
-            jQuery('#wdt-base-skin').selectpicker( 'val', baseSkin );
+            jQuery('#wdt-base-skin').wdtBootstrapSelectPicker( 'val', baseSkin );
         }
     },
 
@@ -130,7 +130,7 @@ var wpdatatable_plugin_config = {
             wdt_current_config.wdtNumberFormat = numberFormat;
         }
         if( jQuery('#wdt-number-format').val() != numberFormat ){
-            jQuery('#wdt-number-format').selectpicker( 'val', numberFormat );
+            jQuery('#wdt-number-format').wdtBootstrapSelectPicker( 'val', numberFormat );
         }
     },
     setCSVDelimiter: function ( wdtCSVDelimiter ) {
@@ -138,7 +138,7 @@ var wpdatatable_plugin_config = {
            wdt_current_config.wdtCSVDelimiter = wdtCSVDelimiter;
       }
        if( jQuery('#wdt-csv-delimiter').val() != wdtCSVDelimiter ){
-           jQuery('#wdt-csv-delimiter').selectpicker( 'val', wdtCSVDelimiter );
+           jQuery('#wdt-csv-delimiter').wdtBootstrapSelectPicker( 'val', wdtCSVDelimiter );
       }
     },
     setSortingOrderBrowseTables: function ( wdtSortingOrderBrowseTables ) {
@@ -146,7 +146,7 @@ var wpdatatable_plugin_config = {
            wdt_current_config.wdtSortingOrderBrowseTables = wdtSortingOrderBrowseTables;
       }
        if( jQuery('#wdt-sorting-order-browse-tables').val() != wdtSortingOrderBrowseTables ){
-           jQuery('#wdt-sorting-order-browse-tables').selectpicker( 'val', wdtSortingOrderBrowseTables );
+           jQuery('#wdt-sorting-order-browse-tables').wdtBootstrapSelectPicker( 'val', wdtSortingOrderBrowseTables );
       }
     },
 
@@ -155,7 +155,7 @@ var wpdatatable_plugin_config = {
             wdt_current_config.wdtRenderFilter = renderPosition;
         }
         if( jQuery('#wp-render-filter').val() != renderPosition ){
-            jQuery('#wp-render-filter').selectpicker( 'val', renderPosition );
+            jQuery('#wp-render-filter').wdtBootstrapSelectPicker( 'val', renderPosition );
         }
     },
 
@@ -248,7 +248,7 @@ var wpdatatable_plugin_config = {
                     jQuery('input[data-name=' + settingName + ']').val( settingValue );
                     break;
                 case "wdtTableFont":
-                    jQuery('select[data-name=' + settingName + ']').selectpicker( 'val', settingValue );
+                    jQuery('select[data-name=' + settingName + ']').wdtBootstrapSelectPicker( 'val', settingValue );
                     break;
                 case "wdtFontSize":
                     jQuery('input[data-name=' + settingName + ']').val( settingValue );

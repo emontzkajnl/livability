@@ -22,6 +22,10 @@ class LangPL {
 
         public static function contents(){
                 $response = array('ImportUpdate' => 'PolskiImport',
+                'SelectAllImages' => 'Wybierz wszystkie obrazy w pliku importu, aby uniknąć błędów importu',
+                'ChooseImagesToImport' => 'Wybierz obrazy do importu. Użyj pola wyboru poniżej, aby zaznaczyć wszystkie obrazy.',
+                'FileName' => 'Nazwa pliku:',
+                'OK' => 'OK',
                 'Exportfiltereddata' => 'Eksportuj przefiltrowane dane',
                 'Exportfiltereddatadesc' => 'Pozwala uzyskać tylko wymagane dane za pomocą różnych zaawansowanych filtrów',
                 'Backupineditableformat' => 'Kopia zapasowa w formacie edytowalnym',
@@ -88,6 +92,8 @@ class LangPL {
                 'JetEngineRFFields' => 'Pola wzmacniacza silnika odrzutowego',
                 'JetEngineCPTFields' => 'Pola CPT silnika odrzutowego',
                 'jetEngineCPTRFFields' => 'Pola RF CPT silnika odrzutowego',
+                'JetEngineCCTFields' => 'Pola Jet Engine CCT',
+                'JetEngineCCTRFFields' => 'Pola powtarzalne Jet Engine CCT',
                 'jetEngineTaxonomyFields' => 'Pola taksonomii silników odrzutowych',
                 'jetEngineTaxonomyRFFields' => 'Pola powtarzalne taksonomii silników odrzutowych',
                 'JetEngineRelationsFields' => 'Pola relacji silników odrzutowych',
@@ -411,14 +417,34 @@ class LangPL {
                 'FifuPageFields' => 'Pola strony Fifu',
                 'polylangfields' => 'Pola ustawień Polylang',
                 'BuddyFields' => 'Pola BuddyPress',
-                'WPCompleteFields' => 'WPWypełnij pola'
+                'WPCompleteFields' => 'WPWypełnij pola',
+                'ChooseUploadMethod' => 'Wybierz metodę przesyłania',
+                'CsvUploadFields' => 'Prześlij plik',
+                'Device' => 'Urządzenie',
+                'Remote' => 'Zdalny',
+                'SelectDeviceZIPfile' => 'Wybierz urządzenie, aby przesłać obrazy bezpośrednio z urządzenia jako plik ZIP.',
+                'SelectDeviceCSVfile' => 'Wybierz zdalny, aby zaimportować obrazy z adresów URL zdalnych stron internetowych.',
+                'MediaContinue' => 'Kontynuuj',
+                'FreshImport' => 'Nowy import',
+                'UpdateContent' => 'Aktualizuj treść',
+                'UpdateThisMappingAs' => 'Zaktualizuj to mapowanie jako',
+                'Overwritetheavailableimages' => 'Nadpisz dostępne obrazy',
+                'AlwaysCreateAsNewImage' => 'Zawsze twórz jako nowy obraz',
+                'ImportCompleted' => 'Import zakończony!',
+                'importHasFinished' => 'Twój import został pomyślnie zakończony. Kliknij poniższy przycisk, aby pobrać i uzyskać dostęp do szczegółowego dziennika importu.',
+                'ImportLog' => 'Dziennik importu',
+                'FailedMedia' => 'Nieudane media',
+                'UseTheFailedImages' => 'Użyj pliku CSV z nieudanymi obrazami, aby poprawić adresy URL i ponownie zaimportować obrazy',
+                'FeaturedFields' => 'Metadane obrazu wyróżnionego',
+                'Summary' => 'Podsumowanie',
+
                 );
         return $response;
         }
         public static function notice_contents()
         {
         $result =array(
-                'UpgradetoPROusingcode' => 'Uaktualnij do PRO za pomocą kodu',
+                'UpgradetoPROusingcode' => 'Uaktualnij do PREMIUM za pomocą kodu',
                 'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'Funkcje odblokowania, takie jak import masowy, zaawansowany eksport, harmonogram, aktualizacja zawartości i więcej, plus wsparcie dożywotnia',
                 'upgradenow' => 'teraz uaktualnij'
         );

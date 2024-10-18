@@ -137,6 +137,7 @@ class WooCommerceMetaImport {
 		
 					$gallery_image_ids = '';
 					foreach($get_all_gallery_images as $gallery_image) {
+						WooCommerceMetaImport::$media_instance->store_image_ids($i=1);
 						if(is_numeric($gallery_image)) {
 							$attachids[]=$gallery_image;
 							$gallery_image_ids .= $gallery_image . ',';

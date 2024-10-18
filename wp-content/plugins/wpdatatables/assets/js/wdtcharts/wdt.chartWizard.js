@@ -417,7 +417,7 @@ var wdtChartColumnsData = {};
                             $('.chart-series-color').hide();
                         }
 
-                        $('.selectpicker').selectpicker('refresh');
+                        $('.selectpicker').wdtBootstrapSelectPicker('refresh');
 
                         var eTop = $('.chart-preview-container').offset().top;
                         var eWidth = $('.chart-preview-container').width();

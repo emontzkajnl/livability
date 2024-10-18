@@ -22,15 +22,15 @@ class PodsImport {
 		return PodsImport::$pods_instance;
 	}
 
-	public function set_pods_values($header_array ,$value_array , $map, $post_id , $type, $hash_key, $lang_map = null){	
+	public function set_pods_values($line_number,$header_array ,$value_array , $map, $post_id , $type, $hash_key, $lang_map = null){	
 		$post_values = [];
 		$helpers_instance = ImportHelpers::getInstance();	
 		$post_values = $helpers_instance->get_header_values($map , $header_array , $value_array);
 		$lang_values = $helpers_instance->get_header_values($lang_map , $header_array , $value_array);
-		$this->pods_import_function($post_values, $type, $post_id , $header_array , $value_array, $lang_values, $hash_key);
+		$this->pods_import_function($line_number,$post_values, $type, $post_id , $header_array , $value_array, $lang_values, $hash_key);
 	}
 
-	public function pods_import_function($data_array, $importas, $pID, $header_array , $value_array, $wpml_array, $hash_key) {
+	public function pods_import_function($line_number,$data_array, $importas, $pID, $header_array , $value_array, $wpml_array, $hash_key) {
 		global $wpdb;
 		$helpers_instance = ImportHelpers::getInstance();
 		$media_instance = MediaHandling::getInstance();
@@ -42,7 +42,7 @@ class PodsImport {
 			$import_type = 'product';
 
 		}
-		if($import_type == 'Images'){
+		if($import_type == 'Media'){
 			$import_type = 'media';
 		}
     
@@ -87,11 +87,14 @@ class PodsImport {
 				}
 
 				$gallery_ids = array();
+				$indexs= 0;
 				foreach($exploded_file_items as $file) {	
 					$file = trim($file);
+					$media_instance->store_image_ids($i=1);
 					$ext = pathinfo($file, PATHINFO_EXTENSION);
-					if($ext){
-                        $get_file_id = $media_instance->media_handling($file, $pID);
+					if(preg_match_all( '/\b(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)[-A-Z0-9+&@#\/%=~_|$?!:,.]*[A-Z0-9+&@#\/%=~_|$]/i', $file)){
+						$get_file_id = $media_instance->image_meta_table_entry($line_number ,'', $pID ,$custom_key, $file, $hash_key,'pods',$import_type,'','',$header_array, $value_array,'','',$indexs);
+                      //  $get_file_id = $media_instance->media_handling($file, $pID);
 						if($get_file_id != '') {
 							$gallery_ids[] = $get_file_id;
 						}
@@ -103,6 +106,7 @@ class PodsImport {
 							$gallery_ids[] = $file;
 						}
 					}
+					$indexs++;
 				}
 				if(in_array($importas, $list_taxonomy)){
 					update_term_meta($pID,$custom_key, $gallery_ids);
@@ -131,6 +135,7 @@ class PodsImport {
 				$pick_objtype = $podsFields["PODS"][$custom_key]['pick_objecttype'];
 				$termitem = [];
 				$item = [];
+				$exploded_rel_items =array();
 				//$exploded_rel_items = explode(',', $custom_value);
 				if (strpos($custom_value, ',') !== false) {
 					$exploded_rel_items = explode(',', $custom_value);
@@ -159,10 +164,13 @@ class PodsImport {
 				else{
 					foreach($exploded_rel_items as $items){
 						$items = trim($items);
-						$ids = $wpdb->get_results( $wpdb->prepare( "SELECT ID FROM {$wpdb->prefix}posts where post_title = %s and post_status=%s",$items,'publish') );
-						foreach($ids as $id){
-							$item[]=$id->ID;
+						if(!empty($items)){
+							$ids = $wpdb->get_results( $wpdb->prepare( "SELECT ID FROM {$wpdb->prefix}posts where post_title = %s and post_status=%s",$items,'publish') );
+							foreach($ids as $id){
+								$item[]=$id->ID;
+							}
 						}
+						
 					}
 				}
 			

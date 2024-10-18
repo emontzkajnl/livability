@@ -7,6 +7,7 @@
 
 namespace Smackcoders\FCSV;
 
+use Smackcoders\FCSV\MediaImport;
 use Smackcoders\WCSV\WooCommerceCoreImport;
 
 if ( ! defined( 'ABSPATH' ) )
@@ -15,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) )
 class CoreFieldsImport {
 	private static $core_instance = null,$media_instance;
 	public $detailed_log;
+	public $media_log,$failed_media_data;
 	public $generated_content;
 	public $openAI_response=array();
 	public static function getInstance() {
@@ -27,7 +29,7 @@ class CoreFieldsImport {
 		return CoreFieldsImport::$core_instance;
 	}
 
-	function set_core_values($header_array ,$value_array , $map , $type , $mode , $line_number , $check , $hash_key, $unmatched_row, $gmode, $templatekey, $wpml_array = null){
+	function set_core_values($header_array ,$value_array , $map , $type , $mode , $line_number , $check , $hash_key, $unmatched_row, $gmode, $templatekey, $wpml_array = null,$media_meta=null,$media_type=null,$order_meta=null){
 		global $wpdb;
 		global $uci_woocomm_instance,$woocommerce_core_instance;
 		global $userimp_class;
@@ -38,7 +40,7 @@ class CoreFieldsImport {
 		CoreFieldsImport::$media_instance->header_array = $header_array;
 		CoreFieldsImport::$media_instance->value_array = $value_array;
 		$log_table_name = $wpdb->prefix ."import_detail_log";
-
+		$media_handle = get_option('smack_image_options');
 		$unikey_name = 'hash_key';
 		$unikey_value = $hash_key;
 
@@ -46,8 +48,24 @@ class CoreFieldsImport {
 			$unikey_name = 'templatekey';
 			$unikey_value = ($templatekey != null) ? $templatekey : '';
 		}	
-		
+
+		$updated_row_counts = $helpers_instance->update_count($unikey_value,$unikey_name);
+		$created_count = $updated_row_counts['created'];
+		$skipped_count = $updated_row_counts['skipped'];
+
 		$taxonomies = get_taxonomies();
+		if (in_array($type, $taxonomies)) {
+			$get_import_type = 'term';
+		}elseif ($type == 'Users') {
+			$get_import_type = 'user';
+		}elseif ($type == 'Comments') {
+			$get_import_type = 'comment';
+		}elseif ($type == 'Media') {
+			$get_import_type = 'Media';
+		} 
+		 else {	
+			$get_import_type = 'post';
+		}
 		if (in_array($type, $taxonomies)) {
 			$import_type = $type;
 			if($import_type == 'category' || $import_type == 'product_category' || $import_type == 'product_cat' || $import_type == 'wpsc_product_category' || $import_type == 'event-categories'):
@@ -63,28 +81,46 @@ class CoreFieldsImport {
 			$elementor_import->set_elementor_values($header_array ,$value_array , $map, $post_id , $type, $mode, $line_number , $hash_key);
 			wp_die();
 		}
-		if(($type == 'WooCommerce Product') || ($type == 'WooCommerce Product Variations')|| ($type == 'Categories') || ($type == 'Tags') || ($type == 'Taxonomies') || ($type == 'Comments') || ($type == 'Users') || ($type == 'Customer Reviews') || ($type == 'lp_order') || ($type == 'nav_menu_item') || ($type == 'widgets')){
+		if(!empty($media_meta)){
+			if($media_handle['media_settings']['media_handle_option'] == 'true'){
+				$post_values = $helpers_instance->get_header_values($media_meta , $header_array , $value_array);
+				$media_handle['media_settings']['title'] = isset($post_values['featured_image_title']) ? $post_values['featured_image_title'] : '';
+    			$media_handle['media_settings']['caption'] = isset($post_values['featured_image_caption']) ? $post_values['featured_image_caption'] : '';
+    			$media_handle['media_settings']['alttext'] = isset($post_values['featured_image_alt_text']) ? $post_values['featured_image_alt_text'] : '';
+    			$media_handle['media_settings']['description'] = isset($post_values['featured_image_description']) ? $post_values['featured_image_description'] : '';
+				$media_handle['media_settings']['file_name'] = isset($post_values['featured_file_name']) ? $post_values['featured_file_name'] : '';
+			
+				update_option('smack_image_options', $media_handle);
+				$media_handle = get_option('smack_image_options');
+			}
+		}
+		
+		if(($type == 'WooCommerce Product') || ($type == 'WooCommerce Coupons') || ($type == 'WooCommerce Orders') || ($type == 'WooCommerce Reviews') || ($type == 'WooCommerce Product Variations')|| ($type == 'Categories') || ($type == 'Tags') || ($type == 'Taxonomies') || ($type == 'Comments') || ($type == 'Users') || ($type == 'Customer Reviews') || ($type == 'lp_order') || ($type == 'nav_menu_item') || ($type == 'widgets') || ($type == 'Media')){
 
 			$comments_instance = CommentsImport::getInstance();
 			$customer_reviews_instance = CustomerReviewsImport::getInstance();
 			$learnpress_instance = LearnPressImport::getInstance();
 			$taxonomies_instance = TaxonomiesImport::getInstance();
 			$woocommerce_core_instance = WooCommerceCoreImport::getInstance();
-
+			$media_core_instance = MediaImport::getInstance();
 			$post_values = [];
 			$post_values = $helpers_instance->get_header_values($map , $header_array , $value_array);
 			$wpml_values = $helpers_instance->get_header_values($wpml_array , $header_array , $value_array);
 			if($type == 'WooCommerce Product'){
 				$result = $uci_woocomm_instance->woocommerce_product_import($post_values , $mode , $check , $unikey_value , $unikey_name , $hash_key, $line_number, $unmatched_row, $wpml_values);
 			}
+			if($type == 'Media'){
+				$result = $media_core_instance->media_fields_import($post_values , $mode , $type , $media_type ,$unikey_value ,$unikey_name, $line_number,$hash_key,$header_array ,$value_array);
+			}
 			if($type == 'WooCommerce Orders'){
-				$result = $woocommerce_core_instance->woocommerce_orders_import($post_values , $mode , $check , $unikey_value ,$unikey_name, $line_number);
+				$order_meta_data = $helpers_instance->get_header_values($order_meta,$header_array,$value_array);
+				$result = $uci_woocomm_instance->woocommerce_orders_import($post_values , $mode , $check , $unikey_value ,$unikey_name, $line_number,$order_meta_data,'');
 			}
 			if($type == 'WooCommerce Product Variations'){
 				$result = $uci_woocomm_instance->woocommerce_variations_import($post_values , $mode , $check ,$unikey_value ,  $unikey_name, $line_number, $variation_count =null);
 			}
 			if($type == 'WooCommerce Coupons'){
-				$result = $woocommerce_core_instance->woocommerce_coupons_import($post_values , $mode , $check , $unikey_value , $unikey_name, $line_number);
+				$result = $uci_woocomm_instance->woocommerce_coupons_import($post_values , $mode , $check , $unikey_value , $unikey_name, $line_number);
 			}
 			if($type == 'WooCommerce Refunds'){
 				$result = $woocommerce_core_instance->woocommerce_refunds_import($post_values , $mode , $check , $unikey_value , $unikey_name, $line_number);
@@ -93,13 +129,13 @@ class CoreFieldsImport {
 				$result = $taxonomies_instance->taxonomies_import_function($post_values , $mode , $import_type , $unmatched_row, $check , $unikey_value , $unikey_name ,$line_number ,$header_array ,$value_array);
 			}
 			if($type == 'Users'){
-				$result = $userimp_class->users_import_function($post_values , $mode ,$unikey_value , $unikey_name , $line_number);
+				$result = $userimp_class->users_import_function($post_values , $mode ,$unikey_value , $line_number);
 			}
-			if($type == 'Comments'){
-				$result = $comments_instance->comments_import_function($post_values , $mode ,$unikey_value , $unikey_name , $line_number);
+			if($type == 'Comments' || $type == 'WooCommerce Reviews'){
+				$result = $comments_instance->comments_import_function($post_values , $mode ,$unikey_value , $unikey_name , $line_number, $type);
 			}
 			if($type == 'Customer Reviews'){
-				$result = $customer_reviews_instance->customer_reviews_import($post_values , $mode , $check ,$unikey_value , $unikey_name , $line_number);
+				$result = $customer_reviews_instance->customer_reviews_import($post_values , $mode , $check ,$unikey_value , $line_number);
 			}
 			if($type == 'lp_order'){
 				$result = $learnpress_instance->learnpress_orders_import($post_values , $mode ,$unikey_value , $unikey_name , $line_number);
@@ -128,60 +164,188 @@ class CoreFieldsImport {
 					$featured_image=$post_values['featured_image'];
 				}
 				if ( preg_match_all( '/\b[-A-Z0-9+&@#\/%=~_|$?!:,.]*[A-Z0-9+&@#\/%=~_|$]/i', $featured_image, $matchedlist, PREG_PATTERN_ORDER ) ) {	
-					$image_type = 'Featured';  
-					$attach_id = CoreFieldsImport::$media_instance->media_handling( $featured_image , $post_id ,$post_values,$type,$image_type,$hash_key,$templatekey,$header_array,$value_array);	
+					$image_type = 'Featured'; 
+					CoreFieldsImport::$media_instance->store_image_ids($i=1); 
+					$attach_id = CoreFieldsImport::$media_instance->image_meta_table_entry($line_number,$post_values,$post_id ,'',$featured_image, $hash_key ,$image_type,$type,'','',$header_array,$value_array);
+					//$attach_id = CoreFieldsImport::$media_instance->media_handling( $featured_image , $post_id ,$post_values,$type,$image_type,$hash_key,$templatekey,$header_array,$value_array);	
 				}
 			}
 			$this->detailed_log[$line_number]['Message'] = isset($this->detailed_log[$line_number]['Message']) ? $this->detailed_log[$line_number]['Message'] : '';
 			if (preg_match("/(Can't|Skipped|Duplicate)/", $this->detailed_log[$line_number]['Message']) === 0) { 	
 				if ( $type == 'WooCommerce Product') {
-					if ( ! isset( $post_values['post_title'] ) ) {
-						$post_values['post_title'] = '';
+					if(isset($result['post_type']) && ($result['post_type'] =='product_variation')){
+						$this->detailed_log[$line_number]['webLink'] = get_permalink( $post_id );
+						$this->detailed_log[$line_number]['id'] = $post_id ;
+						$this->detailed_log[$line_number]['post_type'] = get_post_type($post_id);
+						$this->detailed_log[$line_number]['post_title'] = get_the_title($post_id);
 					}
+					else{
+						$this->detailed_log[$line_number]['webLink'] = get_permalink( $post_id );
+						$this->detailed_log[$line_number]['id'] = $post_id ;
+						$this->detailed_log[$line_number]['adminLink'] = get_edit_post_link( $post_id, true );
+						$this->detailed_log[$line_number]['post_type'] = get_post_type($post_id);
+						$this->detailed_log[$line_number]['post_title'] = get_the_title($post_id);
+					}
+				}
+				elseif($type == 'WooCommerce Coupons'){
+					$this->detailed_log[$line_number]['adminLink'] = get_edit_post_link( $post_id, true );
+					$this->detailed_log[$line_number]['post_type'] = get_post_type($post_id);
+					$this->detailed_log[$line_number]['post_title'] = get_the_title($post_id);
+				}
+				elseif( $type == 'Media'){
 					if (!empty($post_id)) {
-						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+						$file_path = get_attached_file($post_id);
+						$this->detailed_log[$line_number]['FileName'] = basename($file_path);;
+						$this->detailed_log[$line_number]['attach_ID'] = $post_id;
+						$this->detailed_log[$line_number]['adminLink'] = get_edit_post_link( $post_id , true );
+						$image_url = wp_get_attachment_url($post_id);
+						$this->detailed_log[$line_number]['post_type'] = 'Media';
+						$this->detailed_log[$line_number]['webLink'] = $image_url;
+						return $post_id;
 					}
 				}
 				elseif( $type == 'Users'){
 					if (!empty($post_id)) {
-						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_edit_user_link( $post_id , true ) . "' target='_blank' title='" . esc_attr( 'Edit this item' ) . "'> User Profile </a>";
+					$this->detailed_log[$line_number]['webLink'] = get_author_posts_url( $post_id );
+					$this->detailed_log[$line_number]['post_type'] = 'users';
+					$this->detailed_log[$line_number]['id'] = $post_id;
+					$this->detailed_log[$line_number]['adminLink'] = get_edit_user_link( $post_id , true );
 					}
 				}
 				elseif($type == 'Tags' || $type == 'Categories' || $type == 'post_tag' || $type =='Post_category'|| $type == 'Taxonomies'){
 					if (!empty($post_id)) {
-						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_edit_term_link( $post_id, $import_type ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+						$this->detailed_log[$line_number]['adminLink'] = get_edit_term_link( $post_id, $import_type );
+						$this->detailed_log[$line_number]['post_type'] = $type;
+						$term_link = get_term_link($post_id, $import_type);
+						if (!is_wp_error($term_link)) {
+							$this->detailed_log[$line_number]['webLink'] = $term_link;
+						}
 					}
 				}
 				elseif($type == 'lp_order'){
 					if (!empty($post_id)) {
-						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+						$this->detailed_log[$line_number]['adminLink'] = get_edit_post_link( $post_id, true );
+						$this->detailed_log[$line_number]['post_type'] = get_post_type($post_id);
+						$this->detailed_log[$line_number]['post_title'] = get_the_title($post_id);
+						$this->detailed_log[$line_number]['id'] = $post_id ;
+					}
+				}
+				elseif($type=='WooCommerce Orders'){
+					$this->detailed_log[$line_number]['adminLink'] = $this->get_order_url($post_id) ;
+					$this->detailed_log[$line_number]['post_type'] = get_post_type($post_id);
+					$order = wc_get_order($post_id);
+					if ($order) {
+						$order_key = $order->get_order_key();
+						$order_id = $order->get_id();
+						$customer_order_view_link = wc_get_endpoint_url('view-order', $order_id, wc_get_page_permalink('myaccount')) . '?key=' . $order_key;
+						$this->detailed_log[$line_number]['webLink'] = $customer_order_view_link;
 					}
 				}
 				elseif($type == 'WooCommerce Product Variations' ){
+					if (!empty($post_id)) {
 					$post_values['post_title']=isset($post_values['post_title'])?$post_values['post_title']:'';
-					if (!empty($post_id)) {
-						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> ";
+					$this->detailed_log[$line_number]['webLink'] = get_permalink( $post_id );
+					$this->detailed_log[$line_number]['id'] = $post_id ;
+					$this->detailed_log[$line_number]['post_type'] = get_post_type($post_id);
+					$this->detailed_log[$line_number]['post_title'] = get_the_title($post_id);
 					}
 				}
-				// else if($type == )
-				elseif($type != 'nav_menu_item' && isset($post_values['post_title'])){
+				elseif($type == 'nav_menu_item' && isset($post_values['post_title'])){
 					if (!empty($post_id)) {
-						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+						//$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+						$this->detailed_log[1]['Message'] = "Imported Successfully.";
+						$menu_item_object_id = get_post_meta($post_id, '_menu_item_object_id', true);
+						$this->detailed_log[$line_number]['id'] = $post_id ;
+						$this->detailed_log[$line_number]['webLink'] = isset($menu_item_object_id) ? get_permalink($menu_item_object_id) : null;
+						$this->detailed_log[$line_number]['adminLink'] = isset($menu_item_object_id) ?  get_edit_post_link($menu_item_object_id, true) : null;
 					}
 				}
-				elseif($type == 'Comments'){
+				elseif($type == 'Comments' || $type == 'WooCommerce Reviews'   ){
 					if (!empty($post_id)) {
-						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_comment_link( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_comment_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+						$this->detailed_log[$line_number]['webLink'] = get_comment_link( $post_id );
+						$this->detailed_log[$line_number]['adminLink'] = get_edit_comment_link( $post_id );
+						$this->detailed_log[$line_number]['id'] = $post_id ;
+						$this->detailed_log[$line_number]['post_type'] = 'Comment' ;
+						if($type == 'WooCommerce Reviews'){
+							$this->detailed_log[$line_number]['post_type'] = 'Reviews' ;
+							$this->detailed_log[$line_number]['adminLink'] = admin_url('comment.php?action=editcomment&c=' . $post_id);					
+						}
+						$comment = get_comment($post_id);
+						$comment_post_id = isset($comment->comment_post_ID) ? $comment->comment_post_ID : null;
+						$post_type = isset($comment_post_id) ? get_post_type($comment_post_id) : null;
+						// $this->detailed_log[$line_number]['post_type'] = isset($post_type) ? $post_type : 'Comment';
 					}					
 				}
 				if(isset($post_values['post_status'])){
 
-					$this->detailed_log[$line_number]['  Status'] = $post_values['post_status'];
+					$this->detailed_log[$line_number]['Status'] = $post_values['post_status'];
 				}	
 			}
-
 			return $post_id;
 
+		}
+		global $wpdb;
+		$optional_type = '';
+		if(is_plugin_active('jet-engine/jet-engine.php')){
+			$get_slug_name = $wpdb->get_results("SELECT slug FROM {$wpdb->prefix}jet_post_types WHERE status = 'content-type'");
+			foreach($get_slug_name as $key=>$get_slug){
+				$value=$get_slug->slug;
+				$optionaltype=$value;						
+				if($optionaltype == $type){
+					$optional_type=$optionaltype;
+				}
+			}
+		}
+		if($optional_type == $type){
+			if($gmode != 'CLI'){
+			$current_user = wp_get_current_user();									
+			$author_id = $current_user->data->ID;
+			}
+			else { // else part is only used for set the author id
+				$post_values = [];				
+				$post_values = $this->import_core_fields($post_values);
+				$author_id = isset($post_values['post_author']) ? $post_values['post_author'] : "";
+			}
+			
+			if($mode == 'Insert'){
+				$post_values = [];
+				$post_values = $helpers_instance->get_header_values($map , $header_array , $value_array, $hash_key);
+				
+				$post_values = $this->import_core_fields($post_values);
+				
+				$table_name = 'jet_cct_'.$type;												
+				$value_status =  empty($post_values['cct_status']) ? "publish" : $post_values['cct_status'] ;
+				if($author_id)
+					$wpdb->get_results("INSERT INTO {$wpdb->prefix}$table_name(cct_status,cct_author_id) values('$value_status',$author_id)");       			
+				else 
+					$wpdb->get_results("INSERT INTO {$wpdb->prefix}$table_name(cct_status) values('$value_status')");       			
+				$get_result =  $wpdb->get_results("SELECT _ID FROM {$wpdb->prefix}$table_name WHERE  cct_status = '$value_status' order by _ID DESC ");			
+				$id = $get_result[0];				
+				$post_id = $id->_ID;
+		
+				$page = 'jet-cct-'.$type;
+				$dir=site_url().'/wp-admin';				
+				$wpdb->get_results("UPDATE $log_table_name SET created = $created_count WHERE $unikey_name = '$unikey_value'");
+				$cct_post_title = isset($post_values['post_title']) ? $post_values['post_title'] : '';
+
+				$this->detailed_log[$line_number]['Message'] = 'Inserted Custom Content Type '  . ' ID: ' . $post_id ;
+				//$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='$dir/admin.php?page=$page&cct_action=edit&item_id=$post_id' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $cct_post_title ) ) . "'rel='permalink'>Admin View</a>";	
+				$this->detailed_log[$line_number]['id'] = $post_id;
+				$this->detailed_log[$line_number]['state'] = 'Inserted';
+				$this->detailed_log[$line_number]['adminLink'] = "$dir/admin.php?page=$page&cct_action=edit&item_id=$post_id";
+				$this->detailed_log[$line_number]['webLink'] = get_permalink($post_id);
+				$this->detailed_log[$line_number]['status'] = $value_status;
+				if($unmatched_row == 'true'){
+					global $wpdb;
+					$type ='cct';
+					$post_entries_table = $wpdb->prefix ."ultimate_post_entries";
+					$file_table_name = $wpdb->prefix."smackcsv_file_events";
+					$get_id  = $wpdb->get_results( "SELECT file_name  FROM $file_table_name WHERE `hash_key` = '$hash_key'");	
+					$file_name = $get_id[0]->file_name;
+					$wpdb->get_results("INSERT INTO $post_entries_table (`ID`,`type`, `file_name`,`status`) VALUES ( '{$post_id}','{$type}', '{$file_name}','Inserted')");
+				}			
+				return $post_id;
+			}
 		}
 		else{
 			$current_user = wp_get_current_user();
@@ -366,11 +530,6 @@ class CoreFieldsImport {
 	
 			}
 
-			$updated_row_counts = $helpers_instance->update_count($unikey_value,$unikey_name);
-			$created_count = $updated_row_counts['created'];
-			$updated_count = $updated_row_counts['updated'];
-			$skipped_count = $updated_row_counts['skipped'];
-
 			if($this->generated_content){
 				$generated_content = $post_values['post_content'];
 				if($generated_content == 401 ||$generated_content == 429 ||$generated_content == 500 ||$generated_content == 503 ||$generated_content == 400){
@@ -389,50 +548,9 @@ class CoreFieldsImport {
 				if (is_array($get_result) && !empty($get_result)) {
 					$fields = $wpdb->get_results("UPDATE $log_table_name SET skipped = $skipped_count WHERE $unikey_name = '$unikey_value'");
 					$this->detailed_log[$line_number]['Message'] =  "Skipped, Due to duplicate found!.";
-				}else{
-
-					$media_handle = get_option('smack_image_options');
-					if($media_handle['media_settings']['media_handle_option'] == 'true' 
-					&& isset($media_handle['media_settings']['enable_postcontent_image'])
-					&& $media_handle['media_settings']['enable_postcontent_image'] == 'true'){
-						if(preg_match("/<img/", $post_values['post_content'])) {
-
-							$content = "<p>".$post_values['post_content']."</p>";
-							$doc = new \DOMDocument();
-							if(function_exists('mb_convert_encoding')) {
-								@$doc->loadHTML( mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' ), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
-							}else{
-								@$doc->loadHTML( $content);
-							}
-							$searchNode = $doc->getElementsByTagName( "img" );
-							if ( ! empty( $searchNode ) ) {
-								foreach ( $searchNode as $searchNode ) {
-									$orig_img_src[] = $searchNode->getAttribute( 'src' ); 			
-									$media_dir = wp_get_upload_dir();
-									$names = $media_dir['url'];
-
-									$shortcode_img[] = $orig_img_src;
-
-									$temp_img = plugins_url("../assets/images/loading-image.jpg", __FILE__);
-									$searchNode->setAttribute( 'src', $temp_img);
-									//	$searchNode->setAttribute( 'alt', $shortcode_img );
-
-									$orig_img_alt = $searchNode->getAttribute( 'alt' );
-									if(!empty($orig_img_alt)){
-										$media_handle['postcontent_image_alt'] = $orig_img_alt;
-										update_option('smack_image_options', $media_handle);
-									}
-
-								}
-								$post_content              = $doc->saveHTML();
-								$post_values['post_content'] = $post_content;
-								$update_content['ID']           = $post_id;
-								$update_content['post_content'] = $post_content;
-								wp_update_post( $update_content );
-							}
-						}
-					}
-					
+					$this->detailed_log[$line_number]['state'] = 'Skipped';
+				}
+				else{
 					if($post_values['post_status']!='delete'){
 						if(is_plugin_active('multilanguage/multilanguage.php')) {
 							$post_id = $this->multiLang($post_values);
@@ -473,7 +591,6 @@ class CoreFieldsImport {
 							update_post_meta($post_id, '_wp_page_template', $post_values['wp_page_template']);
 						}
 					}
-
 					if($unmatched_row == 'true'){
 						global $wpdb;
 						$post_entries_table = $wpdb->prefix ."ultimate_post_entries";
@@ -482,52 +599,99 @@ class CoreFieldsImport {
 						$file_name = $get_id[0]->file_name;
 						$wpdb->get_results("INSERT INTO $post_entries_table (`ID`,`type`, `file_name`,`status`) VALUES ( '{$post_id}','{$type}', '{$file_name}','Inserted')");
 					}
-
 					if(isset($post_values['post_format'])){
 						$format=str_replace("post-format-","",$post_values['post_format']);
 						set_post_format($post_id ,$format );
 					}
-
 					if(is_plugin_active('post-expirator/post-expirator.php')) {
 						$this->postExpirator($post_id,$post_values);
 					}
+					
 
-					$fields = $wpdb->get_results("UPDATE $log_table_name SET created = $created_count WHERE $unikey_name = '$unikey_value'");
-					if(preg_match("/<img/", $post_values['post_content'])) {
-				
-						$shortcode_table = $wpdb->prefix . "ultimate_csv_importer_shortcode_manager";
+					$media_handle = get_option('smack_image_options');
+					if($media_handle['media_settings']['media_handle_option'] == 'true' 
+					&& isset($media_handle['media_settings']['enable_postcontent_image'])
+					&& $media_handle['media_settings']['enable_postcontent_image'] == 'true'){
+						if (preg_match("/<img/", $post_values['post_content'])) {
+							// Wrap post content in a <p> tag if needed
+							$content = "<p>" . $post_values['post_content'] . "</p>";
+							$doc = new \DOMDocument();
 						
-						if(!empty($orig_img_src)){						
-							foreach ($orig_img_src as $img => $img_val){
-								//$shortcode  = $shortcode_img[$img][$img];
-								$shortcode  = 'inline';
-								$wpdb->get_results("INSERT INTO $shortcode_table (image_shortcode , original_image , post_id,hash_key,templatekey) VALUES ( '{$shortcode}', '{$img_val}', $post_id  ,'{$hash_key}','{$templatekey}')");
+							// Ensure proper encoding
+							if (function_exists('mb_convert_encoding')) {
+								@$doc->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+							} else {
+								@$doc->loadHTML($content);
+							}
+						
+							// Find all image elements with src attributes
+							$xpath = new \DOMXPath($doc);
+							$searchNode = $xpath->query('//img[@src]');
+						
+							if (!empty($searchNode)) {
+								$media_dir = wp_get_upload_dir(); // Get the media directory
+								$attach_ids = [];
+								$index = 0;
+						
+								foreach ($searchNode as $searchNodes) {
+									$img_src = $searchNodes->getAttribute('src'); // Get external image URL
+						
+									// Download the external image to the media library
+									$attach_id = CoreFieldsImport::$media_instance->image_meta_table_entry(
+										$line_number, $post_values, $post_id, '', $img_src, $hash_key, 
+										'inline', $get_import_type, '', '', $header_array, $value_array, '', '', $index
+									);
+									if ($attach_id) {
+										$local_img_url = wp_get_attachment_url($attach_id);
+										$searchNodes->setAttribute('src', $local_img_url);
+										$index++;
+									}
+								}
+						
+								// Save the updated content
+								$post_content = $doc->saveHTML();
+								// Update post content with local image URLs
+								$post_values['post_content'] = $post_content;
+								$update_content = [
+									'ID' => $post_id,
+									'post_content' => $post_content
+								];
+								wp_update_post($update_content); // Update the post in the database
 							}
 						}
-				
-						$doc = new \DOMDocument();
-						$searchNode = $doc->getElementsByTagName( "img" );
 						
-						if ( ! empty( $searchNode ) ) {
-							foreach ( $searchNode as $searchNode ) {
-								$orig_img_src = $searchNode->getAttribute( 'src' ); 
-							}
-						}			
-						
-						$media_dir = wp_get_upload_dir();
-						$names = $media_dir['url'];
 					}
+					if($media_handle['media_settings']['media_handle_option'] == 'true' && !empty($post_values['post_content']) && $media_handle['media_settings']['enable_postcontent_image'] == 'false' && preg_match("/<img/", $post_values['post_content'])) {
+						$dom = new \DOMDocument();
+                        @$dom->loadHTML($post_values['post_content']);
+                        $xpath = new \DOMXPath($dom);
+                        $searchNode = $xpath->query('//img[@src]');
+						foreach ( $searchNode as $searchNodes ) {
+							$orig_img_src[] = $searchNodes->getAttribute( 'src' );
+							if(!empty($orig_img_src)){
+								CoreFieldsImport::$media_instance->store_image_ids($i=1);
+							}
+						}	
+							$media_dir = wp_get_upload_dir();
+							$names = $media_dir['url'];
+					}
+
+
+					$fields = $wpdb->get_results("UPDATE $log_table_name SET created = $created_count WHERE $unikey_name = '$unikey_value'");
 					if(is_wp_error($post_id) || $post_id == '') {
 						if(is_wp_error($post_id)) {
 							$this->detailed_log[$line_number]['Message'] = "Can't insert this " . $post_values['post_type'] . ". " . $post_id->get_error_message();
+							$this->detailed_log[$line_number]['state'] = 'Skipped';
 						}
 						else {
 							$wpml_message  = isset($wpml_message )?$wpml_message:'';
 							if($sitepress != null && is_plugin_active('wpml-ultimate-importer/wpml-ultimate-importer.php')){
 								$this->detailed_log[$line_number]['Message'] =  "Can't insert this " . $post_values['post_type'].'. '.$wpml_message;
+								$this->detailed_log[$line_number]['state'] = 'Skipped';
 							}
 							else{
 								$this->detailed_log[$line_number]['Message'] =  "Can't insert this " . $post_values['post_type'];
+								$this->detailed_log[$line_number]['state'] = 'Skipped';
 							}
 						}
 						$fields = $wpdb->get_results("UPDATE $log_table_name SET skipped = $skipped_count WHERE $unikey_name = '$unikey_value'");
@@ -569,10 +733,18 @@ class CoreFieldsImport {
 							}
 							else{
 								$this->detailed_log[$line_number]['Message'] = 'Inserted ' . $post_values['post_type'] . ' ID: ' . $post_id . ', ' . $post_values['specific_author'];
+								$author = explode('</b>',$post_values['specific_author']);
+								$this->detailed_log[$line_number]['id'] = $post_id;
+								$this->detailed_log[$line_number]['state'] = 'Inserted';
+								$this->detailed_log[$line_number]['author'] = end($author);
 							}
 						}
 						else{
 							$this->detailed_log[$line_number]['Message'] = 'Inserted ' . $post_values['post_type'] . ' ID: ' . $post_id . ', ' . $post_values['specific_author'];
+							$author = explode('</b>',$post_values['specific_author']);
+							$this->detailed_log[$line_number]['id'] = $post_id;
+							$this->detailed_log[$line_number]['state'] = 'Inserted';
+							$this->detailed_log[$line_number]['author'] = end($author);
 						}
 					}
 					if( $post_values['post_type'] == 'page'){
@@ -620,9 +792,11 @@ class CoreFieldsImport {
 					if(is_wp_error($post_id) || $post_id == '') {
 						if(is_wp_error($post_id)) {
 							$this->detailed_log[$line_number]['Message'] = "Can't insert this " . $post_values['post_type'] . ". " . $post_id->get_error_message();
+							$this->detailed_log[$line_number]['state'] = 'Skipped';
 						}
 						else {
 							$this->detailed_log[$line_number]['Message'] =  "Can't insert this " . $post_values['post_type'];
+							$this->detailed_log[$line_number]['state'] = 'Skipped';
 						}
 						$fields = $wpdb->get_results("UPDATE $log_table_name SET skipped = $skipped_count WHERE $unikey_name = '$unikey_value'");
 					}
@@ -637,22 +811,30 @@ class CoreFieldsImport {
 					if ( ! isset( $post_values['post_title'] ) ) {
 						$post_values['post_title'] = '';
 					}
-					
-						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
-					
+					$this->detailed_log[$line_number]['webLink'] = get_permalink( $post_id );
+					$this->detailed_log[$line_number]['adminLink'] = get_edit_post_link( $post_id, true );
+					$this->detailed_log[$line_number]['post_type'] = get_post_type($post_id);
+					$this->detailed_log[$line_number]['post_title'] = get_the_title($post_id);
 					
 				}
 				else{
+					$post_value_title = isset($post_values['post_title']) ? $post_values['post_title'] : '';
 					if($type == 'llms_coupon'){
-						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+						$this->detailed_log[$line_number]['adminLink'] = get_edit_post_link( $post_id, true );
+						$this->detailed_log[$line_number]['post_type'] = get_post_type($post_id);
+						$this->detailed_log[$line_number]['post_title'] = get_the_title($post_id);
 					}
 					else{
-						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $post_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_post_link( $post_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+						$this->detailed_log[$line_number]['webLink'] = get_permalink( $post_id );
+						$this->detailed_log[$line_number]['adminLink'] = get_edit_post_link( $post_id, true );
+						$this->detailed_log[$line_number]['post_type'] = get_post_type($post_id);
+						$this->detailed_log[$line_number]['post_title'] = get_the_title($post_id);
 					}
 				}
-				$this->detailed_log[$line_number]['  Status'] = $post_values['post_status'];
+				if(isset($post_values['post_status'])){
+					$this->detailed_log[$line_number]['Status'] = $post_values['post_status'];
+				}
 			}
-
 			if((isset($post_values['featured_image'])) && !is_plugin_active('featured-image-from-url/featured-image-from-url.php')) {
 				if (strpos($post_values['featured_image'], '|') !== false) {
 					$featured_img = explode('|', $post_values['featured_image']);
@@ -666,14 +848,72 @@ class CoreFieldsImport {
 					$featured_image=$post_values['featured_image'];
 				}
 
-				if ( preg_match_all( '/\b[-A-Z0-9+&@#\/%=~_|$?!:,.]*[A-Z0-9+&@#\/%=~_|$]/i', $featured_image, $matchedlist, PREG_PATTERN_ORDER ) ) {	
-					$image_type = 'Featured';  
-					$attach_id = CoreFieldsImport::$media_instance->media_handling( $featured_image , $post_id ,$post_values,$type,$image_type,$hash_key,$header_array,$value_array);	
+				if ( preg_match_all( '/\b[-A-Z0-9+&@#\/%=~_|$?!:,.]*[A-Z0-9+&@#\/%=~_|$]/i', $featured_image, $matchedlist, PREG_PATTERN_ORDER ) ) {			
+					if($media_handle['media_settings']['media_handle_option'] == 'true'){
+						if(!empty($post_values['featured_image'])){
+							CoreFieldsImport::$media_instance->store_image_ids($i=1);
+						}
+						if($media_handle['media_settings']['use_ExistingImage'] == 'true'){
+							$image_type = 'Featured';		  
+							$f_image = $post_values['featured_image'];
+							$f_path = CoreFieldsImport::$media_instance->get_filename_path($post_values['featured_image']);
+							$fimg_name = isset($f_path['fimg_name']) ? $f_path['fimg_name'] : '';
+							// $check_featured_image = $wpdb->get_results("SELECT $unikey_name FROM {$wpdb->prefix}ultimate_csv_importer_media_report WHERE $unikey_name = '$unikey_value'  AND image_type = 'Featured' "); 
+							// if(empty($check_featured_image)){				
+							// 	$image_media_table = $wpdb->prefix . "ultimate_csv_importer_media_report";
+							// 	$wpdb->get_results("INSERT INTO $image_media_table (`hash_key`,`templatekey`,`module`,`image_type`,`status`) VALUES ( '{$hash_key}','{$templatekey}','{$type}','{$image_type}','Completed') ");
+							// }
+							$wp_content_url = content_url();
+								if(strpos($f_image, $wp_content_url) !== FALSE){
+									$attachment_id = $wpdb->get_results("SELECT ID FROM {$wpdb->prefix}posts WHERE post_type = 'attachment' AND guid = '$f_image' ", ARRAY_A);
+								}
+								else{
+									$attachment_id = $wpdb->get_results("SELECT ID FROM {$wpdb->prefix}posts WHERE post_type = 'attachment' AND guid LIKE '%$fimg_name%'", ARRAY_A);
+								}
+								if(!empty($attachment_id[0]['ID'])){
+									$table_name = $wpdb->prefix . 'smackcsv_file_events';
+									$file_name = $wpdb->get_var("SELECT file_name FROM $table_name WHERE hash_key = '$hash_key'");
+									$shortcode_table = $wpdb->prefix . "ultimate_csv_importer_shortcode_manager";                                                                   
+									$attach_id = $attachment_id[0]['ID'];
+									$check_id = $wpdb->get_results("SELECT ID FROM {$wpdb->prefix}posts WHERE ID ='{$attach_id}' AND post_title ='image-failed' AND post_type = 'attachment'", ARRAY_A);
+									if(!empty($check_id)){
+										$failed_ids = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}ultimate_csv_importer_shortcode_manager WHERE post_id='{$post_id}' AND media_id = '{$attach_id}' AND image_shortcode = 'Featured_image_'");
+										if(!empty($failed_ids) && $failed_ids[0]->post_id != $post_id){
+											$attach_id = $failed_ids[0]->media_id;
+											CoreFieldsImport::$media_instance->store_failed_image_ids($attach_id);
+											CoreFieldsImport::$media_instance->failed_media_data($line_number,$post_id,$failed_ids[0]->post_title,$failed_ids[0]->media_id, $failed_ids[0]->original_image,);				
+										}elseif(empty($failed_ids) ){
+											CoreFieldsImport::$media_instance->store_failed_image_ids($attach_id);
+											CoreFieldsImport::$media_instance->failed_media_data($line_number,$post_id,$post_values['post_title'],$attach_id,$post_values['featured_image']);
+										}elseif(!empty($failed_ids) && $failed_ids[0]->post_id == $post_id){
+											CoreFieldsImport::$media_instance->store_failed_image_ids($failed_ids[0]->media_id);
+											CoreFieldsImport::$media_instance->failed_media_data($line_number,$failed_ids[0]->post_id,$failed_ids[0]->post_title,$failed_ids[0]->media_id,$failed_ids[0]->original_image); 
+										}
+										set_post_thumbnail($post_id, $attach_id);
+									}else{
+										set_post_thumbnail($post_id, $attach_id);
+									}             
+								}
+								else{
+									$post_values['featured_image'] = $featured_image;
+									$image_type = 'Featured';
+									$attach_id = CoreFieldsImport::$media_instance->image_meta_table_entry($line_number,$post_values,$post_id ,'',$post_values['featured_image'], $hash_key ,$image_type,$type,'','',$header_array,$value_array);
+									set_post_thumbnail( $post_id, $attach_id );
+								}
+						}
+						else{
+						$image_type = 'Featured';
+						$attach_id = CoreFieldsImport::$media_instance->image_meta_table_entry($line_number,$post_values,$post_id ,'',$post_values['featured_image'], $hash_key ,$image_type,$type,'','',$header_array,$value_array);
+						set_post_thumbnail( $post_id, $attach_id );
+						}
+					}
 				}
 				if(preg_match("(Can't|Skipped|Duplicate)", $this->detailed_log[$line_number]['Message']) === 0) {  
-					if ( $type == 'Images') {
+					if ( $type == 'Media') {
 						
-						$this->detailed_log[$line_number]['VERIFY'] = "<b> Click here to verify</b> - <a href='" . get_permalink( $attach_id ) . "' target='_blank' title='" . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $post_values['post_title'] ) ) . "'rel='permalink'>Web View</a> | <a href='" . get_edit_post_link( $attach_id, true ) . "'target='_blank' title='" . esc_attr( 'Edit this item' ) . "'>Admin View</a>";
+						$this->detailed_log[$line_number]['adminLink'] = get_edit_post_link( $attach_id, true );
+						$image_url = wp_get_attachment_url($attach_id);
+						$this->detailed_log[$line_number]['webLink'] = $image_url;
 					}
 				}
 			}
@@ -729,7 +969,10 @@ class CoreFieldsImport {
 		}
 		return $array;
 	}
-
+	public function get_order_url($post_id){
+		$dir=site_url().'/wp-admin/admin.php?page=wc-orders&action=edit&id='.$post_id;
+		return  $dir;
+	}
 	public function postExpirator($post_id,$post_values){
 		if(!empty($post_values['post_expirator_status'])){
 			$post_values['post_expirator_status'] = array('expireType' => $post_values['post_expirator_status'],'id' => $post_id);
@@ -830,7 +1073,6 @@ class CoreFieldsImport {
 		}else{
 			$data_array['post_status'] = 'publish';
 		}
-
 		return $data_array;
 	}
 

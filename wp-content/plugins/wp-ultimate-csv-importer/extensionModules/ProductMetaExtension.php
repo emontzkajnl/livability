@@ -83,10 +83,19 @@ class ProductMetaExtension extends ExtensionHandler{
 					'_subscription_trial_period' => '_subscription_trial_period',
 					'_subscription_trial_length' => '_subscription_trial_length',
 					'_subscription_price' => '_subscription_price',
-					'Bundle Sells' =>'_wc_pb_bundle_sell_ids',
-					'Bundle Sells Title' => '_wc_pb_bundle_sells_title',
-					'Bundle Sells Discount' => '_wc_pb_bundle_sells_discount',
                 );
+				if(is_plugin_active('yith-cost-of-goods-for-woocommerce-premium/init.php') && ($import_type == 'WooCommerce' ||$import_type == 'WooCommerceVariations')){
+					$pro_meta_fields['yith_cog_cost'] = 'yith_cog_cost';
+				}
+				if(is_plugin_active('woocommerce-min-max-quantities/woocommerce-min-max-quantities.php')){
+					$pro_meta_fields['minimum_allowed_quantity'] = 'minimum_allowed_quantity';
+					$pro_meta_fields['maximum_allowed_quantity'] = 'maximum_allowed_quantity';
+				}
+				if ( is_plugin_active( 'yith-woocommerce-barcodes-premium/init.php' ) && $import_type == 'WooCommerce') {
+					$pro_meta_fields['Barcode Protocol'] = '_ywbc_barcode_protocol';
+					$pro_meta_fields['Barcode Value'] = '_ywbc_barcode_value';
+					$pro_meta_fields['Barcode Display Value'] = '_ywbc_barcode_display_value';
+				}
                 if (is_plugin_active('variation-swatches-for-woocommerce/variation-swatches-for-woocommerce.php')) {
                         $pro_meta_fields['Product Attribute Type'] = 'product_attribute_type';
                 }
@@ -297,7 +306,19 @@ class ProductMetaExtension extends ExtensionHandler{
 		}
 
 		$pro_meta_fields_line = $this->convert_static_fields_to_array($pro_meta_fields);
-		$response['product_meta_fields'] = $pro_meta_fields_line;
+		
+		if($data == 'WooCommerce Orders'){
+			$response['order_meta_fields'] = $pro_meta_fields_line; 
+		}
+		if($data == 'WooCommerce Coupons'){
+			$response['coupon_meta_fields'] = $pro_meta_fields_line; 
+		}
+		if($data == 'WooCommerce Refunds'){
+			$response['refund_meta_fields'] = $pro_meta_fields_line; 
+		}
+		if($data !== 'WooCommerce Orders' && $data !== 'WooCommerce Coupons' && $data !== 'WooCommerce Refunds'){
+			$response['product_meta_fields'] = $pro_meta_fields_line; 
+		}    
 		return $response;		
 	}
 

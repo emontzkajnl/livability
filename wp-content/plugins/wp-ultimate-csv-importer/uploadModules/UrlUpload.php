@@ -35,6 +35,10 @@ class UrlUpload implements Uploads{
 		check_ajax_referer('smack-ultimate-csv-importer', 'securekey');
 		$file_url = esc_url_raw($_POST['url']);
 		$file_url = wp_http_validate_url($file_url);
+		$media_type = '';
+        if (isset($_POST['MediaType'])) {
+            $media_type = sanitize_key($_POST['MediaType']);
+        }
 		if(!$file_url){					
 		$response['success'] = false;
 		$response['message'] = 'Download Failed.URL is not valid.';
@@ -175,7 +179,10 @@ class UrlUpload implements Uploads{
 						if($validate_file == "yes"){
 							$wpdb->get_results("UPDATE $file_table_name SET status='Downloaded',`lock`=false WHERE id = '$lastid'");
 							fclose($file);
-							$get_result = $validate_instance->import_record_function($event_key , $url_file_name); 
+							$get_result = $validate_instance->import_record_function($event_key , $url_file_name);
+							if(isset($media_type) && ($media_type == 'external' || $media_type == 'local')){
+								$get_result['selected type'] = 'Media';
+							}
 							$response['success'] = true;
 							$response['filename'] = $url_file_name;
 							$response['hashkey'] = $event_key;

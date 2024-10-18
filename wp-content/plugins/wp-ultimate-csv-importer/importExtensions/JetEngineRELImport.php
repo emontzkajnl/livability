@@ -124,10 +124,7 @@ class JetEngineRELImport {
                     $get_related_posts = array_unique($get_related_posts);
                     if($relation_type == 'one'){
                     foreach($get_related_posts as $related_posts){
-                        $related_posts = trim($related_posts);  
-                        if(strpos($related_posts,'&') !== false){
-                            $related_posts = str_replace('&','&amp;',$related_posts);
-                        }                      
+                        $related_posts = trim($related_posts);                    
                         if(is_numeric($related_posts)){                                                                         
                             if($connection_type == 'posts'){
                                 $get_related_post_id = $wpdb->get_var("SELECT ID FROM {$wpdb->prefix}posts WHERE ID = $related_posts AND post_status = 'publish' AND post_type = '$connection_object'");                                

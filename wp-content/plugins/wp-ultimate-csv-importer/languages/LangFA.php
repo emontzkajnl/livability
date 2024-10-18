@@ -27,6 +27,10 @@ class LangFA
         {
                 $response = array(
 					'ImportUpdate' => 'ImportUpdate',
+					'SelectAllImages' => 'تمام تصاویر موجود در فایل واردات خود را انتخاب کنید تا از بروز خطاهای واردات جلوگیری شود',
+					'ChooseImagesToImport' => 'تصاویر را برای واردات انتخاب کنید. از جعبه انتخاب زیر برای انتخاب تمام تصاویر استفاده کنید.',
+					'FileName' => 'نام فایل:',
+					'OK' => 'تایید',
 					'Buynow' => 'هم اکنون خریداری کنید!',
 					'Exportfiltereddata' => 'صادرات داده های فیلتر شده',
                 	'Exportfiltereddatadesc' => 'به شما امکان می دهد فقط داده های مورد نیاز را با فیلترهای مختلف پیشرفته دریافت کنید',
@@ -112,6 +116,8 @@ class LangFA
 					'JetEngineRFFields' => 'JetEngineRFFfields',
 					'JetEngineCPTFields' => 'JetEngineCPTFields',
 					'JetEngineCPTRFFields' => 'JetEngineCPTRFFfields',
+					'JetEngineCCTFields' => 'Jet Engine CCT Fields',
+					'JetEngineCCTRFFields' => 'Jet Engine CCT Repeater Fields',
 					'JetEngineTaxonomyFields' => 'JetEngineTaxonomyFields',
 					'JetEngineTaxonomyRFFields' => 'JetEngineTaxonomyRFFfields',
 					'JetEngineRelationsFields' => 'JetEngineRelationsFields',
@@ -396,7 +402,27 @@ class LangFA
 					'SampleCSVXML' => 'نمونه CSV&XML',
 					'WarningImportforsomedataaredisabledInstallandactivatebelowpluginsfirst' => 'هشدار: برخی از افزونه ها گم شده اند، توصیه می شود',
 					'DragDropyourfilesor' => 'فایل های خود را بکشید و رها کنید یا',
-					'WPCompleteFields' => 'فیلدهای WPComplete'
+					'WPCompleteFields' => 'فیلدهای WPComplete',
+					'ChooseUploadMethod' => 'روش آپلود را انتخاب کنید',
+					'Media' => 'رسانه',
+					'CsvUploadFields' => 'فایل را آپلود کنید',
+					'Device' => 'دستگاه',
+					'Remote' => 'راه دور',
+					'SelectDeviceZIPfile' => 'دستگاه را انتخاب کنید تا تصاویر را مستقیماً از دستگاه خود به عنوان یک فایل ZIP آپلود کنید.',
+					'SelectDeviceCSVfile' => 'راه دور را انتخاب کنید تا تصاویر را از URLهای وب‌سایت‌های راه دور وارد کنید.',
+					'MediaContinue' => 'ادامه دهید',
+					'FreshImport' => 'واردات جدید',
+					'UpdateContent' => 'محتوا را به‌روزرسانی کنید',
+					'UpdateThisMappingAs' => 'این نقشه را به‌روزرسانی کنید به عنوان',
+					'Overwritetheavailableimages' => 'تصاویر موجود را بازنویسی کنید',
+					'AlwaysCreateAsNewImage' => 'همیشه به عنوان تصویر جدید ایجاد کنید',
+					'ImportCompleted' => 'واردات کامل شد!',
+					'importHasFinished' => 'واردات شما با موفقیت به پایان رسید. برای دانلود و دسترسی به یک گزارش واردات دقیق روی دکمه زیر کلیک کنید.',
+					'ImportLog' => 'گزارش واردات',
+					'FailedMedia' => 'رسانه‌های ناموفق',
+					'UseTheFailedImages' => 'از فایل CSV تصاویر ناموفق برای تصحیح URLها و واردات دوباره تصاویر استفاده کنید',
+					'FeaturedFields' => 'متادیتای تصویر برجسته',
+					'Summary' => 'خلاصه',
                 );
                 return $response;
         }
@@ -404,7 +430,7 @@ class LangFA
 		public static function notice_contents()
         {
         $result =array(
-                'UpgradetoPROusingcode' => 'ارتقا به PRO با استفاده از کد',
+                'UpgradetoPROusingcode' => 'ارتقا به PREMIUM با استفاده از کد',
                 'Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'  =>'باز کردن ویژگی هایی مانند واردات فله، صادرات پیشرفته، برنامه ریزی، به روز رسانی محتوا، و بیشتر، به علاوه پشتیبانی طول عمر',
                 'upgradenow' => 'ارتقاء دهید'
         );

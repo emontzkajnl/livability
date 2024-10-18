@@ -10,8 +10,8 @@ namespace Smackcoders\FCSV;
 if ( ! defined( 'ABSPATH' ) )
 	exit; // Exit if accessed directly
 
-class MappingExtension{
-	private static $instance = null;
+class MappingExtension {
+	private static $instance = null,$extension_handler ;
 	private static $extension = [];
 	private static $validatefile;
 
@@ -22,7 +22,7 @@ class MappingExtension{
 		$request_page = isset($_REQUEST['page']) ?sanitize_text_field($_REQUEST['page']) : '';
 		$request_action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : '';
 		if (in_array($request_page, $plugin_pages) || in_array($request_action, $plugin_ajax_hooks)) {
-			add_action('wp_ajax_mappingfields',array($this,'mapping_field_function'));
+			add_action('wp_ajax_mappingfields',array($this,'mapping_field_function')); 
 		}
 	}
 
@@ -49,6 +49,9 @@ class MappingExtension{
 	public function mapping_field_function(){
 		check_ajax_referer('smack-ultimate-csv-importer', 'securekey');
 		$import_type = sanitize_text_field($_POST['Types']);
+		if(isset($_POST['MediaType'])){
+			$media_type = sanitize_key($_POST['MediaType']);
+		}
 		$hash_key = sanitize_key($_POST['HashKey']);
 		$get_key = get_option('openAI_settings');
 		$mode = sanitize_text_field($_POST['Mode']);
@@ -75,8 +78,10 @@ class MappingExtension{
 		$smackcsv_instance = SmackCSV::getInstance();
 		$upload_dir = $smackcsv_instance->create_upload_dir();
 		if($file_extension == 'csv' || $file_extension == 'txt'){
-			if (!ini_get("auto_detect_line_endings")) {
-				ini_set("auto_detect_line_endings", true);
+			if (version_compare(PHP_VERSION, '8.1.0', '<')) {  // Only do this if PHP version is less than 8.1.0
+				if (!ini_get("auto_detect_line_endings")) {
+					ini_set("auto_detect_line_endings", true);
+				}
 			}
 			$info = [];
 			if (($h = fopen($upload_dir.$hash_key.'/'.$hash_key, "r")) !== FALSE) 
@@ -103,7 +108,11 @@ class MappingExtension{
 							$response['show_template'] = false;
 							$response['csv_fields'] = $exp_line;
 							$response['currentuser']=$current_user_role;
-							$value = $this->mapping_fields($import_type);
+							if(!empty($media_type) && $import_type == 'Media'){
+								$value = $this->media_mapping_fields($import_type,$mode,$media_type);
+							}else{
+								$value = $this->mapping_fields($import_type);
+							}
 							$response['fields'] = $value;					
 							echo wp_json_encode($response);
 							wp_die();  			  			
@@ -124,8 +133,11 @@ class MappingExtension{
 						$response['get_key'] = $get_key;
 						$response['show_template'] = false;
 						$response['csv_fields'] = $exp_line;
-						$value = $this->mapping_fields($import_type);
-
+						if(!empty($media_type) && $import_type == 'Media'){
+							$value = $this->media_mapping_fields($import_type,$mode,$media_type);
+						}else{
+							$value = $this->mapping_fields($import_type);
+						}
 						$response['fields'] = $value;
 						$response['total_records'] = (int)$total_rows;
 						echo wp_json_encode($response);
@@ -165,7 +177,11 @@ class MappingExtension{
 			$response['success'] = true;
 			$response['show_template'] = false;
 			$response['csv_fields'] = $headers;
-			$value = $this->mapping_fields($import_type);
+			if(!empty($media_type) && $import_type == 'Media'){
+				$value = $this->media_mapping_fields($import_type,$mode,$media_type);
+			}else{
+				$value = $this->mapping_fields($import_type);
+			}
 			$response['fields'] = $value;
 			$response['total_records'] = (int)$total_rows;
 			echo wp_json_encode($response);
@@ -209,7 +225,46 @@ class MappingExtension{
 			$supporting_instance = $support_instance[$i];
 			$fields = $supporting_instance->processExtension($import_type,$process_type);
 			array_push($value , $fields);			
-		}		
+		}
 		return $value;
+	}
+
+	public function media_mapping_fields($import_type,$mode =null,$media_type=null){
+		MappingExtension::$extension_handler = new ExtensionHandler();
+		$support_instance = [];
+		if($import_type == 'Media') {
+			if($media_type == 'local'){
+				$wordpressfields = array(
+					'File Name' => 'file_name',
+					'Caption' => 'caption',
+					'Alt text' => 'alt_text',
+					'Desctiption' => 'description',
+					'Title' => 'title',
+					'Media ID' => 'media_id',
+				);
+				if(trim($mode) == 'Insert'){
+					unset($wordpressfields['Media ID']);
+				}
+			}else{
+				$wordpressfields = array(
+					'Post ID' => 'post_id',
+					'Media ID' => 'media_id',
+					'Actual URL' => 'actual_url',
+					'File Name' => 'file_name',
+					'Title' => 'title',
+					'Caption' => 'caption',
+					'Alt text' => 'alt_text',
+					'Desctiption' => 'description'		
+				);
+				if(trim($mode) == 'Insert'){
+					unset($wordpressfields['Post ID']);
+					unset($wordpressfields['Media ID']);
+				}
+			}
+			
+		}
+		$wordpress_value = MappingExtension::$extension_handler->convert_static_fields_to_array($wordpressfields);
+		$response[]['core_fields'] = $wordpress_value ;
+		return $response;
 	}
 }		

@@ -225,7 +225,7 @@ class ValidateFile {
 		);
 		$results = array();
 		$i = 0;
-		 while($file->valid() && $i <= 1){
+		 while($file->valid() && $i < 1){
 		    $line = $file->fgets();
 		    foreach ($delimiters as $delimiter){
 			$regExp = '/['.$delimiter.']/';
@@ -240,8 +240,14 @@ class ValidateFile {
 		    }
 		   $i++;
 		}
-		$results = array_keys($results, max($results));
-		return $results[0];
+		if(!empty($results)){
+            $results = array_keys($results, max($results));
+            return $results[0];
+        }
+        else{
+            return true;
+        }
+
     }
 
 

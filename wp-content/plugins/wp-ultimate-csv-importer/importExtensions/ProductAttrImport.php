@@ -6,6 +6,7 @@
  */
 
 namespace Smackcoders\FCSV;
+use Smackcoders\WCSV\WooCommerceMetaImport;
 
 if ( ! defined( 'ABSPATH' ) )
     exit; // Exit if accessed directly
@@ -32,7 +33,7 @@ class ProductAttrImport {
         $core_array = [];
         $image_meta = [];
         if(($type == 'WooCommerce Product') || ($type == 'WooCommerce Product Variations')){
-            $woocommerce_meta_instance->woocommerce_meta_import_function($data_array,$post_id,  $type , $line_number , $header_array, $value_array);
+            $woocommerce_meta_instance->woocommerce_meta_import_function($data_array,$image_meta,$post_id ,$variation_id , $type , $line_number , $mode , $header_array, $value_array,'',$hash_key,'','');
         }
     }
 }

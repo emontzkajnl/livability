@@ -82,8 +82,8 @@ class ExportExtension {
 			echo wp_json_encode(count($query));
 			wp_die();
 		}
-		elseif($module == 'Comments'){
-			$get_all_comments = $this->commentsCount();	
+		elseif($module == 'Comments' || $module == 'WooCommerceReviews'){
+			$get_all_comments = $this->commentsCount($module);	
 			echo wp_json_encode($get_all_comments);
 			wp_die();
 		}
@@ -130,6 +130,24 @@ class ExportExtension {
 				$optional_type = '';
 			}
 			$module = $post_export_class->import_post_types($module,$optional_type);
+		}
+		if(is_plugin_active('jet-engine/jet-engine.php')){
+			$get_slug_name = $wpdb->get_results("SELECT slug FROM {$wpdb->prefix}jet_post_types WHERE status = 'content-type'");
+			foreach($get_slug_name as $key=>$get_slug){
+				$value=$get_slug->slug;
+				$optional_type=$value;	
+				if($optionalType == $optional_type){
+					$table_name='jet_cct_'.$optional_type;
+					$get_menu= $wpdb->get_results("SELECT * FROM {$wpdb->prefix}$table_name");
+					if(is_array($get_menu))
+					$total = count($get_menu);
+					else
+					$total = 0;
+
+						echo wp_json_encode($total);
+						wp_die();
+				}
+			}
 		}
 		$get_post_ids = "select DISTINCT ID from {$wpdb->prefix}posts";
 		$get_post_ids .= " where post_type = '$module'";
@@ -235,6 +253,11 @@ class ExportExtension {
 			}
 		}
 		}
+	
+		if($mode == 'WooCommerceReviews'){
+			$get_comments .= " and comment_type = 'review'";
+	    }
+	
 		$get_comments .= " order by comment_ID";
 		$comments = $wpdb->get_results( $get_comments );
 		$totalRowCount = count($comments);

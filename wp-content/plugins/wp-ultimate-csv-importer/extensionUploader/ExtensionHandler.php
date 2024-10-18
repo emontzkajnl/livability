@@ -24,7 +24,7 @@ class ExtensionHandler{
 
 	public function import_post_types($import_type) {	
 		$import_type = trim($import_type);	
-		$module = array('Posts' => 'post', 'Pages' => 'page', 'Users' => 'user', 'Comments' => 'comments', 'Taxonomies' => $import_type, 'CustomerReviews' =>'wpcr3_review', 'Categories' => 'categories', 'Tags' => 'tags', 'WooCommerce' => 'product', 'WooCommerce Product' => 'product', 'WPeCommerce' => 'wpsc-product','WPeCommerceCoupons' => 'wpsc-product','WooCommerceVariations' => 'product', 'WooCommerceOrders' => 'product', 'WooCommerceCoupons' => 'product', 'WooCommerceRefunds' => 'product', 'CustomPosts' => $import_type);
+		$module = array('Posts' => 'post', 'Pages' => 'page', 'Users' => 'user', 'Comments' => 'comments', 'Taxonomies' => $import_type, 'CustomerReviews' =>'wpcr3_review', 'Categories' => 'categories', 'Tags' => 'tags', 'WooCommerce' => 'product', 'WooCommerce Product' => 'product', 'WPeCommerce' => 'wpsc-product','WPeCommerceCoupons' => 'wpsc-product','WooCommerceVariations' => 'product', 'WooCommerceOrders' => 'product', 'WooCommerceCoupons' => 'product', 'WooCommerceRefunds' => 'product', 'CustomPosts' => $import_type,'WooCommerceReviews' => 'reviews');
 		foreach (get_taxonomies() as $key => $taxonomy) {
 			$module[$taxonomy] = $taxonomy;
 		}
@@ -89,8 +89,7 @@ class ExtensionHandler{
 		$importas = array(
 			'Posts' => 'Posts',
 			'Pages' => 'Pages',			
-			'Comments' => 'Comments',
-			'Images' => 'Images'
+			'Comments' => 'Comments'
 			
 		);
 		$all_post_types = get_post_types();
@@ -133,8 +132,9 @@ class ExtensionHandler{
 		if(is_plugin_active('woocommerce/woocommerce.php') && is_plugin_active('import-woocommerce/import-woocommerce.php')){
 			$importas['WooCommerce Product'] ='WooCommerce';
 			$importas['WooCommerce Product Variations'] ='WooCommerceVariations';
-			//$importas['WooCommerce Orders'] = 'WooCommerceOrders';
-			//$importas['WooCommerce Coupons'] = 'WooCommerceCoupons';
+			$importas['WooCommerce Reviews'] ='WooCommerceReviews';
+			$importas['WooCommerce Orders'] = 'WooCommerceOrders';
+			$importas['WooCommerce Coupons'] = 'WooCommerceCoupons';
 			//$importas['WooCommerce Refunds'] = 'WooCommerceRefunds';
 		}
 
@@ -201,8 +201,10 @@ class ExtensionHandler{
 			$file_extension = 'xml';
 		}
 		if($file_extension == 'csv' || $file_extension == 'txt'){
-			if (!ini_get("auto_detect_line_endings")) {
-				ini_set("auto_detect_line_endings", true);
+			if (version_compare(PHP_VERSION, '8.1.0', '<')) {  // Only do this if PHP version is less than 8.1.0
+				if (!ini_get("auto_detect_line_endings")) {
+					ini_set("auto_detect_line_endings", true);
+				}
 			}
 			$info = [];
 			if (($h = fopen($upload_dir.$hashkey.'/'.$hashkey, "r")) !== FALSE) 
@@ -325,7 +327,8 @@ class ExtensionHandler{
 		if(!empty($Headers)){
 			if(in_array('wp_page_template', $Headers) && in_array('menu_order', $Headers)){
 				$type = 'Pages';
-			} elseif(in_array('user_login', $Headers) || in_array('role', $Headers) || in_array('user_email', $Headers) ){
+			}
+			elseif(in_array('user_login', $Headers) || in_array('role', $Headers) || in_array('user_email', $Headers) ){
 				$type = 'Users';
 			} elseif(in_array('comment_author', $Headers) || in_array('comment_content', $Headers) ||  in_array('comment_approved', $Headers) ){
 				$type = 'Comments';
@@ -342,8 +345,8 @@ class ExtensionHandler{
 			} elseif( in_array('recurrence_freq', $Headers) || in_array('recurrence_interval', $Headers) || in_array('recuurence_days', $Headers)){
 				$type = 'Recurring Events';
 			} elseif( in_array('name', $Headers) && in_array('slug', $Headers)){
-				$type = 'category';
-			} elseif(is_plugin_active('woocommerce/woocommerce.php')){
+				$type = 'category';  
+			} elseif(is_plugin_active('woocommerce/woocommerce.php') && is_plugin_active('import-woocommerce/import-woocommerce.php')){
 				if(in_array('PARENTSKU', $Headers) || in_array('VARIATIONSKU', $Headers) || in_array('PRODUCTID', $Headers) || in_array('VARIATIONID', $Headers)){
 					$type = 'WooCommerce Product Variations';
 				} elseif(in_array('coupon_code', $Headers) || in_array('COUPONID', $Headers) || in_array('coupon_amount', $Headers)){

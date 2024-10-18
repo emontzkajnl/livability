@@ -63,16 +63,22 @@ class Tables {
 					`status` varchar(255) DEFAULT NULL
 					) ENGINE=InnoDB"
 					);
-
-
+				
 		$shortcode_table_name =  $wpdb->prefix ."ultimate_csv_importer_shortcode_manager";
-		$wpdb->query("CREATE TABLE IF NOT EXISTS $shortcode_table_name (
+		$table = $wpdb->query("CREATE TABLE IF NOT EXISTS $shortcode_table_name (
+			`id` int(10) NOT NULL AUTO_INCREMENT,
 			`post_id` INT(6),
+			`post_title` VARCHAR(255) DEFAULT NULL,
 			`image_shortcode` VARCHAR(255) NOT NULL,
-			`original_image` VARCHAR(255) NOT NULL,
-			`hash_key` VARCHAR(255) NOT NULL,
-			`templatekey` VARCHAR(32),
-			`status` VARCHAR(255) DEFAULT 'pending'
+			`media_id` INT(6) DEFAULT NULL,
+			`original_image` TEXT NOT NULL,
+			`indexs` INT(10) DEFAULT NULL,
+			`status` VARCHAR(255) DEFAULT 'failed',
+			`image_meta` TEXT DEFAULT NULL,
+			`hash_key` VARCHAR(255) DEFAULT NULL,
+			`import_type` VARCHAR(10) DEFAULT NULL,
+			`file_name` VARCHAR(100) ,
+			PRIMARY KEY (`id`)
 				) ENGINE=InnoDB"
 				);
 
@@ -104,6 +110,7 @@ class Tables {
 			`filesize` VARCHAR(255) NOT NULL,
 			`created` bigint(20) NOT NULL default 0,
 			`updated` bigint(20) NOT NULL default 0,
+			`failed` bigint(20) NOT NULL default 0,
 			`skipped` bigint(20) NOT NULL default 0
 				) ENGINE=InnoDB" 
 				);
@@ -149,6 +156,7 @@ class Tables {
 			`created` bigint(20) NOT NULL default 0,
 			`updated` bigint(20) NOT NULL default 0,
 			`skipped` bigint(20) NOT NULL default 0,
+			`failed` bigint(20) NOT NULL default 0,
 			`deleted` bigint(20) NOT NULL default 0,
 			`is_terminated` tinyint(1) NOT NULL default 0,
 			`terminated_on` datetime NOT NULL default '0000-00-00 00:00:00',
@@ -183,8 +191,48 @@ class Tables {
 			`month` varchar(60) DEFAULT NULL,
 			`year` varchar(60) DEFAULT NULL					
 			) ENGINE=InnoDB"
-			); 				
+			); 
+	
+//summary log
+			$summarylog = $wpdb->prefix . "summary";
+			$wpdb->query("
+    	CREATE TABLE IF NOT EXISTS $summarylog (
+        `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        `event_id` VARCHAR(255) NOT NULL,
+        `post_id` INT  NULL,
+        `post_title` VARCHAR(255)  NULL,
+        `post_type` VARCHAR(255)  NULL,
+        `status` VARCHAR(255)  NULL,
+        `is_category` TINYINT NOT NULL,
+        `associated_media` INT(250)  NULL,
+        `failed_media` INT(250)  NULL
+    		) ENGINE=InnoDB;
+			");
 
+					//failed media log
+		$failed_media = $wpdb->prefix . "failed_media";
+		$wpdb->query("
+		CREATE TABLE IF NOT EXISTS $failed_media (
+		`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		`event_id` VARCHAR(255) NOT NULL,
+		`post_id` INT NOT NULL,
+		`media_id` INT NOT NULL,
+		`title` VARCHAR(255)  NULL,
+		`file_name` VARCHAR(255)  NULL,
+		`caption` VARCHAR(255)  NULL,
+		`description` VARCHAR(255)  NULL,
+		`alt_text` VARCHAR(255)  NULL,
+		`actual_url` VARCHAR(255)  NULL,
+		`file_url` VARCHAR(255)  NULL,
+		`status` VARCHAR(255)  NULL
+
+		) ENGINE=InnoDB;
+		");
+		$result = $wpdb->query("SHOW COLUMNS FROM `{$wpdb->prefix}failed_media` LIKE 'post_title'");
+		if($result){
+			$wpdb->query("ALTER TABLE `{$wpdb->prefix}failed_media` CHANGE post_title title VARCHAR(20)");
+		}
+			
 		$result = $wpdb->query("SHOW COLUMNS FROM `{$wpdb->prefix}import_detail_log` LIKE 'running'");
 		if($result == 0){
 			$wpdb->query("ALTER TABLE `{$wpdb->prefix}import_detail_log` ADD COLUMN running boolean not null default 1");
@@ -193,6 +241,16 @@ class Tables {
 		$result = $wpdb->query("SHOW COLUMNS FROM `{$wpdb->prefix}import_detail_log` LIKE 'templatekey'");
 		if($result == 0){
 			$wpdb->query("ALTER TABLE `{$wpdb->prefix}import_detail_log` ADD COLUMN templatekey varchar(32)");
+		}
+
+		$result = $wpdb->query("SHOW COLUMNS FROM `{$wpdb->prefix}import_detail_log` LIKE 'failed'");
+		if($result == 0){
+			$wpdb->query("ALTER TABLE `{$wpdb->prefix}import_detail_log` ADD COLUMN failed bigint(20) NOT NULL default 0");
+		}
+
+		$result = $wpdb->query("SHOW COLUMNS FROM `{$wpdb->prefix}smackuci_events` LIKE 'failed'");
+		if($result == 0){
+			$wpdb->query("ALTER TABLE `{$wpdb->prefix}smackuci_events` ADD COLUMN failed bigint(20) NOT NULL default 0");
 		}
 
 		$result = $wpdb->query("SHOW COLUMNS FROM $file_table_name LIKE 'templatekey'");
@@ -213,6 +271,42 @@ class Tables {
 		$result = $wpdb->query("SHOW COLUMNS FROM `{$wpdb->prefix}smackuci_events` LIKE 'deletelog'");
 		if($result == 0){
 			$wpdb->query("ALTER TABLE `{$wpdb->prefix}smackuci_events` ADD COLUMN deletelog boolean default false");
+		}
+		$image_shortcode_result = $wpdb->query("SHOW COLUMNS FROM `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` LIKE 'original_image'");
+		if($image_shortcode_result){
+			$wpdb->query("ALTER table `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` MODIFY original_image TEXT NOT NULL;");
+		}
+		$result_1 = $wpdb->query("SHOW COLUMNS FROM `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` LIKE 'indexs'");
+		if($result_1 == 0){
+			$wpdb->query("ALTER TABLE `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` ADD COLUMN indexs int(10) DEFAULT NULL");
+		}
+		$result_2 = $wpdb->query("SHOW COLUMNS FROM `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` LIKE 'import_type'");
+		if($result_2 == 0){
+			$wpdb->query("ALTER table `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` ADD COLUMN import_type VARCHAR(10);");
+		}
+		$result_3 =  $wpdb->query("SHOW COLUMNS FROM `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` LIKE 'templatekey'");
+		if($result_3 == 0){
+			$res = $wpdb->query("ALTER TABLE {$wpdb->prefix}ultimate_csv_importer_shortcode_manager DROP COLUMN templatekey");     
+		}
+		$result_4 = $wpdb->query("SHOW COLUMNS FROM `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` LIKE 'file_name'");
+		if($result_4 == 0){
+			$wpdb->query("ALTER TABLE `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` ADD COLUMN file_name varchar(100)");
+		}
+		$result_5 = $wpdb->query("SHOW COLUMNS FROM `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` LIKE 'post_title'");
+		if($result_5 == 0){
+			$wpdb->query("ALTER TABLE `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` ADD COLUMN post_title varchar(255)");
+		}
+		$result_6 = $wpdb->query("SHOW COLUMNS FROM `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` LIKE 'media_id'");
+		if($result_6 == 0){
+			$wpdb->query("ALTER TABLE `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` ADD COLUMN media_id INT(6)");
+		}
+		$result_7 = $wpdb->query("SHOW COLUMNS FROM `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` LIKE 'status'");
+		if($result_7 == 1){
+			$wpdb->query("ALTER TABLE `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` Modify COLUMN status VARCHAR(255) DEFAULT 'failed'");
+		}
+		$result_8 = $wpdb->query("SHOW COLUMNS FROM `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` LIKE 'hash_key'");
+		if($result_8 == 1){
+			$wpdb->query("ALTER TABLE `{$wpdb->prefix}ultimate_csv_importer_shortcode_manager` Modify COLUMN hash_key VARCHAR(255) DEFAULT NULL ");
 		}
 	}
 }

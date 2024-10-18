@@ -14,11 +14,11 @@ var popoverOptions = {
         '<div class="arrow"></div>' +
         '<h3 class="popover-header">' +
         '<i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i>' +
-        wdtWpDataTablesPopoverStrings.title +
+        (wdtWpDataTablesPopoverStrings.title ? wdtWpDataTablesPopoverStrings.title : 'This is a premium feature') +
         '<button type="button" class="closePopover">' +
         '<span aria-hidden="true"><i class="wpdt-icon-times-full"></i></span></button></h3>' +
-        '<div class="popover-body"><span>' + wdtWpDataTablesPopoverStrings.description + '</span> ' +
-        '<div class="popover-footer"><a id="wdt-premium-compare-link">' + wdtWpDataTablesPopoverStrings.compare_link + '</a></div></div' +
+        '<div class="popover-body"><span>' + (wdtWpDataTablesPopoverStrings.description ? wdtWpDataTablesPopoverStrings.description : 'This feature is available only in premium version of wpDataTables') + '</span> ' +
+        '<div class="popover-footer"><a id="wdt-premium-compare-link">' + (wdtWpDataTablesPopoverStrings.compare_link ? wdtWpDataTablesPopoverStrings.compare_link : 'Compare and View Pricing') + '</a></div></div' +
         '</div>',
     content: function () {
         var content = jQuery(this).attr("data-popover-content");
@@ -33,11 +33,11 @@ var popoverOptions = {
  * Hide tooltip on button click or on mouseout event
  */
 var wdtHideTooltip = function () {
-    jQuery('[data-toggle="tooltip"]').click(function () {
+    jQuery('.wdt-datatables-admin-wrap [data-toggle="tooltip"]').on('click', function () {
         jQuery(this).wdtBootstrapTooltip('hide');
     });
 
-    jQuery('[data-toggle="tooltip"]').mouseout(function (event) {
+    jQuery('.wdt-datatables-admin-wrap [data-toggle="tooltip"]').mouseout(function (event) {
         var e = event.toElement || event.relatedTarget;
         if (e != null && (e.parentNode == this || e == this)) {
             return;
@@ -50,6 +50,21 @@ var wdtHideTooltip = function () {
  * Extend jQuery to use our custom function for tooltip
  */
 jQuery.fn.wdtBootstrapTooltip = jQuery.fn.tooltip;
+
+/**
+ * Extend jQuery to use our custom function for popover
+ */
+jQuery.fn.wdtBootstrapPopover = jQuery.fn.popover;
+
+/**
+ * Extend jQuery to use our custom function for tabs
+ */
+jQuery.fn.wdtBootstrapTabs = jQuery.fn.tab;
+
+/**
+ * Extend jQuery to use our custom function for selectpicker
+ */
+jQuery.fn.wdtBootstrapSelectPicker= jQuery.fn.selectpicker;
 
 /**
  * Extend jQuery to use AnimateCSS
@@ -167,14 +182,14 @@ jQuery.fn.extend({
         /**
          * Attach tooltips
          */
-        $('[data-toggle="tooltip"]').tooltip();
+        $('.wdt-datatables-admin-wrap [data-toggle="tooltip"]').wdtBootstrapTooltip();
 
         wdtHideTooltip();
 
         /**
          * Attach HTML Popovers (Hints with images)
          */
-        $('[data-toggle="html-popover"]').popover({
+        $('[data-toggle="html-popover"]').wdtBootstrapPopover({
             html: true,
             content: function () {
                 var content = $(this).attr("data-popover-content");
@@ -189,7 +204,7 @@ jQuery.fn.extend({
         /**
          * Apply selectpicker
          */
-        $('select.selectpicker').selectpicker();
+        $('select.selectpicker').wdtBootstrapSelectPicker();
 
 
         /**
@@ -324,10 +339,10 @@ jQuery.fn.extend({
          * Popover for select tables
          */
 
-        $('[data-toggle="html-premium-popover"]').popover(popoverOptions).on('shown.bs.popover', function () {
+        $('[data-toggle="html-premium-popover"]').wdtBootstrapPopover(popoverOptions).on('shown.bs.popover', function () {
             var $popup = $(this);
             $(this).next('.popover').find('button.closePopover').click(function (e) {
-                $popup.popover('hide');
+                $popup.wdtBootstrapPopover('hide');
             });
             $('#wdt-premium-compare-link').click(function () {
                 $(location).attr('href', wdtWpDataTablesPage.liteVSPremiumUrl);
@@ -340,20 +355,20 @@ jQuery.fn.extend({
          */
         $(document).keyup(function (event) {
             if (event.which === 27) {
-                $('[data-toggle="html-premium-popover"]').popover('hide');
-                $('[data-toggle="html-button-premium-popover"]').popover('hide');
-                $('[data-toggle="html-checkbox-premium-popover"]').popover('hide');
-                $('[data-toggle="html-input-premium-popover"]').popover('hide');
+                $('[data-toggle="html-premium-popover"]').wdtBootstrapPopover('hide');
+                $('[data-toggle="html-button-premium-popover"]').wdtBootstrapPopover('hide');
+                $('[data-toggle="html-checkbox-premium-popover"]').wdtBootstrapPopover('hide');
+                $('[data-toggle="html-input-premium-popover"]').wdtBootstrapPopover('hide');
             }
         });
 
         /**
          * Popover for checkboxes
          */
-        $('[data-toggle="html-checkbox-premium-popover"]').popover('destroy').popover(popoverOptions).on('shown.bs.popover', function () {
+        $('[data-toggle="html-checkbox-premium-popover"]').wdtBootstrapPopover('destroy').wdtBootstrapPopover(popoverOptions).on('shown.bs.popover', function () {
             var $popup = $(this);
             $popup.next('.popover').find('button.closePopover').click(function (e) {
-                $popup.popover('hide');
+                $popup.wdtBootstrapPopover('hide');
                 $popup.siblings('input[type="checkbox"].wdt-premium-feature').prop("checked", false);
             });
             $('#wdt-premium-compare-link').click(function () {
@@ -375,19 +390,19 @@ jQuery.fn.extend({
          * Popover for input fields
          */
         $('[data-toggle="html-input-premium-popover"]').on('focus', function () {
-            $('[data-toggle="html-input-premium-popover"]').popover(popoverOptions).on('shown.bs.popover', function () {
+            $('[data-toggle="html-input-premium-popover"]').wdtBootstrapPopover(popoverOptions).on('shown.bs.popover', function () {
                 var $popup = $(this);
                 $(this).next('.popover').find('button.closePopover').click(function (e) {
-                    $popup.popover('hide');
+                    $popup.wdtBootstrapPopover('hide');
                 });
                 $('#wdt-premium-compare-link').click(function () {
                     $(location).attr('href', wdtWpDataTablesPage.liteVSPremiumUrl);
                 });
             })
             if ($('.wdt-premium-popover').is(':visible')) {
-                $(this).popover('hide');
+                $(this).wdtBootstrapPopover('hide');
             } else {
-                $(this).popover('show');
+                $(this).wdtBootstrapPopover('show');
             }
 
         });
@@ -401,7 +416,7 @@ jQuery.fn.extend({
                 $(this).val() == 'pick_rows') {
                 popoverOnChange(this.id)
             } else {
-                $('#' + this.id).popover('destroy');
+                $('#' + this.id).wdtBootstrapPopover('destroy');
             }
         });
 
@@ -497,30 +512,30 @@ window.onbeforeunload = function (e) {
  * Popover function for select options
  */
 function popoverOnChange(selector) {
-    jQuery("#" + selector).popover(popoverOptions).on('shown.bs.popover', function () {
+    jQuery("#" + selector).wdtBootstrapPopover(popoverOptions).on('shown.bs.popover', function () {
         var $popup = jQuery(this);
         jQuery(this).next('.popover').find('button.closePopover').click(function (e) {
-            $popup.popover('hide');
+            $popup.wdtBootstrapPopover('hide');
         });
         jQuery('#wdt-premium-compare-link').click(function () {
             jQuery(location).attr('href', wdtWpDataTablesPage.liteVSPremiumUrl);
         });
-    }).popover('show');
+    }).wdtBootstrapPopover('show');
 }
 
 /**
  * Popover for button click
  */
 function popoverOnClick() {
-    jQuery('[data-toggle="html-button-premium-popover"]').popover(popoverOptions).on('shown.bs.popover', function () {
+    jQuery('[data-toggle="html-button-premium-popover"]').wdtBootstrapPopover(popoverOptions).on('shown.bs.popover', function () {
         var $popup = jQuery(this);
         jQuery(this).next('.popover').find('button.closePopover').click(function (e) {
-            $popup.popover('hide');
+            $popup.wdtBootstrapPopover('hide');
         });
         jQuery('#wdt-premium-compare-link').click(function () {
             jQuery(location).attr('href', wdtWpDataTablesPage.liteVSPremiumUrl);
         });
-    }).popover('toggle');
+    }).wdtBootstrapPopover('toggle');
 }
 
 /**

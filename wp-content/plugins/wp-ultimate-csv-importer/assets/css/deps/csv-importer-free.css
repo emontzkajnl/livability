@@ -4250,3 +4250,17 @@ Author: Mohamed Fariz
   justify-content: center;
 }
 /*# sourceMappingURL=csv-importer-free.css.map */
+table.table.log-manager tbody tr td:first-child {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 140px;
+  overflow-x: hidden;
+}
+table.table.log-manager tbody tr td:first-child:hover {
+  white-space: break-spaces;
+}
+.rollbackAlign {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}

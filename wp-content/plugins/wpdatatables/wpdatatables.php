@@ -3,7 +3,7 @@
 Plugin Name: wpDataTables - Tables & Table Charts
 Plugin URI: https://wpdatatables.com
 Description: Create responsive, sortable tables & charts from Excel, CSV or PHP. Add tables & charts to any post in minutes with DataTables.
-Version: 3.4.2.17
+Version: 3.4.2.28
 Author: TMS-Plugins
 Author URI: https://tmsproducts.io
 Text Domain: wpdatatables
@@ -30,8 +30,11 @@ require_once(WDT_ROOT_PATH . 'config/config.inc.php');
 // Check PHP version
 if (version_compare(WDT_PHP_SERVER_VERSION, WDT_REQUIRED_PHP_VERSION, '<')) {
 
+    if (!function_exists('is_plugin_active')) {
+        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    }
+
     if (is_plugin_active(WDT_BASENAME)) {
-        include_once ABSPATH . 'wp-admin/includes/plugin.php';
         deactivate_plugins(WDT_BASENAME);
     }
     add_action('admin_notices',
@@ -92,6 +95,7 @@ function wpdatatables_load()
     require_once(WDT_ROOT_PATH . 'source/class.wpdatachart.php');
     require_once(WDT_ROOT_PATH . 'source/class.wdtbrowsetable.php');
     require_once(WDT_ROOT_PATH . 'source/class.wdtbrowsechartstable.php');
+    require_once(WDT_ROOT_PATH . 'source/class.feedback.php');
     require_once(WDT_ROOT_PATH . 'integrations/page_builders/gutenberg/WDTGutenbergBlocks.php');
     require_once(WDT_ROOT_PATH . 'integrations/page_builders/elementor/class.wdtelementorblock.php');
     require_once(WDT_ROOT_PATH . 'integrations/page_builders/divi-wpdt/divi-wpdt.php');

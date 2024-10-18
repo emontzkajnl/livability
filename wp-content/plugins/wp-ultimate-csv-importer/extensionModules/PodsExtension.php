@@ -36,7 +36,7 @@ class PodsExtension extends ExtensionHandler{
 		if(empty($post_id) && $import_type == 'comments'){
             $post_id = $wpdb->get_results($wpdb->prepare("select ID from {$wpdb->prefix}posts where post_name= %s and post_type = %s", 'comment', '_pods_pod'));
 		}
-		if(empty($post_id) && $import_type == 'Images'){
+		if(empty($post_id) && $import_type == 'Media'){
             $post_id = $wpdb->get_results($wpdb->prepare("select ID from {$wpdb->prefix}posts where post_name= %s and post_type = %s", 'media', '_pods_pod'));
 		}
 
@@ -67,7 +67,7 @@ class PodsExtension extends ExtensionHandler{
 				return false;
 			}
 			$import_type = $this->import_name_as($import_type);
-			if($import_type == 'Posts' || $import_type == 'Pages' || $import_type == 'CustomPosts' || $import_type == 'Taxonomies' || $import_type == 'Categories' || $import_type == 'Tags' || $import_type == 'event' || $import_type == 'event-recurring' || $import_type == 'location' || $import_type == 'Users' || $import_type == 'WooCommerce' || $import_type == 'WPeCommerce' || $import_type == 'Comments'|| $import_type == 'Images') {	
+			if($import_type == 'Posts' || $import_type == 'Pages' || $import_type == 'CustomPosts' || $import_type == 'Taxonomies' || $import_type == 'Categories' || $import_type == 'Tags' || $import_type == 'event' || $import_type == 'event-recurring' || $import_type == 'location' || $import_type == 'Users' || $import_type == 'WooCommerce' || $import_type == 'WPeCommerce' || $import_type == 'Comments') {	
 				return true;
 			}
 			if($import_type == 'ticket'){
@@ -85,7 +85,7 @@ class PodsExtension extends ExtensionHandler{
 
 	function import_post_types($import_type, $importAs = null) {	
 		$import_type = trim($import_type);
-		$module = array('Posts' => 'post', 'Pages' => 'page', 'Users' => 'user', 'Comments' => 'comments', 'Taxonomies' => $importAs, 'CustomerReviews' =>'wpcr3_review', 'Categories' => 'categories', 'Tags' => 'tags', 'WooCommerce' => 'product', 'WPeCommerce' => 'wpsc-product','WPeCommerceCoupons' => 'wpsc-product','WooCommerceVariations' => 'product', 'WooCommerceOrders' => 'product', 'WooCommerceCoupons' => 'product', 'WooCommerceRefunds' => 'product', 'CustomPosts' => $importAs, 'Images' => 'Images');
+		$module = array('Posts' => 'post', 'Pages' => 'page', 'Users' => 'user', 'Comments' => 'comments', 'Taxonomies' => $importAs, 'CustomerReviews' =>'wpcr3_review', 'Categories' => 'categories', 'Tags' => 'tags', 'WooCommerce' => 'product', 'WPeCommerce' => 'wpsc-product','WPeCommerceCoupons' => 'wpsc-product','WooCommerceVariations' => 'product', 'WooCommerceOrders' => 'product', 'WooCommerceCoupons' => 'product', 'WooCommerceRefunds' => 'product', 'CustomPosts' => $importAs);
 		foreach (get_taxonomies() as $key => $taxonomy) {
 			$module[$taxonomy] = $taxonomy;
 		}

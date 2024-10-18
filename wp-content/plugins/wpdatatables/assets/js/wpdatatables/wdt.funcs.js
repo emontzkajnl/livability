@@ -215,6 +215,7 @@ function wdtValidateURL(textval) {
 
 function wdtPrepareDate(date, wdtDateFormat, wdtTimeFormat) {
     var format = wdtDateFormat + ' ' + wdtTimeFormat;
+    if (date == "") return '';
     return moment(date, format).valueOf();
 }
 
@@ -440,18 +441,18 @@ function wdtAddDatePlaceholders(input) {
         jQuery('.formatting-rule-cell-value.wdt-datepicker').on('dp.hide', function (e) {
             e.stopImmediatePropagation();
             if(jQuery.inArray(jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-cell-value').val(), ['%LAST_WEEK%','%THIS_WEEK%','%NEXT_WEEK%','%LAST_30_DAYS%','%LAST_MONTH%','%NEXT_MONTH%','%THIS_MONTH%']) === -1) {
-                jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-if-clause').prop('disabled', false).selectpicker('val', 'lt');
+                jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-if-clause').prop('disabled', false).wdtBootstrapSelectPicker('val', 'lt');
             } else {
-                jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-if-clause').prop('disabled', true).selectpicker('val', '');
+                jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-if-clause').prop('disabled', true).wdtBootstrapSelectPicker('val', '');
             }
         });
 
         jQuery('.formatting-rule-cell-value.wdt-datetimepicker').on('dp.hide', function (e) {
             e.stopImmediatePropagation();
             if(jQuery.inArray(jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-cell-value').val(), ['%LAST_WEEK%','%THIS_WEEK%','%NEXT_WEEK%','%LAST_30_DAYS%','%LAST_MONTH%','%NEXT_MONTH%','%THIS_MONTH%']) === -1) {
-                jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-if-clause').prop('disabled', false).selectpicker('val', 'lt');
+                jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-if-clause').prop('disabled', false).wdtBootstrapSelectPicker('val', 'lt');
             } else {
-                jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-if-clause').prop('disabled', true).selectpicker('val', '');
+                jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-if-clause').prop('disabled', true).wdtBootstrapSelectPicker('val', '');
             }
         });
 

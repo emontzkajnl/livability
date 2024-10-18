@@ -31,13 +31,18 @@ class TermsandTaxonomiesImport {
     }
 
     public function terms_taxo_import_function ($data_array, $type ,$pID , $mode , $line_number,$poly_values) {
-		
-		
 		$core_instance = CoreFieldsImport::getInstance();
 		$helpers_instance = ImportHelpers::getInstance();
 		global $core_instance;
-		if($type== 'WooCommerce Product'){
-			$data_array['product_category'] = empty($data_array['product_category']) ? 'Uncategorized' : $data_array['product_category'];
+		if ($type == 'WooCommerce Product') {
+			if ($mode == 'Update') {
+				if (empty($data_array['product_category'])) {
+					$categories = wp_get_post_terms($pID, 'product_cat', array('fields' => 'names'));
+					$data_array['product_category'] = !empty($categories) ? implode(', ', $categories) : 'Uncategorized';
+				}
+			} else {
+				$data_array['product_category'] = empty($data_array['product_category']) ? 'Uncategorized' : $data_array['product_category'];
+			}
 		}
 		unset($data_array['post_format']);
 		unset($data_array['product_type']);

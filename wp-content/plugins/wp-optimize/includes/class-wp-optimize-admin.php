@@ -45,6 +45,7 @@ class WP_Optimize_Admin {
 			),
 			'wpo_images'  => array(
 				'smush' => __('Compress images', 'wp-optimize'),
+				'dimensions' => __('Images dimensions', 'wp-optimize').'<span class="menu-pill premium-only">Premium</span>',
 				'unused' => __('Unused images and sizes', 'wp-optimize').'<span class="menu-pill premium-only">Premium</span>',
 				'lazyload' => __('Lazy-load', 'wp-optimize').'<span class="menu-pill premium-only">Premium</span>',
 			),
@@ -60,6 +61,7 @@ class WP_Optimize_Admin {
 				"js" => __('JavaScript', 'wp-optimize').'<span class="menu-pill disabled hidden">'.__('Disabled', 'wp-optimize').'</span>',
 				"css" => __('CSS', 'wp-optimize').'<span class="menu-pill disabled hidden">'.__('Disabled', 'wp-optimize').'</span>',
 				"font" => __('Fonts', 'wp-optimize'),
+				"analytics" => __('Analytics', 'wp-optimize').'<span class="menu-pill premium-only">Premium</span>',
 				"settings" => __('Settings', 'wp-optimize'),
 				"preload" => __('Preload', 'wp-optimize'),
 				"advanced" => __('Advanced', 'wp-optimize')
@@ -77,7 +79,6 @@ class WP_Optimize_Admin {
 		);
 
 		$tabs = (array_key_exists($page, $pages_tabs)) ? $pages_tabs[$page] : array();
-
 		return apply_filters('wp_optimize_admin_page_'.$page.'_tabs', $tabs);
 	}
 
@@ -237,6 +238,11 @@ class WP_Optimize_Admin {
 			 */
 			add_filter('admin_footer_text', array($this, 'display_footer_review_message'));
 		}
+		
+		/**
+		 * Add action for display Images > Images dimensions tab.
+		 */
+		add_action('wp_optimize_admin_page_wpo_images_dimensions', array($this, 'admin_page_wpo_images_dimensions'));
 	}
 
 	/**
@@ -319,7 +325,8 @@ class WP_Optimize_Admin {
 			'wpo_cache_options' => $wpo_cache_options,
 			'cache_size' => $wpo_cache->get_cache_size(),
 			'display' => $display,
-			'can_purge_the_cache' => WP_Optimize()->get_page_cache()->can_purge_cache(),
+			'can_purge_the_cache' => $wpo_cache->can_purge_cache(),
+			'auto_preload_after_purge' => $wpo_cache->should_auto_preload_purged_contents(),
 			'does_server_handles_cache' => WP_Optimize()->does_server_handles_cache(),
 			'error' => $error,
 		));
@@ -488,6 +495,19 @@ class WP_Optimize_Admin {
 	 */
 	public function admin_page_wpo_images_lazyload() {
 		WP_Optimize()->include_template('images/lazyload.php');
+	}
+	
+	/**
+	 * Runs upon the WP action wp_optimize_admin_page_wpo_images_dimensions
+	 */
+	public function admin_page_wpo_images_dimensions() {
+		$options = WP_Optimize()->get_options();
+		$image_dimensions = $options->get_option('image_dimensions');
+		$ignore_classes = $options->get_option('image_dimensions_ignore_classes');
+		WP_Optimize()->include_template('images/dimensions.php', false, array(
+			'images_dimensions_status' => $image_dimensions,
+			'ignore_classes' => $ignore_classes ?: '',
+		));
 	}
 
 	/**

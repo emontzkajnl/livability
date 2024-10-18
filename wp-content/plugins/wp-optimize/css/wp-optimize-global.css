@@ -79,10 +79,14 @@
   content: "-";
 }
 
-.wpo-collapsible-content {
+.wpo-collapsible-content, .display-none {
   display: none;
 }
 
 .wpo-collapsible.opened + .wpo-collapsible-content {
   display: block;
+}
+
+.wpo-action-separator {
+  color: #A7AAAD;
 }

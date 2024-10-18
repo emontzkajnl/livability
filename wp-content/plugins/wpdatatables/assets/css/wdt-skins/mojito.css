@@ -20,7 +20,6 @@
     margin-bottom: 12px;
     color: #6B7280;
 }
-
 .wpdt-c .wpDataTablesWrapper .dropdown-menu>li>a {
     box-shadow: none !important;
 }
@@ -28,15 +27,12 @@
 .wpdt-c .wpDataTableContainer {
     background:none;
 }
-
 div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c,
 div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c .wpDataTablesWrapper
 {
     background: #ffffff;
     padding: 0;
 }
-
-/*  Above the table  */
 
 /*  Display length and Global search  */
 

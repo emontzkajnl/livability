@@ -202,7 +202,7 @@ class CustomerReviewsImport {
 							}
 
 							$mode_of_affect = 'Inserted';
-							$core_instance->detailed_log[$line_number]['Message'] = 'Inserted Review ID: ' . $reviewId;;
+							$core_instance->detailed_log[$line_number]['Message'] = 'Inserted Review ID: ' . $reviewId;
 							$fields = $wpdb->get_results("UPDATE $log_table_name SET created = $created_count WHERE $unikey_name = '$unikey_value'");
 							
 						} else {
@@ -254,7 +254,7 @@ class CustomerReviewsImport {
 							$reviewId = $wpdb->insert_id;
 							$mode_of_affect = 'Inserted';
 
-							$core_instance->detailed_log[$line_number]['Message'] = 'Inserted Review ID: ' . $reviewId;;
+							$core_instance->detailed_log[$line_number]['Message'] = 'Inserted Review ID: ' . $reviewId;
 							$fields = $wpdb->get_results("UPDATE $log_table_name SET created = $created_count WHERE $unikey_name = '$unikey_value'");
 						} else {
 							$wpdb->update( $wpdb->wpcreviews, array(

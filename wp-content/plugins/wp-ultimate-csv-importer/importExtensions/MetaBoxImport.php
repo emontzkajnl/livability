@@ -23,16 +23,15 @@ class MetaBoxImport {
 		return MetaBoxImport::$metabox_instance;
 	}
 
-	function set_metabox_values($header_array ,$value_array , $map, $post_id , $type){
-
+	function set_metabox_values($line_number,$header_array ,$value_array , $map, $post_id , $type,$hash_key){
 		$post_values = [];
 		$helpers_instance = ImportHelpers::getInstance();	
 		$post_values = $helpers_instance->get_header_values($map , $header_array , $value_array);
 
-		$this->metabox_import_function($post_values, $post_id , $header_array , $value_array, $type);
+		$this->metabox_import_function($line_number,$post_values, $post_id , $header_array , $value_array, $type,$hash_key);
 	}
 
-	public function metabox_import_function ($data_array, $pID, $header_array, $value_array, $type) {
+	public function metabox_import_function ($line_number,$data_array, $pID, $header_array, $value_array, $type,$hash_key) {
 
 		global $wpdb;
 		$helpers_instance = ImportHelpers::getInstance();
@@ -107,16 +106,17 @@ class MetaBoxImport {
 			elseif($field_type == 'image' || $field_type == 'file' || $field_type == 'file_advanced' || $field_type == 'image_advanced'){
 				$get_uploads_fields = explode(',', $data_value);
 				$get_fields_count = count($get_uploads_fields);
-
+				$indexs = 0;
 				foreach($get_uploads_fields as $uploads_fields){
-					$attachmentId = MetaBoxImport::$media_instance->media_handling($uploads_fields, $pID);
-
+					MetaBoxImport::$media_instance->store_image_ids($i=1); 
+					$attachmentId = MetaBoxImport::$media_instance->image_meta_table_entry($line_number ,'', $pID ,$data_key, $uploads_fields, $hash_key,'metabox',$type,'','',$header_array, $value_array,'','',$indexs);
 					if($get_fields_count > 1){
 						add_post_meta($pID, $data_key, $attachmentId);	
 					}
 					else{
 						update_post_meta($pID, $data_key, $attachmentId);	
 					}
+					$indexs++;
 				}	
 			}
 			elseif($field_type == 'video'){
