@@ -3,6 +3,8 @@
 wp-config-local.php
 wp-cli.local.yml
 wp-content/uploads
+wp-content/wp-admin
+wp-content/wp-includes
 wp-content/blogs.dir/
 wp-content/upgrade/
 wp-content/backup-db/
@@ -18,6 +20,10 @@ mu-plugins/
 wp-config.php
 db/
 wp-content/ewww/lazy/
+wp-activate.php
+license.txt
+readme.html
+
 
 
 # @TODO writable paths
