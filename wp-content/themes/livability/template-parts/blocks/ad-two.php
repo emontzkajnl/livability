@@ -6,8 +6,11 @@
 <!-- <script>
 googletag.cmd.push(function() { googletag.display('div-gpt-ad-1568929535248-0'); });
 </script> -->
-<?php if( function_exists('the_ad_placement') ) { 
-    the_ad_placement('manual-right-rail'); 
-    } ?>
+<?php 
+// DISABLE FUNCTION TO TARGET EMPTY DIV
+// if( function_exists('the_ad_placement') ) { 
+//     the_ad_placement('manual-right-rail'); 
+//     } 
+    ?>
 
 </div>
