@@ -201,7 +201,7 @@
             <div class="wp-block-column">
             <?php //get_template_part('template-parts/blocks/ad-two' ); ?>
             <div class="wp-block-jci-ad-area-two">
-                <?php echo the_ad_group(699); ?>
+                <!-- empty so aa can just target div  -->
             </div>
             </div> 
             </div> <!-- wp-block-columns -->
