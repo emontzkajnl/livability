@@ -152,7 +152,7 @@ if (get_field('enable_mega_hero', $ID)):
                 </div> <!-- lc first column-->
             	<div class="wp-block-column"><!-- sidebar column-->
              	<div class="wp-block-jci-ad-area-two">
-                    <?php echo the_ad_group(699); ?>
+                    <?php //echo the_ad_group(699); ?>
                 </div>
         	</div><!-- sidebar column-->
             </div> <!-- liv-columns -->
