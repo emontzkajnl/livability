@@ -91,7 +91,7 @@ while ( have_posts() ) :
             </div>
             <div class="wp-block-column">
             <?php //get_template_part('template-parts/blocks/ad-two' ); ?>
-            <div class="wp-block-jci-ad-area-two" id="<?php echo get_the_ID(); ?>-3"></div>
+            <div class="wp-block-jci-ad-area-two" ></div>
             </div> 
             </div> <!-- wp-block-columns -->
             </div> <!-- .entry-content? -->
