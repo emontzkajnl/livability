@@ -758,7 +758,8 @@ function jci_blocks_render_ad_one() {
 //     } else {
     $html = '';
     $html .= '<div class="wp-block-jci-blocks-ad-area-one">';
-    $html .= do_shortcode('[the_ad_placement id="top-leaderboard"]');
+    // AD NOW INJECTED SO DIV ONLY
+    //$html .= do_shortcode('[the_ad_placement id="top-leaderboard"]');
     // $html .= get_ad_group(698);
     $html .= '</div>';
 //     // if ($all_ads) {

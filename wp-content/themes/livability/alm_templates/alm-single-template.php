@@ -59,7 +59,7 @@ if (get_field('enable_mega_hero', $ID)):
          <div class="wp-block-columns full-width-off-white">
             <div class="wp-block-column">
                 <div class="wp-block-jci-ad-area-one" style="display: flex; justify-content: center;" >
-                <?php echo the_ad_group(698); ?>
+                <?php //echo the_ad_group(698); ?>
                 </div>
             </div>
         </div>
