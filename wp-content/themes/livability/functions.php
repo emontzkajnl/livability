@@ -1836,10 +1836,12 @@ function single_query($args, $id ) {
 			)
 		);
 	} 
-	if ( ! empty( $categories ) ) {
-		$args['cat'] = $categories[0]->ID;
-	}
+	// if ( ! empty( $categories ) ) {
+	// 	$args['cat'] = $categories[0]->ID;
+	// }
 	return $args;
 }
 
-add_filter('alm_query_args_custom_single_query', 'single_query', 10, 2);
+// add_filter('alm_query_args_custom_single_query', 'single_query', 10, 2);
+
+add_filter( 'alm_debug', '__return_true' );

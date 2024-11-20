@@ -73,55 +73,44 @@ while ( have_posts() ) :
 		// }
 
 		$places = get_field('place_relationship'); 
-		$implode_places = implode(',', $places);
 		$cat = get_the_category();
 		$alm_posts = array();
-			echo 'place is '.$places[0].' and title is '.get_the_title($places[0]).'<br />';
 		// CREATE MANUAL ARRAY TO CONTROL ALM
 		$alm_args = array(
 			'numberposts' 			=> 100,
 			'post_type'				=> 'post',
 			'post_status'			=> 'publish', 
-			// 'meta_key'				=> 'place_relationship',
-			// 'meta_value'		=> '52325'
-			'meta_query'			=> array(
+		);
+		if ($places) {
+			$alm_args['meta_query'] = array(
 				array(
 					'key'		=> 'place_relationship',
-					'value'		=> '"'.$places[0].'"',
+					'value'		=>  $places[0],
 					'compare'	=> 'LIKE'
-				),
-			),
-		);
-		// if ($places) {
-		// 	$implode_places = implode(',', $places);
-		// 	print_r($implode_places);
-		// 	$alm_args['meta_query'] = array(
-		// 		array(
-		// 			'key'		=> 'place_relationship',
-		// 			'value'		=> $implode_places,
-		// 			// 'compare'	=> 'IN'
-		// 		)
-		// 	);
-		// }
-		if ( ! empty( $cat ) ) {
-			$alm_args['category'] = $cat[0]->ID;
+				)
+			);
+		} else {
+			$alm_args['meta_query'] = array(
+				array(
+					'key'		=> 'global_article',
+					'value'		=>  true,
+					'compare'	=> 'LIKE'
+				)
+			);
 		}
+
+		if ( ! empty( $cat ) ) {
+			$alm_args['cat'] = $cat[0]->term_id;
+		}
+		// print_r($alm_args);
 		$alm_query = get_posts($alm_args);
 		foreach ($alm_query as $aq) {
-			$pl = get_field('place_relationship', $aq->ID);
-			// echo 'title '.$aq->post_title.' place '.get_the_title($pl[0]).'<br />';
 			$alm_posts[] = $aq->ID;
 		}
-		$alm_post_string = implode(',',$alm_posts);
-		// echo 'string '.$alm_post_string;
 		// print_r($alm_query);
-		// if ($alm_query->have_posts()):
-		// 	while ($alm_query->have_posts()): $alm_query->the_post();
-			
-		// 	endwhile;
-		// endif;
+		$alm_post_string = implode(',',$alm_posts);
 ?>
-	<?php echo do_shortcode( '[ajax_load_more single_post="true" single_post_id="'.get_the_ID().'"  single_post_order="previous" cache="false" cache_id="alm_1036248587" single_post_target="#article-wrapper"  post_type="post" pause_override="true" post__in="'.$alm_post_string.'" loading_style="infinite classic" scroll_distance="100"]' );
+	<?php echo do_shortcode( '[ajax_load_more single_post="true" single_post_id="'.get_the_ID().'"  single_post_order="'.$alm_post_string.'" post__in="'.$alm_post_string.'" cache="true" cache_id="alm_1036248587" single_post_target="#article-wrapper"  post_type="post" pause_override="true"  loading_style="infinite classic" scroll_distance="100"]' );
 
 endwhile; // End of the loop.
 

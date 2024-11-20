@@ -757,7 +757,7 @@ function jci_blocks_render_ad_one() {
 //         return the_ad_group(698); 
 //     } else {
     $html = '';
-    $html .= '<div class="wp-block-jci-blocks-ad-area-one">';
+    $html .= '<div class="wp-block-jci-blocks-ad-area-one wp-block-jci-ad-area-one">';
     // AD NOW INJECTED SO DIV ONLY
     //$html .= do_shortcode('[the_ad_placement id="top-leaderboard"]');
     // $html .= get_ad_group(698);
