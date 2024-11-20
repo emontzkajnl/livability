@@ -1,4 +1,4 @@
-<div class="wp-block-jci-blocks-ad-area-one" >
+<div class="wp-block-jci-blocks-ad-area-one wp-block-jci-ad-area-one" >
     <!-- <script>
         if (window.googletag) {
             googletag.cmd.push(function () {
