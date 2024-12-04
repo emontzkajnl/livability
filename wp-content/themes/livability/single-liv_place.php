@@ -41,7 +41,7 @@ while ( have_posts() ) :
 					<div class="bp23-title-section">
 						<!-- logo here -->
 						<img class="bp23-badge-single" src="<?php echo get_stylesheet_directory_uri(  ); ?>/assets/images/2024Top100_badge_final.svg"/>
-						<?php echo '<h1 class="bp23-title">'.get_the_title().'<span><a href="'.site_url( '/best-places/2024-top-100-best-places-to-live-in-the-us/' ).'">Best Places to Live in the U.S. in 2024</a></span></h1>'; ?>
+						<?php echo '<h1 class="bp23-title">'.get_the_title().'<span><a href="'.site_url( '/best-places/2024-top-100-best-places-to-live-in-the-us/' ).'">Best Places to Live in the U.S. 2024-2025</a></span></h1>'; ?>
 						
 						<?php echo has_excerpt( ) ? '<p class="bp23-excerpt">'.get_the_excerpt().'</p>' : ''; 
 						// echo 'parent: '.wp_get_post_parent_id(  ).' '.get_the_title(150065 ); ?>
