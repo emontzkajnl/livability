@@ -53,8 +53,7 @@ function create_block_jci_blocks_v2_block_init() {
     register_block_type( __DIR__ . '/build/link-to-2023-best-place', array('render_callback' => 'jci_blocks_link_to_2023_best_place'));
     register_block_type( __DIR__ . '/build/internally-promoted', array('render_callback' => 'jci_blocks_internally_promoted'));
     register_block_type( __DIR__ . '/build/bp-301', array('render_callback' => 'jci_blocks_bp_301'));
-	
-	
+    register_block_type( __DIR__ . '/build/magazine-brand-stories', array('render_callback' => 'jci_blocks_magazine_brand_stories'));
 }
 add_action( 'init', 'create_block_jci_blocks_v2_block_init' );
 
@@ -1296,4 +1295,54 @@ function jci_blocks_bp_301() {
     } else {
         return;
     }
+}
+
+function jci_blocks_magazine_brand_stories() {
+    $places = get_field('place_relationship');
+    $place_args = array();
+    foreach ($places as $p) {
+        $place_args[] = array(
+            'key'       => 'place_relationship',
+            'value'     => $p,
+            'compare'   => 'LIKE'
+        );
+    }
+    $args = array(
+        'post_type'         => 'post',
+        'post_status'       => 'publish',
+        'posts_per_page'    => -1,
+        'meta_query'        => array(
+            'relation'      => 'AND',
+            array(
+                'key'       => 'sponsored',
+                'value'     => true,
+            ),
+            array(
+                'relation'      => 'OR',
+                $place_args
+            )
+            // array($place_args),
+        )
+    );
+    $brand_query = new WP_Query($args);
+
+    $html = '<h1>brand stories</h1>';
+    if ($brand_query->have_posts()):
+        echo '<div class="brand-stories">';
+        while ($brand_query->have_posts()): $brand_query->the_post();
+        $ID = get_the_ID();
+        $html .= '<div class="brand-stories__card">';
+        $html .= '<a href="'.get_the_permalink().'" class="brand-stories__img">';
+        $html .= '<div style="background-image: url("'.get_the_post_thumbnail_url( $ID,'rel_article' ).'"); display: block;"></div>';
+        $html .= '</a></div>'; // card
+        endwhile;
+        echo "</div>";
+    endif;
+    $html = '<pre>';
+    $html = print_r($brand_query);
+    $html = '</pre>';
+    // foreach ($places as $place) {
+    //     $html .= 'place is '.$place.'<br />';
+    // }
+    return $html;
 }

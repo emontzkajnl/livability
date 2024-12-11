@@ -1,0 +1,14 @@
+{
+	"apiVersion": 2,
+	"name": "jci-blocks/magazine-brand-stories",
+	"version": "0.1.0",
+	"title": "Magazine Brand Stories",
+	"category": "jci-category",
+	"icon": "admin-links",
+	"description": "Brand stories carousel for magazines",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "jci-blocks",
+	"editorScript": "file:./index.js"
+}
