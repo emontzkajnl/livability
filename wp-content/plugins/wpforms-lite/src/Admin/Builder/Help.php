@@ -234,6 +234,7 @@ class Help {
 			'providers/constant_contact'              => 'constant contact',
 			'providers/convertkit'                    => 'convertkit',
 			'providers/drip'                          => 'drip',
+			'providers/dropbox'                       => 'dropbox',
 			'providers/getresponse'                   => 'getresponse',
 			'providers/getresponse_v3'                => 'getresponse',
 			'providers/mailchimp'                     => 'mailchimp',
@@ -242,6 +243,7 @@ class Help {
 			'providers/zapier'                        => 'zapier',
 			'providers/salesforce'                    => 'salesforce',
 			'providers/sendinblue'                    => 'sendinblue',
+			'providers/slack'                         => 'slack',
 			'providers/hubspot'                       => 'hubspot',
 			'payments'                                => '',
 			'payments/paypal_commerce'                => 'paypal commerce',
@@ -267,16 +269,19 @@ class Help {
 				'/docs/creating-first-form/',
 				'/docs/how-to-choose-the-right-form-field-for-your-forms/',
 				'/docs/how-to-customize-the-submit-button/',
+				'/docs/generating-forms-with-wpforms-ai/',
 			],
 			'new form'                  => [
 				'/docs/creating-first-form/',
 				'/docs/how-to-choose-the-right-form-field-for-your-forms/',
 				'/docs/how-to-customize-the-submit-button/',
+				'/docs/generating-forms-with-wpforms-ai/',
 			],
 			'create form'               => [
 				'/docs/creating-first-form/',
 				'/docs/how-to-choose-the-right-form-field-for-your-forms/',
 				'/docs/how-to-customize-the-submit-button/',
+				'/docs/generating-forms-with-wpforms-ai/',
 			],
 			'form template'             => [
 				'/docs/how-to-create-a-custom-form-template/',
@@ -1182,6 +1187,9 @@ class Help {
 			'drip'                      => [
 				'/docs/how-to-install-and-use-the-drip-addon-in-wpforms/',
 			],
+			'dropbox'                   => [
+				'/docs/dropbox-addon/',
+			],
 			'getresponse'               => [
 				'/docs/how-to-install-and-use-getresponse-addon-with-wpforms/',
 			],
@@ -1203,6 +1211,9 @@ class Help {
 			],
 			'sendinblue'                => [
 				'/docs/how-to-install-and-use-the-sendinblue-addon-with-wpforms/',
+			],
+			'slack'                     => [
+				'/docs/slack-addon',
 			],
 			'hubspot'                   => [
 				'/docs/how-to-install-and-use-the-hubspot-addon-in-wpforms/',
@@ -1255,6 +1266,7 @@ class Help {
 			],
 			'ai'                        => [
 				'/docs/generating-form-choices-with-wpforms-ai/',
+				'/docs/generating-forms-with-wpforms-ai/',
 			],
 		];
 	}

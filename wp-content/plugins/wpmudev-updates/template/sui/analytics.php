@@ -258,19 +258,26 @@ if ( ! $analytics_allowed ) {
 				<?php else : ?>
 
 					<div class="sui-message sui-message-lg">
-						<img
-							src="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/devman-analytics.png' ); ?>"
-							srcset="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/devman-analytics.png' ); ?> 1x, <?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/devman-analytics@2x.png' ); ?> 2x"
-							alt="Analytics"
-							class="sui-image"
-							aria-hidden="true"
-						/>
 						<?php if ( ! $analytics_allowed ) : ?>
+							<img
+								src="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/upgrade.png' ); ?>"
+								srcset="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/upgrade.png' ); ?> 1x, <?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/upgrade@2x.png' ); ?> 2x"
+								alt="Analytics"
+								class="sui-image"
+								aria-hidden="true"
+							/>
 							<p><?php esc_html_e( 'Add basic analytics tracking that doesn\'t require any third-party integration, and display your site data in your WordPress Admin Dashboard area, and in your Hub. Upgrade your membership now to get started.', 'wpmudev' ); ?></p>
 							<a href="<?php echo esc_url( $url_upgrade ); ?>" class="sui-button sui-button-purple sui-button-md" target="_blank">
 								<?php esc_attr_e( 'Upgrade Membership', 'wpmudev' ); ?>
 							</a>
 						<?php else : ?>
+							<img
+								src="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/module.png' ); ?>"
+								srcset="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/module.png' ); ?> 1x, <?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/analytics@2x.png' ); ?> 2x"
+								alt="Analytics"
+								class="sui-image"
+								aria-hidden="true"
+							/>
 							<p><?php esc_html_e( "Add basic analytics tracking that doesn't require any third party integration, and display the data in the WordPress Admin Dashboard area.", 'wpmudev' ); ?></p>
 							<button
 								type="submit"

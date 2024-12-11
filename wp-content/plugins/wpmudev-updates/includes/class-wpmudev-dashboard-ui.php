@@ -1346,11 +1346,17 @@ class WPMUDEV_Dashboard_Ui {
 		}
 
 		if ( $is_logged_in ) {
+			$data = WPMUDEV_Dashboard::$api->get_projects_data();
 			// Show total number of available updates.
 			$updates = WPMUDEV_Dashboard::$settings->get( 'updates_available' );
 			if ( is_array( $updates ) ) {
-				foreach ( $updates as $item ) {
+				foreach ( $updates as $id => $item ) {
 					if ( 'plugin' === $item['type'] ) {
+						// Skip addons.
+						if ( ! empty( $data['projects'][ $id ]['is_plugin_addon'] ) ) {
+							continue;
+						}
+
 						$update_plugins ++;
 					}
 				}
@@ -1730,8 +1736,13 @@ class WPMUDEV_Dashboard_Ui {
 			// Show total number of available updates.
 			$updates = WPMUDEV_Dashboard::$settings->get( 'updates_available' );
 			if ( is_array( $updates ) ) {
-				foreach ( $updates as $item ) {
+				foreach ( $updates as $id => $item ) {
 					if ( 'plugin' === $item['type'] ) {
+						// Skip addons.
+						if ( ! empty( $data['projects'][ $id ]['is_plugin_addon'] ) ) {
+							continue;
+						}
+
 						$update_plugins ++;
 					}
 				}
@@ -2039,6 +2050,9 @@ class WPMUDEV_Dashboard_Ui {
 		$member  = WPMUDEV_Dashboard::$api->get_profile();
 		$profile = $member['profile'];
 
+		// Check if hub free services active.
+		$free_services_active = WPMUDEV_Dashboard::$compatibility->is_free_services_active();
+
 		// WPMUDEV hosting.
 		$membership_type       = WPMUDEV_Dashboard::$api->get_membership_status();
 		$is_wpmudev_host       = WPMUDEV_Dashboard::$api->is_wpmu_dev_hosting();
@@ -2055,7 +2069,8 @@ class WPMUDEV_Dashboard_Ui {
 				'profile',
 				'url_support',
 				'documentation_url',
-				'has_hosted_access'
+				'has_hosted_access',
+				'free_services_active'
 			)
 		);
 
@@ -2120,8 +2135,13 @@ class WPMUDEV_Dashboard_Ui {
 		// Show total number of available updates.
 		$updates = WPMUDEV_Dashboard::$settings->get( 'updates_available' );
 		if ( is_array( $updates ) ) {
-			foreach ( $updates as $item ) {
+			foreach ( $updates as $id => $item ) {
 				if ( 'plugin' === $item['type'] ) {
+					// Skip addons.
+					if ( ! empty( $data['projects'][ $id ]['is_plugin_addon'] ) ) {
+						continue;
+					}
+
 					$update_plugins ++;
 				}
 			}

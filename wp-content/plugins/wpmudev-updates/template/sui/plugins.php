@@ -252,13 +252,6 @@ $has_hosted_access     = $is_wpmudev_host && ! $is_standalone_hosting;
 
 			<p><?php printf( esc_html__( '%s Checking for updates, please wait…', 'wpmudev' ), '<i class="sui-icon-loader sui-md sui-loading" aria-hidden="true"></i>' ); //phpcs:ignore ?></p>
 
-			<img
-				src="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/devman-loading.png' ); ?>"
-				srcset="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/devman-loading.png' ); ?> 1x, <?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/devman-loading@2x.png' ); ?> 2x"
-				alt="<?php esc_html_e( 'Dev-man is drinking a cup of coffee while waiting for content to load.' ); ?>"
-				class="sui-image sui-image-center"
-			/>
-
 		</div>
 
 		<table class="sui-table sui-table-flushed dashui-table-plugins" style="display: none;">
@@ -332,7 +325,13 @@ foreach ( $data['projects'] as $project ) {
 	if ( empty( $project['id'] ) ) {
 		continue;
 	}
+
 	if ( 'plugin' !== $project['type'] ) {
+		continue;
+	}
+
+	// No need to render addons.
+	if ( ! empty( $project['is_plugin_addon'] ) ) {
 		continue;
 	}
 

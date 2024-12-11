@@ -59,7 +59,7 @@ export default ( function( document, window, $ ) {
 	 *
 	 * @since 1.8.8
 	 */
-	const { strings, defaults, sizes, urls, isPro, isLicenseActive } = wpforms_gutenberg_form_selector;
+	const { strings, defaults, sizes, urls, isPro, isLicenseActive, isAdmin } = wpforms_gutenberg_form_selector;
 	const defaultStyleSettings = defaults;
 
 	// noinspection JSUnusedLocalSymbols
@@ -188,10 +188,6 @@ export default ( function( document, window, $ ) {
 		copyPasteJsonValue: {
 			type: 'string',
 			default: defaultStyleSettings.copyPasteJsonValue,
-		},
-		pageTitle: {
-			type: 'string',
-			default: defaultStyleSettings.pageTitle,
 		},
 	};
 
@@ -891,8 +887,6 @@ export default ( function( document, window, $ ) {
 			 */
 			getBlockFormContent( props ) {
 				if ( triggerServerRender ) {
-					props.attributes.pageTitle = app.getPageTitle();
-
 					return (
 						<ServerSideRender
 							key="wpforms-gutenberg-form-selector-server-side-renderer"
@@ -1077,14 +1071,20 @@ export default ( function( document, window, $ ) {
 		 * @since 1.8.1
 		 *
 		 * @param {Object} props Block properties.
+		 * @param {string} panel Panel name.
 		 *
 		 * @return {string} Style Settings panel class.
 		 */
-		getPanelClass( props ) {
+		getPanelClass( props, panel = '' ) {
 			let cssClass = 'wpforms-gutenberg-panel wpforms-block-settings-' + props.clientId;
 
 			if ( ! app.isFullStylingEnabled() ) {
 				cssClass += ' disabled_panel';
+			}
+
+			// Restrict styling panel for non-admins.
+			if ( ! ( isAdmin || panel === 'themes' ) ) {
+				cssClass += ' wpforms-gutenberg-panel-restricted';
 			}
 
 			return cssClass;
@@ -1635,21 +1635,7 @@ export default ( function( document, window, $ ) {
 		 * @return {Object} Block attributes.
 		 */
 		getBlockAttributes() {
-			// Update pageTitle attribute.
-			commonAttributes.pageTitle.default = app.getPageTitle();
-
 			return commonAttributes;
-		},
-
-		/**
-		 * Get the current page title.
-		 *
-		 * @since 1.9.0
-		 *
-		 * @return {string} Current page title.
-		 */
-		getPageTitle() {
-			return document.querySelector( '.editor-post-title__input' )?.textContent ?? document.title;
 		},
 
 		/**

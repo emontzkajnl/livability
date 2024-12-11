@@ -80,16 +80,31 @@ class WPMUDEV_Dashboard_Settings {
 			// Get option value.
 			$group_value = $this->get_option( $group, array() );
 			// Merge values.
-			$value = wp_parse_args(
+			$values = wp_parse_args(
 				array( $name => $value ),
 				$group_value
 			);
-
-			// Name should be group.
-			$name = $group;
+		} else {
+			$group  = $name;
+			$values = $value;
 		}
 
-		return $this->set_option( $name, $value );
+		$success = $this->set_option( $group, $values );
+
+		if ( $success ) {
+			/**
+			 * Action hook to run after Dashboard option is updated.
+			 *
+			 * @since 4.11.22
+			 *
+			 * @param string $name  Name of the option.
+			 * @param mixed  $value Value to update.
+			 * @param string $group Group name.
+			 */
+			do_action( 'wpmudev_dashboard_settings_after_set', $name, $value, $group );
+		}
+
+		return $success;
 	}
 
 	/**
@@ -106,7 +121,21 @@ class WPMUDEV_Dashboard_Settings {
 	 * @return bool
 	 */
 	public function set_option( $name, $value ) {
-		return update_site_option( 'wdp_un_' . $name, $value );
+		$success = update_site_option( 'wdp_un_' . $name, $value );
+
+		if ( $success ) {
+			/**
+			 * Action hook to run after Dashboard option is updated.
+			 *
+			 * @since 4.11.22
+			 *
+			 * @param string $name  Name of the option.
+			 * @param mixed  $value Value to update.
+			 */
+			do_action( 'wpmudev_dashboard_settings_after_set_option', $name, $value );
+		}
+
+		return $success;
 	}
 
 	/**
@@ -246,7 +275,7 @@ class WPMUDEV_Dashboard_Settings {
 
 				// If needs an update.
 				if ( $update ) {
-					$this->set_option( $name, $value );
+					$this->set_option( $name, $existing );
 				}
 			} else {
 				$value = null === $value ? '' : $value;
@@ -382,6 +411,7 @@ class WPMUDEV_Dashboard_Settings {
 				'limit_to_user'        => '',
 				'auth_user'            => null,
 				'hub_nonce'            => '',
+				'connected_admin'      => 0,
 			),
 		);
 

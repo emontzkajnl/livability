@@ -72,7 +72,7 @@ class SaveMapping
 		}
 		$get_option = get_option('updateMessageDisplay');
 		if ($get_option === false) {
-			//$result['notice_message'] = $this->updateMessage();
+		//	$result['notice_message'] = $this->updateMessage();
 			$result['notice_display'] = true;
 			add_option('updateMessageDisplay', 'true');
 		}else {
@@ -98,7 +98,7 @@ class SaveMapping
 			return $message;
 		}
 		$response = json_decode($response);
-		$current_plugin_version = '7.11.10';
+		$current_plugin_version = '7.13.1';
         if($current_plugin_version < $response->version[0]) {
 			
             $message = $response->message[0];
@@ -1417,6 +1417,11 @@ class SaveMapping
 					$all_seo_instance->set_all_seo_values($header_array, $value_array, $map['AIOSEO'], $post_id, $selected_type, $get_mode);
 					break;
 
+				case 'RANKMATH':
+					$rankmath_instance = RankMathImport::getInstance();
+					$rankmath_instance->set_rankmath_values($header_array, $value_array, $map['RANKMATH'], $post_id, $selected_type);
+					break;
+
 				case 'ECOMMETA':
 					$variation_id = isset($variation_id) ? $variation_id : '';
 					$uci_woocomm_meta->set_product_meta_values($header_array, $value_array, $map['ECOMMETA'], $post_id, $variation_id, $selected_type, $line_number, $get_mode, $hash_key);
@@ -1441,6 +1446,11 @@ class SaveMapping
 					$uci_woocomm_meta->set_product_meta_values($header_array, $value_array, $map['COUPONMETA'], $post_id, $variation_id, $selected_type, $line_number, $get_mode, $hash_key);
 					break;
 
+				case 'PPOMMETA':
+					$meta_type = 'PPOMMETA';
+					$uci_woocomm_meta->set_product_meta_values($header_array, $value_array, $map['PPOMMETA'], $post_id, '', $meta_type, $line_number, $get_mode, $hash_key);
+					break;
+
 				case 'BUNDLEMETA':
 					$bundle_type = 'BUNDLEMETA';
 					$uci_woocomm_meta->set_product_meta_values($header_array, $value_array, $map['BUNDLEMETA'], $post_id, '', $bundle_type, $line_number, $get_mode, $hash_key);
@@ -1456,6 +1466,11 @@ class SaveMapping
 					$jet_engine_cpt_instance->set_jet_engine_cpt_values($header_array, $value_array, $map['JECPT'], $post_id, $selected_type, $get_mode, $hash_key, $line_number);
 					break;
 
+				case 'JEBOOKING':
+						$jet_engine_instance = JetBookingImport::getInstance();
+						$jet_engine_instance->set_jet_booking_values($header_array, $value_array, $map['JEBOOKING'], $post_id, $selected_type, $get_mode, $hash_key, $line_number, $gmode, $templatekey);
+						break;
+						
 				case 'CFS':
 					$cfs_instance = CFSImport::getInstance();
 					$cfs_instance->set_cfs_values($line_number, $header_array, $value_array, $map['CFS'], $post_id, $selected_type, $hash_key);
@@ -1469,6 +1484,11 @@ class SaveMapping
 				case 'WPMEMBERS':
 					global $wpmember_class;
 					$wpmember_class->set_wpmembers_values($line_number, $header_array, $value_array, $map['WPMEMBERS'], $post_id, $selected_type, $hash_key);
+					break;
+				
+				case 'MEMBERS':
+					global $member_class;
+					$member_class->set_multirole_values($header_array, $value_array, $map['MEMBERS'], $post_id, $selected_type);
 					break;
 
 				case 'TERMS':
@@ -1592,6 +1612,11 @@ class SaveMapping
 				case 'JEREL':
 					$jet_engine_rel_instance = JetEngineRELImport::getInstance();
 					$jet_engine_rel_instance->set_jet_engine_rel_values($header_array, $value_array, $map['JEREL'], $post_id, $selected_type, $get_mode, $hash_key, $line_number, $gmode, $templatekey = null);
+
+				case 'LISTINGMETA':
+					$listing_instance = ListingImport::getInstance();
+					$listing_instance->set_listing_values($header_array, $value_array, $map['LISTINGMETA'], $post_id, $selected_type);
+					break;
 			}
 		}
 		if (get_option('total_attachment_ids')) {

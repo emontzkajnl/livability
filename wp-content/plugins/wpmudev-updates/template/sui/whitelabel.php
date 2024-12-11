@@ -614,13 +614,23 @@ $can_use_whitelabel    = WPMUDEV_Dashboard::$api->is_whitelabel_allowed();
 					</div>
 				<?php else : ?>
 					<div class="sui-message sui-message-lg">
+					<?php if ( false === $can_use_whitelabel || in_array( $membership_type, array( 'expired', 'paused' ), true ) ) : ?>
 						<img
-							src="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/devman-whitelabel.png' ); ?>"
-							srcset="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/devman-whitelabel.png' ); ?> 1x, <?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/devman-whitelabel@2x.png' ); ?> 2x"
-							alt="dev-man"
+							src="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/upgrade.png' ); ?>"
+							srcset="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/upgrade.png' ); ?> 1x, <?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/upgrade@2x.png' ); ?> 2x"
+							alt="Upgrade"
 							class="sui-image"
 							aria-hidden="true"
 						/>
+					<?php else : ?>
+						<img
+							src="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/module.png' ); ?>"
+							srcset="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/module.png' ); ?> 1x, <?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/module@2x.png' ); ?> 2x"
+							alt="Whitelabel"
+							class="sui-image"
+							aria-hidden="true"
+						/>
+					<?php endif; ?>
 						<p><?php esc_html_e( 'Remove WPMU DEV branding from all our plugins and replace it with your own branding for your clients.', 'wpmudev' ); ?></p>
 						<?php if ( in_array( $membership_type, array( 'expired', 'paused' ), true ) ) : ?>
 							<a href="<?php echo esc_html( $url_upgrade_expired ); ?>" class="sui-button sui-button-purple" style="margin-top: 10px;">

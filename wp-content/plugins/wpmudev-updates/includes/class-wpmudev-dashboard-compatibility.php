@@ -89,4 +89,22 @@ class WPMUDEV_Dashboard_Compatibility {
 			);
 		}
 	}
+
+	/**
+	 * Check if Hub free services are active.
+	 *
+	 * Currently we check only if BLC is active.
+	 *
+	 * @since 4.11.24
+	 *
+	 * @return bool
+	 */
+	public function is_free_services_active() {
+		// If BLC active with version above 2.0.
+		if ( defined( 'WPMUDEV_BLC_VERSION' ) && version_compare( WPMUDEV_BLC_VERSION, '2.3.0', '>=' ) ) {
+			return true;
+		}
+
+		return false;
+	}
 }

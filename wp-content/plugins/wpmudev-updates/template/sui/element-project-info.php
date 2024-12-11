@@ -666,15 +666,7 @@ foreach ( $res->tags as $tid => $plugin_tag ) {
 				</a>
 			</div>
 
-			<div class="sui-block-content-center">
-				<img
-					src="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/devman-loading.png' ); ?>"
-					srcset="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/devman-loading.png' ); ?> 1x, <?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/devman-loading@2x.png' ); ?> 2x"
-					alt="Upgrade"
-					aria-hidden="true"
-					style="vertical-align: middle;"
-				/>
-			</div>
+			<div class="sui-block-content-center"></div>
 
 		</div>
 

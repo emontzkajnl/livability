@@ -96,6 +96,11 @@ class CommentsImport {
 			}
 			if ($post_exists) {
 			if($mode == 'Insert'){
+				if(empty( $data_array['comment_date'] )) {
+					$data_array['comment_date'] = current_time('mysql', 0);
+				}else{
+					$data_array['comment_date'] = date( 'Y-m-d H:i:s', strtotime( $data_array['comment_date'] ) );
+				}
 				$retID = wp_insert_comment($data_array);
 				$mode_of_affect = 'Inserted';
 				
@@ -136,6 +141,12 @@ class CommentsImport {
 					}
 					$core_instance->detailed_log[$line_number]['Message'] = 'Inserted Comment ID: ' . $retID;		
 					$fields = $wpdb->get_results("UPDATE $log_table_name SET created = $created_count WHERE $unikey_name = '$unikey_value'");
+				}
+			}
+			if(isset($data_array['comment_rating'])){
+				$rating_range = range(1,5);
+				if(in_array($data_array['comment_rating'], $rating_range)){
+					update_comment_meta($retID ,'rating', $data_array['comment_rating']);
 				}
 			}
 		}else {

@@ -111,6 +111,7 @@ class LangEN_ZA {
                         'ProductMetaFields' => 'Product Meta Fields',
                         'ProductAttrFields' => 'Product Attribute Fields',
                         'ProductBundleMetaFields' => 'Product Bundle Meta Fields',
+                        'PPOMMetaFields' => 'PPOM Meta Fields',
                         'WPECommerceCustomFields' => 'WP ECommerce Custom Fields',
                         'EventsManagerFields' => 'Events Manager Fields',
                         'CMB2CustomFields' => 'CMB2 Custom Fields',
@@ -123,7 +124,7 @@ class LangEN_ZA {
                         'JetEngineTaxonomyFields' => 'Jet Engine Taxonomy Fields',
                         'JetEngineTaxonomyRFFields' => 'Jet Engine Taxonomy Repeater Fields',
                         'JetEngineRelationsFields' => 'Jet Engine Relations Fields',
-
+                        'JetEngineBookingFields' => 'Jet Engine Booking Fields',
                         'CourseSettingsFields' => 'Course Settings Fields',
                         'CurriculumSettingsFields' => 'Curriculum Settings Fields',
                         'QuizSettingsFields' => 'Quiz Settings Fields',

@@ -4,9 +4,9 @@ Author URI: https://tmsproducts.io
 Plugin URI: https://wpdatatables.com/
 Tags: table, table builder, datatable, csv, chart
 Requires at least: 4.0
-Tested up to: 6.6.2
+Tested up to: 6.7.1
 Requires PHP: 7.4
-Stable tag: 3.4.2.28
+Stable tag: 3.4.2.34
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,9 @@ The best WordPress table plugin. Create responsive, and searchable tables and ch
 
 == Description ==
 
-wpDataTables is a popular WordPress table plugin used to create data tables & table charts quickly from Excel, CSV, XML, JSON, PHP, and many other data sources. Use our table & charts plugin to represent vast amounts of complicated data in a concise, and user-friendly way everyone understands.
+wpDataTables is a popular WordPress table plugin used to quickly create, data tables & charts from Excel, CSV, XML, JSON, PHP, and many other data sources. Use our table & charts plugin to represent vast amounts of complicated data in a concise, and user-friendly way everyone understands.
+
+Thanks to our new premium integration, you can also create WooCommerce product tables that update automatically and have “Add to Cart” functionality.
 
 The main benefits wpDataTables provides to its users are more time (as it automates displaying data on a website) and no need to learn to code.
 
@@ -71,9 +73,9 @@ The wpDataTables plugin is designed for a broad range of users who need to manag
 
 ### 4. E-commerce Sites
 
--   Use Case: Showcase product comparisons, pricing tables, or inventory management.
+-   Use Case: Showcase product comparisons, pricing tables, or inventory management. Automatically generate WooCommerce tables for products. Replace a traditional WooCommerce grid with a data table layout to cater to detailed shoppers.
 
--   Features: Pricing table options and automatic data updates.
+-   Features: Pricing table options and automatic data updates. The data in your product table is synced with your WooCommerce store, ensuring accuracy as you update your inventory or pricing.
 
 
 ### 5. Bloggers and Content Creators
@@ -101,6 +103,8 @@ The wpDataTables plugin is versatile, user-friendly, and powerful, making it an 
 -   Searchable catalogs of car parts, books, etc.
 
 -   Currency and crypto rates
+
+-   WooCommerce Product Tables
 
 -   Financial and investment rates
 
@@ -279,6 +283,9 @@ Group similar values from one column for a clearer, more organized table view. L
 Most of the users need to show a single value from their tables. With our table plugin, you can display dynamic single values from your tables using wpDataTables’ [single-cell shortcode](https://wpdatatables.com/documentation/table-features/single-cell-shortcode/).
 
 ## Premium Features of wpDataTables
+-   [WooCommerce Integration](https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/woocommerce-integration) - Create dynamic and customizable WooCommerce product tables to display product data directly from your WooCommerce store.
+
+-   [WP Posts Builder - New Table Type](https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/wp-post-builder-integration) - Easily generate tables displaying posts, pages, or custom post types with the new WP Posts Builder integration.
 
 -   [Folders/Categories](https://wpdatatables.com/documentation/table-features/folders-for-tables-and-charts/) – Organize Tables and Charts in WordPress Using Folders.
 
@@ -420,18 +427,46 @@ This can be changed from the “Number format” drop-down menu in the wpDataTab
 == Screenshots ==
 1. New simple editor
 2. Merge cells and customization
-3. Reorder/resizing columns and rows
+3. Create table from data source
 4. Front-end data table preview.
 5. Back-end data table editor preview.
-6. Data Table preview from the back-end
+6. Column settings
 7. Table browser example
 8. General settings
-9. Column settings
+9. Simple templates
 10. Plugin settings
 11. Google charts
-12. Google chart settings
+12. Chart.js charts
+13. Google chart settings
 
 == Changelog ==
+= 3.4.2.34 =
+* Fixed issue with undefined method in WPDataChart class.
+Other small bug fixes and stability improvements.
+
+= 3.4.2.33 =
+* New responsive option – Pagination Layout on mobile.
+* Compatibility with WordPress 6.7.1 version approved.
+Other small bug fixes and stability improvements.
+
+= 3.4.2.32 =
+* Minor CSS fixes.
+Other small bug fixes and stability improvements.
+
+= 3.4.2.31 =
+* Compatibility with WordPress 6.7 version approved.
+* Updated page Lite vs Premium.
+Other small bug fixes and stability improvements.
+
+= 3.4.2.30 =
+* Fixed issue with “Return to the Top” feature.
+Other small bug fixes and stability improvements.
+
+= 3.4.2.29 =
+* Added an Activation tab to Plugin settings.
+* Improved newsletter subscription.
+Other small bug fixes and stability improvements.
+
 = 3.4.2.28 =
 * Compatibility with WordPress 6.6.2 version approved.
 * Minor CSS fixes.

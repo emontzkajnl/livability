@@ -37,6 +37,13 @@ class WPMUDEV_Dashboard_Utils {
 		add_action( 'wpmudev_after_remove_allowed_user', array( $this, 'recheck_sso_user' ) );
 		// Do hub sync if server properties change.
 		add_action( 'admin_init', array( $this, 'sync_on_site_info_change' ) );
+
+		// Disable delete for connected admin.
+		add_filter( 'user_row_actions', array( $this, 'maybe_remove_delete_action' ), 1, 2 );
+		add_action( 'delete_user', array( $this, 'maybe_abort_admin_delete' ) );
+		add_action( 'wpmu_delete_user', array( $this, 'maybe_abort_admin_delete' ) );
+		// Set connected admin.
+		add_action( 'wpmudev_dashboard_settings_after_set', array( $this, 'handle_permission_changes' ) );
 	}
 
 	/**
@@ -273,6 +280,36 @@ class WPMUDEV_Dashboard_Utils {
 	}
 
 	/**
+	 * Get user id of admin who connected site with Hub.
+	 *
+	 * This may not be accurate. As a fallback we return first admin from the
+	 * allowed admins list.
+	 *
+	 * @since 4.11.22
+	 *
+	 * @return int
+	 */
+	public function get_connected_admin_id() {
+		// Get connected admin user id.
+		$user_id = WPMUDEV_Dashboard::$settings->get( 'connected_admin', 'general', 0 );
+
+		// If connected admin is not found, use SSO admin id.
+		if ( empty( $user_id ) ) {
+			$user_id = WPMUDEV_Dashboard::$settings->get( 'userid', 'sso', 0 );
+		}
+
+		// If SSO user id is not set, get the first admin from allowed admins list.
+		if ( empty( $user_id ) ) {
+			$users = WPMUDEV_Dashboard::$site->get_allowed_users( true );
+			if ( ! empty( $users[0] ) ) {
+				$user_id = $users[0];
+			}
+		}
+
+		return empty( $user_id ) ? 0 : (int) $user_id;
+	}
+
+	/**
 	 * Check if current request is Dashboard's admin request.
 	 *
 	 * @since 4.11.7
@@ -356,16 +393,28 @@ class WPMUDEV_Dashboard_Utils {
 	public function get_site_info() {
 		global $wp_version;
 
+		$php_memory = '';
+
+		// No fatal errors please.
+		if (
+			class_exists( 'WP_Site_Health' )
+			&& method_exists( 'WP_Site_Health', 'get_instance' )
+			&& property_exists( 'WP_Site_Health', 'php_memory_limit' )
+		) {
+			$php_memory = WP_Site_Health::get_instance()->php_memory_limit;
+		}
+
 		// Prepare info.
 		$info = array(
 			'wp_version'   => $wp_version,
 			'php_version'  => phpversion(),
 			'wp_debug'     => defined( 'WP_DEBUG' ) && WP_DEBUG,
-			'issues_total' => $this->get_site_health_issues_total(),
-			'php_memory'   => ini_get( 'memory_limit' ),
+			'php_memory'   => $php_memory,
 			'is_multisite' => is_multisite(),
-			'server_ip'    => isset( $_SERVER['SERVER_ADDR'] ) ? $_SERVER['SERVER_ADDR'] : '',
 		);
+
+		// Add site health data.
+		$info = $this->set_site_health_issue_counts( $info );
 
 		/**
 		 * Filter hook to modify site info data.
@@ -378,27 +427,29 @@ class WPMUDEV_Dashboard_Utils {
 	}
 
 	/**
-	 * Get site properties.
+	 * Set site health data.
 	 *
-	 * Get site and server properties to show in Hub widget.
+	 * @param array $info Info data.
 	 *
 	 * @since 4.11.19
 	 *
-	 * @return int
+	 * @return array
 	 */
-	public function get_site_health_issues_total() {
+	public function set_site_health_issue_counts( $info = array() ) {
 		// Get site health issues count.
 		$issues = get_transient( 'health-check-site-status-result' );
 		if ( ! empty( $issues ) ) {
 			$issues = json_decode( $issues, true );
 		}
 
-		// If issues found.
-		if ( isset( $issues['recommended'], $issues['critical'] ) ) {
-			return $issues['recommended'] + $issues['critical'];
-		}
+		// Add all issues count separately.
+		$info['good_issues_count']        = $issues['good'] ?? 0;
+		$info['recommended_issues_count'] = $issues['recommended'] ?? 0;
+		$info['critical_issues_count']    = $issues['critical'] ?? 0;
+		// For backward compatibility.
+		$info['issues_total'] = $info['recommended_issues_count'] + $info['critical_issues_count'];
 
-		return 0;
+		return $info;
 	}
 
 	/**
@@ -425,9 +476,81 @@ class WPMUDEV_Dashboard_Utils {
 			 * @since 4.11.19
 			 *
 			 * @param array $previous Previous info.
-			 * @param array $previous Current info.
+			 * @param array $current  Current info.
 			 */
 			do_action( 'wpmudev_dashboard_site_info_changed', $previous, $current );
+		}
+	}
+
+	/**
+	 * Remove delete row action for main admin user.
+	 *
+	 * @since 4.11.22
+	 *
+	 * @param array   $actions     Actions.
+	 * @param WP_User $user_object User object.
+	 *
+	 * @return array
+	 */
+	public function maybe_remove_delete_action( $actions, $user_object ) {
+		$admin_id = WPMUDEV_Dashboard::$utils->get_connected_admin_id();
+
+		// Remove if main admin.
+		if ( isset( $user_object->ID ) && $user_object->ID === $admin_id ) {
+			unset( $actions['delete'] );
+		}
+
+		return $actions;
+	}
+
+	/**
+	 * Abort user delete if main admin is being deleted.
+	 *
+	 * @since 4.11.22
+	 *
+	 * @param int $user_id ID of the user to delete.
+	 *
+	 * @return void
+	 */
+	public function maybe_abort_admin_delete( $user_id ) {
+		$admin_id = WPMUDEV_Dashboard::$utils->get_connected_admin_id();
+		// Get user object.
+		$user = get_userdata( $user_id );
+
+		// Abort if main admin.
+		if ( $user instanceof WP_User && $user_id === $admin_id ) {
+			wp_die(
+				sprintf(
+				/* translators: %s: is for name */
+					__( 'Sorry, you are not allowed to delete user: <strong>%s</strong>.', 'wpmudev' ),
+					$user->user_login
+				)
+			);
+		}
+	}
+
+	/**
+	 * When allowed users list is changed, set connected admin.
+	 *
+	 * @since 4.11.22
+	 *
+	 * @param string $key Updated option key.
+	 *
+	 * @return void
+	 */
+	public function handle_permission_changes( $key ) {
+		if ( 'limit_to_user' !== $key ) {
+			return;
+		}
+
+		// Get current allowed admins list.
+		$allowed_users = (array) WPMUDEV_Dashboard::$settings->get( 'limit_to_user', 'general', array() );
+		// Get current connected admin.
+		$connected_admin = WPMUDEV_Dashboard::$settings->get( 'connected_admin', 'general', 0 );
+
+		// Set connected admin if required.
+		if ( ! empty( $allowed_users[0] ) && ( empty( $connected_admin ) || ! in_array( $connected_admin, $allowed_users, true ) ) ) {
+			WPMUDEV_Dashboard::$settings->set( 'connected_admin', $allowed_users[0], 'general' );
 		}
 	}
 }

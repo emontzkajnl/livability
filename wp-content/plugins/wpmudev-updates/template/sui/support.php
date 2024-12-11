@@ -291,8 +291,8 @@ if ( in_array( $membership_type, array( 'expired', 'paused' ), true ) ) {
 			<div class="sui-message sui-message-lg">
 
 				<img
-					src="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/graphic-support-new.png' ); ?>"
-					srcset="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/graphic-support-new.png' ); ?> 1x, <?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/graphic-support-new@2x.png' ); ?> 2x"
+					src="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/module.png' ); ?>"
+					srcset="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/module.png' ); ?> 1x, <?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/module@2x.png' ); ?> 2x"
 					alt="Support"
 					aria-hidden="true"
 				/>
@@ -515,8 +515,8 @@ if ( in_array( $membership_type, array( 'expired', 'paused' ), true ) ) {
 				<?php if ( empty( $access_logs ) ) : ?>
 					<div class="sui-message">
 						<img
-							src="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/graphic-support-new.png' ); ?>"
-							srcset="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/graphic-support-new.png' ); ?> 1x, <?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/graphic-support-new@2x.png' ); ?> 2x"
+							src="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/module.png' ); ?>"
+							srcset="<?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/module.png' ); ?> 1x, <?php echo esc_url( WPMUDEV_Dashboard::$site->plugin_url . 'assets/images/module@2x.png' ); ?> 2x"
 							alt="dev-man"
 							class="sui-image"
 						/>

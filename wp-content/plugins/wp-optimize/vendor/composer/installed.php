@@ -3,7 +3,7 @@
         'name' => 'updraftplus/wp-optimize',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '82ec157c3627dd3aea62d432220da83a56023800',
+        'reference' => '5804c103e67aa6497de8de15e15a0f382e3ea4a7',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -200,6 +200,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'team-updraft/lib-central' => array(
+            'pretty_version' => '1.24.11',
+            'version' => '1.24.11.0',
+            'reference' => '60dd99f4cfb4484489f7224b10da3d90818adefc',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../team-updraft/lib-central',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'tubalmartin/cssmin' => array(
             'pretty_version' => 'v4.1.1',
             'version' => '4.1.1.0',
@@ -212,7 +221,7 @@
         'updraftplus/wp-optimize' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '82ec157c3627dd3aea62d432220da83a56023800',
+            'reference' => '5804c103e67aa6497de8de15e15a0f382e3ea4a7',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

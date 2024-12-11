@@ -10,7 +10,7 @@
  *
  * @wordpress-plugin
  * Plugin Name: WP Ultimate CSV Importer
- * Version:     7.11.10
+ * Version:     7.13.1
  * Plugin URI:  https://www.smackcoders.com/wp-ultimate-csv-importer-pro.html
  * Description: Seamlessly create posts, custom posts, pages, media, SEO and more from your CSV data with ease.
  * Author:      Smackcoders
@@ -60,6 +60,8 @@ class SmackCSV{
 	private static $send_password = null ; 
 	private static $security = null ;
 	private static $support_instance = null ;
+	private static $helper_instance = null ;
+	private static $need_helper_instance = null ;
 	private static $uninstall = null ;
 	private static $install = null ;
 	private static $export_instance = null ;
@@ -85,7 +87,7 @@ class SmackCSV{
 	private static $persian_instance = null;
 	private static $chinese_instance = null;
 	private static $addon_instance = null;
-	public $version = '7.11.10';
+	public $version = '7.13.1';
 
 	public function __construct() { 
 		add_action('init', array(__CLASS__, 'show_admin_menus'));
@@ -96,10 +98,7 @@ class SmackCSV{
 		if(!empty($nextnoticedate)){
 			$nextnotice=strtotime("+3 day", strtotime($nextnoticedate));
 		}
-		if (isset($nextnotice) && (strtotime($current_date_and_time) >= $nextnotice) || empty($nextnoticedate)) {
-			add_action('admin_notices', array(__CLASS__, 'upgrade_notice'));
-		}
-		add_action('admin_post_dismiss_upgrade_notice', array(__CLASS__, 'dismiss_upgrade_notice'));
+		
 	}
 
 	public static function csv_register_importers() {
@@ -153,6 +152,8 @@ class SmackCSV{
 			SmackCSV::$send_password = SendPassword::getInstance();
 			SmackCSV::$security = Security::getInstance();
 			SmackCSV::$support_instance = SupportMail::getInstance();
+			SmackCSV::$helper_instance = HelperExtension::getInstance();
+			SmackCSV::$need_helper_instance = NeedHelperExtension::getInstance();
 			SmackCSV::$install = SmackCSVInstall::getInstance();
 			SmackCSV::$export_instance = ExportExtension::getInstance();
 			SmackCSV::$italy_instance = LangIT::getInstance();
@@ -238,115 +239,11 @@ class SmackCSV{
 		add_action('admin_enqueue_scripts',array(__CLASS__,'csv_enqueue_function'));
 	}
 
-	public static function upgrade_notice() {
-		//$language = get_locale();
-		$user_id = get_current_user_id();
-		$language = get_user_meta($user_id, 'locale', true);
-		if($language == 'it_IT'){
-			SmackCSV::$italy_instance = LangIT::getInstance();
-			$notice_content = SmackCSV::$italy_instance->notice_contents();
-		}
-		elseif($language == 'fr_FR' || $language == 'fr_BE'){
-			SmackCSV::$france_instance = LangFR::getInstance();
-			$notice_content = SmackCSV::$france_instance->notice_contents();
-		}
-		elseif($language == 'de_DE' || $language == 'de_AT'){
-			SmackCSV::$german_instance = LangGE::getInstance();
-			$notice_content = SmackCSV::$german_instance->notice_contents();
-		}
-		elseif ($language == 'es_ES') {
-			SmackCSV::$spanish_instance = LangES::getInstance();
-			$notice_content = SmackCSV::$spanish_instance->notice_contents();
-		}
-		elseif ($language == 'en_CA') {
-			SmackCSV::$en_CA_instance = LangEN_CA::getInstance();
-			$notice_content = SmackCSV::$en_CA_instance->notice_contents();
-		}
-		elseif ($language == 'en_GB') {
-			SmackCSV::$en_GB_instance = LangEN_GB::getInstance();
-			$notice_content = SmackCSV::$en_GB_instance->notice_contents();
-		}
-		elseif ($language == 'tr_TR') {
-			SmackCSV::$turkish_instance = LangTR::getInstance();
-			$notice_content = SmackCSV::$turkish_instance->notice_contents();
-		}
-		elseif ($language == 'en_NZ') {
-			SmackCSV::$nz_instance = LangNZ::getInstance();
-			$notice_content = SmackCSV::$nz_instance->notice_contents();
-		}
-		elseif ($language == 'pl_PL') {
-			SmackCSV::$pl_instance = LangPL::getInstance();
-			$notice_content = SmackCSV::$pl_instance->notice_contents();
-		}
-		elseif ($language == 'en_AU') {
-			SmackCSV::$aus_instance = LangAUS::getInstance();
-			$notice_content = SmackCSV::$aus_instance->notice_contents();
-		}
-		elseif ($language == 'art_xpirate') {
-			SmackCSV::$enpi_instance = LangPI::getInstance();
-			$notice_content = SmackCSV::$enpi_instance->notice_contents();
-		}
-		elseif ($language == 'en_ZA') {
-			SmackCSV::$en_ZA_instance = LangEN_ZA::getInstance();
-			$notice_content = SmackCSV::$en_ZA_instance->notice_contents();
-		}
-		elseif ($language == 'ru_RU') {
-			SmackCSV::$russian_instance = LangRU::getInstance();
-			$notice_content = SmackCSV::$russian_instance->notice_contents();
-		}
-		elseif($language == 'pt_BR') {
-			SmackCSV::$portuguese_instance = LangPT::getInstance();
-			$notice_content = SmackCSV::$portuguese_instance->notice_contents();
-		}
-		elseif ($language == 'ja') {
-			SmackCSV::$japanese_instance = LangJA::getInstance();
-			$notice_content = SmackCSV::$japanese_instance->notice_contents();
-		}
-		elseif ($language == 'nl_NL') {
-			SmackCSV::$dutch_instance = LangNL::getInstance();
-			$notice_content = SmackCSV::$dutch_instance->notice_contents();
-		}
-		elseif ($language == 'ta_IN') {
-			SmackCSV::$tamil_instance = LangTA::getInstance();
-			$notice_content = SmackCSV::$tamil_instance-->notice_contents();
-		}
-		elseif ($language == 'ar') {
-			SmackCSV::$arabic_instance = LangAR::getInstance();
-			$notice_content = SmackCSV::$arabic_instance->notice_contents();
-		}
-		elseif ($language == 'fa_IR') {
-			SmackCSV::$persian_instance = LangFA::getInstance();
-			$notice_content = SmackCSV::$persian_instance->notice_contents();
-		}
-		elseif ($language == 'zh_CN') {
-			SmackCSV::$chinese_instance = LangZH::getInstance();
-			$notice_content = SmackCSV::$chinese_instance->notice_contents();
-		}
-		else{
-			SmackCSV::$en_instance = LangEN::getInstance();
-			$notice_content = SmackCSV::$en_instance->notice_contents();
-		}
-		$test=translate('apple',$language);
-		?>
-		<div class="notice notice-warning is-dismissible" >
-		<p> <?php echo sanitize_text_field($notice_content['UpgradetoPROusingcode'])?> <b>WPCSVFREE2PRO</b>. <?php echo sanitize_text_field($notice_content['Unlockfeatureslikebulkimportadvanced exportschedulingcontentupdatemorepluslifetimesupport'])?>&nbsp <a href="https://www.smackcoders.com/wp-ultimate-csv-importer-pro.html?utm_source=csv-importer-free-admin-notice&utm_medium=wp_org_readme&utm_campaign=csv-pro-coupon" class="button button-pro promo-btn" target="_blank"><?php echo sanitize_text_field($notice_content['upgradenow'])?></a>
-        </p>
-			
-			<button type="button"class="notice-dismiss" onclick="location.href='<?php echo esc_url(admin_url('admin-post.php?action=dismiss_upgrade_notice')); ?>'">
-				<span class="screen-reader-text">Dismiss this notice.</span>
-			</button>
-		</div>
-		<?php
-	}
+	
 	public static function is_upgrade_notice_dismissed() {
 		return get_option('csv_upgrade_notice_dismissed', false);
 	}
-	public static function dismiss_upgrade_notice() {
-		$current_date_and_time = date("Y-m-d H:i:s");
-		update_option('close_date', $current_date_and_time);
-		wp_safe_redirect(wp_get_referer() ?: admin_url());
-		exit();
-	}
+	
 
 	public static function editor_menu (){
 
@@ -705,6 +602,8 @@ function loadbasic(){
 		include_once('DragandDropExtension.php');
 		include_once('controllers/SendPassword.php');
 		include_once('controllers/SupportMail.php');
+		include_once('controllers/HelperExtension.php');
+		include_once('controllers/NeedHelperExtension.php');
 		include_once('controllers/Security.php');
 		$plugin = SmackCSV::getInstance();			
 	}	

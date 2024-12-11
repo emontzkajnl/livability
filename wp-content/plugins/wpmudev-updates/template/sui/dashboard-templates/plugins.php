@@ -35,6 +35,11 @@ if ( $update_plugins > 0 && ( ( ! $is_free && ! $is_hosted_third_party ) || $has
 			continue;
 		}
 
+		// No need to render addons.
+		if ( ! empty( $data['projects'][ $item ]['is_plugin_addon'] ) ) {
+			continue;
+		}
+
 		$wpmu_plugin = WPMUDEV_Dashboard::$site->get_project_info( $item );
 		// get the updates first.
 		if ( ! $wpmu_plugin->has_update ) {
@@ -48,6 +53,11 @@ endif;
 foreach ( $projects as $key => $item ) {
 	// Skip themes.
 	if ( 'plugin' !== $data['projects'][ $item ]['type'] ) {
+		continue;
+	}
+
+	// No need to render addons.
+	if ( ! empty( $data['projects'][ $item ]['is_plugin_addon'] ) ) {
 		continue;
 	}
 

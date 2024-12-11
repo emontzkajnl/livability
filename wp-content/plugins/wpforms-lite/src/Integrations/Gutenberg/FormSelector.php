@@ -67,7 +67,6 @@ abstract class FormSelector implements IntegrationInterface {
 		'containerShadowSize'   => CSSVars::CONTAINER_SHADOW_SIZE['none']['box-shadow'],
 		'customCss'             => '',
 		'copyPasteJsonValue'    => '',
-		'pageTitle'             => '',
 	];
 
 	/**
@@ -356,9 +355,6 @@ abstract class FormSelector implements IntegrationInterface {
 				'type' => 'string',
 			],
 			'copyPasteJsonValue'    => [
-				'type' => 'string',
-			],
-			'pageTitle'             => [
 				'type' => 'string',
 			],
 		];
@@ -681,6 +677,7 @@ abstract class FormSelector implements IntegrationInterface {
 			],
 			'forms'             => $this->get_form_list(),
 			'strings'           => $strings,
+			'isAdmin'           => current_user_can( 'manage_options' ),
 			'isPro'             => wpforms()->is_pro(),
 			'defaults'          => self::DEFAULT_ATTRIBUTES,
 			'is_modern_markup'  => $this->render_engine === 'modern',

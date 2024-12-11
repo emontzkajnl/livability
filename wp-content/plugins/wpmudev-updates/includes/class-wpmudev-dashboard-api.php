@@ -47,6 +47,13 @@ class WPMUDEV_Dashboard_Api {
 	protected $rest_api_translation = 'api/translations/v1/';
 
 	/**
+	 * Path to the hosting site endpoints.
+	 *
+	 * @var string
+	 */
+	protected $rest_api_hub = 'api/hub/v1/';
+
+	/**
 	 * The complete WPMUDEV REST API endpoint. Defined in constructor.
 	 *
 	 * @var string (URL)
@@ -410,6 +417,9 @@ class WPMUDEV_Dashboard_Api {
 		} elseif ( 'POST' === $method ) {
 			$options['body'] = $data;
 			$response        = wp_remote_post( $link, $options );
+		} elseif ( 'DELETE' === $method ) {
+			$options['method'] = 'DELETE';
+			$response          = wp_remote_request( $link, $options );
 		}
 
 		// Add the request-URL to the response data.
@@ -1502,7 +1512,7 @@ class WPMUDEV_Dashboard_Api {
 		$data_hash = md5( json_encode( $hash_data ) ); // get a hash of the data to see if it changed (minus auth cookies)
 		unset( $hash_data );
 
-		$last_run = WPMUDEV_Dashboard::$settings->get( 'last_run_sync', 'general', array() );
+		$last_run = (array) WPMUDEV_Dashboard::$settings->get( 'last_run_sync', 'general', array() );
 
 		// used to bypass the cache on api side when logging in or upgrading
 		if ( $force || empty( $last_run ) ) {
@@ -2698,6 +2708,46 @@ class WPMUDEV_Dashboard_Api {
 	}
 
 	/**
+	 * Clear WPMUDEV hosting static cache if possible.
+	 *
+	 * This will be a non-blocking request, so do not expect a response.
+	 *
+	 * @return void
+	 */
+	public function maybe_clear_hosting_static_cache() {
+		// Only if WPMUDEV hosting.
+		if ( ! $this->is_wpmu_dev_hosting() ) {
+			return;
+		}
+
+		// Hub site ID.
+		$hub_site_id = WPMUDEV_Dashboard::$api->get_site_id();
+		// Not a Hub site.
+		if ( empty( $hub_site_id ) ) {
+			return;
+		}
+
+		// set api base.
+		$api_base = $this->server_root . $this->rest_api_hub;
+
+		// No blocking.
+		$options = array(
+			'timeout'  => 0.01,
+			'blocking' => false,
+		);
+		// Sets up special auth header.
+		$options['headers']                  = array();
+		$options['headers']['Authorization'] = $this->get_key();
+
+		WPMUDEV_Dashboard::$api->call(
+			$api_base . 'sites/' . $hub_site_id . '/modules/hosting/static-cache',
+			false,
+			'DELETE',
+			$options
+		);
+	}
+
+	/**
 	 * Enable and configure analytics to collect data for the site.
 	 *
 	 * @since  4.6
@@ -2720,10 +2770,15 @@ class WPMUDEV_Dashboard_Api {
 		if ( wp_remote_retrieve_response_code( $response ) == 200 ) {
 			$data = json_decode( wp_remote_retrieve_body( $response ), true );
 
-			WPMUDEV_Dashboard::$settings->set( 'site_id', $data['site_id'], 'analytics' );
-			WPMUDEV_Dashboard::$settings->set( 'tracker', $data['tracker'], 'analytics' );
+			if ( isset( $data['site_id'], $data['tracker'] ) ) {
+				WPMUDEV_Dashboard::$settings->set( 'site_id', $data['site_id'], 'analytics' );
+				WPMUDEV_Dashboard::$settings->set( 'tracker', $data['tracker'], 'analytics' );
 
-			return true;
+				// Clear WPMUDEV static cache.
+				$this->maybe_clear_hosting_static_cache();
+
+				return true;
+			}
 		} else {
 			$this->parse_api_error( $response );
 		}
@@ -2753,6 +2808,9 @@ class WPMUDEV_Dashboard_Api {
 		);
 
 		if ( wp_remote_retrieve_response_code( $response ) == 200 ) {
+			// Clear WPMUDEV static cache.
+			$this->maybe_clear_hosting_static_cache();
+
 			return true;
 		} else {
 			$this->parse_api_error( $response );
@@ -2767,7 +2825,7 @@ class WPMUDEV_Dashboard_Api {
 	 *
 	 * @since  4.6
 	 *
-	 * @param int $days_ago How many days in the past to look back
+	 * @param int $days_ago How many days in the past to look back.
 	 * @param int $subsite  If filtering to a subsite pass the blog_id of it.
 	 *
 	 * @return mixed
@@ -2796,6 +2854,9 @@ class WPMUDEV_Dashboard_Api {
 		if ( $subsite ) {
 			$remote_path = add_query_arg( 'subsite', $subsite, $remote_path );
 		}
+
+		// Add hub site ID.
+		$remote_path = add_query_arg( 'domain', $this->network_site_url(), $remote_path );
 
 		// Using version name in key to force clear cache on update.
 		$transient_key = 'wdp_analytics_v4117_' . md5( $remote_path );
@@ -3178,6 +3239,7 @@ class WPMUDEV_Dashboard_Api {
 			array(
 				'filter'   => $filter,
 				'days_ago' => $days_ago,
+				'domain'   => $this->network_site_url(),
 			),
 			"{$api_base}site/{$site_id}/{$type}"
 		);
