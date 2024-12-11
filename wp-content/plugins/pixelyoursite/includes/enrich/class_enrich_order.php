@@ -32,9 +32,11 @@ class EnrichOrder {
     function add_edd_order_details($payment_id) {
         echo '<div id="edd-payment-notes" class="postbox">
     <h3 class="hndle"><span>PixelYourSite</span></h3>';
-        echo "<div style='margin:20px'><p>With the paid plugin, you can see more data on the Easy Digital Downloads Reports page.
-<a target='_blank' href='https://www.pixelyoursite.com/easy-digital-downloads-first-party-reports/?utm_source=free-plugin-edd-order&utm_medium=free-plugin-edd-order&utm_campaign=free-plugin-edd-order&utm_content=free-plugin-edd-order&utm_term=free-plugin-edd-order'>Click here for details.</a>
-</p>You can stop storing this data from the plugin's <a href='".admin_url("admin.php?page=pixelyoursite&tab=edd")."' target='_blank'>Easy Digital Downloads page</a></div>";
+        echo "<div style='margin:20px'>
+                <p>With the paid plugin, you can see more data on the Easy Digital Downloads Reports page. <a target='_blank' href='https://www.pixelyoursite.com/easy-digital-downloads-first-party-reports/?utm_source=free-plugin-edd-order&utm_medium=free-plugin-edd-order&utm_campaign=free-plugin-edd-order&utm_content=free-plugin-edd-order&utm_term=free-plugin-edd-order'>Click here for details.</a></p>
+                <p>You can ". (PYS()->getOption('edd_enabled_display_data_to_orders') ? 'hide' : 'show') ." Report data from the plugin's <a href='".admin_url("admin.php?page=pixelyoursite&tab=edd")."' target='_blank'>Easy Digital Downloads page</a>. </p>
+                <p>You can stop storing this data from the plugin's <a href='".admin_url("admin.php?page=pixelyoursite&tab=edd")."' target='_blank'>Easy Digital Downloads page</a></p>
+                </div>";
         include 'views/html-edd-order-box.php';
         echo '</div>';
     }
@@ -56,9 +58,11 @@ class EnrichOrder {
             // Обработка ситуации, когда $post не является ни объектом \WP_Post, ни объектом с методом get_id().
             $orderId = null; // Или другое значение по умолчанию.
         }
-        echo "<div style='margin:20px 10px'><p>With the paid plugin, you can see more data on the WooCommerce Reports page. 
-                <a href='https://www.pixelyoursite.com/woocommerce-first-party-reports?utm_source=free-plugin&utm_medium=order-page&utm_campaign=reports-order-page&utm_content=woocommerce-reports-client-page&utm_term=order-page-reports' target='_blank'>Click here for details</a>
-                </p>You can stop storing this data from the plugin's <a href='".admin_url("admin.php?page=pixelyoursite&tab=woo")."' target='_blank'>WooCommerce page</a>.</div>";
+        echo "<div style='margin:20px 10px'>
+                <p>With the paid plugin, you can see more data on the WooCommerce Reports page. <a href='https://www.pixelyoursite.com/woocommerce-first-party-reports?utm_source=free-plugin&utm_medium=order-page&utm_campaign=reports-order-page&utm_content=woocommerce-reports-client-page&utm_term=order-page-reports' target='_blank'>Click here for details</a></p>
+                <p>You can ". (PYS()->getOption('woo_enabled_display_data_to_orders') ? 'hide' : 'show') ." Report data from the plugin's <a href='".admin_url("admin.php?page=pixelyoursite&tab=woo")."' target='_blank'>WooCommerce page</a>. </p>
+                <p>You can stop storing this data from the plugin's <a href='".admin_url("admin.php?page=pixelyoursite&tab=woo")."' target='_blank'>WooCommerce page</a>.</p>
+                </div>";
         include 'views/html-order-meta-box.php';
     }
 
@@ -117,23 +121,20 @@ class EnrichOrder {
 			$utms_id = getUtmsId( true );
 
 			$pys_browser_time = getBrowserTime();
-			if ( $edd_subscription ) {
-				$pys_landing = '';
-			} elseif ( isset( $_REQUEST[ 'pys_landing' ] ) ) {
+
+            $pys_landing = $pys_source = defined( 'REST_REQUEST' ) && REST_REQUEST ? 'REST API' : '';
+			if ( isset( $_REQUEST[ 'pys_landing' ] ) ) {
 				$pys_landing = sanitize_text_field( $_REQUEST[ 'pys_landing' ] );
 			} elseif ( isset( $_COOKIE[ 'pys_landing_page' ] ) || isset( $_SESSION[ 'LandingPage' ] ) ) {
 				$pys_landing = $_COOKIE[ 'pys_landing_page' ] ?? $_SESSION[ 'LandingPage' ];
-			} else {
-				$pys_landing = '';
 			}
+
 			if ( $edd_subscription ) {
 				$pys_source = 'recurring payment';
 			} elseif ( isset( $_REQUEST[ 'pys_source' ] ) ) {
 				$pys_source = sanitize_text_field( $_REQUEST[ 'pys_source' ] );
 			} elseif ( isset( $_COOKIE[ 'pysTrafficSource' ] ) || isset( $_SESSION[ 'TrafficSource' ] ) ) {
 				$pys_source = $_COOKIE[ 'pysTrafficSource' ] ?? $_SESSION[ 'TrafficSource' ];
-			} else {
-				$pys_source = '';
 			}
 
 			if ( $edd_subscription ) {

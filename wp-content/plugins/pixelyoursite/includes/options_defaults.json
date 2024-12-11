@@ -7,6 +7,8 @@
   "general_event_on_woo_enabled": true,
   "general_event_on_edd_enabled": true,
 
+  "enable_all_tracking_ids" : true,
+
   "cookie_duration": 7,
   "last_visit_duration": 60,
   "debug_enabled": false,
@@ -16,7 +18,8 @@
     "administrator"
   ],
 
-  "block_robot_enabled": false,
+  "block_robot_enabled": true,
+  "exclude_blocked_robots": ["WP Rocket"],
   "block_ip_enabled": false,
   "blocked_ips": [],
 
@@ -51,6 +54,7 @@
   "edd_view_content_value_option": "price",
   "edd_view_content_value_global": 0,
   "edd_enabled_save_data_to_orders": true,
+  "edd_enabled_display_data_to_orders": true,
 
   "custom_events_enabled": true,
 
@@ -93,6 +97,7 @@
   "woo_view_category_enabled": true,
   "woo_view_cart_enabled" : true,
   "woo_enabled_save_data_to_orders": true,
+  "woo_enabled_display_data_to_orders": true,
   "woo_add_enrich_to_admin_email": true,
 
 

@@ -3,8 +3,8 @@ Contributors: wpmonks
 Donate link: https://www.paypal.me/wpmonks
 Tags: Gravity Forms CSS, gravity forms themes, gravity forms styler, Gravity Forms Design, Gravity Forms Material Design, Gravity Forms Tooltips
 Requires at least: 4.0
-Tested up to: 6.6
-Stable tag: 5.18
+Tested up to: 6.7
+Stable tag: 5.19
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -125,6 +125,9 @@ Yes, Gravity Forms embedded in Divi themes is also supported. Please check the t
 4. Options in settings
 
 == Changelog ==
+= 5.19 (25th November 2024) =
+* Fixed compatability issues with Custom themes addon
+
 = 5.18 (15th September 2024) =
 * Fixed form preview not showing with conditional logic and Gravity Forms Material Design
 

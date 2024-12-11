@@ -7,6 +7,8 @@
   "general_event_on_woo_enabled": "checkbox",
   "general_event_on_edd_enabled": "checkbox",
 
+  "enable_all_tracking_ids" : "checkbox",
+
   "cookie_duration": "number",
   "last_visit_duration": "number",
   "debug_enabled": "checkbox",
@@ -15,6 +17,7 @@
   "admin_permissions": "multi_select",
 
   "block_robot_enabled": "checkbox",
+  "exclude_blocked_robots": "multi_select",
   "block_ip_enabled": "checkbox",
   "blocked_ips": "multi_select",
 
@@ -34,6 +37,7 @@
   "woo_view_content_value_option": "radio",
   "woo_view_content_value_global": "number",
   "woo_enabled_save_data_to_orders": "checkbox",
+  "woo_enabled_display_data_to_orders": "checkbox",
   "woo_add_enrich_to_admin_email": "checkbox",
 
   "edd_add_to_cart_on_button_click": "checkbox",
@@ -51,6 +55,7 @@
   "edd_view_content_value_option": "radio",
   "edd_view_content_value_global": "number",
   "edd_enabled_save_data_to_orders": "checkbox",
+  "edd_enabled_display_data_to_orders": "checkbox",
 
   "custom_events_enabled": "checkbox",
 
