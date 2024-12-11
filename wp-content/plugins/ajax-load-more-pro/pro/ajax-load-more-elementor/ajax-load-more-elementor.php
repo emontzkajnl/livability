@@ -7,19 +7,19 @@
  * Twitter: @KaptonKaos
  * Author URI: http://connekthq.com
  * Copyright: Darren Cooney & Connekt Media
- * Version: 1.2.0
- * Elementor tested up to: 3.19.1
- * Elementor Pro tested up to: 3.19.1
+ * Version: 1.2.1
+ * Elementor tested up to: 3.25.10
+ * Elementor Pro tested up to: 3.25.10
  *
- * @package ALMElementor
+ * @package ALMElementor 
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ALM_ELEMENTOR_VERSION', '1.2.0' );
-define( 'ALM_ELEMENTOR_RELEASE', 'February 8, 2024' );
+define( 'ALM_ELEMENTOR_VERSION', '1.2.1' );
+define( 'ALM_ELEMENTOR_RELEASE', 'December 4, 2024' );
 
 /**
  * Plugin activation hook.
@@ -152,6 +152,7 @@ if ( ! class_exists( 'ALMElementor' ) ) :
 				'controls'                   => $params['controls'] ? $params['controls'] : 'true',
 				'scrolltop'                  => $params['scrolltop'] ? $params['scrolltop'] : '50',
 				'paged'                      => $params['paged'],
+				'prev_label'                 => apply_filters( 'alm_elementor_previous_label', $params['prev_label'] ),
 				'container_class'            => apply_filters( 'alm_elementor_container_class', 'elementor-grid' ),
 				'woo_item_class'             => apply_filters( 'alm_elementor_woo_item_class', 'product' ),
 				'woo_pagination_class'       => apply_filters( 'alm_elementor_woo_pagination_class', 'woocommerce-pagination' ),

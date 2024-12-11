@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: GP Populate Anything 2.1.13\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cloned-perk-0CqDy0jkw2\n"
+"Project-Id-Version: GP Populate Anything 2.1.15\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cloned-perk-nLjSNqoLaj\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-10-17T13:55:14+00:00\n"
+"POT-Creation-Date: 2024-11-19T16:43:14+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: gp-populate-anything\n"
@@ -254,17 +254,17 @@ msgstr ""
 msgid "Too many values to display."
 msgstr ""
 
-#: class-gp-populate-anything.php:1841
-#: class-gp-populate-anything.php:4724
-#: includes/class-live-merge-tags.php:1318
+#: class-gp-populate-anything.php:1852
+#: class-gp-populate-anything.php:4776
+#: includes/class-live-merge-tags.php:1326
 msgid "Fill Out Other Fields"
 msgstr ""
 
-#: class-gp-populate-anything.php:1862
+#: class-gp-populate-anything.php:1873
 msgid "No Results"
 msgstr ""
 
-#: class-gp-populate-anything.php:3284
+#: class-gp-populate-anything.php:3336
 msgid "Please fill out other fields."
 msgstr ""
 

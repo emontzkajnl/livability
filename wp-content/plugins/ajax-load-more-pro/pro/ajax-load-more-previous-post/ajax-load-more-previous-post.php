@@ -6,7 +6,7 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.7.0
+ * Version: 1.7.1
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
  *
@@ -19,8 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_PREV_POST_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_PREV_POST_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_PREV_POST_VERSION', '1.7.0' );
-define( 'ALM_PREV_POST_RELEASE', 'May 10, 2024' );
+define( 'ALM_PREV_POST_VERSION', '1.7.1' );
+define( 'ALM_PREV_POST_RELEASE', 'December 4, 2024' );
 
 /**
  * Activation hook.

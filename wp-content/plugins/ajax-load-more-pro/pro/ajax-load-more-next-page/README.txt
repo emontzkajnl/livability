@@ -5,10 +5,10 @@ Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/ajax-load-more/add-ons/next-page/
 Requires at least: 4.0
-Tested up to: 6.5
+Tested up to: 6.7
 Stable tag: trunk
 Homepage: https://connekthq.com/ajax-load-more/
-Version: 1.8.0
+Version: 1.8.1
 
 == Copyright ==
 Copyright 2024 Connekt Media
@@ -43,6 +43,11 @@ The Next Page add-on for Ajax Load More works by using <!-‒nextpage‒-> Quick
 5. Activate the plugin in the Plugin dashboard.
 
 == Changelog ==
+
+= 1.8.1 - December 4, 2024 =
+* UPDATE: Add default Next Page shortcode when selecting a post type in the ALM setting section.
+* FIX: Fixed issue with Next page settings not functioning correctly.
+
 
 = 1.8.0 - May 10, 2024 =
 * NEW: Added official support for using Next Page add-on with Single Posts add-on.

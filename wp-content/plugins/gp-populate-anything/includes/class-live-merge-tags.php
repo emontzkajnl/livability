@@ -106,6 +106,11 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		 * Products
 		 */
 		add_filter( 'gform_product_info', array( $this, 'replace_lmts_in_non_choice_product_labels' ), 10, 3 );
+
+		/**
+		 * Hydrate HTML field - ensure any LMTs are populated for it. Especially useful when Auto Loading form entery with GPASC.
+		 */
+		add_filter( 'gppa_hydrated_field', array( $this, 'hydrate_html_fields' ), 10, 2 );
 	}
 
 
@@ -981,10 +986,13 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			if ( $field->get_input_type() === 'number' && ! rgblank( $entry_value ) ) {
 				if ( GFCommon::is_numeric( $entry_value, 'decimal_dot' ) ) {
 					$entry_values[ $input_id ] = GFCommon::clean_number( $entry_value, 'decimal_dot' );
-				} else if ( GFCommon::is_numeric( $entry_value, 'decimal_comma' ) ) {
+				} elseif ( GFCommon::is_numeric( $entry_value, 'decimal_comma' ) ) {
 					$entry_values[ $input_id ] = GFCommon::clean_number( $entry_value, 'decimal_comma' );
 				}
 				continue;
+			} elseif ( $field->type == 'multi_choice' && $field->inputType == 'radio' ) {
+				$entry_values[ absint( $input_id ) ] = $entry_values[ $input_id ];
+				unset( $entry_values[ $input_id ] );
 			}
 
 			if ( ! in_array( $field['type'], GP_Populate_Anything::get_interpreted_multi_input_field_types(), true ) ) {
@@ -1445,6 +1453,24 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		}
 
 		return $product_info;
+	}
+
+	/**
+	 * Populate values for Live Merge Tags in HTML field content.
+	 */
+	public function hydrate_html_fields( $field, $form ) {
+
+		$lmt      = gp_populate_anything()->live_merge_tags;
+		$gf_token = rgget( 'gf_token' );
+		// Only to be processed for an HTML field with LMT in the context of S&C.
+		if ( $field->type == 'html' && $lmt->has_live_merge_tag( $field->content ) && $gf_token ) {
+			$draft_data = GFFormsModel::get_draft_submission_values( $gf_token );
+			$data_array = json_decode( rgar( $draft_data, 'submission' ), true );
+
+			$lmt->populate_lmt_whitelist( $form );
+			$field->content = $lmt->replace_live_merge_tags_static( $field->content, $form, rgar( $data_array, 'submitted_values' ) );
+		}
+		return $field;
 	}
 
 }

@@ -279,12 +279,23 @@ export default class GPPopulateAnything {
 					return;
 				}
 
-				const $el = $(event.target);
-
-				const inputId = String($el.attr('name')).replace(
-					new RegExp(`^${inputPrefix}`),
-					''
+				const $el = $(
+					/*
+					 * Fallback to event.currentTarget if event.target is null. Seeing this on CircleCI with one
+					 * specific test, unable to reproduce locally, but figured it's worth putting in here.
+					 */
+					event.target?.name ? event.target : event.currentTarget
 				);
+
+				const inputName = $el.attr('name');
+
+				if (!inputName) {
+					return;
+				}
+
+				const inputId = inputName
+					.replace(new RegExp(`^${inputPrefix}`), '')
+					.replace(/\[]$/g, '');
 
 				if (!inputId) {
 					return;

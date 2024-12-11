@@ -5,13 +5,13 @@ Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/comments/
 Requires at least: 4.0
-Tested up to: 6.2
+Tested up to: 6.7
 Stable tag: trunk
 Homepage: https://connekthq.com/
-Version: 1.2.1
+Version: 1.2.2
 
 == Copyright ==
-Copyright 2023 Darren Cooney
+Copyright 2024 Connekt Media
 
 This software is NOT to be distributed, but can be INCLUDED in WP themes: Premium or Contracted.
 This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -19,7 +19,7 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 
 == Description ==
 
-= Load blog comments on demand with Ajax Load More and the Comments add-on! =
+= Load WordPress comments on demand with Ajax Load More and the Comments add-on! =
 
 The Comments add-on queries your single post comments and returns them via Ajax.
 
@@ -45,7 +45,12 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/comments/
 
 == Changelog ==
 
-= 1.2.1 -June 11, 2023 =
+= 1.2.2 - December 4, 2024 =
+* UPDATE: Added fix to set the default `comments_post_id` to the current post ID.
+* UPDATE: Code cleanup.
+
+
+= 1.2.1 - June 11, 2023 =
 * UPDATE: Updated to add compatibility with Cache Add-on 2.0 and Ajax Load More 6.0.
 * UPDATE: Code cleanup.
 

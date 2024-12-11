@@ -1802,6 +1802,17 @@ class GP_Populate_Anything extends GP_Plugin {
 	}
 
 	/**
+	 * @param $field
+	 *
+	 * check if field has persistent choices. Gravity Forms 2.9's method isn't accessible if we are on older versions.
+	 *
+	 * @return bool
+	 */
+	private function has_persistent_choices( $field ) {
+		return in_array( $field->type, array( 'multi_choice', 'image_choice' ) );
+	}
+
+	/**
 	 * Gets the choices for a dynamically populated field. Also used for GP Advanced Select AJAX results.
 	 *
 	 * @param GF_Field $field Current field to populate choices for.
@@ -1869,7 +1880,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		} else {
 
 			$choices = array();
-
+			$inputs  = array();
 			foreach ( $objects as $object_index => $object ) {
 				$value = $this->process_template( $field, 'value', $object, 'choices', $objects );
 				$text  = $this->process_template( $field, 'label', $object, 'choices', $objects );
@@ -1878,13 +1889,33 @@ class GP_Populate_Anything extends GP_Plugin {
 					continue;
 				}
 
+				// Similar to Gravity Forms 2.9's JS method `GenerateUniqueFieldKey`
+				// You must pass int to base_convert otherwise you'll get a deprecation notice.
+				$key = substr( base_convert( mt_rand(), 10, 36 ), 0, 9 ) . base_convert( (int) ( microtime( true ) * 1000 ), 10, 36 );
+
 				$choice = array(
 					'value' => $value,
 					'text'  => $text,
 				);
 
+				if ( $this->has_persistent_choices( $field ) ) {
+					$choice['key'] = $key;
+				}
+
 				if ( rgar( $templates, 'price' ) ) {
 					$choice['price'] = $this->process_template( $field, 'price', $object, 'choices', $objects );
+				}
+
+				if ( rgar( $templates, 'image' ) ) {
+					$image_url = $this->process_template( $field, 'image', $object, 'choices', $objects );
+
+					if ( $image_url ) {
+						$attachment_id = attachment_url_to_postid( $image_url );
+
+						if ( $attachment_id ) {
+							$choice['attachment_id'] = $attachment_id;
+						}
+					}
 				}
 
 				if ( $include_object ) {
@@ -1902,6 +1933,16 @@ class GP_Populate_Anything extends GP_Plugin {
 				 * @param array     $objects An array of objects being populated as choices into the field.
 				 */
 				$choices[] = gf_apply_filters( array( 'gppa_input_choice', $field->formId, $field->id ), $choice, $field, $object, $objects );
+
+				if ( $this->has_persistent_choices( $field ) ) {
+					$input    = array(
+						'label' => $text,
+						'name'  => $text,
+						'key'   => $key,
+						'id'    => $field['id'] . '.' . ( $object_index + 1 ),
+					);
+					$inputs[] = $input;
+				}
 			}
 		}
 
@@ -1917,6 +1958,17 @@ class GP_Populate_Anything extends GP_Plugin {
 		$choices = gf_apply_filters( array( 'gppa_input_choices', $field->formId, $field->id ), $choices, $field, $objects );
 
 		$this->_field_choices_cache[ $cache_key ] = $choices;
+
+		if ( $this->has_persistent_choices( $field ) ) {
+			$form = GFAPI::get_form( $field->formId );
+			foreach ( $form['fields'] as &$f_field ) {
+				if ( $field['id'] == $f_field['id'] && isset( $inputs ) ) {
+					$f_field->inputs = $inputs;
+				}
+			}
+
+			GFAPI::update_form( $form );
+		}
 
 		return $choices;
 
@@ -2806,7 +2858,7 @@ class GP_Populate_Anything extends GP_Plugin {
 
 			$field->gppaDisable = ! empty( $field->choices[0]['gppaErrorChoice'] );
 
-			if ( $field->get_input_type() == 'checkbox' ) {
+			if ( $field->get_input_type() == 'checkbox' && ! $this->has_persistent_choices( $field ) ) {
 				$inputs = array();
 				$index  = 1;
 
@@ -3111,7 +3163,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		foreach ( $form['fields'] as $field ) {
 
 			$input_type = $field->get_input_type();
-			$inputs     = $field->get_entry_inputs();
+			$inputs     = $this->has_persistent_choices( $field ) ? $field->inputs : $field->get_entry_inputs();
 
 			/**
 			 * @note GP Nested Forms sets allowsPrepopulate to true on all fields in the child form.

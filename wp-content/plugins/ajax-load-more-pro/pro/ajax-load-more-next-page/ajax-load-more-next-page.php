@@ -6,7 +6,7 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.8.0
+ * Version: 1.8.1
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
  *
@@ -19,8 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_NEXTPAGE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_NEXTPAGE_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_NEXTPAGE_VERSION', '1.8.0' );
-define( 'ALM_NEXTPAGE_RELEASE', 'May 10, 2024' );
+define( 'ALM_NEXTPAGE_VERSION', '1.8.1' );
+define( 'ALM_NEXTPAGE_RELEASE', 'December 4, 2024' );
 
 /**
  * Activation hook.
@@ -834,12 +834,17 @@ if ( ! class_exists( 'ALM_Nextpage_Plugin' ) ) :
 				window.addEventListener('load', function(){
 					var nextpageElements = document.querySelectorAll('.nextpage-option input[type="checkbox"]');
 					if(nextpageElements){
-						for(var i = 0; i < nextpageElements.length - 1; i++){
+						for(var i = 0; i < nextpageElements.length; i++){
 							nextpageElements[i].addEventListener('change', function(e){
 								var el = e.target;
 								var parent = el.parentNode.parentNode;
 								var shortcode = parent.querySelector('.nextpage-option--shortcode');
+								var textarea = shortcode.querySelector('textarea');
+								var defaultCode = '[ajax_load_more nextpage="true" pause="true" scroll="false"]';
 								if(el.checked){
+									if(textarea.value === ''){
+										textarea.value = defaultCode;
+									}
 									shortcode.classList.add('active');
 								} else {
 									shortcode.classList.remove('active');

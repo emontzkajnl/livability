@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.1.15 | November 19, 2024
+
+- Added support for the Multiple Choice field added in Gravity Forms 2.9.
+- Added support for populating images dynamically in the Image Choice field added in Gravity Forms 2.9.
+- Fixed Live Merge Tags not populating into HTML fields on multi-page forms when resuming with a Save & Continue token.
+
+## 2.1.14 | November 7, 2024
+
+- Fixed issue with Time field values not populating correctly in Gravity Flow Form Submission steps.
+
 ## 2.1.13 | October 16, 2024
 
 - Fixed issue where filter values from fields that are empty strings could be converted to `null` on object types that do not support `null` as a special value.

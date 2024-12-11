@@ -229,11 +229,11 @@ class ALMElementorPosts extends Widget_Base {
 		$this->add_control(
 			'previous_link_label',
 			[
-				'label'       => __( 'Previous Posts Link Label', 'alm-elementor' ),
+				'label'       => __( 'Previous Posts Button', 'alm-elementor' ),
 				'type'        => Controls_Manager::TEXT,
-				'description' => __( 'The text displayed when the previous posts link is rendered. Leave empty to not render component.', 'alm-elementor' ),
-				'placeholder' => apply_filters( 'alm_previous_link_label', __( '← Previous Posts', 'ajax-load-more' ) ),
-				'default'     => apply_filters( 'alm_previous_link_label', __( '← Previous Posts', 'ajax-load-more' ) ),
+				'description' => __( 'On paged URLs, show a Previous Posts button to load posts in a reverse load more order. Leave empty to not render component.', 'alm-elementor' ),
+				'placeholder' => apply_filters( 'alm_elementor_previous_posts_button_placeholder', __( 'Previous Posts', 'alm-elementor' ) ),
+				'default'     => apply_filters( 'alm_elementor_previous_posts_button_label', '' ),
 				'separator'   => 'before',
 				'label_block' => true,
 				'condition'   => [
@@ -270,33 +270,6 @@ class ALMElementorPosts extends Widget_Base {
 		);
 
 		$this->end_controls_section();
-
-		if ( has_action( 'alm_cache_installed' ) ) {
-
-			$this->start_controls_section(
-				'integrations',
-				[
-					'label' => __( 'Integrations', 'alm-elementor' ),
-				]
-			);
-			$this->add_control(
-				'cache',
-				[
-					'label'       => __( 'Cache', 'alm-elementor' ),
-					'type'        => Controls_Manager::TEXT,
-					'description' => __( 'Enable Ajax Load More Cache on this instance.', 'alm-elementor' ),
-					'type'        => Controls_Manager::SELECT,
-					'options'     =>
-						[
-							'false' => __( 'False', 'alm-elementor' ),
-							'true'  => __( 'True', 'alm-elementor' ),
-						],
-					'default'     => 'false',
-				]
-			);
-			$this->end_controls_section();
-
-		}
 	}
 
 	/**
@@ -381,7 +354,7 @@ class ALMElementorPosts extends Widget_Base {
 			<div style="<?php echo self::CSS; ?>">
 				<?php _e( 'Elementor Widget Connector for Ajax Load More', 'alm-elementor' ); ?>
 				<br/>
-				<span style="opacity: 0.75; font-weight: 400;">';
+				<span style="opacity: 0.75; font-weight: 400;">
 				<?php _e( 'Preview or launch the live URL to view Ajax Load More content.', 'alm-elementor' ); ?>
 				</span>
 			</div>

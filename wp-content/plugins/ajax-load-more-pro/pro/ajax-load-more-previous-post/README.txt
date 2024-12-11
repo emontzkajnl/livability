@@ -5,10 +5,10 @@ Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/ajax-load-more/add-ons/single-post/
 Requires at least: 4.0
-Tested up to: 6.5
+Tested up to: 6.7
 Stable tag: trunk
 Homepage: https://connekthq.com/ajax-load-more/
-Version: 1.7.0
+Version: 1.7.1
 
 
 == Copyright ==
@@ -48,6 +48,11 @@ http://connekthq.com/plugins/ajax-load-more/single-post/
 
 
 == Changelog ==
+
+= 1.7.1 - December 4, 2024 =
+* FIX: Fixed issue with reading progress bar not working correctly on Elementor single templates.
+* UPDATE: Code clean up.
+
 
 = 1.7.0 - May 10, 2024 =
 * NEW: Added official support for using Next Page add-on with Single Posts add-on.

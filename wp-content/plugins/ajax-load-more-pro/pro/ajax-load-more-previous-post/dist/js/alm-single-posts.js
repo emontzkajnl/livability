@@ -127,6 +127,7 @@ var almSinglePosts = {};
 		almSinglePosts.target = "";
 		almSinglePosts.first = document.querySelector(".alm-single-post");
 		almSinglePosts.showProgressBar = false;
+		almSinglePosts.isElementor = document.body.classList.contains("elementor-page");
 	};
 
 	/**
@@ -329,13 +330,20 @@ var almSinglePosts = {};
 			return false; // Exit if ID null
 		}
 
-		var progressDiv = document.querySelector('.alm-single-post[data-id="' + id + '"]');
+		var targetElement = null;
 
-		if (progressDiv) {
-			var elHeight = Math.round(progressDiv.offsetHeight);
+		if (!almSinglePosts.isElementor) {
+			targetElement = document.querySelector('.alm-single-post[data-id="' + id + '"]');
+		} else {
+			// If is Elementor, get the target name and data attribute.
+			targetElement = document.querySelector('.post-' + id + '[data-elementor-type="single"]');
+		}
+
+		if (targetElement) {
+			var elHeight = Math.round(targetElement.offsetHeight);
 			var wHeight = Math.round(window.outerHeight);
-			var scrollT = Math.round(document.documentElement.scrollTop);
-			var progressOffset = ajaxloadmore.getOffset(progressDiv);
+			var scrollT = Math.round(document.documentElement.scrollTop || window.scrollY);
+			var progressOffset = ajaxloadmore.getOffset(targetElement);
 			var pTop = Math.round(progressOffset.top);
 
 			if (scrollT > parseInt(pTop - almSinglePosts.offset)) {
@@ -368,8 +376,7 @@ var almSinglePosts = {};
 			return false; // Exit, not the correct amount of parameters
 		}
 
-		var transition = "all 0.3s ease";
-		var transition2 = "all 0.2s ease";
+		var transition = "all 0.375s ease";
 		var body = document.body;
 
 		almSinglePosts.progressWrap = document.createElement("div");
@@ -379,7 +386,7 @@ var almSinglePosts = {};
 		almSinglePosts.progress.classList.add("alm-reading-progress");
 
 		almSinglePosts.progressWrap.style.transition = transition;
-		almSinglePosts.progress.style.transition = transition2;
+		almSinglePosts.progress.style.transition = transition;
 
 		if (barStyle[3]) {
 			// Background Color

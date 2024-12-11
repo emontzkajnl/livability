@@ -6,7 +6,7 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.2.1
+ * Version: 1.2.2
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
  *
@@ -19,8 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_COMMENTS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_COMMENTS_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_COMMENTS_VERSION', '1.2.1' );
-define( 'ALM_COMMENTS_RELEASE', 'June 11, 2023' );
+define( 'ALM_COMMENTS_VERSION', '1.2.2' );
+define( 'ALM_COMMENTS_RELEASE', 'December 4, 2024' );
 
 /**
  *  Installation hook.
@@ -37,7 +37,6 @@ register_activation_hook( __FILE__, 'alm_comments_install' );
  */
 function alm_comments_admin_notice() {
 	$slug   = 'ajax-load-more';
-	$plugin = $slug . '-comments';
 	// Ajax Load More Notice.
 	if ( get_transient( 'alm_comments_admin_notice' ) ) {
 		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
@@ -81,7 +80,8 @@ if ( ! class_exists( 'ALMComments' ) ) :
 		 * @since 1.1
 		 */
 		public function alm_comments_preloaded( $args ) {
-			$comments                             = isset( $args['comments'] ) ? $args['comments'] : false;
+			global $post;
+
 			$comments_callback                    = isset( $args['comments_callback'] ) ? $args['comments_callback'] : '';
 			$comments_template                    = isset( $args['comments_template'] ) ? $args['comments_template'] : 'none';
 			$GLOBALS['alm_comment_repeater']      = $comments_template;
@@ -89,9 +89,7 @@ if ( ! class_exists( 'ALMComments' ) ) :
 			$comments_template_type               = $comments_template_type[0];
 			$GLOBALS['alm_comment_repeater_type'] = $comments_template_type;
 
-			$comments_order    = isset( $args['order'] ) ? $args['order'] : 'DESC';
-			$comments_orderby  = isset( $args['orderby'] ) ? $args['orderby'] : 'date';
-			$comments_post_id  = isset( $args['comments_post_id'] ) ? $args['comments_post_id'] : 'null';
+			$comments_post_id  = isset( $args['comments_post_id'] ) && $args['comments_post_id'] ? $args['comments_post_id'] : $post->ID;
 			$comments_per_page = isset( $args['comments_per_page'] ) ? $args['comments_per_page'] : '5';
 			$comments_type     = isset( $args['comments_type'] ) ? $args['comments_type'] : 'comment';
 			$comments_style    = isset( $args['comments_style'] ) ? $args['comments_style'] : 'ul';
@@ -101,7 +99,7 @@ if ( ! class_exists( 'ALMComments' ) ) :
 
 			// If callback is empty, look for a template selected.
 			if ( $comments_callback === '' ) {
-				$comments_callback = ( $comments_template_type !== 'none' ) ? 'alm_comment' : $comments_callback;
+				$comments_callback = $comments_template_type !== 'none' ? 'alm_comment' : $comments_callback;
 			}
 
 			$alm_comments_args  = array(
@@ -139,7 +137,7 @@ if ( ! class_exists( 'ALMComments' ) ) :
 		 * @since 1.0
 		 */
 		public function alm_comments_query() {
-			$form_data = filter_input_array( INPUT_GET, FILTER_SANITIZE_STRING );
+			$form_data = filter_input_array( INPUT_GET );
 			if ( ! isset( $form_data ) ) {
 				return;
 			}
@@ -151,7 +149,6 @@ if ( ! class_exists( 'ALMComments' ) ) :
 			$order          = isset( $form_data['order'] ) ? $form_data['order'] : 'DESC';
 			$canonical_url  = isset( $form_data['canonical_url'] ) ? $form_data['canonical_url'] : $_SERVER['HTTP_REFERER'];
 			$preloaded      = isset( $form_data['preloaded'] ) ? $form_data['preloaded'] : false;
-			$seo_start_page = isset( $form_data['seo_start_page'] ) ? $form_data['seo_start_page'] : 1;
 
 			// Cache Add-on.
 			$cache_id        = isset( $form_data['cache_id'] ) ? $form_data['cache_id'] : '';
@@ -169,8 +166,6 @@ if ( ! class_exists( 'ALMComments' ) ) :
 				$GLOBALS['alm_comment_repeater_type'] = $comments_template_type;
 				$page                                 = isset( $form_data['page'] ) ? $form_data['page'] : 0;
 
-				$comments_order    = isset( $data['order'] ) ? $data['order'] : 'DESC';
-				$comments_orderby  = isset( $data['orderby'] ) ? $data['orderby'] : 'date';
 				$comments_post_id  = isset( $data['post_id'] ) ? $data['post_id'] : 'null';
 				$comments_per_page = isset( $data['per_page'] ) ? $data['per_page'] : '5';
 				$comments_type     = isset( $data['type'] ) ? $data['type'] : 'comment';
@@ -283,6 +278,11 @@ if ( ! class_exists( 'ALMComments' ) ) :
 		 * @since 1.0
 		 */
 		public function alm_comments_shortcode( $comments, $comments_per_page, $comments_type, $comments_style, $comments_template, $comments_callback, $comments_post_id ) {
+			global $post;
+
+			// Set default post ID.
+			$comments_post_id = isset( $comments_post_id ) && $comments_post_id ? $comments_post_id : $post->ID;
+
 			$return  = ' data-comments="' . $comments . '"';
 			$return .= ' data-comments_per_page="' . $comments_per_page . '"';
 			$return .= ' data-comments_type="' . $comments_type . '"';
@@ -381,4 +381,3 @@ function alm_comments_plugin_updater() {
 	}
 }
 add_action( 'admin_init', 'alm_comments_plugin_updater', 0 );
-/* End Software Licensing */

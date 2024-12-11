@@ -4,13 +4,13 @@ Contributors: dcooney
 Author: Darren Cooney
 Author; URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/ajax-load-more/pro/
-Requires at least: 4.0
-Tested up to: 6.5
+Requires at least: 5.0
+Tested up to: 6.7
 Stable tag: trunk
 Requires PHP: 7.0
 Homepage: https://connekthq.com/ajax-load-more/
 Donate: https://connekthq.com/donate
-Version: 1.2.25
+Version: 1.2.26
 
 == Copyright ==
 Copyright 2024 Darren Cooney, Connekt Media
@@ -31,25 +31,43 @@ http://connekthq.com/ajax-load-more/pro/
 
 = Uploading in WordPress Dashboard =
 
-1. Navigate to the 'Add New' in the plugins dashboard
-2. Navigate to the 'Upload' area
-3. Select `ajax-load-more-pro.zip` from your computer
-4. Click 'Install Now'
-5. Activate the plugin in the Plugin dashboard
+1. Navigate to the 'Add New' in the plugins dashboard.
+3. Select `ajax-load-more-pro.zip` from your computer.
+4. Click 'Install Now' and activate the plugin in the Plugin dashboard.
 
 = Using FTP =
 
-1. Download `ajax-load-more-pro.zip`
-2. Extract the `ajax-load-more-pro.zip` to your computer
-3. Upload the `ajax-load-more-pro.zip` directory to the `/wp-content/plugins/` directory
-4. Ensure Ajax Load More is installed prior to activating the repeater plugin
-5. Activate the plugin in the Plugin dashboard
+1. Download `ajax-load-more-pro.zip`.
+2. Extract the `ajax-load-more-pro.zip` and upload the `ajax-load-more-pro.zip` directory to the `/wp-content/plugins/` directory.
+4. Ensure Ajax Load More is installed prior to activating the repeater plugin.
+5. Activate the plugin in the Plugin dashboard.
 
-== Upgrade Notice ==
-
-This Ajax Load More Pro update requires updating core Ajax Load More plugin to 5.6.0 for compatibility with the Filters add-on 2.0 update.
 
 == Changelog ==
+
+** 1.2.26 - December 4, 2024 **
+
+Single Posts - 1.7.1
+
+- FIX: Fixed issue with reading progress bar not working correctly on Elementor single templates.
+- UPDATE: Code clean up.
+
+Comments - 1.2.2
+
+- UPDATE: Added fix to set the default `comments_post_id` to the current post ID.
+- UPDATE: Code cleanup.
+
+Next Page - 1.8.1
+
+- UPDATE: Add default Next Page shortcode when selecting a post type in the ALM setting section.
+- FIX: Fixed issue with Next page settings not functioning correctly.
+
+Elementor - 1.2.1
+
+- NEW: Added new functionality to load previous posts on paged result content.
+- UPDATE: Removed ALM Cache integration as this needs to be rebuilt.
+- UPDATE: Code cleanup.
+
 
 ** 1.2.25 - May 30, 2024 **
 
@@ -467,3 +485,7 @@ SEO - 1.9.4
 ** 1.0 - November 3, 2018 **
 
 - Initial Release
+
+== Upgrade Notice ==
+
+None

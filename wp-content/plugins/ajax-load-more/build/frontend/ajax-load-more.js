@@ -4233,6 +4233,16 @@ __webpack_require__.d(__webpack_exports__, {
   wpblock: function() { return /* binding */ wpblock; }
 });
 
+// NAMESPACE OBJECT: ./node_modules/axios/lib/platform/common/utils.js
+var common_utils_namespaceObject = {};
+__webpack_require__.r(common_utils_namespaceObject);
+__webpack_require__.d(common_utils_namespaceObject, {
+  hasBrowserEnv: function() { return hasBrowserEnv; },
+  hasStandardBrowserEnv: function() { return hasStandardBrowserEnv; },
+  hasStandardBrowserWebWorkerEnv: function() { return hasStandardBrowserWebWorkerEnv; },
+  origin: function() { return origin; }
+});
+
 ;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/bind.js
 
 
@@ -4453,6 +4463,8 @@ const isFormData = (thing) => {
  * @returns {boolean} True if value is a URLSearchParams object, otherwise false
  */
 const isURLSearchParams = kindOfTest('URLSearchParams');
+
+const [isReadableStream, isRequest, isResponse, isHeaders] = ['ReadableStream', 'Request', 'Response', 'Headers'].map(kindOfTest);
 
 /**
  * Trim excess whitespace off the beginning and end of a string
@@ -4842,8 +4854,7 @@ const toObjectSet = (arrayOrString, delimiter) => {
 const noop = () => {}
 
 const toFiniteNumber = (value, defaultValue) => {
-  value = +value;
-  return Number.isFinite(value) ? value : defaultValue;
+  return value != null && Number.isFinite(value = +value) ? value : defaultValue;
 }
 
 const ALPHA = 'abcdefghijklmnopqrstuvwxyz'
@@ -4924,6 +4935,10 @@ const isThenable = (thing) =>
   isBoolean,
   isObject,
   isPlainObject,
+  isReadableStream,
+  isRequest,
+  isResponse,
+  isHeaders,
   isUndefined,
   isDate,
   isFile,
@@ -5522,6 +5537,19 @@ class InterceptorManager {
 
 
 
+/* harmony default export */ var browser = ({
+  isBrowser: true,
+  classes: {
+    URLSearchParams: classes_URLSearchParams,
+    FormData: classes_FormData,
+    Blob: classes_Blob
+  },
+  protocols: ['http', 'https', 'file', 'blob', 'url', 'data']
+});
+
+;// CONCATENATED MODULE: ./node_modules/axios/lib/platform/common/utils.js
+const hasBrowserEnv = typeof window !== 'undefined' && typeof document !== 'undefined';
+
 /**
  * Determine if we're running in a standard browser environment
  *
@@ -5539,18 +5567,10 @@ class InterceptorManager {
  *
  * @returns {boolean}
  */
-const isStandardBrowserEnv = (() => {
-  let product;
-  if (typeof navigator !== 'undefined' && (
-    (product = navigator.product) === 'ReactNative' ||
-    product === 'NativeScript' ||
-    product === 'NS')
-  ) {
-    return false;
-  }
-
-  return typeof window !== 'undefined' && typeof document !== 'undefined';
-})();
+const hasStandardBrowserEnv = (
+  (product) => {
+    return hasBrowserEnv && ['ReactNative', 'NativeScript', 'NS'].indexOf(product) < 0
+  })(typeof navigator !== 'undefined' && navigator.product);
 
 /**
  * Determine if we're running in a standard browser webWorker environment
@@ -5561,7 +5581,7 @@ const isStandardBrowserEnv = (() => {
  * `typeof window !== 'undefined' && typeof document !== 'undefined'`.
  * This leads to a problem when axios post `FormData` in webWorker
  */
- const isStandardBrowserWebWorkerEnv = (() => {
+const hasStandardBrowserWebWorkerEnv = (() => {
   return (
     typeof WorkerGlobalScope !== 'undefined' &&
     // eslint-disable-next-line no-undef
@@ -5570,17 +5590,17 @@ const isStandardBrowserEnv = (() => {
   );
 })();
 
+const origin = hasBrowserEnv && window.location.href || 'http://localhost';
 
-/* harmony default export */ var browser = ({
-  isBrowser: true,
-  classes: {
-    URLSearchParams: classes_URLSearchParams,
-    FormData: classes_FormData,
-    Blob: classes_Blob
-  },
-  isStandardBrowserEnv,
-  isStandardBrowserWebWorkerEnv,
-  protocols: ['http', 'https', 'file', 'blob', 'url', 'data']
+
+
+;// CONCATENATED MODULE: ./node_modules/axios/lib/platform/index.js
+
+
+
+/* harmony default export */ var platform = ({
+  ...common_utils_namespaceObject,
+  ...browser
 });
 
 ;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/toURLEncodedForm.js
@@ -5591,9 +5611,9 @@ const isStandardBrowserEnv = (() => {
 
 
 function toURLEncodedForm(data, options) {
-  return helpers_toFormData(data, new browser.classes.URLSearchParams(), Object.assign({
+  return helpers_toFormData(data, new platform.classes.URLSearchParams(), Object.assign({
     visitor: function(value, key, path, helpers) {
-      if (browser.isNode && utils.isBuffer(value)) {
+      if (platform.isNode && utils.isBuffer(value)) {
         this.append(key, value.toString('base64'));
         return false;
       }
@@ -5655,6 +5675,9 @@ function arrayToObject(arr) {
 function formDataToJSON(formData) {
   function buildPath(path, value, target, index) {
     let name = path[index++];
+
+    if (name === '__proto__') return true;
+
     const isNumericKey = Number.isFinite(+name);
     const isLast = index >= path.length;
     name = !name && utils.isArray(target) ? target.length : name;
@@ -5737,7 +5760,7 @@ const defaults = {
 
   transitional: defaults_transitional,
 
-  adapter: browser.isNode ? 'http' : 'xhr',
+  adapter: ['xhr', 'http', 'fetch'],
 
   transformRequest: [function transformRequest(data, headers) {
     const contentType = headers.getContentType() || '';
@@ -5751,9 +5774,6 @@ const defaults = {
     const isFormData = utils.isFormData(data);
 
     if (isFormData) {
-      if (!hasJSONContentType) {
-        return data;
-      }
       return hasJSONContentType ? JSON.stringify(helpers_formDataToJSON(data)) : data;
     }
 
@@ -5761,7 +5781,8 @@ const defaults = {
       utils.isBuffer(data) ||
       utils.isStream(data) ||
       utils.isFile(data) ||
-      utils.isBlob(data)
+      utils.isBlob(data) ||
+      utils.isReadableStream(data)
     ) {
       return data;
     }
@@ -5804,6 +5825,10 @@ const defaults = {
     const forcedJSONParsing = transitional && transitional.forcedJSONParsing;
     const JSONRequested = this.responseType === 'json';
 
+    if (utils.isResponse(data) || utils.isReadableStream(data)) {
+      return data;
+    }
+
     if (data && utils.isString(data) && ((forcedJSONParsing && !this.responseType) || JSONRequested)) {
       const silentJSONParsing = transitional && transitional.silentJSONParsing;
       const strictJSONParsing = !silentJSONParsing && JSONRequested;
@@ -5836,8 +5861,8 @@ const defaults = {
   maxBodyLength: -1,
 
   env: {
-    FormData: browser.classes.FormData,
-    Blob: browser.classes.Blob
+    FormData: platform.classes.FormData,
+    Blob: platform.classes.Blob
   },
 
   validateStatus: function validateStatus(status) {
@@ -6018,6 +6043,10 @@ class AxiosHeaders {
       setHeaders(header, valueOrRewrite)
     } else if(utils.isString(header) && (header = header.trim()) && !isValidHeaderName(header)) {
       setHeaders(parseHeaders(header), valueOrRewrite);
+    } else if (utils.isHeaders(header)) {
+      for (const [key, value] of header.entries()) {
+        setHeader(value, key, rewrite);
+      }
     } else {
       header != null && setHeader(valueOrRewrite, header, rewrite);
     }
@@ -6308,186 +6337,6 @@ function settle(resolve, reject, response) {
   }
 }
 
-;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/cookies.js
-
-
-
-
-
-/* harmony default export */ var cookies = (browser.isStandardBrowserEnv ?
-
-// Standard browser envs support document.cookie
-  (function standardBrowserEnv() {
-    return {
-      write: function write(name, value, expires, path, domain, secure) {
-        const cookie = [];
-        cookie.push(name + '=' + encodeURIComponent(value));
-
-        if (utils.isNumber(expires)) {
-          cookie.push('expires=' + new Date(expires).toGMTString());
-        }
-
-        if (utils.isString(path)) {
-          cookie.push('path=' + path);
-        }
-
-        if (utils.isString(domain)) {
-          cookie.push('domain=' + domain);
-        }
-
-        if (secure === true) {
-          cookie.push('secure');
-        }
-
-        document.cookie = cookie.join('; ');
-      },
-
-      read: function read(name) {
-        const match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
-        return (match ? decodeURIComponent(match[3]) : null);
-      },
-
-      remove: function remove(name) {
-        this.write(name, '', Date.now() - 86400000);
-      }
-    };
-  })() :
-
-// Non standard browser env (web workers, react-native) lack needed support.
-  (function nonStandardBrowserEnv() {
-    return {
-      write: function write() {},
-      read: function read() { return null; },
-      remove: function remove() {}
-    };
-  })());
-
-;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/isAbsoluteURL.js
-
-
-/**
- * Determines whether the specified URL is absolute
- *
- * @param {string} url The URL to test
- *
- * @returns {boolean} True if the specified URL is absolute, otherwise false
- */
-function isAbsoluteURL(url) {
-  // A URL is considered absolute if it begins with "<scheme>://" or "//" (protocol-relative URL).
-  // RFC 3986 defines scheme name as a sequence of characters beginning with a letter and followed
-  // by any combination of letters, digits, plus, period, or hyphen.
-  return /^([a-z][a-z\d+\-.]*:)?\/\//i.test(url);
-}
-
-;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/combineURLs.js
-
-
-/**
- * Creates a new URL by combining the specified URLs
- *
- * @param {string} baseURL The base URL
- * @param {string} relativeURL The relative URL
- *
- * @returns {string} The combined URL
- */
-function combineURLs(baseURL, relativeURL) {
-  return relativeURL
-    ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
-    : baseURL;
-}
-
-;// CONCATENATED MODULE: ./node_modules/axios/lib/core/buildFullPath.js
-
-
-
-
-
-/**
- * Creates a new URL by combining the baseURL with the requestedURL,
- * only when the requestedURL is not already an absolute URL.
- * If the requestURL is absolute, this function returns the requestedURL untouched.
- *
- * @param {string} baseURL The base URL
- * @param {string} requestedURL Absolute or relative URL to combine
- *
- * @returns {string} The combined full path
- */
-function buildFullPath(baseURL, requestedURL) {
-  if (baseURL && !isAbsoluteURL(requestedURL)) {
-    return combineURLs(baseURL, requestedURL);
-  }
-  return requestedURL;
-}
-
-;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/isURLSameOrigin.js
-
-
-
-
-
-/* harmony default export */ var isURLSameOrigin = (browser.isStandardBrowserEnv ?
-
-// Standard browser envs have full support of the APIs needed to test
-// whether the request URL is of the same origin as current location.
-  (function standardBrowserEnv() {
-    const msie = /(msie|trident)/i.test(navigator.userAgent);
-    const urlParsingNode = document.createElement('a');
-    let originURL;
-
-    /**
-    * Parse a URL to discover it's components
-    *
-    * @param {String} url The URL to be parsed
-    * @returns {Object}
-    */
-    function resolveURL(url) {
-      let href = url;
-
-      if (msie) {
-        // IE needs attribute set twice to normalize properties
-        urlParsingNode.setAttribute('href', href);
-        href = urlParsingNode.href;
-      }
-
-      urlParsingNode.setAttribute('href', href);
-
-      // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
-      return {
-        href: urlParsingNode.href,
-        protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
-        host: urlParsingNode.host,
-        search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
-        hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
-        hostname: urlParsingNode.hostname,
-        port: urlParsingNode.port,
-        pathname: (urlParsingNode.pathname.charAt(0) === '/') ?
-          urlParsingNode.pathname :
-          '/' + urlParsingNode.pathname
-      };
-    }
-
-    originURL = resolveURL(window.location.href);
-
-    /**
-    * Determine if a URL shares the same origin as the current location
-    *
-    * @param {String} requestURL The URL to test
-    * @returns {boolean} True if URL shares the same origin, otherwise false
-    */
-    return function isURLSameOrigin(requestURL) {
-      const parsed = (utils.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
-      return (parsed.protocol === originURL.protocol &&
-          parsed.host === originURL.host);
-    };
-  })() :
-
-  // Non standard browser envs (web workers, react-native) lack needed support.
-  (function nonStandardBrowserEnv() {
-    return function isURLSameOrigin() {
-      return true;
-    };
-  })());
-
 ;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/parseProtocol.js
 
 
@@ -6553,28 +6402,52 @@ function speedometer(samplesCount, min) {
 
 /* harmony default export */ var helpers_speedometer = (speedometer);
 
-;// CONCATENATED MODULE: ./node_modules/axios/lib/adapters/xhr.js
+;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/throttle.js
+
+
+/**
+ * Throttle decorator
+ * @param {Function} fn
+ * @param {Number} freq
+ * @return {Function}
+ */
+function throttle(fn, freq) {
+  let timestamp = 0;
+  const threshold = 1000 / freq;
+  let timer = null;
+  return function throttled() {
+    const force = this === true;
+
+    const now = Date.now();
+    if (force || now - timestamp > threshold) {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+      timestamp = now;
+      return fn.apply(null, arguments);
+    }
+    if (!timer) {
+      timer = setTimeout(() => {
+        timer = null;
+        timestamp = Date.now();
+        return fn.apply(null, arguments);
+      }, threshold - (now - timestamp));
+    }
+  };
+}
+
+/* harmony default export */ var helpers_throttle = (throttle);
+
+;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/progressEventReducer.js
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-function progressEventReducer(listener, isDownloadStream) {
+/* harmony default export */ var progressEventReducer = ((listener, isDownloadStream, freq = 3) => {
   let bytesNotified = 0;
   const _speedometer = helpers_speedometer(50, 250);
 
-  return e => {
+  return helpers_throttle(e => {
     const loaded = e.loaded;
     const total = e.lengthComputable ? e.total : undefined;
     const progressBytes = loaded - bytesNotified;
@@ -6590,56 +6463,390 @@ function progressEventReducer(listener, isDownloadStream) {
       bytes: progressBytes,
       rate: rate ? rate : undefined,
       estimated: rate && total && inRange ? (total - loaded) / rate : undefined,
-      event: e
+      event: e,
+      lengthComputable: total != null
     };
 
     data[isDownloadStream ? 'download' : 'upload'] = true;
 
     listener(data);
-  };
+  }, freq);
+});
+
+;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/isURLSameOrigin.js
+
+
+
+
+
+/* harmony default export */ var isURLSameOrigin = (platform.hasStandardBrowserEnv ?
+
+// Standard browser envs have full support of the APIs needed to test
+// whether the request URL is of the same origin as current location.
+  (function standardBrowserEnv() {
+    const msie = /(msie|trident)/i.test(navigator.userAgent);
+    const urlParsingNode = document.createElement('a');
+    let originURL;
+
+    /**
+    * Parse a URL to discover its components
+    *
+    * @param {String} url The URL to be parsed
+    * @returns {Object}
+    */
+    function resolveURL(url) {
+      let href = url;
+
+      if (msie) {
+        // IE needs attribute set twice to normalize properties
+        urlParsingNode.setAttribute('href', href);
+        href = urlParsingNode.href;
+      }
+
+      urlParsingNode.setAttribute('href', href);
+
+      // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
+      return {
+        href: urlParsingNode.href,
+        protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
+        host: urlParsingNode.host,
+        search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
+        hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
+        hostname: urlParsingNode.hostname,
+        port: urlParsingNode.port,
+        pathname: (urlParsingNode.pathname.charAt(0) === '/') ?
+          urlParsingNode.pathname :
+          '/' + urlParsingNode.pathname
+      };
+    }
+
+    originURL = resolveURL(window.location.href);
+
+    /**
+    * Determine if a URL shares the same origin as the current location
+    *
+    * @param {String} requestURL The URL to test
+    * @returns {boolean} True if URL shares the same origin, otherwise false
+    */
+    return function isURLSameOrigin(requestURL) {
+      const parsed = (utils.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
+      return (parsed.protocol === originURL.protocol &&
+          parsed.host === originURL.host);
+    };
+  })() :
+
+  // Non standard browser envs (web workers, react-native) lack needed support.
+  (function nonStandardBrowserEnv() {
+    return function isURLSameOrigin() {
+      return true;
+    };
+  })());
+
+;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/cookies.js
+
+
+
+/* harmony default export */ var cookies = (platform.hasStandardBrowserEnv ?
+
+  // Standard browser envs support document.cookie
+  {
+    write(name, value, expires, path, domain, secure) {
+      const cookie = [name + '=' + encodeURIComponent(value)];
+
+      utils.isNumber(expires) && cookie.push('expires=' + new Date(expires).toGMTString());
+
+      utils.isString(path) && cookie.push('path=' + path);
+
+      utils.isString(domain) && cookie.push('domain=' + domain);
+
+      secure === true && cookie.push('secure');
+
+      document.cookie = cookie.join('; ');
+    },
+
+    read(name) {
+      const match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
+      return (match ? decodeURIComponent(match[3]) : null);
+    },
+
+    remove(name) {
+      this.write(name, '', Date.now() - 86400000);
+    }
+  }
+
+  :
+
+  // Non-standard browser env (web workers, react-native) lack needed support.
+  {
+    write() {},
+    read() {
+      return null;
+    },
+    remove() {}
+  });
+
+
+;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/isAbsoluteURL.js
+
+
+/**
+ * Determines whether the specified URL is absolute
+ *
+ * @param {string} url The URL to test
+ *
+ * @returns {boolean} True if the specified URL is absolute, otherwise false
+ */
+function isAbsoluteURL(url) {
+  // A URL is considered absolute if it begins with "<scheme>://" or "//" (protocol-relative URL).
+  // RFC 3986 defines scheme name as a sequence of characters beginning with a letter and followed
+  // by any combination of letters, digits, plus, period, or hyphen.
+  return /^([a-z][a-z\d+\-.]*:)?\/\//i.test(url);
 }
+
+;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/combineURLs.js
+
+
+/**
+ * Creates a new URL by combining the specified URLs
+ *
+ * @param {string} baseURL The base URL
+ * @param {string} relativeURL The relative URL
+ *
+ * @returns {string} The combined URL
+ */
+function combineURLs(baseURL, relativeURL) {
+  return relativeURL
+    ? baseURL.replace(/\/?\/$/, '') + '/' + relativeURL.replace(/^\/+/, '')
+    : baseURL;
+}
+
+;// CONCATENATED MODULE: ./node_modules/axios/lib/core/buildFullPath.js
+
+
+
+
+
+/**
+ * Creates a new URL by combining the baseURL with the requestedURL,
+ * only when the requestedURL is not already an absolute URL.
+ * If the requestURL is absolute, this function returns the requestedURL untouched.
+ *
+ * @param {string} baseURL The base URL
+ * @param {string} requestedURL Absolute or relative URL to combine
+ *
+ * @returns {string} The combined full path
+ */
+function buildFullPath(baseURL, requestedURL) {
+  if (baseURL && !isAbsoluteURL(requestedURL)) {
+    return combineURLs(baseURL, requestedURL);
+  }
+  return requestedURL;
+}
+
+;// CONCATENATED MODULE: ./node_modules/axios/lib/core/mergeConfig.js
+
+
+
+
+
+const headersToObject = (thing) => thing instanceof core_AxiosHeaders ? { ...thing } : thing;
+
+/**
+ * Config-specific merge-function which creates a new config-object
+ * by merging two configuration objects together.
+ *
+ * @param {Object} config1
+ * @param {Object} config2
+ *
+ * @returns {Object} New object resulting from merging config2 to config1
+ */
+function mergeConfig(config1, config2) {
+  // eslint-disable-next-line no-param-reassign
+  config2 = config2 || {};
+  const config = {};
+
+  function getMergedValue(target, source, caseless) {
+    if (utils.isPlainObject(target) && utils.isPlainObject(source)) {
+      return utils.merge.call({caseless}, target, source);
+    } else if (utils.isPlainObject(source)) {
+      return utils.merge({}, source);
+    } else if (utils.isArray(source)) {
+      return source.slice();
+    }
+    return source;
+  }
+
+  // eslint-disable-next-line consistent-return
+  function mergeDeepProperties(a, b, caseless) {
+    if (!utils.isUndefined(b)) {
+      return getMergedValue(a, b, caseless);
+    } else if (!utils.isUndefined(a)) {
+      return getMergedValue(undefined, a, caseless);
+    }
+  }
+
+  // eslint-disable-next-line consistent-return
+  function valueFromConfig2(a, b) {
+    if (!utils.isUndefined(b)) {
+      return getMergedValue(undefined, b);
+    }
+  }
+
+  // eslint-disable-next-line consistent-return
+  function defaultToConfig2(a, b) {
+    if (!utils.isUndefined(b)) {
+      return getMergedValue(undefined, b);
+    } else if (!utils.isUndefined(a)) {
+      return getMergedValue(undefined, a);
+    }
+  }
+
+  // eslint-disable-next-line consistent-return
+  function mergeDirectKeys(a, b, prop) {
+    if (prop in config2) {
+      return getMergedValue(a, b);
+    } else if (prop in config1) {
+      return getMergedValue(undefined, a);
+    }
+  }
+
+  const mergeMap = {
+    url: valueFromConfig2,
+    method: valueFromConfig2,
+    data: valueFromConfig2,
+    baseURL: defaultToConfig2,
+    transformRequest: defaultToConfig2,
+    transformResponse: defaultToConfig2,
+    paramsSerializer: defaultToConfig2,
+    timeout: defaultToConfig2,
+    timeoutMessage: defaultToConfig2,
+    withCredentials: defaultToConfig2,
+    withXSRFToken: defaultToConfig2,
+    adapter: defaultToConfig2,
+    responseType: defaultToConfig2,
+    xsrfCookieName: defaultToConfig2,
+    xsrfHeaderName: defaultToConfig2,
+    onUploadProgress: defaultToConfig2,
+    onDownloadProgress: defaultToConfig2,
+    decompress: defaultToConfig2,
+    maxContentLength: defaultToConfig2,
+    maxBodyLength: defaultToConfig2,
+    beforeRedirect: defaultToConfig2,
+    transport: defaultToConfig2,
+    httpAgent: defaultToConfig2,
+    httpsAgent: defaultToConfig2,
+    cancelToken: defaultToConfig2,
+    socketPath: defaultToConfig2,
+    responseEncoding: defaultToConfig2,
+    validateStatus: mergeDirectKeys,
+    headers: (a, b) => mergeDeepProperties(headersToObject(a), headersToObject(b), true)
+  };
+
+  utils.forEach(Object.keys(Object.assign({}, config1, config2)), function computeConfigValue(prop) {
+    const merge = mergeMap[prop] || mergeDeepProperties;
+    const configValue = merge(config1[prop], config2[prop], prop);
+    (utils.isUndefined(configValue) && merge !== mergeDirectKeys) || (config[prop] = configValue);
+  });
+
+  return config;
+}
+
+;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/resolveConfig.js
+
+
+
+
+
+
+
+
+
+/* harmony default export */ var resolveConfig = ((config) => {
+  const newConfig = mergeConfig({}, config);
+
+  let {data, withXSRFToken, xsrfHeaderName, xsrfCookieName, headers, auth} = newConfig;
+
+  newConfig.headers = headers = core_AxiosHeaders.from(headers);
+
+  newConfig.url = buildURL(buildFullPath(newConfig.baseURL, newConfig.url), config.params, config.paramsSerializer);
+
+  // HTTP basic authentication
+  if (auth) {
+    headers.set('Authorization', 'Basic ' +
+      btoa((auth.username || '') + ':' + (auth.password ? unescape(encodeURIComponent(auth.password)) : ''))
+    );
+  }
+
+  let contentType;
+
+  if (utils.isFormData(data)) {
+    if (platform.hasStandardBrowserEnv || platform.hasStandardBrowserWebWorkerEnv) {
+      headers.setContentType(undefined); // Let the browser set it
+    } else if ((contentType = headers.getContentType()) !== false) {
+      // fix semicolon duplication issue for ReactNative FormData implementation
+      const [type, ...tokens] = contentType ? contentType.split(';').map(token => token.trim()).filter(Boolean) : [];
+      headers.setContentType([type || 'multipart/form-data', ...tokens].join('; '));
+    }
+  }
+
+  // Add xsrf header
+  // This is only done if running in a standard browser environment.
+  // Specifically not if we're in a web worker, or react-native.
+
+  if (platform.hasStandardBrowserEnv) {
+    withXSRFToken && utils.isFunction(withXSRFToken) && (withXSRFToken = withXSRFToken(newConfig));
+
+    if (withXSRFToken || (withXSRFToken !== false && isURLSameOrigin(newConfig.url))) {
+      // Add xsrf header
+      const xsrfValue = xsrfHeaderName && xsrfCookieName && cookies.read(xsrfCookieName);
+
+      if (xsrfValue) {
+        headers.set(xsrfHeaderName, xsrfValue);
+      }
+    }
+  }
+
+  return newConfig;
+});
+
+
+;// CONCATENATED MODULE: ./node_modules/axios/lib/adapters/xhr.js
+
+
+
+
+
+
+
+
+
+
 
 const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
 
 /* harmony default export */ var xhr = (isXHRAdapterSupported && function (config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
-    let requestData = config.data;
-    const requestHeaders = core_AxiosHeaders.from(config.headers).normalize();
-    const responseType = config.responseType;
+    const _config = resolveConfig(config);
+    let requestData = _config.data;
+    const requestHeaders = core_AxiosHeaders.from(_config.headers).normalize();
+    let {responseType} = _config;
     let onCanceled;
     function done() {
-      if (config.cancelToken) {
-        config.cancelToken.unsubscribe(onCanceled);
+      if (_config.cancelToken) {
+        _config.cancelToken.unsubscribe(onCanceled);
       }
 
-      if (config.signal) {
-        config.signal.removeEventListener('abort', onCanceled);
-      }
-    }
-
-    if (utils.isFormData(requestData)) {
-      if (browser.isStandardBrowserEnv || browser.isStandardBrowserWebWorkerEnv) {
-        requestHeaders.setContentType(false); // Let the browser set it
-      } else {
-        requestHeaders.setContentType('multipart/form-data;', false); // mobile/desktop app frameworks
+      if (_config.signal) {
+        _config.signal.removeEventListener('abort', onCanceled);
       }
     }
 
     let request = new XMLHttpRequest();
 
-    // HTTP basic authentication
-    if (config.auth) {
-      const username = config.auth.username || '';
-      const password = config.auth.password ? unescape(encodeURIComponent(config.auth.password)) : '';
-      requestHeaders.set('Authorization', 'Basic ' + btoa(username + ':' + password));
-    }
-
-    const fullPath = buildFullPath(config.baseURL, config.url);
-
-    request.open(config.method.toUpperCase(), buildURL(fullPath, config.params, config.paramsSerializer), true);
+    request.open(_config.method.toUpperCase(), _config.url, true);
 
     // Set the request timeout in MS
-    request.timeout = config.timeout;
+    request.timeout = _config.timeout;
 
     function onloadend() {
       if (!request) {
@@ -6701,7 +6908,7 @@ const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
         return;
       }
 
-      reject(new core_AxiosError('Request aborted', core_AxiosError.ECONNABORTED, config, request));
+      reject(new core_AxiosError('Request aborted', core_AxiosError.ECONNABORTED, _config, request));
 
       // Clean up request
       request = null;
@@ -6711,7 +6918,7 @@ const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
     request.onerror = function handleError() {
       // Real errors are hidden from us by the browser
       // onerror should only fire if it's a network error
-      reject(new core_AxiosError('Network Error', core_AxiosError.ERR_NETWORK, config, request));
+      reject(new core_AxiosError('Network Error', core_AxiosError.ERR_NETWORK, _config, request));
 
       // Clean up request
       request = null;
@@ -6719,33 +6926,20 @@ const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
 
     // Handle timeout
     request.ontimeout = function handleTimeout() {
-      let timeoutErrorMessage = config.timeout ? 'timeout of ' + config.timeout + 'ms exceeded' : 'timeout exceeded';
-      const transitional = config.transitional || defaults_transitional;
-      if (config.timeoutErrorMessage) {
-        timeoutErrorMessage = config.timeoutErrorMessage;
+      let timeoutErrorMessage = _config.timeout ? 'timeout of ' + _config.timeout + 'ms exceeded' : 'timeout exceeded';
+      const transitional = _config.transitional || defaults_transitional;
+      if (_config.timeoutErrorMessage) {
+        timeoutErrorMessage = _config.timeoutErrorMessage;
       }
       reject(new core_AxiosError(
         timeoutErrorMessage,
         transitional.clarifyTimeoutError ? core_AxiosError.ETIMEDOUT : core_AxiosError.ECONNABORTED,
-        config,
+        _config,
         request));
 
       // Clean up request
       request = null;
     };
-
-    // Add xsrf header
-    // This is only done if running in a standard browser environment.
-    // Specifically not if we're in a web worker, or react-native.
-    if (browser.isStandardBrowserEnv) {
-      // Add xsrf header
-      const xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath))
-        && config.xsrfCookieName && cookies.read(config.xsrfCookieName);
-
-      if (xsrfValue) {
-        requestHeaders.set(config.xsrfHeaderName, xsrfValue);
-      }
-    }
 
     // Remove Content-Type if data is undefined
     requestData === undefined && requestHeaders.setContentType(null);
@@ -6758,26 +6952,26 @@ const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
     }
 
     // Add withCredentials to request if needed
-    if (!utils.isUndefined(config.withCredentials)) {
-      request.withCredentials = !!config.withCredentials;
+    if (!utils.isUndefined(_config.withCredentials)) {
+      request.withCredentials = !!_config.withCredentials;
     }
 
     // Add responseType to request if needed
     if (responseType && responseType !== 'json') {
-      request.responseType = config.responseType;
+      request.responseType = _config.responseType;
     }
 
     // Handle progress if needed
-    if (typeof config.onDownloadProgress === 'function') {
-      request.addEventListener('progress', progressEventReducer(config.onDownloadProgress, true));
+    if (typeof _config.onDownloadProgress === 'function') {
+      request.addEventListener('progress', progressEventReducer(_config.onDownloadProgress, true));
     }
 
     // Not all browsers support upload events
-    if (typeof config.onUploadProgress === 'function' && request.upload) {
-      request.upload.addEventListener('progress', progressEventReducer(config.onUploadProgress));
+    if (typeof _config.onUploadProgress === 'function' && request.upload) {
+      request.upload.addEventListener('progress', progressEventReducer(_config.onUploadProgress));
     }
 
-    if (config.cancelToken || config.signal) {
+    if (_config.cancelToken || _config.signal) {
       // Handle cancellation
       // eslint-disable-next-line func-names
       onCanceled = cancel => {
@@ -6789,15 +6983,15 @@ const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
         request = null;
       };
 
-      config.cancelToken && config.cancelToken.subscribe(onCanceled);
-      if (config.signal) {
-        config.signal.aborted ? onCanceled() : config.signal.addEventListener('abort', onCanceled);
+      _config.cancelToken && _config.cancelToken.subscribe(onCanceled);
+      if (_config.signal) {
+        _config.signal.aborted ? onCanceled() : _config.signal.addEventListener('abort', onCanceled);
       }
     }
 
-    const protocol = parseProtocol(fullPath);
+    const protocol = parseProtocol(_config.url);
 
-    if (protocol && browser.protocols.indexOf(protocol) === -1) {
+    if (protocol && platform.protocols.indexOf(protocol) === -1) {
       reject(new core_AxiosError('Unsupported protocol ' + protocol + ':', core_AxiosError.ERR_BAD_REQUEST, config));
       return;
     }
@@ -6808,7 +7002,342 @@ const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
   });
 });
 
+;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/composeSignals.js
+
+
+
+const composeSignals = (signals, timeout) => {
+  let controller = new AbortController();
+
+  let aborted;
+
+  const onabort = function (cancel) {
+    if (!aborted) {
+      aborted = true;
+      unsubscribe();
+      const err = cancel instanceof Error ? cancel : this.reason;
+      controller.abort(err instanceof core_AxiosError ? err : new cancel_CanceledError(err instanceof Error ? err.message : err));
+    }
+  }
+
+  let timer = timeout && setTimeout(() => {
+    onabort(new core_AxiosError(`timeout ${timeout} of ms exceeded`, core_AxiosError.ETIMEDOUT))
+  }, timeout)
+
+  const unsubscribe = () => {
+    if (signals) {
+      timer && clearTimeout(timer);
+      timer = null;
+      signals.forEach(signal => {
+        signal &&
+        (signal.removeEventListener ? signal.removeEventListener('abort', onabort) : signal.unsubscribe(onabort));
+      });
+      signals = null;
+    }
+  }
+
+  signals.forEach((signal) => signal && signal.addEventListener && signal.addEventListener('abort', onabort));
+
+  const {signal} = controller;
+
+  signal.unsubscribe = unsubscribe;
+
+  return [signal, () => {
+    timer && clearTimeout(timer);
+    timer = null;
+  }];
+}
+
+/* harmony default export */ var helpers_composeSignals = (composeSignals);
+
+;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/trackStream.js
+
+
+const streamChunk = function* (chunk, chunkSize) {
+  let len = chunk.byteLength;
+
+  if (!chunkSize || len < chunkSize) {
+    yield chunk;
+    return;
+  }
+
+  let pos = 0;
+  let end;
+
+  while (pos < len) {
+    end = pos + chunkSize;
+    yield chunk.slice(pos, end);
+    pos = end;
+  }
+}
+
+const readBytes = async function* (iterable, chunkSize, encode) {
+  for await (const chunk of iterable) {
+    yield* streamChunk(ArrayBuffer.isView(chunk) ? chunk : (await encode(String(chunk))), chunkSize);
+  }
+}
+
+const trackStream = (stream, chunkSize, onProgress, onFinish, encode) => {
+  const iterator = readBytes(stream, chunkSize, encode);
+
+  let bytes = 0;
+
+  return new ReadableStream({
+    type: 'bytes',
+
+    async pull(controller) {
+      const {done, value} = await iterator.next();
+
+      if (done) {
+        controller.close();
+        onFinish();
+        return;
+      }
+
+      let len = value.byteLength;
+      onProgress && onProgress(bytes += len);
+      controller.enqueue(new Uint8Array(value));
+    },
+    cancel(reason) {
+      onFinish(reason);
+      return iterator.return();
+    }
+  }, {
+    highWaterMark: 2
+  })
+}
+
+;// CONCATENATED MODULE: ./node_modules/axios/lib/adapters/fetch.js
+
+
+
+
+
+
+
+
+
+
+const fetchProgressDecorator = (total, fn) => {
+  const lengthComputable = total != null;
+  return (loaded) => setTimeout(() => fn({
+    lengthComputable,
+    total,
+    loaded
+  }));
+}
+
+const isFetchSupported = typeof fetch === 'function' && typeof Request === 'function' && typeof Response === 'function';
+const isReadableStreamSupported = isFetchSupported && typeof ReadableStream === 'function';
+
+// used only inside the fetch adapter
+const encodeText = isFetchSupported && (typeof TextEncoder === 'function' ?
+    ((encoder) => (str) => encoder.encode(str))(new TextEncoder()) :
+    async (str) => new Uint8Array(await new Response(str).arrayBuffer())
+);
+
+const supportsRequestStream = isReadableStreamSupported && (() => {
+  let duplexAccessed = false;
+
+  const hasContentType = new Request(platform.origin, {
+    body: new ReadableStream(),
+    method: 'POST',
+    get duplex() {
+      duplexAccessed = true;
+      return 'half';
+    },
+  }).headers.has('Content-Type');
+
+  return duplexAccessed && !hasContentType;
+})();
+
+const DEFAULT_CHUNK_SIZE = 64 * 1024;
+
+const supportsResponseStream = isReadableStreamSupported && !!(()=> {
+  try {
+    return utils.isReadableStream(new Response('').body);
+  } catch(err) {
+    // return undefined
+  }
+})();
+
+const resolvers = {
+  stream: supportsResponseStream && ((res) => res.body)
+};
+
+isFetchSupported && (((res) => {
+  ['text', 'arrayBuffer', 'blob', 'formData', 'stream'].forEach(type => {
+    !resolvers[type] && (resolvers[type] = utils.isFunction(res[type]) ? (res) => res[type]() :
+      (_, config) => {
+        throw new core_AxiosError(`Response type '${type}' is not supported`, core_AxiosError.ERR_NOT_SUPPORT, config);
+      })
+  });
+})(new Response));
+
+const getBodyLength = async (body) => {
+  if (body == null) {
+    return 0;
+  }
+
+  if(utils.isBlob(body)) {
+    return body.size;
+  }
+
+  if(utils.isSpecCompliantForm(body)) {
+    return (await new Request(body).arrayBuffer()).byteLength;
+  }
+
+  if(utils.isArrayBufferView(body)) {
+    return body.byteLength;
+  }
+
+  if(utils.isURLSearchParams(body)) {
+    body = body + '';
+  }
+
+  if(utils.isString(body)) {
+    return (await encodeText(body)).byteLength;
+  }
+}
+
+const resolveBodyLength = async (headers, body) => {
+  const length = utils.toFiniteNumber(headers.getContentLength());
+
+  return length == null ? getBodyLength(body) : length;
+}
+
+/* harmony default export */ var adapters_fetch = (isFetchSupported && (async (config) => {
+  let {
+    url,
+    method,
+    data,
+    signal,
+    cancelToken,
+    timeout,
+    onDownloadProgress,
+    onUploadProgress,
+    responseType,
+    headers,
+    withCredentials = 'same-origin',
+    fetchOptions
+  } = resolveConfig(config);
+
+  responseType = responseType ? (responseType + '').toLowerCase() : 'text';
+
+  let [composedSignal, stopTimeout] = (signal || cancelToken || timeout) ?
+    helpers_composeSignals([signal, cancelToken], timeout) : [];
+
+  let finished, request;
+
+  const onFinish = () => {
+    !finished && setTimeout(() => {
+      composedSignal && composedSignal.unsubscribe();
+    });
+
+    finished = true;
+  }
+
+  let requestContentLength;
+
+  try {
+    if (
+      onUploadProgress && supportsRequestStream && method !== 'get' && method !== 'head' &&
+      (requestContentLength = await resolveBodyLength(headers, data)) !== 0
+    ) {
+      let _request = new Request(url, {
+        method: 'POST',
+        body: data,
+        duplex: "half"
+      });
+
+      let contentTypeHeader;
+
+      if (utils.isFormData(data) && (contentTypeHeader = _request.headers.get('content-type'))) {
+        headers.setContentType(contentTypeHeader)
+      }
+
+      if (_request.body) {
+        data = trackStream(_request.body, DEFAULT_CHUNK_SIZE, fetchProgressDecorator(
+          requestContentLength,
+          progressEventReducer(onUploadProgress)
+        ), null, encodeText);
+      }
+    }
+
+    if (!utils.isString(withCredentials)) {
+      withCredentials = withCredentials ? 'cors' : 'omit';
+    }
+
+    request = new Request(url, {
+      ...fetchOptions,
+      signal: composedSignal,
+      method: method.toUpperCase(),
+      headers: headers.normalize().toJSON(),
+      body: data,
+      duplex: "half",
+      withCredentials
+    });
+
+    let response = await fetch(request);
+
+    const isStreamResponse = supportsResponseStream && (responseType === 'stream' || responseType === 'response');
+
+    if (supportsResponseStream && (onDownloadProgress || isStreamResponse)) {
+      const options = {};
+
+      ['status', 'statusText', 'headers'].forEach(prop => {
+        options[prop] = response[prop];
+      });
+
+      const responseContentLength = utils.toFiniteNumber(response.headers.get('content-length'));
+
+      response = new Response(
+        trackStream(response.body, DEFAULT_CHUNK_SIZE, onDownloadProgress && fetchProgressDecorator(
+          responseContentLength,
+          progressEventReducer(onDownloadProgress, true)
+        ), isStreamResponse && onFinish, encodeText),
+        options
+      );
+    }
+
+    responseType = responseType || 'text';
+
+    let responseData = await resolvers[utils.findKey(resolvers, responseType) || 'text'](response, config);
+
+    !isStreamResponse && onFinish();
+
+    stopTimeout && stopTimeout();
+
+    return await new Promise((resolve, reject) => {
+      settle(resolve, reject, {
+        data: responseData,
+        headers: core_AxiosHeaders.from(response.headers),
+        status: response.status,
+        statusText: response.statusText,
+        config,
+        request
+      })
+    })
+  } catch (err) {
+    onFinish();
+
+    if (err && err.name === 'TypeError' && /fetch/i.test(err.message)) {
+      throw Object.assign(
+        new core_AxiosError('Network Error', core_AxiosError.ERR_NETWORK, config, request),
+        {
+          cause: err.cause || err
+        }
+      )
+    }
+
+    throw core_AxiosError.from(err, err && err.code, config, request);
+  }
+}));
+
+
+
 ;// CONCATENATED MODULE: ./node_modules/axios/lib/adapters/adapters.js
+
 
 
 
@@ -6816,11 +7345,12 @@ const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
 
 const knownAdapters = {
   http: helpers_null,
-  xhr: xhr
+  xhr: xhr,
+  fetch: adapters_fetch
 }
 
 utils.forEach(knownAdapters, (fn, value) => {
-  if(fn) {
+  if (fn) {
     try {
       Object.defineProperty(fn, 'name', {value});
     } catch (e) {
@@ -6830,6 +7360,10 @@ utils.forEach(knownAdapters, (fn, value) => {
   }
 });
 
+const renderReason = (reason) => `- ${reason}`;
+
+const isResolvedHandle = (adapter) => utils.isFunction(adapter) || adapter === null || adapter === false;
+
 /* harmony default export */ var adapters = ({
   getAdapter: (adapters) => {
     adapters = utils.isArray(adapters) ? adapters : [adapters];
@@ -6838,30 +7372,44 @@ utils.forEach(knownAdapters, (fn, value) => {
     let nameOrAdapter;
     let adapter;
 
+    const rejectedReasons = {};
+
     for (let i = 0; i < length; i++) {
       nameOrAdapter = adapters[i];
-      if((adapter = utils.isString(nameOrAdapter) ? knownAdapters[nameOrAdapter.toLowerCase()] : nameOrAdapter)) {
+      let id;
+
+      adapter = nameOrAdapter;
+
+      if (!isResolvedHandle(nameOrAdapter)) {
+        adapter = knownAdapters[(id = String(nameOrAdapter)).toLowerCase()];
+
+        if (adapter === undefined) {
+          throw new core_AxiosError(`Unknown adapter '${id}'`);
+        }
+      }
+
+      if (adapter) {
         break;
       }
+
+      rejectedReasons[id || '#' + i] = adapter;
     }
 
     if (!adapter) {
-      if (adapter === false) {
-        throw new core_AxiosError(
-          `Adapter ${nameOrAdapter} is not supported by the environment`,
-          'ERR_NOT_SUPPORT'
+
+      const reasons = Object.entries(rejectedReasons)
+        .map(([id, state]) => `adapter ${id} ` +
+          (state === false ? 'is not supported by the environment' : 'is not available in the build')
         );
-      }
 
-      throw new Error(
-        utils.hasOwnProp(knownAdapters, nameOrAdapter) ?
-          `Adapter '${nameOrAdapter}' is not available in the build` :
-          `Unknown adapter '${nameOrAdapter}'`
+      let s = length ?
+        (reasons.length > 1 ? 'since :\n' + reasons.map(renderReason).join('\n') : ' ' + renderReason(reasons[0])) :
+        'as no adapter specified';
+
+      throw new core_AxiosError(
+        `There is no suitable adapter to dispatch the request ` + s,
+        'ERR_NOT_SUPPORT'
       );
-    }
-
-    if (!utils.isFunction(adapter)) {
-      throw new TypeError('adapter is not a function');
     }
 
     return adapter;
@@ -6952,115 +7500,8 @@ function dispatchRequest(config) {
   });
 }
 
-;// CONCATENATED MODULE: ./node_modules/axios/lib/core/mergeConfig.js
-
-
-
-
-
-const headersToObject = (thing) => thing instanceof core_AxiosHeaders ? thing.toJSON() : thing;
-
-/**
- * Config-specific merge-function which creates a new config-object
- * by merging two configuration objects together.
- *
- * @param {Object} config1
- * @param {Object} config2
- *
- * @returns {Object} New object resulting from merging config2 to config1
- */
-function mergeConfig(config1, config2) {
-  // eslint-disable-next-line no-param-reassign
-  config2 = config2 || {};
-  const config = {};
-
-  function getMergedValue(target, source, caseless) {
-    if (utils.isPlainObject(target) && utils.isPlainObject(source)) {
-      return utils.merge.call({caseless}, target, source);
-    } else if (utils.isPlainObject(source)) {
-      return utils.merge({}, source);
-    } else if (utils.isArray(source)) {
-      return source.slice();
-    }
-    return source;
-  }
-
-  // eslint-disable-next-line consistent-return
-  function mergeDeepProperties(a, b, caseless) {
-    if (!utils.isUndefined(b)) {
-      return getMergedValue(a, b, caseless);
-    } else if (!utils.isUndefined(a)) {
-      return getMergedValue(undefined, a, caseless);
-    }
-  }
-
-  // eslint-disable-next-line consistent-return
-  function valueFromConfig2(a, b) {
-    if (!utils.isUndefined(b)) {
-      return getMergedValue(undefined, b);
-    }
-  }
-
-  // eslint-disable-next-line consistent-return
-  function defaultToConfig2(a, b) {
-    if (!utils.isUndefined(b)) {
-      return getMergedValue(undefined, b);
-    } else if (!utils.isUndefined(a)) {
-      return getMergedValue(undefined, a);
-    }
-  }
-
-  // eslint-disable-next-line consistent-return
-  function mergeDirectKeys(a, b, prop) {
-    if (prop in config2) {
-      return getMergedValue(a, b);
-    } else if (prop in config1) {
-      return getMergedValue(undefined, a);
-    }
-  }
-
-  const mergeMap = {
-    url: valueFromConfig2,
-    method: valueFromConfig2,
-    data: valueFromConfig2,
-    baseURL: defaultToConfig2,
-    transformRequest: defaultToConfig2,
-    transformResponse: defaultToConfig2,
-    paramsSerializer: defaultToConfig2,
-    timeout: defaultToConfig2,
-    timeoutMessage: defaultToConfig2,
-    withCredentials: defaultToConfig2,
-    adapter: defaultToConfig2,
-    responseType: defaultToConfig2,
-    xsrfCookieName: defaultToConfig2,
-    xsrfHeaderName: defaultToConfig2,
-    onUploadProgress: defaultToConfig2,
-    onDownloadProgress: defaultToConfig2,
-    decompress: defaultToConfig2,
-    maxContentLength: defaultToConfig2,
-    maxBodyLength: defaultToConfig2,
-    beforeRedirect: defaultToConfig2,
-    transport: defaultToConfig2,
-    httpAgent: defaultToConfig2,
-    httpsAgent: defaultToConfig2,
-    cancelToken: defaultToConfig2,
-    socketPath: defaultToConfig2,
-    responseEncoding: defaultToConfig2,
-    validateStatus: mergeDirectKeys,
-    headers: (a, b) => mergeDeepProperties(headersToObject(a), headersToObject(b), true)
-  };
-
-  utils.forEach(Object.keys(Object.assign({}, config1, config2)), function computeConfigValue(prop) {
-    const merge = mergeMap[prop] || mergeDeepProperties;
-    const configValue = merge(config1[prop], config2[prop], prop);
-    (utils.isUndefined(configValue) && merge !== mergeDirectKeys) || (config[prop] = configValue);
-  });
-
-  return config;
-}
-
 ;// CONCATENATED MODULE: ./node_modules/axios/lib/env/data.js
-const VERSION = "1.5.0";
+const VERSION = "1.7.2";
 ;// CONCATENATED MODULE: ./node_modules/axios/lib/helpers/validator.js
 
 
@@ -7192,7 +7633,34 @@ class Axios {
    *
    * @returns {Promise} The Promise to be fulfilled
    */
-  request(configOrUrl, config) {
+  async request(configOrUrl, config) {
+    try {
+      return await this._request(configOrUrl, config);
+    } catch (err) {
+      if (err instanceof Error) {
+        let dummy;
+
+        Error.captureStackTrace ? Error.captureStackTrace(dummy = {}) : (dummy = new Error());
+
+        // slice off the Error: ... line
+        const stack = dummy.stack ? dummy.stack.replace(/^.+\n/, '') : '';
+        try {
+          if (!err.stack) {
+            err.stack = stack;
+            // match without the 2 top stack lines
+          } else if (stack && !String(err.stack).endsWith(stack.replace(/^.+\n.+\n/, ''))) {
+            err.stack += '\n' + stack
+          }
+        } catch (e) {
+          // ignore the case where "stack" is an un-writable property
+        }
+      }
+
+      throw err;
+    }
+  }
+
+  _request(configOrUrl, config) {
     /*eslint no-param-reassign:0*/
     // Allow for axios('example/url'[, config]) a la fetch API
     if (typeof configOrUrl === 'string') {
@@ -7690,6 +8158,56 @@ axios.default = axios;
 // this module should only have a default export
 /* harmony default export */ var lib_axios = (axios);
 
+// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
+var injectStylesIntoStyleTag = __webpack_require__(379);
+var injectStylesIntoStyleTag_default = /*#__PURE__*/__webpack_require__.n(injectStylesIntoStyleTag);
+// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/styleDomAPI.js
+var styleDomAPI = __webpack_require__(795);
+var styleDomAPI_default = /*#__PURE__*/__webpack_require__.n(styleDomAPI);
+// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/insertBySelector.js
+var insertBySelector = __webpack_require__(569);
+var insertBySelector_default = /*#__PURE__*/__webpack_require__.n(insertBySelector);
+// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js
+var setAttributesWithoutAttributes = __webpack_require__(565);
+var setAttributesWithoutAttributes_default = /*#__PURE__*/__webpack_require__.n(setAttributesWithoutAttributes);
+// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/insertStyleElement.js
+var insertStyleElement = __webpack_require__(216);
+var insertStyleElement_default = /*#__PURE__*/__webpack_require__.n(insertStyleElement);
+// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/styleTagTransform.js
+var styleTagTransform = __webpack_require__(589);
+var styleTagTransform_default = /*#__PURE__*/__webpack_require__.n(styleTagTransform);
+// EXTERNAL MODULE: ./node_modules/mini-css-extract-plugin/dist/loader.js??ruleSet[1].rules[2].use[1]!./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!./src/frontend/scss/ajax-load-more.scss
+var ajax_load_more = __webpack_require__(792);
+var ajax_load_more_default = /*#__PURE__*/__webpack_require__.n(ajax_load_more);
+;// CONCATENATED MODULE: ./src/frontend/scss/ajax-load-more.scss
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (styleTagTransform_default());
+options.setAttributes = (setAttributesWithoutAttributes_default());
+
+      options.insert = insertBySelector_default().bind(null, "head");
+    
+options.domAPI = (styleDomAPI_default());
+options.insertStyleElement = (insertStyleElement_default());
+
+var update = injectStylesIntoStyleTag_default()((ajax_load_more_default()), options);
+
+
+
+
+       /* harmony default export */ var scss_ajax_load_more = ((ajax_load_more_default()) && (ajax_load_more_default()).locals ? (ajax_load_more_default()).locals : undefined);
+
 // EXTERNAL MODULE: ./node_modules/crypto-js/md5.js
 var md5 = __webpack_require__(214);
 var md5_default = /*#__PURE__*/__webpack_require__.n(md5);
@@ -7711,11 +8229,52 @@ var api = lib_axios.create({
     'X-WP-Nonce': rest_nonce
   }
 });
+;// CONCATENATED MODULE: ./src/frontend/js/functions/getButtonURL.js
+/**
+ * Get the URL for Load More button.
+ *
+ * @param {Object} alm The Ajax Load More object.
+ * @param {string} rel The type of load more, `next` or `previous`.
+ * @since 5.4.0
+ */
+function getButtonURL(alm) {
+  var _button;
+  var rel = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'next';
+  if (!alm || !alm.trigger) {
+    return false;
+  }
+  var button = alm.trigger.querySelector('.alm-load-more-btn');
+  if (rel === 'prev') {
+    button = document.querySelector('.alm-load-more-btn--prev');
+  }
+  return ((_button = button) === null || _button === void 0 || (_button = _button.dataset) === null || _button === void 0 ? void 0 : _button.url) || '';
+}
+
+/**
+ * Set button dataset attributes.
+ *
+ * @param {Element} button The HTML element.
+ * @param {number}  page   The current page number.
+ * @param {string}  url    The URL for updating.
+ */
+function setButtonAtts(button, page, url) {
+  if (!button || page === 0) {
+    return;
+  }
+  if ((button === null || button === void 0 ? void 0 : button.rel) === 'prev') {
+    button.href = url;
+  }
+
+  // Set page & URL attributes.
+  button.dataset.page = page;
+  button.dataset.url = url ? url : '';
+}
 ;// CONCATENATED MODULE: ./src/frontend/js/addons/cache.js
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw new Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw new Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 
 
 
@@ -7751,13 +8310,18 @@ function getCacheSlug(alm, data) {
     _alm$rel = alm.rel,
     rel = _alm$rel === void 0 ? 'next' : _alm$rel;
   if (addons.nextpage) {
-    return "page-".concat(page + addons.nextpage_startpage); // Nextpage.
+    // Nextpage.
+    return "page-".concat(page + addons.nextpage_startpage);
   } else if (addons.single_post) {
-    return addons.single_post_id; // Single Post.
+    // Single Post.
+    return addons.single_post_id;
+  } else if (addons.queryloop) {
+    // Query Loop, use the button URL.
+    return md5_default()(JSON.stringify(getButtonURL(alm, alm.rel))).toString();
   } else if (addons.woocommerce || addons.elementor) {
-    return rel === 'prev' ? "page-".concat(pagePrev) : "page-".concat(page + 1); // WooCommerce || Elementor.
+    // WooCommerce || Elementor.
+    return rel === 'prev' ? "page-".concat(pagePrev) : "page-".concat(page + 1);
   }
-
   return md5_default()(JSON.stringify(data)).toString(); // Standard.
 }
 
@@ -7897,45 +8461,42 @@ function commentsCreateParams(alm) {
   }
   return alm;
 }
-;// CONCATENATED MODULE: ./src/frontend/js/functions/getButtonURL.js
+;// CONCATENATED MODULE: ./src/frontend/js/functions/constants.js
+var EXCLUDED_NODES = ['#text', '#comment'];
+var API_DATA_SHAPE = {
+  html: '',
+  meta: {
+    postcount: 0,
+    totalposts: 0
+  }
+};
+;// CONCATENATED MODULE: ./src/frontend/js/functions/dispatchScrollEvent.js
 /**
- * Get the URL for Load More button.
+ * Dispatch a window scroll event.
  *
- * @param {Object} alm The Ajax Load More object.
- * @param {string} rel The type of load more, `next` or `previous`.
- * @since 5.4.0
+ * @param {boolean} delay Should this be delayed.
+ * @since 5.5
  */
-function getButtonURL(alm) {
-  var _button;
-  var rel = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'next';
-  if (!alm || !alm.trigger) {
-    return false;
+function dispatchScrollEvent() {
+  var delay = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+  if (typeof Event === 'function') {
+    setTimeout(function () {
+      window.dispatchEvent(new CustomEvent('scroll'));
+    }, delay ? 150 : 1);
   }
-  var button = alm.trigger.querySelector('.alm-load-more-btn');
-  if (rel === 'prev') {
-    button = document.querySelector('.alm-load-more-btn--prev');
-  }
-  return ((_button = button) === null || _button === void 0 || (_button = _button.dataset) === null || _button === void 0 ? void 0 : _button.url) || '';
 }
-
+;// CONCATENATED MODULE: ./src/frontend/js/functions/setContentParams.js
 /**
- * Set button dataset attributes.
+ * Set accessibility attributes on the containers.
  *
- * @param {Element} button The HTML element.
- * @param {number}  page   The current page number.
- * @param {string}  url    The URL for updating.
+ * @param {Element} container  The container element.
+ * @param {Element} almListing The Ajax Load More container.
  */
-function setButtonAtts(button, page, url) {
-  if (!button) {
-    return;
-  }
-  if (button.rel && button.rel === 'prev') {
-    button.href = url;
-  }
-
-  // Set page & URL attributes.
-  button.dataset.page = page;
-  button.dataset.url = url ? url : '';
+function setContentContainersParams(container, almListing) {
+  container.setAttribute('aria-live', 'polite');
+  container.setAttribute('aria-atomic', 'true');
+  almListing.removeAttribute('aria-live');
+  almListing.removeAttribute('aria-atomic');
 }
 ;// CONCATENATED MODULE: ./src/frontend/js/modules/lazyImages.js
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -8216,11 +8777,64 @@ function loadItems(container, items, alm) {
     loadItem();
   });
 }
+;// CONCATENATED MODULE: ./src/frontend/js/modules/loadPrevious.js
+/**
+ * Create a Load Previous button.
+ *
+ * @param {Object} alm       The Ajax Load More object.
+ * @param {Object} container The container element.
+ * @param {number} page      The previous page number.
+ * @param {string} url       The previous page url.
+ * @param {string} label     The label for the button.
+ * @since 5.5.0
+ */
+function createLoadPreviousButton(alm, container) {
+  var page = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+  var url = arguments.length > 3 ? arguments[3] : undefined;
+  var label = arguments.length > 4 ? arguments[4] : undefined;
+  if (!label) {
+    return;
+  }
+
+  // Create wrapper.
+  var btnWrap = document.createElement('div');
+  btnWrap.classList.add('alm-btn-wrap--prev');
+
+  // Create button.
+  var button = document.createElement('a');
+  button.href = url;
+  button.innerHTML = label;
+  button.setAttribute('rel', 'prev');
+  button.dataset.page = page;
+  button.dataset.url = url;
+  button.setAttribute('class', "alm-load-more-btn alm-load-more-btn--prev ".concat(alm.loading_style));
+
+  // Click event.
+  button.addEventListener('click', function (e) {
+    alm.AjaxLoadMore.prevClick(e);
+  });
+
+  // Set alm previous button to this button.
+  alm.AjaxLoadMore.setPreviousButton(button);
+
+  // Append button to wrap.
+  btnWrap.appendChild(button);
+
+  // Get parent element.
+  var parent = container.parentNode;
+
+  // Append button before container.
+  parent.insertBefore(btnWrap, container);
+}
 ;// CONCATENATED MODULE: ./src/frontend/js/addons/elementor.js
 function elementor_typeof(o) { "@babel/helpers - typeof"; return elementor_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, elementor_typeof(o); }
 function elementor_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ elementor_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == elementor_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw new Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(elementor_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw new Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function elementor_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function elementor_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { elementor_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { elementor_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+
+
 
 
 
@@ -8237,7 +8851,6 @@ function elementorCreateParams(alm) {
     listing = _alm.listing;
   alm.addons.elementor = listing.dataset.elementor === 'posts' && listing.dataset.elementorSettings;
   if (alm.addons.elementor) {
-    // Get Settings
     alm.addons.elementor_type = 'posts';
     alm.addons.elementor_settings = JSON.parse(alm.listing.dataset.elementorSettings);
 
@@ -8253,9 +8866,11 @@ function elementorCreateParams(alm) {
     alm.addons.elementor_controls = alm.addons.elementor_settings.controls;
     alm.addons.elementor_controls = alm.addons.elementor_controls === 'true' ? true : false;
     alm.addons.elementor_scrolltop = parseInt(alm.addons.elementor_settings.scrolltop);
+    alm.addons.elementor_prev_label = alm.addons.elementor_settings.prev_label || '';
 
     // Get next page URL.
-    alm.addons.elementor_next_page = elementorGetNextUrl(alm, alm.addons.elementor_element);
+    alm.addons.elementor_next_page = elementorGetPagedURL(alm, alm.addons.elementor_element);
+    alm.addons.elementor_prev_page = elementorGetPagedURL(alm, alm.addons.elementor_element, 'prev');
 
     // Get the max pages.
     alm.addons.elementor_max_pages = alm.addons.elementor_element.querySelector('.e-load-more-anchor');
@@ -8279,48 +8894,50 @@ function elementorCreateParams(alm) {
  * Set up the instance on Elementor
  *
  * @param {Object} alm
- * @since 5.3.0
  */
 function elementorInit(alm) {
-  if (!alm.addons.elementor || !alm.addons.elementor_type || !alm.addons.elementor_type === 'posts') {
+  var addons = alm.addons;
+  if (!addons.elementor || !addons.elementor_type || !addons.elementor_type === 'posts') {
     return false;
   }
-  var target = alm.addons.elementor_element;
-  if (target) {
-    // Set button data attributes
-    alm.button.dataset.page = alm.addons.elementor_paged;
+  var container = addons.elementor_element;
+  if (!container) {
+    return false;
+  }
+  alm.button.dataset.page = addons.elementor_paged; // Set button data attributes
 
-    // Set button URL
-    var nextPage = alm.addons.elementor_next_page;
-    alm.button.dataset.url = nextPage ? nextPage : '';
+  // Set button URL
+  var nextPage = addons.elementor_next_page;
+  alm.button.dataset.url = nextPage ? nextPage : '';
 
-    // Set a11y attributes
-    target.setAttribute('aria-live', 'polite');
-    target.setAttribute('aria-atomic', 'true');
-    alm.listing.removeAttribute('aria-live');
-    alm.listing.removeAttribute('aria-atomic');
+  // Set attributes on containers.
+  setContentContainersParams(container, alm.listing);
 
-    // Set data atts on 1st grid item
-    var item = target.querySelector(".".concat(alm.addons.elementor_item_class)); // Get first `.product` item
-    if (item) {
-      item.classList.add('alm-elementor');
-      item.dataset.url = window.location;
-      item.dataset.page = alm.addons.elementor_paged;
-      item.dataset.pageTitle = document.title;
-    }
+  // Set data attributes on first item.
+  var item = container.querySelector(".".concat(addons.elementor_item_class)); // Get first item
+  if (item) {
+    item.classList.add('alm-elementor');
+    item.dataset.url = window.location;
+    item.dataset.page = addons.elementor_paged;
+    item.dataset.pageTitle = document.title;
+  }
 
-    // Masonry Window Resize. Delay for masonry to be added via Elementor.
-    if (alm.addons.elementor_masonry) {
-      var resizeTimeout;
-      setTimeout(function () {
-        window.addEventListener('resize', function () {
-          clearTimeout(resizeTimeout);
-          resizeTimeout = setTimeout(function () {
-            positionMasonryItems(alm, ".".concat(alm.addons.elementor_container_class), ".".concat(alm.addons.elementor_item_class));
-          }, 100);
-        });
-      }, 250);
-    }
+  // Paged URL: Create previous button.
+  if (addons.elementor_paged > 1 && addons.elementor_prev_page && addons.elementor_prev_label) {
+    createLoadPreviousButton(alm, container, addons.elementor_paged, addons.elementor_prev_page, addons.elementor_prev_label);
+  }
+
+  // Masonry Window Resize. Delay for masonry to be added via Elementor.
+  if (addons.elementor_masonry) {
+    var resizeTimeout;
+    setTimeout(function () {
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function () {
+          positionMasonryItems(alm, ".".concat(addons.elementor_container_class), ".".concat(addons.elementor_item_class));
+        }, 100);
+      });
+    }, 250);
   }
 }
 
@@ -8332,59 +8949,64 @@ function elementorInit(alm) {
  * @param {Object} response   Query response.
  * @param {string} cache_slug The cache slug.
  * @return {Object}           Results data.
- * @since 5.4.0
  */
 function elementorGetContent(alm, url, response, cache_slug) {
-  // Default data object.
-  var data = {
-    html: '',
-    meta: {
-      postcount: 0,
-      totalposts: 0
-    }
-  };
+  var data = API_DATA_SHAPE; // Default data object.
 
   // Successful response.
   if (response.status === 200 && response.data) {
     var addons = alm.addons,
       page = alm.page,
-      button = alm.button;
+      button = alm.button,
+      buttonPrev = alm.buttonPrev,
+      rel = alm.rel;
+    var elementor_target = addons.elementor_target,
+      elementor_container_class = addons.elementor_container_class,
+      elementor_item_class = addons.elementor_item_class;
 
     // Create temp div to hold response data.
     var content = document.createElement('div');
     content.innerHTML = response.data;
 
-    // Set button URL.
-    var nextURL = elementorGetNextUrl(alm, content);
-    if (nextURL) {
-      setButtonAtts(button, page + 1, nextURL);
+    // Set button state & URL.
+    if (rel === 'prev' && buttonPrev) {
+      var prevURL = elementorGetPagedURL(alm, content, 'prev');
+      if (prevURL) {
+        setButtonAtts(buttonPrev, page - 1, prevURL);
+      } else {
+        alm.AjaxLoadMore.triggerDonePrev();
+      }
     } else {
-      // Disable button if no next page.
-      alm.AjaxLoadMore.triggerDone();
+      var nextURL = elementorGetPagedURL(alm, content);
+      if (nextURL) {
+        setButtonAtts(button, page + 1, nextURL);
+      } else {
+        alm.AjaxLoadMore.triggerDone();
+      }
     }
 
     // Get Page Title
     var title = content.querySelector('title').innerHTML;
     data.pageTitle = title;
 
-    // Get Elementor Items container.
-    var container = content.querySelector("".concat(addons.elementor_target, " .").concat(addons.elementor_container_class));
+    // Get Elementor container.
+    var container = content.querySelector("".concat(elementor_target, " .").concat(elementor_container_class));
     if (!container) {
       console.warn("Ajax Load More Elementor: Unable to find Elementor container element.");
       return data;
     }
 
     // Get the first item and append data attributes.
-    var item = container ? container.querySelector(".".concat(addons.elementor_item_class)) : null;
+    var item = container ? container.querySelector(".".concat(elementor_item_class)) : null;
     if (item) {
       item.classList.add('alm-elementor');
       item.dataset.url = url;
-      item.dataset.page = addons.elementor_paged;
+      item.dataset.page = rel === 'next' ? page + 1 : page - 1;
       item.dataset.pageTitle = title;
     }
 
     // Count the number of returned items.
-    var items = container.querySelectorAll(".".concat(addons.elementor_item_class));
+    var items = container.querySelectorAll(".".concat(elementor_item_class));
     if (items) {
       // Set the html to the elementor container data.
       data.html = container ? container.innerHTML : '';
@@ -8403,7 +9025,6 @@ function elementorGetContent(alm, url, response, cache_slug) {
  *
  * @param {HTMLElement} content The HTML data.
  * @param {Object}      alm     The alm object.
- * @since 5.3.0
  */
 function elementor(content, alm) {
   if (!content || !alm) {
@@ -8422,6 +9043,8 @@ function elementor(content, alm) {
       if (typeof almElementorLoaded === 'function') {
         window.almElementorLoaded(ElementorItems);
       }
+
+      // Load the items.
       elementor_asyncToGenerator( /*#__PURE__*/elementor_regeneratorRuntime().mark(function _callee() {
         return elementor_regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
@@ -8453,30 +9076,26 @@ function elementor(content, alm) {
  * Elementor loaded and dispatch actions.
  *
  * @param {Object} alm The alm object.
- * @since 5.5.0
  */
 function elementorLoaded(alm) {
   var page = alm.page,
     AjaxLoadMore = alm.AjaxLoadMore,
     addons = alm.addons;
   var nextPage = page + 1;
-  var max_pages = addons.elementor_max_pages;
+  var elementor_max_pages = addons.elementor_max_pages;
+  lazyImages(alm); // Lazy load images if necessary.
 
-  // Lazy load images if necessary.
-  lazyImages(alm);
-
-  // Trigger almComplete.
   if (typeof almComplete === 'function' && alm.transition !== 'masonry') {
-    window.almComplete(alm);
+    window.almComplete(alm); // Trigger almComplete.
   }
 
-  // End transitions.
-  AjaxLoadMore.transitionEnd();
+  AjaxLoadMore.transitionEnd(); // End transitions.
 
-  // ALM Done.
-  if (nextPage >= max_pages) {
-    AjaxLoadMore.triggerDone();
+  if (nextPage >= elementor_max_pages) {
+    AjaxLoadMore.triggerDone(); // ALM Done.
   }
+
+  dispatchScrollEvent();
 }
 
 /**
@@ -8608,10 +9227,8 @@ function elementorGetWidgetType(target) {
 
   // Get Elementor type based on container class.
   if (target.classList.contains('elementor-wc-products')) {
-    // WooCommerce.
     return 'woocommerce';
   } else if (target.classList.contains('elementor-widget-loop-grid')) {
-    // Loop Grid.
     return 'loop-grid';
   }
   return 'posts';
@@ -8622,21 +9239,23 @@ function elementorGetWidgetType(target) {
  *
  * @param {Object}  alm     The alm object.
  * @param {Element} content The HTML content to search.
+ * @param {string}  dir     the direction, next of prev.
  * @return {HTMLElement}    The pagination element.
  */
-function elementorGetNextUrl(alm, content) {
+function elementorGetPagedURL(alm, content) {
   var _addons$elementor_set, _element$querySelecto;
+  var dir = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'next';
   var _alm$addons = alm.addons,
     addons = _alm$addons === void 0 ? {} : _alm$addons;
 
   // Locate the pagination container.
   var element = (content === null || content === void 0 ? void 0 : content.querySelector(addons === null || addons === void 0 ? void 0 : addons.elementor_pagination_class)) || (content === null || content === void 0 ? void 0 : content.querySelector(".".concat(addons === null || addons === void 0 || (_addons$elementor_set = addons.elementor_settings) === null || _addons$elementor_set === void 0 ? void 0 : _addons$elementor_set.pagination_class)));
 
-  // Get the next page URL from the pagination element.
-  var nextpage = element === null || element === void 0 || (_element$querySelecto = element.querySelector('a.next')) === null || _element$querySelecto === void 0 ? void 0 : _element$querySelecto.href;
+  // Get URL from the pagination element.
+  var page = element === null || element === void 0 || (_element$querySelecto = element.querySelector("a.".concat(dir))) === null || _element$querySelecto === void 0 ? void 0 : _element$querySelecto.href;
 
-  // Return the next page URL.
-  return nextpage ? nextpage : false;
+  // Return the paged URL element.
+  return page ? page : false;
 }
 ;// CONCATENATED MODULE: ./src/frontend/js/functions/getParameterByName.js
 /**
@@ -9008,8 +9627,6 @@ function pagingComplete(alm) {
   // Trigger <script /> tags in templates.
   modules_insertScript.init(last_loaded);
 }
-;// CONCATENATED MODULE: ./src/frontend/js/functions/constants.js
-var EXCLUDED_NODES = ['#text', '#comment'];
 ;// CONCATENATED MODULE: ./src/frontend/js/functions/stripEmptyNodes.js
 
 
@@ -9152,18 +9769,20 @@ function preloaded_arrayLikeToArray(arr, len) { if (len == null || len > arr.len
  */
 function preloadedCreateParams(alm) {
   var _listing$dataset;
-  var listing = alm.listing;
+  var listing = alm.listing,
+    addons = alm.addons;
   alm.addons.preloaded = listing.dataset.preloaded === 'true';
   alm.addons.preloaded_amount = listing !== null && listing !== void 0 && (_listing$dataset = listing.dataset) !== null && _listing$dataset !== void 0 && _listing$dataset.preloadedAmount ? parseInt(listing.dataset.preloadedAmount) : alm.posts_per_page;
   if (!alm.addons.preloaded) {
     alm.addons.preloaded_amount = 0;
   }
-  if (alm.addons.preloaded) {
-    var _alm$localize;
-    if (alm !== null && alm !== void 0 && (_alm$localize = alm.localize) !== null && _alm$localize !== void 0 && _alm$localize.total_posts) {
+  if (addons.preloaded) {
+    if (alm !== null && alm !== void 0 && alm.localize) {
       // Disable ALM if total_posts is equal to or less than preloaded_amount.
-      if (parseInt(alm.localize.total_posts) <= alm.addons.preloaded_amount) {
-        alm.addons.preloaded_total_posts = parseInt(alm.localize.total_posts);
+      var _alm$localize$total_p = alm.localize.total_posts,
+        total_posts = _alm$localize$total_p === void 0 ? 0 : _alm$localize$total_p;
+      if (parseInt(total_posts) <= addons.preloaded_amount) {
+        alm.addons.preloaded_total_posts = parseInt(total_posts);
         alm.disable_ajax = true;
       }
     }
@@ -9181,8 +9800,7 @@ function setPreloadedParams(alm) {
   var addons = alm.addons,
     listing = alm.listing;
   if (addons.paging) {
-    // Exit if paging.
-    return;
+    return; // Exit if paging.
   }
 
   // Parse preloaded data into array of HTML elements.
@@ -9198,6 +9816,274 @@ function setPreloadedParams(alm) {
       addFiltersAttributes(alm, firstElement, 1);
     }
   }
+}
+;// CONCATENATED MODULE: ./src/frontend/js/addons/queryLoop.js
+function queryLoop_typeof(o) { "@babel/helpers - typeof"; return queryLoop_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, queryLoop_typeof(o); }
+function queryLoop_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ queryLoop_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == queryLoop_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw new Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(queryLoop_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw new Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function queryLoop_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function queryLoop_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { queryLoop_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { queryLoop_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+
+
+
+
+
+/**
+ * Create add-on params for ALM.
+ *
+ * @param {Object} alm The alm object.
+ * @return {Object|null}    The modified object.
+ */
+function queryLoopCreateParams(alm) {
+  var main = alm.main;
+  var blockClassname = 'wp-block-query';
+
+  // Get the parent container.
+  var container = main.closest(".".concat(blockClassname));
+
+  // If parent is not a .wp-block-query, return alm.
+  if (!container) {
+    return alm;
+  }
+
+  // If parent is a wp-block-query, set queryloop settings.
+  alm.addons.queryloop = true;
+  alm.addons.queryloop_settings = {
+    container: container,
+    classes: {
+      container: ".".concat(container.className.replace(/ /g, '.')),
+      listing: '.wp-block-post-template',
+      element: '.wp-block-post',
+      pagination: '.wp-block-query-pagination',
+      pagination_prev: 'a.wp-block-query-pagination-previous',
+      pagination_next: 'a.wp-block-query-pagination-next'
+    },
+    pagination: container.querySelector('.wp-block-query-pagination'),
+    pagination_prev: container.querySelector('a.wp-block-query-pagination-previous'),
+    pagination_next: container.querySelector('a.wp-block-query-pagination-next')
+  };
+  return alm;
+}
+
+/**
+ * Set up the instance of Query Loop.
+ *
+ * @param {Object} alm
+ */
+function queryLoopInit(alm) {
+  var rel = alm.rel,
+    addons = alm.addons,
+    button = alm.button,
+    buttonPrev = alm.buttonPrev,
+    page = alm.page;
+  var _addons$queryloop_set = addons.queryloop_settings,
+    settings = _addons$queryloop_set === void 0 ? {} : _addons$queryloop_set;
+
+  // Set button state & URL.
+  if (rel === 'prev' && buttonPrev) {
+    var _settings$pagination_;
+    var prevURL = (settings === null || settings === void 0 || (_settings$pagination_ = settings.pagination_prev) === null || _settings$pagination_ === void 0 ? void 0 : _settings$pagination_.href) || false;
+    if (prevURL) {
+      setButtonAtts(buttonPrev, page - 1, prevURL);
+    } else {
+      alm.AjaxLoadMore.triggerDonePrev();
+    }
+  } else {
+    var _settings$pagination_2;
+    var nextURL = (settings === null || settings === void 0 || (_settings$pagination_2 = settings.pagination_next) === null || _settings$pagination_2 === void 0 ? void 0 : _settings$pagination_2.href) || false;
+    if (nextURL) {
+      setButtonAtts(button, page + 1, nextURL);
+    } else {
+      alm.AjaxLoadMore.triggerDone();
+    }
+  }
+}
+
+/**
+ * Get the content, title and results text from the Ajax response.
+ *
+ * @param {Object} alm        The alm object.
+ * @param {string} url        The request URL.
+ * @param {Object} response   Query response.
+ * @param {string} cache_slug The cache slug.
+ * @return {Object}           Results data.
+ */
+function queryLoopGetContent(alm, url, response, cache_slug) {
+  var data = API_DATA_SHAPE; // Default data object.
+
+  // Successful response.
+  if (response.status === 200 && response.data) {
+    var _queryloop_settings$c, _queryloop_settings$c2, _queryloop_settings$c3, _queryloop_settings$c4;
+    var addons = alm.addons,
+      page = alm.page,
+      button = alm.button,
+      buttonPrev = alm.buttonPrev,
+      rel = alm.rel;
+    var _addons$queryloop_set2 = addons.queryloop_settings,
+      queryloop_settings = _addons$queryloop_set2 === void 0 ? {} : _addons$queryloop_set2;
+
+    // Create temp div to hold response data.
+    var content = document.createElement('div');
+    content.innerHTML = response.data;
+
+    // Set button state & URL.
+    if (rel === 'prev' && buttonPrev) {
+      var prevURL = getPagedURL(queryloop_settings, content, 'prev');
+      if (prevURL) {
+        setButtonAtts(buttonPrev, page - 1, prevURL);
+      } else {
+        alm.AjaxLoadMore.triggerDonePrev();
+      }
+    } else {
+      var nextURL = getPagedURL(queryloop_settings, content);
+      if (nextURL) {
+        setButtonAtts(button, page + 1, nextURL);
+      } else {
+        alm.AjaxLoadMore.triggerDone();
+      }
+    }
+
+    // Get Page Title
+    var title = content.querySelector('title').innerHTML;
+    data.pageTitle = title;
+
+    // Get container.
+    var container = content === null || content === void 0 ? void 0 : content.querySelector("".concat(queryloop_settings === null || queryloop_settings === void 0 || (_queryloop_settings$c = queryloop_settings.classes) === null || _queryloop_settings$c === void 0 ? void 0 : _queryloop_settings$c.container, " ").concat(queryloop_settings === null || queryloop_settings === void 0 || (_queryloop_settings$c2 = queryloop_settings.classes) === null || _queryloop_settings$c2 === void 0 ? void 0 : _queryloop_settings$c2.listing));
+    if (!container) {
+      console.warn('Ajax Load More: Unable to locate Query Loop container.');
+      return data;
+    }
+
+    // Get the first item and append data attributes.
+    var item = container ? container.querySelector(queryloop_settings === null || queryloop_settings === void 0 || (_queryloop_settings$c3 = queryloop_settings.classes) === null || _queryloop_settings$c3 === void 0 ? void 0 : _queryloop_settings$c3.element) : null;
+    if (item) {
+      item.classList.add('alm-queryloop');
+      item.dataset.url = url;
+      item.dataset.page = rel === 'next' ? page + 1 : page - 1;
+      item.dataset.pageTitle = title;
+    }
+
+    // Count the number of returned items.
+    var items = container.querySelectorAll(queryloop_settings === null || queryloop_settings === void 0 || (_queryloop_settings$c4 = queryloop_settings.classes) === null || _queryloop_settings$c4 === void 0 ? void 0 : _queryloop_settings$c4.element);
+    if (items) {
+      // Set the html to the elementor container data.
+      data.html = container ? container.innerHTML : '';
+      data.meta.postcount = items.length;
+      data.meta.totalposts = items.length;
+
+      // Create cache file.
+      createCache(alm, data, cache_slug);
+    }
+  }
+  return data;
+}
+
+/**
+ * Core ALM Query Loop loader.
+ *
+ * @param {HTMLElement} content The HTML data.
+ * @param {Object}      alm     The alm object.
+ */
+function queryloop(content, alm) {
+  if (!content || !alm) {
+    alm.AjaxLoadMore.triggerDone();
+    return false;
+  }
+  return new Promise(function (resolve) {
+    var _queryloop_settings$c5, _queryloop_settings$c6;
+    var addons = alm.addons;
+    var _addons$queryloop_set3 = addons.queryloop_settings,
+      queryloop_settings = _addons$queryloop_set3 === void 0 ? {} : _addons$queryloop_set3;
+
+    // Get post listing container.
+    var container = queryloop_settings === null || queryloop_settings === void 0 || (_queryloop_settings$c5 = queryloop_settings.container) === null || _queryloop_settings$c5 === void 0 ? void 0 : _queryloop_settings$c5.querySelector("".concat(queryloop_settings.classes.listing));
+
+    // Get all individual items in Ajax response.
+    var items = content.querySelectorAll("".concat(queryloop_settings === null || queryloop_settings === void 0 || (_queryloop_settings$c6 = queryloop_settings.classes) === null || _queryloop_settings$c6 === void 0 ? void 0 : _queryloop_settings$c6.element));
+    if (container && items) {
+      var queryloopItems = Array.prototype.slice.call(items); // Convert NodeList to Array
+
+      // Trigger almQueryLoopLoaded callback.
+      if (typeof almQueryLoopLoaded === 'function') {
+        window.almQueryLoopLoaded(queryloopItems);
+      }
+
+      // Load the items.
+      queryLoop_asyncToGenerator( /*#__PURE__*/queryLoop_regeneratorRuntime().mark(function _callee() {
+        return queryLoop_regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return loadItems(container, queryloopItems, alm);
+            case 2:
+              resolve(true);
+            case 3:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee);
+      }))()["catch"](function (e) {
+        console.warn(e, 'There was an error with Query Loop'); // eslint-disable-line no-console
+      });
+    } else {
+      resolve(false);
+    }
+  });
+}
+
+/**
+ * Query Loop loaded and dispatch actions.
+ *
+ * @param {Object} alm The alm object.
+ */
+function queryloopLoaded(alm) {
+  var page = alm.page,
+    AjaxLoadMore = alm.AjaxLoadMore,
+    addons = alm.addons;
+  var nextPage = page + 1;
+  var max_pages = addons.elementor_max_pages;
+
+  // Lazy load images if necessary.
+  lazyImages(alm);
+
+  // Trigger almComplete.
+  if (typeof almComplete === 'function' && alm.transition !== 'masonry') {
+    window.almComplete(alm);
+  }
+
+  // End transitions.
+  AjaxLoadMore.transitionEnd();
+
+  // ALM Done.
+  if (nextPage >= max_pages) {
+    AjaxLoadMore.triggerDone();
+  }
+  dispatchScrollEvent();
+}
+
+/**
+ * Get the pagination container for the Elementor pagination.
+ *
+ * @param {Object}  settings The query loop settings object.
+ * @param {Element} content  The HTML content to search.
+ * @param {string}  dir      the direction, next of prev.
+ * @return {HTMLElement}     The pagination element.
+ */
+function getPagedURL(settings, content) {
+  var _settings$classes, _settings$classes2, _pagination$querySele;
+  var dir = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'next';
+  // Locate the pagination container.
+  var pagination = content === null || content === void 0 ? void 0 : content.querySelector("".concat(settings.classes.container, " ").concat(settings.classes.pagination));
+
+  // Get the pagination target class.
+  var target = dir === 'next' ? (_settings$classes = settings.classes) === null || _settings$classes === void 0 ? void 0 : _settings$classes.pagination_next : (_settings$classes2 = settings.classes) === null || _settings$classes2 === void 0 ? void 0 : _settings$classes2.pagination_prev;
+
+  // Get the next URL from the pagination element.
+  var page = pagination === null || pagination === void 0 || (_pagination$querySele = pagination.querySelector(target)) === null || _pagination$querySele === void 0 ? void 0 : _pagination$querySele.href;
+
+  // Return the next page URL.
+  return page ? page : false;
 }
 ;// CONCATENATED MODULE: ./src/frontend/js/addons/singleposts.js
 
@@ -9393,75 +10279,13 @@ function addSinglePostsAttributes(alm, element) {
   element.dataset.title = addons.single_post_title;
   return element;
 }
-;// CONCATENATED MODULE: ./src/frontend/js/functions/dispatchScrollEvent.js
-/**
- * Dispatch a window scroll event.
- *
- * @param {boolean} delay Should this be delayed.
- * @since 5.5
- */
-function dispatchScrollEvent() {
-  var delay = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-  if (typeof Event === 'function') {
-    setTimeout(function () {
-      window.dispatchEvent(new CustomEvent('scroll'));
-    }, delay ? 150 : 1);
-  }
-}
-;// CONCATENATED MODULE: ./src/frontend/js/modules/loadPrevious.js
-/**
- * Create a Load Previous button.
- *
- * @param {Object} alm       The Ajax Load More object.
- * @param {Object} container The container element.
- * @param {number} page      The previous page number.
- * @param {string} url       The previous page url.
- * @param {string} label     The label for the button.
- * @since 5.5.0
- */
-function createLoadPreviousButton(alm, container) {
-  var page = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
-  var url = arguments.length > 3 ? arguments[3] : undefined;
-  var label = arguments.length > 4 ? arguments[4] : undefined;
-  if (!label) {
-    return;
-  }
-
-  // Create wrapper.
-  var btnWrap = document.createElement('div');
-  btnWrap.classList.add('alm-btn-wrap--prev');
-
-  // Create button.
-  var button = document.createElement('a');
-  button.href = url;
-  button.innerHTML = label;
-  button.setAttribute('rel', 'prev');
-  button.dataset.page = page;
-  button.dataset.url = url;
-  button.setAttribute('class', "alm-load-more-btn alm-load-more-btn--prev ".concat(alm.loading_style));
-
-  // Click event.
-  button.addEventListener('click', function (e) {
-    alm.AjaxLoadMore.prevClick(e);
-  });
-
-  // Set alm previous button to this button.
-  alm.AjaxLoadMore.setPreviousButton(button);
-
-  // Append button to wrap.
-  btnWrap.appendChild(button);
-
-  // Get parent element.
-  var parent = container.parentNode;
-
-  // Append button before container.
-  parent.insertBefore(btnWrap, container);
-}
 ;// CONCATENATED MODULE: ./src/frontend/js/addons/woocommerce.js
 function woocommerce_typeof(o) { "@babel/helpers - typeof"; return woocommerce_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, woocommerce_typeof(o); }
 function woocommerce_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ woocommerce_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == woocommerce_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw new Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(woocommerce_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw new Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function woocommerce_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function woocommerce_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { woocommerce_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { woocommerce_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
 
 
 
@@ -9500,6 +10324,11 @@ function wooInit(alm) {
   if (!alm || !alm.addons.woocommerce) {
     return false;
   }
+  var container = document.querySelector(alm.addons.woocommerce_settings.container); // Get `ul.products`
+  if (!container) {
+    console.warn('ALM WooCommerce: Unable to locate container element. Get more information -> https://connekthq.com/plugins/ajax-load-more/docs/add-ons/woocommerce/#alm_woocommerce_container');
+    return;
+  }
   alm.button.dataset.page = alm.addons.woocommerce_settings.paged + 1; // Page
 
   // Get upcoming URL.
@@ -9509,40 +10338,32 @@ function wooInit(alm) {
   } else {
     alm.button.dataset.url = '';
   }
+  var count = countContainers(alm.addons.woocommerce_settings.container);
+  var page = alm.addons.woocommerce_settings.paged;
+  if (count > 1) {
+    // Display warning if multiple containers were found.
+    console.warn('ALM WooCommerce: Multiple containers with the same classname or ID found. The WooCommerce add-on requires a single container to be defined. Get more information -> https://connekthq.com/plugins/ajax-load-more/docs/add-ons/woocommerce/');
+  }
 
-  // Set up URL and class parameters on first item in product listing
-  var container = document.querySelector(alm.addons.woocommerce_settings.container); // Get `ul.products`
-  if (container) {
-    var count = getContainerCount(alm.addons.woocommerce_settings.container);
-    var currentPage = alm.addons.woocommerce_settings.paged;
-    if (count > 1) {
-      // Display warning if multiple containers were found.
-      console.warn('ALM WooCommerce: Multiple containers with the same classname or ID found. The WooCommerce add-on requires a single container to be defined. Get more information -> https://connekthq.com/plugins/ajax-load-more/docs/add-ons/woocommerce/');
-    }
-    container.setAttribute('aria-live', 'polite');
-    container.setAttribute('aria-atomic', 'true');
-    alm.listing.removeAttribute('aria-live');
-    alm.listing.removeAttribute('aria-atomic');
-    var products = container.querySelector(alm.addons.woocommerce_settings.products); // Get first `.product` item
-    if (products) {
-      products.classList.add('alm-woocommerce');
-      products.dataset.url = alm.addons.woocommerce_settings.paged_urls[alm.addons.woocommerce_settings.paged - 1];
-      products.dataset.page = alm.page;
-      products.dataset.pageTitle = document.title;
-    } else {
-      console.warn('ALM WooCommerce: Unable to locate products. Get more information -> https://connekthq.com/plugins/ajax-load-more/docs/add-ons/woocommerce/#alm_woocommerce_products');
-    }
+  // Set attributes on containers.
+  setContentContainersParams(container, alm.listing);
 
-    // Paged URL: Create previous button.
-    if (currentPage > 1) {
-      if (alm.addons.woocommerce_settings.settings.previous_products) {
-        var prevURL = alm.addons.woocommerce_settings.paged_urls[currentPage - 2];
-        var label = alm.addons.woocommerce_settings.settings.previous_products;
-        createLoadPreviousButton(alm, container, currentPage - 1, prevURL, label);
-      }
-    }
+  // Set data attributes on first item.
+  var item = container.querySelector(alm.addons.woocommerce_settings.products); // Get first `.product` item
+  if (item) {
+    item.classList.add('alm-woocommerce');
+    item.dataset.url = alm.addons.woocommerce_settings.paged_urls[alm.addons.woocommerce_settings.paged - 1];
+    item.dataset.page = alm.page;
+    item.dataset.pageTitle = document.title;
   } else {
-    console.warn('ALM WooCommerce: Unable to locate container element. Get more information -> https://connekthq.com/plugins/ajax-load-more/docs/add-ons/woocommerce/#alm_woocommerce_container');
+    console.warn('ALM WooCommerce: Unable to locate products. Get more information -> https://connekthq.com/plugins/ajax-load-more/docs/add-ons/woocommerce/#alm_woocommerce_products');
+  }
+
+  // Paged URL: Create previous button.
+  if (page > 1 && alm.addons.woocommerce_settings.settings.previous_products) {
+    var prevURL = alm.addons.woocommerce_settings.paged_urls[page - 2];
+    var label = alm.addons.woocommerce_settings.settings.previous_products;
+    createLoadPreviousButton(alm, container, page - 1, prevURL, label);
   }
 }
 
@@ -9568,6 +10389,7 @@ function woocommerce(content, alm) {
     if (container && products) {
       var wooProducts = Array.prototype.slice.call(products); // Convert NodeList to Array.
 
+      // Load the items.
       woocommerce_asyncToGenerator( /*#__PURE__*/woocommerce_regeneratorRuntime().mark(function _callee() {
         return woocommerce_regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
@@ -9604,14 +10426,7 @@ function woocommerce(content, alm) {
  * @since 5.3.0
  */
 function wooGetContent(alm, url, response, cache_slug) {
-  // Default data object.
-  var data = {
-    html: '',
-    meta: {
-      postcount: 0,
-      totalposts: 0
-    }
-  };
+  var data = API_DATA_SHAPE; // Default data object.
 
   // Successful response.
   if (response.status === 200 && response.data) {
@@ -9624,18 +10439,20 @@ function wooGetContent(alm, url, response, cache_slug) {
     var total_posts = localize.total_posts;
     var _addons$woocommerce_s2 = addons.woocommerce_settings,
       woocommerce_settings = _addons$woocommerce_s2 === void 0 ? {} : _addons$woocommerce_s2;
-    var currentPage = rel === 'prev' ? pagePrev : page + 1; // Get the page number.
+
+    // Get the page number.
+    var currentPage = rel === 'prev' ? pagePrev : page + 1;
 
     // Create temp div to hold response data.
-    var div = document.createElement('div');
-    div.innerHTML = response.data;
+    var content = document.createElement('div');
+    content.innerHTML = response.data;
 
     // Get Page Title
-    var title = div.querySelector('title').innerHTML;
+    var title = content.querySelector('title').innerHTML;
     data.pageTitle = title;
 
     // Get WooCommerce products container.
-    var container = div.querySelector(woocommerce_settings.container);
+    var container = content.querySelector(woocommerce_settings.container);
     if (!container) {
       console.warn("Ajax Load More WooCommerce: Unable to find WooCommerce ".concat(woocommerce_settings.container, " element."));
       return data;
@@ -9663,7 +10480,7 @@ function wooGetContent(alm, url, response, cache_slug) {
     }
 
     // Results Text
-    almWooCommerceResultsText(div, alm);
+    almWooCommerceResultsText(content, alm);
   }
   return data;
 }
@@ -9675,15 +10492,14 @@ function wooGetContent(alm, url, response, cache_slug) {
  * @since 5.5.0
  */
 function woocommerceLoaded(alm) {
+  var addons = alm.addons;
   var nextPageNum = alm.page + 2;
-  var nextPage = alm.addons.woocommerce_settings.paged_urls[nextPageNum - 1]; // Get URL.
+  var nextPage = addons.woocommerce_settings.paged_urls[nextPageNum - 1]; // Get URL.
 
-  // Set button data attributes.
+  // Set button state & URL.
   if (alm.rel === 'prev' && alm.buttonPrev) {
-    var prevPageNum = alm.pagePrev - 1;
-    var prevPage = alm.addons.woocommerce_settings.paged_urls[alm.pagePrev - 2];
-    setButtonAtts(alm.buttonPrev, prevPageNum, prevPage);
-    dispatchScrollEvent(true);
+    var prevPage = addons.woocommerce_settings.paged_urls[alm.pagePrev - 2];
+    setButtonAtts(alm.buttonPrev, parseInt(alm.pagePrev) - 1, prevPage);
   } else {
     setButtonAtts(alm.button, nextPageNum, nextPage);
   }
@@ -9706,6 +10522,7 @@ function woocommerceLoaded(alm) {
   if (alm.rel === 'next' && nextPageNum > parseInt(alm.addons.woocommerce_settings.pages)) {
     alm.AjaxLoadMore.triggerDone();
   }
+  dispatchScrollEvent();
 }
 
 /**
@@ -9803,17 +10620,17 @@ function returnButton(text, link, label, seperator) {
  * Get total count of WooCommerce containers.
  *
  * @param {string} container The container class.
- * @return {number}          The total umber of containers.
+ * @return {number}          The total number of containers.
  */
-function getContainerCount(container) {
+function countContainers(container) {
   if (!container) {
     return 0;
   }
   var containers = document.querySelectorAll(container); // Get all containers.
-  if (containers) {
-    return containers.length;
+  if (!containers) {
+    return 0;
   }
-  return 0;
+  return containers.length;
 }
 ;// CONCATENATED MODULE: ./src/frontend/js/functions/displayResults.js
 
@@ -11388,56 +12205,6 @@ function getPostCount(alm) {
 
   return count;
 }
-// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
-var injectStylesIntoStyleTag = __webpack_require__(379);
-var injectStylesIntoStyleTag_default = /*#__PURE__*/__webpack_require__.n(injectStylesIntoStyleTag);
-// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/styleDomAPI.js
-var styleDomAPI = __webpack_require__(795);
-var styleDomAPI_default = /*#__PURE__*/__webpack_require__.n(styleDomAPI);
-// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/insertBySelector.js
-var insertBySelector = __webpack_require__(569);
-var insertBySelector_default = /*#__PURE__*/__webpack_require__.n(insertBySelector);
-// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js
-var setAttributesWithoutAttributes = __webpack_require__(565);
-var setAttributesWithoutAttributes_default = /*#__PURE__*/__webpack_require__.n(setAttributesWithoutAttributes);
-// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/insertStyleElement.js
-var insertStyleElement = __webpack_require__(216);
-var insertStyleElement_default = /*#__PURE__*/__webpack_require__.n(insertStyleElement);
-// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/styleTagTransform.js
-var styleTagTransform = __webpack_require__(589);
-var styleTagTransform_default = /*#__PURE__*/__webpack_require__.n(styleTagTransform);
-// EXTERNAL MODULE: ./node_modules/mini-css-extract-plugin/dist/loader.js??ruleSet[1].rules[2].use[1]!./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!./src/frontend/scss/ajax-load-more.scss
-var ajax_load_more = __webpack_require__(792);
-var ajax_load_more_default = /*#__PURE__*/__webpack_require__.n(ajax_load_more);
-;// CONCATENATED MODULE: ./src/frontend/scss/ajax-load-more.scss
-
-      
-      
-      
-      
-      
-      
-      
-      
-      
-
-var options = {};
-
-options.styleTagTransform = (styleTagTransform_default());
-options.setAttributes = (setAttributesWithoutAttributes_default());
-
-      options.insert = insertBySelector_default().bind(null, "head");
-    
-options.domAPI = (styleDomAPI_default());
-options.insertStyleElement = (insertStyleElement_default());
-
-var update = injectStylesIntoStyleTag_default()((ajax_load_more_default()), options);
-
-
-
-
-       /* harmony default export */ var scss_ajax_load_more = ((ajax_load_more_default()) && (ajax_load_more_default()).locals ? (ajax_load_more_default()).locals : undefined);
-
 ;// CONCATENATED MODULE: ./src/frontend/js/ajax-load-more.js
 function ajax_load_more_typeof(o) { "@babel/helpers - typeof"; return ajax_load_more_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, ajax_load_more_typeof(o); }
 function ajax_load_more_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ ajax_load_more_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == ajax_load_more_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw new Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(ajax_load_more_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw new Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
@@ -11450,6 +12217,7 @@ function ajax_load_more_iterableToArray(iter) { if (typeof Symbol !== "undefined
 function ajax_load_more_arrayWithoutHoles(arr) { if (Array.isArray(arr)) return ajax_load_more_arrayLikeToArray(arr); }
 function ajax_load_more_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 // ALM Modules
+
 
 
 
@@ -11618,6 +12386,7 @@ var alm_is_filtering = false;
 
     // Add-on Shortcode Params
 
+    alm = queryLoopCreateParams(alm); // Query Loop add-on
     alm = elementorCreateParams(alm); // Elementor add-on
     alm = wooCreateParams(alm); // WooCommerce add-on
     alm = cacheCreateParams(alm); // Cache add-on
@@ -11885,8 +12654,8 @@ var alm_is_filtering = false;
                 params = '';
               }
 
-              // WooCommerce || Elementor.
-              if (alm.addons.woocommerce || alm.addons.elementor && alm.addons.elementor_type === 'posts') {
+              // Query Loop || WooCommerce || Elementor.
+              if (alm.addons.queryloop || alm.addons.woocommerce || alm.addons.elementor && alm.addons.elementor_type === 'posts') {
                 ajaxurl = getButtonURL(alm, alm.rel);
                 params = '';
               }
@@ -11905,6 +12674,9 @@ var alm_is_filtering = false;
                 } else if (alm.addons.elementor) {
                   // Elementor
                   return elementorGetContent(alm, ajaxurl, response, cache_slug);
+                } else if (alm.addons.queryloop) {
+                  // Query Loop
+                  return queryLoopGetContent(alm, ajaxurl, response, cache_slug);
                 }
 
                 // Standard ALM - Get data from response.
@@ -12058,9 +12830,6 @@ var alm_is_filtering = false;
                     // Reset container opacity.
                     alm.addons.paging_container.style.opacity = 0;
 
-                    // Inject content.
-                    //alm.addons.paging_container.innerHTML = alm.html;
-
                     // Start paging functionaity.
                     alm.AjaxLoadMore.pagingInit();
                   }
@@ -12136,7 +12905,7 @@ var alm_is_filtering = false;
                 _context8.next = 52;
                 break;
               }
-              if (!(alm.addons.woocommerce || alm.addons.elementor)) {
+              if (!(alm.addons.woocommerce || alm.addons.elementor || alm.addons.queryloop)) {
                 _context8.next = 21;
                 break;
               }
@@ -12164,16 +12933,28 @@ var alm_is_filtering = false;
                     case 7:
                       elementorLoaded(alm);
                     case 8:
+                      if (!alm.addons.queryloop) {
+                        _context4.next = 12;
+                        break;
+                      }
+                      _context4.next = 11;
+                      return queryloop(temp, alm);
+                    case 11:
+                      queryloopLoaded(alm);
+                    case 12:
                     case "end":
                       return _context4.stop();
                   }
                 }, _callee4);
               }))()["catch"](function (e) {
                 if (alm.addons.woocommerce) {
-                  console.warn('Ajax Load More: There was an error loading woocommerce products.', e);
+                  console.warn('Ajax Load More: There was an error loading WooCommerce products.', e);
                 }
                 if (alm.addons.elementor) {
-                  console.warn('Ajax Load More: There was an error loading elementor items.', e);
+                  console.warn('Ajax Load More: There was an error loading Clementor items.', e);
+                }
+                if (alm.addons.queryloop) {
+                  console.warn('Ajax Load More: There was an error loading Query Loop items.', e);
                 }
               });
               alm.init = false;
@@ -12627,7 +13408,7 @@ var alm_is_filtering = false;
       placeholder('hide', alm);
       if (!alm.addons.paging) {
         alm.buttonPrev.classList.add('done');
-        alm.buttonPrev.removeAttribute('rel');
+        alm.buttonPrev.style.opacity = '0.5';
         alm.buttonPrev.disabled = true;
       }
 
@@ -12978,6 +13759,11 @@ var alm_is_filtering = false;
               })), 250);
             }
 
+            // Query Loop Add-on.
+            if (alm.addons.queryloop && alm.addons.queryloop_settings) {
+              queryLoopInit(alm);
+            }
+
             // Preloaded + SEO && !Paging.
             if (alm.addons.preloaded && alm.addons.seo && !alm.addons.paging) {
               // Add delay for setup and scripts to load.
@@ -13091,7 +13877,7 @@ var alm_is_filtering = false;
             });
 
             setPreloadedParams(alm); // Set preloaded params.
-          case 12:
+          case 13:
           case "end":
             return _context12.stop();
         }
@@ -13205,7 +13991,7 @@ var alm_is_filtering = false;
     setTimeout(function () {
       alm.proceed = true;
       alm.AjaxLoadMore.scrollSetup();
-    }, 500);
+    }, 1000);
 
     // Init Ajax Load More
     alm.AjaxLoadMore.init();

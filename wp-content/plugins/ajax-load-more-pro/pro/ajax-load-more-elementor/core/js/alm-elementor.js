@@ -84,6 +84,13 @@ var alm_elementor = {};
 
 				// If first page
 				if (page === undefined || page === "") {
+					// Get first instance of `.alm-elementor`.
+					alm_elementor.first = alm_elementor.container
+						? alm_elementor.container.querySelector(
+								".alm-elementor:first-child"
+						  )
+						: "";
+					 
 					page = alm_elementor.first.dataset.page;
 					permalink = alm_elementor.first.dataset.url;
 					pageTitle = alm_elementor.first.dataset.pageTitle;

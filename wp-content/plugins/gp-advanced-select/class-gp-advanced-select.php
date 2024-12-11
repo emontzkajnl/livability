@@ -80,9 +80,10 @@ class GP_Advanced_Select extends GP_Plugin {
 
 		add_filter( 'gform_field_input', array( $this, 'add_gpadvs_field_preview_markup' ), 10, 5 );
 
-		add_filter( 'gform_field_css_class', array( $this, 'add_gpadvs_css_class' ), 10, 3 );
+		add_filter( 'gform_field_content', array( $this, 'add_gpadvs_css_class' ), 10, 5 );
 
 	}
+
 	public function add_gpadvs_field_preview_markup( $input, $field, $value, $entry_id, $form_id ) {
 		if ( ! GFCommon::is_form_editor() || ! $this->is_advanced_select_field( $field ) ) {
 			return $input;
@@ -136,12 +137,18 @@ class GP_Advanced_Select extends GP_Plugin {
 		return $default_preview . $gapdvs_ms_preview;
 	}
 
-	public function add_gpadvs_css_class( $classes, $field, $form ) {
-		if ( $this->is_advanced_select_field( $field ) && $field['gpadvsEnable'] === true ) {
-			$classes .= ' gform-theme__disable';
+	public function add_gpadvs_css_class( $content, $field, $value, $lead_id, $form_id ) {
+		if ( $this->is_advanced_select_field( $field ) && $field['gpadvsEnable'] === true && ! GFCommon::is_form_editor() ) {
+			$search_class = $field->type == 'select' ? 'ginput_container_select' : 'ginput_container_multiselect';
+
+			$content = str_replace(
+				$search_class,
+				"$search_class gform-theme__disable",
+				$content
+			);
 		}
 
-		return $classes;
+		return $content;
 	}
 
 	public function add_init_script( $form ) {
