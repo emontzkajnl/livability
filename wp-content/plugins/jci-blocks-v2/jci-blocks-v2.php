@@ -1299,7 +1299,7 @@ function jci_blocks_bp_301() {
 
 function jci_blocks_magazine_brand_stories() {
     $places = get_field('place_relationship');
-    $place_args = array();
+    $place_args = array('relation'      => 'OR');
     foreach ($places as $p) {
         $place_args[] = array(
             'key'       => 'place_relationship',
@@ -1317,30 +1317,51 @@ function jci_blocks_magazine_brand_stories() {
                 'key'       => 'sponsored',
                 'value'     => true,
             ),
-            array(
-                'relation'      => 'OR',
-                $place_args
-            )
-            // array($place_args),
+            // array(
+            //     'relation'      => 'OR',
+            //     array (
+            //         'key'       => 'place_relationship',
+            //         'value'     => 51074,
+            //         'compare'   => 'LIKE'
+            //     ),
+            //     array (
+            //         'key'       => 'place_relationship',
+            //         'value'     => 51093,
+            //         'compare'   => 'LIKE'
+            //     ),
+            //     array (
+            //         'key'       => 'place_relationship',
+            //         'value'     => 51066,
+            //         'compare'   => 'LIKE'
+            //     ),
+            // )
+            $place_args
         )
     );
     $brand_query = new WP_Query($args);
 
     $html = '<h1>brand stories</h1>';
     if ($brand_query->have_posts()):
-        echo '<div class="brand-stories">';
+        $html .= '<div class="brand-stories">';
+        $html .= '<div class="pwl-slick">';
         while ($brand_query->have_posts()): $brand_query->the_post();
         $ID = get_the_ID();
+        $sponsor_name = get_field('sponsor_name'); 
+        $sponsor_url = get_field('sponsor_url');  
         $html .= '<div class="brand-stories__card">';
-        $html .= '<a href="'.get_the_permalink().'" class="brand-stories__img">';
-        $html .= '<div style="background-image: url("'.get_the_post_thumbnail_url( $ID,'rel_article' ).'"); display: block;"></div>';
-        $html .= '</a></div>'; // card
+        $html .= '<a href="'.get_the_permalink().'" class="brand-stories__img">'.get_the_post_thumbnail( $ID,'rel_article' ).'</a>';
+        //$html .= '<div style="background-image: url('.get_the_post_thumbnail( $ID,'rel_article' ).'); display: block; height: 180px;"></div></a>';
+        $html .= '<div class="brand-stories__title">';
+        $html .= '<h4><a href="'.get_the_permalink().'">'.get_the_title().'</a></h4></div>';
+        $html .= '<p class="brand-stories__sponsor-text"><a href="'.$sponsor_url.'" target="_blank">Sponsored by '.$sponsor_name.'</a></p>';
+        $html .= '</div>'; // title, card
         endwhile;
-        echo "</div>";
+        $html .= "</div>"; //pwl slick
+        $html .= "</div>";
     endif;
-    $html = '<pre>';
-    $html = print_r($brand_query);
-    $html = '</pre>';
+    // $html = '<pre>';
+    // $html = print_r($place_args);
+    // $html = '</pre>';
     // foreach ($places as $place) {
     //     $html .= 'place is '.$place.'<br />';
     // }
