@@ -1299,13 +1299,21 @@ function jci_blocks_bp_301() {
 
 function jci_blocks_magazine_brand_stories() {
     $places = get_field('place_relationship');
-    $place_args = array('relation'      => 'OR');
-    foreach ($places as $p) {
-        $place_args[] = array(
+    if (count($places) == 1) {
+        $place_args = array(
             'key'       => 'place_relationship',
-            'value'     => $p,
+            'value'     => $places[0],
             'compare'   => 'LIKE'
         );
+    } else {
+        $place_args = array('relation'      => 'OR');
+        foreach ($places as $p) {
+            $place_args[] = array(
+                'key'       => 'place_relationship',
+                'value'     => $p,
+                'compare'   => 'LIKE'
+            );
+        }
     }
     $args = array(
         'post_type'         => 'post',
@@ -1317,32 +1325,14 @@ function jci_blocks_magazine_brand_stories() {
                 'key'       => 'sponsored',
                 'value'     => true,
             ),
-            // array(
-            //     'relation'      => 'OR',
-            //     array (
-            //         'key'       => 'place_relationship',
-            //         'value'     => 51074,
-            //         'compare'   => 'LIKE'
-            //     ),
-            //     array (
-            //         'key'       => 'place_relationship',
-            //         'value'     => 51093,
-            //         'compare'   => 'LIKE'
-            //     ),
-            //     array (
-            //         'key'       => 'place_relationship',
-            //         'value'     => 51066,
-            //         'compare'   => 'LIKE'
-            //     ),
-            // )
             $place_args
         )
     );
     $brand_query = new WP_Query($args);
 
-    $html = '<h1>brand stories</h1>';
     if ($brand_query->have_posts()):
         $html .= '<div class="brand-stories">';
+        $html .= '<h2 class="wp-block-jci-blocks-section-header green-line">Businesses & Brands to Know</h2>';
         $html .= '<div class="pwl-slick">';
         while ($brand_query->have_posts()): $brand_query->the_post();
         $ID = get_the_ID();

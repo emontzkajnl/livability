@@ -75,20 +75,38 @@ while ( have_posts() ) :
 		$places = get_field('place_relationship'); 
 		$cat = get_the_category();
 		$alm_posts = array();
+		$today = getdate();
 		// CREATE MANUAL ARRAY TO CONTROL ALM
 		$alm_args = array(
 			'numberposts' 			=> 100,
 			'post_type'				=> 'post',
 			'post_status'			=> 'publish', 
+			'date_query'        => array(
+				array(
+					'after'     => $today[ 'month' ] . ' 1st, ' . ($today[ 'year' ] - 3)
+				)
+			)
 		);
 		if ($places) {
-			$alm_args['meta_query'] = array(
-				array(
-					'key'		=> 'place_relationship',
-					'value'		=>  $places[0],
-					'compare'	=> 'LIKE'
-				)
-			);
+			if (count($places) == 1) {
+				$alm_args['meta_query'] = array(
+					array(
+						'key'		=> 'place_relationship',
+						'value'		=>  $places[0],
+						'compare'	=> 'LIKE'
+					)
+				);
+			} else { //mulitple places
+				$alm_args['meta_query'] = array('relation' => 'OR');
+				foreach ($places as $p) {
+					$alm_args['meta_query'][] = array(
+						'key'       => 'place_relationship',
+						'value'     => $p,
+						'compare'   => 'LIKE'
+					);
+				}
+			}
+		
 		} else {
 			$alm_args['meta_query'] = array(
 				array(
