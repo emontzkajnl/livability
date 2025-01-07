@@ -1,3 +1,7 @@
+### 5.6.0 | 2024-12-12
+- Fixed an issue where the List field passes the raw entry value to Mailchimp, instead of the expected comma-separated list of values.
+- Fixed code placement to be consistent with the WordPress coding standards.
+
 ### 5.5.0 | 2024-09-23
 - Added support for instructing the Mailchimp API to skip merge field validation by using the [gform_mailchimp_subscription](https://docs.gravityforms.com/gform_mailchimp_subscription/) filter to add the `skip_merge_validation` argument to the request.
 - Updated the status indicator component to be compatible with Gravity Forms v2.8.8.

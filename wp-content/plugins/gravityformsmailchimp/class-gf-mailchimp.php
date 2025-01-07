@@ -2115,12 +2115,8 @@ class GFMailChimp extends GFFeedAddOn {
 
 					} else {
 
-						// Use export value if method exists for field.
-						if ( is_callable( array( 'GF_Field', 'get_value_export' ) ) ) {
-							$field_value = $field->get_value_export( $entry, $field_id );
-						} else {
-							$field_value = rgar( $entry, $field_id );
-						}
+						// Retrieve the value of the field in a format suitable for export
+						$field_value = $field->get_value_export( $entry, $field_id );
 
 					}
 
