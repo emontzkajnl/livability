@@ -14,7 +14,11 @@
         cmWrapper.que = cmWrapper.que || [];
 </script> -->
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-    <?php $ID = get_the_ID(); ?>
+    <?php $ID = get_the_ID(); 
+    global $wp_query;
+    $wp_query->is_single = true;
+    $wp_query->is_singular = true;
+    $wp_query->in_the_loop = true;?>
 
     <!-- <script>
         cmWrapper.que.push(function() {

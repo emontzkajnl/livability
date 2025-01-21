@@ -152,8 +152,8 @@
    }
  }
 }
-
-body #ajaxsearchlite1 .probox .proinput input, div.asl_w .probox .proinput input {
+div.asl_w .probox .proinput input
+body #ajaxsearchlite1 div.asl_w .probox .proinput input, div.asl_w .probox .proinput input {
   color: #111 !important; 
 }
 .proinput input {

@@ -128,7 +128,7 @@ while ( have_posts() ) :
 		// print_r($alm_query);
 		$alm_post_string = implode(',',$alm_posts);
 ?>
-	<?php echo do_shortcode( '[ajax_load_more single_post="true" single_post_id="'.get_the_ID().'"  single_post_order="'.$alm_post_string.'" post__in="'.$alm_post_string.'" cache="true" cache_id="alm_1036248587" single_post_target="#article-wrapper"  post_type="post" pause_override="true"  loading_style="infinite classic" scroll_distance="100"]' );
+	<?php echo do_shortcode( '[ajax_load_more single_post="true" single_post_id="'.get_the_ID().'"  single_post_order="'.$alm_post_string.'" post__in="'.$alm_post_string.'" cache="false" single_post_target="#article-wrapper"  post_type="post" pause_override="true"  loading_style="infinite classic" scroll_distance="100"]' );
 
 endwhile; // End of the loop.
 
