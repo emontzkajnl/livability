@@ -1,8 +1,9 @@
 <?php 
 if ($post->post_parent > 0){
-    if (get_field('city_map_options')) {
     $place_query = str_replace(',','',get_the_title());
     $place_query = str_replace(' ','+', $place_query); 
+    if (get_field('city_map_options')) {
+
     $cmo = get_field('city_map_options');
     $option = $cmo['options']; // title, coordinates, proxi, hide
     $zoom = $cmo['set_zoom_level'] ? '&zoom='.$cmo['zoom_level']: '';
