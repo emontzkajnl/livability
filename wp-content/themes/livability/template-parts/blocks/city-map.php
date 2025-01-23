@@ -19,8 +19,8 @@ if ($post->post_parent > 0){
             echo '<iframe width="100%" height="500" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA-VaZnsUyefqTA8Nu4LZOB6rKJcQoTRgQ&q='.$place_query.'&center='.$lat.','.$long.$zoom.'" allowfullscreen=""></iframe>';
             break;
         case 'proxi':
-            $proxi = $option['proxi'];
-            echo '<iframe src="'.$proxi.$zoom.'" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe>';
+            $proxi = $cmo['proxi'];
+            echo '<iframe src="'.$proxi.'" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe>';
             break;
     
         default:
