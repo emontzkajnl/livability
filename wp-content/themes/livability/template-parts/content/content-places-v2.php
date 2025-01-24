@@ -49,6 +49,11 @@ $topic_args = array(
 //    $city_name = substr(get_the_title($place[0]), 0, -4); 
    $full_city_name = get_the_title();
    $city_name = substr(get_the_title(), 0, -4); 
+   $cmo = get_field('city_map_options');
+   $hide_map = false;
+   if ($cmo && $cmo['options'] == 'hide') {
+    $hide_map = true;
+   }
 //    print_r($parent_obj);
 
 ?>
@@ -75,7 +80,7 @@ $topic_args = array(
         ?>
         <li><a href="#weather">Weather</a></li>
         <li><a href="#quick-facts">Quick Facts</a></li>
-        <li><a href="#map">Map</a></li>
+        <?php if (!$hide_map) { echo '<li><a href="#map">Map</a></li>'; } ?>
         <?php 
         echo array_key_exists('experiences-adventures', $topics_array) ? '<li><a href="#experiences-adventures">Experiences & Adventures</a></li>' : '';
         echo array_key_exists('food-scenes', $topics_array) ? '<li><a href="#food-scenes">Food Scenes</a></li>': '';
@@ -143,8 +148,10 @@ $topic_args = array(
             </div>
         </div>
         
-        <?php echo '<h2 id="map">Map of '.$full_city_name.'</h2>'; 
-        get_template_part( 'template-parts/blocks/city-map' ); ?>
+        <?php if (!$hide_map) {
+            echo '<h2 id="map">Map of '.$full_city_name.'</h2>'; 
+            get_template_part( 'template-parts/blocks/city-map' ); 
+        } ?>
         
         <div class="wp-block-columns">
             <div class="wp-block-column">

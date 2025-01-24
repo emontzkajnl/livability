@@ -20,7 +20,7 @@ if ($post->post_parent > 0){
             break;
         case 'proxi':
             $proxi = $cmo['proxi_url'];
-            echo '<iframe src="'.$proxi.'" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe>';
+            echo '<iframe src="'.$proxi.$zoom.'" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe>';
             break;
     
         default:
