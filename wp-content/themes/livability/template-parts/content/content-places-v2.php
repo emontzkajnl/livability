@@ -54,6 +54,7 @@ $topic_args = array(
    if ($cmo && $cmo['options'] == 'hide') {
     $hide_map = true;
    }
+   $hide_facts = get_field('hide_facts');
 //    print_r($parent_obj);
 
 ?>
@@ -79,7 +80,7 @@ $topic_args = array(
         echo count($brands_array) > 0 ? '<li><a href="#brands-to-know">Brands to Know</a></li>' : '';
         ?>
         <li><a href="#weather">Weather</a></li>
-        <li><a href="#quick-facts">Quick Facts</a></li>
+        <?php echo $hide_facts ? '' : '<li><a href="#quick-facts">Quick Facts</a></li>'; ?>
         <?php if (!$hide_map) { echo '<li><a href="#map">Map</a></li>'; } ?>
         <?php 
         echo array_key_exists('experiences-adventures', $topics_array) ? '<li><a href="#experiences-adventures">Experiences & Adventures</a></li>' : '';
@@ -143,7 +144,9 @@ $topic_args = array(
             <?php get_template_part( 'template-parts/blocks/top-100-carousel-24');
             get_template_part( 'template-parts/blocks/brand-stories', null, array('city' => $city_name, 'state' => $state_name, 'posts' => $brands_array) );
             get_template_part( 'template-parts/blocks/weather', null, array('city' => $city_name, 'abbv' => $state_abbv) );
-            get_template_part( 'template-parts/blocks/quick-facts-2', null, array('city' => $city_name, 'state' => $state_name  ) ); 
+            if (!$hide_facts) {
+                get_template_part( 'template-parts/blocks/quick-facts-2', null, array('city' => $city_name, 'state' => $state_name  ) ); 
+            }
             ?>
             </div>
         </div>

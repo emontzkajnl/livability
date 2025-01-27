@@ -3,6 +3,27 @@
     "title": "Place Type",
     "fields": [
         {
+            "key": "field_6797b61b38331",
+            "label": "Hide Facts",
+            "name": "hide_facts",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
             "key": "field_605dc1d316581",
             "label": "Place Type",
             "name": "place_type",
@@ -382,5 +403,5 @@
     "active": true,
     "description": "City, state, region and data points",
     "show_in_rest": 0,
-    "modified": 1686568836
+    "modified": 1738015767
 }

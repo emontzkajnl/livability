@@ -241,6 +241,9 @@ function return_breadcrumbs() {
  function jci_blocks_render_quick_facts() {
      $ID = get_the_id();
      $post_type = get_post_type( );
+     if (get_field('hide_facts', $ID) == true) {
+        return null;
+     }
      if ($post_type == 'liv_place'): // used on places only
      $is_child = wp_get_post_parent_id($ID) > 0;
     $data = get_field('state_data');

@@ -1845,3 +1845,25 @@ function single_query($args, $id ) {
 // add_filter('alm_query_args_custom_single_query', 'single_query', 10, 2);
 
 add_filter( 'alm_debug', '__return_true' );
+
+function place_data_shortcode($atts, $content = null) {
+	$a = shortcode_atts( array(
+		'data'		=> ''
+	), $atts );
+	$id = get_the_ID();
+	$data = $a['data'];
+	switch ($variable) {
+		case 'value':
+			# code...
+			break;
+		
+		default:
+			# code...
+			break;
+	}
+	$html = '<span>id is '.$id.' and data is '.$a['data'].'</span>';
+	return $html;
+
+}
+
+add_shortcode( 'place_data', 'place_data_shortcode' );
