@@ -20,6 +20,18 @@
             break;
         case 'proxi':
             $proxi = $cmo['proxi_url'];
+            // change $zoom according to if url has params or not
+            if ($zoom) {
+                $components = parse_url($proxi);
+                parse_str($components['query'], $params);
+                if (count($params) > 0) {
+                    $zoom = '&zoom='.$cmo['zoom_level'];
+                } else {
+                    $zoom = '?zoom='.$cmo['zoom_level'];
+                }
+            }
+            echo 'url is '.$proxi.$zoom.'<br />';
+            // print_r(parse_url('google.com?key1=one&key2=two', PHP_URL_QUERY));
             echo '<iframe src="'.$proxi.$zoom.'" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe>';
             break;
     
