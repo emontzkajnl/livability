@@ -1217,6 +1217,24 @@ div[class^="curated-posts-"] {
   }
 }
 
+.place-accolades {
+  padding-left: 0;
+  li {
+    list-style: none;
+    font-family: "Jost",Arial,Helvetica,sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    line-height: 3;
+    display: inline-block;
+    padding-left: 50px;
+    position: relative;
+    margin-right: 50px;
+    a {
+      color: inherit;
+    }
+  }
+}
+
 .cc-cta-container {
   display: flex;
   border-top: 1px solid #ccc;

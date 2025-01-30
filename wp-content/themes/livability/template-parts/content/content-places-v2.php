@@ -115,6 +115,7 @@ $topic_args = array(
                      // topic of connected community, show block
                      echo do_shortcode('[addtoany]'); 
                      get_template_part( 'template-parts/blocks/cc-cta-block' );
+                     get_template_part( 'template-parts/blocks/liv-place-accolades');
                      
                      if (get_field('client_place') || get_field('non-client_city_with_content')) {
                         the_content( );

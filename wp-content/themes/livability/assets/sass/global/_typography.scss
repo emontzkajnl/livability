@@ -61,6 +61,83 @@ h5,
   font-size: 1rem;
   font-weight: 600;
 }
+.place-section-heading {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 30px;
+  h2 {
+    flex-shrink: 0;
+    margin-top: 0;
+    margin-right: 20px;
+    margin-left: 50px;
+    position: relative;
+    &:before {
+      content: '';
+      position: absolute;
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 60px;
+      height: 45px;
+      left: 60px;
+    }
+    &.economy {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/economy.svg');
+      }
+    }
+    &.location {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/location.svg');
+      }
+    }
+    &.restaurants {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/restaurants.svg');
+      }
+    }
+    &.schools {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/schools.svg');
+      }
+    }
+    &.things {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/things-to-do.svg');
+      }
+    }
+    &.unique {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/unique.svg');
+      }
+    }
+    &.outdoor {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/outdoor.svg');
+      }
+    }
+  }
+  &__line {
+    display: block;
+    height: 4px;
+    border-top: 4px dotted #ccc;
+    flex-shrink: 0;
+    flex-grow: 1;
+    // position: relative;
+
+    // &::before {
+    //   content: '';
+    //   position: absolute;
+    //   display: block;
+    //   height: 1px;
+    //   border-top: 1px dotted $green;
+    //   background-color: $green;
+    //   width: 2000px;
+    //   right: 10px;
+    //   top: 50%;
+    // }
+  }
+}
 
 .code-font {
   font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Ubuntu Mono", "Roboto Mono", Menlo, Monaco, Consolas, monospace; 

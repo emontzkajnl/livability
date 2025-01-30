@@ -469,6 +469,16 @@ function my_acf_init_block_types() {
             'icon'              => 'layout',
             'keywords'          => array( 'block', 'related', 'article', 'post' ),
         ));
+        acf_register_block_type(array(
+            'name'              => 'Liv Place Section Heading',
+            'title'             => __('Liv Place Section Heading', 'acf-blocks'),
+            'description'       => __('Liv Place Section Heading', 'acf-blocks'),
+            'mode'              => 'preview',
+            'render_template'   => plugin_dir_path( __FILE__ ) . 'blocks/place-section-heading/place-section-heading.php',
+            'category'          => 'jci-category',
+            'icon'              => 'layout',
+            'keywords'          => array( 'block', 'related', 'article', 'post' ),
+        ));
 
         // acf_register_block_type(array(
         //     'name'              => 'listicle',
