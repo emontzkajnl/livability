@@ -12,9 +12,9 @@ if ($is_client || $accolades):
         foreach($accolades as $a ) {
             $link = $a['link'];
             if ($link) {
-                echo '<li class="place_accolades_accolade"><a class="unstyle-link" href="'.$link.'">'.$a['title'].'</a></li>';
+                echo '<li class="place-accolades__accolade"><a class="unstyle-link" href="'.$link.'">'.$a['title'].'</a></li>';
             } else {
-                echo '<li class="place_accolades_accolade">'.$a['title'].'</li>';
+                echo '<li class="place-accolades__accolade">'.$a['title'].'</li>';
             }
         }
     }

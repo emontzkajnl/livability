@@ -1229,8 +1229,28 @@ div[class^="curated-posts-"] {
     padding-left: 50px;
     position: relative;
     margin-right: 50px;
+    &:before {
+      content: '';
+      position: absolute;
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 40px;
+      height: 40px;
+      left: 5px;
+  top: 4px;
+    }
     a {
       color: inherit;
+    }
+  }
+  &__accolade {
+    &:before {
+      background-image: url('./assets/images/subheading-icons/accolade.svg');
+    }
+  }
+  &__client {
+    &:before {
+      background-image: url('./assets/images/subheading-icons/partner.svg');
     }
   }
 }
