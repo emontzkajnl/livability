@@ -39,12 +39,17 @@
             },
             "choices": {
                 "economy": "Economy",
+                "healthcare": "Healthcare",
+                "live": "Live",
                 "location": "Location",
                 "outdoor": "Outdoor",
+                "play": "Play",
                 "restaurants": "Restaurants",
                 "schools": "Schools",
                 "things": "Things to Do",
-                "unique": "Unique"
+                "unique": "Unique",
+                "visit": "Visit",
+                "work": "Work"
             },
             "default_value": false,
             "return_format": "value",
@@ -74,5 +79,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1738254821
+    "modified": 1738358410
 }
