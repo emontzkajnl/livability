@@ -30,7 +30,6 @@
                     $zoom = '?zoom='.$cmo['zoom_level'];
                 }
             }
-            echo 'url is '.$proxi.$zoom.'<br />';
             // print_r(parse_url('google.com?key1=one&key2=two', PHP_URL_QUERY));
             echo '<iframe src="'.$proxi.$zoom.'" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe>';
             break;

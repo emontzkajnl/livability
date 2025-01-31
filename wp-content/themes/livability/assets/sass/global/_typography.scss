@@ -118,6 +118,31 @@ h5,
         background-image: url('./assets/images/subheading-icons/outdoor.svg');
       }
     }
+    &.healthcare {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/healthcare.svg');
+      }
+    }
+    &.live {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/live.svg');
+      }
+    }
+    &.play {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/play.svg');
+      }
+    }
+    &.visit {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/visit.svg');
+      }
+    }
+    &.work {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/work.svg');
+      }
+    }
   }
   &__line {
     display: block;
