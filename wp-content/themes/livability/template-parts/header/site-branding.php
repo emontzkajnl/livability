@@ -23,9 +23,9 @@ $header_class = $show_title ? 'site-title' : 'screen-reader-text';
 
 	<div class="site-logo">
 		<?php if (is_front_page(  )):   ?>
-			<img  height="50" width="201" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo.svg" alt="livability" class="custom-logo">
+			<img  height="50" width="201" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo2.svg" alt="livability" class="custom-logo">
 		<?php else: ?>
-			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="custom-logo-link"><img height="50" width="201" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo.svg" alt="livability" class="custom-logo"></a>
+			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="custom-logo-link"><img height="50" width="201" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo2.svg" alt="livability" class="custom-logo"></a>
 		<?php endif; ?>
 	</div>
 
