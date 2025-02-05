@@ -20,7 +20,7 @@ if ($link) {
     $link_id = 'id="'.$link['value'].'"';
     $link_title = 'data-title="'.$link['label'].'"';
 }
-echo 'label is '.$link['label']; 
+
 ?>
 <div class="place-section-heading">
 <?php echo '<h2 class="'.esc_attr($icon).'" '.$link_id.' '.$link_title.'>'.$heading.'</h2>'; ?>
