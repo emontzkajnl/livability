@@ -1,6 +1,6 @@
 @charset "UTF-8";
 .green-text {
-  color: #7dc244 !important; }
+  color: #6CC24A !important; }
 
 .has-background-white .site a:focus:not(.wp-block-button__link):not(.wp-block-file__button) {
   background: none;
@@ -88,7 +88,7 @@ body {
   color: #000; }
 
 body a {
-  color: #7dc244; }
+  color: #6CC24A; }
 
 .entry-content,
 .entry-summary {
@@ -139,7 +139,7 @@ h5,
   bottom: -25px;
   left: 0;
   position: absolute;
-  background-color: #7dc244; }
+  background-color: #6CC24A; }
 
 .uppercase {
   text-transform: uppercase; }
@@ -265,7 +265,7 @@ button,
 [type=submit] {
   border: none;
   border-radius: 0;
-  background-color: #7dc244;
+  background-color: #6CC24A;
   color: white;
   padding: 5px 30px;
   font-family: "Jost";
@@ -4744,7 +4744,7 @@ readers do not read off random characters that represent icons */
   font-weight: 400; }
 
 #crumbs a {
-  color: #7dc244;
+  color: #6CC24A;
   text-decoration: none; }
 
 .site-header {
@@ -4904,7 +4904,7 @@ readers do not read off random characters that represent icons */
   color: #fefefe; }
 
 .hero-section li {
-  color: #7dc244; }
+  color: #6CC24A; }
 
 .hero-section li a {
   color: #fefefe; }
@@ -4925,7 +4925,7 @@ readers do not read off random characters that represent icons */
   font-family: "Jost", Arial, Helvetica, sans-serif;
   font-weight: 600;
   font-size: 1.25rem;
-  color: #7dc244;
+  color: #6CC24A;
   text-transform: uppercase;
   line-height: 1.8em; }
 
@@ -5107,14 +5107,14 @@ readers do not read off random characters that represent icons */
   margin-top: 10px; }
 
 .quick-facts-block {
-  border: 3px solid #7dc244;
+  border: 3px solid #6CC24A;
   text-align: center;
   position: relative;
   padding: 40px 20px 20px;
   margin-bottom: 100px; }
 
 .quick-facts-block .qf-title {
-  color: #7dc244;
+  color: #6CC24A;
   background-color: white;
   display: inline-block;
   padding: 10px 20px;
@@ -5332,7 +5332,7 @@ div[class^=curated-posts-] .cp:first-child {
   width: 50px;
   left: calc(50% - 25px);
   bottom: -20px;
-  background-color: #7dc244; }
+  background-color: #6CC24A; }
 
 .one-hundred-list ul {
   padding-left: 0; }
@@ -5649,8 +5649,8 @@ div[class^=curated-posts-] .cp:first-child {
   float: right;
   padding: 45px 30px;
   background-color: #f4f4f4;
-  border-top: 2px solid #7dc244;
-  border-bottom: 2px solid #7dc244;
+  border-top: 2px solid #6CC24A;
+  border-bottom: 2px solid #6CC24A;
   font-size: 1.35rem; }
 
 .wp-block-jci-blocks-blockquote-section blockquote:before {
@@ -5771,7 +5771,7 @@ div[class^=curated-posts-] .cp:first-child {
 
 .green-circle {
   color: white;
-  background-color: #7dc244;
+  background-color: #6CC24A;
   padding: 10px;
   border-radius: 50%;
   font-family: "Jost", Arial, Helvetica, sans-serif;
@@ -5915,7 +5915,7 @@ div[class^=curated-posts-] .cp:first-child {
   font-family: "Jost";
   font-weight: 600;
   font-size: 1.125rem;
-  background-color: #7dc244 !important;
+  background-color: #6CC24A !important;
   border: none !important;
   padding: 5px 30px;
   width: 170px;
@@ -5946,7 +5946,7 @@ body .gform_footer {
 
 /*# sourceMappingURL=style.css.map */
 .green-text {
-  color: #7dc244 !important; }
+  color: #6CC24A !important; }
 
 .has-background-white
 .site
@@ -6035,7 +6035,7 @@ body {
   line-height: 1.35;
   color: #000; }
   body a {
-    color: #7dc244; }
+    color: #6CC24A; }
 
 .entry-content,
 .entry-summary {
@@ -6088,7 +6088,7 @@ h5,
     bottom: -25px;
     left: 0;
     position: absolute;
-    background-color: #7dc244; }
+    background-color: #6CC24A; }
 
 .uppercase {
   text-transform: uppercase; }
@@ -6207,7 +6207,7 @@ button,
 [type="submit"] {
   border: none;
   border-radius: 0;
-  background-color: #7dc244;
+  background-color: #6CC24A;
   color: white;
   padding: 5px 30px;
   font-family: "Jost";
@@ -10682,7 +10682,7 @@ readers do not read off random characters that represent icons */
   font-family: "Jost", Arial, Helvetica, sans-serif;
   font-weight: 400; }
   #crumbs a {
-    color: #7dc244;
+    color: #6CC24A;
     text-decoration: none; }
 
 .site-header {
@@ -10843,7 +10843,7 @@ h4.mega-block-title {
   background-position: center center;
   color: #fefefe; }
   .hero-section li {
-    color: #7dc244; }
+    color: #6CC24A; }
     .hero-section li a {
       color: #fefefe; }
 
@@ -10861,7 +10861,7 @@ h4.mega-block-title {
     font-family: "Jost", Arial, Helvetica, sans-serif;
     font-weight: 600;
     font-size: 1.25rem;
-    color: #7dc244;
+    color: #6CC24A;
     text-transform: uppercase;
     line-height: 1.8em; }
   .hero-text h2.h1 {
@@ -11049,13 +11049,13 @@ h4.mega-block-title {
   margin-top: 10px; }
 
 .quick-facts-block {
-  border: 3px solid #7dc244;
+  border: 3px solid #6CC24A;
   text-align: center;
   position: relative;
   padding: 40px 20px 20px;
   margin-bottom: 100px; }
   .quick-facts-block .qf-title {
-    color: #7dc244;
+    color: #6CC24A;
     background-color: white;
     display: inline-block;
     padding: 10px 20px;
@@ -11242,7 +11242,7 @@ div[class^="curated-posts-"] {
     width: 50px;
     left: calc(50% - 25px);
     bottom: -20px;
-    background-color: #7dc244; }
+    background-color: #6CC24A; }
 
 .one-hundred-list ul {
   padding-left: 0; }
@@ -11516,8 +11516,8 @@ div[class^="curated-posts-"] {
   float: right;
   padding: 45px 30px;
   background-color: #f4f4f4;
-  border-top: 2px solid #7dc244;
-  border-bottom: 2px solid #7dc244;
+  border-top: 2px solid #6CC24A;
+  border-bottom: 2px solid #6CC24A;
   font-size: 1.35rem; }
   .wp-block-jci-blocks-blockquote-section blockquote:before {
     content: ""; }
@@ -11636,7 +11636,7 @@ div[class^="curated-posts-"] {
 
 .green-circle {
   color: white;
-  background-color: #7dc244;
+  background-color: #6CC24A;
   padding: 10px;
   border-radius: 50%;
   font-family: "Jost", Arial, Helvetica, sans-serif;
@@ -11774,7 +11774,7 @@ div[class^="curated-posts-"] {
     font-family: "Jost";
     font-weight: 600;
     font-size: 1.125rem;
-    background-color: #7dc244 !important;
+    background-color: #6CC24A !important;
     border: none !important;
     padding: 5px 30px;
     width: 170px;

@@ -3,6 +3,24 @@
     $('.livability-image-meta').show();
   });
 
+
+  if ($('body').hasClass('single-liv_place')) {
+    const headings = $('h2.lpsh');
+    if (headings) {
+      const secondList = $('.place-side-nav li').eq(1);
+      list = '';
+      headings.each(function(i,h){
+        // console.log('heading ',$(h).attr('id'));
+        const hid =  $(h).attr('id');
+        const htitle = $(h).data('title');
+        list += `<li><a href="#${hid}">${htitle}</a></li>`;
+       });
+       console.log(list);
+       $(list).insertAfter(secondList);
+    }
+
+  }
+
   const bp24ScrollFixx = () => {
     const headHeight = $('.entry-header').height();
     const articleHeight = $('.bp24lparticle').height();

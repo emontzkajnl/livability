@@ -3,7 +3,7 @@
 	<input type="search" name="keyword" id="keyword" class="search-field">
 	<!-- <input type="search" id="search-form-1" placeholder="Search..." class="search-field" value="" name="s"> -->
 	<!-- <input type="submit" class="search-submit" value="" /> -->
-	<button type="submit" class="search-submit" style="background:#7dc244;"><i class="fa fa-search"></i></button>
+	<button type="submit" class="search-submit" style="background:#6CC24A;"><i class="fa fa-search"></i></button>
 <div id="datafetch"></div>
 </form>
 <style>
