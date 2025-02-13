@@ -463,8 +463,8 @@
 
   // let logosrc = $('.custom-logo').attr('src');
   // let whitelogosrc = logosrc.replace('logo.svg', 'white-logo.svg');
-  const logosrc = 'https://' + location.host + '/wp-content/themes/livability/assets/images/logo.svg';
-  const whitelogosrc = 'https://' + location.host + '/wp-content/themes/livability/assets/images/white-logo.svg';
+  const logosrc = 'https://' + location.host + '/wp-content/themes/livability/assets/images/logo3.svg';
+  const whitelogosrc = 'https://' + location.host + '/wp-content/themes/livability/assets/images/whitelogo3.svg';
   if ($('.mega-hero').length) {
     $('.mega-hero').css('margin-top', '-130px');
     $('.custom-logo').attr('src', whitelogosrc);
@@ -838,6 +838,8 @@ function getBpYear(){
     return '2023';
   } else if ( $('body').hasClass('best_places-template-best_places_2024_landing_page') ) {
     return '2024';
+  } else if ( $('body').hasClass('best_places-template-best_places_2025_landing_page') ) {
+    return '2025';
   } else {
     return null;
   }
@@ -874,7 +876,6 @@ $('.bp23-category-btn').on('click', function(){
         $('.bp23-results').html(data);
       } else if (year == '2024') {
         $('.bp24__results').html(data);
-        
       }
       
       Waypoint.refreshAll();

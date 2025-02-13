@@ -49,6 +49,7 @@ function create_block_jci_blocks_v2_block_init() {
 	register_block_type( __DIR__ . '/build/mag-sponsor', array('render_callback' => 'jci_blocks_render_mag_sponsor'));
 	register_block_type( __DIR__ . '/build/link-place-to-top-100', array('render_callback' => 'jci_blocks_link_place_to_top_100'));
     register_block_type( __DIR__ . '/build/weather-block', array('render_callback' => 'jci_blocks_weather_block'));
+    register_block_type( __DIR__ . '/build/content-weather-block', array('render_callback' => 'jci_blocks_content_weather_block'));
     register_block_type( __DIR__ . '/build/livscore-block', array('render_callback' => 'jci_blocks_livscore_block'));
     register_block_type( __DIR__ . '/build/link-to-2023-best-place', array('render_callback' => 'jci_blocks_link_to_2023_best_place'));
     register_block_type( __DIR__ . '/build/internally-promoted', array('render_callback' => 'jci_blocks_internally_promoted'));
@@ -1359,4 +1360,24 @@ function jci_blocks_magazine_brand_stories() {
     //     $html .= 'place is '.$place.'<br />';
     // }
     return $html;
+}
+
+function jci_blocks_content_weather_block() {
+    $id = get_the_ID();
+    global $wpdb; 
+    $results = $wpdb->get_results( "SELECT * FROM 2024_city_data WHERE place_id = $id", OBJECT );
+
+    $high = $results[0]->avg_high_temp;
+    $low = $results[0]->avg_low_temp;
+    $rain = $results[0]->avg_rain;
+    $snow = $results[0]->avg_snow;
+
+   if ($high != null && $low != null && $rain != null && $snow != null):
+    $html = '<div class="weather-block-2">';
+    $html .= '<div class="weather-block-2__card temp"><div class="weather-block-2__icon temp"></div><h4>Average Temperatures</h4><p>'.$high.' high / '.$low.' low</p></div>';
+    $html .= '<div class="weather-block-2__card rain"><div class="weather-block-2__icon rain"></div><h4>Average Annual Rainfall</h4><p>'.$rain.' in</p></div>';
+    $html .= '<div class="weather-block-2__card snow"><div class="weather-block-2__icon snow"></div><h4>Average Annual Snowfall</h4><p>'.$snow.' in</p></div>';
+    $html .= '</div>';
+    return $html;
+    endif; 
 }

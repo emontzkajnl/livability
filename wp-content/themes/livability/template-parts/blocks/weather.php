@@ -18,7 +18,8 @@ echo '<h2 id="weather">Weather in '.$city.', '.strtoupper($abbv).'</h2>'; ?>
         <div class="weather-block-2__icon temp"></div>
         <h4>Average Temperatures</h4>
         <p><?php echo $high.' high / '.$low.' low'; ?></p>
-    </div>    <div class="weather-block-2__card rain">
+    </div>    
+    <div class="weather-block-2__card rain">
         <div class="weather-block-2__icon rain"></div>
         <h4>Average Annual Rainfall</h4>
         <p><?php echo $rain?> in</p>

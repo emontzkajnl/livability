@@ -42,6 +42,7 @@ $topic_args = array(
    }
 
    $is_2024_bp = has_term('2024', 'best_places_years');
+   $is_2025_bp = has_term('2025', 'best_places_years');
    $parent_obj = get_post_parent();
    $state_name = $parent_obj->post_title;
    $state_abbv = $parent_obj->post_name;
@@ -105,7 +106,7 @@ $topic_args = array(
                 } ?>
             </div>
                      <?php 
-                     if ($is_2024_bp) {
+                     if ($is_2024_bp || $is_2025_bp) {
                          echo '<h2 class="h1" id="overview">'.get_the_title().'</h2>';
                      } else {
                         echo '<h1 class="h1" id="overview">'.get_the_title().'</h1>';
@@ -122,7 +123,7 @@ $topic_args = array(
                      } else {
                         
                         // non-clients that are 2024 top 100 have content to show
-                        if ($is_2024_bp) {
+                        if ($is_2024_bp || $is_2025_bp) {
                             the_content();
                         } else {
                             get_template_part( 'template-parts/blocks/madlib' ); 
@@ -144,7 +145,10 @@ $topic_args = array(
             <div class="wp-block-column">
             <?php get_template_part( 'template-parts/blocks/top-100-carousel-24');
             get_template_part( 'template-parts/blocks/brand-stories', null, array('city' => $city_name, 'state' => $state_name, 'posts' => $brands_array) );
-            get_template_part( 'template-parts/blocks/weather', null, array('city' => $city_name, 'abbv' => $state_abbv) );
+            // if (!get_field('client_place') && !get_field('non-client_city_with_content')) {
+                get_template_part( 'template-parts/blocks/weather', null, array('city' => $city_name, 'abbv' => $state_abbv) );
+            // }
+            
             if (!$hide_facts) {
                 get_template_part( 'template-parts/blocks/quick-facts-2', null, array('city' => $city_name, 'state' => $state_name  ) ); 
             }
