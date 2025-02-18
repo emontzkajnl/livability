@@ -832,20 +832,29 @@ function load_more_bpm_posts() {
 			<p class="read-more"><a href="<?php echo get_the_permalink( $bp['id'] ); ?>">Read More</a></p>
 			</div>
 		<?php }
-	} elseif ( $_POST['year'] == '2024') {
+	} else {
 		if (isset($_SESSION['bp23_cat'])) {
 			$sortBy = $_SESSION['bp23_cat'];
 		} else {
 			$sortBy = 'livscore';
 		}
+		$year = $_POST['year'];
 		$page = $_POST['page'];
 		global $wpdb;
-		$results = $wpdb->get_results( "SELECT * FROM 2024_top_100  ORDER BY ".$sortBy." DESC", OBJECT );
+		if ($year == '2024') {
+			$results = $wpdb->get_results( "SELECT * FROM 2024_top_100  ORDER BY ".$sortBy." DESC", OBJECT );
+		} else { // year is 2025
+			$results = $wpdb->get_results( "SELECT * FROM 2025_top_100  ORDER BY ".$sortBy." DESC", OBJECT );
+		}
 		$bp24_array = array();
 		foreach ($results as $key => $value) { 
 			$arr = array(); // collect data to use in loop
 			// get population and home value from city data table
-			$city_data = $wpdb->get_results( "SELECT * FROM 2024_city_data  WHERE place_id = $value->place_id", OBJECT );
+			if ($year == '2024') {
+				$city_data = $wpdb->get_results( "SELECT * FROM 2024_city_data  WHERE place_id = $value->place_id", OBJECT );
+			} else {
+				$city_data = $wpdb->get_results( "SELECT * FROM 2025_city_data  WHERE place_id = $value->place_id", OBJECT );
+			}
 			$arr['population'] = $city_data[0]->city_pop;
 			$arr['home_value'] = $city_data[0]->avg_hom_val;
 			$arr['cat_name'] = $sortBy;
@@ -894,12 +903,12 @@ function load_more_bpm_posts() {
 			
 			<div class="bp24__card">
 			<div class="bp24__img-container" >
-			<a href="<?php echo get_the_permalink( $value['place_id']).'?top-100=2024'; ?>">
+			<a href="<?php echo get_the_permalink( $value['place_id']).'?top-100='.$year; ?>">
 			<?php echo get_the_post_thumbnail( $value['place_id'], 'medium'); ?>
 			</a>
 			</div>
 			<div class="bp24__text-container">
-			<a class="unstyle-link" href="<?php echo get_the_permalink( $value['place_id']).'?top-100=2024'; ?>">
+			<a class="unstyle-link" href="<?php echo get_the_permalink( $value['place_id']).'?top-100='.$year; ?>">
 			<h4 class="bp24__city"><?php echo $value['city']; ?></h4>
 			</a>
 			<p class="bp24__state"><?php echo $value['state']; ?></p>
@@ -907,7 +916,7 @@ function load_more_bpm_posts() {
 			<p>Region: <?php echo get_region_by_state_name($value['state']); ?></p>
 			<p>Population: <?php echo  number_format($value['population']); ?></p>
 			<p>Med. Home Value: $<?php echo number_format($value['home_value']); ?></p>
-			<p class="bp24__read-more"><a class="unstyle-link" href="<?php echo get_the_permalink( $value['place_id']).'?top-100=2024';  ?>">Read More</a></p>
+			<p class="bp24__read-more"><a class="unstyle-link" href="<?php echo get_the_permalink( $value['place_id']).'?top-100='.$year;  ?>">Read More</a></p>
 			</div>
 		</div>
 		<?php }
@@ -1692,19 +1701,29 @@ if ( ! function_exists('local_insights') ) {
 		}
 		// ad goes here. 
 		// die();
-		elseif ($_POST['year'] == '2024'):
+		else:
 		// else:
 			// print_r($_POST);
 			global $wpdb;
 			$sortBy = $_POST['cat'] ? $_POST['cat'] : 'livscore'; 
 			$_SESSION["bp23_cat"] = $sortBy;
+			$year = $_POST['year'];
 			// echo 'sort by '.$sortBy;
-			$results = $wpdb->get_results( "SELECT * FROM 2024_top_100  ORDER BY ".$sortBy." DESC", OBJECT );
+			if ($year == '2024') {
+				$results = $wpdb->get_results( "SELECT * FROM 2024_top_100  ORDER BY ".$sortBy." DESC", OBJECT );
+			} else {
+				$results = $wpdb->get_results( "SELECT * FROM 2025_top_100  ORDER BY ".$sortBy." DESC", OBJECT );
+			}
 			$bp24_array = array();
 			foreach ($results as $key => $value) { 
 				$arr = array(); // collect data to use in loop
 				// get population and home value from city data table
-				$city_data = $wpdb->get_results( "SELECT * FROM 2024_city_data  WHERE place_id = $value->place_id", OBJECT );
+				if ($year == '2024') {
+					$city_data = $wpdb->get_results( "SELECT * FROM 2024_city_data  WHERE place_id = $value->place_id", OBJECT );
+				} else {
+					$city_data = $wpdb->get_results( "SELECT * FROM 2025_city_data  WHERE place_id = $value->place_id", OBJECT );
+				}
+				
 				$arr['population'] = $city_data[0]->city_pop;
 				$arr['home_value'] = $city_data[0]->avg_hom_val;
 				$arr['cat_name'] = $sortBy;

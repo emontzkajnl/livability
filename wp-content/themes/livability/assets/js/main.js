@@ -874,7 +874,7 @@ $('.bp23-category-btn').on('click', function(){
       if (year == '2023') {
         
         $('.bp23-results').html(data);
-      } else if (year == '2024') {
+      } else { // year == 2024 or 2025
         $('.bp24__results').html(data);
       }
       
@@ -895,7 +895,7 @@ $('#region, #population, #home_value').on('change', function(e){
   
   // console.log('e ',e);
   const year = getBpYear();
-  if (year == '2024') {
+  if (year == '2024' || year == '2025') {
     window.params.bp23filters[e.target.parentElement.parentElement.id] = e.target.value;
   } else {
     window.params.bp23filters[e.target.id] = e.target.value;
@@ -1025,13 +1025,13 @@ function loadbp23() {
         if (typeof ga === "function") { 
           ga('send','pageview', newPage);
         }
-        if (typeof PARSELY !== 'undefined') {
-        PARSELY.beacon.trackPageView({
-          url: newPage,
-          urlref: href,
-          js: 1
-        });
-      }
+      //   if (typeof PARSELY !== 'undefined') {
+      //   PARSELY.beacon.trackPageView({
+      //     url: newPage,
+      //     urlref: href,
+      //     js: 1
+      //   });
+      // }
       }
       Waypoint.refreshAll();
     }
