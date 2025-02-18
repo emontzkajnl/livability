@@ -907,7 +907,6 @@ $('#region, #population, #home_value').on('change', function(e){
     e.target.classList.add("filtered");
   }
   const cat = $('.bp23-category-btn .active').data('cat');
-  // console.log('cat data is ',cat);
   const data = {
     action: "loadbp23",
     cat: cat,
@@ -923,7 +922,7 @@ $('#region, #population, #home_value').on('change', function(e){
       if (year == '2023') {
         $('.bp23-results').html(data);
         Waypoint.refreshAll();
-      } else if (year == '2024') {
+      } else {
         $('.bp24__results').html(data);
         bp24ScrollFixx();
         Waypoint.refreshAll();

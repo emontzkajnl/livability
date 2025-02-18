@@ -1703,7 +1703,6 @@ if ( ! function_exists('local_insights') ) {
 		// die();
 		else:
 		// else:
-			// print_r($_POST);
 			global $wpdb;
 			$sortBy = $_POST['cat'] ? $_POST['cat'] : 'livscore'; 
 			$_SESSION["bp23_cat"] = $sortBy;
@@ -1790,6 +1789,7 @@ if ( ! function_exists('local_insights') ) {
 				</div>
 			</div>
 			<?php }
+			echo 'end of list';
 			// die();
 		endif; // if year is 23 or 24
 		die();
