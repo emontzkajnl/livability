@@ -1789,7 +1789,6 @@ if ( ! function_exists('local_insights') ) {
 				</div>
 			</div>
 			<?php }
-			echo 'end of list';
 			// die();
 		endif; // if year is 23 or 24
 		die();
