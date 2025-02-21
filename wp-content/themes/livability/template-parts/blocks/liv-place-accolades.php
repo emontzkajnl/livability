@@ -7,7 +7,7 @@ $is_client = get_field('client_place');
 
 if ($is_client || $accolades):
     echo '<ul class="place-accolades">';
-    echo $is_client ? '<li class="place-accolades__client">Livability Partner</li>' : '';
+    echo $is_client ? '<li class="place-accolades__client"><a href="'.site_url('partner').'">Livability Partner</a></li>' : '';
     if ($accolades) {
         foreach($accolades as $a ) {
             $link = $a['link'];
