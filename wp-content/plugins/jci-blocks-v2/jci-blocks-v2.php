@@ -1050,12 +1050,18 @@ function jci_blocks_livscore_block() {
     $health = get_field('ls_health');
     $housing = get_field('ls_housing');
     $safety = get_field('ls_safety');
-    elseif (get_post_type( ) == 'liv_place'):
+    elseif (get_post_type( ) == 'liv_place'): // top 100 cities are no longer best places as of 2024
         global $wpdb;
         $id = get_the_ID();
         $title = get_the_title();
         $city_title = $title;
      $results = $wpdb->get_results( "SELECT * FROM 2024_top_100 WHERE place_id = $id", OBJECT );
+     if (!$results) {
+        $results = $wpdb->get_results( "SELECT * FROM 2025_top_100 WHERE place_id = $id", OBJECT );
+     }
+     if (!results) {
+        return; 
+     }
      $livscore = $results[0]->livscore;
      $amenities = $results[0]->amenities;
      $environment = $results[0]->environment;
@@ -1149,6 +1155,8 @@ foreach ($cat_array as $key => $cat) {
 
 $html .= '</div>';
     return $html; 
+    // return var_dump($results);
+
 }
 
 function jci_blocks_weather_block() {

@@ -18,7 +18,9 @@ while ( have_posts() ) :
 	
 	if (get_field('place_type') != 'state') {
 		// if 2024 top 100, show bp hero whether client or not
-		if (has_term('2024', 'best_places_years')) { 
+		$is_2024 = has_term('2024', 'best_places_years');
+		$is_2025 = has_term('2025', 'best_places_years');
+		if ($is_2024 || $is_2025) { 
 			$parent_id = wp_get_post_parent_id();
  			$byline =  get_field('img_byline',get_post_thumbnail_id());
 			$hero  = get_field('hero_section');
@@ -39,7 +41,7 @@ while ( have_posts() ) :
 					 
                     </div>
 					<div class="bp23-title-section">
-						<!-- logo here -->
+						<!-- TODO replace badge and maybe title for 2025 -->
 						<img class="bp23-badge-single" src="<?php echo get_stylesheet_directory_uri(  ); ?>/assets/images/2024Top100_badge_final.svg"/>
 						<?php echo '<h1 class="bp23-title">'.get_the_title().'<span><a href="'.site_url( '/best-places/2024-top-100-best-places-to-live-in-the-us/' ).'">Best Places to Live in the U.S. 2024-2025</a></span></h1>'; ?>
 						
