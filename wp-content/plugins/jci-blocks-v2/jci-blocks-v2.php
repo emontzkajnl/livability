@@ -1055,12 +1055,16 @@ function jci_blocks_livscore_block() {
         $id = get_the_ID();
         $title = get_the_title();
         $city_title = $title;
-     $results = $wpdb->get_results( "SELECT * FROM 2024_top_100 WHERE place_id = $id", OBJECT );
-     if (!$results) {
+        $is_2024 = has_term('2024', 'best_places_years');
+		$is_2025 = has_term('2025', 'best_places_years');
+        $results = null;
+     
+     if ($is_2025) {
         $results = $wpdb->get_results( "SELECT * FROM 2025_top_100 WHERE place_id = $id", OBJECT );
-     }
-     if (!results) {
-        return; 
+     } elseif ($is_2024) {
+        $results = $wpdb->get_results( "SELECT * FROM 2024_top_100 WHERE place_id = $id", OBJECT );
+     } else {
+        return '';
      }
      $livscore = $results[0]->livscore;
      $amenities = $results[0]->amenities;
