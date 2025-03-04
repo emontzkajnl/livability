@@ -42,6 +42,7 @@ if ( have_posts() ) {
 			),
 			(int) $wp_query->found_posts
 		);
+		// print_r($wp_query);
 		?>
 	</p></div><!-- .search-result-count -->
 			</div>
@@ -54,12 +55,13 @@ if ( have_posts() ) {
 	<?php
 	// Start the Loop.
 	// while ( have_posts() ) {
-	// 	the_post();
-
-	// 	get_template_part( 'template-parts/content/content-search');
-	// } 
-	 get_template_part( 'template-parts/content/content-search-test');
-	// echo do_shortcode('[ajax_load_more loading_style="infinite classic" repeater="template_3" post_type="any" posts_per_page="20" search="'.esc_html( get_search_query() ).'" scroll_distance="-200"]');
+		// the_post();
+		// get_template_part( 'template-parts/content/content-search');
+	
+	//  get_template_part( 'template-parts/content/content-search-test');
+	//  get_template_part( 'template-parts/content/content-excerpt', get_post_format() );
+	echo do_shortcode('[ajax_load_more loading_style="infinite classic" repeater="template_3" post_type="any" posts_per_page="20" search="'.esc_html( get_search_query() ).'" scroll_distance="-200"]');
+	// }
 	?>
 	</ul>
 	</div> <!-- column -->
@@ -72,6 +74,7 @@ if ( have_posts() ) {
 	//  twenty_twenty_one_the_posts_navigation();
 
 	// If no content, include the "No posts found" template.
+	
 } else {
 	get_template_part( 'template-parts/content/content-none' );
 }

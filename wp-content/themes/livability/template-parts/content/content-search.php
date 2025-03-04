@@ -34,6 +34,7 @@ switch ($type) {
 <?php _e(the_title('<h2>','</h2>'), 'livability'); 
 the_excerpt();
  ?>
+ </div>
 </a>
-</div>
+
 </li>
