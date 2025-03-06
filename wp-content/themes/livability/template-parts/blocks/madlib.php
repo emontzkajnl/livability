@@ -1,14 +1,16 @@
 <?php 
 
     $title = get_the_title(  );
-    $population = get_field('city_population');
-    $income = str_replace(',','', get_field('city_household_income'));
+    $ID = get_the_ID();
+    $city_data = $wpdb->get_results( "SELECT * FROM 2025_city_data  WHERE place_id = $ID", OBJECT );
+    $population = $city_data[0]->city_pop;
+    $income = str_replace(',','', $city_data[0]->avg_hou_inc);
     $income = intval($income);
-    $homeValue = str_replace(',','', get_field('city_home_value')); 
+    $homeValue = str_replace(',','', $city_data[0]->avg_hom_val); 
     $homeValue = intval($homeValue);
     $startOverLink = get_permalink( 18680);
     $gtkLink = get_permalink(19038);
-    $mymLink = get_permalink( 70453 );?>
+    $mymLink = get_permalink( 70453 ); ?>
 
     <p>Looking to move to <?php echo $title; ?>? You’ve come to the right place. Livability helps people find their perfect places to live, and we’ve got everything you need to know to decide if moving to <?php echo $title; ?> is right for you.</p>
 
