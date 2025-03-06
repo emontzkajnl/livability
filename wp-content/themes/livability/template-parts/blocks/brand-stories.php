@@ -44,10 +44,12 @@ $sponsors = get_posts($args);
         $sponsor_name = get_field('sponsor_name', $s); 
         $sponsor_url = get_field('sponsor_url', $s);  ?>
         <div class="brand-stories__card">
+            <div class="brand-stories__img-container">
             <a href="<?php echo get_the_permalink($s); ?>" class="brand-stories__img">
             <!-- <div style="background-image: url(<?php //echo get_the_post_thumbnail_url( $s,'rel_article' ); ?>); display: block;"></div> -->
-            <?php echo get_the_post_thumbnail( $s, 'rel_article', array('style' => 'height: auto;') ); ?>
+            <?php echo get_the_post_thumbnail( $s, 'full' ); ?>
             </a>
+        </div>
             <div class="brand-stories__title">
                 <h4><a href="<?php echo get_the_permalink($s); ?>"><?php echo get_the_title($s); ?></a></h4>
             </div>

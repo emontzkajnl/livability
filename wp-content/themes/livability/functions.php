@@ -1885,3 +1885,4 @@ function place_data_shortcode($atts, $content = null) {
 }
 
 add_shortcode( 'place_data', 'place_data_shortcode' );
+
