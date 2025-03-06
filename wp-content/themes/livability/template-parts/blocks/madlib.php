@@ -2,7 +2,7 @@
 
     $title = get_the_title(  );
     $ID = get_the_ID();
-    $city_data = $wpdb->get_results( "SELECT * FROM 2025_city_data  WHERE place_id = $ID", OBJECT );
+    $city_data = $wpdb->get_results( "SELECT * FROM 2024_city_data  WHERE place_id = $ID", OBJECT );
     $population = $city_data[0]->city_pop;
     $income = str_replace(',','', $city_data[0]->avg_hou_inc);
     $income = intval($income);
