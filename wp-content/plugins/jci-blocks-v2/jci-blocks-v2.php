@@ -240,6 +240,7 @@ function return_breadcrumbs() {
 
 
  function jci_blocks_render_quick_facts() {
+    global $wpdb;
      $ID = get_the_id();
      $post_type = get_post_type( );
      if (get_field('hide_facts', $ID) == true) {
@@ -249,35 +250,62 @@ function return_breadcrumbs() {
      $is_child = wp_get_post_parent_id($ID) > 0;
     $data = get_field('state_data');
     // $test = 'is this a block?';
-    $html;
+    $html = '';
     // if ($data) {
         // $householdIncome = intval(get_field('state_household_income')); 
-        $householdIncome = str_replace(',','',get_field('state_household_income')); 
-        $householdIncome = intval($householdIncome);
-        $propTax = get_field('state_property_tax');
-        $statePop = str_replace(',','',get_field('state_population'));
-        $statePop = intval($statePop);
-        $stateSun = get_field('state_sunshine');
-        $salesTax = get_field('state_sales_tax');
-        $incomeTax = get_field('state_income_tax');
-        $commute = get_field('city_commute'); 
-        $cityHomeValue = str_replace(',','',get_field('city_home_value')); 
-        $cityHomeValue = intval($cityHomeValue); 
-        $cityHouseholdIncome = str_replace(',','',get_field('city_household_income'));
-        $cityHouseholdIncome = intval($cityHouseholdIncome); 
-        $cityPopulation = str_replace(',','',get_field('city_population'));
-        $cityPopulation = intval($cityPopulation);
-        $cityWalkScore = get_field('city_walk_score');  
-        $cityPropTax = str_replace(',','',get_field('city_property_tax')); 
-        $cityPropTax = intval($cityPropTax);
+        if ($is_child) { // city page
+            $results = $wpdb->get_results( "SELECT * FROM 2025_city_data  WHERE place_id = $ID", OBJECT );
+            if ($results) {
+                $cityHomeValue = $results[0]->avg_hom_val;
+                $cityPropTax = $results[0]->avg_pro_tax;
+                $cityPopulation = $results[0]->city_pop;
+                $avg_com = $results[0]->avg_com;
+                $avg_hou_inc = $results[0]->avg_hou_inc;
+                $avg_rent = $results[0]->avg_rent;
+            } else {
+                $commute = get_field('city_commute'); 
+                $cityHomeValue = str_replace(',','',get_field('city_home_value')); 
+                $cityHomeValue = intval($cityHomeValue); 
+                $cityHouseholdIncome = str_replace(',','',get_field('city_household_income'));
+                $cityHouseholdIncome = intval($cityHouseholdIncome); 
+                $cityPopulation = str_replace(',','',get_field('city_population'));
+                $cityPopulation = intval($cityPopulation);
+                $cityWalkScore = get_field('city_walk_score');  
+                $cityPropTax = str_replace(',','',get_field('city_property_tax')); 
+                $cityPropTax = intval($cityPropTax);
+            }
+        } else { // state page
+            $results = $wpdb->get_results( "SELECT * FROM 2025_state_data  WHERE place_id = $ID", OBJECT );
+            if ($results) {
+                $householdIncome = $results[0]->avg_hou_inc;
+                $propTax = $results[0]->avg_pro_tax;
+                $statePop = $results[0]->state_pop;
+                $salesTax = $results[0]->sales_tax;
+                $incomeTax = $results[0]->state_inc_tax;
+                $stateRent = $results[0]->avg_rent;
+            } else { // fallback to custom fields
+                $householdIncome = str_replace(',','',get_field('state_household_income')); 
+                $householdIncome = intval($householdIncome);
+                $propTax = get_field('state_property_tax');
+                $propTax = number_format($propTax);
+                $statePop = str_replace(',','',get_field('state_population'));
+                $statePop = intval($statePop);
+                $stateSun = get_field('state_sunshine');
+                $salesTax = get_field('state_sales_tax');
+                $incomeTax = get_field('state_income_tax');
+            }
+        }
+       
+
         // if (!$diversityIndex && !$householdIncome && !$propTax && !$homeValue) { return NULL;}
-        $html = '<div class="quick-facts-block"><h3 class="qf-title">Quick Facts</h3><dl>';
-        $html .= $householdIncome ? '<div><dt>Average Household Income</dt><dd>$'.number_format($householdIncome).'</dd></div>' : '';
-        $html .= $propTax ? '<div><dt>Average Property Tax</dt><dd>$'.number_format($propTax).'</dd></div>' : '';
-        $html .= $statePop ? '<div><dt>State Population</dt><dd>'.number_format($statePop).'</dd></div>' : '';
+        $html .= '<div class="quick-facts-2-block"><h3 class="qf-title">Quick Facts about '.get_the_title().'</h3><dl>';
+        $html .= $householdIncome ? '<div class="avg-inc"><dt>Average Household Income</dt><dd>$'.number_format($householdIncome).'</dd></div>' : '';
+        $html .= $propTax ? '<div class="prop-tax"><dt>Average Property Tax</dt><dd>$'.$propTax.'</dd></div>' : '';
+        $html .= $statePop ? '<div class="city-pop"><dt>State Population</dt><dd>'.number_format($statePop).'</dd></div>' : '';
         // $html .= $stateSun ? '<div><dt>Average Property Tax</dt><dd>$'.$stateSun.'</dd></div>' : '';
-        $html .= $salesTax ? '<div><dt>Sales Tax</dt><dd>'.$salesTax.'%</dd></div>' : '';
-        $html .= $incomeTax ? '<div><dt>State Income Tax</dt><dd>'.$incomeTax.'</dd></div>' : '';
+        $html .= $salesTax ? '<div class="avg-inc"><dt>Sales Tax</dt><dd>'.$salesTax.'%</dd></div>' : '';
+        $html .= $incomeTax ? '<div class="avg-inc"><dt>State Income Tax</dt><dd>'.$incomeTax.'</dd></div>' : '';
+        $html .= $stateRent ? '<div class="avg-rent"><dt>Median Monthly Rent</dt><dd>'.$stateRent.'</dd></div>' : '';
         $html .= $commute ? '<div><dt>Average Commute</dt><dd>'.$commute.' minutes</dd></div>' : '';
         $html .= $cityHomeValue ? '<div><dt>Median Home Value</dt><dd>$'.number_format($cityHomeValue).'</dd></div>' : '';
         $html .= $cityHouseholdIncome ? '<div><dt>Median Household Income</dt><dd>$'.number_format($cityHouseholdIncome).'</dd></div>' : '';
@@ -287,7 +315,6 @@ function return_breadcrumbs() {
         $html .= '</dl></div>';
         $html .= $is_child ? '<p class="widget-link"><a href="'.site_url( 'city-data-widget?cityid=' ).$ID.'">Display these facts on your site.</a></p>' : '';
     else: // used for 2023 best places only
-        $html;
         $place = get_field('place_relationship');
         foreach ($place as $p) {
             if (get_field('place_type', $p) == 'city') {
@@ -306,7 +333,7 @@ function return_breadcrumbs() {
         $cityRent = intval($cityRent);
         $commute = get_field('city_commute', $city_id); 
 
-        $html = '<h3>Quick Facts About '.get_the_title($city_id).'</h3>';
+        $html .= '<h3>Quick Facts About '.get_the_title($city_id).'</h3>';
         $html .= '<dl class="bp23qf">';
         $html .= '<div class="bp23qf__col1">';
             $html .= '<div class="bp23qf__income">';
@@ -346,6 +373,10 @@ function return_breadcrumbs() {
         
     endif;
      return $html;
+ }
+
+ function jci_blocks_render_state_quick_facts() {
+    $results = $wpdb->get_results( "SELECT * FROM 2024_state_data  ", OBJECT );
  }
 
  function jci_blocks_render_content_card_block(  $attributes ) {
@@ -1377,7 +1408,12 @@ function jci_blocks_magazine_brand_stories() {
 function jci_blocks_content_weather_block() {
     $id = get_the_ID();
     global $wpdb; 
-    $results = $wpdb->get_results( "SELECT * FROM 2024_city_data WHERE place_id = $id", OBJECT );
+    if (has_post_parent( $id )) {
+        $results = $wpdb->get_results( "SELECT * FROM 2024_city_data WHERE place_id = $id", OBJECT );
+    } else {
+        $results = $wpdb->get_results( "SELECT * FROM 2025_state_data WHERE place_id = $id", OBJECT );
+    }
+    
 
     $high = $results[0]->avg_high_temp;
     $low = $results[0]->avg_low_temp;

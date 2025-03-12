@@ -64,7 +64,8 @@ $topic_args = array(
 	<div class="entry-content">
         <div class="wp-block-columns full-width-white">
             <div class="wp-block-column">
-                <?php get_template_part( 'template-parts/blocks/ad-one' ); ?>
+                <?php get_template_part( 'template-parts/blocks/ad-one' ); 
+                get_template_part('template-parts/blocks/city-301'); ?>
             </div>
         </div>
 <div class="place-column__parent">
@@ -131,9 +132,7 @@ $topic_args = array(
             <div class="wp-block-column">
             <?php 
             get_template_part( 'template-parts/blocks/brand-stories', null, array('city' => $city_name, 'state' => $state_name, 'posts' => $brands_array) );
-            // if (!get_field('client_place') && !get_field('non-client_city_with_content')) {
                 get_template_part( 'template-parts/blocks/weather', null, array('city' => $city_name, 'abbv' => $state_abbv) );
-            // }
             
             if (!$hide_facts) {
                 get_template_part( 'template-parts/blocks/quick-facts-2', null, array('city' => $city_name, 'state' => $state_name  ) ); 
