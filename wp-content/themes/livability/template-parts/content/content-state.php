@@ -134,9 +134,9 @@ $topic_args = array(
             get_template_part( 'template-parts/blocks/brand-stories', null, array('city' => $city_name, 'state' => $state_name, 'posts' => $brands_array) );
                 get_template_part( 'template-parts/blocks/weather', null, array('city' => $city_name, 'abbv' => $state_abbv) );
             
-            if (!$hide_facts) {
-                get_template_part( 'template-parts/blocks/quick-facts-2', null, array('city' => $city_name, 'state' => $state_name  ) ); 
-            }
+            // if (!$hide_facts) {
+            //     get_template_part( 'template-parts/blocks/quick-facts-2', null, array('city' => $city_name, 'state' => $state_name  ) ); 
+            // }
             ?>
             </div>
         </div>
