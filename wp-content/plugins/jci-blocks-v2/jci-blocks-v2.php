@@ -243,9 +243,9 @@ function return_breadcrumbs() {
     global $wpdb;
      $ID = get_the_id();
      $post_type = get_post_type( );
-     if (get_field('hide_facts', $ID) == true) {
-        return null;
-     }
+    //  if (get_field('hide_facts', $ID) == true) {
+    //     return null;
+    //  }
      if ($post_type == 'liv_place'): // used on places only
      $is_child = wp_get_post_parent_id($ID) > 0;
     $data = get_field('state_data');
@@ -259,8 +259,8 @@ function return_breadcrumbs() {
                 $cityHomeValue = $results[0]->avg_hom_val;
                 $cityPropTax = $results[0]->avg_pro_tax;
                 $cityPopulation = $results[0]->city_pop;
-                $avg_com = $results[0]->avg_com;
-                $avg_hou_inc = $results[0]->avg_hou_inc;
+                $commute = $results[0]->avg_com;
+                $cityHouseholdIncome = $results[0]->avg_hou_inc;
                 $avg_rent = $results[0]->avg_rent;
             } else {
                 $commute = get_field('city_commute'); 
@@ -306,12 +306,13 @@ function return_breadcrumbs() {
         $html .= $salesTax ? '<div class="avg-inc"><dt>Sales Tax</dt><dd>'.$salesTax.'%</dd></div>' : '';
         $html .= $incomeTax ? '<div class="avg-inc"><dt>State Income Tax</dt><dd>'.$incomeTax.'</dd></div>' : '';
         $html .= $stateRent ? '<div class="avg-rent"><dt>Median Monthly Rent</dt><dd>'.$stateRent.'</dd></div>' : '';
-        $html .= $commute ? '<div><dt>Average Commute</dt><dd>'.$commute.' minutes</dd></div>' : '';
-        $html .= $cityHomeValue ? '<div><dt>Median Home Value</dt><dd>$'.number_format($cityHomeValue).'</dd></div>' : '';
-        $html .= $cityHouseholdIncome ? '<div><dt>Median Household Income</dt><dd>$'.number_format($cityHouseholdIncome).'</dd></div>' : '';
-        $html .= $cityPopulation ? '<div><dt>Total Population</dt><dd>'.number_format($cityPopulation).'</dd></div>' : '';
+        $html .= $commute ? '<div class="avg-com"><dt>Average Commute</dt><dd>'.$commute.' minutes</dd></div>' : '';
+        $html .= $cityHomeValue ? '<div class="prop-tax"><dt>Median Home Value</dt><dd>$'.number_format($cityHomeValue).'</dd></div>' : '';
+        $html .= $cityHouseholdIncome ? '<div class="avg-inc"><dt>Median Household Income</dt><dd>$'.number_format($cityHouseholdIncome).'</dd></div>' : '';
+        $html .= $cityPopulation ? '<div class="city-pop"><dt>Total Population</dt><dd>'.number_format($cityPopulation).'</dd></div>' : '';
         $html .= $cityWalkScore ? '<div><dt>Walk Score</dt><dd>'.$cityWalkScore.'</dd></div>' : '';
-        $html .= $cityPropTax ? '<div><dt>Median Property Tax</dt><dd>$'.number_format($cityPropTax).'</dd></div>' : '';
+        $html .= $cityPropTax ? '<div class="avg-inc"><dt>Median Property Tax</dt><dd>$'.number_format($cityPropTax).'</dd></div>' : '';
+        $html .= $avg_rent ? '<div class="avg-rent"><dt>Median Monthly Rent</dt><dd>$'.number_format($avg_rent).'</dd></div>' : '';
         $html .= '</dl></div>';
         $html .= $is_child ? '<p class="widget-link"><a href="'.site_url( 'city-data-widget?cityid=' ).$ID.'">Display these facts on your site.</a></p>' : '';
     else: // used for 2023 best places only
