@@ -1,7 +1,6 @@
 *** Yoast SEO premium Changelog ***
 
 
-2024-10-08 - version 23.6
-* update -  Sets the minimum supported WordPress version to 6.5.
-* update -  Bumps the minimum required version of Yoast SEO to 23.6.
+2025-03-18 - version 24.7
+* fix -  Fixes a bug where the help beacon would be displayed over table pagination on Yoast admin pages.
 
