@@ -416,6 +416,22 @@
           right: calc(50% - 25px);
         }
       }
+      .state-inc {
+        &:before {
+          background-image: url("./assets/images/placev2-qf-icons/state-income-tax.svg");
+          height: 47px;
+          width: 49px;
+          right: calc(50% - 25px);
+        }
+      }
+      .state-sales {
+        &:before {
+          background-image: url("./assets/images/placev2-qf-icons/state-sales-tax.svg");
+          height: 47px;
+          width: 49px;
+          right: calc(50% - 25px);
+        }
+      }
       .avg-rent {
         &:before {
           background-image: url("./assets/images/placev2-qf-icons/calendar.svg");

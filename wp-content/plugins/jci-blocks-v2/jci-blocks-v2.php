@@ -303,8 +303,8 @@ function return_breadcrumbs() {
         $html .= $propTax ? '<div class="prop-tax"><dt>Average Property Tax</dt><dd>$'.$propTax.'</dd></div>' : '';
         $html .= $statePop ? '<div class="city-pop"><dt>State Population</dt><dd>'.number_format($statePop).'</dd></div>' : '';
         // $html .= $stateSun ? '<div><dt>Average Property Tax</dt><dd>$'.$stateSun.'</dd></div>' : '';
-        $html .= $salesTax ? '<div class="avg-inc"><dt>Sales Tax</dt><dd>'.$salesTax.'%</dd></div>' : '';
-        $html .= $incomeTax ? '<div class="avg-inc"><dt>State Income Tax</dt><dd>'.$incomeTax.'</dd></div>' : '';
+        $html .= $salesTax ? '<div class="state-sales"><dt>Sales Tax</dt><dd>'.$salesTax.'%</dd></div>' : '';
+        $html .= $incomeTax ? '<div class="state-inc"><dt>State Income Tax</dt><dd>'.$incomeTax.'</dd></div>' : '';
         $html .= $stateRent ? '<div class="avg-rent"><dt>Median Monthly Rent</dt><dd>'.$stateRent.'</dd></div>' : '';
         $html .= $commute ? '<div class="avg-com"><dt>Average Commute</dt><dd>'.$commute.' minutes</dd></div>' : '';
         $html .= $cityHomeValue ? '<div class="prop-tax"><dt>Median Home Value</dt><dd>$'.number_format($cityHomeValue).'</dd></div>' : '';
