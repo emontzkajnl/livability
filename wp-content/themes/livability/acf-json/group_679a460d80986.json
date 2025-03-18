@@ -49,6 +49,7 @@
                 "things": "Things to Do",
                 "unique": "Unique",
                 "visit": "Visit",
+                "weather": "Weather",
                 "work": "Work"
             },
             "default_value": false,
@@ -108,5 +109,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1738767906
+    "modified": 1742332941
 }

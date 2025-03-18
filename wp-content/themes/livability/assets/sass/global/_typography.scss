@@ -143,6 +143,11 @@ h5,
         background-image: url('./assets/images/subheading-icons/work.svg');
       }
     }
+    &.weather {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/weather.svg');
+      }
+    }
   }
   &__line {
     display: block;
