@@ -37,20 +37,59 @@ class JCI_Place extends Abstract_Schema_Piece {
         $canonical = YoastSEO()->meta->for_current_page()->canonical;
 		$post_id = YoastSEO()->meta->for_current_page()->post_id;
 		$type = get_field('place_type');
+		$data = [];
 
-		$data          = array(
-			'@type'            => $type,
-			'@id'              => $this->context->canonical,
-            'name'              => the_title_attribute( array( 'echo' => false ) ),
-			'description'		=> get_the_excerpt( $post_id )
-		);
-		// $data = apply_filters( 'be_review_schema_data', $data, $this->context );
-        // $data['mainEntityOfPage'] = [ '@id' => $canonical ];
-		if (has_post_parent( $post_id )) {
-			$parentLink = get_the_permalink( get_post_parent( $post_id) );
-			$data[ 'containedInPlace'] = $parentLink;
+		if ($type == 'city') {
+			$state = get_post_parent();
+			$abbv = $state->post_name;
+			$latitude = get_post_meta(get_the_ID(), 'jci-latitude', true);
+			$longitude = get_post_meta(get_the_ID(), 'jci-longitude', true);
+			$data = array(
+				'@type'			=> $type,
+				'name'			=> substr(get_the_title($post_id), 0, -4),
+				'address'		=> array(
+					'@type'				=> 'PostalAddress',
+					'addressLocality'	=> substr(get_the_title($post_id), 0, -4),
+					'addressRegion'		=> strtoupper($abbv),
+					'addressCountry'	=> 'US'
+				),
+				'geo'			=> array(
+					'@type'				=> 'GeoCoordinates',
+					'latitude'			=> $latitude,
+					'longitude'			=> $longitude,
+				),
+				'containedInPlace'	=> array(
+					'@type'				=> 'State',
+					'name'				=> $state->post_title,
+					'address'			=> array(
+						'@type'				=> 'PostalAddress',
+						'addressRegion'		=> strtoupper($abbv),
+						'addressCountry'	=> 'US'
+					),
+				),
+				'description'	=> get_the_excerpt( $post_id ),
+			);
+		} elseif ($type == 'state' ) {
+			$latitude = get_post_meta(get_the_ID(), 'jci-latitude', true);
+			$longitude = get_post_meta(get_the_ID(), 'jci-longitude', true);
+			$abbv = get_post()->post_name;
+			$data = array(
+				'@type'			=> $type,
+				'name'			=> get_the_title(),
+				'address'			=> array(
+					'@type'				=> 'PostalAddress',
+					'addressRegion'		=> strtoupper($abbv),
+					'addressCountry'	=> 'US'
+				),
+				'geo'			=> array(
+					'@type'				=> 'GeoCoordinates',
+					'latitude'			=> $latitude,
+					'longitude'			=> $longitude,
+				),
+				'description'	=> get_the_excerpt( $post_id ),
+			);
+
 		}
-
 		return $data;
 	}
 
