@@ -48,7 +48,6 @@ class JCI_Place extends Abstract_Schema_Piece {
 				$latitude = get_post_meta(get_the_ID(), 'jci-latitude', true);
 				$longitude = get_post_meta(get_the_ID(), 'jci-longitude', true);
 				$data = array(
-					'test'			=> 'shouldBePlace',
 					'@type'			=> $type,
 					'name'			=> substr(get_the_title($post_id), 0, -4),
 					'address'		=> array(
@@ -78,7 +77,6 @@ class JCI_Place extends Abstract_Schema_Piece {
 				$longitude = get_post_meta(get_the_ID(), 'jci-longitude', true);
 				$abbv = get_post()->post_name;
 				$data = array(
-					'test'			=> 'shouldBePlace',
 					'@type'			=> $type,
 					'name'			=> get_the_title(),
 					'address'			=> array(
