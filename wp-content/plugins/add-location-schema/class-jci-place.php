@@ -122,7 +122,7 @@ class JCI_Place extends Abstract_Schema_Piece {
 						'name'					=> $name,
 						'address'				=> array(
 							'@type'				=> 'PostalAddress',
-							'addressRegion'		=> $abbv,
+							'addressRegion'		=> strtoupper($abbv),
 							'addressCountry'	=> 'US'
 						)
 					)
