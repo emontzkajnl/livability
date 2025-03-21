@@ -11,18 +11,22 @@ if( !empty($block['className']) ) {
 
 $heading = get_field('heading');
 $icon = get_field('icon');
-$link = get_field('menu_link');
+$show = get_field('show_in_menu');
+// $link = get_field('menu_link');
 //echo 'label is '.$link['label'];
-$link_id = $link_title = '';
+// $link_id = $link_title = '';
 // $link = get_field('menu_link') ? 'id="'.get_field('menu_link').'"' : ''; 
-if ($link) {
-    $icon .= ' lpsh';
-    $link_id = 'id="'.$link['value'].'"';
-    $link_title = 'data-title="'.$link['label'].'"';
+if ($icon) {
+    $icon_class = $icon['value'].' lpsh';
+    // $link_id = 'id="'.$link['value'].'"';
+    // $link_title = 'data-title="'.$link['label'].'"';
 }
-
+$link_id = $show ? 'id="'.$icon['value'].'"' : '';
+$link_title = $show ? 'data-title="'.$icon['label'].'"' : '';
+echo 'icon label is '.$icon['label'].' and id is '.$link_id;
+echo $show ? '<br />show is true' : '<br />show is false';
 ?>
 <div class="place-section-heading">
-<?php echo '<h2 class="'.esc_attr($icon).'" '.$link_id.' '.$link_title.'>'.$heading.'</h2>'; ?>
+<?php echo '<h2 class="'.esc_attr($icon_class).'" '.$link_id.' '.$link_title.'>'.$heading.'</h2>'; ?>
 <span class="place-section-heading__line"></span>
 </div>

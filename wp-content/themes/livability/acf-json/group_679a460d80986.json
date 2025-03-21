@@ -25,7 +25,7 @@
         },
         {
             "key": "field_679b92331896a",
-            "label": "Icon",
+            "label": "Icon\/Menu Link",
             "name": "icon",
             "aria-label": "",
             "type": "select",
@@ -38,22 +38,22 @@
                 "id": ""
             },
             "choices": {
+                "business": "Business Climate",
                 "economy": "Economy",
                 "healthcare": "Healthcare",
-                "live": "Live",
+                "live": "Where to Live",
                 "location": "Location",
-                "outdoor": "Outdoor",
-                "play": "Play",
+                "outdoor": "Outdoors",
                 "restaurants": "Restaurants",
-                "schools": "Schools",
+                "schools": "Eduction",
                 "things": "Things to Do",
-                "unique": "Unique",
+                "unique": "What’s Unique",
                 "visit": "Visit",
                 "weather": "Weather",
-                "work": "Work"
+                "work": "Careers"
             },
             "default_value": false,
-            "return_format": "value",
+            "return_format": "array",
             "multiple": 0,
             "allow_null": 0,
             "allow_in_bindings": 0,
@@ -62,11 +62,11 @@
             "placeholder": ""
         },
         {
-            "key": "field_67a1428529fd5",
-            "label": "Menu Link",
-            "name": "menu_link",
+            "key": "field_67dd92cb0cdd9",
+            "label": "Show in Menu?",
+            "name": "show_in_menu",
             "aria-label": "",
-            "type": "select",
+            "type": "true_false",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -75,20 +75,12 @@
                 "class": "",
                 "id": ""
             },
-            "choices": {
-                "where": "Where",
-                "economy": "Economy",
-                "unique": "Unique",
-                "todo": "Things To Do"
-            },
-            "default_value": false,
-            "return_format": "array",
-            "multiple": 0,
-            "allow_null": 1,
+            "message": "",
+            "default_value": 1,
             "allow_in_bindings": 0,
             "ui": 0,
-            "ajax": 0,
-            "placeholder": ""
+            "ui_on_text": "",
+            "ui_off_text": ""
         }
     ],
     "location": [
@@ -109,5 +101,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1742332941
+    "modified": 1742575837
 }
