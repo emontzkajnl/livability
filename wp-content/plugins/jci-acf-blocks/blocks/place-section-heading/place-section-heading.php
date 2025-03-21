@@ -23,8 +23,8 @@ if ($icon) {
 }
 $link_id = $show ? 'id="'.$icon['value'].'"' : '';
 $link_title = $show ? 'data-title="'.$icon['label'].'"' : '';
-echo 'icon label is '.$icon['label'].' and id is '.$link_id;
-echo $show ? '<br />show is true' : '<br />show is false';
+// echo 'icon label is '.$icon['label'].' and id is '.$link_id;
+// echo $show ? '<br />show is true' : '<br />show is false';
 ?>
 <div class="place-section-heading">
 <?php echo '<h2 class="'.esc_attr($icon_class).'" '.$link_id.' '.$link_title.'>'.$heading.'</h2>'; ?>
