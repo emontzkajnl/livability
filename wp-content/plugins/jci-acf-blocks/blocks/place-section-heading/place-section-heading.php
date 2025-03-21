@@ -11,7 +11,6 @@ if( !empty($block['className']) ) {
 
 $heading = get_field('heading');
 $icon = get_field('icon');
-$show = get_field('show_in_menu');
 $hide = get_field('hide_in_menu');
 // $link = get_field('menu_link');
 //echo 'label is '.$link['label'];

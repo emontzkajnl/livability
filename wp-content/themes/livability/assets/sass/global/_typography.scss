@@ -83,7 +83,7 @@ h5,
       left: -50px;
       top: -5px;
     }
-    &.economy {
+    &.economy, &.business {
       &:before {
         background-image: url('./assets/images/subheading-icons/economy.svg');
       }
