@@ -62,9 +62,9 @@
             "placeholder": ""
         },
         {
-            "key": "field_67dd92cb0cdd9",
-            "label": "Show in Menu?",
-            "name": "show_in_menu",
+            "key": "field_67ddc230e7006",
+            "label": "Hide in Menu?",
+            "name": "hide_in_menu",
             "aria-label": "",
             "type": "true_false",
             "instructions": "",
@@ -76,7 +76,7 @@
                 "id": ""
             },
             "message": "",
-            "default_value": 1,
+            "default_value": 0,
             "allow_in_bindings": 0,
             "ui": 0,
             "ui_on_text": "",
@@ -101,5 +101,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1742575837
+    "modified": 1742586723
 }

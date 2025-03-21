@@ -11,9 +11,11 @@
       list = '';
       headings.each(function(i,h){
         // console.log('heading ',$(h).attr('id'));
+        if (typeof $(h).data('title') !== 'undefined') {
         const hid =  $(h).attr('id');
         const htitle = $(h).data('title');
         list += `<li><a href="#${hid}">${htitle}</a></li>`;
+        }
        });
        console.log(list);
        $(list).insertAfter(secondList);

@@ -12,6 +12,7 @@ if( !empty($block['className']) ) {
 $heading = get_field('heading');
 $icon = get_field('icon');
 $show = get_field('show_in_menu');
+$hide = get_field('hide_in_menu');
 // $link = get_field('menu_link');
 //echo 'label is '.$link['label'];
 // $link_id = $link_title = '';
@@ -21,8 +22,8 @@ if ($icon) {
     // $link_id = 'id="'.$link['value'].'"';
     // $link_title = 'data-title="'.$link['label'].'"';
 }
-$link_id = $show ? 'id="'.$icon['value'].'"' : '';
-$link_title = $show ? 'data-title="'.$icon['label'].'"' : '';
+$link_id = $hide ? '' : 'id="'.$icon['value'].'"';
+$link_title = $hide ? '' : 'data-title="'.$icon['label'].'"';
 // echo 'icon label is '.$icon['label'].' and id is '.$link_id;
 // echo $show ? '<br />show is true' : '<br />show is false';
 ?>
