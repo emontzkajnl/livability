@@ -18,7 +18,7 @@ class JCI_Place extends Abstract_Schema_Piece {
 	 */
 	public function is_needed() {
 
-		if( is_singular( ['post', 'liv_place'] )) {
+		if( is_singular( ['post', 'liv_place'] ) && get_field('place_relationship')) {
 				return true;
 		}
 		return false;
@@ -98,7 +98,6 @@ class JCI_Place extends Abstract_Schema_Piece {
 		} else { // is article
 
 			$place = get_field('place_relationship');
-			if (!$place) {return;}
 			$place = $place[0];
 			
 			$type = get_field('place_type', $place);
