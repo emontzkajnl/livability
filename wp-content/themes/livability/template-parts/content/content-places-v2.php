@@ -56,6 +56,7 @@ $topic_args = array(
     $hide_map = true;
    }
    $hide_facts = get_field('hide_facts');
+   $hide_weather = get_field('hide_weather');
 //    print_r($parent_obj);
 
 ?>
@@ -79,8 +80,9 @@ $topic_args = array(
         <li><a href="#economy">Economy</a></li>
         <?php endif; 
         echo count($brands_array) > 0 ? '<li><a href="#brands-to-know">Brands to Know</a></li>' : '';
+        echo $hide_weather ? '' : '<li><a href="#weather">Weather</a></li>'; 
         ?>
-        <li><a href="#weather">Weather</a></li>
+        
         <?php echo $hide_facts ? '' : '<li><a href="#quick-facts">Quick Facts</a></li>'; ?>
         <?php if (!$hide_map) { echo '<li><a href="#map">Map</a></li>'; } ?>
         <?php 
@@ -145,9 +147,11 @@ $topic_args = array(
             <div class="wp-block-column">
             <?php get_template_part( 'template-parts/blocks/top-100-carousel-24');
             get_template_part( 'template-parts/blocks/brand-stories', null, array('city' => $city_name, 'state' => $state_name, 'posts' => $brands_array) );
-            // if (!get_field('client_place') && !get_field('non-client_city_with_content')) {
+
+            if (!get_field('hide_weather')) {
                 get_template_part( 'template-parts/blocks/weather', null, array('city' => $city_name, 'abbv' => $state_abbv) );
-            // }
+            }
+            
             
             if (!$hide_facts) {
                 get_template_part( 'template-parts/blocks/quick-facts-2', null, array('city' => $city_name, 'state' => $state_name  ) ); 

@@ -98,7 +98,7 @@ class JCI_Place extends Abstract_Schema_Piece {
 		} else { // is article
 
 			$place = get_field('place_relationship');
-			// if (!$place) {return;}
+			if (!$place) {return;}
 			$place = $place[0];
 			
 			$type = get_field('place_type', $place);
