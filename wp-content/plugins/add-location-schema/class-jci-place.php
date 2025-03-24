@@ -18,10 +18,13 @@ class JCI_Place extends Abstract_Schema_Piece {
 	 */
 	public function is_needed() {
 
-		if( is_singular( ['post', 'liv_place'] ) && get_field('place_relationship')) {
+		if( is_singular( 'liv_place' ) ) {
 				return true;
+		} elseif ( is_singular( 'post' ) && get_field('place_relationship', get_the_ID())) {
+			return true; 
+		} else {
+			return false;
 		}
-		return false;
 	}
 
     public function __construct( WPSEO_Schema_Context $context ) {
