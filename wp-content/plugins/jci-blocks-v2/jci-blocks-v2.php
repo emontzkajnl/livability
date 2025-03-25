@@ -55,6 +55,7 @@ function create_block_jci_blocks_v2_block_init() {
     register_block_type( __DIR__ . '/build/internally-promoted', array('render_callback' => 'jci_blocks_internally_promoted'));
     register_block_type( __DIR__ . '/build/bp-301', array('render_callback' => 'jci_blocks_bp_301'));
     register_block_type( __DIR__ . '/build/magazine-brand-stories', array('render_callback' => 'jci_blocks_magazine_brand_stories'));
+    register_block_type( __DIR__ . '/build/largest-cities', array('render_callback' => 'jci_blocks_largest_cities'));
 }
 add_action( 'init', 'create_block_jci_blocks_v2_block_init' );
 
@@ -1430,3 +1431,19 @@ function jci_blocks_content_weather_block() {
     return $html;
     endif; 
 }
+
+function jci_blocks_largest_cities() {
+    global $wpdb;
+    $state = get_the_title();
+    $html = '<ul class="liv-table">';
+    $results = $wpdb->get_results( "SELECT city, city_pop, state FROM 2025_city_data WHERE state='$state' ORDER BY city_pop DESC", ARRAY_A);
+    $results = array_slice($results, 0, 12);
+    foreach ($results as $r) {
+        $html .= '<li><span class="table-key">'.substr($r['city'],0, -4).'</span><span class="table-value">'.number_format($r['city_pop']).'</span></li>';
+    }
+    $html .= '</ul>';
+    return $html;
+}
+
+// ¶  ‡ ‡
+

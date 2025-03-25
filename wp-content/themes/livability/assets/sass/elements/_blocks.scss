@@ -3208,6 +3208,29 @@ border-bottom: 1px solid $green;
   }
 }
 
+.liv-table {
+ padding-left: 0;
+  li {
+    list-style: none;
+    margin: 0 20px;
+    padding: 5px 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    font-size: 1rem;
+    border-bottom: 1px dotted #000;
+  }
+  .table-key {
+    display: block;
+  }
+  .table-value {
+    text-align: right;
+    display: block;
+    flex-shrink: 0;
+  }
+}
+
 @media screen and (max-width: 480px) {
 
   .cc-cta-container {
@@ -3645,6 +3668,7 @@ border-bottom: 1px solid $green;
       }
     }
   }
+
 }
 @media screen and (min-width: 782px) {
   .home-vids .wp-block-column:not(:first-child) {
@@ -3653,6 +3677,9 @@ border-bottom: 1px solid $green;
 }
 
 @media screen and (min-width: 960px) {
+  .liv-table {
+    columns: 2;
+  }
   .bp24 {
     &__card {
       width: calc(33% - 30px);
@@ -4081,9 +4108,12 @@ border-bottom: 1px solid $green;
       columns: 6;
     }
   }
- 
+
 }
 @media screen and (min-width: 1150px) {
+  .liv-table {
+    columns: 3;
+  }
   .bp24 {
     &__card {
       width: calc(25% - 30px);

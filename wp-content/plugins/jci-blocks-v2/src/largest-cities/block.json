@@ -1,0 +1,13 @@
+{
+	"apiVersion": 2,
+	"name": "jci-blocks/largest-cities",
+	"version": "0.1.0",
+	"title": "Largest Cities Block",
+	"category": "jci-category",
+	"icon": "admin-links",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "jci-blocks",
+	"editorScript": "file:./index.js"
+}
