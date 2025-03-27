@@ -58,7 +58,7 @@ function create_block_jci_blocks_v2_block_init() {
     register_block_type( __DIR__ . '/build/largest-cities', array('render_callback' => 'jci_blocks_largest_cities'));
     register_block_type( __DIR__ . '/build/industries', array('render_callback' => 'jci_blocks_industries'));
     register_block_type( __DIR__ . '/build/occupations', array('render_callback' => 'jci_blocks_occupations'));
-    // register_block_type( __DIR__ . '/build/schools', array('render_callback' => 'jci_blocks_schools'));
+    register_block_type( __DIR__ . '/build/schools', array('render_callback' => 'jci_blocks_schools'));
 }
 add_action( 'init', 'create_block_jci_blocks_v2_block_init' );
 
@@ -1644,5 +1644,21 @@ function jci_blocks_occupations() {
     $html .= '</ul>';
     endif;
     return $html;
+}
 
+function jci_blocks_schools() {
+    global $wpdb;
+    $stateId = get_the_ID();
+    $html = '';
+    $results = $wpdb->get_results( "SELECT college, enrollment FROM largest_colleges WHERE place_id='$stateId' ORDER BY enrollment DESC", ARRAY_A);
+    $results = array_slice($results, 0, 12);
+    if ($results):
+        $html .= '<ul class="liv-table">';
+        foreach ($results as $s) {
+            $html .= '<li><span class="table-key">'.$s['college'].'</span><span class="table-value">'.number_format($s['enrollment']).'</span></li>';
+        }
+        $html .= '</ul>';
+    endif;
+    return $html;
+    // print_r($results);
 }
