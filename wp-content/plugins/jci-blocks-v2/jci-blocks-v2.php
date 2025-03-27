@@ -1461,71 +1461,73 @@ function jci_blocks_industries() {
     $html = '';
     $results = $wpdb->get_results("SELECT INDEXAGRI, INDEXMINE, INDEXCONS, INDEXMMFG, INDEXWTRA, INDEXRTRA, INDEXTRAN, INDEXUTIL, INDEXINFO, INDEXFIN, INDEXREAL, INDEXPSRV, INDEXMGMT, INDEXADS, INDEXEDUC, INDEXHLTH,  INDEXARTS, INDEXFOOD, INDEXOTHR, INDEXPUBA FROM 2025_state_data WHERE place_id = $stateId", ARRAY_A);
     if ($results):
-    function mapIndustry($ind) {
-        switch ($ind) {
-            case 'INDEXAGRI':
-                return 'Agriculture/Forestry';
-                break;
-            case 'INDEXMINE':
-                return 'Mining/Quarrying/Oil/Gas';
-                break;
-            case 'INDEXCONS':
-                return 'Construction';
-                break;              
-            case 'INDEXMMFG':
-                return 'Manufacturing';
-                break;
-            case 'INDEXWTRA':
-                return 'Wholesale Trade';
-                break;
-            case 'INDEXRTRA':
-                return 'Retail Trade';
-                break;
-            case 'INDEXTRAN':
-                return 'Transportation/Warehousing';
-                break;
-            case 'INDEXUTIL':
-                return 'Utilities';
-                break; 
-            case 'INDEXINFO':
-                return 'Information';
-                break;
-            case 'INDEXFIN':
-                return 'Finance/Insurance';
-                break;
-            case 'INDEXREAL':
-                return 'Real Estate';
-                break;
-            case 'INDEXPSRV':
-                return 'Professional/Scientific/Tech';
-                break;
-            case 'INDEXMGMT':
-                return 'Management of Companies';
-                break;
-            case 'INDEXADS':
-                return 'Administrative/Waste Management';
-                break;
-            case 'INDEXEDUC':
-                return 'Educational';
-                break;    
-            case 'INDEXHLTH':
-                return 'Health Care and Social';
-                break;
-            case 'INDEXARTS':
-                return 'Arts/Entertainment/Recreation';
-                break;
-            case 'INDEXFOOD':
-                return 'Accommodation/Food Services';
-                break;
-            case 'INDEXOTHR':
-                return 'Other Services';
-                break; 
-            case 'INDEXPUBA':
-                return 'Public Administration';
-                break;                                 
-            default:
-                # code...
-                break;
+    if (!function_exists('mapIndustry')){
+        function mapIndustry($ind) {
+            switch ($ind) {
+                case 'INDEXAGRI':
+                    return 'Agriculture/Forestry';
+                    break;
+                case 'INDEXMINE':
+                    return 'Mining/Quarrying/Oil/Gas';
+                    break;
+                case 'INDEXCONS':
+                    return 'Construction';
+                    break;              
+                case 'INDEXMMFG':
+                    return 'Manufacturing';
+                    break;
+                case 'INDEXWTRA':
+                    return 'Wholesale Trade';
+                    break;
+                case 'INDEXRTRA':
+                    return 'Retail Trade';
+                    break;
+                case 'INDEXTRAN':
+                    return 'Transportation/Warehousing';
+                    break;
+                case 'INDEXUTIL':
+                    return 'Utilities';
+                    break; 
+                case 'INDEXINFO':
+                    return 'Information';
+                    break;
+                case 'INDEXFIN':
+                    return 'Finance/Insurance';
+                    break;
+                case 'INDEXREAL':
+                    return 'Real Estate';
+                    break;
+                case 'INDEXPSRV':
+                    return 'Professional/Scientific/Tech';
+                    break;
+                case 'INDEXMGMT':
+                    return 'Management of Companies';
+                    break;
+                case 'INDEXADS':
+                    return 'Administrative/Waste Management';
+                    break;
+                case 'INDEXEDUC':
+                    return 'Educational';
+                    break;    
+                case 'INDEXHLTH':
+                    return 'Health Care and Social';
+                    break;
+                case 'INDEXARTS':
+                    return 'Arts/Entertainment/Recreation';
+                    break;
+                case 'INDEXFOOD':
+                    return 'Accommodation/Food Services';
+                    break;
+                case 'INDEXOTHR':
+                    return 'Other Services';
+                    break; 
+                case 'INDEXPUBA':
+                    return 'Public Administration';
+                    break;                                 
+                default:
+                    # code...
+                    break;
+            }
         }
     }
     $results = $results[0];
@@ -1538,7 +1540,6 @@ function jci_blocks_industries() {
     $html .= '</ul>';
     endif;
     return $html;
-    // return $sortresults[0]['INDEXAGRI'];
 }
 
 
