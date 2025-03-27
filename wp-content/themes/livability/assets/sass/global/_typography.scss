@@ -83,9 +83,14 @@ h5,
       left: -50px;
       top: -5px;
     }
-    &.economy, &.business {
+    &.economy {
       &:before {
         background-image: url('./assets/images/subheading-icons/economy.svg');
+      }
+    }
+    &.business {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/business-climate.svg');
       }
     }
     &.location {
