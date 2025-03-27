@@ -3208,6 +3208,7 @@ border-bottom: 1px solid $green;
   }
 }
 
+
 .liv-table {
  padding-left: 0;
   li {
@@ -3220,6 +3221,11 @@ border-bottom: 1px solid $green;
     justify-content: space-between;
     font-size: 1rem;
     border-bottom: 1px dotted #000;
+    -webkit-column-break-inside: avoid;
+    -moz-column-break-inside:avoid;
+    -moz-page-break-inside:avoid;
+    page-break-inside: avoid;
+    break-inside: avoid-column;
   }
   .table-key {
     display: block;

@@ -6,7 +6,7 @@ registerBlockType( metadata.name, {
 	edit: () => {
 		return (
 			<div className="jci-block-placeholder">
-				<p>State Largest Cities Block placeholder</p>
+				<p>State Industries Block placeholder</p>
 			</div>
 		);
 	},

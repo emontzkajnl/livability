@@ -56,6 +56,9 @@ function create_block_jci_blocks_v2_block_init() {
     register_block_type( __DIR__ . '/build/bp-301', array('render_callback' => 'jci_blocks_bp_301'));
     register_block_type( __DIR__ . '/build/magazine-brand-stories', array('render_callback' => 'jci_blocks_magazine_brand_stories'));
     register_block_type( __DIR__ . '/build/largest-cities', array('render_callback' => 'jci_blocks_largest_cities'));
+    register_block_type( __DIR__ . '/build/industries', array('render_callback' => 'jci_blocks_industries'));
+    register_block_type( __DIR__ . '/build/occupations', array('render_callback' => 'jci_blocks_occupations'));
+    register_block_type( __DIR__ . '/build/schools', array('render_callback' => 'jci_blocks_schools'));
 }
 add_action( 'init', 'create_block_jci_blocks_v2_block_init' );
 
@@ -1435,15 +1438,104 @@ function jci_blocks_content_weather_block() {
 function jci_blocks_largest_cities() {
     global $wpdb;
     $state = get_the_title();
-    $html = '<ul class="liv-table">';
+    $html = '';
+    
     $results = $wpdb->get_results( "SELECT city, city_pop, state FROM 2025_city_data WHERE state='$state' ORDER BY city_pop DESC", ARRAY_A);
+    if ($results):
     $results = array_slice($results, 0, 12);
+    $html .= '<ul class="liv-table">';
     foreach ($results as $r) {
         $html .= '<li><span class="table-key">'.substr($r['city'],0, -4).'</span><span class="table-value">'.number_format($r['city_pop']).'</span></li>';
     }
     $html .= '</ul>';
     return $html;
+    endif;
 }
 
-// ¶  ‡ ‡
+function jci_blocks_industries() {
+    global $wpdb;
+    $stateId = get_the_ID();
+    $html = '';
+    $results = $wpdb->get_results("SELECT INDEXAGRI, INDEXMINE, INDEXCONS, INDEXMMFG, INDEXWTRA, INDEXRTRA, INDEXTRAN, INDEXUTIL, INDEXINFO, INDEXFIN, INDEXREAL, INDEXPSRV, INDEXMGMT, INDEXADS, INDEXEDUC, INDEXHLTH,  INDEXARTS, INDEXFOOD, INDEXOTHR, INDEXPUBA FROM 2025_state_data WHERE place_id = $stateId", ARRAY_A);
+    if ($results):
+    function mapIndustry($ind) {
+        switch ($ind) {
+            case 'INDEXAGRI':
+                return 'Agriculture/Forestry';
+                break;
+            case 'INDEXMINE':
+                return 'Mining/Quarrying/Oil/Gas';
+                break;
+            case 'INDEXCONS':
+                return 'Construction';
+                break;              
+            case 'INDEXMMFG':
+                return 'Manufacturing';
+                break;
+            case 'INDEXWTRA':
+                return 'Wholesale Trade';
+                break;
+            case 'INDEXRTRA':
+                return 'Retail Trade';
+                break;
+            case 'INDEXTRAN':
+                return 'Transportation/Warehousing';
+                break;
+            case 'INDEXUTIL':
+                return 'Utilities';
+                break; 
+            case 'INDEXINFO':
+                return 'Information';
+                break;
+            case 'INDEXFIN':
+                return 'Finance/Insurance';
+                break;
+            case 'INDEXREAL':
+                return 'Real Estate';
+                break;
+            case 'INDEXPSRV':
+                return 'Professional/Scientific/Tech';
+                break;
+            case 'INDEXMGMT':
+                return 'Management of Companies';
+                break;
+            case 'INDEXADS':
+                return 'Administrative/Waste Management';
+                break;
+            case 'INDEXEDUC':
+                return 'Educational';
+                break;    
+            case 'INDEXHLTH':
+                return 'Health Care and Social';
+                break;
+            case 'INDEXARTS':
+                return 'Arts/Entertainment/Recreation';
+                break;
+            case 'INDEXFOOD':
+                return 'Accommodation/Food Services';
+                break;
+            case 'INDEXOTHR':
+                return 'Other Services';
+                break; 
+            case 'INDEXPUBA':
+                return 'Public Administration';
+                break;                                 
+            default:
+                # code...
+                break;
+        }
+    }
+    $results = $results[0];
+    arsort($results);
+    $results = array_slice($results, 0, 12);
+    $html .= '<ul class="liv-table">';
+    foreach ($results as $key=>$value) {
+        $html .= '<li><span class="table-key">'.mapIndustry($key).'</span><span class="table-value">'.number_format($value).'</span></li>';
+    }
+    $html .= '</ul>';
+    endif;
+    return $html;
+    // return $sortresults[0]['INDEXAGRI'];
+}
+
 

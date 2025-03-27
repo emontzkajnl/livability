@@ -45,7 +45,7 @@
                 "location": "Location",
                 "outdoor": "Outdoors",
                 "restaurants": "Restaurants",
-                "schools": "Eduction",
+                "schools": "Education",
                 "things": "Things to Do",
                 "unique": "What’s Unique",
                 "visit": "Visit",
@@ -101,5 +101,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1742586723
+    "modified": 1743018714
 }

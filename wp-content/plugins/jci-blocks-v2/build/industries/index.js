@@ -1,0 +1,1 @@
+(()=>{"use strict";const e=window.React,l=window.wp.blocks,c=(window.wp.i18n,JSON.parse('{"u2":"jci-blocks/industries"}'));(0,l.registerBlockType)(c.u2,{edit:()=>(0,e.createElement)("div",{className:"jci-block-placeholder"},(0,e.createElement)("p",null,"State Industries Block placeholder")),save:()=>null})})();
