@@ -57,8 +57,8 @@ function create_block_jci_blocks_v2_block_init() {
     register_block_type( __DIR__ . '/build/magazine-brand-stories', array('render_callback' => 'jci_blocks_magazine_brand_stories'));
     register_block_type( __DIR__ . '/build/largest-cities', array('render_callback' => 'jci_blocks_largest_cities'));
     register_block_type( __DIR__ . '/build/industries', array('render_callback' => 'jci_blocks_industries'));
-    register_block_type( __DIR__ . '/build/occupations', array('render_callback' => 'jci_blocks_occupations'));
-    register_block_type( __DIR__ . '/build/schools', array('render_callback' => 'jci_blocks_schools'));
+    // register_block_type( __DIR__ . '/build/occupations', array('render_callback' => 'jci_blocks_occupations'));
+    // register_block_type( __DIR__ . '/build/schools', array('render_callback' => 'jci_blocks_schools'));
 }
 add_action( 'init', 'create_block_jci_blocks_v2_block_init' );
 
@@ -303,6 +303,7 @@ function return_breadcrumbs() {
 
         // if (!$diversityIndex && !$householdIncome && !$propTax && !$homeValue) { return NULL;}
         $html .= '<div class="quick-facts-2-block"><h3 class="qf-title">Quick Facts about '.get_the_title().'</h3><dl>';
+        if (!$is_child) {
         $html .= $householdIncome ? '<div class="avg-inc"><dt>Average Household Income</dt><dd>$'.number_format($householdIncome).'</dd></div>' : '';
         $html .= $propTax ? '<div class="prop-tax"><dt>Average Property Tax</dt><dd>$'.$propTax.'</dd></div>' : '';
         $html .= $statePop ? '<div class="city-pop"><dt>State Population</dt><dd>'.number_format($statePop).'</dd></div>' : '';
@@ -310,6 +311,7 @@ function return_breadcrumbs() {
         $html .= $salesTax ? '<div class="state-sales"><dt>Sales Tax</dt><dd>'.$salesTax.'%</dd></div>' : '';
         $html .= $incomeTax ? '<div class="state-inc"><dt>State Income Tax</dt><dd>'.$incomeTax.'</dd></div>' : '';
         $html .= $stateRent ? '<div class="avg-rent"><dt>Median Monthly Rent</dt><dd>'.$stateRent.'</dd></div>' : '';
+        } else {
         $html .= $commute ? '<div class="avg-com"><dt>Average Commute</dt><dd>'.$commute.' minutes</dd></div>' : '';
         $html .= $cityHomeValue ? '<div class="prop-tax"><dt>Median Home Value</dt><dd>$'.number_format($cityHomeValue).'</dd></div>' : '';
         $html .= $cityHouseholdIncome ? '<div class="avg-inc"><dt>Median Household Income</dt><dd>$'.number_format($cityHouseholdIncome).'</dd></div>' : '';
@@ -317,6 +319,7 @@ function return_breadcrumbs() {
         $html .= $cityWalkScore ? '<div><dt>Walk Score</dt><dd>'.$cityWalkScore.'</dd></div>' : '';
         $html .= $cityPropTax ? '<div class="avg-inc"><dt>Median Property Tax</dt><dd>$'.number_format($cityPropTax).'</dd></div>' : '';
         $html .= $avg_rent ? '<div class="avg-rent"><dt>Median Monthly Rent</dt><dd>$'.number_format($avg_rent).'</dd></div>' : '';
+        }
         $html .= '</dl></div>';
         $html .= $is_child ? '<p class="widget-link"><a href="'.site_url( 'city-data-widget?cityid=' ).$ID.'">Display these facts on your site.</a></p>' : '';
     else: // used for 2023 best places only
