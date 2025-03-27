@@ -57,7 +57,7 @@ function create_block_jci_blocks_v2_block_init() {
     register_block_type( __DIR__ . '/build/magazine-brand-stories', array('render_callback' => 'jci_blocks_magazine_brand_stories'));
     register_block_type( __DIR__ . '/build/largest-cities', array('render_callback' => 'jci_blocks_largest_cities'));
     register_block_type( __DIR__ . '/build/industries', array('render_callback' => 'jci_blocks_industries'));
-    // register_block_type( __DIR__ . '/build/occupations', array('render_callback' => 'jci_blocks_occupations'));
+    register_block_type( __DIR__ . '/build/occupations', array('render_callback' => 'jci_blocks_occupations'));
     // register_block_type( __DIR__ . '/build/schools', array('render_callback' => 'jci_blocks_schools'));
 }
 add_action( 'init', 'create_block_jci_blocks_v2_block_init' );
@@ -1525,7 +1525,7 @@ function jci_blocks_industries() {
                     return 'Public Administration';
                     break;                                 
                 default:
-                    # code...
+                    return '';
                     break;
             }
         }
@@ -1542,4 +1542,107 @@ function jci_blocks_industries() {
     return $html;
 }
 
+function jci_blocks_occupations() {
+    global $wpdb;
+    $stateId = get_the_ID();
+    $results = $wpdb->get_results("SELECT OCCEXMGMT, OCCEXBUSF, OCCEXCOMP, OCCEXARCH,
+     OCCEXSCI, OCCEXCOMM, OCCEXLEG, OCCEXEDUC, OCCEXARTS, OCCEXHLT1, OCCEXHLT2, 
+     OCCEXHLT3, OCCEXFIRE, OCCEXCOPS, OCCEXFPRP, OCCEXCLNG,  OCCEXPCAR, OCCEXSALE, 
+     OCCEXOFF, OCCEXFARM, OCCEXCNEX, OCCEXINST, OCCEXPROD, OCCEXTRAN, OCCEXMATM FROM 2025_state_data WHERE place_id = $stateId", ARRAY_A);
+        if ($results):
+    if (!function_exists('mapOccupation')) {
+    function mapOccupation($occ) {
+    switch ($occ) {
+        case 'OCCEXMGMT' :
+            return 'Management';
+            break;
+        case 'OCCEXBUSF' :
+            return 'Business/Financial Operations';
+            break;
+        case 'OCCEXCOMP' :
+            return 'Computer/Mathematical';
+            break;
+        case 'OCCEXARCH' :
+            return 'Architecture/Engineering';
+            break;
+        case 'OCCEXSCI' :
+            return 'Life/Physical/Social Science';
+            break;
+        case 'OCCEXCOMM' :
+            return 'Community/Social Service';
+            break;
+        case 'OCCEXLEG' :
+            return 'Legal';
+            break;
+        case 'OCCEXEDUC' :
+            return 'Education/TrainingLibrary';
+            break;
+        case 'OCCEXARTS' :
+            return 'Arts/Design/Ent./Sports/Media';
+            break;
+        case 'OCCEXHLT1' :
+            return 'Health Diagnosing/Treating/Technical';
+            break;
+        case 'OCCEXHLT2' :
+            return 'Health Technologists/Technicians';
+            break;
+        case 'OCCEXHLT3' :
+            return 'Healthcare Support';
+            break;
+        case 'OCCEXFIRE' :
+            return 'Fire Fighting/Prevention/Protective';
+            break;
+        case 'OCCEXCOPS' :
+            return 'Law Enforcement';
+            break;
+        case 'OCCEXFPRP' :
+            return 'Food Preparation/Serving';
+            break;
+        case 'OCCEXCLNG' :
+            return 'Cleaning/Maintenance';
+            break;
+        case 'OCCEXPCAR' :
+            return 'Personal Care/Service';
+            break;
+        case 'OCCEXSALE' :
+            return 'Sales';
+            break;
+        case 'OCCEXOFF' :
+            return 'Office/Administrative Support';
+            break;
+        case 'OCCEXFARM' :
+            return 'Farming/Fishing/Forestry';
+            break;
+        case 'OCCEXCNEX' :
+            return 'Construction/Extraction';
+            break;
+        case 'OCCEXINST' :
+            return 'Installation/Maintenance/Repair';
+            break;
+        case 'OCCEXPROD' :
+            return 'Production';
+            break;
+        case 'OCCEXTRAN' :
+            return 'Transportation';
+            break;
+        case 'OCCEXMATM' :
+            return 'Material Moving';
+            break;
+        default : 
+            return '';
+            break;
+        }
+    }
+}
+    $results = $results[0];
+    arsort($results);
+    $results = array_slice($results, 0, 12);
+    $html .= '<ul class="liv-table">';
+    foreach ($results as $key=>$value) {
+        $html .= '<li><span class="table-key">'.mapOccupation($key).'</span><span class="table-value">'.number_format($value).'</span></li>';
+    }
+    $html .= '</ul>';
+    endif;
+    return $html;
 
+}
