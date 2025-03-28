@@ -73,12 +73,8 @@ $topic_args = array(
     <div class="place-column__nav">
     <ul class="place-side-nav">
         <li class="active"><a href="#overview">Overview</a></li>
-        <?php if ($is_2024_bp): ?>
-        <li><a href="#top-100" >2024 Top 100</a></li>
-        <li><a href="#things-to-do">Things to Do</a></li>
-        <li><a href="#economy">Economy</a></li>
-        <?php endif; 
-        echo count($brands_array) > 0 ? '<li><a href="#brands-to-know">Brands to Know</a></li>' : '';
+        <?php 
+        //echo count($brands_array) > 0 ? '<li><a href="#brands-to-know">Brands to Know</a></li>' : '';
         echo $hide_weather ? '' : '<li><a href="#weather">Weather</a></li>'; 
         ?>
         <?php echo $hide_facts ? '' : '<li><a href="#quick-facts">Quick Facts</a></li>'; ?>

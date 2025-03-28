@@ -7,7 +7,7 @@
   if ($('body').hasClass('single-liv_place')) {
     const headings = $('h2.lpsh');
     if (headings) {
-      const secondList = $('.place-side-nav li').eq(1);
+      const secondList = $('.place-side-nav li').eq(0);
       list = '';
       headings.each(function(i,h){
         // console.log('heading ',$(h).attr('id'));
