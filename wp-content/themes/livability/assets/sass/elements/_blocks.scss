@@ -1676,7 +1676,7 @@ div[class^="curated-posts-"] {
 }
 
 .insights {
-  padding: 15px 38px 38px;
+  padding:18px 22px 38px;
   display: flex;
   color: #111;
   width: 100%;
@@ -1747,9 +1747,27 @@ a.insights-link {
   margin-top: 1rem;
 }
 .insights-connect-with {
+  padding-top: 1rem;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row;
   font-weight: normal;
   font-family: 'Jost', arial, sans-serif;
   font-size: 1rem;
+  p {
+    margin-top: 0;
+  }
+}
+.insights-social {
+  padding-left: 0;
+  li {
+    list-style: none;
+    display: inline-block;
+    padding-left: 10px;
+  }
+  svg {
+    height: 18px;
+  }
 }
 span.insights-cat {
   display:block;
