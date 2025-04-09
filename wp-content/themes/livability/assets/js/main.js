@@ -708,6 +708,14 @@
 
 }
 
+// local insights accordion
+$('.insights').on('click', function(){
+  if ($(this).hasClass('insight-hidden')) {
+    $('.insights').toggleClass('insight-hidden');
+  }
+
+});
+
 // local insight form: replace city state in span tags with correct city state
 if (window.gform) {
   gform.addAction('gform_input_change', function(elem, formId, fieldId){

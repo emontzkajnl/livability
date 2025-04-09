@@ -1572,6 +1572,7 @@ if ( ! function_exists('local_insights') ) {
 			'description'           => __( 'Local realtor impression of current city', 'text_domain' ),
 			'labels'                => $labels,
 			'supports'              => array( 'title', 'editor', 'excerpt', 'thumbnail', 'revisions'),
+			'taxonomies'            => array('local_insight_source_taxonomy', 'post_tag'),
 			'hierarchical'          => false,
 			'public'                => true,
 			'show_ui'               => true,
@@ -1594,6 +1595,50 @@ if ( ! function_exists('local_insights') ) {
 	add_action( 'init', 'local_insights', 0 );
 	
 	}
+
+if ( ! function_exists( 'liv_local_insight_source_taxonomy' ) ) {
+	// Register Custom Taxonomy
+function liv_local_insight_source_taxonomy() {
+
+	$labels = array(
+		'name'                       => _x( 'Sources', 'Taxonomy General Name', 'text_domain' ),
+		'singular_name'              => _x( 'Source', 'Taxonomy Singular Name', 'text_domain' ),
+		'menu_name'                  => __( 'Sources', 'text_domain' ),
+		'all_items'                  => __( 'All Sources', 'text_domain' ),
+		'new_item_name'              => __( 'New Source', 'text_domain' ),
+		'add_new_item'               => __( 'Add Source', 'text_domain' ),
+		'edit_item'                  => __( 'Edit Source', 'text_domain' ),
+		'update_item'                => __( 'Update Source', 'text_domain' ),
+		'view_item'                  => __( 'View Source', 'text_domain' ),
+		'separate_items_with_commas' => __( 'Separate Sources with commas', 'text_domain' ),
+		'add_or_remove_items'        => __( 'Add or remove Sources', 'text_domain' ),
+		'choose_from_most_used'      => __( 'Choose from the most used', 'text_domain' ),
+		'popular_items'              => __( 'Popular Sources', 'text_domain' ),
+		'search_items'               => __( 'Search Sources', 'text_domain' ),
+		'not_found'                  => __( 'Not Found', 'text_domain' ),
+		'no_terms'                   => __( 'No items', 'text_domain' ),
+		'items_list'                 => __( ' Sources', 'text_domain' ),
+		'items_list_navigation'      => __( 'Items list navigation', 'text_domain' ),
+	);
+	$args = array(
+		'labels'                     => $labels,
+		'hierarchical'               => false,
+		'public'                     => true,
+		'show_ui'                    => true,
+		'show_admin_column'          => true,
+		'show_in_nav_menus'          => false,
+		'show_tagcloud'              => true,
+		'show_in_rest'               => true,
+	);
+	register_taxonomy( 'local_insight_source_taxonomy', array( 'local_insights' ), $args );
+
+}
+add_action( 'init', 'liv_local_insight_source_taxonomy', 0 );
+
+}
+
+
+
 
 	function add_city_to_local_insight($post_id, $feed, $entry, $form ) {
 		// error_log('in error log now');
