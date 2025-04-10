@@ -357,8 +357,8 @@
   text-align: center;
   position: relative;
   padding: 40px 20px 60px;
-  margin-bottom: 80px !important;
-  margin-top: 60px !important;
+  margin-bottom: 20px !important;
+  margin-top: 20px !important;
   background-color: #f1f5f8;
   .qf-title {
     display: inline-block;
@@ -2721,7 +2721,7 @@ border-bottom: 1px solid $green;
   }
 }
 .bp23-badge-single {
-  margin: 0 auto;
+  margin: 0 auto .5em;
   max-width: 135px !important;
 }
 
