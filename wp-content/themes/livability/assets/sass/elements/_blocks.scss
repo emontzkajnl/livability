@@ -1677,7 +1677,7 @@ div[class^="curated-posts-"] {
 
 .insights {
   padding:18px 22px 38px;
-  display: flex;
+  // display: flex;
   color: #111;
   width: 100%;
   position: relative;
@@ -1685,7 +1685,15 @@ div[class^="curated-posts-"] {
   background-color: #f0f5f8;
   height: auto;
   transition: height 1s;
-  // background-image: -webkit-gradient(linear,0 0, 0 100%, from(#f1f1f1), to(#fafafa));
+    .insights-header {
+      height: 150px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    .insights-img-container {
+      padding-right: 15px;
+    }
     img {
       width: 150px !important;
       height: 150px !important;
@@ -1710,7 +1718,16 @@ div[class^="curated-posts-"] {
       background: linear-gradient(360deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
     }
   }
-
+  .insights-contact-section {
+    display: block;
+    margin-top: 1rem;
+    text-align: center;
+  }
+  .insights-contact-lower-section {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+  }
 }
 .insights-img {
   float: right;
@@ -1746,17 +1763,12 @@ a.insights-link {
   font-size: 1.25rem;
   margin-top: 1rem;
 }
-.insights-connect-with {
-  padding-top: 1rem;
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: row;
+p.insights-connect-with {
   font-weight: normal;
   font-family: 'Jost', arial, sans-serif;
   font-size: 1rem;
-  p {
-    margin-top: 0;
-  }
+  margin-top: 0;
+  
 }
 .insights-social {
   padding-left: 0;
@@ -1769,18 +1781,40 @@ a.insights-link {
     height: 18px;
   }
 }
-span.insights-cat {
-  display:block;
-  font-size:16px;
-  color:#6CC24A;
-  margin-top:2em;
-  font-weight:bold;
-  font-family: 'Jost', arial, sans-serif;
+// span.insights-cat {
+//   display:block;
+//   font-size:16px;
+//   color:#6CC24A;
+//   margin-top:2em;
+//   font-weight:bold;
+//   font-family: 'Jost', arial, sans-serif;
+// }
+@media all and (min-width: 992px) {
+  .insights {
+    padding-left: 200px;
+    .insights-header {
+      display: block;
+      height: auto;
+      position: relative;
+    }
+    .insights-img-container {
+      padding-right: 0;
+      position: absolute;
+      top: 0;
+      left: -180px;
+    }
+    .insights-contact-section {
+      display: flex;
+      text-align: left;
+    }
+    .insights-contact-lower-section {
+      text-align: left;
+      justify-content: flex-start;
+    }
+  }
 }
 
-.insights-text-container {
-  padding-left: 35px;
-}
+
 
 
 .t-100-landing-23 {

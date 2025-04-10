@@ -56,13 +56,15 @@ if( !empty($block['className']) ) {
     <div class="insights <?php echo $hide_class; ?>">
         <!-- <div class="insights-heading clearfix"> -->
             <!-- <div> -->
+                <div class="insights-header">
                 <div class="insights-img-container">
             <?php echo get_the_post_thumbnail( $ID, 'thumbnail', array('class' => 'insights-img')); ?>
-            </div>
-            <div class="insights-text-container">
+            </div> <!--img-container -->
+            <div>
               <h2 class="insights-title"><?php echo $f_name.' '.$l_name; ?></h2>  
               <span class="insights-name"><?php echo $title.$slash.$company; ?></span>
-            <!-- </div> -->
+            </div>
+            </div><!--insights header -->
             
         <!-- </div> -->
         <?php if ($a_opportunities): 
@@ -80,8 +82,11 @@ if( !empty($block['className']) ) {
             <h2 class="insights-q">Q. <?php echo $q_local_vibe; ?></h2>
             <p class="insights-a"><span class="insights-q">A.</span> <?php echo $a_local_vibe; ?></p>
         <?php endif; ?>
-        <div class="insights-connect-with"><p><strong>Connect With <?php echo $f_name.':</strong> '.$phone.' '.$contact_link.'</p>';
-       $rows = get_field('social_profile', $ID); // social_platform, social_url
+        <div class="insights-contact-section">
+            <p class="insights-connect-with"><strong>Connect With <?php echo $f_name;?>:</strong></p>
+            <div class="insights-contact-lower-section">
+            <p style="margin-top: 0"><?php echo $phone.' '.$contact_link; ?></p>
+       <?php $rows = get_field('social_profile', $ID); // social_platform, social_url
        if( $rows ) {
        
            echo '<ul class="insights-social">';
@@ -110,13 +115,14 @@ if( !empty($block['className']) ) {
            echo '</ul>';
        }
         
-        ?> </div>
-        </div>
+        ?> 
+        </div> <!--insights-contact-lower-section -->
+        </div> <!--insights-contact-section -->
     </div>
     <?php $count++;
     endwhile; ?>
     <p style="text-align: center;">See <a href="" alt="See content advertising opportunities">content advertising opportunities</a> for this page.</p>
-    <?php echo '</div>';
+    <?php  echo '</div>'; // local-inights
 endif;
 wp_reset_postdata(  );
 //echo 'city '.$_GET['city'];
