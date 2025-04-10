@@ -1690,6 +1690,7 @@ div[class^="curated-posts-"] {
       display: flex;
       flex-direction: row;
       align-items: center;
+      margin-bottom: 30px;
     }
     .insights-img-container {
       padding-right: 15px;
@@ -1798,6 +1799,7 @@ p.insights-connect-with {
       display: block;
       height: auto;
       position: relative;
+      margin-bottom: 0;
     }
     .insights-img-container {
       padding-right: 0;
