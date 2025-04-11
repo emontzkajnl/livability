@@ -85,7 +85,7 @@ if( !empty($block['className']) ) {
         <div class="insights-contact-section">
             <p class="insights-connect-with"><strong>Connect With <?php echo $f_name;?>:</strong></p>
             <div class="insights-contact-lower-section">
-            <p style="margin-top: 0"><?php echo $phone.' '.$contact_link; ?></p>
+            <p style="margin-top: 0"><?php echo ' '.$phone.' '.$contact_link; ?></p>
        <?php $rows = get_field('social_profile', $ID); // social_platform, social_url
        if( $rows ) {
        
