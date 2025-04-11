@@ -20,6 +20,7 @@ while ( have_posts() ) :
 		// if 2024 top 100, show bp hero whether client or not
 		$is_2024 = has_term('2024', 'best_places_years');
 		$is_2025 = has_term('2025', 'best_places_years');
+		$heading = get_field('override_place_title') ? 'h2' : 'h1' ; 
 		if ($is_2024 || $is_2025) { 
 			$parent_id = wp_get_post_parent_id();
  			$byline =  get_field('img_byline',get_post_thumbnail_id());
@@ -44,10 +45,11 @@ while ( have_posts() ) :
 						<!-- TODO replace badge and maybe title for 2025 -->
 						<?php if ($is_2025) { ?>
 						<img class="bp23-badge-single" src="<?php echo get_stylesheet_directory_uri(  ); ?>/assets/images/livability-top-100-best-places-badge-2025.svg"/>
-						<?php echo '<h1 class="bp23-title">'.get_the_title().'<span><a href="'.site_url( '/best-places/top-100-best-places-to-live-in-the-us/' ).'">Best Places to Live in the U.S. 2025</a></span></h1>'; 
+						<?php echo '<'.$heading.' class="bp23-title">'.get_the_title().'<span><a href="'.site_url( '/best-places/top-100-best-places-to-live-in-the-us/' ).'">Best Places to Live in the U.S. 2025</a></span></'.$heading.'>'; 
 						} else { ?>
 						<img class="bp23-badge-single" src="<?php echo get_stylesheet_directory_uri(  ); ?>/assets/images/2024Top100_badge_final.svg"/>
-						<?php echo '<h1 class="bp23-title">'.get_the_title().'<span><a href="'.site_url( '/best-places/2024-top-100-best-places-to-live-in-the-us/' ).'">Best Places to Live in the U.S. 2024-2025</a></span></h1>'; 
+						<?php 
+							echo '<'.$heading.' class="bp23-title">'.get_the_title().'<span><a href="'.site_url( '/best-places/2024-top-100-best-places-to-live-in-the-us/' ).'">Best Places to Live in the U.S. 2024-2025</a></span></'.$heading.'>'; 
 						}?>
 						
 						<?php echo has_excerpt( ) ? '<p class="bp23-excerpt">'.get_the_excerpt().'</p>' : ''; 

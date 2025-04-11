@@ -108,8 +108,12 @@ $topic_args = array(
                 } ?>
             </div>
                      <?php 
-                     if ($is_2024_bp || $is_2025_bp) {
-                         echo '<h2 class="h1" id="overview">'.get_the_title().'</h2>';
+                     if (get_field('override_place_title')) {
+                        echo '<h1 class="h1" id="overview">'.get_field('place_title');
+                        echo get_field('place_subtitle') ? '<br /><span class="h2">'.get_field('place_subtitle').'</span>' : '';
+                        echo '</h1>';
+                     } elseif ($is_2024_bp || $is_2025_bp) {
+                        echo '<h2 class="h1" id="overview">'.get_the_title().'</h2>';
                      } else {
                         echo '<h1 class="h1" id="overview">'.get_the_title().'</h1>';
                      }
