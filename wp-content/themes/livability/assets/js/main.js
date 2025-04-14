@@ -3,7 +3,12 @@
     $('.livability-image-meta').show();
   });
 
-
+  $('a[href^=http]').each(function(){
+    if (this.href.indexOf(location.hostname) == -1) {
+      console.log('an external link');
+      $(this).attr("target", "_blank")
+    }
+  });
   if ($('body').hasClass('single-liv_place')) {
     const headings = $('h2.lpsh');
     if (headings) {

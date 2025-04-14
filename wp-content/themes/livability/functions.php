@@ -1930,3 +1930,13 @@ function place_data_shortcode($atts, $content = null) {
 }
 
 add_shortcode( 'place_data', 'place_data_shortcode' );
+
+// Add a custom dimension to GA4 for Best Place year
+add_filter('monsterinsights_available_custom_dimensions', function ($dimensions) {
+	$dimensions['best_places_years'] = array(
+		'id' => 'best_places_years', // Replace with your taxonomy name, e.g., 'product_type'
+		'label' => 'Best Place Year', // Label for MonsterInsights settings
+		'type' => 'dimension',
+		);
+		return $dimensions;
+	});
