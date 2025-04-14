@@ -74,7 +74,7 @@ $topic_args = array(
     <div class="place-column__nav">
     <ul class="place-side-nav">
         <li class="active"><a href="#overview">Overview</a></li>
-        <?php if ($is_2024_bp): ?>
+        <?php if ($is_2024_bp && !$is_2025_bp): ?>
         <li><a href="#top-100" >2024 Top 100</a></li>
         <!-- <li><a href="#things-to-do">Things to Do</a></li>
         <li><a href="#economy">Economy</a></li> -->

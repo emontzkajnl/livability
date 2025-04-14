@@ -1,7 +1,7 @@
 <?php 
 global $wpdb;
 $sortBy = isset( $_SESSION['bp23_cat'] ) ? $_SESSION['bp23_cat'] : 'livscore';
-$results = $wpdb->get_results( "SELECT * FROM 2024_top_100 ORDER BY ".$sortBy, OBJECT );
+$results = $wpdb->get_results( "SELECT * FROM 2025_top_100 ORDER BY ".$sortBy, OBJECT );
 // session_start();
 // get array position of current post
 $currentPos = '';
@@ -50,11 +50,11 @@ $merged = array_merge($row2, $row1);
     </ul>
 
 </div>
-<a href="<?php echo site_url( '/best-places/2024-top-100-best-places-to-live-in-the-us/' ); ?>"><button class="bp2l__green-btn"  >Return to Main List</button></a>
+<a href="<?php echo site_url( '/best-places/top-100-best-places-to-live-in-the-us/' ); ?>"><button class="bp2l__green-btn"  >Return to Main List</button></a>
 </div>
 <div class="carousel-24-right">
     <h3>Explore All Top 100 Best Places Cities </h3>
-    <img class="open-top-100-24-map" src="<?php echo get_stylesheet_directory_uri(  ); ?>/assets/images/top-100-map-screenshot.png" alt="">
+    <img class="open-top-100-24-map" src="<?php echo get_stylesheet_directory_uri(  ); ?>/assets/images/2025-top-100-map.png" alt="">
     <button class="bp2l__green-btn open-top-100-24-map"  >Top 100 Cities Map</button>
 </div>
 </div>  <!-- .carousel-blocks-container -->
