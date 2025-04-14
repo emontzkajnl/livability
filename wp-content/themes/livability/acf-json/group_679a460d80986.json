@@ -40,7 +40,7 @@
             "choices": {
                 "business": "Business Climate",
                 "economy": "Economy",
-                "healthcare": "Healthcare",
+                "healthcare": "Health Care",
                 "live": "Where to Live",
                 "location": "Location",
                 "outdoor": "Outdoors",
@@ -101,5 +101,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1743018714
+    "modified": 1744659935
 }

@@ -42,16 +42,16 @@ $state = get_field('state_text');
 <div class="bp2l__mobile-tab active" data-tab="tab-one"><h3>Top 100 Best Places to Live in US</h3></div>
 <div id="tab-one" class="tab-content">
     <div class="bp2l__one-map-container">
-    <iframe src="https://map.proxi.co/r/top-100-best-places-2024" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe> 
+    <iframe src="https://maps.livability.com/r/ye4r596Zpp6V_D5R2LS2" allow="geolocation; clipboard-write" width="100%" height="625px" style="border-width: 0px;" allowfullscreen></iframe> 
     </div>
     <div class="bp2l__one-text-container">
         <div class="bp2l__top-100-img">
-            <img src="https://livability.com/wp-content/themes/livability/assets/images/2024Top100_badge_final.svg" alt="">
+            <img src="https://livability.com/wp-content/themes/livability/assets/images/livability-top-100-best-places-badge-2025.svg" alt="">
         </div>
         <?php echo $top_onehundred; ?>
 
-        <a href="https://livability.com/best-places/2024-top-100-best-places-to-live-in-the-us/"><button class="bp2l__green-btn">See our top 100 list</button></a>
-        <a href="https://livability.com/best-places/2023-top-100-best-places-to-live-in-the-us/"><button >Previous Years List</button></a>
+        <a href="https://livability.com/best-places/top-100-best-places-to-live-in-the-us/"><button class="bp2l__green-btn">See our top 100 list</button></a>
+        <a href="https://livability.com/best-places/2024-top-100-best-places-to-live-in-the-us/"><button >Previous Years List</button></a>
         <a href="https://www.proxi.co/" target="_blank"><img class="bp2l__proxi-img" src="<?php echo plugin_dir_url( __FILE__ ); ?>images/powered-by-proxi.png" /></a>
     </div>
 </div>
