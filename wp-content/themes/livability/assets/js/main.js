@@ -1231,7 +1231,6 @@ if ( !$('body').hasClass('single-post')) {
     let start = classes.indexOf('wp-image-');
     let str = classes.substring(start + 9);
     if (str.indexOf(' ') >= 0) {
-      console.log('has space');
       str = str.substring(0, str.indexOf(' '));
     }
     const data = {
