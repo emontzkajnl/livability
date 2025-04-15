@@ -35,7 +35,7 @@ if( !empty($block['className']) ) {
     <div class="place-section-heading"><h2 class="location lpsh" style="text-align:center;">Live Like a Local</h2><span class="place-section-heading__line"></span></div>
     <span class="insights-title" style="display: block; margin-top: 30px;">Local residents give their insights into <?php echo  $city_state_name; ?></span>
     <?php while ($li_query->have_posts()): $li_query->the_post();
-    $hide_class = $total_posts > 1 && $count < $total_posts ? ' insight-hidden' : '';
+    $hide_class = $total_posts > 1 && $count != 1 ? ' insight-hidden' : '';
     $ID = get_the_ID();
     $f_name = get_field('first_name', $ID);
     $l_name = get_field('last_name', $ID);

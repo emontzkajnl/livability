@@ -1686,11 +1686,9 @@ div[class^="curated-posts-"] {
   height: auto;
   transition: height 1s;
     .insights-header {
-      height: 150px;
       display: flex;
       flex-direction: row;
       align-items: center;
-      margin-bottom: 30px;
     }
     .insights-img-container {
       margin-right: 15px;
@@ -1713,7 +1711,7 @@ div[class^="curated-posts-"] {
       color: #164988;
     }
   &.insight-hidden {
-    height: 225px;
+    height: 275px;
     transition: height 1s;
     overflow-y: hidden;
     position: relative;
@@ -1805,6 +1803,9 @@ p.insights-connect-with {
 @media all and (min-width: 992px) {
   .insights {
     padding-left: 200px;
+    &.insight-hidden {
+      height: 225px;
+    }
     .insights-header {
       display: block;
       height: auto;
