@@ -31,14 +31,16 @@
     "location": [
         [
             {
-                "param": "post_type",
-                "operator": "==",
-                "value": "best_places"
-            },
-            {
                 "param": "post_template",
                 "operator": "==",
                 "value": "best_places_2024_landing_page.php"
+            }
+        ],
+        [
+            {
+                "param": "post_template",
+                "operator": "==",
+                "value": "best_places_2025_landing_page.php"
             }
         ]
     ],
@@ -51,5 +53,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1713464280
+    "modified": 1744750139
 }
