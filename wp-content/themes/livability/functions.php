@@ -1931,12 +1931,36 @@ function place_data_shortcode($atts, $content = null) {
 
 add_shortcode( 'place_data', 'place_data_shortcode' );
 
-// Add a custom dimension to GA4 for Best Place year
-add_filter('monsterinsights_available_custom_dimensions', function ($dimensions) {
-	$dimensions['best_places_years'] = array(
-		'id' => 'best_places_years', // Replace with your taxonomy name, e.g., 'product_type'
-		'label' => 'Best Place Year', // Label for MonsterInsights settings
-		'type' => 'dimension',
-		);
-		return $dimensions;
-	});
+// Track Best Place Years in GA4
+add_action('wp_head', function () {
+    // Only run on singular pages of best_places or liv_place post types
+    if (is_singular(['best_places', 'liv_place']) && taxonomy_exists('best_places_years')) {
+        $terms = get_the_terms(get_the_ID(), 'best_places_years');
+        if ($terms && !is_wp_error($terms)) {
+            $term = reset($terms); // Get the first term
+            $term_name = esc_js($term->name); // Escape for JavaScript
+            ?>
+            <script>
+                // Wait for gtag to be available
+                document.addEventListener('DOMContentLoaded', function() {
+                    if (typeof gtag === 'function') {
+                        // Set custom dimension for the pageview
+                        gtag('set', 'user_properties', {
+                            'best_places_years': '<?php echo $term_name; ?>'
+                        });
+                        // Send pageview with custom dimension
+                        gtag('event', 'page_view', {
+                            'best_places_years': '<?php echo $term_name; ?>'
+                        });
+                        console.log('GA4: Tracked best_places_years = <?php echo $term_name; ?> for post type <?php echo esc_js(get_post_type()); ?>');
+                    } else {
+                        console.warn('GA4: gtag not found');
+                    }
+                });
+            </script>
+            <?php
+            // Log for debugging
+            error_log('GA4 Debug: Tracked best_places_years = ' . $term_name . ' for post ID ' . get_the_ID() . ' (post type: ' . get_post_type() . ')');
+        }
+    }
+}, 20);
