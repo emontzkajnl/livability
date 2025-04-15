@@ -53,7 +53,7 @@ while ( have_posts() ) :
 						<img class="bp23-badge-single" src="<?php echo get_stylesheet_directory_uri(  ); ?>/assets/images/2024Top100_badge_final.svg"/>
 						</a>
 						<?php 
-							echo '<'.$heading.' class="bp23-title">'.get_the_title().'<span><a href="'.site_url( '/best-places/2024-top-100-best-places-to-live-in-the-us/' ).'">Best Places to Live in the U.S. 2024-2025</a></span></'.$heading.'>'; 
+							echo '<'.$heading.' class="bp23-title">'.get_the_title().'<span><a href="'.site_url( '/best-places/2024-top-100-best-places-to-live-in-the-us/' ).'">Best Places to Live in the U.S. 2024</a></span></'.$heading.'>'; 
 						}?>
 						
 						<?php echo has_excerpt( ) ? '<p class="bp23-excerpt">'.get_the_excerpt().'</p>' : ''; 
