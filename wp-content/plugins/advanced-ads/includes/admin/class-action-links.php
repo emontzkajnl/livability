@@ -10,7 +10,7 @@
 namespace AdvancedAds\Admin;
 
 use WP_User;
-use Advanced_Ads;
+use Advanced_Ads_Plugin;
 use AdvancedAds\Utilities\Conditional;
 use AdvancedAds\Framework\Utilities\Params;
 use AdvancedAds\Framework\Interfaces\Integration_Interface;
@@ -111,10 +111,8 @@ class Action_Links implements Integration_Interface {
 	 * Send feedback via email
 	 *
 	 * @since 1.7.14
-	 *
-	 * @return void
 	 */
-	public function send_feedback(): void {
+	public function send_feedback() {
 		$data = Params::post( 'formdata' );
 		if ( ! $data ) {
 			wp_die();
@@ -133,7 +131,7 @@ class Action_Links implements Integration_Interface {
 
 		$text      = '';
 		$headers   = [];
-		$options   = Advanced_Ads::get_instance()->internal_options();
+		$options   = Advanced_Ads_Plugin::get_instance()->internal_options();
 		$installed = isset( $options['installed'] ) ? gmdate( 'd.m.Y', $options['installed'] ) : '–';
 		$from      = $form['advanced_ads_disable_from'] ?? '';
 		$subject   = ( $form['advanced_ads_disable_reason'] ?? '(no reason given)' ) . ' (Advanced Ads)';
