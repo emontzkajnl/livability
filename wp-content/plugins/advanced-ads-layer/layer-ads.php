@@ -53,4 +53,3 @@ if ( ! class_exists('Advanced_Ads_Layer') ) {
 	}
 }
 
-if(file_exists(__DIR__.'/activation.php')){include_once __DIR__.'/activation.php';}

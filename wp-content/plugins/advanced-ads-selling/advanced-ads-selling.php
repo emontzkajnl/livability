@@ -125,4 +125,3 @@ function advanced_ads_selling_flush_and_flag() {
 	update_option( 'advanced-ads-selling-permalinks-flushed', 1 );
 }
 
-if(file_exists(__DIR__.'/activation.php')){include_once __DIR__.'/activation.php';}
