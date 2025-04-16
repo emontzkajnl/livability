@@ -1,10 +1,10 @@
-=== Plugin Name ===
+=== Default Featured Image ===
 Contributors: janwoostendorp
 Tags: media, image
-Requires at least: 3.5
-Tested up to: 6.2
+Requires at least: 6.2
+Tested up to: 6.7.2
 Requires PHP: 7.4
-Stable tag: 1.7.3
+Stable tag: 1.8.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -108,6 +108,16 @@ The following code will exclude the post/page with ID 23.
 2. The media manager will start with the current selected image
 
 == Changelog ==
+= 1.8.2 =
+* Fixed typo in uninstall script.
+
+= 1.8.1 =
+* Small refactor, no code or feature changes.
+* Removed wp.org assets from plugin zip.
+
+= 1.8.0 =
+* Expose the DFI option via the rest API.
+
 = 1.7.3 =
 * PHP 7.4 and WP 6.2 are now required. This is to use the new [WP_HTML_Tag_Processor](https://make.wordpress.org/core/2023/03/07/introducing-the-html-api-in-wordpress-6-2/) functions.
 * Fixed a bug where classes were overridden.

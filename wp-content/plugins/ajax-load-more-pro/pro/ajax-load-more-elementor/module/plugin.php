@@ -14,7 +14,6 @@ namespace ALMElementorPosts;
  * @since 1.0.0
  */
 class Plugin {
-
 	/**
 	 * Instance
 	 *

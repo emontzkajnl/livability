@@ -13,10 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * This function will list all filters.
  *
  * @since 1.5
- * @param string $filter_id The filter ID.
- * @param string $pos       The position of the listing.
+ * @param string $pos The position of the listing.
  */
-function alm_list_all_filters( $filter_id, $pos = 'sidebar' ) {
+function alm_list_all_filters( $pos = 'sidebar' ) {
 	$filters = ALMFilters::alm_get_all_filters();
 	$params  = filter_input_array( INPUT_GET );
 	$order   = isset( $params['order'] ) ? $params['order'] : 'desc';
@@ -45,14 +44,14 @@ function alm_list_all_filters( $filter_id, $pos = 'sidebar' ) {
 				if ( $order === 'asc' ) {
 					usort(
 						$results,
-						function( $a, $b ) use ( $orderby ) {
+						function ( $a, $b ) use ( $orderby ) {
 							return $b[ $orderby ] <=> $a[ $orderby ]; // phpcs:ignore
 						}
 					);
 				} else {
 					usort(
 						$results,
-						function( $a, $b ) use ( $orderby ) {
+						function ( $a, $b ) use ( $orderby ) {
 							return $a[ $orderby ] <=> $b[ $orderby ]; // phpcs:ignore
 						}
 					);
@@ -130,9 +129,9 @@ function alm_list_all_filters( $filter_id, $pos = 'sidebar' ) {
 						</td>
 						<td class="text-center hide-mobile">
 							<?php if ( $filter['facets'] ) { ?>
-							<i class="fa fa-check-square" aria-hidden="true" style="color: #78ca8e; font-size: 14px; cursor: help;" aria-label="<?php esc_attr_e( 'This filter contains facets.', 'ajax-load-more-filters' ); ?>" title="<?php esc_attr_e( 'This filter contains facets.', 'ajax-load-more-filters' ); ?>"></i>
+							<i class="fa fa-check-square" aria-hidden="true" style="color: #7fd07a; font-size: 15px; cursor: help;" aria-label="<?php esc_attr_e( 'This filter contains facets.', 'ajax-load-more-filters' ); ?>" title="<?php esc_attr_e( 'This filter contains facets.', 'ajax-load-more-filters' ); ?>"></i>
 							<?php } else { ?>
-							<i class="fa fa-square" aria-hidden="true" style="opacity:0.2; font-size: 14px; cursor: help;" aria-label="<?php esc_attr_e( 'This filter does not contain facets.', 'ajax-load-more-filters' ); ?>" title="<?php esc_attr_e( 'This filter does not contain facets.', 'ajax-load-more-filters' ); ?>"></i>
+							<i class="fa fa-square" aria-hidden="true" style="opacity:0.2; font-size: 15px; cursor: help;" aria-label="<?php esc_attr_e( 'This filter does not contain facets.', 'ajax-load-more-filters' ); ?>" title="<?php esc_attr_e( 'This filter does not contain facets.', 'ajax-load-more-filters' ); ?>"></i>
 							<?php } ?>
 						</td>
 						<td>
@@ -202,17 +201,11 @@ function alm_filters_list_arrow( $column = '', $orderby = null, $order = 'asc' )
 function alm_filters_empty_filters( $pos ) {
 	$response  = '<div class="alm-no-filters ' . $pos . '">';
 	$response .= '<div class="alm-no-filters--inner">';
-	$response .= '<p class="first-intro">';
-	$response .= __( 'It appears you don\'t have any filters!', 'ajax-load-more-filters' );
-	$response .= '</p>';
-	$response .= '<p>';
-	$response .= __( 'The first step in filtering with Ajax Load More is to create one!', 'ajax-load-more-filters' );
-	$response .= '</p>';
-
+	$response .= '<p class="first-intro">' . __( 'It appears you don\'t have any filters!', 'ajax-load-more-filters' ) . '</p>';
+	$response .= '<p>' . __( 'The first step in filtering with Ajax Load More is to create one!', 'ajax-load-more-filters' ) . '</p>';
 	if ( $pos !== 'sidebar' ) {
 		$response .= '<p class="create-btn"><a href="' . ALM_FILTERS_BASE_URL . '&action=new" class="button button-primary button-large"> ' . __( 'Create Filter', 'ajax-load-more-filters' ) . '</a></p>';
 	}
-
 	$response .= '</div>';
 	$response .= '</div>';
 

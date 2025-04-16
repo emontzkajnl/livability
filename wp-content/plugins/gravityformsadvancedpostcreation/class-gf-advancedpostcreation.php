@@ -187,6 +187,8 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	 */
 	protected $_async_feed_processing = true;
 
+	protected $_asset_min;
+
 	/**
 	 * Get instance of this class.
 	 *
@@ -200,6 +202,10 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 
 		if ( null === self::$_instance ) {
 			self::$_instance = new self;
+		}
+
+		if ( ! isset( self::$_instance->_asset_min ) ) {
+			self::$_instance->_asset_min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || isset( $_GET['gform_debug'] ) ? '' : '.min';
 		}
 
 		return self::$_instance;
@@ -272,12 +278,10 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	 */
 	public function styles() {
 
-		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || isset( $_GET['gform_debug'] ) ? '' : '.min';
-
 		$styles = array(
 			array(
-				'handle'  => 'gform_advancedpostcreation_form_settings',
-				'src'     => $this->get_base_url() . "/css/form_settings{$min}.css",
+				'handle'  => 'gform_advancedpostcreation_admin',
+				'src'     => $this->get_base_url() . "/assets/css/dist/admin{$this->_asset_min}.css",
 				'version' => $this->_version,
 				'enqueue' => array(
 					array(
@@ -288,7 +292,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 			),
 			array(
 				'handle'  => 'gform_advancedpostcreation_select2',
-				'src'     => $this->get_base_url() . '/css/vendor/select2.min.css',
+				'src'     => $this->get_base_url() . '/assets/css/vendor/select2.min.css',
 				'version' => $this->_version,
 				'enqueue' => array(
 					array(
@@ -315,26 +319,24 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	 */
 	public function scripts() {
 
-		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || isset( $_GET['gform_debug'] ) ? '' : '.min';
-
 		$scripts = array(
 			array(
 				'handle'  => 'gform_advancedpostcreation_select2',
 				'deps'    => array( 'jquery' ),
-				'src'     => $this->get_base_url() . '/js/vendor/select2.min.js',
+				'src'     => $this->get_base_url() . '/assets/js/legacy/select2.min.js',
 				'version' => $this->_version,
 			),
 			array(
 				'handle'  => 'gform_advancedpostcreation_taxonomy_map',
 				'deps'    => array( 'gform_advancedpostcreation_select2' ),
 				'src'     => $this->is_gravityforms_supported( '2.5-beta-1' )
-					? $this->get_base_url() . "/js/taxonomy_map{$min}.js"
-					: $this->get_base_url() . "/legacy/js/taxonomy_map_pre_gf25{$min}.js",
+					? $this->get_base_url() . "/assets/js/legacy/taxonomy_map{$this->_asset_min}.js"
+					: $this->get_base_url() . "/assets/js/legacy/taxonomy_map_pre_gf25{$this->_asset_min}.js",
 				'version' => $this->_version,
 			),
 			array(
 				'handle'  => 'gform_advancedpostcreation_utils',
-				'src'     => $this->get_base_url() . "/js/utils{$min}.js",
+				'src'     => $this->get_base_url() . "/assets/js/legacy/utils{$this->_asset_min}.js",
 				'deps'    => array( 'jquery' ),
 				'version' => $this->_version,
 				'enqueue' => array(
@@ -350,7 +352,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 			array(
 				'handle'  => 'gform_advancedpostcreation_form_settings',
 				'deps'    => array( 'gform_advancedpostcreation_taxonomy_map', 'gform_advancedpostcreation_utils' ),
-				'src'     => $this->get_base_url() . "/js/form_settings{$min}.js",
+				'src'     => $this->get_base_url() . "/assets/js/legacy/form_settings{$this->_asset_min}.js",
 				'version' => $this->_version,
 				'enqueue' => array(
 					array(
@@ -629,6 +631,22 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 						),
 					),
 					array(
+						'name'       => 'disableAutoformat',
+						'label'      => esc_html__( 'Auto-Formatting', 'gravityforms' ),
+						'type'       => 'checkbox',
+						'choices'    => array(
+							array(
+								'name'    => 'disableAutoformat',
+								'label'   => esc_html__( 'Disable auto-formatting', 'gravityforms' ),
+								'tooltip'       => sprintf(
+									'<h6>%s</h6>%s',
+									esc_html__( 'Disable Auto-Formatting', 'gravityformsadvancedpostcreation' ),
+									esc_html__( 'When enabled, auto-formatting will insert paragraph breaks automatically. Disable auto-formatting when using HTML to create the post content.', 'gravityformsadvancedpostcreation' )
+								),
+							),
+						),
+					),
+					array(
 						'name'        => 'postMetaFields',
 						'label'       => esc_html__( 'Custom Fields', 'gravityformsadvancedpostcreation' ),
 						'type'        => 'generic_map',
@@ -736,7 +754,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 				);
 
 				// Add field.
-				$fields = parent::add_field_after( 'postContent', $thumbnail_field, $fields );
+				$fields = parent::add_field_after( 'disableAutoformat', $thumbnail_field, $fields );
 
 			}
 
@@ -1788,16 +1806,15 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	 * Process the feed.
 	 *
 	 * @since  1.0
+	 * @since  1.5 Updated return value for consistency with other add-ons, so the framework can save the feed status to the entry meta.
+	 *
 	 * @access public
 	 *
-	 * @param  array $feed  The Feed object to be processed.
-	 * @param  array $entry The Entry object currently being processed.
-	 * @param  array $form  The Form object currently being processed.
+	 * @param array $feed  The Feed object to be processed.
+	 * @param array $entry The Entry object currently being processed.
+	 * @param array $form  The Form object currently being processed.
 	 *
-	 * @uses   GFAddOn::log_debug()
-	 * @uses   GF_Advanced_Post_Creation::create_post()
-	 *
-	 * @return array
+	 * @return array|WP_Error
 	 */
 	public function process_feed( $feed, $entry, $form ) {
 
@@ -1815,21 +1832,15 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	 * Create post from post creation feed.
 	 *
 	 * @since  1.0
+	 * @since  1.5 Updated return value for consistency with other add-ons, so the framework can save the feed status to the entry meta.
+	 *
 	 * @access public
 	 *
-	 * @param  array $feed  The feed object to be processed.
-	 * @param  array $entry The entry object currently being processed.
-	 * @param  array $form  The form object currently being processed.
+	 * @param array $feed  The feed object to be processed.
+	 * @param array $entry The entry object currently being processed.
+	 * @param array $form  The form object currently being processed.
 	 *
-	 * @uses   GFAddOn::get_field_value()
-	 * @uses   GFAddOn::log_debug()
-	 * @uses   GFAddOn::log_error()
-	 * @uses   GFCommon::replace_variables()
-	 * @uses   GF_Advanced_Post_Creation::get_generic_map_fields()
-	 * @uses   GF_Advanced_Post_Creation::get_mapped_taxonomies()
-	 * @uses   GF_Advanced_Post_Creation::media_handle_upload()
-	 *
-	 * @return array
+	 * @return array|WP_Error
 	 */
 	public function create_post( $feed, $entry, $form ) {
 
@@ -1859,7 +1870,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 			// Log that post was not created.
 			$this->add_feed_error( 'Could not create base post object: ' . $post_id->get_error_message(), $feed, $entry, $form );
 
-			return $entry;
+			return $post_id;
 
 		} else {
 
@@ -1898,12 +1909,13 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 			// Log that post was not created.
 			$this->add_feed_error( 'Could not create post object: ' . $updated_post->get_error_message(), $feed, $entry, $form );
 
-			return $entry;
+			return $updated_post;
 
 		} else {
 
 			// Log that post was created.
 			$this->log_debug( __METHOD__ . '(): Post was created with an ID of ' . $post['ID'] . '.' );
+			$this->add_note( rgar( $entry, 'id' ), sprintf( esc_html__( 'Post created: %d.', 'gravityformsadvancedpostcreation' ), $post['ID'] ), 'success' );
 
 			// Add entry and feed ID to post meta.
 			update_post_meta( $post['ID'], '_' . $this->_slug . '_entry_id', $entry['id'] );
@@ -1959,13 +1971,14 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	 * Updates a post.
 	 *
 	 * @since 1.0
+	 * @since 1.5 Updated to return the WP_error from wp_update_post().
 	 *
 	 * @param integer|string $post_id The ID of the post being updated.
 	 * @param array          $feed    The feed being processed.
 	 * @param array          $entry   The entry associated with the post being updated.
 	 * @param array          $form    The form object.
 	 *
-	 * @return bool
+	 * @return bool|WP_Error
 	 */
 	public function update_post( $post_id, $feed, $entry, $form ) {
 		require_once 'includes/class-post-update-handler.php';
@@ -2084,7 +2097,8 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 		}
 
 		// Replace remaining variables in post content.
-		$content = GFCommon::replace_variables( $content, $form, $entry, false, false );
+		$nl2br   = rgars( $feed, 'meta/disableAutoformat' ) === '0' ? true : false;
+		$content = GFCommon::replace_variables( $content, $form, $entry, false, false, $nl2br );
 
 		return $content;
 
@@ -2485,12 +2499,14 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 			return;
 		}
 
-		$image_exts = array( 'jpg', 'jpeg', 'jpe', 'gif', 'png' );
+		$image_exts = array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'webp' );
 		$file_type  = wp_check_filetype( $file_url );
 
 		if ( in_array( strtolower( $file_type['ext'] ), $image_exts ) ) {
 			$this->log_debug( __METHOD__ . "(): Setting image ID {$image_id} as featured image for post ID {$post_id}." );
 			set_post_thumbnail( $post_id, $image_id );
+		} else {
+			$this->log_error( __METHOD__ . "(): Due to using an unsupported file extension, unable to set image ID {$image_id} as featured image for post ID {$post_id}." );
 		}
 
 	}
@@ -3000,6 +3016,9 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 
 			// Loop through uploaded files, get media IDs.
 			foreach ( $files as $file ) {
+				if ( empty( $current_media[ $file ] ) ) {
+					continue;
+				}
 				$media[] = rgar( $current_media, $file );
 			}
 

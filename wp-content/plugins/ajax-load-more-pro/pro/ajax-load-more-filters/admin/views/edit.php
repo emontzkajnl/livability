@@ -6,20 +6,17 @@
  * @package ALMFilters
  */
 
-if ( ! $filter_vue ) { ?>
-	<script>
-		var alm_filters = '';
-		var alm_filter_id = '';
-	</script>
-	<?php
-} else {
-	// Pass current filter as JS variable.
-	?>
-	<script>
-		var alm_filters = <?php echo wp_json_encode( $filter_vue ); ?>;
-		var alm_filter_id = <?php echo '"' . $filter_id . '"'; ?>;
-	</script>
-<?php } ?>
+// Pass current filter attributes as JS variable.
+?>
+<script>
+	var alm_filters = <?php echo $filter_vue ? wp_json_encode( $filter_vue ) : '""'; ?>;
+	var alm_filter_id = <?php echo $filter_vue ? '"' . $filter_id . '"' : '""'; ?>;
+</script>
+<?php
+
+// Does this filter contain a facets array.
+$has_facets = isset( $filter['facets'] ) && $filter['facets'] === true;
+?>
 
 <!-- Start app -->
 <div class="ajax-load-more-inner-wrapper" id="app">
@@ -136,16 +133,16 @@ if ( ! $filter_vue ) { ?>
 								<div class="checkbox-wrapper">
 									<input type="checkbox" id="filter-facets" data-id="facets" value="true" :checked="data[0].facets === true" v-on:change="optionsChange($event)">
 									<label class="checkbox" for="filter-facets">
-										<span><?php esc_attr_e( 'Enable Faceted Filtering', 'ajax-load-more-filters' ); ?></span>
+										<span><?php esc_attr_e( 'Enable Facet Filtering', 'ajax-load-more-filters' ); ?></span>
 									</label>
 								</div>
 							</div>
 						</div>
 					</div>
 					<?php
-					$pt_args    = array(
+					$pt_args    = [
 						'public' => true,
-					);
+					];
 					$post_types = get_post_types( $pt_args );
 					if ( $post_types ) {
 						?>
@@ -399,9 +396,9 @@ if ( ! $filter_vue ) { ?>
 					<!-- Taxonomy -->
 					<?php
 					$public_tax = apply_filters( 'alm_filters_public_taxonomies', true );
-					$tax_args   = array(
+					$tax_args   = [
 						'_builtin' => apply_filters( 'alm_filters_builtin_taxonomies', false ),
-					);
+					];
 
 					// Add `public` argument if not sepecifically set to false.
 					if ( $public_tax ) {
@@ -1056,7 +1053,7 @@ if ( ! $filter_vue ) { ?>
 					<div class="alm-filter--row_info">
 						<?php
 							$format = __( 'Use the %s hook to adjust the `Reset` button label.', 'ajax-load-more-filters' );
-							echo sprintf( $format, '<a href="https://connekthq.com/plugins/ajax-load-more/docs/add-ons/filters/#alm_filters_range_slider_reset_label" target="_blank">alm_filters_range_slider_reset_label</a>' );
+							printf( $format, '<a href="https://connekthq.com/plugins/ajax-load-more/docs/add-ons/filters/#alm_filters_range_slider_reset_label" target="_blank">alm_filters_range_slider_reset_label</a>' );
 						?>
 					</div>
 				</div>

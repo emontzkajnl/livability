@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Advanced WordPress Backgrounds
  * Description:  Parallax, Video, Images Backgrounds
- * Version:      1.12.4
+ * Version:      1.12.7
  * Author:       Advanced WordPress Backgrounds Team
  * Author URI:   https://wpbackgrounds.com/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=byline
  * License:      GPLv2 or later
@@ -36,7 +36,6 @@ class NK_AWB {
         if ( is_null( self::$instance ) ) {
             self::$instance = new self();
             self::$instance->init();
-            self::$instance->init_hooks();
         }
         return self::$instance;
     }
@@ -69,12 +68,6 @@ class NK_AWB {
         $this->plugin_path = plugin_dir_path( __FILE__ );
         $this->plugin_url  = plugin_dir_url( __FILE__ );
 
-        // load textdomain.
-        load_plugin_textdomain( 'advanced-backgrounds', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-
-        // register images sizes.
-        $this->add_image_sizes();
-
         // include helper files.
         $this->include_dependencies();
 
@@ -84,12 +77,9 @@ class NK_AWB {
         new NK_AWB_VC_Extend();
         new NK_AWB_TinyMCE();
         new NK_AWB_Gutenberg();
-    }
 
-    /**
-     * Init hooks
-     */
-    public function init_hooks() {
+        // Hooks.
+        add_action( 'init', array( $this, 'init_hook' ) );
         add_action( 'init', array( $this, 'register_scripts' ) );
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
         add_action( 'ghostkit_parse_blocks', array( $this, 'parse_ghostkit_blocks' ) );
@@ -97,18 +87,29 @@ class NK_AWB {
     }
 
     /**
+     * Init hook
+     */
+    public function init_hook() {
+        // register images sizes.
+        $this->add_image_sizes();
+
+        // load textdomain.
+        load_plugin_textdomain( 'advanced-backgrounds', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+    }
+
+    /**
      * Register scripts that will be used in the future when portfolio will be printed.
      */
     public function register_scripts() {
-        wp_register_script( 'jarallax', nk_awb()->plugin_url . 'assets/vendor/jarallax/dist/jarallax.min.js', array(), '2.2.0', true );
-        wp_register_script( 'jarallax-video', nk_awb()->plugin_url . 'assets/vendor/jarallax/dist/jarallax-video.min.js', array( 'jarallax' ), '2.2.0', true );
-        wp_register_script( 'awb', nk_awb()->plugin_url . 'assets/awb/awb.min.js', array( 'jarallax', 'jarallax-video' ), '1.12.4', true );
+        wp_register_script( 'jarallax', nk_awb()->plugin_url . 'assets/vendor/jarallax/dist/jarallax.min.js', array(), '2.2.1', true );
+        wp_register_script( 'jarallax-video', nk_awb()->plugin_url . 'assets/vendor/jarallax/dist/jarallax-video.min.js', array( 'jarallax' ), '2.2.1', true );
+        wp_register_script( 'awb', nk_awb()->plugin_url . 'assets/awb/awb.min.js', array( 'jarallax', 'jarallax-video' ), '1.12.7', true );
 
         wp_localize_script(
             'awb',
             'AWB',
             array(
-                'version'  => '1.12.4',
+                'version'  => '1.12.7',
                 'settings' => array(
                     'disable_parallax'    => array_keys( AWB_Settings::get_option( 'disable_parallax', 'awb_general', array() ) ? AWB_Settings::get_option( 'disable_parallax', 'awb_general', array() ) : array() ),
                     'disable_video'       => array_keys( AWB_Settings::get_option( 'disable_video', 'awb_general', array() ) ? AWB_Settings::get_option( 'disable_video', 'awb_general', array() ) : array() ),
@@ -117,7 +118,7 @@ class NK_AWB {
             )
         );
 
-        wp_register_style( 'awb', nk_awb()->plugin_url . 'assets/awb/awb.min.css', array(), '1.12.4' );
+        wp_register_style( 'awb', nk_awb()->plugin_url . 'assets/awb/awb.min.css', array(), '1.12.7' );
     }
 
     /**
@@ -166,14 +167,15 @@ class NK_AWB {
     }
 
     /**
-     * Add image sizes.
+     * Add custom image sizes.
      */
     public function add_image_sizes() {
-        // custom image sizes.
-        add_image_size( 'awb_sm', 500 );
-        add_image_size( 'awb_md', 800 );
-        add_image_size( 'awb_lg', 1280 );
-        add_image_size( 'awb_xl', 1920 );
+        if ( AWB_Settings::get_option( 'register_image_sizes', 'awb_images', true ) ) {
+            add_image_size( 'awb_sm', 500 );
+            add_image_size( 'awb_md', 800 );
+            add_image_size( 'awb_lg', 1280 );
+            add_image_size( 'awb_xl', 1920 );
+        }
     }
 
     /**

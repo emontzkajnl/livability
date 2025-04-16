@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/wpmonks
 Tags: Gravity Forms CSS, gravity forms themes, gravity forms styler, Gravity Forms Design, Gravity Forms Material Design, Gravity Forms Tooltips
 Requires at least: 4.0
 Tested up to: 6.7
-Stable tag: 5.19
+Stable tag: 5.20
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ Gravity Booster - Styles and Layouts for Gravity Forms plugin lets you design an
 
 **Introducing Gravity Booster formerly Styles and Layouts for Gravity Forms. It  you lets you create beautiful designs for Gravity forms.** It provides you and easy to use interface for designing forms that works with all themes and builders. It is compatible with Divi, Elmentor, Visual composer, Thrive Architect Beaver Builder, Astra, GeneratePress, Oxygen Builder, Avada theme, OceanWP theme, Genesis Framework, The7, Salient and more. The design changes you make with this Gravity Forms Styler plugin are instantaneously visible so, you can see how the form looks in real time.
 
-[youtube https://www.youtube.com/watch?v=bkiBdaxIPjY]
+[youtube https://www.youtube.com/watch?v=Ib5qRdMr_v4]
 
 = Styles & Layouts for Gravity Forms Premium Addons: =
 * [ **AI for Gravity Forms** ](https://wpmonks.com/downloads/ai-for-gravity-forms/)
@@ -125,6 +125,9 @@ Yes, Gravity Forms embedded in Divi themes is also supported. Please check the t
 4. Options in settings
 
 == Changelog ==
+= 5.20 (24th January 2025) =
+* Added support for Gravity Forms v2.9
+
 = 5.19 (25th November 2024) =
 * Fixed compatability issues with Custom themes addon
 

@@ -9770,6 +9770,44 @@ function toggleSelect() {
 
 /***/ }),
 
+/***/ "./src/js/frontend/helpers/warnings.js":
+/*!*********************************************!*\
+  !*** ./src/js/frontend/helpers/warnings.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.missingTarget = missingTarget;
+exports.missingALMInstance = missingALMInstance;
+/**
+ * Display console.warn message about missing parameter.
+ *
+ * @param {string} target The Ajax Load More target instance ID.
+ */
+function missingTarget() {
+  console.warn('Ajax Load More: Filters - Unable to locate core Ajax Load More instance. Ensure the target attribute is set on each instance of filters.');
+}
+
+/**
+ * Display console.warn message about missing ALM instance.
+ *
+ * @param {string} target The Ajax Load More target instance ID.
+ */
+function missingALMInstance() {
+  var target = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'null';
+
+  console.warn('Ajax Load More: Filters - Unable to locate core Ajax Load More instance with the ID of "' + target + '". Ensure the target attribute is set correctly on each instance of filters.');
+  return;
+}
+
+/***/ }),
+
 /***/ "./src/js/frontend/index.js":
 /*!**********************************!*\
   !*** ./src/js/frontend/index.js ***!
@@ -9804,6 +9842,8 @@ var _multipleInstances = __webpack_require__(/*! ./helpers/multipleInstances */ 
 var _multipleInstances2 = _interopRequireDefault(_multipleInstances);
 
 var _toggle = __webpack_require__(/*! ./helpers/toggle */ "./src/js/frontend/helpers/toggle.js");
+
+var _warnings = __webpack_require__(/*! ./helpers/warnings */ "./src/js/frontend/helpers/warnings.js");
 
 var _BuildDataObj = __webpack_require__(/*! ./modules/BuildDataObj */ "./src/js/frontend/modules/BuildDataObj.js");
 
@@ -9876,12 +9916,20 @@ var almFiltersInit = function almFiltersInit(filter) {
 
 	var _filter$dataset = filter.dataset,
 	    style = _filter$dataset.style,
-	    target = _filter$dataset.target;
+	    _filter$dataset$targe = _filter$dataset.target,
+	    target = _filter$dataset$targe === undefined ? '' : _filter$dataset$targe;
 
-	var alm = document.querySelector('.ajax-load-more-wrap[data-id="' + target + '"]');
-	if (!alm) {
-		console.warn('Ajax Load More: Filters - Unable to locate core Ajax Load More instance. Ensure the target attribute is set correctly on each instance of filters.');
+	if (!target) {
+		(0, _warnings.missingTarget)(); // Display console warning if target is missing.
 	}
+
+	// Loop each instance.
+	target.split(',').forEach(function (target) {
+		var instance = document.querySelector('.ajax-load-more-wrap[data-id="' + target + '"]');
+		if (!instance) {
+			(0, _warnings.missingALMInstance)(target); // Display console warning if ALM instance is missing.
+		}
+	});
 
 	// Click/Change Event
 	var almFiltersClick = function almFiltersClick() {
@@ -11197,9 +11245,9 @@ var _CurrentFilters = __webpack_require__(/*! ./CurrentFilters */ "./src/js/fron
 
 var _CurrentFilters2 = _interopRequireDefault(_CurrentFilters);
 
-var _Variables = __webpack_require__(/*! ../global/Variables */ "./src/js/frontend/global/Variables.js");
+var _QueryDefaults = __webpack_require__(/*! ./QueryDefaults */ "./src/js/frontend/modules/QueryDefaults.js");
 
-var _Variables2 = _interopRequireDefault(_Variables);
+var _QueryDefaults2 = _interopRequireDefault(_QueryDefaults);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11213,30 +11261,36 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @return void           Dispatch global almFilter() function call
  */
 var dispatch = function dispatch(target, data, url) {
-	// Get the target .ajax-load-more element
-	var alm = document.querySelectorAll('.ajax-load-more-wrap[data-id="' + target + '"] .alm-listing.alm-ajax');
-
-	if (typeof alm !== 'undefined' && alm !== null) {
-		alm = alm[0];
-		var transition = alm.dataset.transition === null ? 'fade' : alm.dataset.transition;
-		var speed = alm.dataset.speed === null ? '250' : alm.dataset.speed;
-
-		// Trigger analytics.
-		(0, _Analytics2.default)('filters');
-
-		// Debug Info
-		if (alm.dataset.filtersDebug === 'true') {
-			console.log('ALM Filters Debug:', data);
-		}
-
-		// Dispatch filters to core ALM
-		if (typeof ajaxloadmore.filter === 'function') {
-			ajaxloadmore.filter(transition, speed, data);
-		}
-
-		// Set currently selected filters
-		(0, _CurrentFilters2.default)(url);
+	// Get the target .ajax-load-more element.
+	var alm = document.querySelectorAll('.ajax-load-more-wrap[data-id="' + target + '"]');
+	if (!alm) {
+		return;
 	}
+	alm = alm[0];
+	var listing = alm.querySelector('.alm-listing.alm-ajax');
+	var transition = listing.dataset.transition === null ? 'fade' : listing.dataset.transition;
+	var speed = listing.dataset.speed === null ? 200 : listing.dataset.speed;
+
+	// Get default shortcode parameters from localized vars.
+	var localized = alm.dataset.localized;
+	var defaults = localized && window[localized] && window[localized].defaults ? window[localized].defaults : {};
+	data = (0, _QueryDefaults2.default)(data, defaults); // Merge query defaults with data.
+
+	// Trigger analytics.
+	(0, _Analytics2.default)('filters');
+
+	// Debug Info
+	if (listing.dataset.filtersDebug === 'true') {
+		console.log('ALM Filters Debug:', data);
+	}
+
+	// Dispatch filters to core ALM
+	if (typeof ajaxloadmore.filter === 'function') {
+		ajaxloadmore.filter(transition, speed, data);
+	}
+
+	// Set currently selected filters
+	(0, _CurrentFilters2.default)(url);
 };
 
 exports.default = dispatch;
@@ -11735,6 +11789,67 @@ exports.default = parseQuerystring;
 
 /***/ }),
 
+/***/ "./src/js/frontend/modules/QueryDefaults.js":
+/*!**************************************************!*\
+  !*** ./src/js/frontend/modules/QueryDefaults.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = setQueryDefaults;
+/**
+ * Merge query defaults to ever-present query attributes for Taxonomy and Meta Query.
+ *
+ * @param {Object} data     The data objects.
+ * @param {Object} defaults The default query attributes.
+ * @return {Object}         The updated data object.
+ */
+function setQueryDefaults() {
+	var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	var defaults = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+	if (!defaults) {
+		return data;
+	}
+
+	/**
+  * Meta Query.
+  * Note: Only set if meta_key & meta_value are set.
+  */
+	if (defaults.meta_key && defaults.meta_value) {
+		data.metaKey = data.metaKey ? data.metaKey + ':' + defaults.meta_key : defaults.meta_key;
+		data.metaValue = data.metaValue ? data.metaValue + ':' + defaults.meta_value : defaults.meta_value;
+		if (defaults.meta_compare) {
+			data.metaCompare = data.metaCompare ? data.metaCompare + ':' + defaults.meta_compare : defaults.meta_compare;
+		}
+		if (defaults.meta_type) {
+			data.metaType = data.metaType ? data.metaType + ':' + defaults.meta_type : defaults.meta_type;
+		}
+	}
+
+	/**
+  * Taxonomy Query.
+  * Note: Only set if taxonomy & taxonomy_terms are set.
+  */
+	if (defaults.taxonomy && defaults.taxonomy_terms) {
+		data.taxonomy = data.taxonomy ? data.taxonomy + ':' + defaults.taxonomy : defaults.taxonomy;
+		data.taxonomyTerms = data.taxonomyTerms ? data.taxonomyTerms + ':' + defaults.taxonomy_terms : defaults.taxonomy_terms;
+		if (defaults.taxonomy_operator) {
+			data.taxonomyOperator = data.taxonomyOperator ? data.taxonomyOperator + ':' + defaults.taxonomy_operator : defaults.taxonomy_operator;
+		}
+	}
+
+	return data;
+}
+
+/***/ }),
+
 /***/ "./src/js/frontend/modules/Scroll.js":
 /*!*******************************************!*\
   !*** ./src/js/frontend/modules/Scroll.js ***!
@@ -12066,6 +12181,8 @@ var _parseQueryString = __webpack_require__(/*! ../helpers/parseQueryString */ "
 
 var _parseQueryString2 = _interopRequireDefault(_parseQueryString);
 
+var _warnings = __webpack_require__(/*! ../helpers/warnings */ "./src/js/frontend/helpers/warnings.js");
+
 var _BuildDataObj = __webpack_require__(/*! ./BuildDataObj */ "./src/js/frontend/modules/BuildDataObj.js");
 
 var _BuildDataObj2 = _interopRequireDefault(_BuildDataObj);
@@ -12109,86 +12226,92 @@ var triggerChange = function triggerChange(filterGroup) {
 	    _filterGroup$dataset$ = _filterGroup$dataset.redirect,
 	    redirect = _filterGroup$dataset$ === undefined ? false : _filterGroup$dataset$; // Get filter params from data attributes.
 
-	var data = {}; // Define data object
-	var url = ''; // Build URL
-
-	// Get the target .ajax-load-more element
-	var alm = document.querySelectorAll('.ajax-load-more-wrap[data-id="' + target + '"]')[0] || null;
-	if (!alm) {
-		return;
+	if (!target) {
+		(0, _warnings.missingTarget)(); // Display console warning if target is missing.
 	}
 
-	var canonicalUrl = alm.dataset.canonicalUrl; // Get the canonical URL
-
-	var hasMultple = (0, _multipleInstances2.default)(); // Are there multiple instances of core ALM on the page.
-
-	// Get all filters on the page.
-	var filters = (0, _getInstances.getFilters)();
-
-	// Loop all filters.
-	[].concat(_toConsumableArray(filters)).forEach(function (filter) {
-		data = (0, _BuildDataObj2.default)(filter, data); // Build data object to send to ALM.
-		if (!hasMultple) {
-			url += (0, _BuildURL2.default)(filter, url); // Build the URL.
+	// Loop each target.
+	target.split(',').forEach(function (target) {
+		// Get the target .ajax-load-more element
+		var alm = document.querySelectorAll('.ajax-load-more-wrap[data-id="' + target + '"]')[0] || null;
+		if (!alm) {
+			return;
 		}
-	});
 
-	// Redirect user to new URL after filter.
-	if (redirect) {
-		window.location.href = '' + redirect + url;
-		return;
-	}
+		var canonicalUrl = alm.dataset.canonicalUrl; // Get the canonical URL
 
-	// Build an object of active filters.
-	var activeFilters = url !== '' ? (0, _parseQueryString2.default)(url, true) : '';
+		var hasMultple = (0, _multipleInstances2.default)(); // Are there multiple instances of core ALM on the page.
 
-	/*
-  * Callback function dispatched informing user of the active filters.
-  */
-	if (typeof window.almFiltersActive === 'function') {
-		window.almFiltersActive(activeFilters);
-	}
+		var data = {};
+		var url = '';
 
-	// Set the reset button status.
-	if (typeof window.almFiltersResetStatus === 'function') {
-		window.almFiltersResetStatus(activeFilters);
-	}
+		// Get all filters on the page.
+		var filters = (0, _getInstances.getFilters)();
 
-	// Set new URL.
-	url = url === '' ? canonicalUrl : url;
+		// Loop all filters.
+		[].concat(_toConsumableArray(filters)).forEach(function (filter) {
+			data = (0, _BuildDataObj2.default)(filter, data); // Build data object to send to ALM.
+			if (!hasMultple) {
+				url += (0, _BuildURL2.default)(filter, url); // Build the URL.
+			}
+		});
 
-	var state = {
-		permalink: url
-	};
+		// Redirect user to new URL after filter.
+		if (redirect) {
+			window.location.href = '' + redirect + url;
+			return;
+		}
 
-	// If pushstate is enabled and not triggered via popstate.
-	if (!_Variables2.default.alm_filtering_popstate && !hasMultple) {
-		if (typeof window.history.pushState === 'function') {
-			var almListing = alm.querySelector('.alm-listing');
+		// Build an object of active filters.
+		var activeFilters = url !== '' ? (0, _parseQueryString2.default)(url, true) : '';
 
-			// Determine if URL should be updated
-			if (almListing && almListing.dataset.filtersUrl !== 'false') {
-				// Send Pushstate
-				// history.replaceState(state, null, url);
-				history.pushState(state, null, url);
-				_Variables2.default.pushstate = true;
+		/*
+   * Callback function dispatched informing user of the active filters.
+   */
+		if (typeof window.almFiltersActive === 'function') {
+			window.almFiltersActive(activeFilters);
+		}
 
-				/*
-     * Callback function dispatched after the browser URL has been updated
-     */
-				if (typeof window.almFiltersURLUpdate === 'function') {
-					window.almFiltersURLUpdate(url);
+		// Set the reset button status.
+		if (typeof window.almFiltersResetStatus === 'function') {
+			window.almFiltersResetStatus(activeFilters);
+		}
+
+		// Set new URL.
+		url = url === '' ? canonicalUrl : url;
+
+		// If pushstate is enabled and not triggered via popstate.
+		if (!_Variables2.default.alm_filtering_popstate && !hasMultple) {
+			if (typeof window.history.pushState === 'function') {
+				var almListing = alm.querySelector('.alm-listing');
+				var state = {
+					permalink: url
+				};
+
+				// Determine if URL should be updated
+				if (almListing && almListing.dataset.filtersUrl !== 'false') {
+					// Send Pushstate
+					// history.replaceState(state, null, url);
+					history.pushState(state, null, url);
+					_Variables2.default.pushstate = true;
+
+					/*
+      * Callback function dispatched after the browser URL has been updated
+      */
+					if (typeof window.almFiltersURLUpdate === 'function') {
+						window.almFiltersURLUpdate(url);
+					}
 				}
 			}
 		}
-	}
 
-	_Variables2.default.alm_filtering_popstate = false;
-	data.pause = false; // Disable pause (prevention)
-	data.preloaded = false; // Disable preloaded (prevention)
-	data.target = target; // Set target before data obj is sent
+		_Variables2.default.alm_filtering_popstate = false;
+		data.pause = false; // Disable pause (prevention)
+		data.preloaded = false; // Disable preloaded (prevention)
+		data.target = target; // Set target before data obj is sent
 
-	(0, _Dispatch2.default)(target, data, url); // Dispatch the data obj and URL.
+		(0, _Dispatch2.default)(target, data, url); // Dispatch the data obj and URL.
+	});
 };
 
 exports.default = triggerChange;

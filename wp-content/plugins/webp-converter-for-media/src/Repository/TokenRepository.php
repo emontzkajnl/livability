@@ -23,7 +23,7 @@ class TokenRepository {
 	 */
 	private $token = null;
 
-	public function get_token( string $token_value = null ): Token {
+	public function get_token( ?string $token_value = null ): Token {
 		if ( $this->token ) {
 			return $this->token;
 		}
@@ -49,7 +49,7 @@ class TokenRepository {
 	 *
 	 * @return void
 	 */
-	public function update_token( Token $token ) {
+	public function save_token( Token $token ) {
 		OptionsAccessManager::update_option(
 			self::TOKEN_OPTION,
 			[
@@ -64,8 +64,8 @@ class TokenRepository {
 	/**
 	 * @return void
 	 */
-	public function reset_token() {
-		$this->update_token( new Token() );
+	public function remove_token() {
+		$this->save_token( new Token() );
 		$this->token = null;
 	}
 }

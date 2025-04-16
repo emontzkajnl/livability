@@ -1,3 +1,10 @@
+### 1.5.0 | 2025-03-18
+- Added a setting to disable auto-formatting for the post content field.
+- Added support for WebP images as featured images.
+- Fixed an issue where the {apc_media} merge tag outputs only commas when the field is not adding files to the media library.
+- AF: Updated process_feed() return value for compatibility with Gravity Forms 2.9.4, so the framework can save the feed status to the entry meta.
+- AF: Updated update_post() return value so Gravity Flow 2.9.13+ can save the feed status to the entry meta when used with Gravity Forms 2.9.4+.
+
 ### 1.4.0 | 2023-09-14
 - Added support for async (background) feed processing to improve form submission performance.
 - Added the [gform_advancedpostcreation_post_update_post](https://docs.gravityforms.com/gform_advancedpostcreation_post_update_post/) action.

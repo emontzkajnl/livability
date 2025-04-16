@@ -8,7 +8,7 @@
  * What does this functionality do?
  * 1. Reads from an index created and stored in the options table.
  * 2. Matches returned query results (get_posts -1) to the items in the content index.
- * 3. Runs functionality to pull oand organize facets.
+ * 3. Runs functionality to pull and organize facets.
  * 4. Returns an array of objects containing the facets and counts.
  */
 
@@ -28,12 +28,12 @@ function alm_filters_get_facets( $args = [], $target = '' ) {
 		return [];
 	}
 
-	$facets = [];
+	$facets  = [];
 	$filters = array_map( 'trim', explode( ',', $target ) ); // Split target into array.
 
 	if ( ! empty( $filters ) ) {
 		// Loop each filter to get facets.
-		foreach( $filters as $id ) {
+		foreach ( $filters as $id ) {
 			$facet  = alm_filters_get_facet( $args, $id ); // Get facets for the filter.
 			$facets = array_merge( $facets, $facet ); // Merge the facets and make them unique.
 		}
@@ -65,7 +65,7 @@ function alm_filters_get_facet( $args = [], $facet_id = '' ) {
 		'year',
 		'month',
 		'day',
-		'post_type'
+		'post_type',
 	];
 
 	/**
@@ -74,10 +74,10 @@ function alm_filters_get_facet( $args = [], $facet_id = '' ) {
 	 * @see https://developer.wordpress.org/apis/transients/
 	 */
 	$alm_id         = array_key_exists( 'alm_id', $args ) ? $args['alm_id'] : '';
-	$transient_name = alm_filters_facet_get_transient_name( $facet_id, $alm_id );
+	$transient_name = alm_filters_facet_get_transient_name( $facet_id, $alm_id, $args );
 	$transient      = get_transient( $transient_name );
 	if ( $transient ) {
-		return $transient; // If found, return the transient.
+		return $transient; // If transient found, return it versus running another query.
 	}
 
 	// Override ALM query $args for the facet query.
@@ -88,9 +88,9 @@ function alm_filters_get_facet( $args = [], $facet_id = '' ) {
 	$posts = get_posts( apply_filters( 'alm_filters_facet_query_args_' . $facet_id, $args ) );
 
 	// Get the facet index from the options table.
-	$facet = get_option( ALM_FILTERS_FACET_PREFIX . $facet_id );
+	$facet = ALMFilters::get_facet_index_by_id( $facet_id );
 
-	$index = $facet ? unserialize( $facet ) : [];
+	$index = $facet ? $facet : [];
 
 	// Get the filter options from the options table.
 	$filter  = get_option( ALM_FILTERS_PREFIX . $facet_id );
@@ -101,7 +101,7 @@ function alm_filters_get_facet( $args = [], $facet_id = '' ) {
 	}
 
 	$default_post_types = isset( $filter['facets_post_types'] ) ? $filter['facets_post_types'] : [ 'post' ];
-	$results = [];
+	$results            = [];
 
 	// Loop each filter and compare to create the facets.
 	foreach ( $filters as $filter ) {
@@ -112,7 +112,6 @@ function alm_filters_get_facet( $args = [], $facet_id = '' ) {
 		switch ( $key ) {
 			case 'taxonomy':
 				$slug                           = $filter['taxonomy'];
-				$operator                       = $filter['taxonomy_operator'];
 				$data                           = in_array( $field_type, $single_select, true ) ? alm_filters_single_selection_args( $key, $slug, $args, $posts ) : $posts;
 				$results['taxonomies'][ $slug ] = alm_filters_compare_index( $data, $index, $slug, 'taxonomy' );
 				break;
@@ -124,7 +123,7 @@ function alm_filters_get_facet( $args = [], $facet_id = '' ) {
 				break;
 
 			case 'post_type':
-				if( in_array( $field_type, $single_select, true ) ) {
+				if ( in_array( $field_type, $single_select, true ) ) {
 					$results[ $key ] = alm_filters_single_selection_args( $key, 'post_type', $args, $posts, $default_post_types );
 				} else {
 					$results[ $key ] = alm_filters_compare_index( $posts, $index, $key );
@@ -162,8 +161,8 @@ function alm_filters_get_facet( $args = [], $facet_id = '' ) {
  *
  * @param  string $key        The filter key.
  * @param  string $slug       The filter slug (taxonomy, meta only).
- * @param  array $args        Array of query args.
- * @param  array $posts       Current posts from query.
+ * @param  array  $args       Array of query args.
+ * @param  array  $posts      Current posts from query.
  * @param  array  $post_types Default post type array.
  * @return array              An array of post IDs.
  */
@@ -182,36 +181,36 @@ function alm_filters_single_selection_args( $key, $slug, $args = [], $posts = []
 
 		// Loop each nested_query and remove matched filter from args if found.
 		foreach ( $nested_query as $index => $item ) {
-			if ( ! is_array( $item ) ) continue;
+			if ( ! is_array( $item ) ) {
+				continue;
+			}
 			if ( $item[ $var ] === $slug ) {
 				// Match found, remove the query arg.
 				unset( $args[ $query_var ][ $index ] );
 				return get_posts( $args );
 			}
 		}
-
-	} elseif ( $key === 'post_type' && isset( $args[$slug] ) ) {
+	} elseif ( $key === 'post_type' && isset( $args[ $slug ] ) ) {
 		/**
 		 * Post Type
 		 * Run a separate `get_posts` query for each post type to get the count.
 		 */
-		if ( isset( $args[$slug] ) ) {
+		if ( isset( $args[ $slug ] ) ) {
 			$post_type_facets = [];
 			foreach ( $post_types as $post_type ) {
 				// Loop each post type to get the count.
-				$args['post_type'] = $post_type;
-				$post_type_facets[$post_type] = count( get_posts( $args ) );
+				$args['post_type']              = $post_type;
+				$post_type_facets[ $post_type ] = count( get_posts( $args ) );
 			}
 			return $post_type_facets;
 		}
-
 	} else {
 		/**
 		 * Standard
 		 * Remove any existing query to get the true facets.
 		 */
-		if ( isset( $args[$slug] ) ) {
-			unset( $args[$slug] ); // Matched - remove query arg.
+		if ( isset( $args[ $slug ] ) ) {
+			unset( $args[ $slug ] ); // Matched - remove query arg.
 			return get_posts( $args );
 		}
 	}
@@ -284,7 +283,7 @@ function alm_filters_organize_results( $array, $flat = false ) {
 }
 
 /******************* - *********************/
-/*********** BUILD FACET INDEX *********** */
+/*********** BUILD/CREATE FACET INDEX *********** */
 /******************* - *********************/
 
 /**
@@ -293,30 +292,39 @@ function alm_filters_organize_results( $array, $flat = false ) {
  * @param  array $filter An array containing the filter options.
  * @return void
  */
-function alm_filters_save_facet( $filter ) {
-	if ( ! $filter ) {
+function alm_filters_save_facet_index( $filter ) {
+	if ( ! $filter || ! isset( $filter['id'] ) ) {
 		return;
 	}
-	$index = alm_filters_build_facet_index( $filter ); // Create index.
-	update_option( ALM_FILTERS_FACET_PREFIX . $filter['id'], serialize( $index ) ); // Update/Create facet option on success.
+	$filter_id = trim( $filter['id'] );
+
+	// TODO: Move this into a background process.
+
+	// Create index.
+	$index = alm_filters_create_facet_index( $filter );
+
+	// Update/Create facet option on success.
+	update_option( ALM_FILTERS_FACET_PREFIX . $filter_id, serialize( $index ) );
+
+	// Delete related transients.
+	alm_filters_delete_facet_transients( $filter_id );
 }
 
 /**
- * Build the facet index.
- * - The index will contain an array of post IDs and arrays of taxonomy and meta values.
- * - The index is then compared to the facets when they are returned from the database.
- * - The facet index is stored in the options tables. e.g. `alm_facet_{id}`
+ * Create a facet index.
+ * Note: The index will contain an array of post IDs and arrays of taxonomy and meta values.
+ *       The index is then compared to the facets when they are returned from the database.
+ *       The facet index is stored in the options tables. e.g. `alm_facet_{id}`
  *
  * @param  array $filter An array containing the filter options.
  * @return array         The facet index as an array.
  */
-function alm_filters_build_facet_index( $filter ) {
-	$index      = [];
+function alm_filters_create_facet_index( $filter ) {
 	$post_types = isset( $filter['facets_post_types'] ) ? $filter['facets_post_types'] : [ 'post' ];
 	$args       = [
 		'post_type'      => $post_types,
-		'post_status'    => 'publish',
-		'posts_per_page' => -1,
+		'post_status'    => [ 'publish' ],
+		'posts_per_page' => apply_filters( 'alm_filters_facets_posts_per_page', -1 ),
 	];
 
 	// Set `inherit` post_status for attachments.
@@ -329,19 +337,63 @@ function alm_filters_build_facet_index( $filter ) {
 	 */
 	$args = apply_filters( 'alm_filters_facets_index_' . $filter['id'] . '_args', $args );
 
-	$filters = isset( $filter ) && isset( $filter['filters'] ) ? $filter['filters'] : [];
-	$facets  = alm_filters_pluck_facet_keys( $filters );
-
 	// WP_Query.
 	$query = new WP_Query( $args );
 	while ( $query->have_posts() ) :
 		$query->the_post();
 		$post_id = get_the_ID();
-		$index[] = alm_filters_build_post_index( $post_id, $facets );
+		$index[] = alm_filters_build_post_index( $post_id, alm_filters_pluck_facet_keys( $filter ) );
 	endwhile;
 	wp_reset_postdata();
 
 	return $index;
+}
+
+/**
+ * Update an existing facet index after a post save
+ *
+ * @param array  $filter         The filter options.
+ * @param string $post_id     The post ID.
+ * @param string $post_status The post status.
+ * @return void
+ */
+function alm_filters_update_facet_index( $filter, $post_id, $post_status ) {
+	$filter_id = $filter['id'];
+	$index     = ALMFilters::get_facet_index_by_id( $filter_id );
+	if ( ! $index ) {
+		// No facet index found, create one.
+		alm_filters_save_facet_index( $filter );
+		return;
+	}
+
+	// Delete related transients.
+	alm_filters_delete_facet_transients( $filter_id );
+
+	$ids = wp_list_pluck( $index, 'id' ); // Pluck IDs from the facet.
+	$key = array_search( $post_id, $ids ); // Find the post ID in thr array.
+
+	if ( $key !== false ) {
+		// Remove the post from the index if in trash.
+		if ( $post_status === 'trash' ) {
+			unset( $index[ $key ] );
+			update_option( ALM_FILTERS_FACET_PREFIX . $filter_id, serialize( $index ) );
+			return;
+		}
+
+		$post_types    = isset( $filter['facets_post_types'] ) ? $filter['facets_post_types'] : [ 'post' ];
+		$is_attachment = in_array( 'attachment', $post_types, true );
+
+		// Update the facet index by the array key.
+		if ( $post_status === 'publish' || ( $is_attachment && $post_status === 'inherit' ) ) {
+			$index[ $key ] = alm_filters_build_post_index( $post_id, alm_filters_pluck_facet_keys( $filter ) );
+			update_option( ALM_FILTERS_FACET_PREFIX . $filter_id, serialize( $index ) );
+			return;
+		}
+	} else {
+		// Post not found, add item to facet index.
+		$index[] = alm_filters_build_post_index( $post_id, alm_filters_pluck_facet_keys( $filter ) );
+		update_option( ALM_FILTERS_FACET_PREFIX . $filter_id, serialize( $index ) );
+	}
 }
 
 /**
@@ -381,10 +433,14 @@ function alm_filters_build_post_index( $post_id, $facets ) {
 /**
  * Pull the possible facet keys from the filters object and return them as an array.
  *
- * @param  array $filters The array of filters to loop.
- * @return array           A constructed array of possible facets.
+ * @param  array $filter The filter array.
+ * @return array         A constructed array of possible facets.
  */
-function alm_filters_pluck_facet_keys( $filters ) {
+function alm_filters_pluck_facet_keys( $filter ) {
+	// Get the filters from the filter options.
+	$filters = isset( $filter ) && isset( $filter['filters'] ) ? $filter['filters'] : [];
+
+	// Default array.
 	$array = [
 		'taxonomies'    => [],
 		'meta'          => [],
@@ -607,7 +663,7 @@ function alm_filters_has_facets( $target ) {
 	$filters = array_map( 'trim', explode( ',', $target ) ); // Split into array on filters.
 	if ( ! empty( $filters ) ) {
 		// Loop each filter and check if facets are present.
-		foreach( $filters as $id ) {
+		foreach ( $filters as $id ) {
 			$filter = ALMFilters::alm_filters_get_filter_by_id( $id );
 			if ( $filter && isset( $filter['facets'] ) && $filter['facets'] ) {
 				return true;
@@ -646,17 +702,17 @@ function alm_filters_facet_get_querystring() {
  * @param string $alm_id The Ajax Load More ID.
  * @return string        The generated transient name as a string from URL.
  */
-function alm_filters_facet_get_transient_name( $id = '', $alm_id = '' ) {
+function alm_filters_facet_get_transient_name( $id = '', $alm_id = '', $args = [] ) {
 	if ( empty( $id ) || empty( $alm_id ) ) {
 		// Bail early if empty.
 		return '';
 	}
 
 	// Parse querystring into array and then into a string.
-	$params = implode( '-', alm_filters_facet_get_querystring() );
+	// $params = implode( '-', alm_filters_facet_get_querystring() );
 
 	// Create unique MD5 hash from params.
-	$hash = md5( $alm_id . $params );
+	$hash = md5( $alm_id . serialize( $args ) );
 
 	// Return the unique transient name.
 	// e.g. alm_facet_filter_{id}_{alm_id}_d41d8cd98f00b204e980099.
@@ -674,7 +730,7 @@ function alm_filters_test_index() {
 	$paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 	$args  = [
 		'post_type'      => [ 'movie' ],
-		'post_status'    => 'publish',
+		'post_status'    => [ 'publish' ],
 		'posts_per_page' => -1,
 	];
 

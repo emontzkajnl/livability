@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.11 | December 18, 2024
+
+- Fixed various styling issues, particularly with the Gravity Forms Theme Framework and when selects are dynamically refreshed with Populate Anything.
+
 ## 1.1.10 | December 4, 2024
 
 - Fixed styling issue of "Continue" button if using Advanced Select with GF Conversational Forms.

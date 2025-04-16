@@ -3,7 +3,7 @@
  * Plugin Name: Gravity Booster ( Style & Layouts )
  * Plugin URI:  http://wpmonks.com/styles-layouts-gravity-forms
  * Description: Create beautiful styles for your gravity forms
- * Version:     5.19
+ * Version:     5.20
  * Author:      Sushil Kumar
  * Author URI:  http://wpmonks.com/
  * License:     GPL2License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'GF_STLA_DIR', WP_PLUGIN_DIR . '/' . basename( __DIR__ ) );
 define( 'GF_STLA_URL', plugins_url() . '/' . basename( __DIR__ ) );
 define( 'GF_STLA_STORE_URL', 'https://wpmonks.com' );
-define( 'GF_STLA_VERSION', '5.19' );
+define( 'GF_STLA_VERSION', '5.20' );
 
 if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) ) {
 	include_once GF_STLA_DIR . '/admin-menu/EDD_SL_Plugin_Updater.php';
@@ -83,6 +83,48 @@ class Gravity_customizer_admin {
 	}
 
 
+	public function get_gravity_theme_dependencies( $form_id ) {
+
+		$styles = array();
+		if ( ! method_exists( 'GFCommon', 'output_default_css' ) || GFCommon::output_default_css() === false ) {
+			return $styles;
+		}
+
+		if ( ! class_exists( 'GFAPI' ) ) {
+			return $styles;
+		}
+
+		$form = GFAPI::get_form( $form_id );
+
+		$slug = '';
+		if ( isset( $form['theme'] ) ) {
+			$slug = $form['theme'];
+		}
+		if ( empty( $slug ) || ! in_array( $slug, array( 'legacy', 'gravity-theme', 'orbital' ) ) ) {
+			if ( method_exists( 'GFForms', 'get_default_theme' ) ) {
+
+				$slug = GFForms::get_default_theme();
+			}
+		}
+
+		$themes = array( $slug );
+
+		if ( in_array( 'orbital', $themes ) ) {
+			$styles[] = 'gravity_forms_orbital_theme';
+			$styles[] = 'gravity_forms_theme_foundation';
+			$styles[] = 'gravity_forms_theme_framework';
+			$styles[] = 'gravity_forms_theme_reset';
+		}
+
+		if ( in_array( 'gravity-theme', $themes ) ) {
+
+				$styles[] = 'gform_basic';
+
+		}
+
+		return $styles;
+	}
+
 	/**
 	 * Enqueue admin scripts and styles.
 	 *
@@ -97,9 +139,16 @@ class Gravity_customizer_admin {
 			}
 		}
 
+		$gravity_theme_dependencies = array();
+		if ( isset( $_GET['formId'] ) ) {
+			$gravity_theme_dependencies = $this->get_gravity_theme_dependencies( $_GET['formId'] );
+		}
+
+		$gravity_theme_dependencies[] = 'wp-components';
+
 		$asset_file = include GF_STLA_DIR . '/build/index.asset.php';
 
-		wp_enqueue_style( 'stla-admin-styles', GF_STLA_URL . '/build/index.css', array( 'wp-components' ), GF_STLA_VERSION );
+		wp_enqueue_style( 'stla-admin-styles', GF_STLA_URL . '/build/index.css', $gravity_theme_dependencies, GF_STLA_VERSION );
 
 		$addons_info = $this->get_booster_admin_js_addons_info();
 

@@ -1,6 +1,6 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php // phpcs:ignoreFileName
 
-use AdvancedAds\Utilities\WordPress;
+use AdvancedAds\Utilities\Conditional;
 
 /**
  * Injects ads in the content based on an XPath expression.
@@ -84,6 +84,12 @@ class Advanced_Ads_In_Content_Injector {
 			$defaults['allowEmpty'] = true;
 		}
 
+		// Merge the options if possible. If there are common keys, we don't merge them to prevent overriding and unexpected behavior.
+		$common_keys = array_intersect_key( $options, $placement_opts );
+		if ( empty( $common_keys ) ) {
+			$options = array_merge( $options, $placement_opts );
+		}
+
 		// allow hooks to change some options.
 		$options = apply_filters(
 			'advanced-ads-placement-content-injection-options',
@@ -94,7 +100,7 @@ class Advanced_Ads_In_Content_Injector {
 		$wp_charset = get_bloginfo( 'charset' );
 		// parse document as DOM (fragment - having only a part of an actual post given).
 
-		$content_to_load = self::get_content_to_load( $content, $wp_charset );
+		$content_to_load = self::get_content_to_load( $content );
 		if ( ! $content_to_load ) {
 			return $content;
 		}
@@ -263,7 +269,7 @@ class Advanced_Ads_In_Content_Injector {
 					}
 				}
 
-				$ad_content = (string) Advanced_Ads_Select::get_instance()->get_ad_by_method( $placement_id, 'placement', $placement_opts );
+				$ad_content = (string) get_the_placement( $placement_id, '', $placement_opts );
 
 				if ( trim( $ad_content, $whitespaces ) === '' ) {
 					continue;
@@ -272,7 +278,7 @@ class Advanced_Ads_In_Content_Injector {
 				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
 				$ad_content = self::filter_ad_content( $ad_content, $node->tagName, $options );
 
-				// Convert HTML to XML!.
+				// convert HTML to XML!
 				$ad_dom                     = new DOMDocument( '1.0', $wp_charset );
 				$libxml_use_internal_errors = libxml_use_internal_errors( true );
 				$ad_dom->loadHtml( '<!DOCTYPE html><html><meta http-equiv="Content-Type" content="text/html; charset=' . $wp_charset . '" /><body>' . $ad_content );
@@ -312,7 +318,7 @@ class Advanced_Ads_In_Content_Injector {
 								$ref_node->parentNode->insertBefore( $importedNode, $ref_node );
 							}
 						} else {
-							// Append to body; -TODO using here that we only select direct children of the body tag.
+							// append to body; -TODO using here that we only select direct children of the body tag.
 							foreach ( $ad_dom->getElementsByTagName( 'body' )->item( 0 )->childNodes as $importedNode ) {
 								$importedNode = $dom->importNode( $importedNode, true );
 								$node->parentNode->appendChild( $importedNode );
@@ -339,11 +345,9 @@ class Advanced_Ads_In_Content_Injector {
 			 * * could not inject one ad (as by use of `elseif` here)
 			 * * but there are enough elements on the site, but just in sub-containers
 			 */
-		} elseif (
-			WordPress::user_can( 'advanced_ads_manage_options' ) &&
-			-1 !== $options['itemLimit'] &&
-			empty( $plugin_options['content-injection-level-disabled'] )
-		) {
+		} elseif ( Conditional::user_can( 'advanced_ads_manage_options' )
+				&& -1 !== $options['itemLimit']
+				&& empty( $plugin_options['content-injection-level-disabled'] ) ) {
 
 			// Check if there are more elements without limitation.
 			$all_items = $xpath->query( '//' . $tag );
@@ -363,6 +367,7 @@ class Advanced_Ads_In_Content_Injector {
 		}
 
 		// phpcs:enable
+
 		return $content;
 	}
 
@@ -370,17 +375,16 @@ class Advanced_Ads_In_Content_Injector {
 	 * Get content to load.
 	 *
 	 * @param string $content Original content.
-	 * @param string $wp_charset blog charset.
 	 *
 	 * @return string $content Content to load.
 	 */
-	private static function get_content_to_load( $content, $wp_charset ) {
+	private static function get_content_to_load( $content ) {
 		// Prevent removing closing tags in scripts.
 		$content_to_load = preg_replace( '/<script.*?<\/script>/si', '<!--\0-->', $content );
 
 		// check which priority the wpautop filter has; might have been disabled on purpose.
 		$wpautop_priority = has_filter( 'the_content', 'wpautop' );
-		if ( $wpautop_priority && Advanced_Ads_Plugin::get_instance()->get_content_injection_priority() < $wpautop_priority ) {
+		if ( $wpautop_priority && Advanced_Ads::get_instance()->get_content_injection_priority() < $wpautop_priority ) {
 			$content_to_load = wpautop( $content_to_load );
 		}
 
@@ -403,10 +407,10 @@ class Advanced_Ads_In_Content_Injector {
 		// Inject placeholder.
 		$id                           = count( self::$ads_for_placeholders );
 		self::$ads_for_placeholders[] = [
-			'id'   => $id,
-			'tag'  => $tag_name,
+			'id'       => $id,
+			'tag'      => $tag_name,
 			'position' => $options['position'],
-			'ad'   => $ad_content,
+			'ad'       => $ad_content,
 		];
 
 		return '%advads_placeholder_' . $id . '%';
@@ -462,8 +466,10 @@ class Advanced_Ads_In_Content_Injector {
 
 		// It is not possible to append/prepend in self closing tags.
 		foreach ( $ads_for_placeholders as &$ad_content ) {
-			if ( ( 'prepend' === $ad_content['position'] || 'append' === $ad_content['position'] )
-				 && in_array( $ad_content['tag'], $self_closing_tags, true ) ) {
+			if (
+				( 'prepend' === $ad_content['position'] || 'append' === $ad_content['position'] ) &&
+				in_array( $ad_content['tag'], $self_closing_tags, true )
+			) {
 				$ad_content['position'] = 'after';
 			}
 		}
@@ -492,7 +498,6 @@ class Advanced_Ads_In_Content_Injector {
 					break;
 			}
 		}
-
 		$alts       = array_unique( $alts );
 		$tag_regexp = implode( '|', $alts );
 		// Add ad placeholder.

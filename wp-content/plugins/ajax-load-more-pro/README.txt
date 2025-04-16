@@ -10,10 +10,10 @@ Stable tag: trunk
 Requires PHP: 7.0
 Homepage: https://connekthq.com/ajax-load-more/
 Donate: https://connekthq.com/donate
-Version: 1.2.26
+Version: 1.3.0.1
 
 == Copyright ==
-Copyright 2024 Darren Cooney, Connekt Media
+Copyright 2025 Darren Cooney & Connekt Media
 
 This software is NOT to be distributed, but can be INCLUDED in WP themes: Premium or Contracted.
 This software is distributed in the hope that it will be useful, but WITHOUT ANY;
@@ -44,6 +44,55 @@ http://connekthq.com/ajax-load-more/pro/
 
 
 == Changelog ==
+
+** 1.3.0.1 - January 22, 2025 **
+
+Filters - 2.3.0.1
+
+- HOTFIX: Fixed issue with new feature to parse default Taxonomy and Meta Query parameters.
+
+** 1.3.0 - January 17, 2025 **
+
+Query Loop - 1.0.0
+
+- NEW: Initial add-on release. Enable the plugin from the ALM pro settings screen.
+
+Filters - 2.3.0
+
+- NEW: Added feature to maintain default Taxonomy and Meta query params when filtering. This means you can now have default shortcode parameters and have them maintain when running a tax or meta query. This feature requires Ajax Load More 7.2.0.
+- NEW: Added support for filtering multiple instances of Ajax Load More on the same page with a single filter. e.g. `[ajax_load_more_filters id="categories" target="alm_1,alm_2"]`
+- UPDATE: Updated facet functionality when update/add/remove an individual post. Facet indexes are now modifed and not recreated after a post has been modified. This will make updating the data much faster after the index has been created.
+- UPDATE: Added support for facet filtering without requiring URL rewrites. This also updates how facets are saved and retrieved from the database.
+- UPDATE: Refactor how and when facet indexing is handled.
+- UDPATE: Updating the admin notices and display.
+- FIX: Fixed potential issue with `sanitize_key` in filter target IDs.
+- FIX: Normalize the filter target ID to lowercase as Ajax Load More and Filter IDs MUST always be lowercase.
+- FIX: Load translations later for WP 6.7.
+
+Cache - 2.0.4
+
+- UPDATE: Admin UI/UX updates.
+- UPDATE: Code cleanup and reorganization.
+
+Call to Actions - 1.1.0
+
+- NEW: Added new parameter `cta_template`. This new parameter will normalize the template selection and replace the `cta_repeater` and `cta_theme-repeater` parameters.
+- UPDATE: Code cleanup, future proofing, and optimization.
+
+Comments - 1.2.3
+
+- UPDATE: Adding support for Theme Repeaters to be selected as the Comment Template.
+- UPDATE: Various code enhancements and cleanup.
+
+Elementor - 1.2.2
+
+- UPDATE: Adding support for Theme Repeaters to be selected as the Comment Template.
+- UPDATE: Various code enhancements and cleanup.
+
+Theme Repeaters - 1.2.0
+
+- NEW: Added new functions that fetch repeaters from theme directory.
+- UPDATE: Code cleanup and optimization.
 
 ** 1.2.26 - December 4, 2024 **
 

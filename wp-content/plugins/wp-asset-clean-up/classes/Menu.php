@@ -6,6 +6,7 @@ namespace WpAssetCleanUp;
 use WpAssetCleanUp\Admin\AssetsManagerAdmin;
 use WpAssetCleanUp\Admin\Info;
 use WpAssetCleanUp\Admin\Overview;
+use WpAssetCleanUp\Admin\PluginsManagerAdmin;
 use WpAssetCleanUp\Admin\SettingsAdmin;
 use WpAssetCleanUp\Admin\Tools;
 
@@ -145,7 +146,7 @@ class Menu
 		    __('Plugins Manager', 'wp-asset-clean-up'),
 		    self::getAccessCapability(),
 		    WPACU_PLUGIN_ID . '_plugins_manager',
-		    array(new PluginsManager, 'page')
+		    array(new PluginsManagerAdmin, 'page')
 	    );
 
 	    add_submenu_page(
@@ -232,12 +233,14 @@ class Menu
                     $htmlSource
                 );
 
+                $adminUrl = admin_url('admin.php?page='.WPACU_PLUGIN_ID.'_settings');
+
                 $reps = array(
                     '<a href=\'options-general.php\' class="wp-has-submenu wp-not-current-submenu' =>
                     '<a href=\'options-general.php\' class="wp-has-submenu wp-has-current-submenu wp-menu-open',
 
-                    '<li><a href=\''.admin_url('admin.php?page=wpassetcleanup_settings').'\'>' . WPACU_PLUGIN_TITLE . '</a></li>' =>
-                    '<li class="current"><a class="current" aria-current="page" href=\''.admin_url('admin.php?page=wpassetcleanup_settings').'\'>' . WPACU_PLUGIN_TITLE . '</a></li>'
+                    '<li><a href=\''.$adminUrl.'\'>' . WPACU_PLUGIN_TITLE . '</a></li>' =>
+                    '<li class="current"><a class="current" aria-current="page" href=\''.$adminUrl.'\'>' . WPACU_PLUGIN_TITLE . '</a></li>'
                 );
 
                 return str_replace(array_keys($reps), array_values($reps), $htmlSource);

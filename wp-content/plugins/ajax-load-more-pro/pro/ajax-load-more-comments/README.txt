@@ -4,14 +4,14 @@ Contributors: dcooney
 Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/comments/
-Requires at least: 4.0
+Requires at least: 5.0
 Tested up to: 6.7
 Stable tag: trunk
 Homepage: https://connekthq.com/
-Version: 1.2.2
+Version: 1.2.3
 
 == Copyright ==
-Copyright 2024 Connekt Media
+Copyright 2025 Darren Cooney & Connekt Media
 
 This software is NOT to be distributed, but can be INCLUDED in WP themes: Premium or Contracted.
 This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -45,20 +45,21 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/comments/
 
 == Changelog ==
 
+= 1.2.3 - January 17, 2025 =
+* UPDATE: Adding support for Theme Repeaters to be selected as the Comment Template.
+* UPDATE: Various code enhancements and cleanup.
+
 = 1.2.2 - December 4, 2024 =
 * UPDATE: Added fix to set the default `comments_post_id` to the current post ID.
 * UPDATE: Code cleanup.
-
 
 = 1.2.1 - June 11, 2023 =
 * UPDATE: Updated to add compatibility with Cache Add-on 2.0 and Ajax Load More 6.0.
 * UPDATE: Code cleanup.
 
-
 = 1.2.0.1 - November 18, 2019 =
 * FIX - Fixed issue with using Paging, Preloaded and Comments together would cause pagination to be off by a page.
 * UPDATE - Removed legacy REST API route
-
 
 = 1.2.0 - May 6, 2019 =
 * UPGRADE NOTICE - This update requires Ajax Load More 5.1+.
@@ -66,39 +67,31 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/comments/
 * NEW - Added custom JavaScript fix for reply links in Comment query causing page refresh.
 * FIX - Fixed issue with `offset` parameter not working correctly.
 
-
 = 1.1.4 - March 8, 2019 =
 * FIX - Fixed issue with preloaded comments not working because of an incorrectly `comments_post_id`.
-
 
 = 1.1.3 - December 6, 2018 =
 * FIX - Fixed issue with comment ordering when a user had 'Newer' comments appear first selected on `settings -> discussion` in admin. This fix ensure comments are always ordered by date and follows the ordering params set by Ajax Load More.
 * FIX - Fixed issue with Preloaded comments options not passing correctly from core ALM.
 
-
 = 1.1.2 - March 24, 2017 =
 * Updated query function to support paging add-on
 * Updated version of plugin update script.
-
 
 = 1.1.1 - September 6, 2016 =
 * MILESTONE - Must update core Ajax Load More to 2.12.0 when updating this add-on.
 * FIX - Updated alm_comments_query() to return totalposts and postcount in json array - this is required for the latest Ajax Load More update.
 
-
 = 1.1 - May 27, 2016 =
 * FIX - Fix for updated 'page' parameter in core Ajax Load More causing issue with repeating comments
 * NEW - Adding support for Preloaded comments. Will be available when Ajax Load More 2.11.1 is released June 2, 2016.
-
 
 = 1.0.2 =
 * MILESTONE - Must update core Ajax Load More to 2.10 in order to run this updated add-on.
 * UPDATE - Updating comment return type to json.
 
-
 = 1.0.1 =
 * UPDATE - Adding support for order and orderby parameters. Orderby uses values found in get_comments() function. https://codex.wordpress.org/Function_Reference/get_comments
-
 
 = 1.0 =
 * Initial Release.

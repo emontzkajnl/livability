@@ -5,13 +5,13 @@ Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/filters/
 Requires at least: 5.0
-Tested up to: 6.5
+Tested up to: 6.7
 Stable tag: trunk
 Homepage: https://connekthq.com/
-Version: 2.2.1
+Version: 2.3.0
 
 == Copyright ==
-Copyright 2024 Connekt Media
+Copyright 2025 Darren Cooney & Connekt Media
 
 This software is NOT to be distributed, but can be INCLUDED in WP themes: Premium or Contracted.
 This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -25,7 +25,6 @@ Create custom Ajax Load More filters in seconds.
 
 http://connekthq.com/plugins/ajax-load-more/add-ons/filters/
 
-
 == Installation ==
 
 = Uploading in WordPress Dashboard =
@@ -35,7 +34,6 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/filters/
 3. Select `ajax-load-more-filters.zip` from your computer
 4. Click 'Install Now'
 5. Activate the plugin in the Plugin dashboard
-
 
 = Using FTP =
 
@@ -48,11 +46,24 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/filters/
 
 == Changelog ==
 
+= 2.3.0.1 - January 22, 2025 =
+* HOTFIX: Fixed issue with new feature to parse default Taxonomy and Meta Query parameters.
+
+= 2.3.0 - January 17, 2025 =
+* NEW: Added feature to maintain default Taxonomy and Meta query params when filtering. This means you can now have default shortcode parameters and have them maintain when running a tax or meta query. This feature requires Ajax Load More 7.2.0.
+* NEW: Added support for filtering multiple instances of Ajax Load More on the same page with a single filter. e.g. `[ajax_load_more_filters id="categories" target="alm_1,alm_2"]`
+* UPDATE: Updated facet functionality when update/add/remove an individual post. Facet indexes are now modifed and not recreated after a post has been modified. This will make updating the data much faster after the index has been created.
+* UPDATE: Added support for facet filtering without requiring URL rewrites. This also updates how facets are saved and retrieved from the database.
+* UPDATE: Refactor how and when facet indexing is handled.
+* UDPATE: Updating the admin notices and display.
+* FIX: Fixed potential issue with `sanitize_key` in filter target IDs.
+* FIX: Normalize the filter target ID to lowercase as Ajax Load More and Filter IDs MUST always be lowercase.
+* FIX: Load translations later for WP 6.7.
+
 = 2.2.1 - May 30, 2024 =
 * NEW: Added new hook that allows for modifying the query args used when creating the facet index. [View Docs](https://connekthq.com/plugins/ajax-load-more/docs/add-ons/filters/facets/#alm_filters_facets_index_args)
 * NEW: Added new `almfilters.getActiveFilters()` public JS function that returns an object of active filters.
 * NEW: Added new `alm_filters_redirect_underscore_{filter_id}` hook that is used with the Redirect functionality to remove the underscores in URLs on archive pages.
-
 
 = 2.2.0 - March 21, 2024 =
 * NEW: Added Posts Per Page filter.
@@ -69,12 +80,10 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/filters/
 * UPDATE: Accessibility updates to filter checkbox/radios.
 * UPDATE: Various UI/UX updates throughout plugin admin and frontend.
 
-
 = 2.1.2 - January 16, 2024 =
 * UPGRADE NOTICE: This update is affected by the core Ajax Load More 7.0 release. Updating this plugin will require updating Ajax Load More to 7.0.
 * UPDATE: Remove all references and output of `alm-reveal` divs.
 * UPDATE: Updated JS parameters to match updates in ALM 7.0.
-
 
 = 2.1.1 - September 27, 2023 =
 * NEW: Added support for facets and Post Type filtering.
@@ -85,7 +94,6 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/filters/
 * FIX: Fixed issue with category and tag filters on frontpage or homepage not parsing the querystring parameters correctly.
 * FIX: Stopped frontpage URLs from being encoded by the core WP `redirect_canonical` hook when using a static homepage. e.g. /?category=design+development was being encoded to /?category=design%20development
 * UPDATE: Removed legacy IE support for IE10 and IE11.
-
 
 = 2.1.0 - July 27, 2023 =
 * FIX: Fixed issue with `attachment` post type and facets not returning results due to `post_status` not being set to `inherit`.
@@ -98,16 +106,13 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/filters/
 * UPDATE: Updated admin pages to match new Ajax Load More 6.1 admin layout.
 * UPDATE: Various code cleanup tasks and file structure organizations.
 
-
 = 2.0.2.2 - June 11, 2023 =
 * UPDATE: Various security fixes and data escaping.
 * FIX: Suppressed php 8.1+ warnings about `FILTER_SANITIZE_STRING` being deprecated.
 * Fix: Fixed issue with decimal values in range slider being displayed in URL when not required.
 
-
 = 2.0.2.1 - March 9, 2023 =
 * HOTFIX: Sanitizing filters target parameter with `sanitize_key` to coincide with core ALM `5.6.0.4` release.
-
 
 = 2.0.2 - February 25, 2023 =
  * FIX: Fixed issue with parsing filters & facets on archive templates/pages.
@@ -119,12 +124,10 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/filters/
  * NEW: Added `alm_filters_textfield_placeholder` to filter of the textfield input placeholder.
  * NEW: Added `alm_filters_css_classes` to allow for filtering of container classnames.
 
-
 = 2.0.1 - February 16, 2023 =
 * FIX: Fixed PHP warning that could be displayed in debug log about undefined `facet` array key.
 * FIX: Fixed issue with unwanted `]`character being rendered in some instances of select drop menus.
 * FIX: Fixed issue with select displaying result count even if not checked in Filter admin.
-
 
 = 2.0.0 - February 14, 2023 =
 UPGRADE NOTICE:
@@ -147,26 +150,21 @@ This filters update requires updating core Ajax Load More plugin to 5.6.0
 * UPDATE: Cleaned up Filter builder JavaScript to make it easier for future updates.
 * UPDATE: Improved taxonomy and meta query handling on deep linked queries.
 
-
 = 1.13.0.4 - January 10, 2023 =
 * HOTFIX: Adding fix for missing constant name that was causing a fatal error.
-
 
 = 1.13.0.3 - June 24, 2022 =
 * UPDATE: Improved accessibility of admin filter builder.
 * Update: Added localstorage variable for expanding/collapsing admin filters. Filters in the admin will now retain the selected state (expanded/collapse)).
 
-
 = 1.13.0.2 - March 7, 2022 =
 * FIX: Added fix for filters not starting when loading with Ajax.
-
 
 = 1.13.0.1 - January 11, 2022 =
 * HOTFIX - Fixed issue with multiple filters using same filter key (e.g. category, tag) not working.
 * HOTFIX - Fixed issue with filters becoming unresponsive when using an integer target ID.
 * UPDATE - Various admin UX/UI updates.
 * UPDATE - Updated axios HTTP library to latest version.
-
 
 = 1.13.0 - January 10, 2022 =
 * UPGRADE NOTICE - Users updating to Filters v1.13.0 must update core Ajax Load More to the version 5.5.1 or greater.
@@ -179,14 +177,12 @@ This filters update requires updating core Ajax Load More plugin to 5.6.0
 * FIX - Fixed issue with Section Toggle functionality losing its status when saving and revisiting the filters admin.
 * FIX - Fixed issue with Star Rating filter returning HTML when using the `alm-selected-filters` HTML element.
 
-
 = 1.12.2 - July 8, 2021 =
 * NEW - Added new hook that provides support adjusting the term parameters of the Filters `get_terms` query. This will allow for setting a `parent` or `child_of` taxonomy option to return the children of a specific term.* FIX - Fixed issue with W3C HTML validator errors. [View Docs](https://connekthq.com/plugins/ajax-load-more/docs/add-ons/filters/#term-query)
 * FIX - Fixed issue caused by `alm_filters_public_taxonomies` filter working incorrectly to show non-public taxonomies.
 * FIX - Fixed an error with Radio buttons where the selected element was unable to be unchecked in some instances.
 * UPDATE - Adding activation warning if core Ajax Load More is not installed when attempting to install add-on.
 * UPDATE - Code cleanup and optimization.
-
 
 = 1.12.1 - May 5, 2021 =
 * NEW - Added new callback for the Range Slider field type that allows for modification of the start and end value display label. [View Docs](https://connekthq.com/plugins/ajax-load-more/docs/add-ons/filters/#almFiltersFormatRangeValues)
@@ -195,7 +191,6 @@ This filters update requires updating core Ajax Load More plugin to 5.6.0
 * FIX - Fixed issues with duplicate IDs on input and select field types when using multiple Custom Field filters.
 * UPDATE - Updated [alm_filters_{id}_{key}](https://connekthq.com/plugins/ajax-load-more/docs/add-ons/filters/#alm_filters_id_key) filter to accept the current Custom Values as a $values array. This allows users to use Custom Values and the Filter Hook to build the filter options.
 * UPDATE - Improved admin UI/UX of adding/removing filter blocks.
-
 
 = 1.12.0 - April 20, 2021 =
 UPGRADE NOTICE:
@@ -215,7 +210,6 @@ OTHER CHANGES:
 * FIX - Fixed issue with hash links causing issues when using back/fwd buttons after a filter and URL changes.
 * FIX - Fixed issue with multi-select input field and [Selected Filters](https://connekthq.com/plugins/ajax-load-more/add-ons/filters/selected-filters/) functionality not working to display the active filters.
 * FIX - Fixed issue with spaces in custom fields and search queries causing problems with selected filters and initial query.
-
 
 = 1.11.0 - January 3, 2021 =
 * NEW - Added `Show Count` setting to display a total count beside each filter item.
@@ -448,6 +442,5 @@ When updating to Filters 1.7.0 you must also update core [Ajax Load More](https:
 = 1.0 - February 13, 2018 =
 
 -  Initial Release.
-
 
 == Upgrade Notice ==

@@ -16,11 +16,11 @@ add_action(
 		register_rest_route(
 			$my_namespace,
 			$my_endpoint,
-			array(
+			[
 				'methods'             => 'POST',
 				'callback'            => 'alm_filters_save_filter',
 				'permission_callback' => '__return_true',
-			)
+			]
 		);
 	}
 );
@@ -48,7 +48,7 @@ function alm_filters_save_filter( WP_REST_Request $request ) {
 		foreach ( $options as $key => $value ) {
 
 			// Get the ID.
-			$id = isset( $options[ $key ]->id ) ? strtolower( $options[ $key ]->id ) : '';
+			$id = isset( $options[ $key ]->id ) ? sanitize_key( $options[ $key ]->id ) : '';
 
 			// Get option from DB.
 			$option = get_option( ALM_FILTERS_PREFIX . $id );
@@ -240,7 +240,6 @@ function alm_filters_save_filter( WP_REST_Request $request ) {
 				/**
 				 * Star Rating.
 				 */
-
 				if ( $filter['field_type'] !== 'star_rating' ) {
 					unset( $array['star_rating_min'], $array['star_rating_max'] );
 				}
@@ -365,46 +364,31 @@ function alm_filters_save_filter( WP_REST_Request $request ) {
 
 		// Facets with empty post types.
 		if ( $has_facets && ! $has_facets_post_types ) {
-			$response = array(
+			$response = [
 				'success' => false,
-				'msg'     => __( 'Error - You must select atleast 1 post type when using facet filtering.', 'ajax-load-more-filters' ),
+				'msg'     => __( 'Error: You must select at least 1 post type when using facets.', 'ajax-load-more-filters' ),
 				'code'    => wp_json_encode( $filter_array, JSON_PRETTY_PRINT ),
-			);
+			];
 			wp_send_json( $response );
 		}
 
-		// Update/Create option on success.
+		// Create/Update option on success.
 		update_option( ALM_FILTERS_PREFIX . $filter_array['id'], serialize( $filter_array ) );
 
-		// If facets, create/update the index.
-		if ( $has_facets && $has_facets_post_types ) {
+		// Create response.
+		$response = [
+			'success' => true,
+			'msg'     => __( 'Filter saved successfully.', 'ajax-load-more-filters' ),
+			'code'    => wp_json_encode( $filter_array, JSON_PRETTY_PRINT ),
+		];
 
-			// Create and save the facet data to options.
-			alm_filters_save_facet( $filter_array );
-			alm_filters_delete_facet_transients( $filter_array['id'] );
-
-			// Create response.
-			$response = array(
-				'success' => true,
-				'msg'     => __( 'Filters and facets saved successfully', 'ajax-load-more-filters' ),
-				'code'    => wp_json_encode( $filter_array, JSON_PRETTY_PRINT ),
-			);
-
-		} else {
-			// Create response.
-			$response = array(
-				'success' => true,
-				'msg'     => __( 'Filter saved successfully', 'ajax-load-more-filters' ),
-				'code'    => wp_json_encode( $filter_array, JSON_PRETTY_PRINT ),
-			);
-		}
 	} else {
 		// Create response.
-		$response = array(
+		$response = [
 			'success' => false,
 			'msg'     => __( 'Error - You are missing some important filter criteria - please fill out all required fields.', 'ajax-load-more-filters' ),
 			'code'    => '',
-		);
+		];
 	}
 
 	wp_send_json( $response );

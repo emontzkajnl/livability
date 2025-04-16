@@ -31,7 +31,7 @@ class SupportedDirectoriesOption extends OptionAbstract {
 	 * {@inheritdoc}
 	 */
 	public function get_form_name(): string {
-		return OptionAbstract::FORM_TYPE_BASIC;
+		return OptionAbstract::FORM_TYPE_GENERAL;
 	}
 
 	/**
@@ -44,7 +44,7 @@ class SupportedDirectoriesOption extends OptionAbstract {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function get_label(): string {
+	public static function get_label(): string {
 		return __( 'Supported directories', 'webp-converter-for-media' );
 	}
 
@@ -69,14 +69,14 @@ class SupportedDirectoriesOption extends OptionAbstract {
 	 *
 	 * @return string[]
 	 */
-	public function get_default_value( array $settings = null ): array {
+	public function get_default_value(): array {
 		return [ 'uploads' ];
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function validate_value( $current_value, array $available_values = null, array $disabled_values = null ) {
+	public function validate_value( $current_value, ?array $available_values = null, ?array $disabled_values = null ) {
 		$valid_values = [];
 		if ( ! $current_value ) {
 			return $valid_values;

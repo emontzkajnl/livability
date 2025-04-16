@@ -2,8 +2,6 @@
 
 namespace WebpConverter\Settings\Option;
 
-use WebpConverter\Conversion\Method\GdMethod;
-
 /**
  * {@inheritdoc}
  */
@@ -40,7 +38,7 @@ class ExtraFeaturesOption extends OptionAbstract {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function get_label(): string {
+	public static function get_label(): string {
 		return __( 'Extra features', 'webp-converter-for-media' );
 	}
 
@@ -84,20 +82,7 @@ class ExtraFeaturesOption extends OptionAbstract {
 	 *
 	 * @return string[]
 	 */
-	public function get_disabled_values( array $settings ): array {
-		$values = [];
-		if ( ( $settings[ ConversionMethodOption::OPTION_NAME ] ?? GdMethod::METHOD_NAME ) === GdMethod::METHOD_NAME ) {
-			$values[] = self::OPTION_VALUE_KEEP_METADATA;
-		}
-		return $values;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @return string[]
-	 */
-	public function get_default_value( array $settings = null ): array {
+	public function get_default_value(): array {
 		return [
 			self::OPTION_VALUE_ONLY_SMALLER,
 		];
@@ -106,7 +91,7 @@ class ExtraFeaturesOption extends OptionAbstract {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function validate_value( $current_value, array $available_values = null, array $disabled_values = null ) {
+	public function validate_value( $current_value, ?array $available_values = null, ?array $disabled_values = null ) {
 		$valid_values = [];
 		if ( ! $current_value ) {
 			return $valid_values;

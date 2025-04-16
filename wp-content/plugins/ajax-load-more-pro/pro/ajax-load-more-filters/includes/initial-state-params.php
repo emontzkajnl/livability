@@ -1,9 +1,10 @@
 <?php
 /**
- * Params in this file are included at /ajax-load-more/core/classes/class.alm-shortcode.php
+ * Params in this file are included at ajax-load-more/core/classes/class.alm-shortcode.php
  * Get filters and operators and over write shortcode parameters based on filter state.
  *
  * @package ALMFilters
+ *
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
  */
 

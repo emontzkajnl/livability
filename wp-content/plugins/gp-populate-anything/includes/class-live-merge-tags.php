@@ -983,16 +983,13 @@ class GP_Populate_Anything_Live_Merge_Tags {
 				continue;
 			}
 
-			if ( $field->get_input_type() === 'number' && ! rgblank( $entry_value ) ) {
+			if ( $field->get_input_type() === 'number' && ! rgblank( $entry_value ) && is_scalar( $entry_value ) ) {
 				if ( GFCommon::is_numeric( $entry_value, 'decimal_dot' ) ) {
 					$entry_values[ $input_id ] = GFCommon::clean_number( $entry_value, 'decimal_dot' );
 				} elseif ( GFCommon::is_numeric( $entry_value, 'decimal_comma' ) ) {
 					$entry_values[ $input_id ] = GFCommon::clean_number( $entry_value, 'decimal_comma' );
 				}
 				continue;
-			} elseif ( $field->type == 'multi_choice' && $field->inputType == 'radio' ) {
-				$entry_values[ absint( $input_id ) ] = $entry_values[ $input_id ];
-				unset( $entry_values[ $input_id ] );
 			}
 
 			if ( ! in_array( $field['type'], GP_Populate_Anything::get_interpreted_multi_input_field_types(), true ) ) {
@@ -1078,6 +1075,25 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 			$entry_values[ $input_id ] = $save_value;
 		}
+
+		$raw_entry_values = $entry_values;
+
+		/**
+		 * Filter the live merge tag entry values.
+		 *
+		 * @since 2.1.17
+		 *
+		 * @param array $entry_values Live Merge Tag Entry Values.
+		 * @param array $form         The current form.
+		 */
+		$entry_values = gf_apply_filters(
+			array(
+				'gppa_live_merge_tag_entry_values',
+				$form['id'],
+			),
+			$entry_values,
+			$form
+		);
 
 		/**
 		 * Change Live Merge Tags to regular merge tags.
@@ -1376,7 +1392,9 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			}
 
 			foreach ( $field->choices as $choice_index => &$choice ) {
-				$choice['gppaOriginalValue'] = trim( $choice['value'] );
+				// GF 2.9 renders this logic multiple times on Form Preview and that causes the value to be replaced multiple times, eventually getting emptied out.
+				// This is a workaround to prevent that from happening, ensuring we do not try to reset the 'gppaOriginalValue' is already set in the current context.
+				$choice['gppaOriginalValue'] = isset( $choice['gppaOriginalValue'] ) ? $choice['gppaOriginalValue'] : trim( $choice['value'] );
 				$choice['value']             = trim( $this->replace_live_merge_tags( $choice['value'], $form_for_lmts ) );
 
 				// Registration of text/label will happen in another method.

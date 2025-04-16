@@ -7,9 +7,7 @@
 
 ?>
 <h2><?php esc_attr_e( 'Cache Auto-Generation', 'ajax-load-more-cache' ); ?></h2>
-<p>
-	<?php esc_attr_e( 'You have enabled auto-generation of the Ajax Load More cache. The cache IDs listed below indicate which instances will be created during the build process.', 'ajax-load-more-cache' ); ?>
-</p>
+<p><?php esc_attr_e( 'You have enabled auto-generation of the Ajax Load More cache. The cache IDs listed below indicate which instances will be created during the build process.', 'ajax-load-more-cache' ); ?></p>
 <p>
 	<a href="https://connekthq.com/plugins/ajax-load-more/docs/add-ons/cache/#auto-generate" target="_blank">
 		<strong><?php esc_attr_e( 'View Documentation', 'ajax-load-more-cache' ); ?></strong>

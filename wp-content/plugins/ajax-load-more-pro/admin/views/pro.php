@@ -3,8 +3,6 @@
  * Ajax Load More Pro Page.
  *
  * @package AjaxLoadMorePro
- * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
- * phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
  */
 
 $alm_addons        = alm_get_addons();
@@ -50,23 +48,19 @@ $alm_admin_heading = __( 'Ajax Load More Pro', 'ajax-load-more' );
 					$option_name    = ALM_PRO_OPTION_PREFIX . $slug;
 					$option_value   = get_option( $option_name ) ? get_option( $option_name ) : update_option( $option_name, 'inactive' );
 					$plugin_path    = ALM_PRO_ADMIN_PATH . 'pro/ajax-load-more-' . $slug . '/ajax-load-more-' . $slug . '.php';
-					$i++;
+					++$i;
 					$installed       = true;
 					$installed_class = 'installed';
 					if ( ! file_exists( $plugin_path ) ) {
 						$installed       = false;
 						$installed_class = 'not-installed';
 					}
+					$title = ! $installed ? __( 'Add-on not installed', 'ajax-load-more-pro' ) : '';
 					?>
 					<section class="item <?php echo esc_attr( get_option( $option_name ) ); ?>
 					" data-status="<?php echo esc_attr( $option_value ); ?>" data-slug="<?php echo esc_attr( $slug ); ?>">
-						<a href="<?php echo esc_url( $url ); ?>" class="<?php echo esc_attr( $installed_class ); ?>" title="
-							<?php
-							if ( ! $installed ) {
-								esc_attr_e( 'Add-on not installed', 'ajax-load-more-pro' );}
-							?>
-						">
-						<?php if ( $installed ) { ?>
+						<a href="<?php echo esc_url( $url ); ?>" class="<?php echo esc_attr( $installed_class ); ?>" title="<?php echo esc_attr( $title ); ?>">
+							<?php if ( $installed ) { ?>
 							<div class="state"><span class="offscreen"><?php esc_attr_e( 'Toggle activation', 'ajax-load-more-pro' ); ?></span></div>
 							<?php } ?>
 							<div class="item--detail">

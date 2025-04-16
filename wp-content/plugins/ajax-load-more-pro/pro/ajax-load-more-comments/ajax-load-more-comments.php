@@ -6,7 +6,7 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.2.2
+ * Version: 1.2.3
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
  *
@@ -19,8 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_COMMENTS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_COMMENTS_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_COMMENTS_VERSION', '1.2.2' );
-define( 'ALM_COMMENTS_RELEASE', 'December 4, 2024' );
+define( 'ALM_COMMENTS_VERSION', '1.2.3' );
+define( 'ALM_COMMENTS_RELEASE', 'January 17, 2025' );
 
 /**
  *  Installation hook.
@@ -36,7 +36,7 @@ register_activation_hook( __FILE__, 'alm_comments_install' );
  * Display admin notice if plugin does not meet the requirements.
  */
 function alm_comments_admin_notice() {
-	$slug   = 'ajax-load-more';
+	$slug = 'ajax-load-more';
 	// Ajax Load More Notice.
 	if ( get_transient( 'alm_comments_admin_notice' ) ) {
 		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
@@ -64,12 +64,12 @@ if ( ! class_exists( 'ALMComments' ) ) :
 		 * Set up contructors.
 		 */
 		public function __construct() {
-			add_action( 'alm_comments_installed', array( &$this, 'alm_comments_installed' ) );
-			add_action( 'wp_ajax_alm_comments', array( &$this, 'alm_comments_query' ) );
-			add_action( 'wp_ajax_nopriv_alm_comments', array( &$this, 'alm_comments_query' ) );
-			add_filter( 'alm_comments_shortcode', array( &$this, 'alm_comments_shortcode' ), 10, 7 );
-			add_filter( 'alm_comments_preloaded', array( &$this, 'alm_comments_preloaded' ), 10, 1 );
-			add_action( 'alm_comments_settings', array( &$this, 'alm_comments_settings' ) );
+			add_action( 'alm_comments_installed', [ &$this, 'alm_comments_installed' ] );
+			add_action( 'wp_ajax_alm_comments', [ &$this, 'alm_comments_query' ] );
+			add_action( 'wp_ajax_nopriv_alm_comments', [ &$this, 'alm_comments_query' ] );
+			add_filter( 'alm_comments_shortcode', [ &$this, 'alm_comments_shortcode' ], 10, 7 );
+			add_filter( 'alm_comments_preloaded', [ &$this, 'alm_comments_preloaded' ], 10, 1 );
+			add_action( 'alm_comments_settings', [ &$this, 'alm_comments_settings' ] );
 		}
 
 		/**
@@ -86,8 +86,7 @@ if ( ! class_exists( 'ALMComments' ) ) :
 			$comments_template                    = isset( $args['comments_template'] ) ? $args['comments_template'] : 'none';
 			$GLOBALS['alm_comment_repeater']      = $comments_template;
 			$comments_template_type               = preg_split( '/(?=\d)/', $comments_template, 2 );
-			$comments_template_type               = $comments_template_type[0];
-			$GLOBALS['alm_comment_repeater_type'] = $comments_template_type;
+			$GLOBALS['alm_comment_repeater_type'] = $comments_template_type[0];
 
 			$comments_post_id  = isset( $args['comments_post_id'] ) && $args['comments_post_id'] ? $args['comments_post_id'] : $post->ID;
 			$comments_per_page = isset( $args['comments_per_page'] ) ? $args['comments_per_page'] : '5';
@@ -102,7 +101,7 @@ if ( ! class_exists( 'ALMComments' ) ) :
 				$comments_callback = $comments_template_type !== 'none' ? 'alm_comment' : $comments_callback;
 			}
 
-			$alm_comments_args  = array(
+			$alm_comments_args  = [
 				'status'  => 'approve',
 				'post_id' => $comments_post_id,
 				'number'  => 999,
@@ -113,18 +112,18 @@ if ( ! class_exists( 'ALMComments' ) ) :
 				 */
 				'orderby' => $orderby,
 				'order'   => $order,
-			);
+			];
 			$alm_comments_query = get_comments( $alm_comments_args );
 			ob_start();
 			wp_list_comments(
-				array(
+				[
 					'style'             => $comments_style,
 					'page'              => 1,
 					'per_page'          => intval( $comments_per_page ),
 					'callback'          => $comments_callback,
 					'type'              => $comments_type,
 					'reverse_top_level' => false,
-				),
+				],
 				$alm_comments_query
 			);
 			$data = ob_get_clean();
@@ -142,13 +141,13 @@ if ( ! class_exists( 'ALMComments' ) ) :
 				return;
 			}
 
-			$query_type     = isset( $form_data['query_type'] ) ? $form_data['query_type'] : 'standard';
-			$data           = isset( $form_data['comments'] ) ? $form_data['comments'] : '';
-			$offset         = isset( $form_data['offset'] ) ? $form_data['offset'] : 0;
-			$orderby        = isset( $form_data['orderby'] ) ? $form_data['orderby'] : 'date';
-			$order          = isset( $form_data['order'] ) ? $form_data['order'] : 'DESC';
-			$canonical_url  = isset( $form_data['canonical_url'] ) ? $form_data['canonical_url'] : $_SERVER['HTTP_REFERER'];
-			$preloaded      = isset( $form_data['preloaded'] ) ? $form_data['preloaded'] : false;
+			$query_type    = isset( $form_data['query_type'] ) ? $form_data['query_type'] : 'standard';
+			$data          = isset( $form_data['comments'] ) ? $form_data['comments'] : '';
+			$offset        = isset( $form_data['offset'] ) ? $form_data['offset'] : 0;
+			$orderby       = isset( $form_data['orderby'] ) ? $form_data['orderby'] : 'date';
+			$order         = isset( $form_data['order'] ) ? $form_data['order'] : 'DESC';
+			$canonical_url = isset( $form_data['canonical_url'] ) ? $form_data['canonical_url'] : $_SERVER['HTTP_REFERER'];
+			$preloaded     = isset( $form_data['preloaded'] ) ? $form_data['preloaded'] : false;
 
 			// Cache Add-on.
 			$cache_id        = isset( $form_data['cache_id'] ) ? $form_data['cache_id'] : '';
@@ -187,7 +186,7 @@ if ( ! class_exists( 'ALMComments' ) ) :
 				if ( $comments === 'true' ) {
 					$comment_count = 0; // Count the comments.
 
-					$alm_comments_args = array(
+					$alm_comments_args = [
 						'status'  => 'approve',
 						'post_id' => $comments_post_id,
 						'number'  => 999,
@@ -198,7 +197,7 @@ if ( ! class_exists( 'ALMComments' ) ) :
 						*/
 						'orderby' => $orderby,
 						'order'   => $order,
-					);
+					];
 
 					$post_comments = get_comments( $alm_comments_args );
 
@@ -207,7 +206,7 @@ if ( ! class_exists( 'ALMComments' ) ) :
 						// This is becasue wp_list_comments does not count replies.
 						$comment_parent = $comment->comment_parent ? $comment->comment_parent : 0;
 						if ( $comment_parent === 0 ) {
-							$comment_count++;
+							++$comment_count;
 						}
 					}
 
@@ -314,22 +313,26 @@ if ( ! class_exists( 'ALMComments' ) ) :
 				'alm_comments_sanitize_license'
 			);
 		}
-
 	}
 
-	// phpcs:disable
 	/**
 	 * Custom comment styling callback (wp_list_comments()).
 	 *
-	 * @deprecated 1.2.0.1
 	 * @since 1.0
 	 */
 	function alm_comment( $comment, $args, $depth ) {
-		$comment_repeater      = $GLOBALS['alm_comment_repeater'];
-		$comment_repeater_type = $GLOBALS['alm_comment_repeater_type'];
-		include alm_get_current_repeater( $comment_repeater, $comment_repeater_type );
+		global $comment;
+		$template      = $GLOBALS['alm_comment_repeater'];
+		$template_type = $GLOBALS['alm_comment_repeater_type'];
+
+		if ( strpos( $template, '.php' ) || strpos( $template, '.html' ) && has_filter( 'alm_get_theme_repeater' ) ) {
+			// Theme Repeater.
+			do_action( 'alm_get_theme_repeater', $template, 1, 1, 1, 1, $args );
+		} else {
+			// Standard Repeater.
+			include alm_get_current_repeater( $template, $template_type );
+		}
 	}
-	// phpcs:enable
 
 	/**
 	 * Sanitize our license activation
@@ -371,12 +374,12 @@ function alm_comments_plugin_updater() {
 		$edd_updater = new EDD_SL_Plugin_Updater(
 			ALM_STORE_URL,
 			__FILE__,
-			array(
+			[
 				'version' => ALM_COMMENTS_VERSION,
 				'license' => $license_key,
 				'item_id' => ALM_COMMENTS_ITEM_NAME,
 				'author'  => 'Darren Cooney',
-			)
+			]
 		);
 	}
 }

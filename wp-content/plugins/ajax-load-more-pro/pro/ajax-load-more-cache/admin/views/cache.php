@@ -51,74 +51,7 @@ if ( isset( $alm_query_params ) ) {
 			?>
 		</section>
 		<aside class="cnkt-sidebar">
-			<div class="cta">
-				<h3><?php esc_attr_e( 'Cache Statistics', 'ajax-load-more-cache' ); ?></h3>
-				<div class="cta-inner">
-				<?php
-				// Count cache files and directories.
-				$dircount    = 0;
-				$filecount   = 0;
-				$directories = [];
-
-				// Create directory if it does not exist.
-				if ( ! is_dir( $path ) ) {
-					wp_mkdir_p( $path );
-				}
-				foreach ( new DirectoryIterator( $path ) as $file ) {
-					if ( $file->isDot() ) {
-						continue;
-					}
-
-					if ( $file->isDir() ) {
-						$directories[] = $file->getFilename();
-					}
-				}
-
-				foreach ( $directories as $directory ) {
-					$val = count( glob( $path . $directory . '/*.json' ) );
-					$dircount++;
-					$filecount = $filecount + $val;
-
-					// Sub Directories.
-					$sub_dir  = array();
-					$sub_path = $path . $directory;
-					foreach ( new DirectoryIterator( $sub_path ) as $file ) {
-						if ( $file->isDot() ) {
-							continue;
-						}
-
-						if ( $file->isDir() ) {
-							$sub_dir[] = $file->getFilename();
-						}
-					}
-					if ( $sub_dir ) {
-						foreach ( $sub_dir as $subdirectory ) {
-							$val = count( glob( $path . $directory . '/' . $subdirectory . '/*.html' ) );
-							$dircount++;
-							$filecount = $filecount + $val;
-						}
-					}
-				}
-				?>
-				<p class="cache-stats">
-					<span class="stat" id="dircount"><?php echo $dircount; ?></span>
-					<?php esc_attr_e( 'Page', 'ajax-load-more-cache' ); ?><?php echo ( $dircount > 1 || $dircount == 0 ) ? 's' : ''; ?> <?php _e( 'Cached', 'ajax-load-more-cache' ); ?>
-				</p>
-				<div class="spacer"></div>
-					<p class="cache-stats last">
-						<span class="stat" id="filecount"><?php echo $filecount; ?></span>
-						<?php esc_attr_e( 'File', 'ajax-load-more-cache' ); ?><?php echo ( $filecount > 1 || $filecount == 0 ) ? 's' : ''; ?> <?php _e( 'Cached', 'ajax-load-more-cache' ); ?>
-					</p>
-				</div>
-				<div class="major-publishing-actions">
-					<form id="delete-all-cache" name="delete-all-cache" action="admin.php" method="GET" data-path="<?php echo ALMCache::alm_get_cache_path(); ?>">
-						<input type="hidden" value="ajax-load-more-cache" name="page">
-						<button type="submit" class="button-primary" name="action" value="delete">
-							<?php esc_attr_e( 'Delete Cache', 'ajax-load-more-cache' ); ?>
-						</button>
-					</form>
-				</div>
-			</div>
+			<?php require_once ALM_CACHE_ADMIN_PATH . 'admin/views/includes/writeable.php'; ?>
 
 			<?php if ( ! $cache_build ) { ?>
 			<div class="cta">
@@ -149,8 +82,6 @@ if ( isset( $alm_query_params ) ) {
 				<?php } ?>
 			</div>
 			<?php } ?>
-			<?php require_once ALM_CACHE_ADMIN_PATH . 'admin/views/includes/writeable.php'; ?>
-			<div class="clear"></div>
 		</aside>
 	</div>
 </div>

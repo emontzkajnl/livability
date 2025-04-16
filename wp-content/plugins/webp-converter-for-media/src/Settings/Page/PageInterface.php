@@ -10,7 +10,7 @@ interface PageInterface {
 	/**
 	 * @return string|null
 	 */
-	public function get_slug();
+	public function get_slug(): ?string;
 
 	/**
 	 * @return bool
@@ -25,12 +25,12 @@ interface PageInterface {
 	/**
 	 * @return string|null
 	 */
-	public function get_menu_url();
+	public function get_menu_url(): ?string;
 
 	/**
 	 * @return string
 	 */
-	public function get_label(): string;
+	public static function get_label(): string;
 
 	/**
 	 * @return string

@@ -95,8 +95,9 @@ class Post_Update_Handler {
 	 * Updates the post.
 	 *
 	 * @since 1.0
+	 * @since 1.5 Updated to return the WP_error from wp_update_post().
 	 *
-	 * @return bool
+	 * @return bool|\WP_Error
 	 */
 	public function update() {
 		$addon = $this->addon;
@@ -140,10 +141,13 @@ class Post_Update_Handler {
 
 		if ( is_wp_error( $result ) ) {
 			$addon->log_debug( __METHOD__ . '(): Error updating post: ' . $result->get_error_message() );
-			return false;
+			$addon->add_feed_error( sprintf( esc_html__( 'Error updating post #%d: %s', 'gravityformsadvancedpostcreation' ), $this->post_id, $result->get_error_message() ), $this->feed, $this->entry, $this->form );
+
+			return $result;
 		}
 
 		$addon->log_debug( __METHOD__ . '(): Post updated.' );
+		$addon->add_note( rgar( $this->entry, 'id' ), sprintf( esc_html__( 'Post #%d updated.', 'gravityformsadvancedpostcreation' ), $this->post_id ), 'success' );
 
 		$this->update_post_properties();
 

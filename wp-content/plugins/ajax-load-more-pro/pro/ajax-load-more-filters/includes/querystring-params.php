@@ -4,6 +4,7 @@
  *
  * @since 1.0
  * @package ALMFilters
+ *
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
  * phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
  */
@@ -136,7 +137,7 @@ if ( $alm_filters_querystring ) {
 				$filter_meta_value   .= $filter_meta_count > 0 ? ':' . str_replace( '+', ',', $value ) : str_replace( '+', ',', $value );
 				$filter_meta_compare .= $filter_meta_count > 0 ? ':' . $filter_session_meta_operator : $filter_session_meta_operator;
 				$filter_meta_type    .= $filter_meta_count > 0 ? ':' . $filter_session_meta_type : $filter_session_meta_type;
-				$filter_meta_count++;
+				++$filter_meta_count;
 				break;
 
 			case 'taxonomy_query':
@@ -157,7 +158,7 @@ if ( $alm_filters_querystring ) {
 					$filter_taxonomy_terms            .= $filter_taxonomy_count > 0 ? ':' . str_replace( '+', ',', $value ) : str_replace( '+', ',', $value );
 					$filter_taxonomy_operator         .= $filter_taxonomy_count > 0 ? ':' . $filter_session_tax_operator . '' : $filter_session_tax_operator;
 					$filter_taxonomy_include_children .= $filter_taxonomy_count > 0 ? ':' . $filter_session_tax_include_children . '' : $filter_session_tax_include_children;
-					$filter_taxonomy_count++;
+					++$filter_taxonomy_count;
 				}
 				break;
 

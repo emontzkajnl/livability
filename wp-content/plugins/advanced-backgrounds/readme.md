@@ -3,9 +3,9 @@
 * Contributors: nko
 * Tags: parallax, video, youtube, background, gutenberg
 * Requires at least: 6.2
-* Tested up to: 6.6
+* Tested up to: 6.7
 * Requires PHP: 7.2
-* Stable tag: 1.12.4
+* Stable tag: 1.12.7
 * License: GPLv2 or later
 * License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 
@@ -66,6 +66,22 @@ The manual installation method involves downloading our AWB plugin and uploading
 5. Extended WPBakery Page Builder ROW options
 
 ## Changelog
+
+= 1.12.7 - Jan 7, 2025 =
+
+* added setting to prevent custom image sizes registration
+* fixed block layout constrained on frontend
+
+= 1.12.6 - Dec 19, 2024 =
+
+* revert back block default attributes added in v1.12.5 as it crashes the block
+
+= 1.12.5 - Dec 19, 2024 =
+
+* added WP 6.7 compatibility fixes
+* added more block support features: ariaLabel, colors, shadow, border and position
+* changed registration of block assets to use enqueue_block_assets hook
+* changed some block default attributes
 
 = 1.12.4 - Sep 7, 2024 =
 

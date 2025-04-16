@@ -56,7 +56,7 @@
 
 			foreach ( $staticDirectories as $directory ) {
 				// Loop thru our sorted directories and store files in array for sorting.
-				$directoy_total++;
+				++$directoy_total;
 				$filepath = $path . $directory;
 
 				echo '<div class="alm-dir-listing">';

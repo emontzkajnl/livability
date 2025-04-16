@@ -6,7 +6,7 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 2.2.1
+ * Version: 2.3.0.1
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
  *
@@ -17,8 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ALM_FILTERS_VERSION', '2.2.1' );
-define( 'ALM_FILTERS_RELEASE', 'May 30, 2024' );
+define( 'ALM_FILTERS_VERSION', '2.3.0.1' );
+define( 'ALM_FILTERS_RELEASE', 'January 22, 2025' );
 define( 'ALM_FILTERS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_FILTERS_URL', plugins_url( '', __FILE__ ) );
 define( 'ALM_FILTERS_ADMIN_URL', plugins_url( 'admin/', __FILE__ ) );
@@ -45,8 +45,7 @@ register_activation_hook( __FILE__, 'alm_filters_install' );
  * @since 2.5.6
  */
 function alm_filters_admin_notice() {
-	$slug   = 'ajax-load-more';
-	$plugin = $slug . '-filters';
+	$slug = 'ajax-load-more';
 	// Ajax Load More Notice.
 	if ( get_transient( 'alm_filters_admin_notice' ) ) {
 		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
@@ -55,7 +54,6 @@ function alm_filters_admin_notice() {
 		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, esc_html__( 'Install Ajax Load More Now', 'ajax-load-more-filters' ) ) . '</p>';
 		$message    .= '</div>';
 		echo wp_kses_post( $message );
-		// deactivate_plugins( '/' . $plugin . '/' . $plugin . '.php' );.
 		delete_transient( 'alm_filters_admin_notice' );
 	}
 }
@@ -63,13 +61,14 @@ add_action( 'admin_notices', 'alm_filters_admin_notice' );
 
 if ( ! class_exists( 'ALMFilters' ) ) :
 
+
 	/**
 	 * Initiate the class.
 	 */
 	class ALMFilters {
 
 		/**
-		 * ALM Notices.
+		 * ALM Admin Notices.
 		 *
 		 * @var array
 		 */
@@ -124,7 +123,6 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 			add_filter( 'alm_filters_shortcode_params', [ &$this, 'alm_filters_shortcode_params' ], 10, 8 );
 			add_filter( 'alm_filters_preloaded_args', [ &$this, 'alm_filters_preloaded_args' ], 10, 1 );
 			add_action( 'init', [ &$this, 'alm_filters_facet_publish_actions' ] );
-			add_filter( 'redirect_canonical', [ &$this, 'alm_filters_frontpage_canonical_redirect' ] );
 
 			add_action( 'admin_init', [ &$this, 'alm_filters_export' ] );
 			add_action( 'admin_init', [ &$this, 'alm_filters_import' ] );
@@ -132,10 +130,21 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 			add_action( 'admin_init', [ &$this, 'alm_filters_duplicate_filter' ] );
 			add_action( 'admin_init', [ &$this, 'alm_filters_deleted' ] );
 			add_action( 'admin_init', [ &$this, 'alm_filters_updated' ] );
-			add_action( 'admin_notices', [ &$this, 'admin_notices' ] );
 
-			load_plugin_textdomain( 'ajax-load-more-filters', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
 			$this->includes();
+
+			add_filter( 'redirect_canonical', [ &$this, 'alm_filters_frontpage_canonical_redirect' ] );
+			add_action( 'init', [ &$this, 'load_translations' ] );
+		}
+
+		/**
+		 * Loads plugin translations.
+		 *
+		 * @since  2.2
+		 * @return void
+		 */
+		public function load_translations() {
+			load_plugin_textdomain( 'ajax-load-more-filters', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
 		}
 
 		/**
@@ -151,10 +160,17 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 			require_once 'functions/display-terms.php';
 			require_once 'functions/display-textfield.php';
 			require_once 'functions/facets.php';
-			require_once 'functions/filter-preview.php';
+			require_once 'functions/preview.php';
+
+			// REST API calls.
 			require_once 'admin/api/save.php';
 			require_once 'admin/api/renderfilter.php';
+
+			// Admin only.
 			if ( is_admin() ) {
+				require_once 'functions/class-notices.php';
+				$this->notices = new ALMNotices();
+
 				if ( ! function_exists( 'alm_list_all_filters' ) ) {
 					require_once 'admin/functions.php';
 				}
@@ -162,9 +178,9 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 		}
 
 		/**
-		 * Create the publish actions for re-indexing facets.
+		 * Create the publish actions for indexing facets.
 		 *
-		 * @since 1.0
+		 * @return void
 		 */
 		public function alm_filters_facet_publish_actions() {
 			if ( is_user_logged_in() && current_user_can( apply_filters( 'alm_user_role', 'edit_theme_options' ) ) && apply_filters( 'alm_filters_facet_publish_actions', true ) ) {
@@ -194,7 +210,9 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 		/**
 		 * Save post hook for updating facets.
 		 *
-		 * @param string $id The Post ID.
+		 * @param string  $id      The Post ID.
+		 * @param WP_Post $post    The Post Object.
+		 * @param bool    $update  Whether this is an existing post being updated or not.
 		 * @return void
 		 */
 		public function alm_filters_update_facets_on_save( $id ) {
@@ -219,8 +237,10 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 
 			foreach ( $filtered as $filter ) {
 				if ( $filter['id'] ) {
-					$filter = unserialize( get_option( ALM_FILTERS_PREFIX . $filter['id'] ) );
-					$filter && alm_filters_save_facet( $filter );
+					$filter = self::alm_filters_get_filter_by_id( $filter['id'], true );
+					if ( $filter ) {
+						alm_filters_update_facet_index( $filter, $id, get_post_status( $id ) );
+					}
 				}
 			}
 		}
@@ -229,26 +249,24 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 		 * Rebuild a filter facet via querystring in the WP Admin.
 		 *
 		 * @see wp-admin/admin.php?page=ajax-load-more-filters&rebuild_facet=my_facet
-		 *
-		 * @since 2.0
 		 */
 		public function alm_filters_rebuild_facets() {
 			$params = filter_input_array( INPUT_GET ); // phpcs:ignore
 			if ( isset( $params['rebuild_facet_index'] ) ) {
 				$filter_id = $params['rebuild_facet_index'];
-				$filter    = get_option( ALM_FILTERS_PREFIX . $filter_id );
+				$filter    = self::alm_filters_get_filter_by_id( $filter_id, true );
 
 				// Confirm filter exist.
-				if ( ! empty( $filter ) ) {
-					alm_filters_save_facet( unserialize( $filter ) );
-					alm_filters_delete_facet_transients( $filter_id ); // Delete related transients.
+				if ( $filter ) {
+					// Create the facet index.
+					alm_filters_save_facet_index( $filter );
 
-					$msg = sprintf( __( 'Facet index has been rebuilt successfully for the <strong>%s</strong> filter!', 'ajax-load-more-filters' ), $filter_id ); // phpcs:ignore
-					$this->alm_filters_add_admin_notice( $msg, 'ajax-load-more-filters' );
+					$msg = sprintf( __( 'Facet index has been rebuilt successfully for the <strong>%s</strong> filter.', 'ajax-load-more-filters' ), $filter_id ); // phpcs:ignore
+					$this->notices->alm_add_admin_notice( $msg, 'ajax-load-more-filters', 'success' );
 
 				} else {
 					$msg = __( 'Filter not found and facets could not be rebuilt.', 'ajax-load-more-filters' );
-					$this->alm_filters_add_admin_notice( $msg, 'ajax-load-more-filters error' );
+					$this->notices->alm_add_admin_notice( $msg, 'ajax-load-more-filters error' );
 
 				}
 			}
@@ -258,31 +276,26 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 		 * Duplicate an existing filter.
 		 *
 		 * @see wp-admin/admin.php?page=ajax-load-more-filters&duplicate_filter=my_facet
-		 *
-		 * @since 2.0
 		 */
 		public function alm_filters_duplicate_filter() {
 			$params = filter_input_array( INPUT_GET ); // phpcs:ignore
 			if ( isset( $params['duplicate_filter'] ) && isset( $params['filter_id'] ) ) {
 				$id         = $params['duplicate_filter'];
-				$new        = $params['filter_id'];
-				$filter     = get_option( ALM_FILTERS_PREFIX . $id );
-				$new_filter = get_option( ALM_FILTERS_PREFIX . $new );
+				$new_id     = $params['filter_id'];
+				$filter     = self::alm_filters_get_filter_by_id( $id, true );
+				$new_filter = self::alm_filters_get_filter_by_id( $new_id, true );
 
 				// New filter name exists. exit before overwrite.
 				if ( $new_filter ) {
 					/* translators: %s: Filter ID & admin link */
-					$msg = sprintf( __( 'Filter <a href="%1$s">%2$s</a> already exists - you need to come up with a unique ID for each filter.', 'ajax-load-more-filters' ), ALM_FILTERS_BASE_URL . '&filter=' . $new, $new );
-					$this->alm_filters_add_admin_notice( $msg, 'ajax-load-more-filters error' );
+					$msg = sprintf( __( 'Filter <a href="%1$s">%2$s</a> already exists - you need to use a unique ID for each filter.', 'ajax-load-more-filters' ), ALM_FILTERS_BASE_URL . '&filter=' . $new_id, $new_id );
+					$this->notices->alm_add_admin_notice( $msg, 'ajax-load-more-filters error' );
 					return;
 				}
 
 				// Confirm filter exist to duplicate.
-				if ( ! empty( $filter ) ) {
-					$filter = unserialize( $filter );
-					$name   = $new;
-
-					$filter['id']            = $name;
+				if ( $filter ) {
+					$filter['id']            = $new_id;
 					$time                    = time();
 					$filter['date_created']  = $time;
 					$filter['date_modified'] = $time;
@@ -290,13 +303,13 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 					update_option( ALM_FILTERS_PREFIX . $filter['id'], serialize( $filter ) );
 
 					/* translators: %s: Filter ID */
-					$msg = sprintf( __( 'Filter <a href="%1$s">%2$s</a> created sucessfully!', 'ajax-load-more-filters' ), ALM_FILTERS_BASE_URL . '&filter=' . $new, $new );
-					$this->alm_filters_add_admin_notice( $msg, 'ajax-load-more-filters' );
+					$msg = sprintf( __( 'Filter <a href="%1$s">%2$s</a> created sucessfully.', 'ajax-load-more-filters' ), ALM_FILTERS_BASE_URL . '&filter=' . $new_id, $new_id );
+					$this->notices->alm_add_admin_notice( $msg, 'ajax-load-more-filters', 'success' );
 
 				} else {
 					/* translators: %s: Filter ID */
 					$msg = sprintf( __( 'Filter <strong>%s</strong> does not exist and could not be duplicated.', 'ajax-load-more-filters' ), $id );
-					$this->alm_filters_add_admin_notice( $msg, 'ajax-load-more-filters error' );
+					$this->notices->alm_add_admin_notice( $msg, 'ajax-load-more-filters error' );
 
 				}
 			}
@@ -306,7 +319,6 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 		 * Delete a filter and facets from the options table.
 		 *
 		 * @see wp-admin/admin.php?page=ajax-load-more-filters&delete_filter=my_filter
-		 * @since 1.5
 		 */
 		public function alm_filters_deleted() {
 			$params = filter_input_array( INPUT_GET ); // phpcs:ignore
@@ -314,13 +326,11 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 				$filter_id = $params['delete_filter'];
 
 				// Confirm options exist.
-				$filter = get_option( ALM_FILTERS_PREFIX . $filter_id );
+				$filter = self::alm_filters_get_filter_by_id( $filter_id, true );
 
-				if ( ! empty( $filter ) ) {
-					$filter = unserialize( $filter );
-
+				if ( $filter ) {
 					// Delete related Facet option and transients.
-					$has_facets = isset( $filter['facets'] ); // Locate matching facet.
+					$has_facets = isset( $filter['facets'] ) && $filter['facets']; // Locate matching facet.
 					if ( $has_facets ) {
 						delete_option( ALM_FILTERS_FACET_PREFIX . $filter_id ); // Delete the WP option.
 						alm_filters_delete_facet_transients( $filter_id ); // Delete related transients.
@@ -330,99 +340,48 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 					delete_option( ALM_FILTERS_PREFIX . $filter_id );
 
 					if ( $has_facets ) {
-						$msg = '<strong>' . $filter_id . '</strong> ' . __( 'filter and facets were successfully deleted!', 'ajax-load-more-filters' );
+						$msg = '<strong>' . $filter_id . '</strong> ' . __( 'filter and facets were successfully deleted.', 'ajax-load-more-filters' );
 					} else {
-						$msg = '<strong>' . $filter_id . '</strong> ' . __( 'filter was deleted successfully!', 'ajax-load-more-filters' );
+						$msg = '<strong>' . $filter_id . '</strong> ' . __( 'filter was deleted successfully.', 'ajax-load-more-filters' );
 					}
-					$this->alm_filters_add_admin_notice( $msg, 'ajax-load-more-filters' );
+					$this->notices->alm_add_admin_notice( $msg, 'ajax-load-more-filters', 'success' );
 				} else {
 					$msg = '<strong>' . $filter_id . '</strong> ' . __( 'filter not found.', 'ajax-load-more-filters' );
-					$this->alm_filters_add_admin_notice( $msg, 'ajax-load-more-filters error' );
+					$this->notices->alm_add_admin_notice( $msg, 'ajax-load-more-filters error' );
 				}
 			}
 		}
 
 		/**
-		 * Add admin notices.
-		 *
-		 * @since 1.5
-		 * @param string $text The notice text.
-		 * @param string $class The classname for the notice.
-		 * @param string $wrap The wrap HTML.
-		 * @return function
-		 */
-		public function alm_filters_add_admin_notice( $text, $class = '', $wrap = 'p' ) {
-			return $this->add_notice( $text, $class, $wrap );
-		}
-
-		/**
-		 * Add admin notices to the $notices array.
-		 *
-		 * @since 1.5
-		 * @param string $text The notice text.
-		 * @param string $class The notice class.
-		 * @param string $wrap The wrap HTML.
-		 * @return void
-		 */
-		public function add_notice( $text = '', $class = '', $wrap = 'p' ) {
-			$this->notices[] = [
-				'text'  => $text,
-				'class' => 'updated ' . $class,
-				'wrap'  => $wrap,
-			];
-		}
-
-		/**
-		 * Return the $notices.
-		 *
-		 * @since 1.5
-		 * @return array $notices The notice.
-		 */
-		public function get_notices() {
-			if ( empty( $this->notices ) ) {
-				return false; // bail early if no notices.
-			}
-			return $this->notices;
-		}
-
-		/**
-		 *  Render admin notices in the WP admin.
-		 *
-		 *  @since  1.5
-		 *  @return void
-		 */
-		public function admin_notices() {
-			$notices = $this->get_notices();
-
-			// bail early if no notices.
-			if ( ! $notices ) {
-				return;
-			}
-
-			// Loop notices.
-			foreach ( $notices as $notice ) {
-				$open  = '';
-				$close = '';
-				if ( $notice['wrap'] ) {
-					$open  = "<{$notice['wrap']}>";
-					$close = "</{$notice['wrap']}>";
-				}
-				?>
-				<div class="alm-admin-notice notice is-dismissible <?php echo esc_attr( $notice['class'] ); ?>"><?php echo wp_kses_post( $open ) . wp_kses_post( $notice['text'] ) . wp_kses_post( $close ); ?></div>
-				<?php
-			}
-		}
-
-		/**
-		 * Was a filter updated.
+		 * Filter has been updated.
 		 *
 		 * @since 1.6
 		 */
 		public function alm_filters_updated() {
 			$params = filter_input_array( INPUT_GET ); // phpcs:ignore
-			if ( isset( $params['filter_updated'] ) ) {
-				$msg = str_replace( '+', ' ', $params['filter_updated'] );
-				$this->alm_filters_add_admin_notice( '<i class="fa fa-check-square" style="color: #46b450";></i>&nbsp; ' . $msg . '!', 'success' );
+			if ( isset( $params['filter'] ) && isset( $params['filter_updated'] ) ) {
+				$filter_id = trim( $params['filter'] );
+				$filter    = self::alm_filters_get_filter_by_id( $filter_id, true );
+				if ( ! $filter ) {
+					$this->notices->alm_add_admin_notice( __( 'Filter does not exist.', 'ajax-load-more-filters' ), 'error' );
+					return;
+				}
+
+				// Update Facet index and transients.
+				$has_facets = isset( $filter['facets'] ) && $filter['facets']; // Locate matching facet.
+				if ( $has_facets ) {
+					// Confirm post types are selected.
+					$has_facets_post_types = isset( $filter['facets_post_types'] ) && is_array( $filter['facets_post_types'] );
+					if ( ! $has_facets_post_types ) {
+						$this->notices->alm_add_admin_notice( __( 'Error: You must select at least 1 post type when using facets.', 'ajax-load-more-filters' ), 'error' );
+						return;
+					}
+
+					// Create the facet index.
+					alm_filters_save_facet_index( $filter );
+				}
+
+				$this->notices->alm_add_admin_notice( __( 'Filter saved successfully.', 'ajax-load-more-filters' ), 'success', 'success' );
 			}
 		}
 
@@ -453,7 +412,7 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 					die();
 
 				} else {
-					$this->alm_filters_add_admin_notice( __( 'No filters selected. You must select a filter to export.', 'ajax-load-more-filters' ), 'error' );
+					$this->notices->alm_add_admin_notice( __( 'No filters selected. You must select a filter to export.', 'ajax-load-more-filters' ), 'error' );
 				}
 			}
 		}
@@ -471,7 +430,7 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 				if ( $file ) {
 					// Validate type.
 					if ( pathinfo( $file['name'], PATHINFO_EXTENSION ) !== 'json' ) {
-						$this->alm_filters_add_admin_notice( __( 'Incorrect file type. You can only import JSON files.', 'ajax-load-more-filters' ), 'error' );
+						$this->notices->alm_add_admin_notice( __( 'Incorrect file type. You can only import JSON files.', 'ajax-load-more-filters' ), 'error' );
 						return;
 					}
 
@@ -481,13 +440,13 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 
 					// Validate json.
 					if ( empty( $json ) ) {
-						$this->alm_filters_add_admin_notice( __( 'Import file empty.', 'ajax-load-more-filters' ), 'error' );
+						$this->notices->alm_add_admin_notice( __( 'Import file empty.', 'ajax-load-more-filters' ), 'error' );
 						return;
 					}
 
 					// Incorrect JSON format.
 					if ( ! is_array( $json ) ) {
-						$this->alm_filters_add_admin_notice( __( 'JSON file formatted incorrectly.', 'ajax-load-more-filters' ), 'error' );
+						$this->notices->alm_add_admin_notice( __( 'JSON file formatted incorrectly.', 'ajax-load-more-filters' ), 'error' );
 						return;
 					}
 
@@ -497,18 +456,18 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 					foreach ( $json as $filter ) {
 
 						if ( ! isset( $filter['id'] ) ) {
-							$this->alm_filters_add_admin_notice( __( 'JSON file formatted incorrectly', 'ajax-load-more-filters' ), 'error' );
+							$this->notices->alm_add_admin_notice( __( 'JSON file formatted incorrectly', 'ajax-load-more-filters' ), 'error' );
 							break;
 						}
 						$id = $filter['id'];
 
 						if ( ! isset( $filter['style'] ) ) {
-							$this->alm_filters_add_admin_notice( __( 'JSON file formatted incorrectly', 'ajax-load-more-filters' ), 'error' );
+							$this->notices->alm_add_admin_notice( __( 'JSON file formatted incorrectly', 'ajax-load-more-filters' ), 'error' );
 							break;
 						}
 
 						if ( ! isset( $filter['filters'] ) ) {
-							$this->alm_filters_add_admin_notice( __( 'JSON file formatted incorrectly', 'ajax-load-more-filters' ), 'error' );
+							$this->notices->alm_add_admin_notice( __( 'JSON file formatted incorrectly', 'ajax-load-more-filters' ), 'error' );
 							break;
 						}
 
@@ -526,11 +485,11 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 					}
 
 					if ( $count > 0 ) {
-						$this->alm_filters_add_admin_notice( $import_string . __( ' successfully imported', 'ajax-load-more-filters' ) );
+						$this->notices->alm_add_admin_notice( $import_string . __( ' successfully imported', 'ajax-load-more-filters' ) );
 					}
 				} else {
 					// Error - file does not exist.
-					$this->alm_filters_add_admin_notice( __( 'An error has occurred', 'ajax-load-more-filters' ), 'error' );
+					$this->notices->alm_add_admin_notice( __( 'An error has occurred', 'ajax-load-more-filters' ), 'error' );
 
 				}
 			}
@@ -594,7 +553,7 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 		 * @since 1.0
 		 */
 		public static function alm_filters_shortcode( $atts ) {
-			$args    = shortcode_atts(
+			$args     = shortcode_atts(
 				[
 					'id'       => '',
 					'target'   => '',
@@ -603,15 +562,14 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 				],
 				$atts
 			);
-			$id       = esc_attr( $args['id'] );
-			$target   = sanitize_key( $args['target'] );
-			$filter   = get_option( ALM_FILTERS_PREFIX . $id ); // Get the option.
+			$id       = sanitize_key( $args['id'] );
+			$target   = esc_attr( str_replace( ' ', '', $args['target'] ) );
+			$filter   = self::alm_filters_get_filter_by_id( $id, true ); // Get the option.
 			$preview  = esc_attr( $args['preview'] );
 			$redirect = esc_attr( $args['redirect'] );
 
 			if ( $filter && $target ) {
-				$filters = unserialize( $filter );
-				return self::init( $filters, $target, $preview, $redirect );
+				return self::init( $filter, $target, $preview, $redirect );
 			}
 		}
 
@@ -624,7 +582,7 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 		 * @param string  $redirect Redirect user to new URL after filter.
 		 * @since 1.0
 		 */
-		public static function init( $filters = [], $target = '', $preview = false, $redirect = false) {
+		public static function init( $filters = [], $target = '', $preview = false, $redirect = false ) {
 			if ( empty( $filters ) ) {
 				return;
 			}
@@ -654,7 +612,7 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 
 			if ( $filters['filters'] ) {
 				$options_obj = [
-					'target'             => isset( $target ) ? esc_attr( $target ) : '',
+					'target'             => isset( $target ) ? strtolower( esc_attr( $target ) ) : '',
 					'id'                 => isset( $filters['id'] ) ? esc_attr( $filters['id'] ) : '',
 					'style'              => isset( $filters['style'] ) ? esc_attr( $filters['style'] ) : 'change',
 					'facets'             => isset( $filters['facets'] ) && $filters['facets'] === true ? true : false,
@@ -883,7 +841,6 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 
 				// Enqueue Range Slider CSS.
 				if ( $has_rangeslider ) {
-					$rangeslider_style = isset( $options['_alm_filters_flatpickr_theme'] ) ? $options['_alm_filters_flatpickr_theme'] : 'default';
 					wp_enqueue_style( 'alm-nouislider', ALM_FILTERS_URL . '/dist/vendor/nouislider/nouislider.min.css', '', ALM_FILTERS_VERSION );
 				}
 
@@ -1012,22 +969,30 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 		 * Get filter from PHP Global variable or WP options table.
 		 * Note: This used when using the PHP method alm_filters() to initiate a filter via PHP.
 		 *
-		 * @param string $id     Filter ID.
-		 * @return array|boolean The filter as array.
+		 * @param string  $id          Filter ID.
+		 * @param boolean $use_options Get via WP options.
+		 * @return array|boolean       The filter as array.
 		 */
-		public static function alm_filters_get_filter_by_id( $id ) {
+		public static function alm_filters_get_filter_by_id( $id, $use_options = false ) {
 			if ( ! $id ) {
 				return false;
 			}
 
-			if ( isset( $GLOBALS ) && isset( $GLOBALS[ ALM_FILTERS_PREFIX . $id ] ) ) {
-				// Get filter from PHP Globals.
-				return $GLOBALS[ ALM_FILTERS_PREFIX . $id ];
-
+			if ( ! $use_options && isset( $GLOBALS ) && isset( $GLOBALS[ ALM_FILTERS_PREFIX . $id ] ) ) {
+				return $GLOBALS[ ALM_FILTERS_PREFIX . $id ]; // Get from PHP Globals.
 			} else {
-				// Get filter as WP option.
-				return unserialize( get_option( ALM_FILTERS_PREFIX . $id ) );
+				return unserialize( get_option( ALM_FILTERS_PREFIX . $id ) ); // Get filter as WP option.
 			}
+		}
+
+		/**
+		 * Get facet index by ID.
+		 *
+		 * @param string $id     The Filter ID.
+		 * @return array|boolean The filter as array.
+		 */
+		public static function get_facet_index_by_id( $id ) {
+			return $id ? unserialize( get_option( ALM_FILTERS_FACET_PREFIX . $id ) ) : false;
 		}
 
 		/**
@@ -1263,18 +1228,16 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 		 */
 		public function alm_filters_shortcode_params( $filters, $target, $url, $paging, $scroll, $scrolltop, $debug, $options ) {
 			$data  = ' data-filters="true"';
-			$data .= ' data-filters-target="' . $target . '"';
+			$data .= ' data-filters-target="' . strtolower( $target ) . '"';
 			$data .= ' data-filters-url="' . $url . '"';
 			$data .= ' data-filters-paging="' . $paging . '"';
 			$data .= ' data-filters-scroll="' . $scroll . '"';
 			$data .= ' data-filters-scrolltop="' . $scrolltop . '"';
 			$data .= $debug === 'true' ? ' data-filters-debug="true"' : '';
 
-			if ( $target ) {
+			if ( $target && alm_filters_has_facets( $target ) ) {
 				// Dynamically set `facets="true"` if set in filter.
-				if ( alm_filters_has_facets( $target ) ) {
-					$data .= ' data-facets="true"';
-				}
+				$data .= ' data-facets="true"';
 			}
 
 			return $data;
@@ -1679,7 +1642,7 @@ endif;
  * @param string       $redirect Redirect user to new URL after filter.
  * @since 1.0
  */
-function alm_filters( $data, $target, $redirect = false) {
+function alm_filters( $data, $target, $redirect = false ) {
 	if ( is_array( $data ) ) {
 		// Parse the filter array.
 		$id = isset( $data['id'] ) ? $data['id'] : false;

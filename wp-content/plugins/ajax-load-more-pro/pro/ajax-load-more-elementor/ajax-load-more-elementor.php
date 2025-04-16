@@ -7,19 +7,19 @@
  * Twitter: @KaptonKaos
  * Author URI: http://connekthq.com
  * Copyright: Darren Cooney & Connekt Media
- * Version: 1.2.1
- * Elementor tested up to: 3.25.10
- * Elementor Pro tested up to: 3.25.10
+ * Version: 1.2.2
+ * Elementor tested up to: 3.26.5
+ * Elementor Pro tested up to: 3.26.5
  *
- * @package ALMElementor 
+ * @package ALMElementor
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ALM_ELEMENTOR_VERSION', '1.2.1' );
-define( 'ALM_ELEMENTOR_RELEASE', 'December 4, 2024' );
+define( 'ALM_ELEMENTOR_VERSION', '1.2.2' );
+define( 'ALM_ELEMENTOR_RELEASE', 'January 17, 2025' );
 
 /**
  * Plugin activation hook.
@@ -44,8 +44,7 @@ register_activation_hook( __FILE__, 'alm_elementor_install' );
  */
 function alm_elementor_admin_notice() {
 
-	$slug   = 'ajax-load-more';
-	$plugin = $slug . '-elementor';
+	$slug = 'ajax-load-more';
 	// Ajax Load More Notice.
 	if ( get_transient( 'alm_elementor_admin_notice' ) ) {
 		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );

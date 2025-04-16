@@ -119,7 +119,12 @@ class MainFront
 		    // Sometimes styles are loaded in the BODY section of the page
 		    add_action( 'wp_print_footer_scripts', array( $this, 'onPrintFooterScriptsStyles' ), 1 );
 
-            add_filter('init', function() {
+            // "wp_loaded" --> "init" is ideal due to the way it gets the HTML (every soon)
+            // "init_shutdown" --> "wp" is the way to go here because is_front_page() and other functions are available and used in the "Main" __construct
+            // The settings are refetched in case there are options set in "Settings" -- "Plugin Usage Preferences" -- "No load on pages" -- "Prevent features of Asset CleanUp Pro from triggering on certain pages"
+            $actionUsed = Main::instance()->settings['alter_html_source_method'] === 'wp_loaded' ? 'init' : 'wp';
+
+            add_action($actionUsed, function() {
                 if (OptimizeCommon::preventAnyFrontendOptimization()) {
                     return;
                 }
@@ -137,7 +142,7 @@ class MainFront
                         return $tag;
                     }, 10, 2);
                 }
-            });
+            }, PHP_INT_MAX);
 
 		    // Preloads
 		    add_action( 'wp_head', static function() {
@@ -272,6 +277,27 @@ class MainFront
 			    $wpacuCleanUp->doDisableOembed();
 		    }
 	    }
+
+        // This is for WPML and other similar plugins compatibility
+        // e.g. es.domain.com is fetching something from de.domain.com
+
+        // These headers are set in the front-end view only (e.g. not within is_admin()),
+        // and only when specific parameters are set on these public URLs
+        $assetsFetchDashboardDirectMethod = Main::instance()->isGetAssetsCall &&
+                                            isset($_GET['wpacu_time_r']) &&
+                                            $_GET['wpacu_time_r'];
+
+        $targetPagePreloadFromDashboard   = isset($_GET['wpacu_preload'], $_GET['wpacu_no_frontend_show'], $_GET['wpacu_time_r']) &&
+                                            $_GET['wpacu_preload'] && $_GET['wpacu_no_frontend_show'] && $_GET['wpacu_time_r'];
+
+        if ( ($assetsFetchDashboardDirectMethod || $targetPagePreloadFromDashboard) && is_user_logged_in() ) {
+            $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : get_site_url();
+
+            header('Access-Control-Allow-Origin: '.$origin); // Allow all origins since it's public
+            header('Access-Control-Allow-Credentials: true');
+            header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+            header('Access-Control-Allow-Headers: Content-Type, Authorization, X-WP-Nonce');
+        }
     }
 
 	/**
@@ -479,8 +505,8 @@ class MainFront
             $globalUnload = Main::instance()->globalUnloaded;
 
             // [wpacu_lite]
-            if ( $nonAssetConfigPage && ! empty( $globalUnload['styles'] ) ) {
-                $list = $globalUnload['styles'];
+            if ( $nonAssetConfigPage && ! empty( $globalUnload[$assetType] ) ) {
+                $list = $globalUnload[$assetType];
             } else {
             // [/wpacu_lite]
 
@@ -543,8 +569,8 @@ class MainFront
             $globalUnload = Main::instance()->globalUnloaded;
 
             // [wpacu_lite]
-            if ( $nonAssetConfigPage && ! empty( $globalUnload['styles'] ) ) {
-                $list = $globalUnload['styles'];
+            if ( $nonAssetConfigPage && ! empty( $globalUnload[$assetType] ) ) {
+                $list = $globalUnload[$assetType];
             } else {
             // [/wpacu_lite]
 
@@ -695,10 +721,6 @@ class MainFront
 		}
 
 		if ( empty($list) || ! is_array($list) ) {
-            // [wpacu_lite]
-            $nonAssetConfigPage = ! Main::instance()->isUpdateable && ! Misc::getShowOnFront();
-            // [/wpacu_lite]
-
 			/*
 			* [START] Build unload list
 			*/
@@ -791,8 +813,8 @@ class MainFront
 
 			// Only trigger the unloading on regular page load, not when the assets list is collected
 			if ( ! Main::instance()->isGetAssetsCall ) {
+                wp_dequeue_style( $handle );
 				wp_deregister_style( $handle );
-				wp_dequeue_style( $handle );
 			}
 		}
 
@@ -1012,8 +1034,8 @@ class MainFront
 			if ( ! Main::instance()->isGetAssetsCall ) {
                 $handle = Main::maybeGetOriginalNonUniqueHandleName($handle, 'scripts');
 
+                wp_dequeue_script( $handle );
 				wp_deregister_script( $handle );
-				wp_dequeue_script( $handle );
 			}
 		}
 

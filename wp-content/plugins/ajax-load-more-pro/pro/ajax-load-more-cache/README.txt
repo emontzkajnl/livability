@@ -5,19 +5,17 @@ Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/cache/
 Requires at least: 4.0.0
-Tested up to: 6.5.0
+Tested up to: 6.7
 Stable tag: trunk
 Homepage: https://connekthq.com/ajax-load-more/
-Version: 2.0.3
-
+Version: 2.0.4
 
 == Copyright ==
-Copyright 2024 Darren Cooney
+Copyright 2025 Darren Cooney & Connekt Media
 
 This software is NOT to be distributed, but can be INCLUDED in WP themes: Premium or Contracted.
 This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
 
 == Description ==
 
@@ -47,20 +45,20 @@ https://connekthq.com/plugins/ajax-load-more/add-ons/cache/
 
 == Changelog ==
 
+= 2.0.4 - January 17, 2025 =
+* UPDATE: Updated and normalized the display of various UI elements in the Ajax Load More admin.
+
 = 2.0.3 - March 21, 2024 =
 * UPDATE: Added support for caching Filter add-on facets.
 
-
 = 2.0.2 - January 16, 2024 =
 * FIX: Fixed issue with display of cache URL on the Cache admin page.
-
 
 = 2.0.1 - July 27, 2023 =
 * UPDATE: Updated cache admin page to reflect new admin styling.
 * UPDATE: Updated various cache dashboard styles.
 * FIX: Fixed spelling issues with REST API test notice.
 * FIX: Fixed URL error in admin display of cache listing.
-
 
 = 2.0.0 - June 11, 2023 =
 * NOTICE: Cache 2.0 is not compatible with Ajax Load More 5.x or lower.
@@ -75,33 +73,26 @@ https://connekthq.com/plugins/ajax-load-more/add-ons/cache/
 * FIX: Fixed issue with load more button not shutting down on the last page of results.
 * UPDATE: Code cleanup and optimization.
 
-
 = 1.7.5 - January 5, 2023 =
 * NEW: Added the ability to clear an individual cache by ID using the `alm_clear_cache` action.
 * UPDATE: Code cleanup and organization.
-
 
 = 1.7.4 - March 7, 2022 =
 * NEW: Added the ability to clear an individual cache by ID using the `alm_clear_cache` action.
 * UPDATE: Code cleanup and organization.
 
-
 = 1.7.3.1 - April 20, 2021 =
 * UDATES - Various admin styling updates to match the updated look and feel of core Ajax Load More v5.4.5.
-
 
 = 1.7.3 - January 3, 2021 =
 * FIX - Fixed issue with [Auto Cache Generation](https://connekthq.com/plugins/ajax-load-more/docs/add-ons/cache/#auto-generate) and included version of JQuery of WP 5.6.
 * UPDATE - Code cleanup and organization.
 
-
 = 1.7.2 - November 11, 2020 =
 * FIX - Fixed issue with PHP error on Cache admin page when the cache directory does not exist.
 
-
 = 1.7.1 - June 29, 2020 =
 * FIX - Fixed issue with 'Delete cache when new posts are published.` setting causing issues for Editor, Author roles saving and creating posts.
-
 
 = 1.7.0 - June 12, 2020 =
 * NEW - Added support for caching results with the [Filters add-on](https://connekthq.com/plugins/ajax-load-more/add-ons/filters/)
@@ -109,10 +100,8 @@ https://connekthq.com/plugins/ajax-load-more/add-ons/cache/
 * UPDATE - Updated warning before deleting a cache directory. Users are now instructed as to which specific directory is up for deletion.
 * FIX - Fixed PHP warning message about undefined index 0 on ALM Cache admin page.
 
-
 = 1.6.1 - May 1, 2020 =
 * NEW - Added new cache API for caching Single Posts using the new implementation method. This new API will allow for more robust caching options in the future.
-
 
 = 1.6.0 - December 28, 2018 =
 * NEW - Added functionality to auto-generate ALM Cache - [view docs](https://connekthq.com/plugins/ajax-load-more/docs/add-ons/cache/#auto-generate).
@@ -120,11 +109,9 @@ https://connekthq.com/plugins/ajax-load-more/add-ons/cache/
 * NEW - Added uninstaller script to remove `alm-cache` directory on plugin deletion.
 * UPDATE - Removing `mkdir()` functions in favor of core WP function `wp_mkdir_p()` which helps with permission issues on directory creation.
 
-
 = 1.5.3 - September 19, 2018 =
 * FIX - Fixed bug with cache creation for paged URLs and the SEO add-on.
 * Update - Admin UI/UX updates
-
 
 = 1.5.2 - April 17, 2018 =
 * NEW - Added new `alm_cache_deleted` action dispatched after Ajax Load More cache is deleted and created.
@@ -132,11 +119,9 @@ https://connekthq.com/plugins/ajax-load-more/add-ons/cache/
 * NEW - Added new language file for localization.
 * UPDATE - Code clean up.
 
-
 = 1.5.1 - November 16, 2017 =
 * UPGRADE NOTICE - You should update core ALM to 3.3.0 before updating Cache to 1.5.1
 * UPDATE - Updated interface of the cache dashboard to match updates to core ALM admin interface.
-
 
 = 1.5.0 - May 22, 2017 =
 * NEW - Added support for caching single posts with the Previous Post add-on.
@@ -146,7 +131,6 @@ https://connekthq.com/plugins/ajax-load-more/add-ons/cache/
 * UPDATE - Updated value passed by the `data-cache-path` parameter. This parameter was required while using cache and filtering. Path without the cache_id is now passed as the `data-cache-path` value.
 * UPDATE - Removing deprecated activation and de-activation functions.
 
-
 = 1.4.0 - May 4, 2017=
 * UPDATE NOTICE - Before updating to Cache 1.4.0 please update core Ajax load More to 3.0
 * NEW - Added support for Advanced Custom Fields extension (Relationship + Repeater fields)
@@ -154,11 +138,9 @@ https://connekthq.com/plugins/ajax-load-more/add-ons/cache/
 * UPDATE - Moved cache directory from the ajax-load-more-chace directory to the WordPress uploads directory (uploads/alm-cache).
 * UPDATE - Updated plugin updater class
 
-
 = 1.3.1 =
 * NEW -  New class for loading cache admin js
 * UPDATE - Updating plugin updater script
-
 
 = 1.3.0 =
 * UPGRADE NOTICE - This update requires Ajax Load More 2.13.1.
@@ -166,17 +148,14 @@ https://connekthq.com/plugins/ajax-load-more/add-ons/cache/
 * FIX - JS issue with Cache settings page for Addon users.
 * UPDATE - Fixed header alignment issue on Cache settings page.
 
-
 = 1.2.4 =
 * FIX - Adding support for Theme Repeater Templates.
 
 = 1.2.3 =
 * FIX - Fixing issue with deletion of individual cache items.
 
-
 = 1.2.2 =
 * UPDATE - Security fix for Ajax Load More 2.8.1.2
-
 
 = 1.2.1 =
 * UPDATE - Updating plugin update script. Users are now required to input a license key to receive updates directly within the WP Admin. Please contact us for information regarding legacy license keys.
@@ -184,11 +163,9 @@ https://connekthq.com/plugins/ajax-load-more/add-ons/cache/
 = 1.2 =
 * UPDATE - Moved Cache admin settings and shortcode settings from core ALM to add-on.
 
-
 = 1.1 =
 * Fixed issue with Cache + SEO where initial user might end up caching multiple pages in a single query if the page requested was greater than 1.
 * Performance Updates.
-
 
 = 1.0 =
 * Initial Release.

@@ -153,7 +153,7 @@ function alm_filters_get_filter_key( $obj = [] ) {
 	}
 
 	$key = $obj['key'];
-	// Set `$key` to taxonomy/meta_key	value for core filters.
+	// Set `$key` to taxonomy/meta_key  value for core filters.
 	$key = ( $obj['key'] === 'taxonomy' ) ? $obj['taxonomy'] : $obj['key']; // Convert $key to $taxonomy value.
 	$key = ( $obj['key'] === 'meta' ) ? $obj['meta_key'] : $key; // Convert $key to $meta_key value.
 
@@ -222,8 +222,7 @@ function alm_filters_add_underscore( $id = '' ) {
 	 * Fix for underscores in taxonomy names when using on archive pages.
 	 * Filter to remove '_' from redirects.
 	 */
-	$redirect_underscore = apply_filters( 'alm_filters_redirect_underscore_' . $id, true ); //
-	if ( alm_filters_is_archive() && ! $redirect_underscore ) {
+	$redirect_underscore = apply_filters( 'alm_filters_redirect_underscore_' . $id, true );     if ( alm_filters_is_archive() && ! $redirect_underscore ) {
 		return ''; // Exit early to remove the underscore.
 	}
 
@@ -296,7 +295,7 @@ function alm_filters_build_count( $show_count, $item, $html ) {
  * The possible values for the sort order.
  */
 function alm_filters_get_order_array() {
-	return array(
+	return [
 		'id',
 		'author',
 		'title',
@@ -311,7 +310,7 @@ function alm_filters_get_order_array() {
 		'post__in',
 		'post__name_in',
 		'post_parent__in',
-	);
+	];
 }
 
 /**
@@ -328,14 +327,14 @@ function alm_filters_facet_get_post_types( $facets ) {
 	$results = [];
 	foreach ( $facets as $facet ) { // Loop each facet.
 		$id     = str_replace( ALM_FILTERS_FACET_PREFIX, '', $facet );
-		$filter = unserialize( get_option( ALM_FILTERS_PREFIX . $id ) );
+		$filter = ALMFilters::alm_filters_get_filter_by_id( $id, true );
 		$types  = $filter && isset( $filter['facets_post_types'] ) ? $filter['facets_post_types'] : [];
 		if ( $types ) {
 			foreach ( $types as $type ) {
-				$results[] = array(
+				$results[] = [
 					'post_type' => $type,
 					'id'        => $id,
-				);
+				];
 			}
 		}
 	}

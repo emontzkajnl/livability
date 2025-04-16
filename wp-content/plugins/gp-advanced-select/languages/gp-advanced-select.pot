@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: GP Advanced Select 1.1.10\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cloned-perk-AC-TrLSTU4\n"
+"Project-Id-Version: GP Advanced Select 1.1.11\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cloned-perk-DEf5kkdb4S\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-12-05T16:52:52+00:00\n"
+"POT-Creation-Date: 2024-12-18T21:52:08+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: gp-advanced-select\n"
@@ -39,22 +39,22 @@ msgstr ""
 msgid "https://gravitywiz.com/"
 msgstr ""
 
-#: class-gp-advanced-select.php:621
+#: class-gp-advanced-select.php:605
 msgid "Remove this item"
 msgstr ""
 
-#: class-gp-advanced-select.php:622
+#: class-gp-advanced-select.php:606
 msgid "No results found"
 msgstr ""
 
-#: class-gp-advanced-select.php:633
+#: class-gp-advanced-select.php:617
 msgid "GP Advanced Select requires that Enhanced UI is disabled."
 msgstr ""
 
-#: class-gp-advanced-select.php:766
+#: class-gp-advanced-select.php:750
 msgid "Enable Advanced Select"
 msgstr ""
 
-#: class-gp-advanced-select.php:775
+#: class-gp-advanced-select.php:759
 msgid "Lazy Load Populated Choices"
 msgstr ""

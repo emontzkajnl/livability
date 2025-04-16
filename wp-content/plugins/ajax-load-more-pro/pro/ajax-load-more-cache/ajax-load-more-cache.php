@@ -6,7 +6,7 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: http://connekthq.com
- * Version: 2.0.3
+ * Version: 2.0.4
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
  *
@@ -17,8 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'ALM_CACHE_VERSION', '2.0.3' );
-define( 'ALM_CACHE_RELEASE', 'March 21, 2024' );
+define( 'ALM_CACHE_VERSION', '2.0.4' );
+define( 'ALM_CACHE_RELEASE', 'January 17, 2025' );
 
 /**
  * Display admin notice if plugin does not meet the requirements.
@@ -26,9 +26,7 @@ define( 'ALM_CACHE_RELEASE', 'March 21, 2024' );
  * @since 2.5.6
  */
 function alm_cache_admin_notice() {
-	$slug   = 'ajax-load-more';
-	$plugin = $slug . '-cache';
-	// Ajax Load More Notice.
+	$slug = 'ajax-load-more';
 	if ( get_transient( 'alm_cache_admin_notice' ) ) {
 		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
 		$message     = '<div class="error">';

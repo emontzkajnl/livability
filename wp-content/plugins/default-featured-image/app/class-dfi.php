@@ -10,7 +10,7 @@ final class DFI {
 	 *
 	 * @var self
 	 */
-	protected static $inst = null;
+	protected static $inst;
 
 	/**
 	 * Create instance of this class.
@@ -18,25 +18,16 @@ final class DFI {
 	 * @return self
 	 */
 	public static function instance() {
-		if ( null === static::$inst ) {
-			static::$inst = new self();
+		if ( null === self::$inst ) {
+			self::$inst = new self();
 		}
-		return static::$inst;
+		return self::$inst;
 	}
 
 	/**
 	 * The constructor
 	 */
 	private function __construct() {
-	}
-
-	/**
-	 * Uninstall
-	 *
-	 * @return void
-	 */
-	public static function uninstall() {
-		delete_option( 'dfi_image_id' );
 	}
 
 	/**
@@ -51,30 +42,28 @@ final class DFI {
 	/**
 	 * Add the dfi_id to the meta data if needed.
 	 *
-	 * @param null|mixed $null      Should be null, we don't use it because we update the meta cache.
+	 * @param null|mixed $_null      Should be null, we don't use it because we update the meta cache.
 	 * @param int        $object_id ID of the object metadata is for.
 	 * @param string     $meta_key  Optional. Metadata key. If not specified, retrieve all metadata for
 	 *                              the specified object.
-	 * @param bool       $single    Optional, default is false. If true, return only the first value of the
-	 *                              specified meta_key. This parameter has no effect if meta_key is not specified.
 	 *
 	 * @return string|string[] Single metadata value, or array of values
 	 */
-	public function set_dfi_meta_key( $null, $object_id, $meta_key, $single ) {
+	public function set_dfi_meta_key( $_null, $object_id, $meta_key ) {
 		// Only affect thumbnails on the frontend, do allow ajax calls.
 		if ( ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) ) {
-			return $null;
+			return $_null;
 		}
 
 		// Check only empty meta_key and '_thumbnail_id'.
 		if ( ! empty( $meta_key ) && '_thumbnail_id' !== $meta_key ) {
-			return $null;
+			return $_null;
 		}
 
 		$post_type = get_post_type( $object_id );
 		// Check if this post type supports featured images.
 		if ( false !== $post_type && ! post_type_supports( $post_type, 'thumbnail' ) ) {
-			return $null; // post type does not support featured images.
+			return $_null; // post type does not support featured images.
 		}
 
 		// Get current Cache.
@@ -96,7 +85,7 @@ final class DFI {
 
 		// Is the _thumbnail_id present in cache?
 		if ( ! empty( $meta_cache['_thumbnail_id'][0] ) ) {
-			return $null; // it is present, don't check anymore.
+			return $_null; // it is present, don't check anymore.
 		}
 
 		// Get the Default Featured Image ID.
@@ -106,7 +95,28 @@ final class DFI {
 		$meta_cache['_thumbnail_id'][0] = apply_filters( 'dfi_thumbnail_id', $dfi_id, $object_id );
 		wp_cache_set( $object_id, $meta_cache, 'post_meta' );
 
-		return $null;
+		return $_null;
+	}
+
+	/**
+	 * Register the DFI option.
+	 *
+	 * @return void
+	 */
+	public function register_media_setting() {
+		register_setting(
+			'media', // settings page.
+			'dfi_image_id', // option name.
+			array(
+				'sanitize_callback' => array( &$this, 'input_validation' ),
+				'show_in_rest'      => array(
+					'schema' => array(
+						'type'    => 'integer',
+						'minimum' => 1,
+					),
+				),
+			)
+		);
 	}
 
 	/**
@@ -115,17 +125,13 @@ final class DFI {
 	 * @return void
 	 */
 	public function media_setting() {
-		register_setting(
-			'media', // settings page.
-			'dfi_image_id', // option name.
-			array( &$this, 'input_validation' ) // validation callback.
-		);
+		$this->register_media_setting();
 		add_settings_field(
 			'dfi', // id.
 			_x( 'Default featured image', 'Label on the settings page.', 'default-featured-image' ), // setting title.
 			array( &$this, 'settings_html' ), // display callback.
 			'media', // settings page.
-			'default' // settings section.
+			'default', // settings section.
 		);
 	}
 
@@ -180,14 +186,14 @@ final class DFI {
 	 */
 	public function admin_scripts() {
 		wp_enqueue_media(); // scripts used for uploader.
-		wp_enqueue_script( 'dfi-script', DFI_URL . 'set-default-featured-image.js', array(), DFI_VERSION, true );
+		wp_enqueue_script( 'dfi-script', DFI_URL . 'src/dfi-admin.js', array(), DFI_VERSION, true );
 		wp_localize_script(
 			'dfi-script',
 			'dfi_L10n',
 			array(
 				'manager_title'  => __( 'Select default featured image', 'default-featured-image' ),
 				'manager_button' => __( 'Set default featured image', 'default-featured-image' ),
-			)
+			),
 		);
 	}
 
@@ -201,9 +207,8 @@ final class DFI {
 	public function preview_image( $image_id ) {
 		$output  = '<div id="preview-image" style="float:left; padding: 0 5px 0 0;">';
 		$output .= wp_get_attachment_image( $image_id, array( 80, 60 ), true );
-		$output .= '</div>';
 
-		return $output;
+		return $output . '</div>';
 	}
 
 	/**
@@ -257,7 +262,10 @@ final class DFI {
 
 		// Attributes can be a query string, parse that.
 		if ( is_string( $attr ) ) {
-			wp_parse_str( $attr, $attr );
+			$str_attr = $attr;
+			$attr     = array();
+			wp_parse_str( $str_attr, $attr );
+			unset( $str_attr );
 		}
 
 		if ( isset( $attr['class'] ) ) {

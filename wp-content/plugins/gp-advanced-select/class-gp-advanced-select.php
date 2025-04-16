@@ -80,8 +80,6 @@ class GP_Advanced_Select extends GP_Plugin {
 
 		add_filter( 'gform_field_input', array( $this, 'add_gpadvs_field_preview_markup' ), 10, 5 );
 
-		add_filter( 'gform_field_content', array( $this, 'add_gpadvs_css_class' ), 10, 5 );
-
 	}
 
 	public function add_gpadvs_field_preview_markup( $input, $field, $value, $entry_id, $form_id ) {
@@ -96,7 +94,7 @@ class GP_Advanced_Select extends GP_Plugin {
 		ob_start();
 		if ( $field['type'] === 'select' ) {
 			?>
-			<div class="ginput_container ginput_container_select" inert>
+			<div class="ginput_container ginput_container_select gform-theme__disable" inert>
 				<select name="input_<?php echo $field['id']; ?>" id="<?php echo $select_id; ?>" class="large tomselected ts-hidden-accessible" aria-invalid="false" tabindex="-1">
 				</select>
 				<div class="ts-wrapper large single plugin-change_listener plugin-remove_button">
@@ -109,7 +107,7 @@ class GP_Advanced_Select extends GP_Plugin {
 			<?php
 		} else {
 			?>
-			<div class="ginput_container ginput_container_multiselect" inert>
+			<div class="ginput_container ginput_container_multiselect gform-theme__disable" inert>
 				<select multiple="multiple" size="7" name="input_<?php echo $field['id']; ?>[]" id="<?php echo $select_id; ?>" class="large tomselected ts-hidden-accessible" aria-invalid="false" tabindex="-1">
 				</select>
 				<div class="ts-wrapper large multi plugin-change_listener plugin-remove_button has-items">
@@ -135,20 +133,6 @@ class GP_Advanced_Select extends GP_Plugin {
 		}
 
 		return $default_preview . $gapdvs_ms_preview;
-	}
-
-	public function add_gpadvs_css_class( $content, $field, $value, $lead_id, $form_id ) {
-		if ( $this->is_advanced_select_field( $field ) && $field['gpadvsEnable'] === true && ! GFCommon::is_form_editor() ) {
-			$search_class = $field->type == 'select' ? 'ginput_container_select' : 'ginput_container_multiselect';
-
-			$content = str_replace(
-				$search_class,
-				"$search_class gform-theme__disable",
-				$content
-			);
-		}
-
-		return $content;
 	}
 
 	public function add_init_script( $form ) {

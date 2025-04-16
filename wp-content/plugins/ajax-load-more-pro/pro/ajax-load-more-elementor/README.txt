@@ -8,12 +8,12 @@ Requires at least: 4.0
 Tested up to: 6.7
 Stable tag: trunk
 Homepage: https://connekthq.com/
-Version: 1.2.1
+Version: 1.2.2
 
 Infinite scroll Elementor widget content with Ajax Load More.
 
 == Copyright ==
-Copyright 2024 Connekt Media
+Copyright 2025 Darren Cooney & Connekt Media
 
 This software is NOT to be distributed, but can be INCLUDED in WP themes: Premium or Contracted.
 This software is distributed in the hope that it will be useful, but WITHOUT ANY;
@@ -45,20 +45,21 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/elementor/
 
 == Changelog ==
 
+= 1.2.2 - January 17, 2025 =
+* UPDATE: Compatibility with latest Elementor version.
+* UPDATE: Code cleanup. 
+
 = 1.2.1 - December 4, 2024 =
 * NEW: Added new functionality to load previous posts on paged result content.
 * UPDATE: Removed ALM Cache integration as this needs to be rebuilt.
 * UPDATE: Code cleanup.
 
-
 = 1.2.0 - February 8, 2024 =
 * NEW: Added support for Loop Grid Elementor widget.
 * FIX: Fixed issue with add-on potentially not disabling the Load More button when no content remains.
 
-
 = 1.1.5 - September 27, 2023 =
 * UPDATE: Updated Elementor JavaScript to support new Google Analytics 4 implementation.
-
 
 = 1.1.4 - June 11, 2023 =
 * NEW: Added Elementor widget setting for `button_done_label` shortcode parameter.
@@ -67,10 +68,8 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/elementor/
 * UPDATE - Elementor compatibility version bump and testing.
 * FIX - Fix for PHP warning about undefined `cache` index.
 
-
 = 1.1.3 - February 14, 2023 =
 * FIX - Updated widget function to fix issues with function deprecation notices.
-
 
 = 1.1.2 - July 8, 2021 =
 * NEW - Added support for lazy loading images.
@@ -78,7 +77,6 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/elementor/
 * UPDATE - Updated copy throughout Ajax Load More Elementor widget.
 * UPDATE - Adding Elementor tested up to versioning for better update support.
 * FIX - Fixed issue with network activation of Elementor Pro causing add-on to not activate.
-
 
 = 1.1 - November 25, 2020 =
 

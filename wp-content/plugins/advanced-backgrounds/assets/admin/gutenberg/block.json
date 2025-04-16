@@ -12,6 +12,18 @@
     "anchor": true,
     "className": true,
     "html": false,
+    "ariaLabel": true,
+    "color": {
+      "heading": true,
+      "button": true,
+      "link": true,
+      "background": false,
+      "enableContrastChecker": false,
+      "__experimentalDefaultControls": {
+        "text": true
+      }
+    },
+    "shadow": true,
     "spacing": {
       "blockGap": true,
       "margin": true,
@@ -19,11 +31,20 @@
       "__experimentalDefaultControls": {
         "blockGap": true,
         "margin": false,
-        "padding": false
+        "padding": true
       }
     },
     "dimensions": {
       "minHeight": true
+    },
+    "__experimentalBorder": {
+      "color": true,
+      "radius": true,
+      "style": true,
+      "width": true
+    },
+    "position": {
+      "sticky": true
     },
     "typography": {
       "fontSize": true,
@@ -38,16 +59,17 @@
         "fontSize": true
       }
     },
-    "__experimentalLayout": true,
-    "layout": true
+    "layout": {
+      "allowSizingOnChildren": true,
+      "default": {
+        "type": "constrained"
+      }
+    }
   },
   "attributes": {
     "type": {
       "type": "string",
       "default": "color"
-    },
-    "align": {
-      "type": "string"
     },
     "fullHeight": {
       "type": "boolean",
@@ -134,8 +156,7 @@
     },
 
     "color": {
-      "type": "string",
-      "default": ""
+      "type": "string"
     },
     "backgroundColor": {
       "type": "string",

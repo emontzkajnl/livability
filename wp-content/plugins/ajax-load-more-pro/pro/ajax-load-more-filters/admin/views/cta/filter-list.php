@@ -11,6 +11,6 @@
 		<?php esc_html_e( 'Ajax Load More Filters', 'ajax-load-more-filters' ); ?>
 	</h3>
 	<div class="cta-inner filter-listing">
-		<?php echo alm_list_all_filters( $filter_id ); // phpcs:ignore ?>
+		<?php echo alm_list_all_filters(); // phpcs:ignore ?>
 	</div>
 </div>

@@ -31,7 +31,7 @@ class ImageResizeOption extends OptionAbstract {
 	 * {@inheritdoc}
 	 */
 	public function get_form_name(): string {
-		return OptionAbstract::FORM_TYPE_BASIC;
+		return OptionAbstract::FORM_TYPE_GENERAL;
 	}
 
 	/**
@@ -44,7 +44,7 @@ class ImageResizeOption extends OptionAbstract {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function get_label(): string {
+	public static function get_label(): string {
 		return __( 'Maximum image dimensions', 'webp-converter-for-media' );
 	}
 
@@ -72,7 +72,7 @@ class ImageResizeOption extends OptionAbstract {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function get_notice_lines() {
+	public function get_notice_lines(): ?array {
 		$size   = $this->get_max_image_size();
 		$notice = [
 			sprintf(
@@ -120,14 +120,14 @@ class ImageResizeOption extends OptionAbstract {
 	 *
 	 * @return mixed[]
 	 */
-	public function get_default_value( array $settings = null ): array {
+	public function get_default_value(): array {
 		return [ '', '', '' ];
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function validate_value( $current_value, array $available_values = null, array $disabled_values = null ) {
+	public function validate_value( $current_value, ?array $available_values = null, ?array $disabled_values = null ) {
 		if ( ! is_array( $current_value ) ) {
 			return [ '', '', '' ];
 		}

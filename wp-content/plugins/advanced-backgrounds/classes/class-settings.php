@@ -98,6 +98,10 @@ class AWB_Settings {
                 'id'    => 'awb_general',
                 'title' => esc_html__( 'General', 'advanced-backgrounds' ),
             ),
+            array(
+                'id'    => 'awb_images',
+                'title' => esc_html__( 'Images', 'advanced-backgrounds' ),
+            ),
         );
 
         return $sections;
@@ -144,6 +148,23 @@ class AWB_Settings {
                     'default'  => array(),
                 ),
             ),
+            'awb_images' => array(
+                array(
+                    'name'    => 'register_image_sizes',
+                    'label'   => esc_html__( 'Register image sizes', 'advanced-backgrounds' ),
+                    'type'    => 'checkbox',
+                    'default' => 'on',
+                ),
+                array(
+                    'name'    => 'register_image_sizes_note',
+                    'desc'    => '<span style="display: block; margin-top: -30px;">' .
+                        esc_html__( 'Uncheck this option if you have already registered sizes or want to save disk space.', 'advanced-backgrounds' ) . '<br />' .
+                        // translators: %s: regenerate thumbnails url.
+                        sprintf( __( 'After publishing your changes, new image sizes may not be shown until you <a href="%s" target="_blank">Regenerate Thumbnails</a>.', 'advanced-backgrounds' ), 'https://wordpress.org/plugins/regenerate-thumbnails/' ) .
+                        '</span>',
+                    'type'    => 'html',
+                ),
+            ),
         );
 
         return $settings_fields;
@@ -163,8 +184,8 @@ class AWB_Settings {
 
         echo '</div>';
 
-        wp_enqueue_style( 'nk-awb-settings', nk_awb()->plugin_url . 'assets/admin/settings/style.min.css', array(), '1.12.4' );
-        wp_enqueue_script( 'nk-awb-settings', nk_awb()->plugin_url . 'assets/admin/settings/script.min.js', array( 'jquery' ), '1.12.4', true );
+        wp_enqueue_style( 'nk-awb-settings', nk_awb()->plugin_url . 'assets/admin/settings/style.min.css', array(), '1.12.7' );
+        wp_enqueue_script( 'nk-awb-settings', nk_awb()->plugin_url . 'assets/admin/settings/script.min.js', array( 'jquery' ), '1.12.7', true );
     }
 }
 new AWB_Settings();

@@ -80,6 +80,11 @@ class GPAdvancedSelect implements GPAdvancedSelectInitArgs {
 				'_'
 			)}`;
 
+			// Add 'gform-theme__disable' class to the '.ginput-container' parent, we do this prior to init as we get FOUT, otherwise
+			$select
+				.closest('.ginput_container')
+				.addClass('gform-theme__disable');
+
 			window[namespace] = new TomSelect(
 				`#${select.id}`,
 				this.tomSelectSettings(namespace)
