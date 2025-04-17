@@ -15,9 +15,9 @@ if( !empty($block['className']) ) {
  $city_name = substr($city_state_name, 0, -4);
  $args = array(
      'post_type'        => 'local_insights',
-     'posts_per_page'   => 3,
+     'posts_per_page'   => 15,
      'post_status'      => 'publish',
-     'orderby'          => 'rand',
+    //  'orderby'          => 'rand', // caching breaks this, so doing this with ajax
      'meta_query'        => array(
         array(
             'key'           => 'place',
@@ -29,13 +29,14 @@ if( !empty($block['className']) ) {
 
  $li_query = new WP_Query($args);
  $total_posts = $li_query->found_posts;
- $count = 1;
- if ($li_query->have_posts()): ?>
+//  $count = 1;
+ if ($li_query->have_posts()):  ?>
     <div id="<?php echo esc_attr($id); ?>" class="<?php echo esc_attr($className); ?>">
     <div class="place-section-heading"><h2 class="location lpsh" style="text-align:center;">Live Like a Local</h2><span class="place-section-heading__line"></span></div>
     <span class="insights-title" style="display: block; margin-top: 30px;">Local residents give their insights into <?php echo  $city_state_name; ?></span>
-    <?php while ($li_query->have_posts()): $li_query->the_post();
-    $hide_class = $total_posts > 1 && $count != 1 ? ' insight-hidden' : '';
+    <?php if ($total_posts == 1) {
+    while ($li_query->have_posts()): $li_query->the_post();
+    // $hide_class = $total_posts > 1 && $count != 1 ? ' insight-hidden' : '';
     $ID = get_the_ID();
     $f_name = get_field('first_name', $ID);
     $l_name = get_field('last_name', $ID);
@@ -53,9 +54,7 @@ if( !empty($block['className']) ) {
     $a_local_vibe = get_field('a_local_vibe', $ID);
 
      ?>
-    <div class="insights <?php echo $hide_class; ?>">
-        <!-- <div class="insights-heading clearfix"> -->
-            <!-- <div> -->
+    <div class="insights <?php //echo $hide_class; ?>">
                 <div class="insights-header">
                 <div class="insights-img-container">
             <?php echo get_the_post_thumbnail( $ID, 'thumbnail', array('class' => 'insights-img')); ?>
@@ -66,19 +65,15 @@ if( !empty($block['className']) ) {
             </div>
             </div><!--insights header -->
             
-        <!-- </div> -->
-        <?php if ($a_opportunities): 
-            // $q_opportun/ities = str_replace('CITY STATE', $city_state_name, $q_opportunities); ?>
+        <?php if ($a_opportunities): ?>
             <h2 class="insights-q">Q. <?php echo $q_opportunities; ?></h2>
             <p class="insights-a"><span class="insights-q">A.</span> <?php echo $a_opportunities; ?></p>
         <?php endif; ?>
-        <?php if ($a_area): 
-            // $q_area = str_replace('CITY STATE', $city_state_name, $q_area); ?>
+        <?php if ($a_area): ?>
             <h2 class="insights-q">Q. <?php echo $q_area; ?></h2>
             <p class="insights-a"><span class="insights-q">A.</span> <?php echo $a_area; ?></p>
         <?php endif; ?>
-        <?php if ($a_local_vibe): 
-            // $q_local_vibe = str_replace('CITY STATE', $city_state_name, $q_local_vibe); ?>
+        <?php if ($a_local_vibe): ?>
             <h2 class="insights-q">Q. <?php echo $q_local_vibe; ?></h2>
             <p class="insights-a"><span class="insights-q">A.</span> <?php echo $a_local_vibe; ?></p>
         <?php endif; ?>
@@ -120,7 +115,16 @@ if( !empty($block['className']) ) {
         </div> <!--insights-contact-section -->
     </div>
     <?php $count++;
-    endwhile; ?>
+    endwhile; 
+} else { // There is more than one insight and need container to randomize posts with ajax  
+    $insight_array = [];
+    while ($li_query->have_posts()){
+        $li_query->the_post();
+        $insight_array[] = get_the_ID();
+    } 
+    echo '<div class="insight-container" data-insights="'.implode(",",$insight_array).'"></div>';
+    
+} ?>
     <p style="text-align: center;">See <a href="" alt="See content advertising opportunities">content advertising opportunities</a> for this page.</p>
     <?php  echo '</div>'; // local-inights
 endif;

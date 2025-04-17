@@ -28,7 +28,7 @@ $state = get_field('state_text');
 ?>
 
 <div id="<?php echo esc_attr($id); ?>" class="<?php echo esc_attr($className); ?>">
-<h2 class="bp2l__title big-thin-text">Find Your Best Place to Live</h2>
+<h2 class="bp2l__title big-thin-text">Find A Great Place to Live</h2>
 <?php if ( ! is_handheld() ) { ?>
 <ul class="bp2l__tab-nav">
 <li  data-tab="tab-one" class="active" >Top 100 Best Places to Live in US</li>

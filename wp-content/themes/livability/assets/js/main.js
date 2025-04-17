@@ -713,12 +713,45 @@
 
 }
 
-// local insights accordion
-$('.insights').on('click', function(){
-  if ($(this).hasClass('insight-hidden')) {
-    $('.insights').toggleClass('insight-hidden');
+if ($('body').hasClass('single-liv_place')) {
+  const container = $('.insight-container');
+  if (container ) {
+    const insights = container.data('insights');
+    const insightArray = insights.split(',');
+    const shuffledInsights = insightArray.sort((a, b) => 0.5 - Math.random());
+    if (shuffledInsights.length > 3) {
+      shuffledInsights = shuffledInsights.slice(0,2);
+    }
+    const data = {
+      action: "loadInsights",
+      insights: shuffledInsights,
+    }
+    $.ajax({
+      url: params.ajaxurl,
+      data: data,
+      type: "POST",
+      dataType: "html",
+      success: function (data) {
+        // console.log('insight data: ',data);
+        container.html(data);
+      }
+    });
   }
+}
 
+
+// local insights accordion
+// $('.insights').on('click', function(){
+//   if ($(this).hasClass('insight-hidden')) {
+
+//     $('.insights').toggleClass('insight-hidden');
+//   }
+// });
+
+$('.insight-container').on('click', '.insights', function(event) {
+  if ($(this).hasClass('insight-hidden')) {
+    $(this).removeClass('insight-hidden').siblings().addClass('insight-hidden');
+  }
 });
 
 // local insight form: replace city state in span tags with correct city state
