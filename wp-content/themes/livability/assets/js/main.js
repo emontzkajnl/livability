@@ -718,9 +718,9 @@ if ($('body').hasClass('single-liv_place')) {
   if (container ) {
     const insights = container.data('insights');
     const insightArray = insights.split(',');
-    const shuffledInsights = insightArray.sort((a, b) => 0.5 - Math.random());
+    let shuffledInsights = insightArray.sort((a, b) => 0.5 - Math.random());
     if (shuffledInsights.length > 3) {
-      shuffledInsights = shuffledInsights.slice(0,2);
+      shuffledInsights = shuffledInsights.slice(0,3);
     }
     const data = {
       action: "loadInsights",
