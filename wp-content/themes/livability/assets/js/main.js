@@ -722,6 +722,7 @@ if ($('body').hasClass('single-liv_place')) {
     if (shuffledInsights.length > 3) {
       shuffledInsights = shuffledInsights.slice(0,3);
     }
+    console.dir(shuffledInsights);
     const data = {
       action: "loadInsights",
       insights: shuffledInsights,
