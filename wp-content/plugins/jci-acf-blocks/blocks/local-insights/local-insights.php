@@ -125,7 +125,7 @@ if( !empty($block['className']) ) {
     echo '<div class="insight-container" data-insights="'.implode(",",$insight_array).'"></div>';
     
 } ?>
-    <p style="text-align: center;">See <a href="" alt="See content advertising opportunities">content advertising opportunities</a> for this page.</p>
+    <p style="text-align: center;">See <a href="<?php echo site_url( 'advertising' ); ?>" alt="See content advertising opportunities">content advertising opportunities</a> for this page.</p>
     <?php  echo '</div>'; // local-inights
 endif;
 wp_reset_postdata(  );
