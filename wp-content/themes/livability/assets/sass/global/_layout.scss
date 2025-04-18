@@ -378,3 +378,9 @@ li.AjaxSearchLiteWidget {
     }
   }
 }
+
+@media all and (max-width: 781px) {
+  .wp-block-columns:not(.is-not-stacked-on-mobile) > .wp-block-column {
+    width: 100%;
+  }
+}

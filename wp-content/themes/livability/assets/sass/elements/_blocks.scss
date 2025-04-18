@@ -570,6 +570,17 @@
     background-position: center center;
     background-repeat: no-repeat;
   }
+  &.curated {
+    h4 {
+      padding-left: 20px;
+      padding-right: 20px;
+      margin-top: 15px;
+      font-size: 1.1rem;
+    }
+    .pwl-img {
+      height: 135px;
+    }
+  }
 }
 
 .bp-data-container {

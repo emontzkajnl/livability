@@ -480,6 +480,17 @@ function my_acf_init_block_types() {
             'keywords'          => array( 'block', 'related', 'article', 'post' ),
         ));
 
+        acf_register_block_type(array(
+            'name'              => 'Curated Carousel',
+            'title'             => __('Curated Carousel', 'acf-blocks'),
+            'description'       => __('Curated Articles and Places for Carousel', 'acf-blocks'),
+            'mode'              => 'preview',
+            'render_template'   => plugin_dir_path( __FILE__ ) . 'blocks/curated-carousel/curated-carousel.php',
+            'category'          => 'jci-category',
+            'icon'              => 'layout',
+            'keywords'          => array( 'block', 'related', 'article', 'post' ),
+        ));
+
         // acf_register_block_type(array(
         //     'name'              => 'listicle',
         //     'title'             => __('Listicle Block', 'acf-blocks'),
