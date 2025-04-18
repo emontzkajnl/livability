@@ -713,7 +713,7 @@
 
 if ($('body').hasClass('single-liv_place')) {
   const insightContainer = $('.insight-container');
-  if (insightContainer ) {
+  if (insightContainer.length ) {
     const insights = insightContainer.data('insights');
     const insightArray = insights.split(',');
     let shuffledInsights = insightArray.sort((a, b) => 0.5 - Math.random());
