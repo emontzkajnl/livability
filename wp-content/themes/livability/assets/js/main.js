@@ -5,7 +5,6 @@
 
   $('a[href^=http]').each(function(){
     if (this.href.indexOf(location.hostname) == -1) {
-      console.log('an external link');
       $(this).attr("target", "_blank")
     }
   });
@@ -272,7 +271,6 @@
       type: "POST",
       dataType: "html",
       success: function (data) {
-        console.log(data);
         container.append(data);
         if (currentPage == maxPages-1) {
           button.remove();
@@ -714,15 +712,14 @@
 }
 
 if ($('body').hasClass('single-liv_place')) {
-  const container = $('.insight-container');
-  if (container ) {
-    const insights = container.data('insights');
+  const insightContainer = $('.insight-container');
+  if (insightContainer ) {
+    const insights = insightContainer.data('insights');
     const insightArray = insights.split(',');
     let shuffledInsights = insightArray.sort((a, b) => 0.5 - Math.random());
     if (shuffledInsights.length > 3) {
       shuffledInsights = shuffledInsights.slice(0,3);
     }
-    console.dir(shuffledInsights);
     const data = {
       action: "loadInsights",
       insights: shuffledInsights,
@@ -734,7 +731,7 @@ if ($('body').hasClass('single-liv_place')) {
       dataType: "html",
       success: function (data) {
         // console.log('insight data: ',data);
-        container.html(data);
+        insightContainer.html(data);
       }
     });
   }
