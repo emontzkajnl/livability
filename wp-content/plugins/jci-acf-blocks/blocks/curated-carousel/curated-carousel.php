@@ -11,7 +11,21 @@ if( !empty($block['className']) ) {
     $className .= ' ' . $block['className'];
 }
 $ID = get_the_ID();
-$the_slides = get_field('slides');
+
+$c_or_t = get_field('curated_or_tag');
+if ($c_or_t == 'curated' ) {
+    $the_slides = get_field('slides');
+} else {
+    $term = get_field('taxonomy');
+    $args = array(
+        'post_type'     => 'post',
+        'post_type'		=> 'post',
+        'post_status'	=> 'publish', 
+        'tag_id'        => $term[0]
+    );
+    $the_slides = get_posts( $args );
+}
+
 
 // print_r($the_slides);
 if ($the_slides): 
@@ -19,11 +33,11 @@ shuffle($the_slides);?>
 <div id="<?php echo esc_attr($id); ?>" class="<?php echo esc_attr($className); ?>">
 <?php echo '<ul class="pwl-slick">';
 foreach($the_slides as $s){
-$slide = $s['slide'];
+$c_or_t == 'curated' ? $slide = $s['slide'] : $slide = $s ;
 $slideId = $slide->ID;
 $slidebkgrnd = get_the_post_thumbnail_url( $slideId, 'rel_article' ); ?>
 <li>
-<a href="<?php echo get_the_permalink($slide->ID); ?>">
+<a href="<?php echo get_the_permalink($slideId); ?>">
 <div>
 <div class="pwl-img" style="background-image: url(<?php echo $slidebkgrnd; ?>);"></div>
 
