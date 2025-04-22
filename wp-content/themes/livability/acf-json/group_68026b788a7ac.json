@@ -3,6 +3,32 @@
     "title": "Curated Carousel",
     "fields": [
         {
+            "key": "field_680682a47adb4",
+            "label": "Curated or Tag",
+            "name": "curated_or_tag",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "Either curate posts or select a tag",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "curated": "Curated",
+                "tag": "Tag"
+            },
+            "default_value": "",
+            "return_format": "value",
+            "allow_null": 0,
+            "other_choice": 0,
+            "allow_in_bindings": 0,
+            "layout": "vertical",
+            "save_other_choice": 0
+        },
+        {
             "key": "field_68026b7c1a909",
             "label": "Slides",
             "name": "slides",
@@ -63,32 +89,6 @@
             ]
         },
         {
-            "key": "field_680682a47adb4",
-            "label": "Curated or Tag",
-            "name": "curated_or_tag",
-            "aria-label": "",
-            "type": "radio",
-            "instructions": "Either curate posts or select a tag",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "choices": {
-                "curated": "Curated",
-                "tag": "Tag"
-            },
-            "default_value": "",
-            "return_format": "value",
-            "allow_null": 0,
-            "other_choice": 0,
-            "allow_in_bindings": 0,
-            "layout": "vertical",
-            "save_other_choice": 0
-        },
-        {
             "key": "field_680683283330c",
             "label": "Taxonomy",
             "name": "taxonomy",
@@ -141,5 +141,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1745265177
+    "modified": 1745270962
 }

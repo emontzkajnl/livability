@@ -48,11 +48,27 @@ class JCI_Place extends Abstract_Schema_Piece {
 			if ($type == 'city') {
 				$state = get_post_parent();
 				$abbv = $state->post_name;
+				$city = substr(get_the_title($post_id), 0, -4);
 				$latitude = get_post_meta(get_the_ID(), 'jci-latitude', true);
 				$longitude = get_post_meta(get_the_ID(), 'jci-longitude', true);
-				$data = array(
+				$liargs = array(
+					'post_type'        => 'local_insights',
+					'posts_per_page'   => 15,
+					'post_status'      => 'publish',
+				   //  'orderby'          => 'rand', // caching breaks this, so doing this with ajax
+					'meta_query'        => array(
+					   array(
+						   'key'           => 'place',
+						   'value'         => '"' . get_the_ID() . '"',
+						   'compare'       => 'LIKE'
+					   ) 
+				   )
+				);
+				$local_insights = get_posts($liargs);
+				// print_r($local_insights);
+				$data[] = array(
 					'@type'			=> $type,
-					'name'			=> substr(get_the_title($post_id), 0, -4),
+					'name'			=> $city,
 					'address'		=> array(
 						'@type'				=> 'PostalAddress',
 						'addressLocality'	=> substr(get_the_title($post_id), 0, -4),
@@ -75,6 +91,41 @@ class JCI_Place extends Abstract_Schema_Piece {
 					),
 					'description'	=> get_the_excerpt( $post_id ),
 				);
+				if ($local_insights) {
+					foreach ($local_insights as $key => $value) {
+						$insightId = $value->ID;
+						$questions = array('opportunities', 'area', 'local_vibe');
+						foreach ($questions as $key => $q) {
+							$q_string = 'q_'.$q;
+							$a_string = 'a_'.$q;
+							$question = get_field($q_string, $insightId);
+							if ($question) {
+								$answer = get_field($a_string, $insightId);
+								$f_name = get_field('first_name', $insightId) ? get_field('first_name', $insightId) : '';
+    							$l_name = get_field('last_name', $insightId) ? get_field('last_name', $insightId) : '';
+								$result = array(
+									'@type'				=> 'Question',
+									'name'				=> $question,
+									'acceptedAnswer'	=> array (
+										'@type'				=> 'Answer',
+										'text'				=> $answer
+									),
+									'author'			=> array(
+										'@type'				=> 'Person',
+										'name'				=> $f_name.' '.$l_name,
+										'address'			=> array(
+											'@type'				=> 'PostalAddress',
+											'addressLocality'	=> $city,
+											'addressRegion'		=> $state->post_title
+										)
+									),
+								);
+								$data[] = $result;
+							}
+						}
+
+					}
+				}
 			} elseif ($type == 'state' ) {
 				$latitude = get_post_meta(get_the_ID(), 'jci-latitude', true);
 				$longitude = get_post_meta(get_the_ID(), 'jci-longitude', true);

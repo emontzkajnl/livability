@@ -42,9 +42,6 @@ class JCI_Place_Schema {
         require_once( plugin_dir_path( __FILE__ ) . '/class-jci-place.php' );
         $this->context = $context;
         $pieces[] = new JCI_Place($context); 
-        // echo '<pre>';
-        // print_r($pieces);
-        // echo '</pre>';
         return $pieces;
     }
 }
