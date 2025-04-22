@@ -29,13 +29,13 @@ class CoreFieldsImport {
 		return CoreFieldsImport::$core_instance;
 	}
 
-	function set_core_values($header_array ,$value_array , $map , $type , $mode , $line_number , $check , $hash_key, $unmatched_row, $gmode, $templatekey, $wpml_array = null,$media_meta=null,$media_type=null,$order_meta=null){
+	function set_core_values($header_array ,$value_array , $map , $type , $mode , $line_number , $check , $hash_key, $unmatched_row, $gmode, $templatekey, $wpml_array = null,$media_meta=null,$media_type=null,$order_meta=null,$meta_data=null ,$attr_data=null,$bsi_data = null){
 		global $wpdb;
 		global $uci_woocomm_instance,$woocommerce_core_instance;
+		global $uci_woocomm_customer_instance,$customer_billing_class;
 		global $userimp_class;
 		global $sitepress;
 		$post_id = null;
-
 		$helpers_instance = ImportHelpers::getInstance();
 		CoreFieldsImport::$media_instance->header_array = $header_array;
 		CoreFieldsImport::$media_instance->value_array = $value_array;
@@ -95,12 +95,12 @@ class CoreFieldsImport {
 			}
 		}
 		
-		if(($type == 'WooCommerce Product') || ($type == 'WooCommerce Coupons') || ($type == 'WooCommerce Orders') || ($type == 'WooCommerce Reviews') || ($type == 'WooCommerce Product Variations')|| ($type == 'Categories') || ($type == 'Tags') || ($type == 'Taxonomies') || ($type == 'Booking')|| ($type == 'Comments') || ($type == 'Users') || ($type == 'Customer Reviews') || ($type == 'lp_order') || ($type == 'nav_menu_item') || ($type == 'widgets') || ($type == 'Media')){
-
+		if(($type == 'WooCommerce Customer') || ($type == 'WooCommerce Product') || ($type == 'WooCommerce Coupons') || ($type == 'JetReviews')|| ($type == 'WooCommerce Orders') || ($type == 'WooCommerce Reviews') || ($type == 'WooCommerce Product Variations')|| ($type == 'Categories') || ($type == 'Tags') || ($type == 'Taxonomies') || ($type == 'Booking')|| ($type == 'Comments') || ($type == 'Users') || ($type == 'Customer Reviews') || ($type == 'lp_order') || ($type == 'nav_menu_item') || ($type == 'widgets') || ($type == 'Media')){			
 			$comments_instance = CommentsImport::getInstance();
 			$customer_reviews_instance = CustomerReviewsImport::getInstance();
 			$learnpress_instance = LearnPressImport::getInstance();
 			$jet_booking_instance = JetBookingImport::getInstance();
+			$jet_reviews_instance = JetReviewsImport::getInstance();
 			$taxonomies_instance = TaxonomiesImport::getInstance();
 			$woocommerce_core_instance = WooCommerceCoreImport::getInstance();
 			$media_core_instance = MediaImport::getInstance();
@@ -108,12 +108,18 @@ class CoreFieldsImport {
 			$post_values = $helpers_instance->get_header_values($map , $header_array , $value_array);
 			$wpml_values = $helpers_instance->get_header_values($wpml_array , $header_array , $value_array);
 			if($type == 'WooCommerce Product'){
-				$result = $uci_woocomm_instance->woocommerce_product_import($post_values , $mode , $check , $unikey_value , $unikey_name , $hash_key, $line_number, $unmatched_row, $wpml_values);
+				$product_meta_data = $helpers_instance->get_header_values($meta_data,$header_array,$value_array);
+				//$result = $uci_woocomm_instance->woocommerce_product_import_new($post_values , $mode , $type, $unmatched_row, $check , $unikey_value , $unikey_name, $line_number, $acf ,$pods, $toolset,$header_array, $value_array,  $wpml_values,$poly_values,$update_based_on,$product_meta_data,$attr_data,$image_meta);	
+				$result = $uci_woocomm_instance->woocommerce_product_import($post_values , $mode , $check , $unikey_value , $unikey_name , $hash_key, $line_number, $unmatched_row, $header_array,$value_array,$wpml_values,$product_meta_data,$attr_data);
 			}
-			if($type == 'Booking'){
+			if($type == 'JetBooking'){
 
-				$result = $jet_booking_instance->jet_booking_import($post_values , $type, $mode ,$unikey_value , $unikey_name, $line_number,$update_based_on,$check,$hash_key);
+				$result = $jet_booking_instance->jet_booking_import($post_values , $type, $mode ,$unikey_value , $unikey_name, $line_number,'',$check,$hash_key);
 			}
+			if ($type == 'JetReviews') {
+				$result = $jet_reviews_instance->set_jet_reviews_values($post_values , $mode ,$unikey_value , $unikey_name, $line_number,'',$check);
+			}
+
 			if($type == 'Media'){
 				$result = $media_core_instance->media_fields_import($post_values , $mode , $type , $media_type ,$unikey_value ,$unikey_name, $line_number,$hash_key,$header_array ,$value_array);
 			}
@@ -132,6 +138,9 @@ class CoreFieldsImport {
 			}
 			if(($type == 'Categories') || ($type == 'Tags') || ($type == 'Taxonomies')){
 				$result = $taxonomies_instance->taxonomies_import_function($post_values , $mode , $import_type , $unmatched_row, $check , $unikey_value , $unikey_name ,$line_number ,$header_array ,$value_array);
+			}
+			if($type == 'WooCommerce Customer'){
+				$result = $uci_woocomm_customer_instance->users_import_function($post_values , $mode ,$unikey_value ,$unikey_name , $line_number);
 			}
 			if($type == 'Users'){
 				$result = $userimp_class->users_import_function($post_values , $mode ,$unikey_value , $line_number);
@@ -192,6 +201,14 @@ class CoreFieldsImport {
 						$this->detailed_log[$line_number]['post_title'] = get_the_title($post_id);
 					}
 				}
+				elseif($type == 'WooCommerce Customer'){
+					$bsi_meta_data = $helpers_instance->get_header_values($bsi_data,$header_array,$value_array);
+					$customer_billing_class->bsi_import_function($bsi_meta_data, $post_id);
+					$this->detailed_log[$line_number]['webLink'] = get_author_posts_url( $post_id );
+					$this->detailed_log[$line_number]['post_type'] = 'users';
+					$this->detailed_log[$line_number]['id'] = $post_id;
+					$this->detailed_log[$line_number]['adminLink'] = get_edit_user_link( $post_id , true );
+				}
 				elseif($type == 'WooCommerce Coupons'){
 					$this->detailed_log[$line_number]['adminLink'] = get_edit_post_link( $post_id, true );
 					$this->detailed_log[$line_number]['post_type'] = get_post_type($post_id);
@@ -206,6 +223,28 @@ class CoreFieldsImport {
 						return $post_id;
 					}
 				}
+				elseif ($type == 'JetReviews') {
+					// Get the permalink for the post
+					$post_permalink = get_permalink($post_id);
+				
+					if ($post_permalink) {
+						// Add query parameters to the frontend permalink
+						$web_link = add_query_arg(
+							[
+								'review_id' => $post_id,
+								'review_type' => 'JetReviews',
+							],
+							$post_permalink
+						);
+					}
+				
+					// Add data to the detailed log
+					$this->detailed_log[$line_number]['id'] = $post_id;
+					$this->detailed_log[$line_number]['post_type'] = 'JetReviews';
+					$this->detailed_log[$line_number]['webLink'] = $web_link;
+					$this->detailed_log[$line_number]['adminLink'] = admin_url('admin.php?page=jet-reviews-list-page');
+				}
+
 				elseif( $type == 'Media'){
 					if (!empty($post_id)) {
 						$file_path = get_attached_file($post_id);
@@ -450,7 +489,7 @@ class CoreFieldsImport {
 						$matched_element = $matches2[1][0];
 
 						$wp_element= trim($key);
-						$csv_element1 = $helpers_instance->evalPhp($matched_element);
+					//	$csv_element1 = $helpers_instance->evalPhp($matched_element);
 						$post_values[$wp_element] = $csv_element1;
 					}
 					elseif(!in_array($csv_value , $header_array)){
@@ -595,7 +634,11 @@ class CoreFieldsImport {
 						}
 						else{
 							$post_values['post_content']=isset($post_values['post_content'])?$post_values['post_content']:'';
-							$post_values['post_content'] = html_entity_decode($post_values['post_content']);													
+							$post_values['post_content'] = html_entity_decode($post_values['post_content'], ENT_QUOTES | ENT_HTML5, 'UTF-8');							
+							$post_values['post_content'] = htmlspecialchars_decode($post_values['post_content'], ENT_QUOTES);
+							$post_values['post_content'] = preg_replace('/\xC2\xA0/', ' ', $post_values['post_content']); // Replace non-breaking spaces
+							//$post_values['post_content'] = trim($post_values['post_content']); // Remove extra spaces
+							unset($post_values['ID']);
 							$post_id = wp_insert_post($post_values);
 							$status = $post_values['post_status'];
 							$update=$wpdb->get_results("UPDATE {$wpdb->prefix}posts set post_status = '$status' where id = $post_id");
@@ -626,51 +669,44 @@ class CoreFieldsImport {
 					if($media_handle['media_settings']['media_handle_option'] == 'true' 
 					&& isset($media_handle['media_settings']['enable_postcontent_image'])
 					&& $media_handle['media_settings']['enable_postcontent_image'] == 'true'){
-						if (preg_match("/<img/", $post_values['post_content'])) {
-							// Wrap post content in a <p> tag if needed
-							$content = "<p>" . $post_values['post_content'] . "</p>";
+						if(preg_match("/<img/", $post_values['post_content'])) {
+
+							$content = "<p>".$post_values['post_content']."</p>";
 							$doc = new \DOMDocument();
-						
-							// Ensure proper encoding
-							if (function_exists('mb_convert_encoding')) {
-								@$doc->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-							} else {
-								@$doc->loadHTML($content);
+							if(function_exists('mb_convert_encoding')) {
+								@$doc->loadHTML( mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' ), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+							}else{
+								@$doc->loadHTML( $content);
 							}
-						
-							// Find all image elements with src attributes
 							$xpath = new \DOMXPath($doc);
 							$searchNode = $xpath->query('//img[@src]');
-						
-							if (!empty($searchNode)) {
-								$media_dir = wp_get_upload_dir(); // Get the media directory
-								$attach_ids = [];
-								$index = 0;
-						
-								foreach ($searchNode as $searchNodes) {
-									$img_src = $searchNodes->getAttribute('src'); // Get external image URL
-						
-									// Download the external image to the media library
-									$attach_id = CoreFieldsImport::$media_instance->image_meta_table_entry(
-										$line_number, $post_values, $post_id, '', $img_src, $hash_key, 
-										'inline', $get_import_type, '', '', $header_array, $value_array, '', '', $index
-									);
-									if ($attach_id) {
-										$local_img_url = wp_get_attachment_url($attach_id);
-										$searchNodes->setAttribute('src', $local_img_url);
-										$index++;
+							if ( ! empty( $searchNode ) ) {
+								foreach ( $searchNode as $searchNodes ) {
+									$orig_img_src[] = $searchNodes->getAttribute( 'src' ); 
+								}
+												
+								$media_dir = wp_get_upload_dir();
+								$names = $media_dir['url'];
+								if(isset($orig_img_src)){
+									$shortcode_table = $wpdb->prefix . "ultimate_csv_importer_shortcode_manager";
+									$indexs = 0;
+									foreach ($orig_img_src as $img_val){
+										$shortcode  = 'inline';
+										CoreFieldsImport::$media_instance->store_image_ids($i=1);
+										$attach_id = CoreFieldsImport::$media_instance->image_meta_table_entry($line_number,$post_values,$post_id ,'',$img_val, $hash_key ,$shortcode,$get_import_type,'','',$header_array,$value_array,'','',$indexs);
+										$indexs++;																			
 									}
 								}
-						
-								// Save the updated content
-								$post_content = $doc->saveHTML();
-								// Update post content with local image URLs
-								$post_values['post_content'] = $post_content;
+								$image_name = pathinfo($img_val);
+								$fimg_name = $image_name['basename'];
+								$temp_img = $wpdb->get_var("SELECT guid FROM {$wpdb->prefix}posts where guid like '%$fimg_name%'");
+								$searchNodes->setAttribute( 'src', $temp_img);
+								$post_content              = $doc->saveHTML();
 								$update_content = [
-									'ID' => $post_id,
-									'post_content' => $post_content
+									'ID'           => $post_id,
+									'post_content' => html_entity_decode($post_content, ENT_QUOTES, 'UTF-8')
 								];
-								wp_update_post($update_content); // Update the post in the database
+								wp_update_post($update_content);
 							}
 						}
 						

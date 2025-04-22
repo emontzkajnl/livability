@@ -46,13 +46,7 @@ function getWooProductPriceToDisplay( $product_id, $qty = 1 ) {
 		return 0;
 	}
 
-    // for Woo Discount Rules
-    if(method_exists('\Wdr\App\Controllers\ManageDiscount','calculateInitialAndDiscountedPrice')) {
-        $salePrice = \Wdr\App\Controllers\ManageDiscount::calculateInitialAndDiscountedPrice($product,$qty);
-        if(is_array($salePrice) && isset($salePrice['discounted_price'])) {
-            return $salePrice['discounted_price'];
-        }
-    }
+
     $productPrice = "";
 
     // take min price for variable product
@@ -65,12 +59,7 @@ function getWooProductPriceToDisplay( $product_id, $qty = 1 ) {
             $variation = wc_get_product($variation_id); // Creating a Variation Instance
 
             if ($variation && is_a($variation, 'WC_Product')) { // Check if $variation is a valid product object
-                $args = array(
-                    'price' => $variation->get_price(),
-                    'qty'   => 1
-                );
-
-                $productPrice = wc_get_price_excluding_tax($variation, $args);
+                $productPrice = current( $prices['price'] ); // Getting the price of the variation
             } else {
                 // Handle the case where no valid variation is found
                 // For example, fallback to the parent product's price or set a default price

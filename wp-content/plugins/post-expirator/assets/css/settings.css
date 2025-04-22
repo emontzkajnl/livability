@@ -6,6 +6,11 @@ ul.pe-list > li {
 	margin-left: 3%;
 }
 
+ul.pe-list ul {
+    margin-left: 20px;
+    list-style: circle;
+}
+
 .pe-scroll {
 	height: 300px;
 	overflow-y: scroll;
@@ -67,6 +72,14 @@ span.post-expiration-attributes {
 
 .pe-event-post {
 	cursor: help;
+}
+
+.pe-post-type-select {
+    margin-top: 10px;
+}
+
+.pe-post-type-select .components-base-control__field {
+    margin-bottom: 0 !important;
 }
 
 .post-expirator-timestamp {

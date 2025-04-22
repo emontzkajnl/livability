@@ -1,13 +1,14 @@
 <?php
 
 /**
- * Copyright (c) 2024, Ramble Ventures
+ * Copyright (c) 2025, Ramble Ventures
  */
 
 namespace PublishPress\Future\Modules\Expirator\Controllers;
 
 use PublishPress\Future\Core\HookableInterface;
 use PublishPress\Future\Core\HooksAbstract as CoreHooksAbstract;
+use PublishPress\Future\Core\Plugin;
 use PublishPress\Future\Framework\InitializableInterface;
 use PublishPress\Future\Framework\Logger\LoggerInterface;
 use PublishPress\Future\Modules\Expirator\HooksAbstract;
@@ -120,18 +121,18 @@ class ScheduledActionsController implements InitializableInterface
                 __('Future', 'post-expirator'),
                 'manage_options',
                 'publishpress-future',
-                [\PostExpirator_Display::getInstance(), 'settings_tabs'],
+                [\PostExpirator_Display::getInstance(), 'future_actions_tabs'],
                 'dashicons-clock',
                 74
             );
 
             add_submenu_page(
                 'publishpress-future',
-                __('Action Settings', 'post-expirator'),
-                __('Action Settings', 'post-expirator'),
+                __('Future Actions', 'post-expirator'),
+                __('Future Actions', 'post-expirator'),
                 'manage_options',
                 'publishpress-future',
-                [\PostExpirator_Display::getInstance(), 'settings_tabs']
+                [\PostExpirator_Display::getInstance(), 'future_actions_tabs']
             );
 
             $hook_suffix = add_submenu_page(
@@ -268,18 +269,18 @@ class ScheduledActionsController implements InitializableInterface
     {
         try {
             if ('admin_page_publishpress-future-scheduled-actions' === $screenId) {
-            wp_enqueue_style(
-                'postexpirator-css',
-                POSTEXPIRATOR_BASEURL . 'assets/css/style.css',
-                false,
-                PUBLISHPRESS_FUTURE_VERSION
-            );
+                wp_enqueue_style(
+                    'postexpirator-css',
+                    Plugin::getAssetUrl('css/style.css'),
+                    false,
+                    PUBLISHPRESS_FUTURE_VERSION
+                );
 
-            wp_enqueue_style(
-                'pe-footer',
-                POSTEXPIRATOR_BASEURL . 'assets/css/footer.css',
-                false,
-                PUBLISHPRESS_FUTURE_VERSION
+                wp_enqueue_style(
+                    'pe-footer',
+                    Plugin::getAssetUrl('css/footer.css'),
+                    false,
+                    PUBLISHPRESS_FUTURE_VERSION
                 );
             }
         } catch (Throwable $th) {
@@ -295,37 +296,21 @@ class ScheduledActionsController implements InitializableInterface
 
         $hook = $action->get_hook();
 
-        if ($hook === WorkflowsHooksAbstract::ACTION_WORKFLOW_SAVED) {
+        if ($hook === HooksAbstract::ACTION_RUN_WORKFLOW) {
             $args = $action->get_args();
-
             if (isset($args['postId']) && isset($args['workflow']) && 'expire' === $args['workflow']) {
-                $transientName = 'post-expirator-notice-' . (int) $args['postId'];
-                $noticeMessage = get_transient($transientName);
-                delete_transient($transientName);
+                $postId = (int)$args['postId'];
+                $post = get_post($postId);
+                $postTitle = $post ? html_entity_decode(get_the_title($post)) : __('Unknown post', 'post-expirator');
 
-                // translators: %s is the action description
                 $html = sprintf(
-                    __('Successfully executed action: %s', 'post-expirator'),
-                    $noticeMessage
+                    __('Executed action for: %s (ID: %d)', 'post-expirator'),
+                    $postTitle,
+                    $postId
                 );
+            } else {
+                $html = __('Executed scheduled action', 'post-expirator');
             }
-        }
-
-        if ($hook === WorkflowsHooksAbstract::ACTION_ASYNC_EXECUTE_NODE) {
-            $html = __('Executed workflow scheduled step', 'post-expirator');
-        }
-
-        if ($hook === WorkflowsHooksAbstract::ACTION_CLEANUP_FINISHED_SCHEDULED_STEPS) {
-            $days = $this->settingsFacade->getScheduledWorkflowStepsCleanupRetention();
-
-            $html = sprintf(
-                __('Cleaned up completed scheduled steps older than %d days', 'post-expirator'),
-                $days
-            );
-        }
-
-        if ($hook === WorkflowsHooksAbstract::ACTION_CLEANUP_ORPHAN_WORKFLOW_ARGS) {
-            $html = __('Cleaned up orphan workflow scheduled step arguments', 'post-expirator');
         }
 
         return $html;
@@ -333,6 +318,7 @@ class ScheduledActionsController implements InitializableInterface
 
     public function onFilterAdminTitle($adminTitle, $title)
     {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No need for nonce verification when just comparing page
         if (isset($_GET['page']) && $_GET['page'] === 'publishpress-future-scheduled-actions') {
             return str_replace($title, __('Scheduled Actions', 'post-expirator'), $adminTitle);
         }

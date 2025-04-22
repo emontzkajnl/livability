@@ -1,4 +1,5 @@
 <?php
+
 header('Content-Type: text/plain');
 
 $results = $this->logger->fetchAll();
@@ -11,11 +12,11 @@ if (empty($results)) {
 
 echo sprintf(
     'Total logs: %d, Log size: %s',
-    $totalLogs,
-    PostExpirator_Util::formatBytes($logSizeInBytes)
+    esc_html($totalLogs),
+    esc_html(PostExpirator_Util::formatBytes($logSizeInBytes))
 );
 echo "\n\n";
 
 foreach ($results as $result) {
-    echo $result['timestamp'] . ': ' . $result['message'] . "\n";
+    echo esc_html($result['timestamp']) . ': ' . esc_html($result['message']) . "\n";
 }

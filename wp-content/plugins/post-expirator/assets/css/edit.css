@@ -35,10 +35,20 @@ div.pe-qe-fields > div {
     color: #e08f63;
 }
 
+.post-expire-col .icon-overdue {
+    color: #353535;
+}
+
+.post-expire-col .future-action-overdue {
+    font-style: italic;
+}
+
 .pe-qe-fields input.invalid {
     border: 2px solid #b15b5b;
     background-color: #ffdede;
 }
+
+
 
 .future-action-gray {
     color: #afafaf;
@@ -171,4 +181,21 @@ body.espresso-admin #publishpress-future-classic-editor .components-input-contro
     border: 0;
     min-width: 30px;
     padding: 0 4px;
+}
+
+.pp-future-workflow-status-icon {
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.pp-future-workflow-status-icon.active {
+    color: #46b450;
+}
+
+.pp-future-workflow-status-icon.inactive {
+    color: #dc3232;
+}
+
+.wp-list-table .column-workflow_status {
+    width: 75px;
 }

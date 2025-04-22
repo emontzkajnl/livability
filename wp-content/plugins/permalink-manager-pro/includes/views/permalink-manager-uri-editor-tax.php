@@ -113,7 +113,7 @@ class Permalink_Manager_Tax_Uri_Editor_Table extends WP_List_Table {
 				$auto_update_uri = ( ! empty( $auto_update_val ) ) ? $auto_update_val : $permalink_manager_options["general"]["auto_update_uris"];
 
 				if ( $auto_update_uri == 1 ) {
-					$field_args_base['disabled']       = true;
+					$field_args_base['readonly']       = true;
 					$field_args_base['append_content'] = sprintf( '<p class="small uri_locked">%s %s</p>', '<span class="dashicons dashicons-lock"></span>', __( 'The above permalink will be automatically updated and is locked for editing.', 'permalink-manager' ) );
 				} else if ( $auto_update_uri == 2 ) {
 					$field_args_base['disabled']       = true;
@@ -153,7 +153,17 @@ class Permalink_Manager_Tax_Uri_Editor_Table extends WP_List_Table {
 		$html .= '</div>';
 
 		if ( $which == 'top' ) {
-			$html .= '<div class="alignleft">';
+			$extra_fields = apply_filters( 'permalink_manager_uri_editor_extra_fields', '', 'taxonomies' );
+
+			if ( $extra_fields ) {
+				$html .= $extra_fields;
+
+				$html .= '<div class="alignleft">';
+				$html .= get_submit_button( __( "Filter", "permalink-manager" ), 'button', false, false, array( 'id' => 'filter-button', 'name' => 'filter-button' ) );
+				$html .= "</div>";
+			}
+
+			$html .= '<div class="alignright">';
 			$html .= $this->search_box( __( 'Search', 'permalink-manager' ), 'search-input' );
 			$html .= '</div>';
 		}
@@ -181,7 +191,7 @@ class Permalink_Manager_Tax_Uri_Editor_Table extends WP_List_Table {
 	 * Prepare the items for the table to process
 	 */
 	public function prepare_items() {
-		global $wpdb, $permalink_manager_options, $current_admin_tax;
+		global $wpdb, $current_admin_tax;
 
 		$columns      = $this->get_columns();
 		$hidden       = $this->get_hidden_columns();
@@ -189,14 +199,12 @@ class Permalink_Manager_Tax_Uri_Editor_Table extends WP_List_Table {
 		$current_page = $this->get_pagenum();
 
 		// Get query variables
-		$per_page         = $permalink_manager_options['screen-options']['per_page'];
 		$taxonomies       = sprintf( "'%s'", $current_admin_tax );
 		$search_query     = ( ! empty( $_REQUEST['s'] ) ) ? esc_sql( $_REQUEST['s'] ) : "";
 
 		// SQL query parameters
 		$order   = ( isset( $_REQUEST['order'] ) && in_array( $_REQUEST['order'], array( 'asc', 'desc' ) ) ) ? sanitize_sql_orderby( $_REQUEST['order'] ) : 'desc';
 		$orderby = ( isset( $_REQUEST['orderby'] ) ) ? sanitize_sql_orderby( $_REQUEST['orderby'] ) : 't.term_id';
-		$offset  = ( $current_page - 1 ) * $per_page;
 
 		// Grab terms from database
 		$sql_parts['start'] = "SELECT t.*, tt.taxonomy FROM {$wpdb->terms} AS t INNER JOIN {$wpdb->term_taxonomy} AS tt ON (tt.term_id = t.term_id) ";
@@ -221,19 +229,7 @@ class Permalink_Manager_Tax_Uri_Editor_Table extends WP_List_Table {
 
 		$sql_parts['end'] = "ORDER BY {$orderby} {$order}";
 
-		// Prepare the SQL query
-		$sql_query = implode( "", $sql_parts );
-
-		// Count items
-		$count_query = preg_replace( '/SELECT(.*)FROM/', 'SELECT COUNT(*) FROM', $sql_query );
-		$total_items = $wpdb->get_var( $count_query );
-
-		// Pagination support
-		$sql_query .= sprintf( " LIMIT %d, %d", $offset, $per_page );
-
-		// Get items
-		$sql_query = apply_filters( 'permalink_manager_filter_uri_editor_query', $sql_query, $this, $sql_parts, $is_taxonomy = true );
-		$all_items = $wpdb->get_results( $sql_query, ARRAY_A );
+		list( $all_items, $total_items, $per_page ) = Permalink_Manager_URI_Editor::prepare_sql_query( $sql_parts, $current_page, true );
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,

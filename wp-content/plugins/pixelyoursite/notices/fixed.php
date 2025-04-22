@@ -112,11 +112,11 @@ function adminGetFixedNotices() {
                     'button_url' => 'https://www.youtube.com/watch?v=w97FATUy7ok'
                 ],
                 [
-                    'slug'  => 'free_block_2_message_2_v1',
-                    'message' => 'Build Meta Custom Audiences with events and parameters. Retarget key segments of your audience, or find new potential customers with Lookalikes.',
-                    'title' => 'Meta Custom Audiences using Events',
+                    'slug'  => 'free_block_2_message_2_v2',
+                    'message' => 'Meta EMQ numbers can be misleading. Watch this video to see why, and what you can do to improve them.',
+                    'title' => 'Meta EMQ Explained and How to Improve It!',
                     'button_text' => 'Watch video',
-                    'button_url' => 'https://www.youtube.com/watch?v=EvzGMAvBnbs',
+                    'button_url' => 'https://www.youtube.com/watch?v=oHoWyT8UQWo',
                 ],
 
 
@@ -136,18 +136,26 @@ function adminGetFixedNotices() {
             'enabelLogo' => true,
             'multiMessage' => [
                 [
-                    'slug'  => 'free_block_7_message_1_v1',
+                    'slug'  => 'free_block_3_message_1_v1',
                     'title' => 'Multiple Meta tags with CAPI support',
                     'message' => 'Learn how you can add multiple Meta (Facebook) tags with Conversion API support.',
                     'button_text' => 'Watch video',
                     'button_url' => 'https://www.youtube.com/watch?v=HM98mGZshvc',
                 ],
                 [
-                    'slug'  => 'free_block_7_message_2_v1',
+                    'slug'  => 'free_block_3_message_2_v1',
                     'title' => 'What WooCommerce products your ads sold',
                     'message' => 'Meta doesn"t show you what products your ads sold, but there is an easy way to find out.',
                     'button_text' => 'Watch video',
                     'button_url' => 'https://www.youtube.com/watch?v=b-eYdx9QK0Q',
+                ],
+
+                [
+                    'slug'  => 'free_block_3_message_3_v1',
+                    'title' => 'Medical Content - Meta Tracking',
+                    'message' => 'Meta has restrictions for MEDICAL content. Learn how to adapt!',
+                    'button_text' => 'Learn more',
+                    'button_url' => 'https://www.pixelyoursite.com/medical-site-meta-tracking',
                 ],
             ],
             'optoutEnabel' => true,

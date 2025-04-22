@@ -277,7 +277,7 @@ class Permalink_Manager_Pro_Functions {
 		$exp_info_code = self::get_expiration_date( true, true, false );
 
 		if ( ! empty( $exp_info_text ) && $exp_info_code >= 2 ) {
-			$alerts['licence_key'] = array( 'txt' => $exp_info_text, 'type' => 'notice-error', 'plugin_only' => false, 'dismissed_time' => DAY_IN_SECONDS * 3 );
+			$alerts['licence_key'] = array( 'txt' => $exp_info_text, 'type' => 'notice-error', 'plugin_only' => true, 'dismissed_time' => DAY_IN_SECONDS * 3 );
 		}
 
 		return $alerts;
@@ -425,14 +425,25 @@ class Permalink_Manager_Pro_Functions {
 								$rel_term = get_term( $rel_elements, $field_object['taxonomy'] );
 							}
 
+							// Get the replacement slug
 							if ( ! empty( $rel_term->term_id ) ) {
-								$custom_field_value = ( ! empty( $custom_field_arg ) && is_numeric( $custom_field_arg ) ) ? Permalink_Manager_Helper_Functions::get_term_full_slug( $rel_term, $rel_elements, $custom_field_arg, $native_uri ) : $rel_term->slug;
+								if ( ! empty( $custom_field_arg ) && is_numeric( $custom_field_arg ) ) {
+									$custom_field_value = Permalink_Manager_Helper_Functions::force_custom_slugs( $rel_term->slug, $rel_term, false, $custom_field_arg );
+								} else if ( ! empty( $custom_field_arg ) && $custom_field_arg == 'id' ) {
+									$custom_field_value = $rel_term->term_id;
+								} else if ( ! empty( $custom_field_arg ) && $custom_field_arg == 'full_slug' ) {
+									$custom_field_value = Permalink_Manager_Helper_Functions::get_term_full_slug( $rel_term, $rel_elements );
+								} else if ( ! empty( $custom_field_arg ) && $custom_field_arg == 'custom_permalink' ) {
+									$custom_field_value = Permalink_Manager_URI_Functions::get_single_uri( $rel_term );
+								} else {
+									$custom_field_value = Permalink_Manager_Helper_Functions::force_custom_slugs( $rel_term->slug, $rel_term );
+								}
 							}
 						} // B2. Posts
 						else {
 							if ( ( is_array( $rel_elements ) ) ) {
 								if ( is_numeric( $rel_elements[0] ) ) {
-									$rel_elements = get_posts( array( 'include' => $rel_elements, 'post_type' => 'any' ) );
+									$rel_elements = get_posts( array( 'include' => $rel_elements, 'post_type' => 'any', 'orderby' => 'post__in' ) );
 								}
 
 								// Get lowest element
@@ -455,6 +466,8 @@ class Permalink_Manager_Pro_Functions {
 									$custom_field_value = Permalink_Manager_Helper_Functions::force_custom_slugs( $rel_post_object->post_name, $rel_post_object, false, $custom_field_arg );
 								} else if ( ! empty( $custom_field_arg ) && $custom_field_arg == 'id' ) {
 									$custom_field_value = $rel_post_object->ID;
+								} else if ( ! empty( $custom_field_arg ) && $custom_field_arg == 'full_slug' ) {
+									$custom_field_value = Permalink_Manager_Helper_Functions::get_post_full_slug( $rel_post_object );
 								} else if ( ! empty( $custom_field_arg ) && $custom_field_arg == 'custom_permalink' ) {
 									$custom_field_value = Permalink_Manager_URI_Functions::get_single_uri( $rel_post_object );
 								} else {

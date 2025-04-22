@@ -6,9 +6,10 @@ use PublishPress\Future\Core\HookableInterface;
 use PublishPress\Future\Core\HooksAbstract as FutureCoreHooksAbstract;
 use PublishPress\Future\Framework\InitializableInterface;
 use PublishPress\Future\Core\HooksAbstract as CoreHooksAbstract;
+use PublishPress\Future\Core\Plugin;
 use PublishPress\Future\Modules\Workflows\HooksAbstract;
-use PublishPress\Future\Modules\Workflows\Interfaces\NodeTypesModelInterface;
-use PublishPress\Future\Modules\Workflows\Models\NodeTypesModel;
+use PublishPress\Future\Modules\Workflows\Interfaces\StepTypesModelInterface;
+use PublishPress\Future\Modules\Workflows\Models\StepTypesModel;
 use PublishPress\Future\Modules\Workflows\Models\WorkflowModel;
 use PublishPress\Future\Modules\Workflows\Module;
 use PublishPress\Future\Framework\Logger\LoggerInterface;
@@ -23,9 +24,9 @@ class WorkflowsList implements InitializableInterface
     private $hooks;
 
     /**
-     * @var NodeTypesModelInterface
+     * @var StepTypesModelInterface
      */
-    private $nodeTypesModel;
+    private $stepTypesModel;
 
     /**
      * @var LoggerInterface
@@ -39,12 +40,12 @@ class WorkflowsList implements InitializableInterface
 
     public function __construct(
         HookableInterface $hooks,
-        NodeTypesModelInterface $nodeTypesModel,
+        StepTypesModelInterface $stepTypesModel,
         LoggerInterface $logger,
         SettingsFacade $settingsFacade
     ) {
         $this->hooks = $hooks;
-        $this->nodeTypesModel = $nodeTypesModel;
+        $this->stepTypesModel = $stepTypesModel;
         $this->logger = $logger;
         $this->settingsFacade = $settingsFacade;
     }
@@ -86,14 +87,12 @@ class WorkflowsList implements InitializableInterface
             2
         );
 
-        if ($this->settingsFacade->getWorkflowScreenshotStatus()) {
-            $this->hooks->addAction(
-                "manage_" . Module::POST_TYPE_WORKFLOW . "_posts_custom_column",
-                [$this, "renderPreviewColumn"],
-                10,
-                2
-            );
-        }
+        $this->hooks->addAction(
+            "manage_" . Module::POST_TYPE_WORKFLOW . "_posts_custom_column",
+            [$this, "renderStatusColumn"],
+            10,
+            2
+        );
 
         $this->hooks->addAction(
             FutureCoreHooksAbstract::ACTION_ADMIN_INIT,
@@ -165,31 +164,22 @@ class WorkflowsList implements InitializableInterface
             return;
         }
 
-        // wp_enqueue_style("wp-jquery-ui-dialog");
-        // wp_enqueue_script("jquery-ui-dialog");
-
-        // wp_enqueue_script(
-        //     "future_workflow_list_script",
-        //     Plugin::getScriptUrl('workflowList'),
-        //     [
-        //         "jquery",
-        //         "jquery-ui-dialog",
-        //     ],
-        //     PUBLISHPRESS_FUTURE_VERSION,
-        //     true
-        // );
+        wp_enqueue_style(
+            'pp-future-workflows-list',
+            Plugin::getAssetUrl('css/workflows-list.css'),
+            [],
+            PUBLISHPRESS_FUTURE_VERSION
+        );
     }
 
     public function addCustomColumns($columns)
     {
+        $columns["workflow_status"] = __("Status", "post-expirator");
+
         $columns["workflow_triggers"] = __(
             "Triggers",
             "post-expirator"
         );
-
-        if ($this->settingsFacade->getWorkflowScreenshotStatus()) {
-            $columns["workflow_preview"] = __("Preview", "post-expirator");
-        }
 
         // Move the date column to the end
         if (isset($columns["date"])) {
@@ -199,6 +189,46 @@ class WorkflowsList implements InitializableInterface
         }
 
         return $columns;
+    }
+
+    public function renderStatusColumn($column, $postId)
+    {
+        if ("workflow_status" !== $column) {
+            return;
+        }
+
+        $workflowModel = new WorkflowModel();
+        $workflowModel->load($postId);
+
+        $workflowStatus = $workflowModel->getStatus();
+        $isActive = $workflowStatus === 'publish';
+
+        $title = $isActive ? __('Deactivate', 'post-expirator') : __('Activate', 'post-expirator');
+
+        $icon = $isActive ? 'yes' : 'no';
+        $iconClass = $isActive ? 'active' : 'inactive';
+
+        $toggleUrl = esc_url(
+            wp_nonce_url(
+                add_query_arg(
+                    [
+                        'pp_action' => 'change_workflow_status',
+                        'workflow_id' => $postId,
+                        'status' => $isActive ? 'draft' : 'publish'
+                    ],
+                    admin_url('edit.php?post_type=' . Module::POST_TYPE_WORKFLOW)
+                ),
+                'change_workflow_status_' . $postId
+            )
+        );
+
+        echo sprintf(
+            '<a href="%s"><i class="pp-future-workflow-status-icon dashicons dashicons-%s %s" title="%s"></i> </a>',
+            esc_url($toggleUrl),
+            esc_attr($icon),
+            esc_attr($iconClass),
+            esc_attr($title)
+        );
     }
 
     public function renderTriggersColumn($column, $postId)
@@ -221,10 +251,10 @@ class WorkflowsList implements InitializableInterface
 
         foreach ($workflowFlow["nodes"] as $node) {
             if (
-                NodeTypesModel::NODE_TYPE_TRIGGER ===
+                StepTypesModel::STEP_TYPE_TRIGGER ===
                 $node["data"]["elementaryType"]
             ) {
-                $nodeType = $this->nodeTypesModel->getNodeType($node["data"]["name"]);
+                $nodeType = $this->stepTypesModel->getStepType($node["data"]["name"]);
 
                 if (empty($nodeType)) {
                     $triggers[] = esc_html($node["data"]["name"]);
@@ -236,29 +266,6 @@ class WorkflowsList implements InitializableInterface
 
         echo esc_html(implode(", ", $triggers));
     }
-
-    public function renderPreviewColumn($column, $postId)
-    {
-        if ("workflow_preview" !== $column) {
-            return;
-        }
-
-        $workflowModel = new WorkflowModel();
-        $workflowModel->load($postId);
-
-        $workflowModel->convertLegacyScreenshots();
-
-        $screenshot = $workflowModel->getScreenshotUrl('thumbnail');
-        $screenshotFull = $workflowModel->getScreenshotUrl();
-
-        if (empty($screenshotFull)) {
-            esc_html_e("No screenshot", "post-expirator");
-            return;
-        }
-
-        require __DIR__ . "/../Views/preview-column.html.php";
-    }
-
 
     public function updateWorkflowStatus()
     {
@@ -304,6 +311,8 @@ class WorkflowsList implements InitializableInterface
                     )
                 )
             );
+
+            exit;
         } catch (Throwable $th) {
             $this->logger->error('Error updating workflow status: ' . $th->getMessage());
         }
@@ -321,18 +330,6 @@ class WorkflowsList implements InitializableInterface
         $workflowModel->load($post->ID);
 
         $workflowStatus = $workflowModel->getStatus();
-
-        $toggleUrl = wp_nonce_url(
-            add_query_arg(
-                [
-                    'pp_action' => 'change_workflow_status',
-                    'workflow_id' => $post->ID,
-                    'status' => ('draft' === $workflowStatus) ? 'publish' : 'draft'
-                ],
-                admin_url('edit.php?post_type=' . Module::POST_TYPE_WORKFLOW)
-            ),
-            'change_workflow_status_' . $post->ID
-        );
 
         $statuses = [
             'draft' => [
@@ -391,8 +388,8 @@ class WorkflowsList implements InitializableInterface
         if (
             !is_admin() || (
                 // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            (!isset($_GET['post_type']) || $_GET['post_type'] !== Module::POST_TYPE_WORKFLOW) &&
-                ($currentScreen && $currentScreen->id !== 'edit-' . Module::POST_TYPE_WORKFLOW)
+                (!isset($_GET['post_type']) || $_GET['post_type'] !== Module::POST_TYPE_WORKFLOW) &&
+                    ($currentScreen && $currentScreen->id !== 'edit-' . Module::POST_TYPE_WORKFLOW)
             )
         ) {
             return $title;
@@ -405,17 +402,12 @@ class WorkflowsList implements InitializableInterface
             return $title;
         }
 
-        $workflowStatus = $workflowModel->getStatus();
-
-        if ('publish' === $workflowStatus) {
-            $title = ' ▶ ' . $title;
-        }
-
         return $title;
     }
 
     public function fixWorkflowEditorPageTitle()
     {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (!isset($_GET['page']) || 'future_workflow_editor' !== $_GET['page']) {
             return;
         }
@@ -457,11 +449,12 @@ class WorkflowsList implements InitializableInterface
             : 'page-title-action';
 
         // Insert the button into the DOM via JavaScript
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
         echo '<script type="text/javascript">
             jQuery(document).ready(function($) {
-                $(".wrap .' . $titleClass . ':first").after(\'' . $customButton . '\');
+                $(".wrap .' . esc_js($titleClass) . ':first").after(\'' . $customButton . '\');
             });
         </script>';
+        // phpcs:enable
     }
 }

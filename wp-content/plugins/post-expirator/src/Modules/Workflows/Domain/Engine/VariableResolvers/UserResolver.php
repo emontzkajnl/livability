@@ -17,6 +17,8 @@ class UserResolver implements VariableResolverInterface
     {
         if (is_object($user)) {
             $this->user = $user;
+        } elseif (is_numeric($user)) {
+            $this->user = get_user_by('ID', $user);
         } else {
             $this->user = null;
         }
@@ -96,6 +98,15 @@ class UserResolver implements VariableResolverInterface
         return $this->user;
     }
 
+    public function setValue(string $name, $value): void
+    {
+        if (isset($this->user->$name)) {
+            $this->user->$name = $value;
+        }
+
+        return;
+    }
+
     public function __isset($name): bool
     {
         return in_array(
@@ -104,7 +115,9 @@ class UserResolver implements VariableResolverInterface
                 'id',
                 'ID',
                 'user_login',
+                'login',
                 'user_email',
+                'email',
                 'roles',
                 'caps',
                 'display_name',

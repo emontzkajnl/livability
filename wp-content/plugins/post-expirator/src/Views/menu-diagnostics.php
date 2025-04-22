@@ -10,9 +10,10 @@ defined('ABSPATH') or die('Direct access not allowed.');
 
 // phpcs:disable Generic.Files.LineLength.TooLong
 
-$container = PublishPress\Future\Core\DI\Container::getInstance();
+$container = Container::getInstance();
 $debug = $container->get(ServicesAbstract::DEBUG);
 $hooks = $container->get(ServicesAbstract::HOOKS);
+$dateTimeFacade = $container->get(ServicesAbstract::DATETIME);
 
 /**
  * @var DBTableSchemaInterface $actionArgsSchema
@@ -39,6 +40,7 @@ $schemaHealthErrors = [
     $debugLogSchema->getTableName() => $debugLogSchema->getErrors(),
     $workflowScheduledStepsSchema->getTableName() => $workflowScheduledStepsSchema->getErrors(),
 ];
+
 ?>
 
 <div class="pp-columns-wrapper<?php echo $showSideBar ? ' pp-enable-sidebar' : ''; ?>">
@@ -80,17 +82,26 @@ $schemaHealthErrors = [
                                 )
                                   ); // phpcs:ignore PSR2.Methods.FunctionCallSignature.Indent?>
                             </span>
+
                             <?php foreach ($schemaHealthErrors as $tableName => $errors) : ?>
                                 <?php if (empty($errors)) {
                                     continue;
                                 } ?>
 
-                                <h4><?php echo esc_html($tableName); ?></h4>
-                                <ul>
-                                    <?php foreach ($errors as $error) : ?>
-                                        <li><?php echo esc_html($error); ?></li>
-                                    <?php endforeach; ?>
-                                </ul>
+                                <table class="widefat striped" style="margin-top: 10px; margin-bottom: 10px;">
+                                    <thead>
+                                        <tr>
+                                            <th><strong><?php echo esc_html($tableName); ?></strong></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($errors as $error) : ?>
+                                            <tr>
+                                            <td><?php echo esc_html($error); ?></td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
                             <?php endforeach; ?>
 
                             <input type="submit" class="button" name="fix-db-schema" id="fix-db-schema" value="<?php
@@ -122,7 +133,7 @@ $schemaHealthErrors = [
                             <?php
                             echo '<a href="' . esc_url(
                                 admin_url(
-                                    'admin.php?page=publishpress-future&tab=viewdebug'
+                                    'admin.php?page=publishpress-future-settings&tab=viewdebug'
                                 )
                             ) . '">' . esc_html__('View Debug Logs', 'post-expirator') . '</a>'; ?>
                         <?php else : ?>
@@ -187,7 +198,7 @@ $schemaHealthErrors = [
 
                             ?>
                             <p><?php
-                        // phpcs:disable Generic.Files.LineLength.TooLong, PSR2.Methods.FunctionCallSignature.Indent
+                         // phpcs:disable Generic.Files.LineLength.TooLong, PSR2.Methods.FunctionCallSignature.Indent
                             esc_html_e(
                             'The below table will show all currently scheduled cron events for the plugin with the next run time.',
                             'post-expirator'
@@ -212,10 +223,9 @@ $schemaHealthErrors = [
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $printPostEvent = function ($post) {
+                                        $printPostEvent = function ($post) use ($container) {
                                             echo esc_html("$post->ID: $post->post_title (status: $post->post_status)");
 
-                                            $container = Container::getInstance();
                                             $factory = $container->get(ServicesAbstract::EXPIRABLE_POST_MODEL_FACTORY);
                                             $postModel = $factory($post->ID);
                                             $attributes = $postModel->getExpirationDataAsArray();
@@ -230,14 +240,14 @@ $schemaHealthErrors = [
                     foreach ($cron as $time => $value) {
         foreach ($value as $eventKey => $eventValue) {
             echo '<tr class="pe-event">';
-            echo '<td>' . esc_html(PostExpirator_Util::get_wp_date('r', $time))
+            echo '<td>' . esc_html($dateTimeFacade->getWpDate('r', $time))
                 . '</td>';
             echo '<td>' . esc_html($eventKey) . '</td>';
             $eventValueKeys = array_keys($eventValue);
             echo '<td>';
             foreach ($eventValueKeys as $eventGUID) {
                 if (false === empty($eventValue[$eventGUID]['args'])) {
-                    echo '<div class="pe-event-post" title="' . esc_attr($eventGUID) . '">';
+                    echo '<div class="pe-event-post" title="' . esc_attr((string)$eventGUID) . '">';
                     foreach ($eventValue[$eventGUID]['args'] as $value) {
                         $eventPost = get_post((int)$value);
 

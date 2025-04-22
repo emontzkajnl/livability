@@ -37,6 +37,7 @@ if ( !class_exists('Puc_v4p11_Plugin_Info', false) ):
 		public $last_updated;
 
 		public $licence;
+		public $licence_status;
 		public $expiration_date;
 		public $variant;
 		public $websites;

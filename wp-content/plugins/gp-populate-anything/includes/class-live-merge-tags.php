@@ -66,7 +66,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			add_filter( $wrapper_filter, array( $this, 'preserve_product_field_label' ), 98, 2 );
 			add_filter( $wrapper_filter, array( $this, 'replace_live_merge_tag_attr' ), 99, 2 );
 			add_filter( $wrapper_filter, array( $this, 'replace_live_merge_tag_non_attr' ), 99, 2 );
-			add_filter( $wrapper_filter, array( $this, 'unescape_live_merge_tags' ), 99 );
+			add_filter( $wrapper_filter, array( $this, 'unescape_live_merge_tags' ), 100 );
 			add_filter( $wrapper_filter, array( $this, 'add_localization_attr_variable' ), 99, 2 );
 			add_filter( $wrapper_filter, array( $this, 'restore_escapes' ), 100, 2 );
 		}

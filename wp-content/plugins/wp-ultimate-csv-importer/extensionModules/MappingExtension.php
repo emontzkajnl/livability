@@ -46,7 +46,7 @@ class MappingExtension {
 	 * Provides all Widget Fields for Mapping Section
 	 * @return array - mapping fields
 	 */
-	public function mapping_field_function(){
+	public function mapping_field_function(){	
 		check_ajax_referer('smack-ultimate-csv-importer', 'securekey');
 		$import_type = sanitize_text_field($_POST['Types']);
 		if(isset($_POST['MediaType'])){
@@ -63,7 +63,7 @@ class MappingExtension {
 		$response['currentuser']=$current_user_role;
 		$details = [];
 		$info = [];
-
+		$filename = '';
 		$table_name = $wpdb->prefix."smackcsv_file_events";
 		$fields = $wpdb->get_results("UPDATE $table_name SET mode ='$mode' WHERE hash_key = '$hash_key'");
 
@@ -74,10 +74,14 @@ class MappingExtension {
 		if(empty($file_extension)){
 			$file_extension = 'xml';
 		}
+		if($file_extension == 'xlsx'  || $file_extension == 'xls'){
+			$file_extension = 'csv';                    
+		}
 		$template_table_name = $wpdb->prefix."ultimate_csv_importer_mappingtemplate";
 		$smackcsv_instance = SmackCSV::getInstance();
 		$upload_dir = $smackcsv_instance->create_upload_dir();
 		if($file_extension == 'csv' || $file_extension == 'txt'){
+		
 			if (version_compare(PHP_VERSION, '8.1.0', '<')) {  // Only do this if PHP version is less than 8.1.0
 				if (!ini_get("auto_detect_line_endings")) {
 					ini_set("auto_detect_line_endings", true);
@@ -93,9 +97,11 @@ class MappingExtension {
 				$delimiter = MappingExtension::$validatefile->getFileDelimiter($file_path, 5);
 				$array_index = array_search($delimiter,$delimiters);
 				if($array_index == 5){
+					
 					$delimiters[$array_index] = ' ';
 				}
 				if($delimiter == '\t'){
+				
 					$delimiter ='~';
 					 $temp=$file_path.'temp';
 					 if (($handles = fopen($temp, 'r')) !== FALSE){
@@ -122,8 +128,10 @@ class MappingExtension {
 					fclose($handles);
 				}
 				else{
+					
 					while (($data = fgetcsv($h, 0, $delimiters[$array_index])) !== FALSE) 
-					{		
+					{	
+						
 						// Read the data from a single line
 						$trimmed_info = array_map('trim', $data);
 						array_push($info , $trimmed_info);
@@ -146,6 +154,43 @@ class MappingExtension {
 					// Close the file
 					fclose($h);
 				}
+			}
+		}
+		if($file_extension == 'tsv'){
+			if (version_compare(PHP_VERSION, '8.1.0', '<')) {  // Only do this if PHP version is less than 8.1.0
+				if (!ini_get("auto_detect_line_endings")) {
+					ini_set("auto_detect_line_endings", true);
+				}
+			}
+			$info = [];
+			if (($h = fopen($upload_dir.$hash_key.'/'.$hash_key, "r")) !== FALSE) 
+			{
+				$file_path = $upload_dir . $hash_key . '/' . $hash_key;
+				$delimiter = MappingExtension::$validatefile->getFileDelimiter($file_path, 5);
+				if($delimiter == '\t'){
+					$hs = $upload_dir . $hash_key . '/' . $hash_key;
+					$line =file($hs, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+					// Read the data from a single line
+					$data = explode("\t", $line[0]); // Split by tab
+					$trimmed_info = array_map('trim', $data);
+						array_push($info , $trimmed_info);
+						$exp_line = $info[0];
+
+						$response['success'] = true;
+						$response['get_key'] = $get_key;
+						$response['show_template'] = false;
+						$response['csv_fields'] = $exp_line;
+						if(!empty($media_type) && $import_type == 'Media'){
+							$value = $this->media_mapping_fields($import_type,$mode,$media_type);
+						}else{
+							$value = $this->mapping_fields($import_type);
+						}
+						
+						$response['fields'] = $value;
+						$response['total_records'] = (int)$total_rows;
+						echo wp_json_encode($response);
+						wp_die();
+				}	
 			}
 		}
 		if($file_extension == 'xml'){

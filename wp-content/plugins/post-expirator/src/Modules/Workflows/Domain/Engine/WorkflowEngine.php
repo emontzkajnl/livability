@@ -5,13 +5,14 @@ namespace PublishPress\Future\Modules\Workflows\Domain\Engine;
 use Closure;
 use Exception;
 use PublishPress\Future\Core\HookableInterface;
+use PublishPress\Future\Framework\InitializableInterface;
 use PublishPress\Future\Framework\Logger\LoggerInterface;
 use PublishPress\Future\Modules\Workflows\Domain\Engine\VariableResolvers\NodeResolver;
 use PublishPress\Future\Modules\Workflows\Domain\Engine\VariableResolvers\SiteResolver;
 use PublishPress\Future\Modules\Workflows\Domain\Engine\VariableResolvers\UserResolver;
 use PublishPress\Future\Modules\Workflows\Domain\Engine\VariableResolvers\WorkflowResolver;
 use PublishPress\Future\Modules\Workflows\HooksAbstract;
-use PublishPress\Future\Modules\Workflows\Interfaces\NodeTypesModelInterface;
+use PublishPress\Future\Modules\Workflows\Interfaces\ExecutionContextRegistryInterface;
 use PublishPress\Future\Modules\Workflows\Interfaces\WorkflowEngineInterface;
 use PublishPress\Future\Modules\Workflows\Models\ScheduledActionModel;
 use PublishPress\Future\Modules\Workflows\Models\ScheduledActionsModel;
@@ -19,14 +20,14 @@ use PublishPress\Future\Modules\Workflows\Models\WorkflowModel;
 use PublishPress\Future\Modules\Workflows\Models\WorkflowScheduledStepModel;
 use PublishPress\Future\Modules\Workflows\Models\WorkflowsModel;
 use PublishPress\Future\Modules\Workflows\Module;
-use PublishPress\Future\Modules\Workflows\Interfaces\NodeRunnerInterface;
-use PublishPress\Future\Modules\Workflows\Interfaces\RuntimeVariablesHandlerInterface;
+use PublishPress\Future\Modules\Workflows\Interfaces\TriggerRunnerInterface;
+use PublishPress\Future\Modules\Workflows\Interfaces\StepTypesModelInterface;
 use PublishPress\Future\Modules\Workflows\Interfaces\WorkflowModelInterface;
 use Throwable;
 
 class WorkflowEngine implements WorkflowEngineInterface
 {
-    const LOG_PREFIX = '[WF Engine]';
+    public const LOG_PREFIX = '[WF Engine]';
 
     /**
      * @var HookableInterface
@@ -34,19 +35,14 @@ class WorkflowEngine implements WorkflowEngineInterface
     private $hooks;
 
     /**
-     * @var NodeTypesModelInterface
+     * @var StepTypesModelInterface
      */
-    private $nodeTypesModel;
+    private $stepTypesModel;
 
     /**
      * @var \Closure
      */
-    private $nodeRunnerFactory;
-
-    /**
-     * @var RuntimeVariablesHandlerInterface
-     */
-    private $variablesHandler;
+    private $stepRunnerFactory;
 
     /**
      * @var LoggerInterface
@@ -59,44 +55,69 @@ class WorkflowEngine implements WorkflowEngineInterface
     private $currentAsyncActionId;
 
     /**
-     * @var WorkflowModelInterface
+     * @var InitializableInterface
      */
-    private $currentRunningWorkflow;
+    private $executionContextInitializer;
 
     /**
-     * @var array
+     * @var ExecutionContextRegistryInterface
      */
-    private $currentExecutionTrace;
+    private $executionContextRegistry;
+
+    /**
+     * @var string
+     */
+    private $engineExecutionId;
+
+    /**
+     * @var string
+     */
+    private $engineExecutionEnvironment;
+
 
     public function __construct(
         HookableInterface $hooks,
-        NodeTypesModelInterface $nodeTypesModel,
-        \Closure $nodeRunnerFactory,
-        RuntimeVariablesHandlerInterface $variablesHandler,
-        LoggerInterface $logger
+        StepTypesModelInterface $stepTypesModel,
+        \Closure $stepRunnerFactory,
+        ExecutionContextRegistryInterface $executionContextRegistry,
+        LoggerInterface $logger,
+        InitializableInterface $executionContextInitializer
     ) {
         $this->hooks = $hooks;
-        $this->nodeTypesModel = $nodeTypesModel;
-        $this->nodeRunnerFactory = $nodeRunnerFactory;
-        $this->variablesHandler = $variablesHandler;
+        $this->stepTypesModel = $stepTypesModel;
+        $this->stepRunnerFactory = $stepRunnerFactory;
+        $this->executionContextRegistry = $executionContextRegistry;
         $this->logger = $logger;
+        $this->executionContextInitializer = $executionContextInitializer;
 
         $this->hooks->doAction(HooksAbstract::ACTION_WORKFLOW_ENGINE_LOAD);
 
         $this->hooks->addAction(
-            HooksAbstract::ACTION_EXECUTE_NODE,
-            [$this, 'executeNodeRoutine']
+            HooksAbstract::ACTION_EXECUTE_STEP,
+            [$this, 'executeStepRoutine'],
+            10,
+            2
         );
 
         $this->hooks->addAction(
-            HooksAbstract::ACTION_ASYNC_EXECUTE_NODE,
-            [$this, "executeAsyncNodeRoutine"],
+            HooksAbstract::ACTION_ASYNC_EXECUTE_STEP,
+            [$this, "executeAsyncStepRoutine"],
             10
         );
 
         $this->hooks->addAction(
+            HooksAbstract::ACTION_UNSCHEDULE_RECURRING_STEP_ACTION,
+            [$this, "unscheduleRecurringStepAction"],
+            10,
+            2
+        );
+
+        /**
+         * We are keeping the old constant for compatibility with old actions scheduled by the old constant.
+         */
+        $this->hooks->addAction(
             HooksAbstract::ACTION_UNSCHEDULE_RECURRING_NODE_ACTION,
-            [$this, "unscheduleRecurringNodeAction"],
+            [$this, "unscheduleRecurringStepAction"],
             10,
             2
         );
@@ -118,23 +139,27 @@ class WorkflowEngine implements WorkflowEngineInterface
     {
         $this->hooks->doAction(HooksAbstract::ACTION_WORKFLOW_ENGINE_START);
 
+        $this->executionContextInitializer->initialize();
+
+        $this->engineExecutionEnvironment = $this->getEngineExecutionEnvironment();
+
         $currentUser = wp_get_current_user();
-        $context = $this->getContext();
+
         $this->logger->debug(
             sprintf(
-                self::LOG_PREFIX . ' Starting engine | User: %s | Context: %s',
+                self::LOG_PREFIX . ' Starting engine | User: %s | Environment: %s',
                 ($currentUser->ID > 0) ? "ID {$currentUser->ID}" : 'unknown',
-                $context
+                $this->engineExecutionEnvironment
             )
         );
 
-        $workflowsModel = new WorkflowsModel();
-        $workflows = $workflowsModel->getPublishedWorkflowsIds();
+        $publishedWorkflowsIds = $this->getPublishedWorkflowsIds();
+        $stepTypes = $this->getAllStepTypes();
 
-        $nodeTypes = $this->nodeTypesModel->getAllNodeTypesByType();
+        $this->engineExecutionId = $this->generateUniqueId();
 
         // Setup the workflow triggers
-        foreach ($workflows as $workflowId) {
+        foreach ($publishedWorkflowsIds as $workflowId) {
             /** @var WorkflowModelInterface $workflow */
             $workflow = new WorkflowModel();
             $workflow->load($workflowId);
@@ -147,42 +172,29 @@ class WorkflowEngine implements WorkflowEngineInterface
                 )
             );
 
-            $this->currentRunningWorkflow = $workflow;
+            $workflowExecutionId = $this->generateUniqueId();
+            $this->executionContextRegistry->getExecutionContext($workflowExecutionId);
 
-            $this->variablesHandler->setAllVariables([]);
+            $triggerSteps = $workflow->getTriggerNodes();
+            $routineTree = $workflow->getRoutineTree($stepTypes);
 
-            $triggerNodes = $workflow->getTriggerNodes();
+            $this->prepareExecutionContextForWorkflow(
+                $workflowExecutionId,
+                $workflow
+            );
 
-            $routineTree = $workflow->getRoutineTree($nodeTypes);
+            foreach ($triggerSteps as $triggerStep) {
+                $triggerName = $triggerStep['data']['name'];
+                $triggerId = $triggerStep['id'];
 
-            $triggerRunner = null;
+                $stepType = $this->stepTypesModel->getStepType($triggerName);
 
-            $globalVariables = [
-                'user' => new UserResolver($currentUser),
-                'site' => new SiteResolver(),
-                'workflow' => new WorkflowResolver(
-                    [
-                        'id' => $workflow->getId(),
-                        'title' => $workflow->getTitle(),
-                        'description' => $workflow->getDescription(),
-                        'modified_at' => $workflow->getModifiedAt(),
-                        'steps' => $workflow->getNodes(),
-                    ]
-                ),
-                'execution_id' => $this->getExecutionId(),
-            ];
-
-            foreach ($triggerNodes as $triggerNode) {
-                $triggerName = $triggerNode['data']['name'];
-                $triggerId = $triggerNode['id'];
-                $nodeType = $this->nodeTypesModel->getNodeType($triggerName);
-
-                if (! $nodeType) {
+                if (! $stepType) {
                     continue;
                 }
 
-                /** @var NodeRunnerInterface $triggerRunner */
-                $triggerRunner = call_user_func($this->nodeRunnerFactory, $triggerName);
+                /** @var TriggerRunnerInterface $triggerRunner */
+                $triggerRunner = call_user_func($this->stepRunnerFactory, $triggerName, $workflowExecutionId);
 
                 if (is_null($triggerRunner)) {
                     $message = sprintf(
@@ -200,28 +212,16 @@ class WorkflowEngine implements WorkflowEngineInterface
                     continue;
                 }
 
-                // Reset the execution trace
-                $this->currentExecutionTrace = [];
-
-                $globalVariables['trigger'] = new NodeResolver(
-                    [
-                        'id' => $triggerId,
-                        'name' => $triggerName,
-                        'label' => $nodeType->getLabel(),
-                        'activation_timestamp' => date('Y-m-d H:i:s'),
-                        'slug' => $triggerNode['data']['slug'],
-                    ]
+                $this->prepareExecutionContextForTrigger(
+                    $workflowExecutionId,
+                    $triggerStep
                 );
-
-                $this->variablesHandler->setAllVariables([
-                    'global' => $globalVariables,
-                ]);
 
                 // Setup the trigger
                 $this->logger->debug(
                     sprintf(
                         self::LOG_PREFIX . '   - Setting up trigger | Slug: %s',
-                        $triggerNode['data']['slug']
+                        $triggerStep['data']['slug']
                     )
                 );
                 $triggerRunner->setup($workflowId, $routineTree[$triggerId]);
@@ -238,6 +238,58 @@ class WorkflowEngine implements WorkflowEngineInterface
         $this->logger->debug(self::LOG_PREFIX . ' Engine started and listening for events');
     }
 
+    public function prepareExecutionContextForWorkflow(
+        string $workflowExecutionId,
+        WorkflowModelInterface $workflowModel
+    ): void {
+        $executionContext = $this->executionContextRegistry->getExecutionContext(
+            $workflowExecutionId
+        );
+
+        $currentUser = wp_get_current_user();
+
+        $globalVariables = [
+            'engine_execution_id' => $this->engineExecutionId,
+            'user' => new UserResolver($currentUser),
+            'site' => new SiteResolver(),
+            'workflow' => new WorkflowResolver(
+                [
+                    'id' => $workflowModel->getId(),
+                    'title' => $workflowModel->getTitle(),
+                    'description' => $workflowModel->getDescription(),
+                    'modified_at' => $workflowModel->getModifiedAt(),
+                    'execution_id' => $workflowExecutionId,
+                    'execution_trace' => [],
+                ]
+            ),
+        ];
+
+        $executionContext->setVariable('global', $globalVariables);
+    }
+
+    public function prepareExecutionContextForTrigger(
+        string $workflowExecutionId,
+        array $triggerStep
+    ): void {
+        $stepType = $this->stepTypesModel->getStepType($triggerStep['data']['name']);
+
+        $triggerContext = new NodeResolver(
+            [
+                'id' => $triggerStep['id'],
+                'name' => $triggerStep['data']['name'],
+                'label' => $stepType->getLabel(),
+                'activation_timestamp' => date('Y-m-d H:i:s'),
+                'slug' => $triggerStep['data']['slug'],
+                'postId' => 0,
+            ]
+        );
+
+        $executionContext = $this->executionContextRegistry->getExecutionContext(
+            $workflowExecutionId
+        );
+        $executionContext->setVariable('global.trigger', $triggerContext);
+    }
+
     public function setCurrentAsyncActionId($actionId)
     {
         $this->currentAsyncActionId = $actionId;
@@ -248,14 +300,16 @@ class WorkflowEngine implements WorkflowEngineInterface
         return (int) $this->currentAsyncActionId;
     }
 
-    public function executeNodeRoutine($step)
+    public function executeStepRoutine($step, $workflowExecutionId)
     {
         $node = $step['node'];
         $nodeName = $node['data']['name'];
 
-        $nodeRunner = call_user_func($this->nodeRunnerFactory, $nodeName);
+        $stepRunner = call_user_func($this->stepRunnerFactory, $nodeName, $workflowExecutionId);
 
-        if (is_null($nodeRunner)) {
+        $executionContext = $this->executionContextRegistry->getExecutionContext($workflowExecutionId);
+
+        if (is_null($stepRunner)) {
             $message = sprintf(
                 self::LOG_PREFIX . ' Node runner not found: %s',
                 $nodeName
@@ -263,28 +317,27 @@ class WorkflowEngine implements WorkflowEngineInterface
 
             $this->logger->error($message);
 
-            throw new \Exception($message);
+            throw new \Exception(esc_html($message));
         }
 
         $this->logger->debug(
             sprintf(
                 self::LOG_PREFIX . '   - Workflow %d: Setting up step | Slug: %s',
-                $this->currentRunningWorkflow->getId(),
+                $executionContext->getVariable('global.workflow.id'),
                 $node['data']['slug']
             )
         );
 
-        $nodeRunner->setup($step);
+        $stepRunner->setup($step);
     }
 
-    public function executeAsyncNodeRoutine($args)
+    public function executeAsyncStepRoutine($args)
     {
         try {
-
             if (is_null($args)) {
                 $message = self::LOG_PREFIX . ' Async node runner error, no args found';
 
-                throw new \Exception($message);
+                throw new \Exception(esc_html($message));
             }
 
             $originalArgs = $args;
@@ -295,6 +348,7 @@ class WorkflowEngine implements WorkflowEngineInterface
                 $scheduledStepModel = new WorkflowScheduledStepModel();
                 $scheduledStepModel->loadByActionId($this->currentAsyncActionId);
                 $args = $scheduledStepModel->getArgs();
+                $workflowExecutionId = $args['runtimeVariables']['global']['workflow']['execution_id'];
             } else {
                 // Old format, when the args were saved directly in the actionsscheduler_actions table.
                 if (! isset($args['step']['node']['data']['name'])) {
@@ -306,25 +360,36 @@ class WorkflowEngine implements WorkflowEngineInterface
                 }
 
                 $nodeName = $args['step']['node']['data']['name'];
+
+                $workflowExecutionId = '1_' . $this->generateUniqueId();
             }
+
             $args['actionId'] = $this->currentAsyncActionId;
+            $args['workflowId'] = $originalArgs['workflowId'];
 
-            $nodeRunner = call_user_func($this->nodeRunnerFactory, $nodeName);
+            $stepRunner = call_user_func($this->stepRunnerFactory, $nodeName, $workflowExecutionId);
 
-            $step = $this->currentRunningWorkflow->getPartialRoutineTreeFromNodeId($args['step']['nodeId']);
+            $workflow = new WorkflowModel();
+            $workflow->load($originalArgs['workflowId']);
+
+            $step = $workflow->getPartialRoutineTreeFromNodeId($originalArgs['stepId']);
+
+            if (empty($step)) {
+                throw new \Exception('Step not found');
+            }
 
             $this->logger->debug(
                 sprintf(
                     self::LOG_PREFIX . '   - Workflow %1$d: Executing async step %2$s on action %3$d',
-                    $this->currentRunningWorkflow->getId(),
-                    $step['node']['data']['slug'],
-                    (int) $this->currentAsyncActionId
+                    $originalArgs['workflowId'],
+                    $step['node']['data']['slug'] ?? 'unknown',
+                    $args['actionId']
                 )
             );
 
-            $nodeRunner->actionCallback($args, $originalArgs);
+            $stepRunner->actionCallback($args, $originalArgs);
         } catch (Throwable $e) {
-            $this->logger->error(sprintf(self::LOG_PREFIX . ' Async node runner error: %s', $e->getMessage()));
+            $this->logger->error(sprintf(self::LOG_PREFIX . ' Async node runner error: %s. File: %s:%d', $e->getMessage(), $e->getFile(), $e->getLine()));
         }
     }
 
@@ -358,28 +423,41 @@ class WorkflowEngine implements WorkflowEngineInterface
         $scheduledActionsModel->cancelWorkflowScheduledActions($workflowId);
     }
 
-    public function unscheduleRecurringNodeAction($workflowId, $stepId)
+    public function unscheduleRecurringStepAction($workflowId, $actionUIDHash)
     {
         $scheduledActionsModel = new ScheduledActionsModel();
-        $scheduledActionsModel->cancelRecurringScheduledActions($workflowId, $stepId);
+        $scheduledActionsModel->cancelRecurringScheduledActions($workflowId, $actionUIDHash);
     }
 
-    public function getVariablesHandler(): RuntimeVariablesHandlerInterface
+    public function getEngineExecutionId(): string
     {
-        return $this->variablesHandler;
+        return $this->engineExecutionId;
     }
 
-    public function getCurrentExecutionTrace(): array
+    public function generateUniqueId(): string
     {
-        return $this->currentExecutionTrace;
+        return wp_generate_uuid4();
     }
 
-    public function getCurrentRunningWorkflow(): WorkflowModelInterface
+    private function getPublishedWorkflowsIds(): array
     {
-        return $this->currentRunningWorkflow;
+        $workflowsModel = new WorkflowsModel();
+        $workflows = $workflowsModel->getPublishedWorkflowsIds();
+
+        return $workflows;
     }
 
-    private function getContext(): string
+    private function getAllStepTypes(): array
+    {
+        return $this->stepTypesModel->getAllStepTypesByType();
+    }
+
+    /**
+     * Determines the execution environment of the workflow engine.
+     *
+     * @return string The environment context (cli, admin, cron, ajax, or frontend)
+     */
+    private function getEngineExecutionEnvironment(): string
     {
         if (defined('WP_CLI')) {
             return 'cli';
@@ -398,10 +476,5 @@ class WorkflowEngine implements WorkflowEngineInterface
         }
 
         return 'frontend';
-    }
-
-    private function getExecutionId(): string
-    {
-        return wp_generate_uuid4();
     }
 }

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.28 | April 17, 2025
+
+- Improved support for Multiple Choice and Image Choice fields.
+- Fixed a compatibility issue between GP Populate Anything and GP Advanced Phone Field.
+- Added new `$template` parameter to `GP_Populate_Anything::process_template()` for passing arbitrary string templates.
+
 ## 2.1.27 | April 10, 2025
 
 - Fixed an issue where Live Merge Tags in Nested Forms did not populate correctly with Save & Continue enabled.

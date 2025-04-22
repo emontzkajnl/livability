@@ -37,13 +37,14 @@ class GTM extends Settings implements Pixel {
             PYS_FREE_PATH . '/modules/google_gtm/options_fields.json',
             PYS_FREE_PATH . '/modules/google_gtm/options_defaults.json'
         );
-        add_action( 'wp_head', array($this,'pys_wp_header_top'), 1, 0 );
         add_action( 'pys_register_pixels', function( $core ) {
             /** @var PYS $core */
             $core->registerPixel( $this );
         } );
         $this->isEnabled = $this->enabled();
-
+        if($this->isEnabled) {
+            add_action('wp_head', array($this, 'pys_wp_header_top'), 1, 0);
+        }
 
     }
 
@@ -180,6 +181,10 @@ class GTM extends Settings implements Pixel {
             } break;
             case 'automatic_event_login' :{
                 $event->addPayload(["name" => "login"]);
+                $isActive = $this->getOption($event->getId().'_enabled');
+            } break;
+            case 'automatic_event_404' :{
+                $event->addPayload(["name" => "404"]);
                 $isActive = $this->getOption($event->getId().'_enabled');
             } break;
             case 'automatic_event_search' :{

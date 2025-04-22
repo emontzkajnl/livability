@@ -364,6 +364,30 @@ class GP_Populate_Anything extends GP_Plugin {
 		);
 	}
 
+	/**
+	 * Check if the Multiple Choice and Image Choice fields are multi selectable choice field or not.
+	 *
+	 * `Multiple Choice` and `Image Choice` fields with the 'checkbox' input type are treated as multi selectable fields.
+	 *
+	 * @param  \GF_Field  $field  The field object.
+	 *
+	 * @return bool
+	 *
+	 * @since 2.1.28
+	 */
+	public static function is_multi_selectable_choice_field_types( $field ) {
+		$field_types = array( 'multi_choice', 'image_choice' );
+
+		$field_type       = rgar( $field, 'type' );
+		$field_input_type = rgar( $field, 'inputType' );
+
+		if ( in_array( $field_type, $field_types ) && $field_input_type === 'checkbox' ) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public function init_admin() {
 
 		parent::init_admin();
@@ -971,6 +995,7 @@ class GP_Populate_Anything extends GP_Plugin {
 			$populate === 'values'
 			&& ! in_array( rgar( $field, 'type' ), self::get_multi_selectable_choice_field_types(), true )
 			&& ! in_array( rgar( $field, 'inputType' ), self::get_multi_selectable_choice_field_types(), true )
+			&& ! self::is_multi_selectable_choice_field_types( $field )
 			&& ! $this->does_field_accept_json( $field )
 			&& ! $query_all_value_objects
 			&& ! $object_type_instance->uses_php_filtering()
@@ -1173,7 +1198,22 @@ class GP_Populate_Anything extends GP_Plugin {
 
 	}
 
-	public function process_template( $field, $template_name, $object, $populate, $objects ) {
+	/**
+	 * Looks up a template configured in a field and converts it into a value that can be used in Choice or Value
+	 * population.
+	 *
+	 * @param \GF_Field $field
+	 * @param string|null $template_name
+	 * @param array $object
+	 * @param string $populate
+	 * @param array $objects
+	 * @param string|null $template You may optionally pass an arbitrary template here to process if there isn't a
+	 *  template already set in the field. It's recommended that you pass an appropriate $template_name for the sake
+	 *  of runtime caching and filters.
+	 *
+	 * @return mixed|null
+	 */
+	public function process_template( $field, $template_name, $object, $populate, $objects, $template = null ) {
 
 		static $_cache;
 
@@ -1191,7 +1231,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		$object_type      = $this->get_object_type( $object_type_id, $field );
 		$templates        = rgar( $field, 'gppa-' . $populate . '-templates', array() );
 		$primary_property = $this->get_primary_property( $field, $populate );
-		$template         = rgar( $templates, $template_name );
+		$template         = ! $template ? rgar( $templates, $template_name ) : $template;
 
 		if ( ! $object_type ) {
 			return null;
@@ -1357,7 +1397,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		 */
 		if (
 			(
-				( isset( $field->choices ) && is_array( $field->choices ) && in_array( $field->type, self::get_multi_selectable_choice_field_types(), true ) )
+				( isset( $field->choices ) && is_array( $field->choices ) && ( in_array( $field->type, self::get_multi_selectable_choice_field_types(), true ) || self::is_multi_selectable_choice_field_types( $field ) ) )
 				|| rgar( $field, 'storageType' ) === 'json'
 			)
 			&& $populate === 'values'
@@ -2033,12 +2073,12 @@ class GP_Populate_Anything extends GP_Plugin {
 	 * @return array|null
 	 */
 	public function get_selected_choices( $field, $field_values = null ) {
-
 		$templates = rgar( $field, 'gppa-values-templates', array() );
 
 		if (
 			! in_array( $field->type, self::get_multi_selectable_choice_field_types(), true )
 			&& ! in_array( $field->inputType, self::get_multi_selectable_choice_field_types(), true )
+			&& ! self::is_multi_selectable_choice_field_types( $field->type )
 		) {
 			return null;
 		}
@@ -2085,14 +2125,18 @@ class GP_Populate_Anything extends GP_Plugin {
 				 * space as this is what's added by GP_Populate_Anything::use_commas_for_arrays() on the
 				 * `gppa_array_value_to_text` filter.
 				 *
-				 * @param bool $split_field_objects_by_comma Whether to split field objects by comma. Defaults to `true`.
-				 * @param \GF_Field $field The current field being populated.
-				 * @param mixed $object The current object being populated into the field.
-				 * @param mixed $object_processed The current object being populated into the field after being processed by the template.
+				 * @param  bool       $split_field_objects_by_comma  Whether to split field objects by comma. Defaults to `true`.
+				 * @param  \GF_Field  $field                         The current field being populated.
+				 * @param  mixed      $object                        The current object being populated into the field.
+				 * @param  mixed      $object_processed              The current object being populated into the field after being processed by the template.
 				 *
 				 * @since 2.0.23
 				 */
-				$split_field_objects_by_comma = gf_apply_filters( array( 'gppa_split_field_objects_by_comma', $field->formId, $field->id ), true, $field, $object, $object_processed );
+				$split_field_objects_by_comma = gf_apply_filters( array(
+					'gppa_split_field_objects_by_comma',
+					$field->formId,
+					$field->id,
+				), true, $field, $object, $object_processed );
 
 				if ( $split_field_objects_by_comma && ! is_array( $object_processed ) && strpos( $object_processed, ', ' ) ) {
 					$object_processed = array_map( 'trim', explode( ', ', $object_processed ) );
@@ -2106,23 +2150,34 @@ class GP_Populate_Anything extends GP_Plugin {
 			}
 		}
 
-		if ( $field->type === 'checkbox' ) {
-
+		if ( in_array( $field->type, array( 'checkbox', 'image_choice' ) ) ) {
 			$values_to_select_by_input = array();
-			$choice_number             = 0;
 
+			$choice_number = 0;
 			foreach ( $field->choices as $choice ) {
 				$choice_number++;
 
 				// Hack to skip numbers ending in 0, so that 5.1 doesn't conflict with 5.10. From class-gf-field-checkbox.php
 				if ( $choice_number % 10 == 0 ) {
-					$choice_number ++;
+					$choice_number++;
 				}
-
 				$input = $field->id . '.' . $choice_number;
-
 				if ( in_array( $choice['value'], $values_to_select ) ) {
 					$values_to_select_by_input[ $input ] = $choice['value'];
+				}
+			}
+
+			return $values_to_select_by_input;
+		} elseif ( $field->type === 'multi_choice' ) {
+			$values_to_select_by_input = array();
+
+			foreach ( $field->choices as $choice ) {
+				if ( count( $values_to_select ) > 0 ) {
+					foreach ( $values_to_select as $key => $value ) {
+						if ( $choice['value'] === $value ) {
+							$values_to_select_by_input[ $key ] = $choice['value'];
+						}
+					}
 				}
 			}
 
@@ -2130,7 +2185,6 @@ class GP_Populate_Anything extends GP_Plugin {
 		}
 
 		return array_values( $values_to_select );
-
 	}
 
 	public function ajax_get_query_results() {
@@ -2581,7 +2635,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		$field       = $this->populate_field_choices( $field, $field_values, $preselected_choice_value );
 		$field_value = $this->populate_field_value( $field, $field_values, $form, $entry, $force_use_field_value );
 
-		if ( in_array( $field->type, self::get_multi_selectable_choice_field_types(), true ) ) {
+		if ( in_array( $field->type, self::get_multi_selectable_choice_field_types(), true ) || self::is_multi_selectable_choice_field_types( $field ) ) {
 			$selected_choices_value = $this->get_selected_choices( $field, $field_values );
 		}
 

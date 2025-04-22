@@ -2,7 +2,6 @@
 
 use PublishPress\Future\Core\DI\Container;
 use PublishPress\Future\Core\DI\ServicesAbstract;
-use PublishPress\Future\Modules\Expirator\CapabilitiesAbstract;
 use PublishPress\Future\Modules\Expirator\Migrations\V30000WPCronToActionsScheduler;
 use PublishPress\Future\Modules\Expirator\Migrations\V30001RestorePostMeta;
 use PublishPress\Future\Modules\Settings\HooksAbstract as SettingsHooksAbstract;
@@ -15,6 +14,8 @@ defined('ABSPATH') or die('Direct access not allowed.');
 /**
  * The class that is responsible for all the displays.
  */
+// phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class PostExpirator_Display
 {
     /**
@@ -106,7 +107,7 @@ class PostExpirator_Display
     /**
      * Creates the settings page.
      */
-    public function settings_tabs()
+    public function future_actions_tabs()
     {
         if (!is_admin() || !current_user_can('manage_options')) {
             wp_die(esc_html__('You do not have permission to configure PublishPress Future.', 'post-expirator'));
@@ -115,8 +116,36 @@ class PostExpirator_Display
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : '';
 
-        $allowed_tabs = ['defaults', 'general', 'display', 'advanced', 'diagnostics', 'viewdebug', 'notifications', ];
+        $allowed_tabs = ['defaults', 'general', 'display', 'notifications', ];
         $allowed_tabs = $this->hooks->applyFilters(SettingsHooksAbstract::FILTER_ALLOWED_TABS, $allowed_tabs);
+
+        if (empty($tab) || ! in_array($tab, $allowed_tabs, true)) {
+            $tab = 'defaults';
+        }
+
+        ob_start();
+        $this->load_tab($tab);
+        $html = ob_get_clean();
+
+        $this->render_template('tabs-future-actions', ['tabs' => $allowed_tabs, 'html' => $html, 'tab' => $tab]);
+
+        $this->publishpress_footer();
+    }
+
+    /**
+     * Creates the settings page.
+     */
+    public function settings_tabs()
+    {
+        if (!is_admin() || !current_user_can('manage_options')) {
+            wp_die(esc_html__('You do not have permission to configure PublishPress Future.', 'post-expirator'));
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'advanced';
+
+        $allowed_tabs = ['advanced', 'diagnostics', 'viewdebug' ];
+        $allowed_tabs = $this->hooks->applyFilters(SettingsHooksAbstract::FILTER_ALLOWED_SETTINGS_TABS, $allowed_tabs);
 
         $debugIsEnabled = (bool)$this->hooks->applyFilters(SettingsHooksAbstract::FILTER_DEBUG_ENABLED, false);
         if (! $debugIsEnabled) {
@@ -128,14 +157,14 @@ class PostExpirator_Display
         }
 
         if (empty($tab) || ! in_array($tab, $allowed_tabs, true)) {
-            $tab = 'defaults';
+            $tab = 'advanced';
         }
 
         ob_start();
         $this->load_tab($tab);
         $html = ob_get_clean();
 
-        $this->render_template('tabs', ['tabs' => $allowed_tabs, 'html' => $html, 'tab' => $tab]);
+        $this->render_template('tabs-settings', ['tabs' => $allowed_tabs, 'html' => $html, 'tab' => $tab]);
 
         $this->publishpress_footer();
     }
@@ -178,7 +207,9 @@ class PostExpirator_Display
                 $this->settingsFacade->setTimeFormatForDatePicker(sanitize_key($_POST['future-action-time-format']));
                 $this->settingsFacade->setMetaboxTitle(sanitize_text_field($_POST['expirationdate-metabox-title']));
                 $this->settingsFacade->setMetaboxCheckboxLabel(sanitize_text_field($_POST['expirationdate-metabox-checkbox-label']));
-                // phpcs:enable
+                $this->settingsFacade->setShortcodeWrapper(sanitize_text_field($_POST['shortcode-wrapper']));
+                $this->settingsFacade->setShortcodeWrapperClass(sanitize_text_field($_POST['shortcode-wrapper-class']));
+                // phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
             }
         }
 
@@ -198,7 +229,7 @@ class PostExpirator_Display
     private function menu_diagnostics()
     {
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
             if (
                 ! isset($_POST['_postExpiratorMenuDiagnostics_nonce']) || ! wp_verify_nonce(
                     sanitize_key($_POST['_postExpiratorMenuDiagnostics_nonce']),
@@ -319,16 +350,15 @@ class PostExpirator_Display
                 $this->settingsFacade->setHideCalendarByDefault(
                     isset($_POST['expired-hide-calendar-by-default']) && $_POST['expired-hide-calendar-by-default'] == '1'
                 );
-                // phpcs:enable
+                // phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 
                 if (! isset($_POST['allow-user-roles']) || ! is_array($_POST['allow-user-roles'])) {
                     $_POST['allow-user-roles'] = [];
                 }
 
-                $this->settingsFacade->setAllowUserRoles($_POST['allow-user-roles']);
-                $this->settingsFacade->setWorkflowScreenshotStatus(
-                    isset($_POST['workflow-screenshot']) && $_POST['workflow-screenshot'] == '1'
-                );
+                $allowUserRoles = array_map('sanitize_text_field', $_POST['allow-user-roles']);
+
+                $this->settingsFacade->setAllowUserRoles($allowUserRoles);
 
                 echo "<div id='message' class='updated fade'><p>";
                 esc_html_e('Saved Options!', 'post-expirator');
@@ -355,17 +385,34 @@ class PostExpirator_Display
                     'postexpirator_menu_notifications'
                 )
             ) {
-                print 'Form Validation Failure: Sorry, your nonce did not verify.';
-                exit;
+                throw new \Exception('The nonce did not verify.');
             }
 
-            $emailList = explode(',', trim(sanitize_text_field($_POST['expired-email-notification-list'])));
+            if (! isset($_POST['expired-email-notification-list'])) {
+                throw new \Exception('The expired email notification list is not set.');
+            }
+
+            if (! isset($_POST['past-due-actions-notification-list'])) {
+                throw new \Exception('The past due actions notification list is not set.');
+            }
+
+            $expiredEmailNotificationList = explode(',', sanitize_text_field($_POST['expired-email-notification-list']));
+            $pastDueActionsNotificationList = explode(',', sanitize_text_field($_POST['past-due-actions-notification-list']));
+
+            $expiredEmailNotificationList = array_map('trim', $expiredEmailNotificationList);
+            $expiredEmailNotificationList = array_filter($expiredEmailNotificationList, 'is_email');
+
+            $pastDueActionsNotificationList = array_map('trim', $pastDueActionsNotificationList);
+            $pastDueActionsNotificationList = array_filter($pastDueActionsNotificationList, 'is_email');
+
 
             // phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
             $this->settingsFacade->setSendEmailNotification((bool)$_POST['expired-email-notification']);
             $this->settingsFacade->setSendEmailNotificationToAdmins((bool)$_POST['expired-email-notification-admins']);
-            $this->settingsFacade->setEmailNotificationAddressesList($emailList);
-            // phpcs:enable
+            $this->settingsFacade->setEmailNotificationAddressesList($expiredEmailNotificationList);
+            $this->settingsFacade->setPastDueActionsNotificationStatus((bool)$_POST['past-due-actions-notification']);
+            $this->settingsFacade->setPastDueActionsNotificationAddressesList($pastDueActionsNotificationList);
+            // phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 
             echo "<div id='message' class='updated fade'><p>";
             esc_html_e('Saved Options!', 'post-expirator');
@@ -397,6 +444,10 @@ class PostExpirator_Display
                 print 'Form Validation Failure: Sorry, your nonce did not verify.';
                 exit;
             } else {
+                if (! isset($_POST['expired-preserve-data-deactivating'])) {
+                    throw new \Exception('The expired preserve data deactivating option is not set.');
+                }
+
                 // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
                 update_option('expirationdatePreserveData', (int)$_POST['expired-preserve-data-deactivating']);
 

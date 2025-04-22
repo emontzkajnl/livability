@@ -3,8 +3,8 @@ Contributors: wpforms, jaredatch, smub, slaFFik
 Tags: contact form, contact form plugin, forms, form builder, custom form
 Requires at least: 5.5
 Tested up to: 6.7
-Stable tag: 1.9.2.3
-Requires PHP: 7.0
+Stable tag: 1.9.4.2
+Requires PHP: 7.1
 License: GNU General Public License v2.0 or later
 
 The best WordPress contact form plugin. Drag & Drop form builder to create beautiful contact forms, payment forms, & other custom forms. 7000+ integrations including Stripe and more.
@@ -99,6 +99,7 @@ We also know that our developer friends may want more control, so we added tons 
 * [Form templates](https://wpforms.com/templates/?utm_source=wprepo&utm_medium=link&utm_campaign=liteplugin) pre-built and ready to import.
 * [Form styling](https://wpforms.com/docs/styling-your-forms/?utm_source=wprepo&utm_medium=link&utm_campaign=liteplugin) for fields, labels, and buttons.
 * [Spam protection](https://wpforms.com/features/spam-protection/?utm_source=wprepo&utm_medium=link&utm_campaign=liteplugin) built in, plus integrations with hCaptcha, Google reCAPTCHA, and Cloudflare Turnstile.
+* [AI Forms](https://wpforms.com/features/wpforms-ai/?utm_source=wprepo&utm_medium=link&utm_campaign=liteplugin) to automatically create and refine forms through natural conversation.
 * [Instant form notifications](https://wpforms.com/features/instant-notifications/?utm_source=wprepo&utm_medium=link&utm_campaign=liteplugin) via email.
 * [Custom form confirmations](https://wpforms.com/features/form-confirmation/?utm_source=wprepo&utm_medium=link&utm_campaign=liteplugin) with success messages or thank you pages.
 * [Smart phone field](https://wpforms.com/docs/how-to-choose-the-right-form-field-for-your-forms/?utm_source=wprepo&utm_medium=link&utm_campaign=liteplugin#phone) that adapts to your visitor's location.
@@ -145,6 +146,8 @@ We also know that our developer friends may want more control, so we added tons 
 * [ConvertKit](https://wpforms.com/features/convertkit-addon/?utm_source=wprepo&utm_medium=link&utm_campaign=liteplugin)
 * [Salesforce](https://wpforms.com/features/salesforce-addon/?utm_source=wprepo&utm_medium=link&utm_campaign=liteplugin)
 * [Slack](https://wpforms.com/features/slack-addon/?utm_source=wprepo&utm_medium=link&utm_campaign=liteplugin)
+* [Dropbox](https://wpforms.com/features/dropbox-addon/?utm_source=wprepo&utm_medium=link&utm_campaign=liteplugin)
+* [Twilio](https://wpforms.com/features/twilio-addon/?utm_source=wprepo&utm_medium=link&utm_campaign=liteplugin)
 
 You can see why WPForms is the best WordPress contact form plugin on the market! Want to unlock these features? [Upgrade to our Pro version](https://wpforms.com/?utm_source=wprepo&utm_medium=link&utm_campaign=liteplugin).
 
@@ -376,6 +379,71 @@ Thank you,
 Syed Balkhi
 
 == Changelog ==
+
+= 1.9.4.2 =
+- Fixed: Fatal error when trying to delete the plugin.
+- Fixed: Character encoding issues in Email notifications when viewed on some Apple devices.
+
+= 1.9.4.1 =
+- Added: Minimum and maximum value validation for the Numbers field.
+- Added: Implemented password protection and user access restrictions for uploaded files.
+- Added: Automatic preview page reload was added after saving.
+- Changed: Improved Gutenberg block UI by hiding settings when no form is selected.
+- Changed: Updated stripe/stripe-php library to 16.5.0.
+- Changed: Enhanced Tools > Scheduled Actions visibility for better compatibility with Action Scheduler, WooCommerce, and WP Rocket plugins.
+- Changed: Improved Stripe payments customer address handling.
+- Changed: Optimized number slider calculations for better decimal precision.
+- Changed: Improved Numbers and Number Slider fields settings interface in the form builder.
+- Fixed: Stripe Credit Card field payment element console warnings.
+- Fixed: Resolved form submission debug log warnings.
+- Fixed: URL referer smart tag functionality for external websites.
+- Fixed: Addressed GDPR enhancements setting flashings on refresh.
+- Fixed: Resolved Stripe payments processing for Indian accounts.
+- Fixed: Corrected Payments Summary chart tooltip display.
+- Fixed: Improved decimal precision in number slider field calculations.
+- Fixed: Enhanced WPForms admin pages performance.
+- Fixed: Backslash handling in form data after saving.
+- Fixed: Prevented duplicate entry submissions with reCAPTCHA v3.
+- Fixed: Restored missing Order Summary item names for hidden label fields.
+- Fixed: Improved Order Summary performance with conditional Multiple Items fields.
+- Fixed: Dynamic Choice fields button behavior.
+- Fixed: Display of zero-price Payment Checkbox items.
+- Fixed: Stripe Credit Card field styling in Divi builder.
+- Fixed: Fatal error with a custom country address scheme.
+
+= 1.9.3.2 =
+- Fixed: GDPR enhancements sub-setting briefly flashed on the WPForms > Settings admin page after refresh.
+
+= 1.9.3.1 =
+- IMPORTANT: Support for PHP 7.0 has been discontinued. If you are running PHP 7.0, you MUST upgrade PHP before installing WPForms 1.9.3. Failure to do that will disable WPForms core functionality.
+- Added: Ability to open the Form Builder with a specific section via URL parameter.
+- Added: Support for Block API versions 2 and 3.
+- Added: Support for the Constant Contact API v3.
+- Added: Quick page navigation on the Forms Overview page.
+- Added: Direct access to Tools sections from WPForms top admin menu.
+- Changed: Updated stripe/stripe-php library to 16.3.0.
+- Changed: Updated DOMPurify library to 3.2.3.
+- Changed: Optimized Order Summary table display on mobile devices.
+- Changed: Improved date formatting consistency in payments table.
+- Changed: Removed dynamic missing translation fix to improve performance.
+- Fixed: Tooltip text overlap in Choices.js dropdowns with long tags.
+- Fixed: Default payment choice label visibility in order summary table.
+- Fixed: Hidden single item field visibility in Order Summary table.
+- Fixed: Unnecessary CSS variables output on pages without forms.
+- Fixed: Toggle icon status glitch on the payments settings section.
+- Fixed: Submit button text handling with empty values.
+- Fixed: Non-Latin characters have been stripped from the URL when used in {page_url} and {url_referer} smart tags.
+- Fixed: Block Editor field compatibility.
+- Fixed: Warning appeared in the debug.log when non-string data were erroneously sent to translation.
+- Fixed: Custom validation message display for sub-fields.
+- Fixed: Stripe Credit Card field in Elementor popups.
+- Fixed: Submit button default label handling.
+- Fixed: An error was happening when removing “Copy / Paste Style Settings” in Elementor and Block editor.
+- Fixed: The “Copy / Paste Style Settings” field default value was empty when adding an Elementor WPForms block.
+- Fixed: Error handler improvements.
+- Fixed: Some emails were not added to Constant Contact integration.
+- Fixed: The WPForms Challenge steps were shown in the AI Form Generator panel.
+- Fixed: PHP 7.1 and 7.2 compatibility.
 
 = 1.9.2.3 =
 - Changed: Creating a custom form theme is now available only to Administrators.

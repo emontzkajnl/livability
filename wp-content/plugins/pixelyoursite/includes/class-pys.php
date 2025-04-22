@@ -31,8 +31,12 @@ final class PYS extends Settings implements Plugin {
     private $logger;
     private $containers;
     private $crawlerDetect;
-	
-	public static function instance() {
+
+    public $general_domain = '';
+
+    private $pixels_loaded = false;
+
+    public static function instance() {
 
 		if ( is_null( self::$_instance ) ) {
 			self::$_instance = new self();
@@ -115,6 +119,7 @@ final class PYS extends Settings implements Plugin {
         $this->logger = new PYS_Logger();
         $this->containers = new gtmContainers();
         $this->crawlerDetect = new CrawlerDetect();
+        $this->general_domain = $this->get_wp_cookie_domain();
     }
 
     public function init() {
@@ -130,7 +135,7 @@ final class PYS extends Settings implements Plugin {
                 'clear_plugin_logs' => [$this->logger, 'remove'],
             ];
 
-            if (isPinterestActive()) {
+            if (isPinterestActive() && class_exists('Pinterest')){
                 $loggers['pinterest'] = [Pinterest()->getLog(), 'downloadLogFile'];
                 $clearLoggers['clear_pinterest_logs'] = [Pinterest()->getLog(), 'remove'];
             }
@@ -273,7 +278,7 @@ final class PYS extends Settings implements Plugin {
             }
             if (empty($_SESSION['LandingPage'])) {
                 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
-                $currentUrl = $protocol . ($_SERVER['HTTP_HOST'] ?? '') . ($_SERVER['REQUEST_URI'] ?? '');
+                $currentUrl = $protocol . ($_SERVER['HTTP_HOST'] ?? parse_url(get_site_url(), PHP_URL_HOST)) . ($_SERVER['REQUEST_URI'] ?? '');
                 $landing = explode('?', $currentUrl)[0];
                 $_SESSION['LandingPage'] = $landing;
             }
@@ -454,6 +459,11 @@ final class PYS extends Settings implements Plugin {
 	 */
     public function managePixels() {
 
+        if ( $this->pixels_loaded ) {
+            return;
+        }
+        $this->pixels_loaded = true;
+
         if (defined('DOING_AJAX') && DOING_AJAX) {
             return;
         }
@@ -462,8 +472,10 @@ final class PYS extends Settings implements Plugin {
         if (is_admin() || is_customize_preview() || is_preview()) {
             return;
         }
-        if($this->is_user_agent_bot())
-        {
+        if ($this->is_user_agent_bot()) {
+            if (!defined('DONOTCACHEPAGE')) {
+                define('DONOTCACHEPAGE', true);
+            }
             return;
         }
         // disable Events Manager on Elementor editor
@@ -508,27 +520,20 @@ final class PYS extends Settings implements Plugin {
                 });
             }
 	    	return;
-
 	    }
-
-
-
     }
 
-    function get_user_ip(){
-        $ip = $_SERVER['REMOTE_ADDR'];
+    function get_user_ip() {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? null;
 
-        // Check if HTTP_X_FORWARDED_FOR is set and not empty
         if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            // Split the list of IPs using a comma and take the first IP
             $forwarded_ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
             $ip = trim($forwarded_ips[0]);
         } elseif (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            // Use HTTP_CLIENT_IP if available
             $ip = $_SERVER['HTTP_CLIENT_IP'];
         }
 
-        return $ip;
+        return filter_var($ip, FILTER_VALIDATE_IP) ?: '0.0.0.0';
     }
 
     function is_user_agent_bot(){
@@ -684,6 +689,15 @@ final class PYS extends Settings implements Plugin {
             wp_enqueue_style( 'pys_css', PYS_FREE_URL . '/dist/styles/admin.css', array( 'select2_css' ), PYS_FREE_VERSION );
             wp_enqueue_script( 'pys_js', PYS_FREE_URL . '/dist/scripts/admin.js', array( 'jquery', 'select2_js', 'popper',
                                                                                  'bootstrap' ), PYS_FREE_VERSION );
+
+            if( (isset($_GET['page']) && $_GET['page'] == "pixelyoursite" && isset($_GET['tab']) && ($_GET['tab'] == 'events')) ||
+                ( $_GET['page'] && (( $_GET['page'] == "pixelyoursite_woo_reports" ) || $_GET['page'] == "pixelyoursite_edd_reports" ))
+            ) {
+                wp_enqueue_style( 'pys_confirm_style', PYS_FREE_URL . '/dist/scripts/confirm/jquery-confirm.min.css', array(  ), PYS_FREE_VERSION );
+                wp_enqueue_style( 'pys_confirm_style_theme', PYS_FREE_URL . '/dist/scripts/confirm/bs3.css', array(  ), PYS_FREE_VERSION );
+                wp_enqueue_script( 'pys_confirm_script', PYS_FREE_URL . '/dist/scripts/confirm/jquery-confirm.min.js', array( 'pys_js' ), PYS_FREE_VERSION );
+                wp_enqueue_script( 'pys_custom_confirm_script', PYS_FREE_URL . '/dist/scripts/confirm/custom-confirm.js', array( 'pys_js' ), PYS_FREE_VERSION );
+            }
 
         }
 
@@ -1086,7 +1100,22 @@ final class PYS extends Settings implements Plugin {
 	function edd_recurring_payment( $payment_id ) {
 		EnrichOrder()->edd_save_subscription_meta( $payment_id );
 	}
+    public function get_wp_cookie_domain() {
+        // Getting the site URL
+        $site_url = get_site_url();
 
+        // Parse domain from URL
+        $host = parse_url($site_url, PHP_URL_HOST);
+
+        // Remove the subdomain, if there is one, leaving the main domain
+        $parts = explode('.', $host);
+        if (count($parts) > 2) {
+            $domain = '.' . $parts[count($parts) - 2] . '.' . $parts[count($parts) - 1];
+        } else {
+            $domain = '.' . $host;
+        }
+        return $domain;
+    }
 }
 
 /**

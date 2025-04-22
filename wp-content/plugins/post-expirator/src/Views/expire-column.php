@@ -1,12 +1,13 @@
 <?php
 
 /**
- * Copyright (c) 2024, Ramble Ventures
+ * Copyright (c) 2025, Ramble Ventures
  */
 
 use PublishPress\Future\Core\DI\Container;
 use PublishPress\Future\Core\DI\ServicesAbstract;
 use PublishPress\Future\Modules\Expirator\ExpirationActionsAbstract;
+use PublishPress\Future\Modules\Expirator\Interfaces\ExpirationActionInterface;
 
 defined('ABSPATH') or die('Direct access not allowed.');
 
@@ -14,13 +15,19 @@ $container = Container::getInstance();
 $factory = $container->get(ServicesAbstract::EXPIRABLE_POST_MODEL_FACTORY);
 $postModel = $factory($id);
 
+$cachePostsWithFutureActions = $container->get(ServicesAbstract::CACHE_POSTS_WITH_FUTURE_ACTION);
+
 $actionEnabled = $postModel->isExpirationEnabled();
 $actionDate = $postModel->getExpirationDateString(false);
 $actionDateUnix = $postModel->getExpirationDateAsUnixTime();
 $actionTaxonomy = $postModel->getExpirationTaxonomy();
 $actionType = $postModel->getExpirationType();
+/**
+ * @var ExpirationActionInterface $action
+ */
 $action = $postModel->getExpirationAction();
 $actionTerms = implode(',', $postModel->getExpirationCategoryIDs());
+$isOverdueAction = $actionDateUnix < time();
 
 ?>
 <div
@@ -43,51 +50,64 @@ $actionTerms = implode(',', $postModel->getExpirationCategoryIDs());
         $format = get_option('date_format') . ' ' . get_option('time_format');
         $container = Container::getInstance();
 
-        $formatedDate = $container->get(ServicesAbstract::DATETIME)->getWpDate($format, $actionDateUnix);
+        $defaultDateTimeFormat = $container->get(ServicesAbstract::DATETIME)->getDefaultDateTimeFormat();
+
+        $formatedDate = $container->get(ServicesAbstract::DATETIME)->getWpDate(
+            $format,
+            $actionDateUnix,
+            $defaultDateTimeFormat
+        );
 
         if (is_object($action)) {
-            ?><span class="dashicons dashicons-clock icon-scheduled" aria-hidden="true"></span> <?php
+            $cachePostsWithFutureActions->addValue((string) $id);
 
-            if ($columnStyle === 'simple') {
-                echo esc_html($formatedDate);
-            } else {
-                echo sprintf(
-                    // phpcs:ignore Generic.Files.LineLength.TooLong
-                    // translators: %1$s opens a span tag, %2$s is the action name, %3$s ends a span tag, %4$s is the a span tag, %5$s is the a span tag, %6$s is the a span tag
-                    esc_html__('%1$s%2$s%3$s on %5$s%4$s%6$s', 'post-expirator'),
-                    '<span class="future-action-action-name">',
-                    esc_html($action->getDynamicLabel($postModel->getPostType())),
-                    '</span>',
-                    esc_html($formatedDate),
-                    '<span class="future-action-action-date">',
-                    '</span>'
-                );
+            $iconClass = 'dashicons dashicons-clock' . ($isOverdueAction ? ' icon-overdue' : ' icon-scheduled');
+            ?><span class="<?php echo esc_attr($iconClass); ?>" aria-hidden="true"></span> <?php
 
-                $categoryActions = [
-                    ExpirationActionsAbstract::POST_CATEGORY_ADD,
-                    ExpirationActionsAbstract::POST_CATEGORY_SET,
-                    ExpirationActionsAbstract::POST_CATEGORY_REMOVE,
-                ];
+if ($isOverdueAction) {
+    echo '<span class="future-action-overdue">' . esc_html__('Overdue: ', 'post-expirator') . '</span>';
+}
 
-                if (in_array($action, $categoryActions)) {
-                    $actionTerms = $postModel->getExpirationCategoryNames();
-                    if (!empty($actionTerms)) {
-                        ?>
+if ($columnStyle === 'simple') {
+    echo esc_html($formatedDate);
+} else {
+    echo sprintf(
+        // phpcs:ignore Generic.Files.LineLength.TooLong
+        // translators: %1$s opens a span tag, %2$s is the action name, %3$s ends a span tag, %4$s is the a span tag, %5$s is the a span tag, %6$s is the a span tag
+        esc_html__('%1$s%2$s%3$s on %5$s%4$s%6$s', 'post-expirator'),
+        '<span class="future-action-action-name">',
+        esc_html($action->getDynamicLabel($postModel->getPostType())),
+        '</span>',
+        esc_html($formatedDate),
+        '<span class="future-action-action-date">',
+        '</span>'
+    );
+
+    $categoryActions = [
+        ExpirationActionsAbstract::POST_CATEGORY_ADD,
+        ExpirationActionsAbstract::POST_CATEGORY_SET,
+        ExpirationActionsAbstract::POST_CATEGORY_REMOVE,
+    ];
+
+    if (in_array($action, $categoryActions)) {
+        $actionTerms = $postModel->getExpirationCategoryNames();
+        if (!empty($actionTerms)) {
+            ?>
                         <div class="future-action-gray">[<?php echo esc_html(implode(', ', $actionTerms)); ?>]</div>
-                        <?php
-                    }
-                }
+                <?php
+        }
+    }
 
-                if ($actionType === ExpirationActionsAbstract::CHANGE_POST_STATUS) {
-                    $newStatus = $postModel->getExpirationNewStatus();
-                    $newStatus = get_post_status_object($newStatus);
-                    if ($newStatus) {
-                        ?>
+    if ($actionType === ExpirationActionsAbstract::CHANGE_POST_STATUS) {
+        $newStatus = $postModel->getExpirationNewStatus();
+        $newStatus = get_post_status_object($newStatus);
+        if ($newStatus) {
+            ?>
                         <div class="future-action-gray">[<?php echo esc_html($newStatus->label); ?>]</div>
-                        <?php
-                    }
-                }
-            }
+                <?php
+        }
+    }
+}
         } else {
             ?>
             <span class="dashicons dashicons-warning icon-missed" aria-hidden="true"></span>
@@ -97,11 +117,6 @@ $actionTerms = implode(',', $postModel->getExpirationCategoryIDs());
                 'post-expirator'
             );
         }
-    } else {
-        ?>
-        <span aria-hidden="true">—</span>
-        <span class="screen-reader-text"><?php echo esc_html__('No future action', 'post-expirator'); ?></span>
-        <?php
     }
     ?>
 </div>

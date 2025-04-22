@@ -4,16 +4,22 @@ Tags: Meta Pixel, Meta Conversion API, Google Analytics 4, Google Tag Manager, G
 Requires at least: 3.0.1
 Requires PHP: 5.4
 Tested up to: 6.7
-Stable tag: 10.0.2
+Stable tag: 10.2.0.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Add your Meta Pixel (the old Facebook Pixel) with Conversion API support, Google Analytics (GA4) with Google Consent Mode support, or Google Tag Manager. The plugin also offers Head and Footer scripts with various options. 
+Add Meta Pixel with Conversion API, Google Analytics (GA4) + Consent Mode, Google Tag Manager, and Head & Footer scripts. 
 
 == Description ==
 **PixelYourSite Free Version: Complete Tracking Solution for the Meta Pixel, Google Analytics 4, and Google Tag Manager.**
 
 Easily integrate Meta Pixel with full Conversion API support, Google Analytics 4, and Google Tag Manager into your WordPress site. Plus, use our simple Head and Footer script option to add any custom script you need for advanced tracking and optimization. The Pinterest Tag can be implemented via this [paid add-on](https://www.pixelyoursite.com/pinterest-tag). Similar paid add-on for the [Bing tag](https://www.pixelyoursite.com/plugins/pixelyoursite-professional/bing-tag-add-on)
+
+**Free training:** 
+
+We have a YouTube channel called [PixelYourSite](https://www.youtube.com/channel/UCnie2zvwAjTLz9B4rqvAlFQ) where we explain a lot of stuff about the plugin, Meta API, Google Analytics, Google Ads, TikTok and so on. Check this to learn **how to improve your Meta EMQ score with Facebook Login** (facebook_login_id):
+
+[youtube https://www.youtube.com/watch?v=Wv6KhJQqFL4]
 
 **PixelYourSite will help you:**
 
@@ -95,6 +101,8 @@ Easily integrate Meta Pixel with full Conversion API support, Google Analytics 4
 
 * It can fire GA4 tags with Google Consent Mode granted.
 
+* Dedicated filter that enables Meta Limited Data Use.
+
 * It's fully integrated with [ConsentMagic](https://www.pixelyoursite.com/plugins/consentmagic).
 
 
@@ -103,14 +111,6 @@ Easily integrate Meta Pixel with full Conversion API support, Google Analytics 4
 PixelYourSite is known for its easy integration of the Meta Pixel, Google Analytics, TikTok (paid), Pinterest (paid add-on), and Bing (paid add-on). What makes it special is its new Google Tag Manager integration, pushing all events into the GTM data layer with no coding required.
 
 GTM Container Import: to simplify GTM setup we offer you a GTM Container Import file that will configure triggers for all our events and variables for all our parameters. Version 1.0 of this file comes with Google Analytics 4 tags pre-configured: [Watch this video to learn more](https://www.youtube.com/watch?v=qKJ3mmCgT3M).
-
-
-**Free training:** 
-
-We have a YouTube channel called [PixelYourSite](https://www.youtube.com/channel/UCnie2zvwAjTLz9B4rqvAlFQ) where we explain a lot of stuff about the plugin, Meta API, Google Analytics, Google Ads, TikTok and so on. Check this video about a Meta Events Manager option that can RUIN your conversion tracking:
-
-[youtube https://www.youtube.com/watch?v=4eMKGxT7qMk]
-
 
 
 **Key resources:**
@@ -154,6 +154,8 @@ The list of paid feature is long and growing:
 * More parameters for our events, including landing page, traffic source, or UTMs tracking.
 
 * More triggers for your own events: Clicks on links and CSS Selectors, Number of Page Views, Mouse over CSS Selectors, Embedded video views, Email link click, Page scroll, Post type, and direct integrations with various Form plugins plus Elementor forms.
+
+* More events triggers on top of the ones available in the free version (URL filters, Device, User role): URL parameters, Landing page, Source.
 
 * Better tracking of user data for an improved EMQ score, including the ability to get user data from forms, or URLs.
 
@@ -303,6 +305,9 @@ There are several triggers you can use:
 
 *URL includes (supports delay)
 *URL equals (supports delay)
+*Home page
+*Page scroll
+*Post type
 *Click on HTML link (pro)
 *Click on CSS Selector (pro)
 *Mouse over CSS Selector (pro)
@@ -382,6 +387,139 @@ NO, absolutely not! We don't track any type of data about your website. We simpl
 
 
 == Changelog ==
+
+= PixelYourSite 10.2.0.2 =
+
+April 16, 2025
+
+* Fixed a potential issue with WooCommerce variations IDs when hooks were selected for the AddToCart event. 
+
+* Fixed a potential conflict with a discount plugin.
+
+* WordPress 6.8 compatibility check.
+
+= PixelYourSite 10.2.0.1 =
+
+April 15, 2025
+
+* Changes and improvements in the way the plugin works with caches.
+
+
+= PixelYourSite 10.2.0 =
+
+April 7, 2025
+
+* Social Connect by PixelYourSite (new plugin) integration: PixelYourSite can use the facebook_login_id for Meta, increasing Meta EMQ score and improving tracking performance.
+
+* Fixing a possible issue resulting in GDPR filters loading twice. 
+
+* Fixing a small bug resulting in “PHP Warning: Undefined array key “REMOTE_ADDR…”
+
+* Other small code improvements. 
+
+
+= PixelYourSite 10.1.3 =
+
+March 31, 2025
+
+* Fixing a possible issue with the Google dataLayer names.
+
+* Updating Google noscript image URL to reflect the current v 2 version.
+
+* Fixing the short description in the readme file to fit the 150 characters limit. 
+
+* Declaring support for WooCommerce 9.7
+
+
+= PixelYourSite 10.1.2.2 =
+
+March 4, 2025
+
+* Fix for a code problem potentially resulting in PHP Fatal error: Uncaught TypeError: call_user_func_array(): Argument #1 ($callback) must be a valid callback, function "adminNoticeUADismissHandler" not found or invalid function
+
+
+= PixelYourSite 10.1.2 =
+
+February 28, 2025
+
+* Fixing a possible error in the code.
+
+= PixelYourSite 10.1.1.2 =
+
+February 28, 2025
+
+* Small code improvements and security enhancements. 
+
+* Declaring compatibility for WooCommerce 9.7
+
+= PixelYourSite 10.1.1.1 =
+
+February 19, 2025
+
+* Small code change to avoid errors when unsupported versions of Pinterest or Bing add-ons are used. 
+
+= PixelYourSite 10.1.1 =
+
+February 19, 2025
+
+* Fixing a potential resulting in the "Disable the plugin for known web crawlers" option could not be changed. 
+
+* Fixing a bug related to custom event duplication. 
+
+* Ensuring compatibility with the rennet version of the Pinterest and Bing add-ons.
+
+* Small UI changes. 
+
+= PixelYourSite 10.1.0 =
+
+February 5, 2025
+
+* New events triggers: Home page, Page scroll, Post type.
+
+* New events conditions: URL Contains, URL Match, Device, User role.
+
+* A new filter for Meta Limited Data Use. Developers of consent solutions can use it to control LDU for our Meta pixel and CAPI events. This filter is already used by ConsentMagic (our consent plugin) when the LDU option is enabled. ConsentMagic has a LDU consent rule targeting supported US states. 
+
+* Vide links updates.
+
+* We replaced internal used images with the SVG format.
+
+* Fixing a possible error with /includes/class-custom-event.php around line 292
+
+* Fixing possible issues and code improvements. 
+
+
+= PixelYourSite 10.0.4 =
+
+January 16, 2025
+
+* New Meta settings allow you to disable event parameters that can track Protected Health Information (PHI). Recommended for websites with medical content. 
+
+* Fixing some possible issues with WooCommerce events values when taxes are used. 
+
+* Fixing a possible issue with Sunshine Photo Cart Checkout
+
+* Fixing a possible issue with Cookiebot. 
+
+* Fixing a small problem with GTM scripts when the option is turned OFF. 
+
+* Updating the UI to reflect pro triggers for WooCommerce websites. 
+
+
+= PixelYourSite 10.0.3.1 =
+
+December 27, 2024
+
+* Small code changes to ensure that Google tags installed by third-party solutions are in no way affected by the plugin when no Google tag ID is present in the settings. 
+
+= PixelYourSite 10.0.3 =
+
+December 17, 2024
+
+* New options allow control of how tracking works for subdomains-domain environments (our native landing page, traffic source, and UTMs tracking). The free version tracks this data for WooCommerce and EDD orders. The pro version tracks it as events parameters too, and makes it available in dedicated reports.
+
+* A new event that tracks 404 errors – Google Analytics (default ON) and GTM (default OFF). 
+
 
 = PixelYourSite 10.0.2 =
 

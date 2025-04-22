@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2024, Ramble Ventures
+ * Copyright (c) 2025, Ramble Ventures
  */
 
 namespace PublishPress\Future\Core;
@@ -22,13 +22,14 @@ use PublishPress\Future\Modules\Expirator\Migrations\V30104ArgsColumnLength;
 use PublishPress\Future\Modules\Expirator\PostMetaAbstract;
 use PublishPress\Future\Modules\Settings\SettingsFacade;
 use PublishPress\Future\Modules\Workflows\Migrations\V40000WorkflowScheduledStepsSchema;
+use PublishPress\Future\Modules\Workflows\Migrations\V040500OnScheduledStepsSchema;
 use Throwable;
 
 defined('ABSPATH') or die('Direct access not allowed.');
 
 class Plugin implements InitializableInterface
 {
-    const LOG_PREFIX = '[Plugin]';
+    public const LOG_PREFIX = '[Plugin]';
 
     /**
      * @var bool
@@ -185,6 +186,7 @@ class Plugin implements InitializableInterface
                 // Fresh install. Run migrations that create the DB tables.
                 $container->get(ServicesAbstract::HOOKS)->doAction(V30000ActionArgsSchema::HOOK);
                 $container->get(ServicesAbstract::HOOKS)->doAction(V40000WorkflowScheduledStepsSchema::HOOK);
+                $container->get(ServicesAbstract::HOOKS)->doAction(V040500OnScheduledStepsSchema::HOOK);
             } else {
                 if (version_compare($version, '1.6.1') === -1) {
                     update_option('expirationdateDefaultDate', POSTEXPIRATOR_EXPIREDEFAULT);
@@ -298,6 +300,12 @@ class Plugin implements InitializableInterface
                         V40000WorkflowScheduledStepsSchema::HOOK
                     );
                 }
+
+                if (version_compare($version, '4.5.0', '<')) {
+                    $container->get(ServicesAbstract::HOOKS)->doAction(
+                        V040500OnScheduledStepsSchema::HOOK
+                    );
+                }
             }
 
             $this->hooks->doAction(HooksAbstract::ACTION_UPGRADE_PLUGIN, $version);
@@ -311,13 +319,21 @@ class Plugin implements InitializableInterface
         }
     }
 
-    public static function getScriptUrl($script)
+    public static function getScriptUrl(string $script): string
     {
         $extension = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '.js' : '.min.js';
 
+        return self::getAssetUrl('js/' . $script . $extension);
+    }
+
+    /**
+     * @since 4.3.1
+     */
+    public static function getAssetUrl(string $asset): string
+    {
         $container = Container::getInstance();
         $baseUrl = $container->get(ServicesAbstract::BASE_URL);
 
-        return $baseUrl . 'assets/js/' . $script . $extension;
+        return $baseUrl . 'assets/' . $asset;
     }
 }

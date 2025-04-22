@@ -7,122 +7,121 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-12-09T15:08:10+00:00\n"
+"POT-Creation-Date: 2025-04-02T17:30:10+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: post-expirator\n"
 
-#: components/data-fields/conditional.jsx:85
-msgid "Edit condition"
-msgstr ""
-
-#: components/data-fields/conditional.jsx:94
-msgid "This conditional will only be evaluated in the Pro version. In the Free version, it will always return true."
-msgstr ""
-
-#: components/data-fields/conditional.jsx:106
-msgid "Condition"
-msgstr ""
-
-#: components/data-fields/conditional.jsx:122
+#: components/data-fields/conditional/components/conditional-hoc.jsx:41
 msgid "Add Group"
 msgstr ""
 
-#: components/data-fields/conditional.jsx:123
+#: components/data-fields/conditional/components/conditional-hoc.jsx:42
 msgid "Add Rule"
 msgstr ""
 
-#: components/data-fields/date-offset.jsx:75
-msgid "As soon as possible"
+#: components/data-fields/conditional/components/conditional-hoc.jsx:55
+msgid "Condition"
 msgstr ""
 
-#: components/data-fields/date-offset.jsx:76
-msgid "On a specific date"
+#: components/data-fields/conditional/components/conditional-hoc.jsx:56
+msgid "Create rules that will continue the workflow only if certain conditions are met."
 msgstr ""
 
-#: components/data-fields/date-offset.jsx:77
-msgid "Relative to a specific date"
+#: components/data-fields/conditional/components/conditional-hoc.jsx:57
+msgid "Edit condition"
 msgstr ""
 
-#: components/data-fields/date-offset.jsx:81
+#: components/data-fields/conditional/components/conditional-hoc.jsx:58
+msgid "Conditional logic is a Pro feature. Upgrade to create advanced conditions for your workflows."
+msgstr ""
+
+#: components/data-fields/conditional/components/not-toggle.jsx:30
+msgid "Not"
+msgstr ""
+
+#: components/data-fields/date-offset/index.jsx:61
 msgid "Selected in the calendar"
 msgstr ""
 
-#: components/data-fields/date-offset.jsx:82
+#: components/data-fields/date-offset/index.jsx:62
+#: components/data-fields/post-data/post-date.jsx:59
 msgid "When the trigger is activated"
 msgstr ""
 
-#: components/data-fields/date-offset.jsx:83
+#: components/data-fields/date-offset/index.jsx:63
+#: components/data-fields/post-data/post-date.jsx:63
 msgid "When the step is activated"
 msgstr ""
 
-#: components/data-fields/date-offset.jsx:138
-msgid "When to run"
+#: components/data-fields/date-offset/index.jsx:64
+#: components/data-fields/date-offset/index.jsx:139
+#: components/data-fields/post-data/post-date.jsx:72
+msgid "Custom date source"
 msgstr ""
 
-#: components/data-fields/date-offset.jsx:147
+#: components/data-fields/date-offset/index.jsx:80
+msgid "As soon as possible"
+msgstr ""
+
+#: components/data-fields/date-offset/index.jsx:81
+msgid "On a specific date"
+msgstr ""
+
+#: components/data-fields/date-offset/index.jsx:82
+msgid "Relative to a specific date"
+msgstr ""
+
+#: components/data-fields/date-offset/index.jsx:86
+msgid "Unchanged"
+msgstr ""
+
+#: components/data-fields/date-offset/index.jsx:119
 msgid "Date source"
 msgstr ""
 
-#: components/data-fields/date-offset.jsx:163
+#: components/data-fields/date-offset/index.jsx:147
+msgid "Click the button to choose a custom date source from variables that can provide a date."
+msgstr ""
+
+#: components/data-fields/date-offset/index.jsx:159
 msgid "Offset"
 msgstr ""
 
-#: components/data-fields/date-offset.jsx:170
+#: components/data-fields/date-offset/index.jsx:168
 msgid "Date Preview"
 msgstr ""
 
-#: components/data-fields/date-offset.jsx:171
+#: components/data-fields/date-offset/index.jsx:169
 msgid "Current Date"
 msgstr ""
 
-#: components/data-fields/date-offset.jsx:172
+#: components/data-fields/date-offset/index.jsx:170
 msgid "Computed Date"
 msgstr ""
 
-#: components/data-fields/date-offset.jsx:181
+#: components/data-fields/date-offset/index.jsx:181
 msgid "Error: "
 msgstr ""
 
-#: components/data-fields/date-offset.jsx:186
+#: components/data-fields/date-offset/index.jsx:188
 msgid "Click for more information"
 msgstr ""
 
-#: components/data-fields/date-offset.jsx:194
+#: components/data-fields/date-offset/index.jsx:197
 msgid "For more information on formatting, see the %sPHP strtotime function%s. For example, you could enter %s+1 month%s or %s+1 week 2 days 4 hours 2 seconds%s or %snext Thursday%s. Please use only phrases in English."
 msgstr ""
 
-#: components/data-fields/date-offset.jsx:216
-msgid "Repeating Action"
-msgstr ""
-
-#: components/data-fields/date-offset.jsx:230
-msgid "Unique ID Expression"
-msgstr ""
-
-#: components/data-fields/date-offset.jsx:233
-msgid "Define a custom expression for a unique task ID. Use placeholders like {{onSavePost1.post.ID}}, {{global.user.ID}} or {{global.execution_id}} to make sure the ID is unique."
-msgstr ""
-
-#: components/data-fields/date-offset.jsx:239
-msgid "Priority"
-msgstr ""
-
-#: components/data-fields/date-offset.jsx:242
-msgid "Sets the execution priority of the scheduled step. Lower numbers indicate higher priority and are executed first."
-msgstr ""
-
-#: components/data-fields/debug-data.jsx:7
+#: components/data-fields/debug-data.jsx:39
 msgid "All received input"
 msgstr ""
 
-#: components/data-fields/debug-data.jsx:22
-#: components/data-fields/debug-data.jsx:49
+#: components/data-fields/debug-data.jsx:43
 msgid "Custom data"
 msgstr ""
 
-#: components/data-fields/debug-data.jsx:41
-msgid "Data to output"
+#: components/data-fields/debug-data.jsx:64
+msgid "Select the data to output"
 msgstr ""
 
 #: components/data-fields/debug-levels.jsx:7
@@ -157,44 +156,239 @@ msgstr ""
 msgid "Level"
 msgstr ""
 
-#: components/data-fields/email-recipient.jsx:13
-msgid "Custom Addresses"
-msgstr ""
-
-#: components/data-fields/email-recipient.jsx:34
-msgid "Email Recipient"
-msgstr ""
-
-#: components/data-fields/email-recipient.jsx:41
-msgid "Custom Email Addresses"
-msgstr ""
-
-#: components/data-fields/post-query.jsx:46
-msgid "Post Type"
-msgstr ""
-
-#: components/data-fields/post-query.jsx:53
-msgid "Post selection"
-msgstr ""
-
-#: components/data-fields/post-query.jsx:56
-msgid "Post received as input"
-msgstr ""
-
-#: components/data-fields/post-query.jsx:57
-msgid "Custom query"
-msgstr ""
-
-#: components/data-fields/post-query.jsx:77
-msgid "Post ID"
-msgstr ""
-
-#: components/data-fields/post-query.jsx:83
+#: components/data-fields/expression-builder/autocompleters/post-statuses.jsx:10
+#: components/data-fields/post-query/index.jsx:117
+#: components/data-fields/post-search-query/components/query-fields.jsx:29
 msgid "Post Status"
 msgstr ""
 
-#: components/data-fields/post-query.jsx:94
+#: components/data-fields/expression-builder/autocompleters/post-types.jsx:10
+#: components/data-fields/post-query/index.jsx:50
+#: components/data-fields/post-search-query/components/query-fields.jsx:33
+msgid "Post Type"
+msgstr ""
+
+#: components/data-fields/expression-builder/column-item.jsx:24
+msgid "Insert"
+msgstr ""
+
+#: components/data-fields/expression-builder/index.jsx:135
+msgid "Edit"
+msgstr ""
+
+#: components/data-fields/expression-builder/index.jsx:178
+msgid "Select a variable from the list below."
+msgstr ""
+
+#: components/data-fields/expression-builder/index.jsx:182
+msgid "Type your expression here or use the variables below."
+msgstr ""
+
+#: components/data-fields/expression-builder/index.jsx:209
+msgid "Variables"
+msgstr ""
+
+#: components/data-fields/expression-builder/index.jsx:212
+msgid "Double-click on a variable to select it."
+msgstr ""
+
+#: components/data-fields/expression-builder/index.jsx:216
+msgid "Double-click on any variable to add it to your expression."
+msgstr ""
+
+#: components/data-fields/expression-builder/index.jsx:228
+msgid "Hover over a variable to see its description."
+msgstr ""
+
+#: components/data-fields/help-link.jsx:5
+msgid "Learn more"
+msgstr ""
+
+#: components/data-fields/post-data/index.jsx:32
+#: components/data-fields/post-search-query/components/query-fields.jsx:25
+msgid "Post Date"
+msgstr ""
+
+#: components/data-fields/post-data/index.jsx:38
+msgid "Update the post date"
+msgstr ""
+
+#: components/data-fields/post-data/index.jsx:42
+#: components/data-fields/post-search-query/components/query-fields.jsx:9
+msgid "Post Title"
+msgstr ""
+
+#: components/data-fields/post-data/index.jsx:48
+msgid "Update the post title"
+msgstr ""
+
+#: components/data-fields/post-data/index.jsx:52
+msgid "Post Name"
+msgstr ""
+
+#: components/data-fields/post-data/index.jsx:58
+msgid "Update the post name"
+msgstr ""
+
+#: components/data-fields/post-data/index.jsx:62
+#: components/data-fields/post-search-query/components/query-fields.jsx:13
+msgid "Post Content"
+msgstr ""
+
+#: components/data-fields/post-data/index.jsx:68
+msgid "Update the post content"
+msgstr ""
+
+#: components/data-fields/post-data/index.jsx:72
+#: components/data-fields/post-search-query/components/query-fields.jsx:17
+msgid "Post Excerpt"
+msgstr ""
+
+#: components/data-fields/post-data/index.jsx:78
+msgid "Update the post excerpt"
+msgstr ""
+
+#: components/data-fields/post-data/index.jsx:82
+msgid "Post Discussion"
+msgstr ""
+
+#: components/data-fields/post-data/index.jsx:86
+msgid "Update the post discussion"
+msgstr ""
+
+#: components/data-fields/post-data/index.jsx:90
+msgid "Post Password"
+msgstr ""
+
+#: components/data-fields/post-data/index.jsx:96
+msgid "Update the post password"
+msgstr ""
+
+#: components/data-fields/post-data/index.jsx:100
+#: components/data-fields/post-query/index.jsx:132
+#: components/data-fields/post-search-query/components/query-fields.jsx:21
+msgid "Post Author"
+msgstr ""
+
+#: components/data-fields/post-data/index.jsx:106
+msgid "Update the post author"
+msgstr ""
+
+#: components/data-fields/post-data/post-author.jsx:62
+msgid "Unable to load the list of authors. Please try again."
+msgstr ""
+
+#: components/data-fields/post-data/post-author.jsx:80
+#: components/data-fields/post-data/post-date.jsx:84
+#: components/data-fields/post-data/post-discussion.jsx:32
+#: components/data-fields/post-data/post-text.jsx:27
+msgid "Do not update"
+msgstr ""
+
+#: components/data-fields/post-data/post-author.jsx:102
+msgid "Author"
+msgstr ""
+
+#: components/data-fields/post-data/post-discussion.jsx:36
+msgid "Comments only"
+msgstr ""
+
+#: components/data-fields/post-data/post-discussion.jsx:37
+#: components/data-fields/post-data/post-discussion.jsx:56
+msgid "Closed"
+msgstr ""
+
+#: components/data-fields/post-data/post-discussion.jsx:38
+msgid "Pings only"
+msgstr ""
+
+#: components/data-fields/post-data/post-discussion.jsx:39
+#: components/data-fields/post-data/post-discussion.jsx:51
+msgid "Open"
+msgstr ""
+
+#: components/data-fields/post-data/post-discussion.jsx:46
+msgid "Changed..."
+msgstr ""
+
+#: components/data-fields/post-data/post-discussion.jsx:53
+msgid "Visitors can add new comments and replies."
+msgstr ""
+
+#: components/data-fields/post-data/post-discussion.jsx:58
+msgid "Visitors can not add new comments or replies. Existing comments remain visible."
+msgstr ""
+
+#: components/data-fields/post-data/post-discussion.jsx:97
+msgid "Enable pinbacks & trackbacks"
+msgstr ""
+
+#: components/data-fields/post-data/post-discussion.jsx:104
+msgid "Learn more about pinbacks & trackbacks"
+msgstr ""
+
+#: components/data-fields/post-data/post-text.jsx:31
+msgid "Clear content"
+msgstr ""
+
+#: components/data-fields/post-filter/components/post-filter.jsx:83
+msgid "Post Filter"
+msgstr ""
+
+#: components/data-fields/post-filter/components/post-filter.jsx:84
+msgid "Create filters to query specific posts based on conditions."
+msgstr ""
+
+#: components/data-fields/post-filter/components/post-filter.jsx:85
+msgid "Edit filters"
+msgstr ""
+
+#: components/data-fields/post-query/index.jsx:78
+msgid "Post selection"
+msgstr ""
+
+#: components/data-fields/post-query/index.jsx:81
+msgid "Post received as input"
+msgstr ""
+
+#: components/data-fields/post-query/index.jsx:82
+#: components/data-fields/user-query.jsx:61
+msgid "Custom query"
+msgstr ""
+
+#: components/data-fields/post-query/index.jsx:105
+#: components/data-fields/post-search-query/components/query-fields.jsx:5
+msgid "Post ID"
+msgstr ""
+
+#: components/data-fields/post-query/index.jsx:145
+msgid "Post Terms"
+msgstr ""
+
+#: components/data-fields/post-query/index.jsx:160
+#: components/data-fields/user-query.jsx:95
+msgid "Separate multiple values with commas or Enter key."
+msgstr ""
+
+#: components/data-fields/post-query/index.jsx:166
+#: components/data-fields/user-query.jsx:101
 msgid "* Required field"
+msgstr ""
+
+#: components/data-fields/post-search-query/components/post-search-query.jsx:84
+msgid "Post Search Query"
+msgstr ""
+
+#: components/data-fields/post-search-query/components/post-search-query.jsx:85
+msgid "Create a search query to filter posts based on conditions."
+msgstr ""
+
+#: components/data-fields/post-search-query/components/post-search-query.jsx:86
+msgid "Edit query"
+msgstr ""
+
+#: components/data-fields/post-search-query/components/query-fields.jsx:37
+msgid "Post Parent"
 msgstr ""
 
 #: components/data-fields/post-status.jsx:40
@@ -237,6 +431,22 @@ msgstr ""
 msgid "Custom interval in seconds"
 msgstr ""
 
+#: components/data-fields/schedule.jsx:127
+msgid "Repeating Action"
+msgstr ""
+
+#: components/data-fields/schedule.jsx:131
+msgid "Choose how often this task should repeat. Select 'Non-repeating' for a one-time action or set an interval for automatic recurrence."
+msgstr ""
+
+#: components/data-fields/schedule.jsx:148
+msgid "Unique Task Identifier"
+msgstr ""
+
+#: components/data-fields/schedule.jsx:154
+msgid "Define a unique ID to detect and prevent duplicate tasks."
+msgstr ""
+
 #: components/data-fields/taxonomy-terms.jsx:60
 msgid "Taxonomy"
 msgstr ""
@@ -254,11 +464,27 @@ msgstr ""
 msgid "Terms"
 msgstr ""
 
-#: components/flow-editor/index.jsx:317
+#: components/data-fields/user-query.jsx:44
+msgid "User Role"
+msgstr ""
+
+#: components/data-fields/user-query.jsx:57
+msgid "User selection"
+msgstr ""
+
+#: components/data-fields/user-query.jsx:60
+msgid "User received as input"
+msgstr ""
+
+#: components/data-fields/user-query.jsx:84
+msgid "User ID"
+msgstr ""
+
+#: components/flow-editor/index.jsx:437
 msgid "Applying auto layout."
 msgstr ""
 
-#: components/flow-editor/index.jsx:342
+#: components/flow-editor/index.jsx:462
 msgid "Auto layout applied."
 msgstr ""
 
@@ -266,14 +492,23 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: components/inspector-card/index.jsx:48
-#: components/secondary-sidebar/node-card.jsx:22
+#: components/inspector-card/index.jsx:51
+msgid "Add a description to this step..."
+msgstr ""
+
+#: components/inspector-card/index.jsx:68
+#: components/inspector-card/index.jsx:78
+msgid "Edit description"
+msgstr ""
+
+#: components/inspector-card/index.jsx:116
+#: components/secondary-sidebar/node-card.jsx:16
 msgid "Pro"
 msgstr ""
 
-#: components/inspector-card/index.jsx:59
-#: components/node-types/generic.jsx:164
-#: components/secondary-sidebar/node-card.jsx:35
+#: components/inspector-card/index.jsx:132
+#: components/node-types/generic.jsx:300
+#: components/secondary-sidebar/node-card.jsx:29
 msgid "Currently this step is being skipped. Upgrade to Pro to unlock this feature."
 msgstr ""
 
@@ -308,6 +543,15 @@ msgstr ""
 #. translators: button label text should, if possible, be under 16 characters.
 #: components/left-toolbar/undo.jsx:31
 msgid "Undo"
+msgstr ""
+
+#: components/loading-message/index.jsx:7
+#: components/node-dev-info-panel/index.jsx:18
+msgid "Loading..."
+msgstr ""
+
+#: components/loading-message/index.jsx:12
+msgid "Wait, we are loading the workflow..."
 msgstr ""
 
 #. translators: button label text should, if possible, be under 16 characters.
@@ -426,53 +670,57 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: components/node-dev-info-panel/index.jsx:18
-msgid "Loading..."
-msgstr ""
-
 #: components/node-dev-info-panel/index.jsx:23
 msgid "Developer Info"
 msgstr ""
 
-#: components/node-dev-info-panel/index.jsx:30
+#: components/node-dev-info-panel/index.jsx:31
 #: components/node-inspector/node-inspector-card.jsx:18
-#: components/node-types/generic.jsx:44
+#: components/node-types/generic.jsx:109
 msgid "Node"
 msgstr ""
 
-#: components/node-dev-info-panel/index.jsx:43
+#: components/node-dev-info-panel/index.jsx:41
+msgid "Node Data"
+msgstr ""
+
+#: components/node-dev-info-panel/index.jsx:51
+msgid "Node Settings"
+msgstr ""
+
+#: components/node-dev-info-panel/index.jsx:65
 msgid "Node Type"
 msgstr ""
 
-#: components/node-inspector/index.jsx:101
+#: components/node-inspector/index.jsx:99
 msgid "No element selected."
 msgstr ""
 
-#: components/node-inspector/index.jsx:109
+#: components/node-inspector/index.jsx:107
 msgid "Multiple and different elements selected."
 msgstr ""
 
-#: components/node-inspector/index.jsx:119
+#: components/node-inspector/index.jsx:117
 msgid "%d steps selected"
 msgstr ""
 
-#: components/node-inspector/index.jsx:122
+#: components/node-inspector/index.jsx:120
 msgid "Multiple steps selected."
 msgstr ""
 
-#: components/node-inspector/index.jsx:133
+#: components/node-inspector/index.jsx:131
 msgid "%d connections selected"
 msgstr ""
 
-#: components/node-inspector/index.jsx:136
+#: components/node-inspector/index.jsx:134
 msgid "Multiple connections selected."
 msgstr ""
 
-#: components/node-inspector/index.jsx:169
+#: components/node-inspector/index.jsx:166
 msgid "Connection"
 msgstr ""
 
-#: components/node-inspector/index.jsx:170
+#: components/node-inspector/index.jsx:167
 msgid "The connection between nodes in the workflow. Signifies the path along which data or control flow one node to another."
 msgstr ""
 
@@ -505,10 +753,22 @@ msgid "This step does not output any data."
 msgstr ""
 
 #: components/node-inspector/node-data-flow-panel.jsx:125
-msgid "Global Variables"
+msgid "Step Scoped Variables"
 msgstr ""
 
 #: components/node-inspector/node-data-flow-panel.jsx:129
+msgid "This step receives the following step scoped variables:"
+msgstr ""
+
+#: components/node-inspector/node-data-flow-panel.jsx:140
+msgid "This step does not have any step scoped variables."
+msgstr ""
+
+#: components/node-inspector/node-data-flow-panel.jsx:145
+msgid "Global Variables"
+msgstr ""
+
+#: components/node-inspector/node-data-flow-panel.jsx:149
 msgid "No global variables are declared"
 msgstr ""
 
@@ -516,30 +776,42 @@ msgstr ""
 msgid "No description"
 msgstr ""
 
-#: components/node-types/generic.jsx:97
+#: components/node-types/generic.jsx:57
+msgid "Unknown node: %s"
+msgstr ""
+
+#: components/node-types/generic.jsx:58
+msgid "This is a placeholder node for a node that does not exist."
+msgstr ""
+
+#: components/node-types/generic.jsx:214
 msgid "Step"
 msgstr ""
 
-#: components/node-types/generic.jsx:99
+#: components/node-types/generic.jsx:216
 msgid "Action"
 msgstr ""
 
 #. translators: Patterns tab title in the block inserter.
-#: components/node-types/generic.jsx:101
+#: components/node-types/generic.jsx:218
 #: components/secondary-sidebar/tabs.jsx:30
 msgid "Advanced"
 msgstr ""
 
-#: components/node-types/generic.jsx:103
+#: components/node-types/generic.jsx:220
 msgid "Trigger"
 msgstr ""
 
-#: components/node-types/generic.jsx:142
+#: components/node-types/generic.jsx:267
+msgid "Step actions"
+msgstr ""
+
+#: components/node-types/generic.jsx:273
 #: components/workflow-delete-button/index.jsx:39
 msgid "Delete"
 msgstr ""
 
-#: components/node-types/generic.jsx:172
+#: components/node-types/generic.jsx:308
 msgid "This node has errors"
 msgstr ""
 
@@ -565,41 +837,12 @@ msgstr ""
 msgid "Click to add a trigger"
 msgstr ""
 
-#: components/node-validation-panel/index.jsx:14
+#: components/node-validation-panel/index.jsx:19
 msgid "Validation"
 msgstr ""
 
-#: components/node-validation-panel/index.jsx:31
+#: components/node-validation-panel/index.jsx:49
 msgid "All checks have passed for this step."
-msgstr ""
-
-#: components/node-validator/index.jsx:50
-msgid "This step requires a connection from a previous step."
-msgstr ""
-
-#: components/node-validator/index.jsx:60
-msgid "This step requires a connection to a following step."
-msgstr ""
-
-#: components/node-validator/index.jsx:123
-#: components/node-validator/index.jsx:134
-msgid "The field %s is required."
-msgstr ""
-
-#: components/node-validator/index.jsx:155
-msgid "The field %s must be a valid email address."
-msgstr ""
-
-#: components/node-validator/index.jsx:171
-msgid "The field %s must be a valid email address list separated by commas."
-msgstr ""
-
-#: components/node-validator/index.jsx:185
-msgid "The field %s must be an integer."
-msgstr ""
-
-#: components/node-validator/index.jsx:200
-msgid "The field %s must be an integer list separated by commas."
 msgstr ""
 
 #: components/pro-feature-button/index.jsx:26
@@ -631,7 +874,7 @@ msgstr ""
 msgid "A tip for using the workflow editor"
 msgstr ""
 
-#: components/secondary-sidebar/node-card.jsx:37
+#: components/secondary-sidebar/node-card.jsx:31
 msgid "Drag this node to preview its options in your workflow."
 msgstr ""
 
@@ -746,45 +989,45 @@ msgid "Move to trash"
 msgstr ""
 
 #. translators: button label text should, if possible, be under 16 characters.
-#: components/workflow-publish-button/index.jsx:84
+#: components/workflow-publish-button/index.jsx:79
 msgid "Publish"
 msgstr ""
 
-#: components/workflow-publish-button/index.jsx:84
+#: components/workflow-publish-button/index.jsx:79
 msgid "Update"
 msgstr ""
 
-#: components/workflow-publish-button/index.jsx:95
+#: components/workflow-publish-button/index.jsx:90
 msgid "Autosaving..."
 msgstr ""
 
-#: components/workflow-publish-button/index.jsx:95
+#: components/workflow-publish-button/index.jsx:90
 msgid "Updating..."
 msgstr ""
 
-#: components/workflow-publish-button/index.jsx:97
+#: components/workflow-publish-button/index.jsx:92
 msgid "Updated"
 msgstr ""
 
 #. translators: button label text should, if possible, be under 16 characters.
-#: components/workflow-save-draft-button/index.jsx:87
+#: components/workflow-save-draft-button/index.jsx:82
 msgid "Save draft"
 msgstr ""
 
 #. translators: button label text should, if possible, be under 16 characters.
-#: components/workflow-save-draft-button/index.jsx:90
+#: components/workflow-save-draft-button/index.jsx:85
 msgid "Save"
 msgstr ""
 
-#: components/workflow-save-draft-button/index.jsx:99
+#: components/workflow-save-draft-button/index.jsx:94
 msgid "Autosaving"
 msgstr ""
 
-#: components/workflow-save-draft-button/index.jsx:99
+#: components/workflow-save-draft-button/index.jsx:94
 msgid "Saving"
 msgstr ""
 
-#: components/workflow-save-draft-button/index.jsx:101
+#: components/workflow-save-draft-button/index.jsx:96
 msgid "Saved"
 msgstr ""
 
@@ -796,63 +1039,63 @@ msgstr ""
 msgid "Unable to load the workflow. Please try again."
 msgstr ""
 
-#: components/workflow-store/actions.jsx:87
+#: components/workflow-store/actions.jsx:91
 msgid "Workflow saved as draft."
 msgstr ""
 
-#: components/workflow-store/actions.jsx:95
-#: components/workflow-store/actions.jsx:132
+#: components/workflow-store/actions.jsx:99
+#: components/workflow-store/actions.jsx:149
 msgid "Unable to save workflow. Please, try again."
 msgstr ""
 
-#: components/workflow-store/actions.jsx:124
+#: components/workflow-store/actions.jsx:141
 msgid "Workflow saved."
 msgstr ""
 
-#: components/workflow-store/actions.jsx:170
+#: components/workflow-store/actions.jsx:185
 msgid "Workflow published."
 msgstr ""
 
-#: components/workflow-store/actions.jsx:178
+#: components/workflow-store/actions.jsx:193
 msgid "Unable to publish the workflow. Please, try again."
 msgstr ""
 
-#: components/workflow-store/actions.jsx:216
+#: components/workflow-store/actions.jsx:229
 msgid "Workflow switched to draft."
 msgstr ""
 
-#: components/workflow-store/actions.jsx:224
+#: components/workflow-store/actions.jsx:237
 msgid "Unable to switch workflow to draft. Please, try again."
 msgstr ""
 
-#: components/workflow-store/actions.jsx:314
+#: components/workflow-store/actions.jsx:327
 msgid "Workflow deleted. Redirecting..."
 msgstr ""
 
-#: components/workflow-store/actions.jsx:325
+#: components/workflow-store/actions.jsx:338
 msgid "Unable to delete the workflow. Please, try again."
 msgstr ""
 
-#: components/workflow-summary/index.jsx:44
+#: components/workflow-summary/index.jsx:42
 msgid "Summary"
 msgstr ""
 
-#: components/workflow-summary/index.jsx:50
+#: components/workflow-summary/index.jsx:48
 msgid "Title"
 msgstr ""
 
-#: components/workflow-summary/index.jsx:59
+#: components/workflow-summary/index.jsx:57
 msgid "Description"
 msgstr ""
 
-#: components/workflow-switch-to-draft-button/index.jsx:37
+#: components/workflow-switch-to-draft-button/index.jsx:33
 msgid "Are you sure you want to unpublish this workflow?"
 msgstr ""
 
-#: components/workflow-switch-to-draft-button/index.jsx:62
+#: components/workflow-switch-to-draft-button/index.jsx:52
 msgid "Draft"
 msgstr ""
 
-#: components/workflow-switch-to-draft-button/index.jsx:62
+#: components/workflow-switch-to-draft-button/index.jsx:52
 msgid "Switch to draft"
 msgstr ""

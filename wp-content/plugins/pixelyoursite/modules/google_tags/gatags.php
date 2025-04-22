@@ -42,7 +42,7 @@ class GATags extends Settings {
             PYS_FREE_PATH . '/modules/google_tags/options_defaults.json'
 		);
 
-		$this->isEnabled = GA()->enabled();
+		$this->isEnabled = GA()->configured();
         if($this->isEnabled){
             if(!is_admin() && $this->getOption('gtag_datalayer_type') !== 'disable') {
                 add_action( 'wp_head', array($this,'pys_wp_header_top'), 1, 0 );
@@ -123,7 +123,13 @@ class GATags extends Settings {
                 return $matches[0] . '&l=' . $dataLayerName;
             }
         }, $buffer);
-
+        $buffer = preg_replace_callback(
+            '/window\.dataLayer\s*=\s*window\.dataLayer\s*\|\|\s*\[\];|window\[\'dataLayer\'\]\s*=\s*window\[\'dataLayer\'\]\s*\|\|\s*\[\];/s',
+            function($matches)  use ($dataLayerName) {
+                return str_replace('dataLayer', $dataLayerName, $matches[0]);
+            },
+            $buffer
+        );
         $buffer = preg_replace_callback(
             '/gtag\((.*?)\);/s',
             function($matches)  use ($dataLayerName) {

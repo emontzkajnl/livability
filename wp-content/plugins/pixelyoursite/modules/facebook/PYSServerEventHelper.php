@@ -36,22 +36,24 @@ class ServerEventHelper {
             ->setClientIpAddress(self::getIpAddress())
             ->setClientUserAgent(self::getHttpUserAgent());
 
-        if (!self::getFbp() && (!isset($eventParams['_fbp']) || !$eventParams['_fbp']) && !headers_sent()) {
-            self::setFbp('fb.1.' . time() . '.' . rand(1000000000, 9999999999));
-            if(!headers_sent()){
-                setcookie("_fbp", self::getFbp(), 2147483647,'/');
-            }
-        }
+		if ( Consent()->checkConsent( 'facebook' ) ) {
+			if ( !self::getFbp() && ( !isset( $eventParams[ '_fbp' ] ) || !$eventParams[ '_fbp' ] ) && !headers_sent() ) {
+				self::setFbp( 'fb.1.' . time() . '.' . rand( 1000000000, 9999999999 ) );
+				if ( !headers_sent() ) {
+					setcookie( "_fbp", self::getFbp(), 2147483647, '/', PYS()->general_domain );
+				}
+			}
 
-        if (!self::getFbc() && self::getUrlParameter('fbclid')) {
-            $fbclid = self::getUrlParameter('fbclid');
-            if($fbclid){
-                self::setFbc('fb.1.' . time() . '.' . $fbclid );
-                if(!headers_sent()){
-                    setcookie("_fbc", self::$fbc, 2147483647,'/');
-                }
-            }
-        }
+			if ( !self::getFbc() && self::getUrlParameter( 'fbclid' ) ) {
+				$fbclid = self::getUrlParameter( 'fbclid' );
+				if ( $fbclid ) {
+					self::setFbc( 'fb.1.' . time() . '.' . $fbclid );
+					if ( !headers_sent() ) {
+						setcookie( "_fbc", self::$fbc, 2147483647, '/', PYS()->general_domain );
+					}
+				}
+			}
+		}
 
         $fbp = '';
         $fbc = '';
@@ -99,6 +101,12 @@ class ServerEventHelper {
             ->setCustomData($customData)
             ->setUserData($user_data);
 
+		if ( Facebook()->getLDUMode() ) {
+			$event
+			->setDataProcessingOptions( [ 'LDU' ] )
+			->setDataProcessingOptionsCountry( 0 )
+			->setDataProcessingOptionsState( 0 );
+		}
 
         return $event;
     }
@@ -173,7 +181,8 @@ class ServerEventHelper {
 
         if (!empty($_SERVER['REQUEST_URI'])) {
             $start = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")."://";
-            $request_uri = $start.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+            $host = $_SERVER['HTTP_HOST'] ?? parse_url(get_site_url(), PHP_URL_HOST);
+            $request_uri = $start . $host . $_SERVER['REQUEST_URI'];
         }
         if($removeQuery && isset($_SERVER['QUERY_STRING'])) {
             $request_uri = str_replace("?".$_SERVER['QUERY_STRING'],"",$request_uri);
@@ -298,6 +307,14 @@ class ServerEventHelper {
 				if ( !empty( $user_persistence_data[ 'em' ] ) ) $userData->setEmail( $user_persistence_data[ 'em' ] );
 				if ( !empty( $user_persistence_data[ 'tel' ] ) ) $userData->setPhone( $user_persistence_data[ 'tel' ] );
 
+				$user_id = $order->get_user_id();
+				if ( $user_id && apply_filters( 'pys_send_meta_id', true ) ) {
+					$login_id = get_user_meta( $user_id, '_socplug_social_id_Facebook', true );
+					if ( !empty( $login_id ) ) {
+						$userData->setFbLoginId( $login_id );
+					}
+				}
+
             } else {
                 return ServerEventHelper::getRegularUserData();
             }
@@ -333,12 +350,17 @@ class ServerEventHelper {
 				if ( !empty( $user_persistence_data[ 'em' ] ) ) $userData->setEmail( $user_persistence_data[ 'em' ] );
 				if ( !empty( $user_persistence_data[ 'tel' ] ) ) $userData->setPhone( $user_persistence_data[ 'tel' ] );
 
+				if ( $user_info[ 'id' ] && apply_filters( 'pys_send_meta_id', true ) ) {
+					$login_id = get_user_meta( $user_info[ 'id' ], '_socplug_social_id_Facebook', true );
+					if ( !empty( $login_id ) ) {
+						$userData->setFbLoginId( $login_id );
+					}
+				}
+
 			} else {
                 return ServerEventHelper::getRegularUserData();
             }
         }
-
-
 
         return $userData;
     }
@@ -384,6 +406,11 @@ class ServerEventHelper {
                     $userData->setExternalId(PixelYourSite\PYS()->get_pbid());
                 }
             }
+
+			$login_id = get_user_meta( $user->ID, '_socplug_social_id_Facebook', true );
+			if ( !empty( $login_id ) && apply_filters( 'pys_send_meta_id', true ) ) {
+				$userData->setFbLoginId( $login_id );
+			}
         } else {
 			$user_persistence_data = get_persistence_user_data( '', '', '', '' );
             if (PixelYourSite\EventsManager::isTrackExternalId() && isset($_COOKIE['pbid'])) {

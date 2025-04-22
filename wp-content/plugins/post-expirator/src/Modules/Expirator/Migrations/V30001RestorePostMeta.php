@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2024, Ramble Ventures
+ * Copyright (c) 2025, Ramble Ventures
  */
 
 namespace PublishPress\Future\Modules\Expirator\Migrations;
@@ -144,7 +144,7 @@ class V30001RestorePostMeta implements MigrationInterface
     public function formatLogActionColumn($text, $row)
     {
         if ($row['hook'] === self::HOOK) {
-            return __('Restore post meta data after v3.0.1', 'publishpress-future');
+            return __('Restore post meta data after v3.0.1', 'post-expirator');
         }
 
         return $text;

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2024, Ramble Ventures
+ * Copyright (c) 2025, Ramble Ventures
  */
 
 namespace PublishPress\Future\Modules\Expirator\Models;
@@ -124,6 +124,9 @@ class PostTypeDefaultDataModel
         ];
     }
 
+    /**
+     * @throws \Exception
+     */
     public function getActionDateParts(int $postId = null): array
     {
         $dateTimeOffset = $this->getDateTimeOffset($this->postType);

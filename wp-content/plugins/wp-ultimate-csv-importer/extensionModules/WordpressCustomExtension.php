@@ -84,7 +84,7 @@ class WordpressCustomExtension extends ExtensionHandler{
             $pods[] = $pods_fields->post_name;  
         }
   
-        if(is_plugin_active('meta-box/meta-box.php')){
+		if(is_plugin_active('meta-box/meta-box.php') || is_plugin_active('meta-box-aio/meta-box-aio.php')){
             $metabox_fields = [];
             $import_as = $this->import_post_types($import_types);
             $get_metabox_fields = \rwmb_get_object_fields( $import_as );
@@ -203,7 +203,33 @@ class WordpressCustomExtension extends ExtensionHandler{
                 "masterstudy-lms-learning-management-system/masterstudy-lms-learning-management-system.php",  
                 "seo-by-rank-math/rank-math.php",
                 "seo-by-rank-math-pro/rank-math-pro.php",
-                "jet-booking/jet-booking.php"
+                "jet-booking/jet-booking.php",
+                "jet-reviews/jet-reviews.php",
+                "jet-engine/jet-engine.php",
+                "advanced-custom-fields/acf.php",
+                "lifterlms/lifterlms.php",  
+                "advanced-custom-fields-pro/acf.php",
+                "acf-repeater/acf-repeater.php",
+                "types/wpcf.php",
+                "pods/init.php",
+                "woocommerce/woocommerce.php",
+                "woocommerce-product-bundles/woocommerce-product-bundles.php",
+                "meta-box/meta-box.php",
+                "meta-box-aio/meta-box-aio.php",
+                "polylang/polylang.php",
+                "featured-image-from-url/featured-image-from-url.php",
+                "events-manager/events-manager.php",
+                "elementor-pro/elementor-pro.php",
+                "nextgen-gallery/nggallery.php",
+                "members/members.php",
+                "all-in-one-seo-pack/all_in_one_seo_pack.php",
+                "wp-seopress/seopress.php",
+                "wordpress-seo/wp-seo.php",
+                "bbpress/bbpress.php",
+                "learnpress/learnpress.php",
+                "sitepress-multilingual-cms/sitepress.php",
+                "wp-job-manager/wp-job-manager.php",
+                "wp-customer-reviews/wp-customer-reviews-3.php"
             );
         }
 

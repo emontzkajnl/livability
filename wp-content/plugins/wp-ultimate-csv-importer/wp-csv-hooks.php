@@ -16,6 +16,7 @@ $plugin_ajax_hooks = [
 
     'security_performance',
     'settings_options',
+    'oneClickUpload',
     'get_options',
     'support_mail',
     'send_subscribe_email',
@@ -67,6 +68,7 @@ $plugin_ajax_hooks = [
     'helperImport',
     'helperSearch',
     'needHelper',
+    'wpquery_data'
 ];  
 }
 else {

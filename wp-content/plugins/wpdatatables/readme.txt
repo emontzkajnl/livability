@@ -4,9 +4,9 @@ Author URI: https://tmsproducts.io
 Plugin URI: https://wpdatatables.com/
 Tags: table, table builder, datatable, csv, chart
 Requires at least: 4.0
-Tested up to: 6.7.1
+Tested up to: 6.7.2
 Requires PHP: 7.4
-Stable tag: 3.4.2.34
+Stable tag: 3.4.2.46
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -440,6 +440,54 @@ This can be changed from the “Number format” drop-down menu in the wpDataTab
 13. Google chart settings
 
 == Changelog ==
+= 3.4.2.46 =
+* Minor library fixes.
+
+= 3.4.2.45 =
+* Minor CSS fixes.
+Other small bug fixes and stability improvements.
+
+= 3.4.2.44 =
+* CSS fix for creating tables.
+
+= 3.4.2.43 =
+* CSS fix for issue with the print page.
+Other small bug fixes and stability improvements.
+
+= 3.4.2.42 =
+* Minor CSS fixes.
+Other small bug fixes and stability improvements.
+
+= 3.4.2.41 =
+* Added Hook to Skip Initial Rows in Excel Sheet (wpdatatables_before_get_excel_headers).
+Other small bug fixes and stability improvements.
+
+= 3.4.2.40 =
+* CSS improvements.
+Other small bug fixes and stability improvements.
+
+= 3.4.2.39 =
+* Minor CSS fixes.
+* Compatibility with WordPress 6.7.2 version approved.
+Other small bug fixes and stability improvements.
+
+= 3.4.2.38 =
+* CSS fixes.
+Other small bug fixes and stability improvements.
+
+= 3.4.2.37 =
+* Removed unnecessary files.
+Other small bug fixes and stability improvements.
+
+= 3.4.2.36 =
+* Minor CSS fixes.
+Other small bug fixes and stability improvements.
+
+= 3.4.2.35 =
+* Improved language translations.
+* Minor CSS fixes.
+Other small bug fixes and stability improvements.
+
 = 3.4.2.34 =
 * Fixed issue with undefined method in WPDataChart class.
 Other small bug fixes and stability improvements.

@@ -30,10 +30,9 @@ class DefaultExtension extends ExtensionHandler{
 		$mode = isset($_POST['Mode']) ? sanitize_text_field($_POST['Mode']) :'';
 		$import_types = $data;
 		$import_type = $this->import_name_as($import_types);
-		$response = [];
-		$check_custpost = array('Posts' => 'post', 'Pages' => 'page', 'Users' => 'users', 'Comments' => 'comments', 'CustomerReviews' =>'wpcr3_review', 'Categories' => 'categories', 'Tags' => 'tags', 'WooCommerce' => 'product', 'WPeCommerce' => 'wpsc-product','WPeCommerceCoupons' => 'wpsc-product', 'WooCommerceVariations' => 'product', 'WooCommerceOrders' => 'product', 'WooCommerceCoupons' => 'product', 'WooCommerceRefunds' => 'product', 'CustomPosts' => 'CustomPosts','WooCommerceReviews' => 'reviews');	
-		if ($import_type != 'Users' && $import_type != 'Taxonomies' && $import_type != 'CustomerReviews' && $import_type != 'Comments' && $import_type != 'WooCommerceVariations' && $import_type != 'WooCommerceOrders' && $import_type != 'WooCommerceCoupons' && $import_type != 'WooCommerceRefunds' && $import_type != 'ngg_pictures' && $import_types != 'Booking' && $import_types != 'lp_order' && $import_types != 'nav_menu_item' && $import_types != 'widgets' && $import_type != 'WooCommerceReviews') {
-			$wordpressfields = array(
+		$response = []; 
+		$check_custpost = array('Posts' => 'post', 'Pages' => 'page', 'Users' => 'users', 'Comments' => 'comments', 'CustomerReviews' =>'wpcr3_review', 'Categories' => 'categories', 'Tags' => 'tags', 'WooCommerce' => 'product', 'WPeCommerce' => 'wpsc-product','WPeCommerceCoupons' => 'wpsc-product', 'WooCommerceOrders' => 'product', 'WooCommerceCoupons' => 'product', 'WooCommerceRefunds' => 'product', 'CustomPosts' => 'CustomPosts','WooCommerceReviews' => 'reviews');	
+		if ($import_type != 'Users' && $import_type != 'WooCommerceCustomer' && $import_type != 'Taxonomies' && $import_types != 'JetReviews' && $import_type != 'CustomerReviews' && $import_type != 'Comments' && $import_type != 'WooCommerceOrders' && $import_type != 'WooCommerceCoupons' && $import_type != 'WooCommerceRefunds' && $import_type != 'ngg_pictures' && $import_types != 'JetBooking' && $import_types != 'lp_order' && $import_types != 'nav_menu_item' && $import_types != 'widgets' && $import_type != 'WooCommerceReviews') {			$wordpressfields = array(
                 	'Title' => 'post_title',
                     'ID' => 'ID',
                     'Content' => 'post_content',
@@ -112,7 +111,7 @@ class DefaultExtension extends ExtensionHandler{
 				unset($wordpressfields['Author']);
 			}
 
-			if($import_types == 'lp_quiz' || $import_types == 'lp_question'){
+			if($import_types == 'lp_quiz' || $import_types == 'lp_question' || $import_types == 'wp_font_face' || $import_types == 'wp_font_family' || $import_types == 'wp_global_style' || $import_types == 'wp_template' ){
 				unset($wordpressfields['Format']);
 				unset($wordpressfields['Featured Image']);
 				unset($wordpressfields['Short Description']);
@@ -120,6 +119,7 @@ class DefaultExtension extends ExtensionHandler{
 				unset($wordpressfields['Comment Status']);
 				unset($wordpressfields['Ping Status']);
 				unset($wordpressfields['Track Options']);
+				unset($wordpressfields['Order']);
 			}
 		}
 		if(is_plugin_active('jet-engine/jet-engine.php')){
@@ -192,18 +192,6 @@ class DefaultExtension extends ExtensionHandler{
 				unset($wordpressfields['Refund Id']);
 			}
 		}
-		if($import_type === 'WooCommerceVariations'){
-			$wordpressfields = array(
-					'Product Id' => 'PRODUCTID',
-					'Parent Sku' => 'PARENTSKU',
-					'Variation Sku' => 'VARIATIONSKU',
-					'Variation ID' => 'VARIATIONID',
-					'Featured Image' => 'featured_image',
-					);
-			if($mode == 'Insert'){
-				unset($wordpressfields['Variation ID']);
-			}
-		}
 		if($import_types == 'lp_order'){
 			$wordpressfields = array(
 				'Order Status' => 'order_status',
@@ -225,6 +213,29 @@ class DefaultExtension extends ExtensionHandler{
 			foreach($get_navigation_locations as $nav_key => $nav_values){
 				$wordpressfields[$nav_key] = $nav_key;
 			}
+		}
+		if($import_types === 'JetReviews') {
+			$wordpressfields = array(
+				'ID' => 'ID',
+				'Review Post Id' => 'post_id',                // The ID of the post being reviewed
+				'Review Source' => 'source',                  // Source of the review (e.g., 'post')
+				'Review Post Type' => 'post_type',            // Type of post (e.g., 'post', 'page', etc.)
+				'Review Author' => 'author',                  // ID of the author who wrote the review
+				'Review Date' => 'date',                      // Date of the review
+				'Review Title' => 'title',                    // Title of the review
+				'Review Content' => 'content',                // Content of the review
+				'Review Type Slug' => 'type_slug',            // Slug of the review type (e.g., 'default', etc.)
+				'Review Rating Data' => 'rating_data',        // Serialized rating data
+				'Review Rating' => 'rating',                  // Rating score (e.g., 100)
+				'Review Likes' => 'likes',                    // Number of likes
+				'Review Dislikes' => 'dislikes',              // Number of dislikes
+				'Review Approved' => 'approved',              // Whether the review is approved (1 or 0)
+				'Review Pinned' => 'pinned',                  // Whether the review is pinned (1 or 0)
+			);
+			if($mode == 'Insert'){
+				unset($wordpressfields['ID']);
+			}
+
 		}
 
 		if($import_types == 'widgets') {
@@ -277,7 +288,7 @@ class DefaultExtension extends ExtensionHandler{
 			}	
 		}
 
-		if($import_type == 'Users'){
+		if($import_type == 'Users' || $import_type == 'WooCommerceCustomer'){
 			$wordpressfields = array(
 					'User Login' => 'user_login',
 					'User Pass' => 'user_pass',
@@ -363,11 +374,10 @@ class DefaultExtension extends ExtensionHandler{
 				}
 			}
 		}
-		if ($import_types == 'Booking' && is_plugin_active('jet-booking/jet-booking.php')) {
+		if ($import_types == 'JetBooking' && is_plugin_active('jet-booking/jet-booking.php')) {
 			$wordpressfields = array(
 				'booking_id' => 'booking_id',
 				'status' => 'status',
-				'orderStatus' => 'orderStatus',
 				'apartment_id' => 'apartment_id',
 				'apartment_unit' => 'apartment_unit',
 				'check_in_date' => 'check_in_date',
@@ -377,6 +387,7 @@ class DefaultExtension extends ExtensionHandler{
 				'import_id' => 'import_id',
 				'attributes' => 'attributes',
 				'guests' => 'guests',
+				'orderStatus' => 'orderStatus',
 				);
 		if($mode == 'Insert'){
 			unset($wordpressfields['booking_id']);
@@ -385,7 +396,7 @@ class DefaultExtension extends ExtensionHandler{
 			unset($wordpressfields['orderStatus']);
 			unset($wordpressfields['order_id']);
 			unset($wordpressfields['user_id']);
-			
+			unset($wordpressfields['import_id']);	
 		}
 		}
 		$wordpress_value = $this->convert_static_fields_to_array($wordpressfields);

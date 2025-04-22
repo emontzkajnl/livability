@@ -161,6 +161,11 @@ WPForms.Admin.Builder.Providers = WPForms.Admin.Builder.Providers || ( function(
 					},
 				};
 
+				// Hidden class is used only for initial get connections request when connections are not set yet.
+				if ( custom.data.task !== 'connections_get' ) {
+					$holder.find( '.wpforms-builder-provider-title-spinner' ).removeClass( 'wpforms-hidden' );
+				}
+
 				custom.data = app.ajax._mergeData( provider, custom.data || {} );
 				$.extend( params, custom );
 
@@ -544,9 +549,10 @@ WPForms.Admin.Builder.Providers = WPForms.Admin.Builder.Providers || ( function(
 			for ( const orderNumber in fields ) {
 				const field = fields[ orderNumber ];
 				const id = field.id;
+				const type = field.type;
 				const label = wpf.sanitizeHTML( field.label?.toString().trim() || wpforms_builder.field + ' #' + id );
 
-				options.push( { value: id, text: label } );
+				options.push( { value: id, text: label, type } );
 
 				if ( 'name' !== field.type || ! field.format ) {
 					optionsWithSubfields.push( { value: id, text: label } );
@@ -561,6 +567,9 @@ WPForms.Admin.Builder.Providers = WPForms.Admin.Builder.Providers || ( function(
 				} );
 			}
 
+			// Add ability to filter options for providers before rendering them.
+			app.panelHolder.trigger( 'WPForms.Admin.Builder.Providers.FilterOptions', [ options ] );
+			app.panelHolder.trigger( 'WPForms.Admin.Builder.Providers.FilterOptionsWithSubfields', [ optionsWithSubfields ] );
 			$( '.wpforms-builder-provider-connection-fields-table .wpforms-builder-provider-connection-field-value' ).each( function() {
 				const $select = $( this );
 				const value = $select.val();
@@ -569,10 +578,11 @@ WPForms.Admin.Builder.Providers = WPForms.Admin.Builder.Providers || ( function(
 				// and don't have the support-subfields attribute.
 				const isSupportSubfields = $select.data( 'support-subfields' ) || Boolean( $select.find( 'option[value$=".first"]' ).length );
 				const newOptions = isSupportSubfields ? optionsWithSubfields : options;
+				const placeholder = $select.data( 'placeholder' ) && $select.data( 'placeholder' ).length ? $select.data( 'placeholder' ) : wpforms_builder_providers.custom_fields_placeholder;
 
 				$newSelect.append( $( '<option>', {
 					value: '',
-					text: wpforms_builder_providers.custom_fields_placeholder,
+					text: placeholder,
 				} ) );
 
 				newOptions.forEach( function( option ) {
@@ -722,8 +732,7 @@ WPForms.Admin.Builder.Providers = WPForms.Admin.Builder.Providers || ( function(
 			 * @param {string} provider Current provider slug.
 			 */
 			connectionAdd( provider ) {
-				const providerClass = app.getProviderClass( provider ),
-					defaultValue = providerClass && typeof providerClass.setDefaultModalValue === 'function' ? providerClass.setDefaultModalValue() : '';
+				const defaultValue = app.ui.getDefaultConnectionName( provider ).trim();
 
 				$.confirm( {
 					title: false,
@@ -806,6 +815,47 @@ WPForms.Admin.Builder.Providers = WPForms.Admin.Builder.Providers || ( function(
 						},
 					},
 				} );
+			},
+
+			/**
+			 * Get the default name for a new connection.
+			 *
+			 * @since 1.9.3
+			 *
+			 * @param {string} provider Current provider slug.
+			 *
+			 * @return {string} Returns the default name for a new connection.
+			 */
+			getDefaultConnectionName( provider ) {
+				const providerClass = app.getProviderClass( provider );
+
+				// Check if the provider has a method to set the custom connection name.
+				if ( typeof providerClass?.setDefaultModalValue === 'function' ) {
+					return providerClass.setDefaultModalValue();
+				}
+
+				const providerName = app.getProviderHolder( provider ).data( 'provider-name' );
+				const numberOfConnections = app.ui.getCountConnectionsOf( provider );
+				const defaultName = `${ providerName } ${ wpforms_builder.connection_label }`;
+
+				if ( numberOfConnections === 0 ) {
+					return defaultName;
+				}
+
+				return `${ defaultName } #${ numberOfConnections + 1 }`;
+			},
+
+			/**
+			 * Get the number of connections for the provider.
+			 *
+			 * @since 1.9.3
+			 *
+			 * @param {string} provider Current provider slug.
+			 *
+			 * @return {number} Returns the number of connections for the provider.
+			 */
+			getCountConnectionsOf( provider ) {
+				return app.getProviderHolder( provider ).find( '.wpforms-builder-provider-connection' ).length;
 			},
 
 			/**
@@ -1004,13 +1054,20 @@ WPForms.Admin.Builder.Providers = WPForms.Admin.Builder.Providers || ( function(
 		 * Get a provider JS object.
 		 *
 		 * @since 1.9.2.3
+		 * @since 1.9.3 Added support for "-" in provider names.
 		 *
 		 * @param {string} provider Provider name.
 		 *
 		 * @return {Object|null} Return provider object or null.
 		 */
 		getProviderClass( provider ) {
-			const getClassName = provider.charAt( 0 ).toUpperCase() + provider.slice( 1 );
+			// Convert part of the provider name to uppercase.
+			const upperProviderPart = ( providerPart ) => (
+				providerPart.charAt( 0 ).toUpperCase() + providerPart.slice( 1 )
+			);
+
+			// Convert provider name to a class name.
+			const getClassName = provider.split( '-' ).map( upperProviderPart ).join( '' );
 
 			if ( typeof WPForms.Admin.Builder.Providers[ getClassName ] === 'undefined' ) {
 				return null;

@@ -24,7 +24,7 @@ class ExtensionHandler{
 
 	public function import_post_types($import_type) {	
 		$import_type = trim($import_type);	
-		$module = array('Posts' => 'post', 'Pages' => 'page', 'Users' => 'user', 'Comments' => 'comments', 'Taxonomies' => $import_type, 'CustomerReviews' =>'wpcr3_review', 'Categories' => 'categories', 'Tags' => 'tags', 'WooCommerce' => 'product', 'WooCommerce Product' => 'product', 'WPeCommerce' => 'wpsc-product','WPeCommerceCoupons' => 'wpsc-product','WooCommerceVariations' => 'product', 'WooCommerceOrders' => 'product', 'WooCommerceCoupons' => 'product', 'WooCommerceRefunds' => 'product', 'CustomPosts' => $import_type,'WooCommerceReviews' => 'reviews');
+		$module = array('Posts' => 'post', 'Pages' => 'page', 'Users' => 'user', 'JetReviews' => 'jetreviews', 'Comments' => 'comments', 'Taxonomies' => $import_type, 'CustomerReviews' =>'wpcr3_review', 'Categories' => 'categories', 'Tags' => 'tags', 'WooCommerce' => 'product', 'WooCommerce Product' => 'product', 'WPeCommerce' => 'wpsc-product','WPeCommerceCoupons' => 'wpsc-product', 'WooCommerceOrders' => 'product', 'WooCommerceCoupons' => 'product', 'WooCommerceRefunds' => 'product', 'CustomPosts' => $import_type,'WooCommerceReviews' => 'reviews');
 		foreach (get_taxonomies() as $key => $taxonomy) {
 			$module[$taxonomy] = $taxonomy;
 		}
@@ -128,14 +128,18 @@ class ExtensionHandler{
 			$importas['WPeCommerce Products'] ='WPeCommerce';
 			$importas['WPeCommerce Coupons'] = 'WPeCommerceCoupons';
 		}
+      // Add JetReviews if the JetReviews plugin is active
+      if(is_plugin_active('jet-reviews/jet-reviews.php')) {
+	  $importas['JetReviews'] = 'jetreviews';
+	  }
 
 		if(is_plugin_active('woocommerce/woocommerce.php') && is_plugin_active('import-woocommerce/import-woocommerce.php')){
 			$importas['WooCommerce Product'] ='WooCommerce';
-			$importas['WooCommerce Product Variations'] ='WooCommerceVariations';
+			//$importas['WooCommerce Product Variations'] ='WooCommerceVariations';
 			$importas['WooCommerce Reviews'] ='WooCommerceReviews';
 			$importas['WooCommerce Orders'] = 'WooCommerceOrders';
 			$importas['WooCommerce Coupons'] = 'WooCommerceCoupons';
-			//$importas['WooCommerce Refunds'] = 'WooCommerceRefunds';
+			$importas['WooCommerce Customer'] = 'WooCommerceCustomer';
 		}
 
 		if(array_key_exists('location' , $importas) && array_key_exists('event-recurring' , $importas)){
@@ -153,9 +157,10 @@ class ExtensionHandler{
 			}
 		}
 		if(is_plugin_active('jet-booking/jet-booking.php')){
-			$importas['Booking'] ='Booking';
+			$importas['JetBooking'] ='JetBooking';
 		}
 		return $importas;	
+		
 	}
 
 	public function import_name_as($import_type){
@@ -202,6 +207,9 @@ class ExtensionHandler{
 		$file_extension = pathinfo($filename, PATHINFO_EXTENSION);
 		if(empty($file_extension)){
 			$file_extension = 'xml';
+		}
+		if($file_extension == 'xlsx'  || $file_extension == 'xls'){
+			$file_extension = 'csv';                    
 		}
 		if($file_extension == 'csv' || $file_extension == 'txt'){
 			if (version_compare(PHP_VERSION, '8.1.0', '<')) {  // Only do this if PHP version is less than 8.1.0
@@ -298,11 +306,52 @@ class ExtensionHandler{
 			}
 			$type = $this->select_import_type($Headers);
 			$total_rows = $this->get_xml_count($path , $child_name);
-			if($total_rows == 0 ){
+			if($total_rows == 0 || $child_name == 'channel' ){
 				$sub_child = $this->get_child($child,$path);
 				$child_name = $sub_child['child_name'];
 				$total_rows = $sub_child['total_count'];
 			}
+		}
+		if($file_extension == 'tsv'){
+			if (version_compare(PHP_VERSION, '8.1.0', '<')) {  // Only do this if PHP version is less than 8.1.0
+				if (!ini_get("auto_detect_line_endings")) {
+					ini_set("auto_detect_line_endings", true);
+				}
+			}
+			$info = [];
+			if (($h = fopen($upload_dir.$hashkey.'/'.$hashkey, "r")) !== FALSE) 
+			{
+				$line_number = 0;
+				$Headers = [];
+				$values = [];
+				$file_path = $upload_dir . $hashkey . '/' . $hashkey;
+				ExtensionHandler::$validate_file = ValidateFile::getInstance();
+				$delimiter = ExtensionHandler::$validate_file->getFileDelimiter($file_path, 5);
+				if($delimiter == '\t'){
+						$hs = $upload_dir.$hashkey.'/'.$hashkey;
+						while (($data = fgetcsv($h, 0, "\t")) !== FALSE) {
+						
+						// Read the data from a single line
+					
+						$data = explode("\t", $line[0]); // Split by tab
+						$trimmed_info = array_map('trim', $data);
+					
+						array_push($info , $trimmed_info);
+
+						if($line_number == 0){
+							$Headers = $info[$line_number];
+							$type = $this->select_import_type($Headers);	
+						}
+						else{
+							$values = $info[$line_number];
+						}
+						$line_number ++;		
+					}
+					// Close the file
+				fclose($h);
+				}
+			}
+			$total_rows = $line_number - 1;
 		}
 		global $wpdb;
 		$table_name = $wpdb->prefix ."smackcsv_file_events";
@@ -316,7 +365,7 @@ class ExtensionHandler{
 			$sub_child_name = $sub_child->getName();
 		}
 		$total_xml_count = $this->get_xml_count($path , $sub_child_name);
-		if($total_xml_count == 0){
+		if($total_xml_count == 0 || $sub_child_name == 'channel' ){
 			$this->get_child($sub_child,$path);
 		}
 		else{
@@ -335,8 +384,13 @@ class ExtensionHandler{
 				$type = 'Pages';
 			}
 			elseif(in_array('user_login', $Headers) || in_array('role', $Headers) || in_array('user_email', $Headers) ){
-				$type = 'Users';
-			} elseif(in_array('comment_author', $Headers) || in_array('comment_content', $Headers) ||  in_array('comment_approved', $Headers) ){
+				if(is_plugin_active('import-users/import-users.php')) {
+					$type = 'Users';
+				}else{
+					$type = 'WooCommerce Customer';
+				}
+			}
+			elseif(in_array('comment_author', $Headers) || in_array('comment_content', $Headers) ||  in_array('comment_approved', $Headers) ){
 				$type = 'Comments';
 			} elseif( in_array('reviewer_name', $Headers) || in_array('reviewer_email', $Headers)){
 				$type = 'Customer Reviews';

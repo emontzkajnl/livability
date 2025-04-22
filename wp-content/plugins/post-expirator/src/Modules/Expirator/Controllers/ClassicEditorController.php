@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2024, Ramble Ventures
+ * Copyright (c) 2025, Ramble Ventures
  */
 
 namespace PublishPress\Future\Modules\Expirator\Controllers;
@@ -281,7 +281,6 @@ class ClassicEditorController implements InitializableInterface
     public function enqueueScripts()
     {
         try {
-
             $currentScreen = get_current_screen();
 
             if (
@@ -340,7 +339,7 @@ class ClassicEditorController implements InitializableInterface
 
             wp_enqueue_style(
                 'publishpress-future-classic-editor',
-                POSTEXPIRATOR_BASEURL . 'assets/css/edit.css',
+                Plugin::getAssetUrl('css/edit.css'),
                 ['wp-components'],
                 PUBLISHPRESS_FUTURE_VERSION
             );
@@ -353,7 +352,14 @@ class ClassicEditorController implements InitializableInterface
             $taxonomyPluralName = '';
             if (! empty($postTypeDefaultConfig['taxonomy'])) {
                 $taxonomy = get_taxonomy($postTypeDefaultConfig['taxonomy']);
-                $taxonomyPluralName = $taxonomy->label;
+
+                if (is_object($taxonomy)) {
+                    $taxonomyPluralName = $taxonomy->label;
+                }
+            }
+
+            if (empty($taxonomyPluralName)) {
+                $taxonomyPluralName = __('Taxonomy', 'post-expirator');
             }
 
             $taxonomyTerms = [];
@@ -364,7 +370,23 @@ class ClassicEditorController implements InitializableInterface
                 ]);
             }
 
-            $defaultExpirationDate = $defaultDataModel->getActionDateParts();
+            try {
+                $defaultExpirationDate = $defaultDataModel->getActionDateParts();
+            } catch (Throwable $e) {
+                $now = time();
+                $gmDate = gmdate('Y-m-d H:i:s', $now);
+                $calculatedDate = $now;
+
+                $defaultExpirationDate = [
+                    'year' => date('Y', $now),
+                    'month' => date('m', $now),
+                    'day' => date('d', $now),
+                    'hour' => date('H', $now),
+                    'minute' => date('i', $now),
+                    'ts' => $calculatedDate,
+                    'iso' => $gmDate
+                ];
+            }
 
             $metaboxTitle = $settingsFacade->getMetaboxTitle() ?? __('Future Actions', 'post-expirator');
             $metaboxCheckboxLabel = $settingsFacade->getMetaboxCheckboxLabel() ?? __('Enable Future Action', 'post-expirator');

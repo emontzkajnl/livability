@@ -187,7 +187,13 @@ function isWPMLActive() {
 
     return is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' );
 }
+function isPhotoCartActive() {
+    if ( ! function_exists( 'is_plugin_active' ) ) {
+        include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+    }
 
+    return is_plugin_active( 'sunshine-photo-cart/sunshine-photo-cart.php' );
+}
 /**
  * Clean variables using sanitize_text_field. Arrays are cleaned recursively.
  * Non-scalar values are ignored.
@@ -1142,7 +1148,20 @@ function getStandardParams() {
 
     return $params;
 }
+function getWPMLProductId($product_id, $tag) {
+    $tagOption = "woo_wpml_unified_id";
+    $tagLanguageOption = "woo_wpml_language";
 
+    if (isWPMLActive() && $tag->getOption($tagOption)) {
+        $wpml_product_id = !empty($tag->getOption($tagLanguageOption))
+            ? apply_filters('wpml_object_id', $product_id, 'product', false, $tag->getOption($tagLanguageOption))
+            : apply_filters('wpml_original_element_id', NULL, $product_id);
+        if ($wpml_product_id) {
+            return $wpml_product_id;
+        }
+    }
+    return $product_id;
+}
 function getTrafficSource () {
     $referrer = "";
     $source = "";
@@ -1284,4 +1303,24 @@ function get_persistence_user_data( $em, $fn, $ln, $tel ) {
 		'ln'  => $ln,
 		'tel' => $tel
 	);
+}
+
+function getAllMetaEventParamName(){
+    $metaEventParamName = array(
+        'event_url'=>'Event URL',
+        'landing_page'=>'Landing Page URL',
+        'post_id'=>'Post ID',
+        'post_title'=>'Post Title',
+        'post_type'=>'Post Type',
+        'page_title' => 'Page Title',
+        'content_name'=>'Content Name',
+        'content_type'=>'Content Type',
+        'categories'=>'Categories',
+        'category_name'=>'Category Name',
+        'tags'=>'Tags',
+        'user_role'=>'User Role',
+        'plugin'=>'Plugin',
+    );
+
+    return $metaEventParamName;
 }

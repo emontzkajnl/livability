@@ -8,6 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class CustomEventFactory {
 
+
 	public static function create( $args ) {
 
 		// create event post object
@@ -37,6 +38,13 @@ class CustomEventFactory {
 	 * @return array
 	 */
 	public static function get( $state = 'any', $post_id = null ) {
+
+        $trigger_types = array(
+            'page_visit',
+            'home_page',
+            'scroll_pos',
+            'post_type',
+        );
 
 		$limit = isset( $post_id ) ? 1 : -1;
 
@@ -70,7 +78,7 @@ class CustomEventFactory {
                 foreach ( $triggers as $trigger ) {
                     $trigger_type = $trigger->getTriggerType();
 
-                    if ( $trigger_type == 'page_visit' || $trigger_type == 'home_page') {
+                    if ( in_array($trigger_type, $trigger_types)) {
                         $results[ $post->ID ] = $customEvent;
                         break;
                     }
@@ -117,13 +125,19 @@ class CustomEventFactory {
 			if ( ! $new_event ) {
 				return;
 			}
-			
+            $data = get_post_meta( $event->getPostId(), '_pys_event_data' );
+            $triggers = $event->getTriggers();
+            $conditions = $event->getConditions();
 			// copy meta from original event
-			foreach ( get_post_meta( $event->getPostId() ) as $meta_key => $meta_values ) {
-				foreach ( $meta_values as $meta_value ) {
-					update_post_meta( $new_event->getPostId(), $meta_key, maybe_unserialize( $meta_value ) );
-				}
-			}
+            foreach ( $data as $meta_value ) {
+                update_post_meta( $new_event->getPostId(), '_pys_event_data', maybe_unserialize( $meta_value ) );
+            }
+            if($triggers){
+                update_post_meta( $new_event->getPostId(), '_pys_event_triggers', addslashes( serialize( $triggers ) ) );
+            }
+            if($conditions){
+                update_post_meta( $new_event->getPostId(), '_pys_event_conditions', addslashes( serialize( $conditions ) ) );
+            }
 			
 			// disable cloned event
 			$new_event->disable();

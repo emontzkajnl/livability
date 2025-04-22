@@ -73,7 +73,7 @@ class Permalink_Manager_URI_Functions_Tax {
 		$term = ( is_numeric( $term ) ) ? get_term( $term ) : $term;
 
 		// Check if the term is allowed
-		if ( empty( $term->term_id ) || Permalink_Manager_Helper_Functions::is_term_excluded( $term ) ) {
+		if ( empty( $term->term_id ) || Permalink_Manager_Helper_Functions::is_term_excluded( $term ) || ! is_string( $permalink ) ) {
 			return $permalink;
 		}
 
@@ -162,7 +162,7 @@ class Permalink_Manager_URI_Functions_Tax {
 	 * @return string
 	 */
 	public static function get_default_term_uri( $term, $native_uri = false, $check_if_disabled = false ) {
-		global $permalink_manager_options, $permalink_manager_permastructs, $wp_taxonomies, $icl_adjust_id_url_filter_off;
+		global $permalink_manager_permastructs, $wp_taxonomies, $icl_adjust_id_url_filter_off;
 
 		// Disable WPML adjust ID filter
 		$icl_adjust_id_url_filter_off = true;
@@ -181,7 +181,7 @@ class Permalink_Manager_URI_Functions_Tax {
 		}
 
 		// 2A. Get the native permastructure
-		$native_permastructure = Permalink_Manager_Helper_Functions::get_default_permastruct( $taxonomy_name );
+		$native_permastructure = Permalink_Manager_Permastructure_Functions::get_default_permastruct( $taxonomy_name );
 
 		// 2B. Get the permastructure
 		if ( $native_uri || empty( $permalink_manager_permastructs['taxonomies'][ $taxonomy_name ] ) ) {
@@ -252,16 +252,7 @@ class Permalink_Manager_URI_Functions_Tax {
 			$slug_tags_replacement = array( $full_slug, $custom_slug, $full_slug, $custom_slug, $top_parent_slug, $top_parent_slug, $full_native_slug, $term_title_slug, $taxonomy_name_slug, $term->term_id );
 
 			// Check if any term tag is present in custom permastructure
-			$do_not_append_slug = ( ! empty( $permalink_manager_options['permastructure-settings']['do_not_append_slug']['taxonomies'][ $taxonomy_name ] ) ) ? true : false;
-			$do_not_append_slug = apply_filters( "permalink_manager_do_not_append_slug", $do_not_append_slug, $taxonomy, $term );
-			if ( ! $do_not_append_slug ) {
-				foreach ( $slug_tags as $tag ) {
-					if ( strpos( $default_uri, $tag ) !== false ) {
-						$do_not_append_slug = true;
-						break;
-					}
-				}
-			}
+			$do_not_append_slug = Permalink_Manager_Permastructure_Functions::is_slug_tag_present( $default_uri, $slug_tags, $term );
 
 			// Replace the term tags with slugs or append the slug if no term tag is defined
 			if ( ! empty( $do_not_append_slug ) ) {
@@ -332,7 +323,10 @@ class Permalink_Manager_URI_Functions_Tax {
 		}
 
 		// Get the rows before they are altered
-		return $wpdb->get_results( "SELECT t.slug, t.name, t.term_id, tt.taxonomy FROM {$wpdb->terms} AS t INNER JOIN {$wpdb->term_taxonomy} AS tt ON tt.term_id = t.term_id LEFT JOIN {$wpdb->termmeta} AS tm ON (tm.term_id = t.term_id AND tm.meta_key = 'auto_update_uri') WHERE tt.taxonomy IN ('{$taxonomy_names}') {$where}", ARRAY_A );
+		$query = "SELECT t.slug, t.name, t.term_id, tt.taxonomy FROM {$wpdb->terms} AS t INNER JOIN {$wpdb->term_taxonomy} AS tt ON tt.term_id = t.term_id LEFT JOIN {$wpdb->termmeta} AS tm ON (tm.term_id = t.term_id AND tm.meta_key = 'auto_update_uri') WHERE tt.taxonomy IN ('{$taxonomy_names}') {$where}";
+		$query = apply_filters( 'permalink_manager_get_items_query', $query, $where, 'taxonomies' );
+
+		return $wpdb->get_results( $query, ARRAY_A );
 	}
 
 	/**
@@ -438,24 +432,15 @@ class Permalink_Manager_URI_Functions_Tax {
 				// Remove prefix from field name to obtain term id
 				$term_id = filter_var( str_replace( 'tax-', '', $id ), FILTER_SANITIZE_NUMBER_INT );
 
-				// Prepare variables
 				$this_term = get_term( $term_id );
+				$old_uri   = Permalink_Manager_URI_Functions::get_single_uri( $term_id, false, true, true );
+				$new_uri   = ( empty( $new_uri ) ) ? null : $new_uri; // If the string is empty, convert it to null to force the default permalink
 
-				// Get default & native URL
-				$native_uri  = self::get_default_term_uri( $this_term, true );
-				$default_uri = self::get_default_term_uri( $this_term );
-				$old_uri     = Permalink_Manager_URI_Functions::get_single_uri( $term_id, false, true, true );
+				$final_uri = self::save_uri( $this_term, $new_uri, false, false, false );
 
-				// Process new values - empty entries will be treated as default values
-				$new_uri = Permalink_Manager_Helper_Functions::sanitize_title( $new_uri );
-				$new_uri = ( ! empty( $new_uri ) ) ? trim( $new_uri, "/" ) : $default_uri;
-
-				if ( $new_uri != $old_uri ) {
-					Permalink_Manager_URI_Functions::save_single_uri( $term_id, $new_uri, true, false );
-					$updated_array[] = array( 'item_title' => $this_term->name, 'ID' => $term_id, 'old_uri' => $old_uri, 'new_uri' => $new_uri, 'tax' => $this_term->taxonomy );
+				if ( $final_uri ) {
+					$updated_array[] = array( 'item_title' => $this_term->name, 'ID' => $term_id, 'old_uri' => $old_uri, 'new_uri' => $final_uri, 'tax' => $this_term->taxonomy );
 					$updated_slugs_count ++;
-
-					do_action( 'permalink_manager_updated_term_uri', $term_id, $new_uri, $old_uri, $native_uri, $default_uri );
 				}
 			}
 
@@ -557,78 +542,121 @@ class Permalink_Manager_URI_Functions_Tax {
 	 * @param int $tt_term_id Term taxonomy ID.
 	 */
 	function update_term_uri( $term_id, $tt_term_id ) {
-		global $permalink_manager_uris, $permalink_manager_options, $wp_current_filter;
+		global $wp_current_filter;
 
 		// Term ID must be defined
 		if ( empty( $term_id ) ) {
 			return;
 		}
 
-		// Check if term was added via "Edit Post" page
-		if ( ! empty( $wp_current_filter[0] ) && strpos( $wp_current_filter[0], 'wp_ajax_add' ) !== false && empty( $_POST['custom_uri'] ) ) {
-			$force_default_uri = true;
-		} else if ( isset( $_POST['custom_uri'] ) && ( ! isset( $_POST['permalink-manager-nonce'] ) || ! wp_verify_nonce( $_POST['permalink-manager-nonce'], 'permalink-manager-edit-uri-box' ) ) ) {
+		// Validate the nonce (if the permalink editor is displayed)
+		if ( isset( $_POST['custom_uri'] ) && ( ! isset( $_POST['permalink-manager-nonce'] ) || ! wp_verify_nonce( $_POST['permalink-manager-nonce'], 'permalink-manager-edit-uri-box' ) ) ) {
 			return;
+		} // If term was added via "Edit Post" page, use the default URI
+		else if ( ! empty( $wp_current_filter[0] ) && strpos( $wp_current_filter[0], 'wp_ajax_add' ) !== false && empty( $_POST['custom_uri'] ) ) {
+			$is_new_term = true;
+		} else if ( ! empty( $wp_current_filter[0] ) && strpos( $wp_current_filter[0], 'create_' ) !== false ) {
+			$is_new_term = true;
+		} else {
+			$is_new_term = false;
 		}
+
+		// Get auto-update URI setting
+		if ( isset( $_POST["auto_update_uri"] ) ) {
+			$auto_update_mode = intval( $_POST["auto_update_uri"] );
+		} else {
+			$auto_update_mode = false;
+		}
+
+		// Check if the URI is provided in the input field
+		if ( ! empty( $_POST['custom_uri'] ) && empty( $is_new_term ) && empty( $_POST['post_ID'] ) ) {
+			$new_uri = Permalink_Manager_Helper_Functions::sanitize_title( $_POST['custom_uri'] );
+		} else {
+			$new_uri = '';
+		}
+
+		self::save_uri( $term_id, $new_uri, $is_new_term, $auto_update_mode );
+	}
+
+	/**
+	 * Save the custom permalink
+	 *
+	 * @param int|WP_Term $term
+	 * @param string $new_uri
+	 * @param bool $is_new_term
+	 * @param int|bool $auto_update_mode
+	 *
+	 * @return bool
+	 */
+	static function save_uri( $term, $new_uri = '', $is_new_term = false, $auto_update_mode = false, $db_save = true ) {
+		global $permalink_manager_options;
 
 		// Get the term object
-		$this_term         = get_term( $term_id );
-		$term_permalink_id = "tax-{$term_id}";
+		if ( is_numeric( $term ) ) {
+			$term_object = get_term( $term );
+		} else if ( is_a( $term, 'WP_Term' ) ) {
+			$term_object = $term;
+		} else {
+			return false;
+		}
+
+		$term_id = $term_object->term_id;
 
 		// Check if the term is allowed
-		if ( empty( $this_term->taxonomy ) || Permalink_Manager_Helper_Functions::is_term_excluded( $this_term ) ) {
-			return;
+		if ( empty( $term_object->taxonomy ) || Permalink_Manager_Helper_Functions::is_term_excluded( $term_object ) || empty( $term_id ) ) {
+			return false;
 		}
 
-		// Get auto-update URI setting (if empty use global setting)
-		if ( ! empty( $_POST["auto_update_uri"] ) ) {
-			$auto_update_uri_current = intval( $_POST["auto_update_uri"] );
-		} else if ( ! empty( $_POST["action"] ) && $_POST['action'] == 'inline-save' ) {
-			$auto_update_uri_current = get_term_meta( $term_id, "auto_update_uri", true );
+		// Manage 'Auto-update URI' settings
+		if ( ! empty( $auto_update_mode ) ) {
+			$auto_update_uri = $auto_update_mode;
+			update_term_meta( $term_id, "auto_update_uri", $auto_update_mode );
+		} else if ( $auto_update_mode === 0 ) {
+			$auto_update_uri = $permalink_manager_options['general']['auto_update_uris'];
+			delete_term_meta( $term_id, "auto_update_uri" );
+		} else {
+			$auto_update_uri = get_term_meta( $term_id, "auto_update_uri", true );
+			$auto_update_uri = ( ! empty( $auto_update_uri ) ) ? $auto_update_uri : $permalink_manager_options['general']['auto_update_uris'];
 		}
-		$auto_update_uri = ( ! empty( $auto_update_uri_current ) ) ? $auto_update_uri_current : $permalink_manager_options["general"]["auto_update_uris"];
 
 		// Get default & native & user-submitted URIs
-		$native_uri  = self::get_default_term_uri( $this_term, true );
-		$default_uri = self::get_default_term_uri( $this_term );
-		$old_uri     = ( isset( $permalink_manager_uris[ $term_permalink_id ] ) ) ? $permalink_manager_uris[ $term_permalink_id ] : "";
+		$native_uri  = self::get_default_term_uri( $term_object, true );
+		$default_uri = self::get_default_term_uri( $term_object );
+		$old_uri     = self::get_term_uri( $term_id, false, true );
 
-		// A. Check if the URI is provided in the input field
-		if ( ! empty( $_POST['custom_uri'] ) && empty( $force_default_uri ) && empty( $_POST['post_ID'] ) && $auto_update_uri != 1 ) {
-			$new_uri = Permalink_Manager_Helper_Functions::sanitize_title( $_POST['custom_uri'] );
-		} // B. Do not overwrite a previously stored URI
-		else if ( ! isset( $_POST['custom_uri'] ) && ! empty( $old_uri ) && $auto_update_uri != 1 ) {
-			$new_uri = '';
-		} // C. If the user removes the whole URI or adds a new term through "Edit Post", the default URI should be used.
-		else {
+		if ( ! empty( $new_uri ) && $auto_update_uri != 1 ) {
+			$new_uri = Permalink_Manager_Helper_Functions::sanitize_title( $new_uri, true );
+		} else if ( $is_new_term || $auto_update_uri == 1 || ( empty( $new_uri ) && empty( $old_uri ) ) || is_null( $new_uri ) ) {
 			$new_uri = $default_uri;
+		} else {
+			$new_uri = '';
 		}
 
-		// Save or remove "Auto-update URI" settings
-		if ( ! empty( $auto_update_uri_current ) ) {
-			update_term_meta( $term_id, "auto_update_uri", $auto_update_uri_current );
-		} elseif ( isset( $_POST['auto_update_uri'] ) ) {
-			delete_term_meta( $term_id, "auto_update_uri" );
+		if ( $is_new_term ) {
+			$allow_save = apply_filters( 'permalink_manager_allow_new_term_uri', true, $term_object );
+		} else {
+			$allow_save = apply_filters( 'permalink_manager_allow_update_term_uri', true, $term_object );
 		}
-
-		// Check if the URI should be updated
-		$allow_update_uri = apply_filters( "permalink_manager_update_term_uri_{$this_term->taxonomy}", true, $this_term );
 
 		$new_uri = apply_filters( 'permalink_manager_pre_update_term_uri', $new_uri, $term_id, $old_uri, $native_uri, $default_uri );
 
-		// A. The update URI process is stopped by the hook above or disabled in "Auto-update" settings
-		if ( ! $allow_update_uri || ( ! empty( $auto_update_uri ) && $auto_update_uri == 2 ) ) {
-			$uri_saved = false;
-		} // B. Save the URI only if $new_uri variable is set
-		else if ( is_array( $permalink_manager_uris ) && ! empty( $new_uri ) ) {
-			Permalink_Manager_URI_Functions::save_single_uri( $term_id, $new_uri, true, true );
+		// The update URI process is stopped by the hook above or disabled in "Auto-update" settings
+		if ( ! $allow_save || ( ! empty( $auto_update_uri ) && $auto_update_uri == 2 ) ) {
+			return false;
+		}
+
+		//  Save the URI only if $new_uri variable is set
+		if ( ! empty( $new_uri ) && $new_uri !== $old_uri ) {
+			Permalink_Manager_URI_Functions::save_single_uri( $term_id, $new_uri, true, $db_save );
 			$uri_saved = true;
-		} // C. The $new_uri variable is empty
+		} // The $new_uri variable is empty or no change is detected
 		else {
 			$uri_saved = false;
 		}
 
-		do_action( 'permalink_manager_updated_term_uri', $term_id, $new_uri, $old_uri, $native_uri, $default_uri, $single_update = true, $uri_saved );
+		do_action( 'permalink_manager_updated_term_uri', $term_id, $new_uri, $old_uri, $native_uri, $default_uri, $uri_saved );
+
+		return ( $uri_saved ) ? $new_uri : false;
 	}
 
 	/**

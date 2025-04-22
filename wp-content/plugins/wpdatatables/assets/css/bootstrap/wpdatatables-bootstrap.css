@@ -221,7 +221,6 @@
 /*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
 
 @media print {
-    *,
     .wpdt-c *:before,
     .wpdt-c *:after {
         background: transparent !important;
@@ -2157,32 +2156,37 @@
 }
 
 .wpdt-c .col-xs-offset-0 {
-    margin-left: 0%;
+    margin-left: 0;
 }
 
 .wpdt-c .opacity-50 {
     opacity: 50%;
 }
+
 .wpdt-c .opacity-6 {
     opacity: .6;
 }
+
 .wpdt-c .opacity-5 {
     opacity: .5;
 }
+
 .wpdt-c .opacity-1 {
     opacity: 1 !important;
 }
+
 @media (min-width: 768px) {
     .wpdt-c .col-sm-0-8,
     .wpdt-c .col-sm-0-1,
     .wpdt-c .col-sm-1,
+    .wpdt-c .col-sm-1-2,
     .wpdt-c .col-sm-2,
     .wpdt-c .col-sm-2-6,
     .wpdt-c .col-sm-3,
     .wpdt-c .col-sm-4,
     .wpdt-c .col-sm-5,
-    .wpdt-c .col-sm-5-5,
     .wpdt-c .col-sm-5-3,
+    .wpdt-c .col-sm-5-5,
     .wpdt-c .col-sm-0-4,
     .wpdt-c .col-sm-1-0,
     .wpdt-c .col-sm-2-0,
@@ -2246,6 +2250,10 @@
 
     .wpdt-c .col-sm-2-0 {
         width: 22.66666667%;
+    }
+
+    .wpdt-c .col-sm-1-2 {
+        width: 6%;
     }
 
     .wpdt-c .col-sm-1-0 {
@@ -2429,7 +2437,7 @@
     }
 
     .wpdt-c .col-sm-offset-0 {
-        margin-left: 0%;
+        margin-left: 0;
     }
 }
 
@@ -2650,7 +2658,7 @@
     }
 
     .wpdt-c .col-md-offset-0 {
-        margin-left: 0%;
+        margin-left: 0;
     }
 }
 
@@ -2871,7 +2879,7 @@
     }
 
     .wpdt-c .col-lg-offset-0 {
-        margin-left: 0%;
+        margin-left: 0;
     }
 }
 
@@ -3115,8 +3123,6 @@
 .wpdt-c input[type="file"]:focus,
 .wpdt-c input[type="radio"]:focus,
 .wpdt-c input[type="checkbox"]:focus {
-    outline: thin dotted;
-    outline: 5px auto -webkit-focus-ring-color;
     outline-offset: -2px;
     outline: none !important;
 }
@@ -3139,7 +3145,7 @@
     color: #000000;
     background-color: transparent;
     background-image: none;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #c4c5c6;
     border-radius: 0;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -7144,8 +7150,8 @@ select.input-group-lg > .input-group-btn > .btn {
 
 .wpdt-c .popover {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 0%;
+    left: 0%;
     z-index: 1200;
     display: none;
     max-width: 276px;
@@ -13743,6 +13749,19 @@ input:focus {
 .wpdt-c .wpdt-custom-center-flex{
     display: flex;
     justify-content: center;
+}
+.wpdt-c .wpdt-placeholder-images img {
+        width: 30%;
+}
+.wpdt-c .wpdt-advanced-table-settings-image img {
+        width: 50%;
+}
+
+@media (min-width: 1700px) {
+    .wpdt-c .wpdt-advanced-table-settings-image img,
+    .wpdt-c .wpdt-placeholder-images img {
+        width: auto;
+    }
 }
 .wpDataTables .dataTables_length select.selectpicker {
     display: inline-block !important;
