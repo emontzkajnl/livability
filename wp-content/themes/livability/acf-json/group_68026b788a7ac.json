@@ -30,7 +30,7 @@
         },
         {
             "key": "field_68026b7c1a909",
-            "label": "Slides",
+            "label": "Articles",
             "name": "slides",
             "aria-label": "",
             "type": "repeater",
@@ -60,7 +60,7 @@
             "sub_fields": [
                 {
                     "key": "field_68026c1a1a90a",
-                    "label": "slide",
+                    "label": "Article",
                     "name": "slide",
                     "aria-label": "",
                     "type": "post_object",
@@ -141,5 +141,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1745270962
+    "modified": 1745433736
 }
