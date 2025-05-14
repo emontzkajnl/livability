@@ -18,7 +18,6 @@ if ($c_or_t == 'curated' ) {
 } else {
     $term = get_field('taxonomy');
     $args = array(
-        'post_type'     => 'post',
         'post_type'		=> 'post',
         'post_status'	=> 'publish', 
         'tag_id'        => $term[0]
@@ -29,9 +28,15 @@ if ($c_or_t == 'curated' ) {
 
 // print_r($the_slides);
 if ($the_slides): 
-shuffle($the_slides);?>
+shuffle($the_slides);
+if (get_the_ID() == '274') {
+    echo '<p class="brand-stories__sponsor-text">Sponsored by <a href="https://www.fbitn.com/" target="_blank">Farm Bureau Insurance of Tennessee</a></p>';
+}
+?>
 <div id="<?php echo esc_attr($id); ?>" class="<?php echo esc_attr($className); ?>">
-<?php echo '<ul class="pwl-slick">';
+
+<?php 
+echo '<ul class="pwl-slick">';
 foreach($the_slides as $s){
 $c_or_t == 'curated' ? $slide = $s['slide'] : $slide = $s ;
 $slideId = $slide->ID;
