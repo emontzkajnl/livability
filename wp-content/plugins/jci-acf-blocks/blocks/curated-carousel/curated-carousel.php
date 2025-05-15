@@ -30,7 +30,7 @@ if ($c_or_t == 'curated' ) {
 if ($the_slides): 
 shuffle($the_slides);
 if (get_the_ID() == '274') {
-    echo '<p class="brand-stories__sponsor-text">Sponsored by <a href="https://www.fbitn.com/" target="_blank">Farm Bureau Insurance of Tennessee</a></p>';
+    echo '<p class="brand-stories__sponsor-text" style="margin-top: -30px !important;">Sponsored by <a href="https://www.fbitn.com/" target="_blank">Farm Bureau Insurance of Tennessee</a></p>';
 }
 ?>
 <div id="<?php echo esc_attr($id); ?>" class="<?php echo esc_attr($className); ?>">
