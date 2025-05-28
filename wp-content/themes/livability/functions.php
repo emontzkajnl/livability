@@ -2053,35 +2053,11 @@ add_action('wp_ajax_loadInsights', 'load_insights');
 add_action('wp_ajax_nopriv_loadInsights', 'load_insights');
 
 function load_tn_mym_posts() {
-	$tnargs = array(
-		'numberposts'       => 20,
-		'post_type'         => 'liv_place',
-		'post_parent__in'   => ['274'],
-		'orderby'          => 'rand'
-	);
-	$tn_cities = get_posts($tnargs);
-	$tn_meta_query = array(
-		'relation'          => 'OR',
-		array (
-			'key'               => 'place_relationship',
-			'value'             => 274,
-			'compare'           => 'LIKE'
-		),
-	);
-	// print_r($tn_cities);
-	foreach ($tn_cities as $key => $value) {
-		$tn_meta_query[] = array(
-			'key'           => 'place_relationship',
-			'value'         => $value->ID,
-			'compare'       => 'LIKE'
-		);
-	}
 	$tnpostargs = array(
 		'numberposts'       => 3,
 		'post_type'         => 'post',
-		'category_name'     => 'make-your-move',
+		'tag'				=> 'fbitn',
 		'orderby'           => 'rand',
-		'meta_query'        => $tn_meta_query
 	);
 	$tnposts = get_posts($tnpostargs);
 	if ( !empty($tnposts)) {
@@ -2090,9 +2066,9 @@ function load_tn_mym_posts() {
 		echo '<div class=" tn-mym">';
 		foreach ($tnposts as $key => $value) {
 			$ID = $value->ID;
-			$slidebkgrnd = get_the_post_thumbnail_url( $ID, 'rel_article' ); 
+			// $slidebkgrnd = get_the_post_thumbnail_url( $ID, 'rel_article' ); 
 			echo '<div class="tn-mym__item"><a class="unstyle-link" href="'.get_the_permalink( $ID ).'">';
-			echo '<div class="tn-mym__img" style="background-image: url('.$slidebkgrnd.');"></div>';
+			echo '<div class="tn-mym__img-container object-fit-image">'.get_the_post_thumbnail( $ID, 'medium_large').'</div>';
 			echo '<h4 class="tn-mym__title">'.get_the_title($ID).'</h4>';
 			echo '</a></div>';
 			// echo '<br /><a href="'.get_the_permalink($value->ID).'">title is '.get_the_title($value->ID).'</a>';

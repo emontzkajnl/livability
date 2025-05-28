@@ -541,10 +541,8 @@
     background-color: #f4f4f4;
     margin-bottom: 30px;
   }
-  &__img {
-    background-size: cover;
-    background-repeat: no-repeat;
-    height: 215px;
+  &__img-container {
+    height: 275px;
   }
   &__title {
     color: black;

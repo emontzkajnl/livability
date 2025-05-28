@@ -47,6 +47,18 @@ div, h1, h2, h3, h4, h5, .ez-toc-section {
   scroll-margin-top: 100px;
 }
 
+.object-fit-image {
+  position: relative;
+  img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      right: 0;
+  }
+}
+
 @media all and (min-width: 1390px) {
   .container {
     padding: 0;
