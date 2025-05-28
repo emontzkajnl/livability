@@ -535,6 +535,22 @@
 
 
 }
+.tn-mym {
+  display: block;
+  &__item {
+    background-color: #f4f4f4;
+    margin-bottom: 30px;
+  }
+  &__img {
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 215px;
+  }
+  &__title {
+    color: black;
+    padding: 15px;
+  }
+}
 .pwl-container {
   margin-bottom: 80px;
   padding: 0 30px;
@@ -3495,6 +3511,18 @@ border-bottom: 1px solid $green;
 }
 
 @media screen and (min-width: 768px) {
+  .tn-mym {
+    display: flex;
+    flex-direction: row;
+    &__item {
+      flex-basis: 33.3%;
+      flex-shrink: 0;
+      margin-left: 15px;
+      &:first-child{
+        margin-left: 0;
+      }
+    }
+  }
   .bp24 {
     &__results-container {
       display: flex;

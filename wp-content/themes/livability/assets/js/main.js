@@ -118,7 +118,9 @@
     $('.text-shortener__container').remove();
   });
 
-
+  if ($('body').hasClass('single-post') && $('.tn-mym-container').length > 0) {
+    console.log('is tennessee');
+  }
 
 
 
@@ -504,7 +506,8 @@
     window.almOnChange = function (alm) {
       console.log("Ajax Load More is loading...");
       console.log("Url is ", window.location.href);
-      // console.dir(alm);
+      
+
 
 
       // var post = alm.single_post_array;
@@ -598,11 +601,46 @@
   //     });
   // }
 
+if ($('body').hasClass('single-post') && $('.tn-mym-container').length) {
+    const container = $('.tn-mym-container');
+    const data = {
+      action: "loadtnmymposts"
+    }
+    $.ajax({
+      url: params.ajaxurl,
+      data: data,
+      type: "POST",
+      dataType: "html",
+      success: function (data) {
+        container.html(data);
+      }
+    });
+}
+
 
   window.almComplete = function(alm){
     console.log("Ajax Load More Complete");
     
-
+    let newPost = $(`.post-${alm.post_id}`);
+    if (newPost.find('.tn-mym-container')) {
+      // const container = newPost.find('.tn-mym-container');
+      const container = $('.tn-mym-container').last();
+      console.log('container is ', container);
+      const data = {
+        action: "loadtnmymposts"
+      }
+      $.ajax({
+        url: params.ajaxurl,
+        data: data,
+        type: "POST",
+        dataType: "html",
+        success: function (data) {
+          console.dir(data);
+          container.html(data);
+        }
+      });
+      
+    }
 
     if (document.querySelectorAll('.pwl-slick')) {
       // initPwlSlick();
