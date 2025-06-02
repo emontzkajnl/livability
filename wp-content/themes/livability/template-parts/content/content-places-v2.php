@@ -163,14 +163,19 @@ $topic_args = array(
             ?>
             </div>
         </div>
+        <div class="wp-block-columns">
+            <div class="wp-block-column">
+        <?php
+        if ( $state_abbv == 'tn') {
+            get_template_part( 'template-parts/blocks/fbitn-block' ); 
+        }
         
-        <?php if (!$hide_map) {
+        if (!$hide_map) {
             echo '<h2 id="map">Map of '.$full_city_name.'</h2>'; 
             get_template_part( 'template-parts/blocks/city-map' ); 
         } ?>
         
-        <div class="wp-block-columns">
-            <div class="wp-block-column">
+
             <?php 
             if (array_key_exists('experiences-adventures', $topics_array)) {
                 echo '<h2 id="experiences-adventures">Experiences & Adventures in '.$full_city_name.'</h2>';

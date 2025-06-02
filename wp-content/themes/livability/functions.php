@@ -2071,7 +2071,6 @@ function load_tn_mym_posts() {
 			echo '<div class="tn-mym__img-container object-fit-image">'.get_the_post_thumbnail( $ID, 'medium_large').'</div>';
 			echo '<h4 class="tn-mym__title">'.get_the_title($ID).'</h4>';
 			echo '</a></div>';
-			// echo '<br /><a href="'.get_the_permalink($value->ID).'">title is '.get_the_title($value->ID).'</a>';
 		}
 		echo '</div>'; // pwl-container
 	}

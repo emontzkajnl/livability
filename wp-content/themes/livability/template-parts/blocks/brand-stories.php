@@ -16,7 +16,7 @@ $args = array(
 $sponsors = get_posts($args);
 
     $count = count($sponsors);
-    $heading = $city_name.', '.$state_name.' Businesses & Brands to Know'; 
+    $heading = $state_name.' Businesses & Brands to Know'; 
     echo '<div class="brand-stories" id="brands-to-know"><h2 class="wp-block-jci-blocks-section-header " style="margin-bottom: 30px;">'.$heading.'</h2>';
     if ($count == 1){
         echo '<div class="brand-stories__one">';

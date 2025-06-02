@@ -548,6 +548,9 @@
     color: black;
     padding: 15px;
   }
+  &__block {
+    margin-top: 50px;
+  }
 }
 .pwl-container {
   margin-bottom: 80px;
@@ -3507,14 +3510,12 @@ border-bottom: 1px solid $green;
     }
   }
 }
-
 @media screen and (min-width: 768px) {
   .tn-mym {
     display: flex;
     flex-direction: row;
     &__item {
       flex-basis: 33.3%;
-      flex-shrink: 0;
       margin-left: 15px;
       &:first-child{
         margin-left: 0;

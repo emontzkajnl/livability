@@ -232,53 +232,6 @@
             get_template_part( 'template-parts/blocks/local-sponsored', null, array('city' => $args['city'], 'global' => $args['global'], 'state' => $args['state'])); 
             if (str_contains(get_the_permalink(),'/tn/' )) {
                 echo '<div class="tn-mym-container"></div>';
-                // $tnargs = array(
-                //     'numberposts'       => 20,
-                //     'post_type'         => 'liv_place',
-                //     'post_parent__in'   => ['274'],
-                //     'orderby'          => 'rand'
-                // );
-                // $tn_cities = get_posts($tnargs);
-                // $tn_meta_query = array(
-                //     'relation'          => 'OR',
-                //     array (
-                //         'key'               => 'place_relationship',
-                //         'value'             => 274,
-                //         'compare'           => 'LIKE'
-                //     ),
-                // );
-                // // print_r($tn_cities);
-                // foreach ($tn_cities as $key => $value) {
-                //     $tn_meta_query[] = array(
-                //         'key'           => 'place_relationship',
-                //         'value'         => $value->ID,
-                //         'compare'       => 'LIKE'
-                //     );
-                // }
-                // $tnpostargs = array(
-                //     'numberposts'       => 3,
-                //     'post_type'         => 'post',
-                //     'category_name'     => 'make-your-move',
-                //     'orderby'           => 'rand',
-                //     'meta_query'        => $tn_meta_query
-                // );
-                // $tnposts = get_posts($tnpostargs);
-                // if ( !empty($tnposts)) {
-                //     echo '<h2>Make Your Move to Tennessee</h2>';
-                //     echo '<p class="brand-stories__sponsor-text" style="margin-top: -30px !important;">Sponsored by <a href="https://www.fbitn.com/">Farm Bureau Insurance of Tennessee</a></p>';
-                //     echo '<div class=" tn-mym">';
-                //     foreach ($tnposts as $key => $value) {
-                //         $ID = $value->ID;
-                //         $slidebkgrnd = get_the_post_thumbnail_url( $ID, 'rel_article' ); 
-                //         echo '<div class="tn-mym__item"><a class="unstyle-link" href="'.get_the_permalink( $ID ).'">';
-                //         echo '<div class="tn-mym__img" style="background-image: url('.$slidebkgrnd.');"></div>';
-                //         echo '<h4 class="tn-mym__title">'.get_the_title($ID).'</h4>';
-                //         echo '</a></div>';
-                //         // echo '<br /><a href="'.get_the_permalink($value->ID).'">title is '.get_the_title($value->ID).'</a>';
-                //     }
-                //     echo '</div>'; // pwl-container
-                // }
-             
             }
             ?>
             </div>
