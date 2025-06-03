@@ -3516,7 +3516,9 @@ border-bottom: 1px solid $green;
     flex-direction: row;
     &__item {
       flex-basis: 33.3%;
-      margin-left: 15px;
+      column-gap: 15px;
+      // width: calc(33.33% - 10px);
+      // margin-left: 15px;
       &:first-child{
         margin-left: 0;
       }
