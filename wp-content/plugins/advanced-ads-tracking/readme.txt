@@ -1,7 +1,7 @@
 === Advanced Ads – Tracking ===
 Requires at least: 4.9
 Tested up to: 6.1
-Stable tag: 2.8.1
+Stable tag: 2.8.2
 Requires PHP: 7.2
 
 Track ad impressions and clicks.
@@ -62,6 +62,11 @@ The Tracking add-on is based on the Advanced Ads plugin, a simple and powerful a
 
 == Changelog ==
 
+= 2.8.2 (December 16, 2024) =
+
+- Improvement: update Arabic, Greek and Italian translations
+- Improvement: add compatibility code for Advanced Ads 2.0
+
 = 2.8.1 (August 12, 2024) =
 
 - Fix: address 'undefined index' notice when inserting ads via Gutenberg or shortcode
@@ -74,4 +79,4 @@ The Tracking add-on is based on the Advanced Ads plugin, a simple and powerful a
 - Fix: allow impression and click tracking with PeepSo Stream placement
 - Fix: ensure group filter appears on statistics page with only one group
 
-Build: 2024-10-956fc661
+Build: 2024-12-b828539d

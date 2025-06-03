@@ -2,19 +2,20 @@
 # This file is distributed under the same license as the Advanced Ads – Tracking plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Advanced Ads – Tracking 2.8.0\n"
+"Project-Id-Version: Advanced Ads – Tracking 2.8.1\n"
 "Report-Msgid-Bugs-To: https://wpadvancedads.com/support/\n"
 "Last-Translator: Thomas Maier <post@webzunft.de>\n"
 "Language-Team: webgilde <support@wpadvancedads.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-08-12T14:09:32+00:00\n"
+"POT-Creation-Date: 2024-12-16T10:29:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: advanced-ads-tracking\n"
 
 #. Plugin Name of the plugin
+#: tracking.php:35
 msgid "Advanced Ads – Tracking"
 msgstr ""
 
@@ -1408,4 +1409,17 @@ msgstr ""
 
 #: public/views/email-report-body.php:112
 msgid "Ad"
+msgstr ""
+
+#: tracking.php:48
+msgid "Important Notice"
+msgstr ""
+
+#. translators: %s: Plugin name
+#: tracking.php:54
+msgid "Your versions of the Advanced Ads addons listed below are incompatible with <strong>Advanced Ads 2.0</strong> and have been deactivated. Please update them to their latest version. If you cannot update, e.g., due to an expired license, you can <a href=\"%1$s\">roll back to a compatible version of the Advanced Ads plugin</a> at any time or <a href=\"%2$s\">renew your license</a>."
+msgstr ""
+
+#: tracking.php:61
+msgid "The following addons are affected:"
 msgstr ""

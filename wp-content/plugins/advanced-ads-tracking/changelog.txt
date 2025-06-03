@@ -1,5 +1,10 @@
 == Changelog ==
 
+= 2.8.2 (December 16, 2024) =
+
+- Improvement: update Arabic, Greek and Italian translations
+- Improvement: add compatibility code for Advanced Ads 2.0
+
 = 2.8.1 (August 12, 2024) =
 
 - Fix: address 'undefined index' notice when inserting ads via Gutenberg or shortcode
