@@ -29,9 +29,15 @@ if ($c_or_t == 'curated' ) {
 // print_r($the_slides);
 if ($the_slides): 
 shuffle($the_slides);
-if (get_the_ID() == '274') {
-    echo '<p class="brand-stories__sponsor-text" style="margin-top: -30px !important;">Sponsored by <a href="https://www.fbitn.com/" target="_blank">Farm Bureau Insurance of Tennessee</a></p>';
+if (get_field('optional_title')) {
+    echo '<h2 class="wp-block-jci-blocks-section-header">'.get_field('optional_title').'</h2>';
 }
+if (get_field('sponsor')) {
+    echo '<p class="brand-stories__sponsor-text" style="margin-top: -30px !important;">Sponsored by <a href="'.get_field('sponsor_link').'" target="_blank">'.get_field('sponsor_name').'</a></p>';
+}
+// if (get_the_ID() == '274') {
+//     echo '<p class="brand-stories__sponsor-text" style="margin-top: -30px !important;">Sponsored by <a href="https://www.fbitn.com/" target="_blank">Farm Bureau Insurance of Tennessee</a></p>';
+// }
 ?>
 <div id="<?php echo esc_attr($id); ?>" class="<?php echo esc_attr($className); ?>">
 
