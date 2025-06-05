@@ -3514,9 +3514,10 @@ border-bottom: 1px solid $green;
   .tn-mym {
     display: flex;
     flex-direction: row;
+    column-gap: 30px;
     &__item {
       flex-basis: 33.3%;
-      column-gap: 15px;
+      
       // width: calc(33.33% - 10px);
       // margin-left: 15px;
       &:first-child{
