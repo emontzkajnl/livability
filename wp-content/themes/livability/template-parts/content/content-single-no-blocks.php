@@ -230,10 +230,12 @@
                 get_template_part( 'template-parts/blocks/cc-global-carousel' ); 
             }
             get_template_part( 'template-parts/blocks/local-sponsored', null, array('city' => $args['city'], 'global' => $args['global'], 'state' => $args['state'])); 
-            if (str_contains(get_the_permalink(),'/tn/' )) {
-                echo '<div class="tn-mym-container"></div>';
-            }
+            // if (str_contains(get_the_permalink(),'/tn/' )) {
+            //     echo '<div class="tn-mym-container"></div>';
+            // }
+
             ?>
+            <div class="injected-bottom-promo"></div>
             </div>
         </div> 
     </div><!-- .entry-content -->
