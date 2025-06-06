@@ -3491,7 +3491,7 @@ border-bottom: 1px solid $green;
 }
 
 .sponsor-card {
-  margin: 50px 20px;
+  margin: 50px 19px;
   .sma-title {
     background: $white2;
   }
@@ -3517,9 +3517,6 @@ border-bottom: 1px solid $green;
     column-gap: 30px;
     &__item {
       flex-basis: 33.3%;
-      
-      // width: calc(33.33% - 10px);
-      // margin-left: 15px;
       &:first-child{
         margin-left: 0;
       }
