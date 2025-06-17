@@ -2,7 +2,7 @@
 /*
 Plugin Name: News Break RSS Feed
 Description: Creates a custom RSS feed for media pickups like News Break with specific namespaces and elements.
-Version: 1.1
+Version: 1.4
 Author: Journal Communications, Inc.
 */
 
@@ -42,6 +42,7 @@ function nb_rss_feed_callback() {
                 'post_status' => 'publish',
                 'posts_per_page' => 10,
                 'tag__not_in' => array(),
+                'has_password' => false, // Exclude password-protected posts
             );
             
             // Get term IDs for the tags to exclude
@@ -69,10 +70,21 @@ function nb_rss_feed_callback() {
                 } else {
                     $authors[] = get_the_author();
                 }
-                // Get post content with images and captions
+                // Get post content
                 $content = get_the_content(null, false);
                 $content = apply_filters('the_content', $content);
-                // Parse content for images and wrap in figure/figcaption
+                // Prepend featured image to content if available
+                $featured_image_html = '';
+                if (has_post_thumbnail()) {
+                    $thumbnail = wp_get_attachment_image_src(get_post_thumbnail_id(), 'full');
+                    if ($thumbnail) {
+                        $caption = get_the_post_thumbnail_caption();
+                        $featured_image_html = '<figure><img src="' . esc_url($thumbnail[0]) . '" alt="' . esc_attr($caption ? $caption : get_the_title()) . '">' .
+                                              ($caption ? '<figcaption>' . wp_kses_post($caption) . '</figcaption>' : '') .
+                                              '</figure>';
+                    }
+                }
+                // Parse content for other images and wrap in figure/figcaption
                 $content = preg_replace_callback(
                     '/<img[^>]+src=["\'](.*?)["\'][^>]*>(?:<p[^>]*>(.*?)<\/p>)?/i',
                     function($matches) {
@@ -84,6 +96,8 @@ function nb_rss_feed_callback() {
                     },
                     $content
                 );
+                // Combine featured image and content
+                $content = $featured_image_html . $content;
                 ?>
                 <item>
                     <title><?php the_title_rss(); ?></title>
@@ -96,7 +110,7 @@ function nb_rss_feed_callback() {
                     <description><![CDATA[<?php the_excerpt_rss(); ?>]]></description>
                     <content:encoded><![CDATA[<?php echo $content; ?>]]></content:encoded>
                     <?php
-                    // Add thumbnail if available
+                    // Add featured image as thumbnail if available
                     if (has_post_thumbnail()) {
                         $thumbnail = wp_get_attachment_image_src(get_post_thumbnail_id(), 'full');
                         if ($thumbnail) {
