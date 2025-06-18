@@ -60,7 +60,7 @@ if (count($posts) > 3) {
             </a>
             <div class="place-topics-2__text-container">
            <h3 class="place-topics-2__title"><a class="unstyle-link" href="<?php echo get_the_permalink($posts[$i]); ?>"><?php echo get_the_title($posts[$i]); ?></a></h3>
-           <p class="place-topics-2__excerpt"><?php// echo get_the_excerpt( $posts[$i] ); ?></p>
+           <p class="place-topics-2__excerpt"><?php echo get_the_excerpt( $posts[$i] ); ?></p>
             </div>
        </div>
     <?php } 
