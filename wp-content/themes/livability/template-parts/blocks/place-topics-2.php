@@ -23,6 +23,28 @@ if ($sponsor) {
 } 
 $cat = str_replace('-','_', $cat);
 
+// move 1st and 2nd lattice tagged posts to 3rd and 4th positions
+$lattice_posts = [];
+$all_posts = [];
+if (count($posts) > 3) {
+    foreach ($posts as $key => $value) {
+        if (count($lattice_posts) < 2) {
+            $current = get_post($value);
+            if (has_tag('lattice', $current)) {
+                $lattice_posts[] = $value;
+            } else {
+                $all_posts[] = $value;
+            }
+        } else {
+            $all_posts[] = $value;
+        }
+    }
+ 
+    if (!empty($lattice_posts)) {
+        array_splice($all_posts, 2, 0, $lattice_posts);
+        $posts = $all_posts;
+    }
+}
 ?>
 
 
@@ -38,7 +60,7 @@ $cat = str_replace('-','_', $cat);
             </a>
             <div class="place-topics-2__text-container">
            <h3 class="place-topics-2__title"><a class="unstyle-link" href="<?php echo get_the_permalink($posts[$i]); ?>"><?php echo get_the_title($posts[$i]); ?></a></h3>
-           <p class="place-topics-2__excerpt"><?php echo get_the_excerpt( $posts[$i] ); ?></p>
+           <p class="place-topics-2__excerpt"><?php// echo get_the_excerpt( $posts[$i] ); ?></p>
             </div>
        </div>
     <?php } 
@@ -50,7 +72,6 @@ $cat = str_replace('-','_', $cat);
             Object.assign(window['<?php echo $cat; ?>'], {current_page: '1'});
             Object.assign(window['<?php echo $cat; ?>'], {posts: '<?php echo json_encode($posts); ?>'});
             Object.assign(window['<?php echo $cat; ?>'], {max_pages: '<?php echo ceil(count($posts) / 3); ?>'});
-            window['test'] = {};
         </script>
     <?php endif; ?>
 </div>
