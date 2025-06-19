@@ -155,7 +155,7 @@ function nb_rss_feed_callback() {
                         $thumb_byline = get_field('img_byline', get_post_thumbnail_id());
                         $caption = get_the_post_thumbnail_caption();
                         $featured_image_html = '<figure><img src="' . esc_url($thumbnail[0]) . '" alt="' . esc_attr($caption ? $caption : get_the_title()) . '">' .
-                                            ($thumb_place_name ? $thumb_place_name : '' ). ' / ' . ($thumb_byline ? $thumb_byline : '') . '<br />' . 
+                                            ' Photo Credit: '.($thumb_place_name ? $thumb_place_name : '' ). ' / ' . ($thumb_byline ? strip_tags($thumb_byline) : '') . '<br />' . 
                                               ($caption ? '<figcaption>' . wp_kses_post($caption) . '</figcaption>' : '') .
                                               '</figure>';
                     }
@@ -170,7 +170,7 @@ function nb_rss_feed_callback() {
                         
                         return '<figure><img src="' . esc_url($img_src) . '" alt="' . esc_attr($caption) . '">' .
                                ($caption ? '<figcaption>' . wp_kses_post($caption) . '</figcaption>' : '') .
-                               ($post_image_id ? '<div class="livability-image-meta">'.get_field('img_place_name', $post_image_id).' / '.get_field('img_byline', $post_image_id) .'</div>' : '') .
+                               ($post_image_id ? ' Photo Credit '.get_field('img_place_name', $post_image_id).' / '.strip_tags(get_field('img_byline', $post_image_id)) : '') .
                                '</figure>';
                     },
                     $content
