@@ -153,10 +153,16 @@ function nb_rss_feed_callback() {
                     if ($thumbnail) {
                         $thumb_place_name = get_field('img_place_name', get_post_thumbnail_id());
                         $thumb_byline = get_field('img_byline', get_post_thumbnail_id());
+                        $thumb_photo_credit = '';
+                        if ($thumb_byline || $thumb_place_name ) {
+                            $thumb_photo_credit .= ' Photo Credit: ';
+                            $thumb_photo_credit .= $thumb_place_name ? $thumb_place_name : '';
+                            $thumb_photo_credit .= $thumb_byline && $thumb_place_name ? ' / ' : '';
+                            $thumb_photo_credit .= $thumb_byline ? strip_tags($thumb_byline) : '';
+                        }
                         $caption = get_the_post_thumbnail_caption();
                         $featured_image_html = '<figure><img src="' . esc_url($thumbnail[0]) . '" alt="' . esc_attr($caption ? $caption : get_the_title()) . '">' .
-                                            ' Photo Credit: '.($thumb_place_name ? $thumb_place_name : '' ). ' / ' . ($thumb_byline ? strip_tags($thumb_byline) : '') . '<br />' . 
-                                              ($caption ? '<figcaption>' . wp_kses_post($caption) . '</figcaption>' : '') .
+                            '<figcaption>' . ($caption ? wp_kses_post($caption) : '') . $thumb_photo_credit . '</figcaption' .
                                               '</figure>';
                     }
                 }
@@ -167,10 +173,19 @@ function nb_rss_feed_callback() {
                         $img_src = $matches[1];
                         $caption = !empty($matches[2]) ? $matches[2] : '';
                         $post_image_id = get_attachment_id( $src );
+                        $photo_credit = '';
+                        if ($post_image_id) {
+                            $place = get_field('img_place_name', $post_image_id);
+                            $byline = get_field('img_byline', $post_image_id);
+                            $photo_credit .= $place || $byline ?  'Photo Credit: ' : '';
+                            $photo_credit .= $place ? $place : '';
+                            $photo_credit .= $place && $byline ? ' / ' : '';
+                            $photo_credit .= $byline ? strip_tags($byline) : '';
+                        }
                         
                         return '<figure><img src="' . esc_url($img_src) . '" alt="' . esc_attr($caption) . '">' .
-                               ($caption ? '<figcaption>' . wp_kses_post($caption) . '</figcaption>' : '') .
-                               ($post_image_id ? ' Photo Credit '.get_field('img_place_name', $post_image_id).' / '.strip_tags(get_field('img_byline', $post_image_id)) : '') .
+                               '<figcaption'.($caption ?  wp_kses_post($caption) : '') . $photo_credit . '</figcaption>'.
+                               
                                '</figure>';
                     },
                     $content
