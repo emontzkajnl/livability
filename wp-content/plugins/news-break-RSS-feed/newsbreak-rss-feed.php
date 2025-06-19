@@ -2,13 +2,86 @@
 /*
 Plugin Name: News Break RSS Feed
 Description: Creates a custom RSS feed for media pickups like News Break with specific namespaces and elements.
-Version: 1.4
+Version: 1.5
 Author: Journal Communications, Inc.
 */
 
 // Prevent direct access
 if (!defined('ABSPATH')) {
     exit;
+}
+
+if ( ! function_exists( 'get_attachment_id' ) ) {
+    /**
+     * Get the Attachment ID for a given image URL.
+     *
+     * @link   http://wordpress.stackexchange.com/a/7094
+     *
+     * @param  string $url
+     *
+     * @return boolean|integer
+     */
+    function get_attachment_id( $url ) {
+
+        $dir = wp_upload_dir();
+
+        // baseurl never has a trailing slash
+        if ( false === strpos( $url, $dir['baseurl'] . '/' ) ) {
+            // URL points to a place outside of upload directory
+            return false;
+        }
+
+        $file  = basename( $url );
+        $query = array(
+            'post_type'  => 'attachment',
+            'fields'     => 'ids',
+            'meta_query' => array(
+                array(
+                    'key'     => '_wp_attached_file',
+                    'value'   => $file,
+                    'compare' => 'LIKE',
+                ),
+            )
+        );
+
+        // query attachments
+        $ids = get_posts( $query );
+
+        if ( ! empty( $ids ) ) {
+
+            foreach ( $ids as $id ) {
+				$full_img = wp_get_attachment_image_src( $id, 'full' );
+				$full_img_src = array_shift($full_img);
+                // first entry of returned array is the URL
+                if ( $url === $full_img_src ) {
+					return $id;
+				}
+                    
+            }
+        }
+
+        $query['meta_query'][0]['key'] = '_wp_attachment_metadata';
+
+        // query attachments again
+        $ids = get_posts( $query );
+
+        if ( empty( $ids) )
+            return false;
+
+        foreach ( $ids as $id ) {
+
+            $meta = wp_get_attachment_metadata( $id );
+
+            foreach ( $meta['sizes'] as $size => $values ) {
+				$image_src = wp_get_attachment_image_src( $id, $size ); 
+                // if ( $values['file'] === $file && $url === array_shift( wp_get_attachment_image_src( $id, $size ) ) )
+                    // return $id;
+				if ( $values['file'] === $file && $url === array_shift( $image_src ) ) return $id; 
+            }
+        }
+
+        return false;
+    }
 }
 
 // Register custom RSS feed
@@ -78,8 +151,11 @@ function nb_rss_feed_callback() {
                 if (has_post_thumbnail()) {
                     $thumbnail = wp_get_attachment_image_src(get_post_thumbnail_id(), 'full');
                     if ($thumbnail) {
+                        $thumb_place_name = get_field('img_place_name', get_post_thumbnail_id());
+                        $thumb_byline = get_field('img_byline', get_post_thumbnail_id());
                         $caption = get_the_post_thumbnail_caption();
                         $featured_image_html = '<figure><img src="' . esc_url($thumbnail[0]) . '" alt="' . esc_attr($caption ? $caption : get_the_title()) . '">' .
+                                            ($thumb_place_name ? $thumb_place_name : '' ). ' / ' . ($thumb_byline ? $thumb_byline : '') . '<br />' . 
                                               ($caption ? '<figcaption>' . wp_kses_post($caption) . '</figcaption>' : '') .
                                               '</figure>';
                     }
@@ -90,8 +166,11 @@ function nb_rss_feed_callback() {
                     function($matches) {
                         $img_src = $matches[1];
                         $caption = !empty($matches[2]) ? $matches[2] : '';
+                        $post_image_id = get_attachment_id( $src );
+                        
                         return '<figure><img src="' . esc_url($img_src) . '" alt="' . esc_attr($caption) . '">' .
                                ($caption ? '<figcaption>' . wp_kses_post($caption) . '</figcaption>' : '') .
+                               ($post_image_id ? '<div class="livability-image-meta">'.get_field('img_place_name', $post_image_id).' / '.get_field('img_byline', $post_image_id) .'</div>' : '') .
                                '</figure>';
                     },
                     $content
@@ -120,7 +199,32 @@ function nb_rss_feed_callback() {
                         }
                     }
                     ?>
-                </item>
+				  <nb:scripts>
+					<![CDATA[
+					  <script>
+						(function(i,s,o,g,r,a,m){i['GoogleTagManagerObject']=r;i[r]=i[r]||function(){
+						(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+						m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+						})(window,document,'script','https://www.googletagmanager.com/gtag/js?id=G-HVXCXLTZK1','gtag');
+						window.dataLayer = window.dataLayer || [];
+						function gtag(){dataLayer.push(arguments);}
+						gtag('js', new Date());
+						gtag('config', 'G-HVXCXLTZK1', {
+						  'cookie_flags': 'SameSite=None;Secure' // Optional: for restricted environments
+						});
+						gtag('event', 'rss_view', {
+						  'feed_item': '<?php echo esc_js(get_the_title()); ?>',
+						  'feed_source': 'newsbreak',
+						  'page_path': '<?php echo esc_js(get_permalink()); ?>',
+						  'campaign_name': 'News Break',
+						  'campaign_source': 'News Break',
+						  'campaign_medium': 'Article',
+						  'referrer': 'https://www.newsbreak.com/'
+						});
+					  </script>
+					]]>
+				  </nb:scripts>
+                </item>          
                 <?php
             endwhile;
             wp_reset_postdata();
