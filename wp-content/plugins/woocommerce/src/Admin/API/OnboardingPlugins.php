@@ -13,7 +13,6 @@ use ActionScheduler;
 use Automattic\Jetpack\Connection\Manager;
 use Automattic\WooCommerce\Admin\Features\Features;
 use Automattic\WooCommerce\Admin\PluginsHelper;
-use Automattic\WooCommerce\Admin\PluginsInstallLoggers\AsynPluginsInstallLogger;
 use WC_REST_Data_Controller;
 use WP_Error;
 use WP_REST_Request;
@@ -66,6 +65,12 @@ class OnboardingPlugins extends WC_REST_Data_Controller {
 								);
 							},
 							'required'          => true,
+						),
+						'source'  => array(
+							'description'       => 'The source of the request',
+							'type'              => 'string',
+							'sanitize_callback' => 'sanitize_text_field',
+							'required'          => false,
 						),
 					),
 				),
@@ -153,9 +158,10 @@ class OnboardingPlugins extends WC_REST_Data_Controller {
 	 */
 	public function install_and_activate_async( WP_REST_Request $request ) {
 		$plugins = $request->get_param( 'plugins' );
+		$source  = $request->get_param( 'source' );
 		$job_id  = uniqid();
 
-		WC()->queue()->add( 'woocommerce_plugins_install_and_activate_async_callback', array( $plugins, $job_id ) );
+		WC()->queue()->add( 'woocommerce_plugins_install_and_activate_async_callback', array( $plugins, $job_id, $source ) );
 
 		$plugin_status = array();
 		foreach ( $plugins as $plugin ) {
@@ -222,7 +228,6 @@ class OnboardingPlugins extends WC_REST_Data_Controller {
 	 * @param WP_REST_Request $request WP_REST_Request object.
 	 *
 	 * @return array
-	 * @throws \Exception If there is an error registering the site.
 	 */
 	public function get_jetpack_authorization_url( WP_REST_Request $request ) {
 		$manager = new Manager( 'woocommerce' );
@@ -246,17 +251,24 @@ class OnboardingPlugins extends WC_REST_Data_Controller {
 			$calypso_env = 'horizon';
 		}
 
-		return [
-			'success' => ! $errors->has_errors(),
-			'errors'  => $errors->get_error_messages(),
-			'url'     => add_query_arg(
+		$color_scheme = get_user_option( 'admin_color', get_current_user_id() );
+		if ( ! $color_scheme ) {
+			// The default Core color schema is 'fresh'.
+			$color_scheme = 'fresh';
+		}
+
+		return array(
+			'success'      => ! $errors->has_errors(),
+			'errors'       => $errors->get_error_messages(),
+			'color_scheme' => $color_scheme,
+			'url'          => add_query_arg(
 				array(
 					'from'        => $request->get_param( 'from' ),
 					'calypso_env' => $calypso_env,
 				),
 				$authorization_url,
 			),
-		];
+		);
 	}
 
 	/**

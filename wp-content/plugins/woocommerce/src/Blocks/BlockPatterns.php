@@ -1,12 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Automattic\WooCommerce\Blocks;
 
 use Automattic\WooCommerce\Admin\Features\Features;
-use Automattic\WooCommerce\Blocks\AIContent\PatternsHelper;
 use Automattic\WooCommerce\Blocks\Domain\Package;
 use Automattic\WooCommerce\Blocks\Patterns\PatternRegistry;
 use Automattic\WooCommerce\Blocks\Patterns\PTKPatternsStore;
-use WP_Error;
 
 /**
  * Registers patterns under the `./patterns/` directory and from the PTK API and updates their content.
@@ -51,13 +51,6 @@ class BlockPatterns {
 	private PatternRegistry $pattern_registry;
 
 	/**
-	 * Patterns dictionary
-	 *
-	 * @var array|WP_Error
-	 */
-	private $dictionary;
-
-	/**
 	 * PTKPatternsStore instance.
 	 *
 	 * @var PTKPatternsStore $ptk_patterns_store
@@ -88,16 +81,19 @@ class BlockPatterns {
 	}
 
 	/**
-	 * Returns the Patterns dictionary.
+	 * Loads the content of a pattern.
 	 *
-	 * @return array|WP_Error
+	 * @param string $pattern_path The path to the pattern.
+	 * @return string The content of the pattern.
 	 */
-	private function get_patterns_dictionary() {
-		if ( null === $this->dictionary ) {
-			$this->dictionary = PatternsHelper::get_patterns_dictionary();
+	private function load_pattern_content( $pattern_path ) {
+		if ( ! file_exists( $pattern_path ) ) {
+			return '';
 		}
 
-		return $this->dictionary;
+		ob_start();
+		include $pattern_path;
+		return ob_get_clean();
 	}
 
 	/**
@@ -110,6 +106,38 @@ class BlockPatterns {
 			return;
 		}
 
+		$patterns = $this->get_block_patterns();
+		foreach ( $patterns as $pattern ) {
+			/**
+			 * Handle backward compatibility for pattern source paths.
+			 * Previously, patterns were stored with absolute paths. Now we store relative paths.
+			 * If we encounter a pattern with an absolute path (containing $patterns_path),
+			 * we keep it as is. Otherwise, we construct the full path from the relative source.
+			 *
+			 * Remove the backward compatibility logic in the WooCommerce 10.1 lifecycle: https://github.com/woocommerce/woocommerce/issues/57354.
+			 */
+			$pattern_path      = str_contains( $pattern['source'], $this->patterns_path ) ? $pattern['source'] : $this->patterns_path . '/' . $pattern['source'];
+			$pattern['source'] = $pattern_path;
+
+			$content            = $this->load_pattern_content( $pattern_path );
+			$pattern['content'] = $content;
+
+			$this->pattern_registry->register_block_pattern( $pattern_path, $pattern );
+		}
+	}
+
+	/**
+	 * Gets block pattern data from the cache if available
+	 *
+	 * @return array Block pattern data.
+	 */
+	private function get_block_patterns() {
+		$pattern_data = $this->get_pattern_cache();
+
+		if ( is_array( $pattern_data ) ) {
+			return $pattern_data;
+		}
+
 		$default_headers = array(
 			'title'         => 'Title',
 			'slug'          => 'Slug',
@@ -120,22 +148,58 @@ class BlockPatterns {
 			'blockTypes'    => 'Block Types',
 			'inserter'      => 'Inserter',
 			'featureFlag'   => 'Feature Flag',
+			'templateTypes' => 'Template Types',
 		);
 
 		if ( ! file_exists( $this->patterns_path ) ) {
-			return;
+			return array();
 		}
 
 		$files = glob( $this->patterns_path . '/*.php' );
 		if ( ! $files ) {
-			return;
+			return array();
 		}
+
+		$patterns = array();
 
 		foreach ( $files as $file ) {
-			$pattern_data = get_file_data( $file, $default_headers );
-
-			$this->pattern_registry->register_block_pattern( $file, $pattern_data, $this->get_patterns_dictionary() );
+			$data = get_file_data( $file, $default_headers );
+			// We want to store the relative path in the cache, so we can use it later to register the pattern.
+			$data['source'] = str_replace( $this->patterns_path . '/', '', $file );
+			$patterns[]     = $data;
 		}
+
+		$this->set_pattern_cache( $patterns );
+		return $patterns;
+	}
+
+	/**
+	 * Gets block pattern cache.
+	 *
+	 * @return array|false Returns an array of patterns if cache is found, otherwise false.
+	 */
+	private function get_pattern_cache() {
+		$pattern_data = get_site_transient( 'woocommerce_blocks_patterns' );
+
+		if ( is_array( $pattern_data ) && WOOCOMMERCE_VERSION === $pattern_data['version'] ) {
+			return $pattern_data['patterns'];
+		}
+
+		return false;
+	}
+
+	/**
+	 * Sets block pattern cache.
+	 *
+	 * @param array $patterns Block patterns data to set in cache.
+	 */
+	private function set_pattern_cache( array $patterns ) {
+		$pattern_data = array(
+			'version'  => WOOCOMMERCE_VERSION,
+			'patterns' => $patterns,
+		);
+
+		set_site_transient( 'woocommerce_blocks_patterns', $pattern_data, MONTH_IN_SECONDS );
 	}
 
 	/**
@@ -155,14 +219,18 @@ class BlockPatterns {
 		$has_scheduled_action = function_exists( 'as_has_scheduled_action' ) ? 'as_has_scheduled_action' : 'as_next_scheduled_action';
 
 		$patterns = $this->ptk_patterns_store->get_patterns();
-		if ( empty( $patterns ) ) {
+		if ( empty( $patterns ) || ! is_array( $patterns ) ) {
+			// Only log once per day by using a transient.
+			$transient_key = 'wc_ptk_pattern_store_warning';
 			// By only logging when patterns are empty and no fetch is scheduled,
 			// we ensure that warnings are only generated in genuinely problematic situations,
 			// such as when the pattern fetching mechanism has failed entirely.
-			if ( ! call_user_func( $has_scheduled_action, 'fetch_patterns' ) ) {
+			if ( ! get_transient( $transient_key ) && ! call_user_func( $has_scheduled_action, 'fetch_patterns' ) ) {
 				wc_get_logger()->warning(
 					__( 'Empty patterns received from the PTK Pattern Store', 'woocommerce' ),
 				);
+				// Set the transient to true to indicate that the warning has been logged in the current day.
+				set_transient( $transient_key, true, DAY_IN_SECONDS );
 			}
 			return;
 		}
@@ -173,7 +241,7 @@ class BlockPatterns {
 			$pattern['slug']    = $pattern['name'];
 			$pattern['content'] = $pattern['html'];
 
-			$this->pattern_registry->register_block_pattern( $pattern['ID'], $pattern, $this->get_patterns_dictionary() );
+			$this->pattern_registry->register_block_pattern( $pattern['ID'], $pattern );
 		}
 	}
 
@@ -183,9 +251,24 @@ class BlockPatterns {
 	 * @param array $patterns The patterns to parse.
 	 * @return array The parsed patterns.
 	 */
-	private function parse_categories( array $patterns ) {
+	private function parse_categories( $patterns ) {
+		if ( ! is_array( $patterns ) ) {
+			return array();
+		}
 		return array_map(
 			function ( $pattern ) {
+				if ( ! isset( $pattern['categories'] ) ) {
+					$pattern['categories'] = array();
+				}
+
+				$values = array_values( $pattern['categories'] );
+
+				foreach ( $values as $value ) {
+					if ( ! isset( $value['title'] ) || ! isset( $value['slug'] ) ) {
+						$pattern['categories'] = array();
+					}
+				}
+
 				$pattern['categories'] = array_map(
 					function ( $category ) {
 						foreach ( self::CATEGORIES_PREFIXES as $prefix ) {

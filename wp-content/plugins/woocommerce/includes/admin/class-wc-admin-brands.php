@@ -5,7 +5,7 @@
  * Important: For internal use only by the Automattic\WooCommerce\Internal\Brands package.
  *
  * @package WooCommerce\Admin
- * @version 9.4.0
+ * @version x.x.x
  */
 
 declare( strict_types = 1);
@@ -18,11 +18,18 @@ use Automattic\Jetpack\Constants;
 class WC_Brands_Admin {
 
 	/**
-	 * Settings array.
+	 * Settings array (Deprecated).
 	 *
 	 * @var array
 	 */
 	public $settings_tabs;
+
+	/**
+	 * Settings form fields (Deprecated).
+	 *
+	 * @var array
+	 */
+	private $settings;
 
 	/**
 	 * Admin fields.
@@ -55,15 +62,20 @@ class WC_Brands_Admin {
 			}
 		);
 
-		$this->settings_tabs = array(
-			'brands' => __( 'Brands', 'woocommerce' ),
-		);
-
 		// Hiding setting for future depreciation. Only users who have touched this settings should see it.
 		$setting_value = get_option( 'wc_brands_show_description' );
 		if ( is_string( $setting_value ) ) {
+
 			// Add the settings fields to each tab.
-			$this->init_form_fields();
+			add_action(
+				'before_woocommerce_init',
+				function () {
+					$this->init_form_fields();
+					$this->settings_tabs = array(
+						'brands' => __( 'Brands', 'woocommerce' ),
+					);
+				}
+			);
 			add_action( 'woocommerce_get_sections_products', array( $this, 'add_settings_tab' ) );
 			add_action( 'woocommerce_get_settings_products', array( $this, 'add_settings_section' ), null, 2 );
 		}
@@ -131,6 +143,7 @@ class WC_Brands_Admin {
 		global $post;
 		// Brands.
 		?>
+		<div class="options_group"><div class="hr-section hr-section-coupon_restrictions"><?php echo esc_html__( 'And', 'woocommerce' ); ?></div>
 		<p class="form-field"><label for="product_brands"><?php esc_html_e( 'Product brands', 'woocommerce' ); ?></label>
 			<select id="product_brands" name="product_brands[]" style="width: 50%;"  class="wc-enhanced-select" multiple="multiple" data-placeholder="<?php esc_attr_e( 'Any brand', 'woocommerce' ); ?>">
 				<?php
@@ -175,6 +188,9 @@ class WC_Brands_Admin {
 			</select>
 			<?php
 				echo wc_help_tip( esc_html__( 'Product must not be associated with these brands for the coupon to remain valid or, for "Product Discounts", products associated with these brands will not be discounted.', 'woocommerce' ) );
+			?>
+		</div>
+		<?php
 	}
 
 	/**

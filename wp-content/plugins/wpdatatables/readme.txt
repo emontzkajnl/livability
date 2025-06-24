@@ -4,9 +4,9 @@ Author URI: https://tmsproducts.io
 Plugin URI: https://wpdatatables.com/
 Tags: table, table builder, datatable, csv, chart
 Requires at least: 4.0
-Tested up to: 6.7.2
+Tested up to: 6.8.1
 Requires PHP: 7.4
-Stable tag: 3.4.2.46
+Stable tag: 6.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -440,6 +440,27 @@ This can be changed from the “Number format” drop-down menu in the wpDataTab
 13. Google chart settings
 
 == Changelog ==
+= 6.3.2 =
+* Security and stability improvements.
+* Minor CSS fixes.
+Other small bug fixes.
+
+= 3.4.2.50 =
+* Minor CSS fixes.
+Other small bug fixes and stability improvements.
+
+= 3.4.2.49 =
+* Removed unnecessary CSS.
+Other small bug fixes and stability improvements.
+
+= 3.4.2.48 =
+* Compatibility with WordPress 6.8.1 version approved.
+Other small bug fixes and stability improvements.
+
+= 3.4.2.47 =
+* Compatibility with WordPress 6.8 version approved.
+Other small bug fixes and stability improvements.
+
 = 3.4.2.46 =
 * Minor library fixes.
 
