@@ -5,18 +5,17 @@ Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/search-engine-optimization/
 Requires at least: 5.0
-Tested up to: 6.4
+Tested up to: 6.8
 Stable tag: trunk
 Homepage: https://connekthq.com
-Version: 1.9.6
+Version: 1.9.7
 
 == Copyright ==
-Copyright 2024 Connekt Media
+Copyright 2025 Connekt Media
 
 This software is NOT to be distributed, but can be INCLUDED in WP themes: Premium or Contracted.
 This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
 
 == Description ==
 
@@ -44,8 +43,12 @@ http://connekthq.com/plugins/ajax-load-more/seo/
 4. Ensure Ajax Load More is installed prior to activating the plugin.
 5. Activate the plugin in the Plugin dashboard.
 
-
 == Changelog ==
+
+= 1.9.7 - June 9, 2025 =
+* UPDATE: Updated load_text_domain action to remove PHP warning.
+* UPDATE: Added `ajax-load-more` as a required plugin and removed activation hooks/notices.
+* UPDATE: Various code cleanups and organization.
 
 = 1.9.6 - January 16, 2024 =
 * UPGRADE NOTICE: This update is affected by the core Ajax Load More 7.0 release. Updating this plugin will require updating Ajax Load More to 7.0.

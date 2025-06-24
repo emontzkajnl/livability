@@ -66,7 +66,6 @@ function alm_woo_is_shop_archive_enabled() {
 	} else {
 		return true;
 	}
-
 }
 /**
  * Is ALM enabled for shop searches.
@@ -88,7 +87,7 @@ function alm_woo_is_shop_search_enabled() {
  * @since 1.0
  */
 function alm_is_woo_archive() {
-	if ( alm_is_woo_activated() && function_exists( 'is_woocommerce' ) && is_woocommerce() ) {
+	if ( function_exists( 'is_woocommerce' ) && is_woocommerce() ) {
 		return true;
 	} else {
 		return false;

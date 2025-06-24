@@ -2,14 +2,15 @@
 /**
  * Plugin Name: Ajax Load More: WooCommerce
  * Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/woocommerce/
- * Description: Ajax Load More addons for integrating WooCommerce.
+ * Description: Ajax Load More addon for integration with WooCommerce shop and archive pages.
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: http://connekthq.com
  * Copyright: Darren Cooney & Connekt Media
- * Version: 1.2.4
+ * Version: 1.2.6
  * WC requires at least: 5.0
- * WC tested up to: 8.1
+ * WC tested up to: 9.9.3
+ * Requires Plugins: ajax-load-more, woocommerce
  *
  * @package ALMWooCommerce
  */
@@ -18,61 +19,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ALM_WOO_VERSION', '1.2.4' );
-define( 'ALM_WOO_RELEASE', 'September 27, 2023' );
-
-/**
- * Plugin activation hook.
- *
- * @since 1.0
- */
-function alm_woo_install() {
-	if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-		set_transient( 'alm_woocommerce_admin_notice', true, 5 );
-	}
-	if ( ! alm_is_woo_activated() ) {
-		wp_die( esc_html__( 'WooCommerce must be installed and activated to use the Ajax Load More WooCommerce Add-on', 'alm-woocommerce' ) );
-	}
-}
-register_activation_hook( __FILE__, 'alm_woo_install' );
-
-/**
- * Is WooCommerce activated.
- *
- * @since 1.0
- */
-function alm_is_woo_activated() {
-	// phpcs:ignore
-	if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
-/**
- * Display admin notice if plugin does not meet the requirements.
- *
- * @since 1.2
- */
-function alm_woocommerce_admin_notice() {
-	$slug   = 'ajax-load-more';
-	$plugin = $slug . '-woocommerce';
-	// Ajax Load More Notice.
-	if ( get_transient( 'alm_woocommerce_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>' . __( 'You must install and activate the core Ajax Load More plugin before using the Ajax Load More WooCommerce Add-on.', 'alm-woocommerce' ) . '</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, __( 'Install Ajax Load More Now', 'alm-woocommerce' ) ) . '</p>';
-		$message    .= '</div>';
-		echo wp_kses_post( $message );
-		delete_transient( 'alm_woocommerce_admin_notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_woocommerce_admin_notice' );
+define( 'ALM_WOO_VERSION', '1.2.6' );
+define( 'ALM_WOO_RELEASE', 'June 9, 2025' );
 
 if ( ! class_exists( 'ALMWooCommerce' ) ) :
-
 	/**
 	 * WooCommerce class.
 	 */
@@ -86,14 +36,45 @@ if ( ! class_exists( 'ALMWooCommerce' ) ) :
 			define( 'ALM_WOO_URL', plugins_url( '', __FILE__ ) );
 			define( 'ALM_WOO_PREFIX', 'alm_woo_' );
 
-			add_action( 'alm_woocommerce_installed', [ &$this, 'alm_woocommerce_installed' ] );
-			add_action( 'wp_enqueue_scripts', [ &$this, 'alm_woocommerce_enqueue_scripts' ] );
-			add_filter( 'alm_woocommerce_shortcode', [ &$this, 'alm_woocommerce_shortcode' ], 10, 3 );
-			add_action( 'woocommerce_before_shop_loop', [ &$this, 'alm_woocommerce_before_shop_loop' ] );
-			add_action( 'woocommerce_after_shop_loop', [ &$this, 'alm_woocommerce_after_shop_loop' ] );
-			add_action( 'alm_woocommerce_settings', [ &$this, 'alm_woocommerce_settings' ] );
-			load_plugin_textdomain( 'alm-woocommerce', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
+			add_action( 'alm_woocommerce_installed', [ $this, 'alm_woocommerce_installed' ] );
+			add_action( 'wp_enqueue_scripts', [ $this, 'alm_woocommerce_enqueue_scripts' ] );
+			add_action( 'woocommerce_before_shop_loop', [ $this, 'alm_woocommerce_before_shop_loop' ] );
+			add_action( 'woocommerce_after_shop_loop', [ $this, 'alm_woocommerce_after_shop_loop' ] );
+			add_action( 'alm_woocommerce_settings', [ $this, 'alm_woocommerce_settings' ] );
+			add_action( 'before_woocommerce_init', [ $this, 'declare_compatibility' ] );
+			add_action( 'init', [ $this, 'init' ] );
+
+			add_filter( 'alm_woocommerce_shortcode', [ $this, 'alm_woocommerce_shortcode' ], 10, 3 );
 			$this->includes();
+		}
+
+		/**
+		 * Load the plugin text domain for translation.
+		 *
+		 * @return void
+		 */
+		public function init() {
+			load_plugin_textdomain( 'alm-woocommerce', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
+		}
+
+		/**
+		 * Declare compatibility with WooCommerce custom order tables.
+		 *
+		 * @see https://developer.woocommerce.com/docs/features/high-performance-order-storage/recipe-book#declaring-extension-incompatibility
+		 */
+		public function declare_compatibility() {
+			if ( class_exists( 'Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+				Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+			}
+		}
+
+		/**
+		 * Is WooCommerce activated.
+		 *
+		 * @since 1.0
+		 */
+		function alm_is_woo_activated() {
+			return in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
 		}
 
 		/**
@@ -102,7 +83,7 @@ if ( ! class_exists( 'ALMWooCommerce' ) ) :
 		 * @since 1.0
 		 */
 		public function includes() {
-			if ( alm_is_woo_activated() ) {
+			if ( $this->alm_is_woo_activated() ) {
 				require_once 'core/functions.php';
 				require_once 'admin/customizer/customizer.php';
 			}
@@ -228,7 +209,6 @@ if ( ! class_exists( 'ALMWooCommerce' ) ) :
 
 			// Render ALM.
 			alm_render( $args );
-
 		}
 
 		/**

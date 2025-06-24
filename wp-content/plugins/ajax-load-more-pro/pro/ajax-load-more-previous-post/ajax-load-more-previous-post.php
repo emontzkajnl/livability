@@ -2,13 +2,14 @@
 /**
  * Plugin Name: Ajax Load More: Single Post
  * Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/single-post/
- * Description: Ajax Load More add-on for infinite scrolling single posts
+ * Description: Ajax Load More add-on for infinite scrolling single posts.
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.7.1
+ * Version: 1.7.2
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
+ * Requires Plugins: ajax-load-more
  *
  * @package ALMSinglePost
  */
@@ -19,40 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_PREV_POST_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_PREV_POST_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_PREV_POST_VERSION', '1.7.1' );
-define( 'ALM_PREV_POST_RELEASE', 'December 4, 2024' );
-
-/**
- * Activation hook.
- *
- * @since 1.0
- */
-function alm_single_post_install() {
-	if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-		set_transient( 'alm_single_post_admin_notice', true, 5 );
-	}
-}
-register_activation_hook( __FILE__, 'alm_single_post_install' );
-
-/**
- * Display admin notice if plugin does not meet the requirements.
- *
- * @since 2.5.6
- */
-function alm_single_post_admin_notice() {
-	$slug   = 'ajax-load-more';
-	// Ajax Load More Notice.
-	if ( get_transient( 'alm_single_post_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>' . __( 'You must install and activate the core Ajax Load More plugin before using the Ajax Load More Single Post Add-on.', 'ajax-load-more-single-post' ) . '</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, __( 'Install Ajax Load More Now', 'ajax-load-more-single-post' ) ) . '</p>';
-		$message    .= '</div>';
-		echo wp_kses_post( $message );
-		delete_transient( 'alm_single_post_admin_notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_single_post_admin_notice' );
+define( 'ALM_PREV_POST_VERSION', '1.7.2' );
+define( 'ALM_PREV_POST_RELEASE', 'June 9, 2025' );
 
 if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 	/**
@@ -64,16 +33,25 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 * Construct class function.
 		 */
 		public function __construct() {
-			add_action( 'alm_prev_post_installed', [ &$this, 'alm_prev_post_installed' ] );
-			add_action( 'alm_single_post_installed', [ &$this, 'alm_single_post_installed' ] );
-			add_action( 'wp_ajax_alm_get_single', [ &$this, 'alm_get_single_post' ] );
-			add_action( 'wp_ajax_nopriv_alm_get_single', [ &$this, 'alm_get_single_post' ] );
-			add_filter( 'alm_single_post_inc', [ &$this, 'alm_single_post_inc' ], 10, 5 );
-			add_filter( 'alm_single_post_args', [ &$this, 'alm_single_post_args' ], 10, 2 );
-			add_filter( 'alm_single_post_shortcode', [ &$this, 'alm_single_post_shortcode' ], 10, 10 );
-			add_action( 'alm_prev_post_settings', [ &$this, 'alm_prev_post_settings' ] );
-			add_action( 'wp_enqueue_scripts', [ &$this, 'alm_single_post_enqueue_scripts' ] );
-			add_action( 'posts_where', [ &$this, 'alm_single_query_where' ], 10, 2 );
+			add_action( 'alm_prev_post_installed', [ $this, 'alm_prev_post_installed' ] );
+			add_action( 'alm_single_post_installed', [ $this, 'alm_single_post_installed' ] );
+			add_action( 'wp_ajax_alm_get_single', [ $this, 'alm_get_single_post' ] );
+			add_action( 'wp_ajax_nopriv_alm_get_single', [ $this, 'alm_get_single_post' ] );
+			add_filter( 'alm_single_post_inc', [ $this, 'alm_single_post_inc' ], 10, 5 );
+			add_filter( 'alm_single_post_args', [ $this, 'alm_single_post_args' ], 10, 2 );
+			add_filter( 'alm_single_post_shortcode', [ $this, 'alm_single_post_shortcode' ], 10, 10 );
+			add_action( 'alm_prev_post_settings', [ $this, 'alm_prev_post_settings' ] );
+			add_action( 'wp_enqueue_scripts', [ $this, 'alm_single_post_enqueue_scripts' ] );
+			add_action( 'posts_where', [ $this, 'alm_single_query_where' ], 10, 2 );
+			add_action( 'init', [ $this, 'init' ] );
+		}
+
+		/**
+		 * Load the plugin text domain for translation.
+		 *
+		 * @return void
+		 */
+		public function init() {
 			load_plugin_textdomain( 'ajax-load-more-single-post', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
 		}
 

@@ -8,7 +8,7 @@ Requires at least: 4.0.0
 Tested up to: 6.7
 Stable tag: trunk
 Homepage: https://connekthq.com/ajax-load-more/
-Version: 2.0.4
+Version: 2.0.5
 
 == Copyright ==
 Copyright 2025 Darren Cooney & Connekt Media
@@ -44,6 +44,11 @@ https://connekthq.com/plugins/ajax-load-more/add-ons/cache/
 5. Activate the plugin in the WP plugin dashboard.
 
 == Changelog ==
+
+= 2.0.5 - June 9, 2025 =
+* UPDATE: Updated load_text_domain action to remove PHP warning.
+* UPDATE: Added `ajax-load-more` as a required plugin and removed activation hooks/notices.
+* UPDATE: Various code cleanups and organization.
 
 = 2.0.4 - January 17, 2025 =
 * UPDATE: Updated and normalized the display of various UI elements in the Ajax Load More admin.

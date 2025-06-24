@@ -15,32 +15,32 @@
 				<?php $alm_filters = ALMFilters::alm_get_all_filters(); ?>
 				<?php if ( $alm_filters ) : ?>
 				<section class="alm-filter-tools-wrap" id="export">
-					<header class="alm-filter--intro full">
+					<header>
 						<h2><?php esc_attr_e( 'Export Filters', 'ajax-load-more-filters' ); ?></h2>
 						<p><?php esc_attr_e( 'Use the Export button to export a JSON file that can be imported into another ALM Filters instance.', 'ajax-load-more-filters' ); ?></p>
 					</header>
 
 					<form method="post" class="alm-filter--tools">
-					<?php
-					echo '<ul class="alm-import-wrap">';
-					echo '<span>' . esc_attr__( 'Select Filters for Export', 'ajax-load-more-filters' ) . '</span>';
-					if ( count( $alm_filters ) > 1 ) {
-						echo '<li><label><input type="checkbox" id="toggle-all-filters" name="filter_keys_master" value="">' . esc_attr__( 'Toggle All', 'ajax-load-more-filters' ) . '</label></li>';
-					}
-						echo '<div class="export-columns">';
-					foreach ( $alm_filters as $filter ) {
-						?>
-									<li>
+						<ul class="alm-import-wrap">
+							<?php
+							echo '<span>' . esc_attr__( 'Select Filters for Export', 'ajax-load-more-filters' ) . '</span>';
+							if ( count( $alm_filters ) > 1 ) {
+								echo '<li><label><input type="checkbox" id="toggle-all-filters" name="filter_keys_master" value="">' . esc_attr__( 'Toggle All', 'ajax-load-more-filters' ) . '</label></li>';
+							}
+							echo '<div class="export-columns">';
+							foreach ( $alm_filters as $filter ) {
+								?>
+								<li>
 									<label>
 										<input type="checkbox" name="filter_keys[]" id="<?php echo esc_attr( $filter ); ?>" value="<?php echo esc_attr( $filter ); ?>">
-							<?php echo esc_attr( ALMFilters::alm_filters_replace_string( $filter ) ); ?>
+										<?php echo esc_attr( ALMFilters::alm_filters_replace_string( $filter ) ); ?>
 									</label>
-									</li>
-						<?php
-					}
-						echo '</div>';
-					echo '</ul>';
-					?>
+								</li>
+								<?php
+							}
+							echo '</div>';
+							?>
+						</ul>
 						<div class="button-wrap">
 							<button class="button button-primary" id="export-filters" name="button"><?php esc_attr_e( 'Export', 'ajax-load-more-filters' ); ?></button>
 							<input type="hidden" name="alm_filters_export" value="true">
@@ -49,8 +49,7 @@
 				</section>
 			<?php endif; ?>
 
-
-				<section
+			<section
 				<?php
 				if ( $alm_filters ) {
 					echo 'style="padding-top: 30px;"'; }

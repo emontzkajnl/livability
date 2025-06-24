@@ -5,10 +5,10 @@ Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/call-to-actions/
 Requires at least: 5.0
-Tested up to: 6.7
+Tested up to: 6.8
 Stable tag: trunk
 Homepage: https://connekthq.com/
-Version: 1.1.0
+Version: 1.1.1
 
 == Copyright ==
 Copyright 2025 Darren Cooney & Connekt Media
@@ -38,6 +38,11 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 
 
 == Changelog ==
+
+= 1.1.1 - June 9, 2025 =
+* UPDATE: Updated load_text_domain action to remove PHP warning.
+* UPDATE: Added `ajax-load-more` as a required plugin and removed activation hooks/notices.
+* UPDATE: Updated WP compatibility.
 
 = 1.1.0 - January 17, 2025 =
 * NEW: Added new parameter `cta_template`. This new parameter will normalize the template selection and replace the `cta_repeater` and `cta_theme-repeater` parameters.

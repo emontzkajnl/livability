@@ -32,7 +32,6 @@ if ( ! class_exists( 'ALMWooCustomizer' ) ) :
 		public static function default_button_loading_label() {
 			return apply_filters( 'alm_woocommerce_button_loading_label', '' );
 		}
-
 	}
 
 	function ALMWooCustomizer() {

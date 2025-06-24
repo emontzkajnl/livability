@@ -4,6 +4,7 @@
  *
  * @since 1.13.0
  * @package ALMFilters
+ *
  * phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
  */
@@ -100,11 +101,18 @@ if ( $alm_filters_array ) {
 
 				case 'taxonomy':
 					// Taxonomy.
-					$key                  = $alm_filter['taxonomy'];
-					$default_tax_operator = '';
+					$key       = $alm_filter['taxonomy']; // Get the taxonomy slug.
+					$query_key = $slug; // Set the taxonomy query key.
+
+					// Check if on archive page, if so add _ to taxonomy slug/key.
+					if ( alm_filters_is_archive() ) {
+						$query_key = '_' . $key;
+					}
 
 					// Confirm taxonomy exists and not already in the querystring.
-					if ( taxonomy_exists( $key ) && ! array_key_exists( $key, $querystring ) ) {
+					if ( taxonomy_exists( $key ) && ! array_key_exists( $query_key, $querystring ) ) {
+						$default_tax_operator = '';
+
 						// Loop filters array to get the taxonomy operator.
 						foreach ( $alm_filters_array as $item ) {
 							if ( isset( $item['taxonomy'] ) && $item['taxonomy'] === $key ) {

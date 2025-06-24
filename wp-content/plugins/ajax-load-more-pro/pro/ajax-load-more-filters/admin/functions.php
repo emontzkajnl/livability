@@ -81,6 +81,9 @@ function alm_list_all_filters( $pos = 'sidebar' ) {
 							<?php alm_filters_list_arrow( 'facets', $orderby, $order ); ?>
 						</a>
 					</th>
+					<th class="text-center hide-mobile">
+						<?php esc_attr_e( 'Index', 'ajax-load-more-filters' ); ?>
+					</th>
 					<th>
 						<a href="<?php echo esc_attr( ALM_FILTERS_BASE_URL ); ?>&orderby=date&order=<?php echo strtolower( $order ) === 'asc' ? 'desc' : 'asc'; ?>">
 							<?php esc_attr_e( 'Date', 'ajax-load-more-filters' ); ?>
@@ -94,6 +97,7 @@ function alm_list_all_filters( $pos = 'sidebar' ) {
 				foreach ( $results as $filter ) :
 					$id = $filter['id'];
 					if ( $id ) {
+						$count = (int) $filter['count'];
 						?>
 					<tr>
 						<td class="title column-title">
@@ -116,29 +120,42 @@ function alm_list_all_filters( $pos = 'sidebar' ) {
 								</a>
 								<span>|</span>
 								<?php if ( $filter['facets'] ) { ?>
-								<a href="<?php echo esc_attr( ALM_FILTERS_BASE_URL ); ?>&rebuild_facet_index=<?php echo esc_attr( $id ); ?>"><?php esc_attr_e( 'Rebuild Facet Index', 'ajax-load-more-filters' ); ?></a> |
+								<a href="<?php echo esc_attr( ALM_FILTERS_BASE_URL ); ?>&rebuild_facet_index=<?php echo esc_attr( $id ); ?>"><?php esc_attr_e( 'Rebuild Index', 'ajax-load-more-filters' ); ?></a> |
 								<?php } ?>
 								<a href="<?php echo esc_attr( ALM_FILTERS_BASE_URL ); ?>&delete_filter=<?php echo esc_attr( $id ); ?>" data-name="<?php echo esc_attr( $id ); ?>" class="delete-filter"><?php esc_attr_e( 'Delete', 'ajax-load-more-filters' ); ?></a>
 							</div>
 						</td>
 						<td class="text-center hide-mobile">
-							<span class="filter-counter">
-								<abbr title="<?php echo esc_attr( $filter['count'] ); ?> <?php esc_attr_e( 'filter block(s) in this filter', 'ajax-load-more-filters' ); ?>">
-												<?php echo esc_attr( $filter['count'] ); ?></abbr>
-							</span>
+							<abbr title="<?php printf( __( 'This filter contains %1$s filter block(s)', 'ajax-load-more-filters' ), $count ); ?>" style="cursor: help;">
+								<?php echo esc_attr( $count ); ?>
+							</abbr>
 						</td>
 						<td class="text-center hide-mobile">
 							<?php if ( $filter['facets'] ) { ?>
-							<i class="fa fa-check-square" aria-hidden="true" style="color: #7fd07a; font-size: 15px; cursor: help;" aria-label="<?php esc_attr_e( 'This filter contains facets.', 'ajax-load-more-filters' ); ?>" title="<?php esc_attr_e( 'This filter contains facets.', 'ajax-load-more-filters' ); ?>"></i>
+							<i class="fa fa-check-square" aria-hidden="true" style="color: #87c784; font-size: 15px; cursor: help;" aria-label="<?php esc_attr_e( 'This filter contains facets.', 'ajax-load-more-filters' ); ?>" title="<?php esc_attr_e( 'This filter contains facets.', 'ajax-load-more-filters' ); ?>"></i>
 							<?php } else { ?>
 							<i class="fa fa-square" aria-hidden="true" style="opacity:0.2; font-size: 15px; cursor: help;" aria-label="<?php esc_attr_e( 'This filter does not contain facets.', 'ajax-load-more-filters' ); ?>" title="<?php esc_attr_e( 'This filter does not contain facets.', 'ajax-load-more-filters' ); ?>"></i>
 							<?php } ?>
+						</td>
+						<td class="text-center hide-mobile">
+							<?php
+							if ( array_key_exists( 'facets', $filter ) && $filter['facets'] ) {
+								$facet_count = count( ALMFilters::get_facet_index_by_id( $id ) );
+								?>
+							<abbr title="<?php printf( __( 'This filter contains %1$s indexed posts', 'ajax-load-more-filters' ), $facet_count ); ?>" style="cursor: help;">
+								<?php echo esc_attr( $facet_count ); ?>
+							</abbr>
+								<?php
+							} else {
+								echo ' -- ';
+							}
+							?>
 						</td>
 						<td>
 							<?php esc_attr_e( 'Published', 'ajax-load-more-filters' ); ?>:<br/>
 							<?php
 							if ( isset( $filter['date'] ) ) {
-								echo '<abbr title="' . esc_attr( gmdate( 'Y/m/d h:i:s a', $filter['date'] ) ) . '">' . esc_attr( gmdate( 'Y/m/d', $filter['date'] ) ) . '</abbr>';
+								echo '<abbr title="' . esc_attr( gmdate( 'Y/m/d h:i:s a', $filter['date'] ) ) . '" style="cursor: help;">' . esc_attr( gmdate( 'Y/m/d', $filter['date'] ) ) . '</abbr>';
 							}
 							?>
 						</td>
@@ -153,7 +170,7 @@ function alm_list_all_filters( $pos = 'sidebar' ) {
 		<div id="alm-filter-pop-up">
 			<div class="inner-wrap small">
 				<h3><?php esc_attr_e( 'Duplicate Filter', 'ajax-load-more-filters' ); ?></h3>
-				<p><?php esc_attr_e( 'Enter a unique filter ID and click the `Duplicate` button.', 'ajax-load-more-filters' ); ?></p>
+				<p><?php esc_attr_e( 'Enter a unique filter ID and click the Duplicate button.', 'ajax-load-more-filters' ); ?></p>
 				<form action="" method="GET" class="dup-form">
 					<input type="hidden" value="ajax-load-more-filters" name="page">
 					<input type="hidden" value="" name="duplicate_filter">
@@ -165,6 +182,7 @@ function alm_list_all_filters( $pos = 'sidebar' ) {
 				</form>
 			</div>
 		</div>
+
 		<?php else : ?>
 			<?php echo wp_kses_post( alm_filters_empty_filters( $pos ) ); ?>
 		<?php endif; ?>

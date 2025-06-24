@@ -9,14 +9,14 @@
 <div class="cta">
 	<h3><?php esc_html_e( 'What\'s New', 'ajax-load-more-filters' ); ?></h3>
 	<div class="cta-inner">
-		<p>🔥 Filters v2.0 introduces a faceted search and filter experience for Ajax Load More!</p>
+		<ul>
+			<li>Filters <span class="alm-pre">3.0</span> introduces background processing functionality for sites with a large number of posts and content. Background processing must be enabled via the Ajax Load More &rarr; <a href="admin.php?page=ajax-load-more#filters_settings">Filters Settings</a>.
+			</li>
+		</ul>
 	</div>
 	<div class="major-publishing-actions">
-		<a href="https://connekthq.com/plugins/ajax-load-more/add-ons/filters/facet-filtering/" class="button button-primary" target="_blank">
-			<?php esc_html_e( 'View Example', 'ajax-load-more-filters' ); ?>
-		</a>
-		<a href="https://connekthq.com/plugins/ajax-load-more/docs/add-ons/filters/facets/" class="button" target="_blank">
-			<?php esc_html_e( 'Learn More', 'ajax-load-more-filters' ); ?>
+		<a href="https://connekthq.com/plugins/ajax-load-more/add-ons/filters/#examples" class="button" target="_blank">
+			<?php esc_html_e( 'View Examples', 'ajax-load-more-filters' ); ?>
 		</a>
 	</div>
 </div>

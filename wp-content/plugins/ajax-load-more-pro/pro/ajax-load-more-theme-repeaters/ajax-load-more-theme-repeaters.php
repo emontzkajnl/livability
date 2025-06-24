@@ -1,64 +1,33 @@
 <?php
-/*
-Plugin Name: Ajax Load More: Theme Repeaters
-Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/theme-repeaters/
-Description: Ajax Load More extension allowing repeater template selection from the current theme directory.
-Author: Darren Cooney
-Twitter: @KaptonKaos
-Author URI: http://connekthq.com
-Version: 1.2.0
-License: GPL
-Copyright: Darren Cooney & Connekt Media
-*/
+/**
+ * Plugin Name: Ajax Load More: Theme Repeaters
+ * Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/theme-repeaters/
+ * Description: Ajax Load More add-on allowing Repeater Template selection from the current theme directory.
+ * Author: Darren Cooney
+ * Twitter: @KaptonKaos
+ * Author URI: http://connekthq.com
+ * Version: 1.2.1
+ * License: GPL
+ * Copyright: Darren Cooney & Connekt Media
+ * Requires Plugins: ajax-load-more
+ *
+ * @package ALM_THEME_REPEATERS
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'ALM_THEME_REPEATERS_VERSION', '1.2.0' );
-define( 'ALM_THEME_REPEATERS_RELEASE', 'January 17, 2025' );
-
-/**
- * Activation hook.
- *
- * @since 1.0
- */
-function alm_theme_repeaters_install() {
-	// if Ajax Load More is activated.
-	if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-		set_transient( 'alm_theme_repeaters_admin_notice', true, 5 );
-	}
-}
-register_activation_hook( __FILE__, 'alm_theme_repeaters_install' );
-
-/**
- * Display admin notice and de-activate if plugin does not meet the requirements.
- *
- * @since 2.5.6
- */
-function alm_theme_repeaters_admin_notice() {
-	$slug = 'ajax-load-more';
-	// Ajax Load More Notice.
-	if ( get_transient( 'alm_theme_repeaters_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>' . __( 'You must install and activate the core Ajax Load More plugin before using the Ajax Load More Theme Repeaters Add-on.', 'ajax-load-more-theme-repeaters' ) . '</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, __( 'Install Ajax Load More Now', 'ajax-load-more-theme-repeaters' ) ) . '</p>';
-		$message    .= '</div>';
-		echo $message;
-		// deactivate_plugins( '/' . $plugin . '/' . $plugin . '.php' );
-		delete_transient( 'alm_theme_repeaters_admin_notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_theme_repeaters_admin_notice' );
+define( 'ALM_THEME_REPEATERS_VERSION', '1.2.1' );
+define( 'ALM_THEME_REPEATERS_RELEASE', 'June 9, 2025' );
 
 
-if ( ! class_exists( 'ALMTHEMEREPEATERS' ) ) :
+if ( ! class_exists( 'ALM_THEME_REPEATERS' ) ) :
 
 	/**
 	 * Theme Repeaters Class.
 	 */
-	class ALMTHEMEREPEATERS {
+	class ALM_THEME_REPEATERS {
 
 		/**
 		 * Construct function.
@@ -67,16 +36,26 @@ if ( ! class_exists( 'ALMTHEMEREPEATERS' ) ) :
 		 * @since 1.0
 		 */
 		public function __construct() {
-			add_action( 'alm_theme_repeaters_installed', [ &$this, 'alm_theme_repeaters_installed' ] );
-			add_action( 'alm_theme_repeaters_settings', [ &$this, 'alm_theme_repeaters_settings' ] );
-			add_filter( 'alm_get_theme_repeater_file', [ &$this, 'alm_get_theme_repeater_file' ] );
-			add_filter( 'alm_get_theme_repeater', [ &$this, 'alm_get_theme_repeater' ], 10, 6 );
-			add_filter( 'alm_get_acf_gallery_theme_repeater', [ &$this, 'alm_get_acf_gallery_theme_repeater' ], 10, 6 );
-			add_filter( 'alm_get_term_query_theme_repeater', [ &$this, 'alm_get_term_query_theme_repeater' ], 10, 6 );
-			add_filter( 'alm_get_users_theme_repeater', [ &$this, 'alm_get_users_theme_repeater' ], 10, 6 );
-			add_filter( 'alm_get_rest_theme_repeater', [ &$this, 'alm_get_rest_theme_repeater' ], 10, 1 );
-			add_action( 'alm_list_theme_repeaters', [ &$this, 'alm_list_theme_repeaters' ] );
-			add_action( 'alm_theme_repeaters_selection', [ &$this, 'alm_theme_repeaters_selection' ] );
+			add_action( 'alm_theme_repeaters_installed', [ $this, 'alm_theme_repeaters_installed' ] );
+			add_action( 'alm_theme_repeaters_settings', [ $this, 'alm_theme_repeaters_settings' ] );
+			add_action( 'alm_list_theme_repeaters', [ $this, 'alm_list_theme_repeaters' ] );
+			add_action( 'alm_theme_repeaters_selection', [ $this, 'alm_theme_repeaters_selection' ] );
+			add_action( 'init', [ $this, 'init' ] );
+
+			add_filter( 'alm_get_theme_repeater_file', [ $this, 'alm_get_theme_repeater_file' ] );
+			add_filter( 'alm_get_theme_repeater', [ $this, 'alm_get_theme_repeater' ], 10, 6 );
+			add_filter( 'alm_get_acf_gallery_theme_repeater', [ $this, 'alm_get_acf_gallery_theme_repeater' ], 10, 6 );
+			add_filter( 'alm_get_term_query_theme_repeater', [ $this, 'alm_get_term_query_theme_repeater' ], 10, 6 );
+			add_filter( 'alm_get_users_theme_repeater', [ $this, 'alm_get_users_theme_repeater' ], 10, 6 );
+			add_filter( 'alm_get_rest_theme_repeater', [ $this, 'alm_get_rest_theme_repeater' ], 10, 1 );
+		}
+
+		/**
+		 * Load the plugin text domain for translation.
+		 *
+		 * @return void
+		 */
+		public function init() {
 			load_plugin_textdomain( 'ajax-load-more-theme-repeaters', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
 		}
 
@@ -494,15 +473,14 @@ if ( ! class_exists( 'ALMTHEMEREPEATERS' ) ) :
 	 * @since 1.0
 	 * @return class
 	 */
-	function ALMTHEMEREPEATERS() {
-		global $ALMTHEMEREPEATERS;
-		if ( ! isset( $ALMTHEMEREPEATERS ) ) {
-			$ALMTHEMEREPEATERS = new ALMTHEMEREPEATERS();
+	function alm_theme_repeaters() {
+		global $alm_theme_repeaters;
+		if ( ! isset( $alm_theme_repeaters ) ) {
+			$alm_theme_repeaters = new ALM_THEME_REPEATERS();
 		}
-		return $ALMTHEMEREPEATERS;
+		return $alm_theme_repeaters;
 	}
-
-	ALMTHEMEREPEATERS(); // initialize.
+	alm_theme_repeaters(); // initialize.
 
 endif; // class_exists check.
 

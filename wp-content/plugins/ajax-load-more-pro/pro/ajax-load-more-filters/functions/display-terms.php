@@ -18,7 +18,6 @@ function alm_filters_list_terms( $obj, $querystring, $id ) {
 	$return         = '';
 	$terms          = [];
 	$items          = [];
-	$items_count    = 0;
 	$field_type     = $obj['field_type'];
 	$exclude        = explode( ',', $obj['exclude'] ); // Convert excludes into array.
 	$selected_value = explode( '+', $obj['selected_value'] ); // Convert selected_value into array.
@@ -229,10 +228,8 @@ function alm_filters_build_terms_list( $id, $obj = [], $match_array = [], $terms
 		// If tag_and use ID.
 		$slug = $key === 'tag_and' ? $item->term_id : $slug;
 
-		$obj['id']     = $key . '-' . $field_type . '-' . $obj['count'];
-		$fieldname_val = $key . '-' . $field_type . '-' . $obj['count'];
-		$fieldname     = $field_type === 'radio' ? ' name="' . $fieldname_val . '"' : '';
-		$field_level   = $init ? ' field-parent' : ' field-child';
+		$obj['id']   = $key . '-' . $field_type . '-' . $obj['count'];
+		$field_level = $init ? ' field-parent' : ' field-child';
 
 		$aria_checked = 'aria-checked="false"';
 		if ( ! empty( $match_array ) ) { // Get active list item.
@@ -268,8 +265,7 @@ function alm_filters_build_terms_list( $id, $obj = [], $match_array = [], $terms
  */
 function alm_filters_build_terms_select( $id, $obj, $match_array, $selected, $terms = [] ) {
 	if ( empty( $terms ) ) {
-		// Bail early if empty.
-		return;
+		return; // Bail early if empty.
 	}
 
 	$field_type = $obj['field_type'];
@@ -285,7 +281,7 @@ function alm_filters_build_terms_select( $id, $obj, $match_array, $selected, $te
 	// Loop items.
 	$items_count = 0;
 	foreach ( $terms as $item ) {
-		$items_count++;
+		++$items_count;
 		$name  = $item->name;
 		$slug  = $item->slug;
 		$total = alm_filters_build_count( $obj['show_count'], $item, false );

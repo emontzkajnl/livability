@@ -2,15 +2,16 @@
 /**
  * Plugin Name: Ajax Load More: Preloaded
  * Plugin URI: http://connekthq.com/plugins/ajax-load-more/preloaded/
- * Description: Ajax Load More extension to preload content before making Ajax requests to your server.
+ * Description: Ajax Load More add-on to preload content on the serser-side before making Ajax requests.
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: http://connekthq.com
- * Version: 1.4.0
+ * Version: 1.4.1
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
+ * Requires Plugins: ajax-load-more
  *
- * @package ALMPreloaded 
+ * @package ALM_Preloaded
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,47 +20,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_PRELOADED_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_PRELOADED_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_PRELOADED_VERSION', '1.4.0' );
-define( 'ALM_PRELOADED_RELEASE', 'January 16, 2024' );
+define( 'ALM_PRELOADED_VERSION', '1.4.1' );
+define( 'ALM_PRELOADED_RELEASE', 'June 9, 2025' );
 
-/**
- * Activation hook
- *
- *  @since 1.0
- */
-function alm_preloaded_install() {
-	if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-		set_transient( 'alm_preloaded_admin_notice', true, 5 );
-	}
-}
-register_activation_hook( __FILE__, 'alm_preloaded_install' );
-
-/**
- * Display admin notice and de-activate if plugin does not meet the requirements.
- *
- * @since 2.0.0
- */
-function alm_preloaded_admin_notice() {
-	$slug   = 'ajax-load-more';
-	$plugin = $slug . '-preloaded';
-	// Ajax Load More Notice.
-	if ( get_transient( 'alm_preloaded_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>' . __( 'You must install and activate the core Ajax Load More plugin before using the Ajax Load More Preloaded Add-on.', 'ajax-load-more-preloaded' ) . '</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, __( 'Install Ajax Load More Now', 'ajax-load-more-preloaded' ) ) . '</p>';
-		$message    .= '</div>';
-		echo wp_kses_post( $message );
-		delete_transient( 'alm_preloaded_admin_notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_preloaded_admin_notice' );
-
-if ( ! class_exists( 'ALMPreloaded' ) ) :
+if ( ! class_exists( 'ALM_Preloaded' ) ) :
 	/**
 	 * Ajax Load More Preloaded Class
 	 */
-	class ALMPreloaded {
+	class ALM_Preloaded {
 
 		/**
 		 * Constuct function.
@@ -416,7 +384,6 @@ if ( ! class_exists( 'ALMPreloaded' ) ) :
 	 *
 	 * @since 1.0.0
 	 */
-
 	function alm_preloaded_sanitize_license( $new ) {
 		$old = get_option( 'alm_preloaded_license_key' );
 		if ( $old && $old != $new ) {
@@ -433,7 +400,7 @@ if ( ! class_exists( 'ALMPreloaded' ) ) :
 	function alm_preloaded() {
 		global $alm_preloaded_posts;
 		if ( ! isset( $alm_preloaded_posts ) ) {
-			$alm_preloaded_posts = new ALMPreloaded();
+			$alm_preloaded_posts = new ALM_Preloaded();
 		}
 		return $alm_preloaded_posts;
 	}

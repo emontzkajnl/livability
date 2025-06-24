@@ -11,7 +11,7 @@ $filter_id         = '';
 $filter_vue        = '';
 $section           = 'dashboard';
 $query_params      = filter_input_array( INPUT_GET );
-$alm_admin_heading = __( 'Filters', 'ajax-load-more' );
+$alm_admin_heading = __( 'Filters', 'ajax-load-more-filters' );
 
 // Export/Import, New.
 if ( isset( $query_params['action'] ) ) {

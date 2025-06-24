@@ -2,13 +2,14 @@
 /**
  * Plugin Name: Ajax Load More for Terms
  * Plugin URI: http://connekthq.com/plugins/ajax-load-more/extensions/terms/
- * Description: An Ajax Load More extension that adds compatibility for loading taxonomy terms via Ajax.
+ * Description: Ajax Load More extension that adds compatibility for loading taxonomy terms.
  * Text Domain: ajax-load-more-for-terms
  * Author: Darren Cooney
  * Author URI: https://connekthq.com
- * Version: 1.1.1
+ * Version: 1.1.2
  * License: GPL
  * Copyright: Connekt Media & Darren Cooney
+ * Requires Plugins: ajax-load-more
  *
  * @package ajax-load-more-for-terms
  */
@@ -16,34 +17,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-/**
- *  Installation hook.
- */
-function alm_terms_install() {
-	if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-		set_transient( 'alm_terms_admin_notice', true, 5 );
-	}
-}
-register_activation_hook( __FILE__, 'alm_terms_install' );
-
-/**
- * Display admin notice if plugin does not meet the requirements.
- */
-function alm_terms_admin_notice() {
-	$slug   = 'ajax-load-more';
-	// Ajax Load More Notice.
-	if ( get_transient( 'alm_terms_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>You must install and activate the core Ajax Load More plugin before using the Ajax Load More Terms extension.</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, 'Install Ajax Load More Now' ) . '</p>';
-		$message    .= '</div>';
-		echo wp_kses_post( $message );
-		delete_transient( 'alm_terms_admin_notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_terms_admin_notice' );
 
 define( 'ALM_TERMS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_TERMS_URL', plugins_url( '', __FILE__ ) );
@@ -62,11 +35,11 @@ if ( ! class_exists( 'ALM_TERMS' ) ) :
 		 * @since 1.0
 		 */
 		public function __construct() {
-			add_action( 'alm_terms_installed', [ &$this, 'alm_terms_installed' ] );
-			add_filter( 'alm_terms_shortcode', [ &$this, 'alm_terms_shortcode' ], 10, 6 );
-			add_filter( 'alm_terms_preloaded', [ &$this, 'alm_terms_preloaded_query' ], 10, 4 );
-			add_action( 'wp_ajax_alm_get_terms', [ &$this, 'alm_get_terms_query' ] );
-			add_action( 'wp_ajax_nopriv_alm_get_terms', [ &$this, 'alm_get_terms_query' ] );
+			add_action( 'alm_terms_installed', [ $this, 'alm_terms_installed' ] );
+			add_filter( 'alm_terms_shortcode', [ $this, 'alm_terms_shortcode' ], 10, 6 );
+			add_filter( 'alm_terms_preloaded', [ $this, 'alm_terms_preloaded_query' ], 10, 4 );
+			add_action( 'wp_ajax_alm_get_terms', [ $this, 'alm_get_terms_query' ] );
+			add_action( 'wp_ajax_nopriv_alm_get_terms', [ $this, 'alm_get_terms_query' ] );
 		}
 
 		/**
@@ -117,8 +90,8 @@ if ( ! class_exists( 'ALM_TERMS' ) ) :
 				if ( $alm_term_query->terms ) {
 					ob_start();
 					foreach ( $alm_term_query->terms as $term ) {
-						$alm_item++;
-						$alm_current++;
+						++$alm_item;
+						++$alm_current;
 						if ( $theme_repeater !== 'null' && has_action( 'alm_get_term_query_theme_repeater' ) ) {
 							// Theme Repeater.
 							do_action( 'alm_get_term_query_theme_repeater', $theme_repeater, $alm_found_posts, $alm_page, $alm_item, $alm_current, $term );
@@ -214,7 +187,7 @@ if ( ! class_exists( 'ALM_TERMS' ) ) :
 
 							ob_start();
 							foreach ( $alm_term_query->terms as $term ) {
-								$alm_current++; // Current item in loop.
+								++$alm_current; // Current item in loop.
 								$alm_page = $page + 1; // Get page number.
 								$alm_item = ( $alm_page * $term_query_number ) - $term_query_number + $alm_current + $preloaded_amount;
 								if ( $theme_repeater !== 'null' && has_action( 'alm_get_term_query_theme_repeater' ) ) {

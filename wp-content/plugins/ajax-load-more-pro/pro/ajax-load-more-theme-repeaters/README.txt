@@ -5,10 +5,10 @@ Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/ajax-load-more/theme-repeaters/
 Requires at least: 5.0
-Tested up to: 6.7
+Tested up to: 6.8
 Stable tag: trunk
 Homepage: http://connekthq.com/ajax-load-more/
-Version: 1.2.0
+Version: 1.2.1
 
 == Copyright ==
 Copyright 2025 Darren Cooney & Connekt Media
@@ -46,6 +46,10 @@ https://connekthq.com/plugins/ajax-load-more/add-ons/theme-repeaters/
 
 
 == Changelog ==
+= 1.2.1 - June 9, 2025 =
+* UPDATE: Updated load_text_domain action to remove PHP warning.
+* UPDATE: Added `ajax-load-more` as a required plugin and removed activation hooks/notices.
+* UPDATE: Various code cleanups and organization.
 
 = 1.2.0 - January 17, 2025 =
 * NEW: Added new functions that fetch repeaters from theme directory.

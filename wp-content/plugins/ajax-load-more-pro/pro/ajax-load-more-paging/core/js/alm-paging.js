@@ -654,7 +654,9 @@ var almPaging = {}; /**
   * @param {Element} container Container to watch for height changes.
   */
 	window.almPagingSetHeight = function (container) {
-		resizeObserver.observe(container);
+		if (container.tagName !== "TABLE") {
+			resizeObserver.observe(container);
+		}
 	};
 
 	/**

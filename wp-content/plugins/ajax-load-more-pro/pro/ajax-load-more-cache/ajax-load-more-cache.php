@@ -2,13 +2,14 @@
 /**
  * Plugin Name: Ajax Load More: Cache
  * Plugin URI: http://connekthq.com/plugins/ajax-load-more/cache/
- * Description: Ajax Load More extension that creates static HTML files from ajax requests.
+ * Description: Ajax Load More add-on that creates and serves static files from ajax requests.
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: http://connekthq.com
- * Version: 2.0.4
+ * Version: 2.0.5
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
+ * Requires Plugins: ajax-load-more
  *
  * @package ALMCache
  */
@@ -17,27 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'ALM_CACHE_VERSION', '2.0.4' );
-define( 'ALM_CACHE_RELEASE', 'January 17, 2025' );
-
-/**
- * Display admin notice if plugin does not meet the requirements.
- *
- * @since 2.5.6
- */
-function alm_cache_admin_notice() {
-	$slug = 'ajax-load-more';
-	if ( get_transient( 'alm_cache_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>' . __( 'You must install and activate the core Ajax Load More plugin before using the Ajax Load More Cache Add-on.', 'ajax-load-more-cache' ) . '</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, __( 'Install Ajax Load More Now', 'ajax-load-more-cache' ) ) . '</p>';
-		$message    .= '</div>';
-		echo wp_kses_post( $message );
-		delete_transient( 'alm_cache_admin_notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_cache_admin_notice' );
+define( 'ALM_CACHE_VERSION', '2.0.5' );
+define( 'ALM_CACHE_RELEASE', 'June 9, 2025' );
 
 if ( ! class_exists( ' ALMCache' ) ) :
 
@@ -51,19 +33,28 @@ if ( ! class_exists( ' ALMCache' ) ) :
 		 */
 		public function __construct() {
 			$this->init();
-			register_activation_hook( __FILE__, [ &$this, 'alm_cache_activation' ] );
-			add_action( 'alm_cache_installed', [ &$this, 'alm_cache_installed' ] );
-			add_action( 'admin_init', [ &$this, 'alm_cache_2_0_upgrader' ] );
-			add_action( 'alm_clear_cache', [ &$this, 'alm_clear_cache' ], 10, 2 );
-			add_filter( 'alm_get_cache_array', [ &$this, 'alm_get_cache_array' ], 10, 2 );
-			add_filter( 'alm_cache_create_directory', [ &$this, 'alm_cache_create_directory' ], 10, 3 );
-			add_action( 'wp_ajax_alm_delete_cache', [ &$this, 'alm_delete_cache' ] );
-			add_action( 'admin_notices', [ &$this, 'alm_cache_admin_notices' ] );
+			register_activation_hook( __FILE__, [ $this, 'alm_cache_activation' ] );
+			add_action( 'alm_cache_installed', [ $this, 'alm_cache_installed' ] );
+			add_action( 'alm_clear_cache', [ $this, 'alm_clear_cache' ], 10, 2 );
+			add_action( 'wp_ajax_alm_delete_cache', [ $this, 'alm_delete_cache' ] );
+			add_action( 'admin_notices', [ $this, 'alm_cache_admin_notices' ] );
+			add_action( 'admin_bar_menu', [ $this, 'alm_add_toolbar_items' ], 100 );
+			add_action( 'alm_cache_settings', [ $this, 'alm_cache_settings' ] );
+			add_action( 'admin_init', [ $this, 'alm_cache_2_0_upgrader' ] );
+			add_action( 'init', [ $this, 'load_plugin_textdomain' ] );
+			add_action( 'init', [ $this, 'alm_cache_create_publish_actions' ] );
 
-			add_action( 'init', [ &$this, 'alm_cache_create_publish_actions' ] );
-			add_action( 'admin_bar_menu', [ &$this, 'alm_add_toolbar_items' ], 100 );
-			add_action( 'alm_cache_settings', [ &$this, 'alm_cache_settings' ] );
-			add_filter( 'alm_cache_shortcode', [ &$this, 'alm_cache_shortcode' ], 10, 3 );
+			add_filter( 'alm_get_cache_array', [ $this, 'alm_get_cache_array' ], 10, 2 );
+			add_filter( 'alm_cache_create_directory', [ $this, 'alm_cache_create_directory' ], 10, 3 );
+			add_filter( 'alm_cache_shortcode', [ $this, 'alm_cache_shortcode' ], 10, 3 );
+		}
+
+		/**
+		 * Load the plugin text domain for translation.
+		 *
+		 * @return void
+		 */
+		public function load_plugin_textdomain() {
 			load_plugin_textdomain( 'ajax-load-more-cache', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
 		}
 
@@ -92,19 +83,15 @@ if ( ! class_exists( ' ALMCache' ) ) :
 		 * @since 1.0
 		 */
 		public function alm_cache_activation() {
-			if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-				set_transient( 'alm_cache_admin_notice', true, 5 );
-			} else {
-				$upload_dir = wp_upload_dir();
-				$dir        = $upload_dir['basedir'] . '/alm-cache';
-				// Create alm-cache directory if does not exist.
-				if ( ! is_dir( $dir ) ) {
-					wp_mkdir_p( $dir );
-				}
-				// Test directory access.
-				if ( ! is_writable( $dir ) ) { // phpcs:ignore
-					wp_die( esc_html__( 'Error accessing uploads/alm-cache directory. This add-on is required to read/write to your server. Please contact your hosting administrator.', 'ajax-load-more-cache' ) );
-				}
+			$upload_dir = wp_upload_dir();
+			$dir        = $upload_dir['basedir'] . '/alm-cache';
+			// Create alm-cache directory if does not exist.
+			if ( ! is_dir( $dir ) ) {
+				wp_mkdir_p( $dir );
+			}
+			// Test directory access.
+			if ( ! is_writable( $dir ) ) { // phpcs:ignore
+				wp_die( esc_html__( 'Error accessing uploads/alm-cache directory. This add-on is required to read/write to your server. Please contact your hosting administrator.', 'ajax-load-more-cache' ) );
 			}
 		}
 
@@ -649,11 +636,11 @@ if ( ! class_exists( ' ALMCache' ) ) :
 						$typeobj = get_post_type_object( $type );
 						$name    = $typeobj->name;
 						if ( $name !== 'revision' && $name !== 'attachment' && $name !== 'nav_menu_item' && $name !== 'acf' ) {
-							add_action( 'publish_' . $name . '', [ &$this, 'alm_cache_post_published' ] );
+							add_action( 'publish_' . $name . '', [ $this, 'alm_cache_post_published' ] );
 						}
 					}
 				}
-				add_action( 'future_to_publish', [ &$this, 'alm_cache_post_published' ] );
+				add_action( 'future_to_publish', [ $this, 'alm_cache_post_published' ] );
 			}
 		}
 

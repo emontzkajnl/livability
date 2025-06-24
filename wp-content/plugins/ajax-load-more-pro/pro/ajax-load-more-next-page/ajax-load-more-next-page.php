@@ -2,13 +2,14 @@
 /**
  * Plugin Name: Ajax Load More: Next Page
  * Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/next-page/
- * Description: Ajax Load More add-on for displaying multipage WordPress content
+ * Description: Ajax Load More add-on for infinite scrolling multipage WordPress content.
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.8.1
+ * Version: 1.8.2
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
+ * Requires Plugins: ajax-load-more
  *
  * @package ALMNextPage
  */
@@ -19,41 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_NEXTPAGE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_NEXTPAGE_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_NEXTPAGE_VERSION', '1.8.1' );
-define( 'ALM_NEXTPAGE_RELEASE', 'December 4, 2024' );
-
-/**
- * Activation hook.
- *
- * @since 1.0
- */
-function alm_nextpage_install() {
-	if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-		set_transient( 'alm_nextpage_admin_notice', true, 5 );
-	}
-}
-register_activation_hook( __FILE__, 'alm_nextpage_install' );
-
-/**
- * Display admin notice and de-activate if plugin does not meet the requirements.
- *
- * @since 1.6.0
- */
-function alm_nextpage_admin_notice() {
-	$slug   = 'ajax-load-more';
-	// Ajax Load More Notice.
-	if ( get_transient( 'alm_nextpage_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>' . __( 'You must install and activate the core Ajax Load More plugin before using the Ajax Load More Next Page Add-on.', 'ajax-load-more-nextpage' ) . '</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, __( 'Install Ajax Load More Now', 'ajax-load-more-nextpage' ) ) . '</p>';
-		$message    .= '</div>';
-		echo wp_kses_post( $message );
-		delete_transient( 'alm_nextpage_admin_notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_nextpage_admin_notice' );
-
+define( 'ALM_NEXTPAGE_VERSION', '1.8.2' );
+define( 'ALM_NEXTPAGE_RELEASE', 'June 9, 2025' );
 
 if ( ! class_exists( 'ALM_Nextpage_Plugin' ) ) :
 
@@ -81,17 +49,28 @@ if ( ! class_exists( 'ALM_Nextpage_Plugin' ) ) :
 		 */
 		public function __construct() {
 			$this->init = true;
-			add_action( 'alm_nextpage_installed', [ &$this, 'alm_nextpage_installed' ] );
-			add_filter( 'alm_init_nextpage', [ &$this, 'alm_nextpage_init' ], 10, 8 );
-			add_action( 'wp_ajax_alm_nextpage', [ &$this, 'alm_nextpage_ajax_query' ] );
-			add_action( 'wp_ajax_nopriv_alm_nextpage', [ &$this, 'alm_nextpage_ajax_query' ] );
-			add_filter( 'alm_nextpage_shortcode', [ &$this, 'alm_nextpage_shortcode' ], 10, 6 );
-			add_filter( 'alm_nextpage_noscript_paging', [ &$this, 'alm_nextpage_noscript_paging' ], 10 );
-			add_action( 'alm_nextpage_settings', [ &$this, 'alm_nextpage_settings' ] );
-			add_filter( 'the_content', [ &$this, 'alm_nextpage_the_content' ], 1 );
-			add_action( 'wp_enqueue_scripts', [ &$this, 'alm_nextpage_enqueue_scripts' ] );
-			load_plugin_textdomain( 'ajax-load-more-nextpage', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
+			add_action( 'alm_nextpage_installed', [ $this, 'alm_nextpage_installed' ] );
+			add_action( 'wp_ajax_alm_nextpage', [ $this, 'alm_nextpage_ajax_query' ] );
+			add_action( 'wp_ajax_nopriv_alm_nextpage', [ $this, 'alm_nextpage_ajax_query' ] );
+			add_action( 'alm_nextpage_settings', [ $this, 'alm_nextpage_settings' ] );
+			add_action( 'wp_enqueue_scripts', [ $this, 'alm_nextpage_enqueue_scripts' ] );
+			add_action( 'init', [ $this, 'init' ] );
+
+			add_filter( 'alm_init_nextpage', [ $this, 'alm_nextpage_init' ], 10, 8 );
+			add_filter( 'alm_nextpage_shortcode', [ $this, 'alm_nextpage_shortcode' ], 10, 6 );
+			add_filter( 'alm_nextpage_noscript_paging', [ $this, 'alm_nextpage_noscript_paging' ], 10 );
+			add_filter( 'the_content', [ $this, 'alm_nextpage_the_content' ], 1 );
+
 			$this->alm_nextpage_includes();
+		}
+
+		/**
+		 * Load the plugin text domain for translation.
+		 *
+		 * @return void
+		 */
+		public function init() {
+			load_plugin_textdomain( 'ajax-load-more-nextpage', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
 		}
 
 		/**
@@ -459,7 +438,7 @@ if ( ! class_exists( 'ALM_Nextpage_Plugin' ) ) :
 			$querystring = ltrim( $querystring, '&' ); // Remove 1st instance of `&`.
 
 			// Clear querystring if contains alm_page.
-			if ( strpos( $querystring, 'alm_page=' ) !== false ||  strpos( $querystring, 'alm_get_posts' ) !== false ) {
+			if ( strpos( $querystring, 'alm_page=' ) !== false || strpos( $querystring, 'alm_get_posts' ) !== false ) {
 				$querystring = '';
 			}
 
@@ -650,7 +629,17 @@ if ( ! class_exists( 'ALM_Nextpage_Plugin' ) ) :
 		 * @return string
 		 */
 		public function alm_nextpage_get_querystring() {
+			// Deprecated hook.
 			if ( ! apply_filters( 'alm_nextpage_retain_querystring', true ) ) {
+				return '';
+			}
+
+			/**
+			 * Prevent the page load querystring params from being carried over to the next page.
+			 *
+			 * Core ALM Hook.
+			 */
+			if ( ! apply_filters( 'alm_retain_querystring', true ) ) {
 				return '';
 			}
 

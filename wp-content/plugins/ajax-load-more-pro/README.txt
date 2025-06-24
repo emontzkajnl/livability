@@ -5,12 +5,12 @@ Author: Darren Cooney
 Author; URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/ajax-load-more/pro/
 Requires at least: 5.0
-Tested up to: 6.7
+Tested up to: 6.8
 Stable tag: trunk
 Requires PHP: 7.0
 Homepage: https://connekthq.com/ajax-load-more/
 Donate: https://connekthq.com/donate
-Version: 1.3.0.1
+Version: 1.3.2.1
 
 == Copyright ==
 Copyright 2025 Darren Cooney & Connekt Media
@@ -44,6 +44,69 @@ http://connekthq.com/ajax-load-more/pro/
 
 
 == Changelog ==
+
+** 1.3.2.1 - June 10, 2025 **
+
+Filters - 3.0.2
+* HOTFIX: Fixed issues with updated CSS for the Range Slider not being applied correctly.
+* HOTFIX: Remove PHP function decalrations to maintain backwards compatibility with older PHP versions.
+
+** 1.3.2 - June 10, 2025 **
+
+The ALM Pro release updates all add-ons to add Ajax Load More as a required plugin and removes depracted activation hooks/notices.
+
+Cache - 2.0.5
+Call to Actions - 1.1.1
+Comments - 1.2.4
+Custom Repeaters - 2.5.13
+Elementor - 1.2.4
+Filters - 3.0.1
+Layouts - 2.1.1
+Next Page - 1.8.2
+Paging - 2.0.2
+Preloaded - 1.4.1
+Query Loop - 1.0.1
+SEO - 1.9.7
+Single Post - 1.7.2
+Theme Repeaters - 1.2.1
+WooCommerce - 1.2.6
+
+Other updates include:
+
+Filters - 3.0.1
+* FIX: Fixed issue with Filters add-on (Tax and Meta Query) leaving unused data attributes on the ALM instance after filtering.
+* FIX: Fixed issue with PHP generation function in the Filter builder tool.
+* UPDATE: Added support for using wp_cache instead of transients for chacking facet data
+* UPDATE: Improve performance of facet indexing.
+* UPDATE: Added `ajax-load-more` as a required plugin and removed activation hooks/notices.
+* UPDATE: Various code cleanup and refactoring.
+
+Single Posts - 1.7.2
+* UPDATE: Added support for `alm_retain_querystring` hook to retain query string parameters as you load additional posts.
+
+
+** 1.3.1 - May 25, 2025 **
+
+Filters - 3.0.0
+- NEW: Added background processing functionality for indexing of facets. This new features needs to be enabled in the plugin Filter settings in the WordPress admin.
+- NEW: Added facet index status in filter sidebar.
+- FIX: Fixed issue with multiple filters and maintaining correct query params when filtering.
+- FIX: Fixed issue with post/facet update functionality potentially throwing a fatal error because of auto-draft post status.
+- UPDATE: Updated various NPM packagaes and dependencies in project.
+- UPDATE: Various code improvements and optimizations.
+
+Paging - 2.0.1
+- NEW: Added support for table layouts.
+- UPDATE: Code cleanup and various UI/UX updates.
+
+Elementor - 1.2.3
+- UPDATE: Fix for activation check potentially throwing PHP error.
+- UPDATE: Compatibility with latest Elementor version.
+
+WooCommece - 1.2.5
+- UPDATE: Fix for activation check potentially throwing PHP error.
+- UPDATE: Updated WooCommerce tested to.
+- UPDATE: Code cleanup and optimization.
 
 ** 1.3.0.1 - January 22, 2025 **
 

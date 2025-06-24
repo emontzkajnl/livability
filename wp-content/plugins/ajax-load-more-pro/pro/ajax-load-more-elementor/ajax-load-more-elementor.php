@@ -2,14 +2,15 @@
 /**
  * Plugin Name: Ajax Load More: Elementor
  * Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/elementor/
- * Description: Infinite scroll Elementor Posts Widget content with Ajax Load More.
+ * Description: Ajax Load More add-on for infinite scrolling Elementor Posts and Product Grid Widgets.
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: http://connekthq.com
  * Copyright: Darren Cooney & Connekt Media
- * Version: 1.2.2
- * Elementor tested up to: 3.26.5
- * Elementor Pro tested up to: 3.26.5
+ * Version: 1.2.4
+ * Elementor tested up to: 3.29.2
+ * Elementor Pro tested up to: 3.29.2
+ * Requires Plugins: ajax-load-more, elementor
  *
  * @package ALMElementor
  */
@@ -18,67 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ALM_ELEMENTOR_VERSION', '1.2.2' );
-define( 'ALM_ELEMENTOR_RELEASE', 'January 17, 2025' );
-
-/**
- * Plugin activation hook.
- *
- * @since 1.0
- */
-function alm_elementor_install() {
-	// if Ajax Load More is not activated.
-	if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-		set_transient( 'alm-core-elementor-admin-notice', true, 5 );
-	}
-	if ( ! alm_is_elementor_activated() ) {
-		set_transient( 'alm_elementor_admin_notice', true, 5 );
-	}
-}
-register_activation_hook( __FILE__, 'alm_elementor_install' );
-
-/**
- * Display admin notice if plugin does not meet the requirements
- *
- * @since 1.1
- */
-function alm_elementor_admin_notice() {
-
-	$slug = 'ajax-load-more';
-	// Ajax Load More Notice.
-	if ( get_transient( 'alm_elementor_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>' . __( 'You must install and activate the core Ajax Load More plugin before using the Ajax Load More Elementor Add-on.', 'alm-elementor' ) . '</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, __( 'Install Ajax Load More Now', 'alm-elementor' ) ) . '</p>';
-		$message    .= '</div>';
-		echo wp_kses_post( $message );
-		delete_transient( 'alm_elementor_admin_notice' );
-	}
-
-	// Elementor Pro Notice.
-	if ( get_transient( 'alm-elementor-admin-notice', true, 5 ) ) {
-		$message  = '<div class="error">';
-		$message .= '<p>' . __( 'Elementor Pro must be installed and activated to use the Ajax Load More Elementor Add-on', 'alm-elementor' ) . '</p>';
-		$message .= '</div>';
-		echo wp_kses_post( $message );
-		delete_transient( 'alm-elementor-admin-notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_elementor_admin_notice' );
-
-/**
- * Is Elementor activated.
- *
- * @since 1.0
- */
-function alm_is_elementor_activated() {
-	if ( defined( 'ELEMENTOR_PRO_VERSION' ) ) {
-		return true;
-	} else {
-		return false;
-	}
-}
+define( 'ALM_ELEMENTOR_VERSION', '1.2.4' );
+define( 'ALM_ELEMENTOR_RELEASE', 'June 9, 2025' );
 
 if ( ! class_exists( 'ALMElementor' ) ) :
 
@@ -101,14 +43,33 @@ if ( ! class_exists( 'ALMElementor' ) ) :
 
 			add_action( 'alm_elementor_installed', [ &$this, 'alm_elementor_installed' ] );
 			add_action( 'wp_enqueue_scripts', [ &$this, 'alm_elementor_enqueue_scripts' ] );
+			add_action( 'alm_elementor_settings', [ &$this, 'alm_elementor_settings' ] );
+			add_action( 'wp_loaded', [ $this, 'init_widget' ] );
+			add_action( 'init', [ $this, 'init' ] );
+
 			add_filter( 'alm_elementor_params', [ &$this, 'alm_elementor_params' ], 10, 2 );
 			add_filter( 'alm_elementor_page_link', [ &$this, 'alm_elementor_page_link' ], 10, 3 );
 			add_filter( 'alm_elementor_hide_pagination', [ &$this, 'alm_elementor_hide_pagination' ] );
-			add_action( 'alm_elementor_settings', [ &$this, 'alm_elementor_settings' ] );
-			add_action( 'wp_loaded', [ $this, 'init_widget' ] );
+		}
+
+		/**
+		 * Load the plugin text domain for translation.
+		 *
+		 * @return void
+		 */
+		public function init() {
 			load_plugin_textdomain( 'alm-elementor', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
 		}
 
+
+		/**
+		 * Is Elementor activated.
+		 *
+		 * @since 1.0
+		 */
+		public function alm_is_elementor_activated() {
+			return defined( 'ELEMENTOR_PRO_VERSION' );
+		}
 
 		/**
 		 * Init the custom Elementor widget on `wp_loaded`.
@@ -117,11 +78,10 @@ if ( ! class_exists( 'ALMElementor' ) ) :
 		 */
 		public function init_widget() {
 			// Check if Elementor installed and activated.
-			if ( alm_is_elementor_activated() ) {
+			if ( $this->alm_is_elementor_activated() ) {
 				require_once ALM_ELEMENTOR_PATH . 'module/plugin.php';
 			}
 		}
-
 
 		/**
 		 * Create link for going back to page 1.

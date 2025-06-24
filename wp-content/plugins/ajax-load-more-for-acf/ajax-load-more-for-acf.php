@@ -2,16 +2,17 @@
 /**
  * Plugin Name: Ajax Load More for ACF
  * Plugin URI: http://connekthq.com/plugins/ajax-load-more/extensions/advanced-custom-fields/
- * Description: An Ajax Load More extension that adds compatibility for ACF field types.
+ * Description: Ajax Load More extension that adds compatibility with various field types for Advanced Custom Fields.
  * Text Domain: ajax-load-more-for-acf
  * Author: Darren Cooney
  * Author URI: https://connekthq.com
- * Version: 1.3.3
+ * Version: 1.3.4
  * License: GPL
  * Copyright: Connekt Media & Darren Cooney
+ * Requires Plugins: ajax-load-more
  *
  * @package ALM_ACF
- */ 
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,35 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_ACF_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_ACF_URL', plugins_url( '', __FILE__ ) );
-
-/**
- *  Installation hook.
- */
-function alm_acf_install() {
-	if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-		set_transient( 'alm_acf_admin_notice', true, 5 );
-	}
-}
-register_activation_hook( __FILE__, 'alm_acf_install' );
-
-/**
- * Display admin notice if plugin does not meet the requirements.
- */
-function alm_acf_admin_notice() {
-	$slug   = 'ajax-load-more';
-	$plugin = $slug . '-for-acf';
-	// Ajax Load More Notice.
-	if ( get_transient( 'alm_acf_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>You must install and activate the core Ajax Load More plugin before using the Ajax Load More ACF extension.</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, 'Install Ajax Load More Now' ) . '</p>';
-		$message    .= '</div>';
-		echo wp_kses_post( $message );
-		delete_transient( 'alm_acf_admin_notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_acf_admin_notice' );
 
 
 if ( ! class_exists( 'ALM_ACF' ) ) :
@@ -61,12 +33,12 @@ if ( ! class_exists( 'ALM_ACF' ) ) :
 		 * Set up contructors.
 		 */
 		public function __construct() {
-			add_action( 'alm_acf_installed', [ &$this, 'alm_acf_installed' ] );
-			add_filter( 'alm_acf_shortcode', [ &$this, 'alm_acf_shortcode' ], 10, 7 );
-			add_filter( 'alm_acf_preloaded', [ &$this, 'alm_acf_preloaded_query' ], 10, 3 );
-			add_action( 'wp_ajax_alm_acf', [ &$this, 'alm_acf_query' ] );
-			add_action( 'wp_ajax_nopriv_alm_acf', [ &$this, 'alm_acf_query' ] );
-			add_filter( 'alm_acf_total_rows', [ &$this, 'alm_acf_total_rows' ], 10, 1 );
+			add_action( 'alm_acf_installed', [ $this, 'alm_acf_installed' ] );
+			add_filter( 'alm_acf_shortcode', [ $this, 'alm_acf_shortcode' ], 10, 7 );
+			add_filter( 'alm_acf_preloaded', [ $this, 'alm_acf_preloaded_query' ], 10, 3 );
+			add_action( 'wp_ajax_alm_acf', [ $this, 'alm_acf_query' ] );
+			add_action( 'wp_ajax_nopriv_alm_acf', [ $this, 'alm_acf_query' ] );
+			add_filter( 'alm_acf_total_rows', [ $this, 'alm_acf_total_rows' ], 10, 1 );
 			$this->alm_acf_includes();
 		}
 
@@ -177,7 +149,7 @@ if ( ! class_exists( 'ALM_ACF' ) ) :
 								if ( $key >= $max_pages ) {
 									break; // exit early.
 								}
-								$row_count++;
+								++$row_count;
 
 								// Set ALM Variables.
 								$alm_found_posts = $total;
@@ -300,7 +272,7 @@ if ( ! class_exists( 'ALM_ACF' ) ) :
 
 									// Only display rows between the values.
 									if ( $postcount < $posts_per_page && $count >= $start ) {
-										$postcount++;
+										++$postcount;
 
 										// Set ALM Variables.
 										$alm_found_posts = $total;
@@ -317,7 +289,7 @@ if ( ! class_exists( 'ALM_ACF' ) ) :
 										}
 									}
 
-									$count++;
+									++$count;
 
 									if ( $count >= $end ) {
 										break; // exit.

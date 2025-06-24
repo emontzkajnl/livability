@@ -1,14 +1,17 @@
-<?php // phpcs:ignore
+<?php
 /**
  * Plugin Name: Ajax Load More: SEO
  * Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/search-engine-optimization/
- * Description: Ajax Load More extension to generate unique paging URLs with each query.
+ * Description: Ajax Load More add-on to generate unique paging URLs and provide SEO enhancements for Ajax content.
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.9.6
+ * Version: 1.9.7
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
+ * Requires Plugins: ajax-load-more
+ *
+ * @package ALM_SEO
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -17,41 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_SEO_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_SEO_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_SEO_VERSION', '1.9.6' );
-define( 'ALM_SEO_RELEASE', 'January 16, 2024' );
-
-/**
- * Install the SEO add-on
- *
- * @since 1.0
- */
-function alm_seo_install() {
-	if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-		set_transient( 'alm_seo_admin_notice', true, 5 );
-	}
-}
-register_activation_hook( __FILE__, 'alm_seo_install' );
-
-/**
- * Display admin notice and de-activate if plugin does not meet the requirements.
- *
- * @since 1.9.4
- */
-function alm_seo_admin_notice() {
-	$slug   = 'ajax-load-more';
-	$plugin = $slug . '-seo';
-	// Ajax Load More Notice.
-	if ( get_transient( 'alm_seo_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>' . __( 'You must install and activate the core Ajax Load More plugin before using the Ajax Load More SEO Add-on.', 'ajax-load-more-seo' ) . '</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, __( 'Install Ajax Load More Now', 'ajax-load-more-seo' ) ) . '</p>';
-		$message    .= '</div>';
-		echo wp_kses_post( $message );
-		delete_transient( 'alm_seo_admin_notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_seo_admin_notice' );
+define( 'ALM_SEO_VERSION', '1.9.7' );
+define( 'ALM_SEO_RELEASE', 'June 9, 2025' );
 
 if ( ! class_exists( 'ALMSEO' ) ) :
 
@@ -68,6 +38,15 @@ if ( ! class_exists( 'ALMSEO' ) ) :
 			add_action( 'wp_enqueue_scripts', [ &$this, 'alm_seo_enqueue_scripts' ] );
 			add_action( 'alm_seo_settings', [ &$this, 'alm_seo_settings' ] );
 			add_filter( 'alm_seo_shortcode', [ &$this, 'alm_seo_shortcode' ], 10, 4 );
+			add_action( 'init', [ $this, 'init' ] );
+		}
+
+		/**
+		 * Load the plugin text domain for translation.
+		 *
+		 * @return void
+		 */
+		public function init() {
 			load_plugin_textdomain( 'ajax-load-more-seo', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
 		}
 
@@ -340,5 +319,4 @@ function alm_seo_plugin_updater() {
 	}
 }
 add_action( 'admin_init', 'alm_seo_plugin_updater', 0 );
-
 /* End Software Licensing */

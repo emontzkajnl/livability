@@ -5,10 +5,10 @@ Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/comments/
 Requires at least: 5.0
-Tested up to: 6.7
+Tested up to: 6.8
 Stable tag: trunk
 Homepage: https://connekthq.com/
-Version: 1.2.3
+Version: 1.2.4
 
 == Copyright ==
 Copyright 2025 Darren Cooney & Connekt Media
@@ -44,6 +44,11 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/comments/
 5. Activate the plugin in the WP plugin dashboard.
 
 == Changelog ==
+
+= 1.2.4 - June 9, 2025 =
+* UPDATE: Updated load_text_domain action to remove PHP warning.
+* UPDATE: Added `ajax-load-more` as a required plugin and removed activation hooks/notices.
+* UPDATE: Updated WP compatibility.
 
 = 1.2.3 - January 17, 2025 =
 * UPDATE: Adding support for Theme Repeaters to be selected as the Comment Template.

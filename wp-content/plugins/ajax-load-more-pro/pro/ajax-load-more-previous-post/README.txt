@@ -5,27 +5,23 @@ Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/ajax-load-more/add-ons/single-post/
 Requires at least: 4.0
-Tested up to: 6.7
+Tested up to: 6.8
 Stable tag: trunk
 Homepage: https://connekthq.com/ajax-load-more/
-Version: 1.7.1
-
+Version: 1.7.2
 
 == Copyright ==
-Copyright 2024 Connekt Media
+Copyright 2025 Connekt Media
 
 This software is NOT to be distributed, but can be INCLUDED in WP themes: Premium or Contracted.
 This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
 
 == Description ==
 
 The Single Post add-on will allow you to navigate your single posts with Ajax and adjust the browser URL as you do.
 
 http://connekthq.com/plugins/ajax-load-more/single-post/
-
-
 
 == Installation ==
 
@@ -37,7 +33,6 @@ http://connekthq.com/plugins/ajax-load-more/single-post/
 4. Click 'Install Now'
 5. Activate the plugin in the Plugin dashboard
 
-
 = Using FTP =
 
 1. Download `ajax-load-more-previous-post.zip`.
@@ -46,30 +41,31 @@ http://connekthq.com/plugins/ajax-load-more/single-post/
 4. Ensure Ajax Load More is installed prior to activating the plugin.
 5. Activate the plugin in the Plugin dashboard.
 
-
 == Changelog ==
+
+= 1.7.2 - June 9, 2025 =
+* UPDATE: Added support for `alm_retain_querystring` hook to retain query string parameters as you load additional posts.
+* UPDATE: Updated load_text_domain action to remove PHP warning.
+* UPDATE: Added `ajax-load-more` as a required plugin and removed activation hooks/notices.
+* UPDATE: Various code cleanups and organization.
 
 = 1.7.1 - December 4, 2024 =
 * FIX: Fixed issue with reading progress bar not working correctly on Elementor single templates.
 * UPDATE: Code clean up.
-
 
 = 1.7.0 - May 10, 2024 =
 * NEW: Added official support for using Next Page add-on with Single Posts add-on.
 * FIX: Fixed issue with undefined PHP variable when using `Next` post ordering.
 * UPDATE: Code clean up.
 
-
 = 1.6.0 - January 16, 2024 =
 * UPGRADE NOTICE: This update is affected by the core Ajax Load More 7.0 release. Updating this plugin will require updating Ajax Load More to 7.0.
 * UPDATE: Remove all references and output of `alm-reveal` divs.
 * FIX: Fixed issue with Single Post preview functionality.
 
-
 = 1.5.6 - September 27, 2023 =
 * UPDATE: Updated Single Post JavaScript to support new Google Analytics 4 implementation.
 * UPDATE: Code cleanup and organization.
-
 
 = 1.5.5 - June 11, 2023 =
 * UPDATE: Updated to add compatibility with Cache Add-on 2.0 and Ajax Load More 6.0.
@@ -81,12 +77,10 @@ http://connekthq.com/plugins/ajax-load-more/single-post/
 * UPDATE: Added new admin prompt when activating plugin without core Ajax Load More installed.
 * UPDATE: Code cleanup and organization.
 
-
 = 1.5.3 - March 31, 2021 =
 * FIX - Fixed potential ordering issue with using a custom query on sites with a large amount of posts.
 * UPDATE - Added console warning if Ajax Load More is unable to locate target post element specified in shortcode.
 * UPDATE - Added functionality that allows Ajax Load More to fetch elements outside the Single Posts target element and pull them in for display in each load more action.
-
 
 = 1.5.2 - February 11, 2021 =
 * NEW - Added post preview functionality - [View Example](https://connekthq.com/accessibility-and-ajax-load-more/?showads=showpreview).
@@ -94,42 +88,34 @@ http://connekthq.com/plugins/ajax-load-more/single-post/
 * UPDATE - PHP and JS code cleanup.
 * UPDATE - Various updates to support PHP 8.0+.
 
-
 = 1.5.1 - January 3, 2021 =
 * Fix - Fixed issue with custom query returning all posts if the query was empty.
 * FIX - Fixed issue with new custom query feature failing to pass the correct data to the shortcode.
 
-
 = 1.5.0 - November 11, 2020 =
 * NEW - Added support for custom queries using core taxonomy, category and tag query parameters in Ajax Load More 🎉
-
 
 = 1.4.4 - April 22, 2020 =
 * FIX - Fixed issue with anchor links taking user to the top of the page.
 * FIX - Fixed issue with encoded characters in post titles.
 * UPDATE - Added support for Yoast page titles.
 
-
 = 1.4.3 - March 18, 2020 =
 * NEW - Added new Single Post [implementation](https://connekthq.com/plugins/ajax-load-more/add-ons/single-posts/#implementation) technique. Users are no longer required to use a Repeater Template when using this add-on.
-
 
 = 1.4.2 - October 1, 2019 =
 * NEW - Added option to display a reading progress bar. `single_post_progress_bar` is the shortcode parameter - please view the Shortcode Builder for implementation help.
 * UPDATE - Updated default `Scroll to Post` behaviour setting to false.
-
 
 = 1.4.1 - May 29, 2019 =
 This update relates to fixes applied to Ajax Load More `5.1.1`
 * FIX - Added fix for browser popstate issue in core Ajax Load More.
 * UPDATE - Removed REST API endpoint.
 
-
 = 1.4.0 - May 6, 2019 =
 * UPGRADE NOTICE - This update requires Ajax Load More 5.1+.
 * NEW - Single Posts add-on now uses the REST API for Ajax queries. This change can be reverted in ALM Settings.
 * FIX - Added fix to suppress PHP warning messages about WP_Query parameters.
-
 
 = 1.3.2 - March 8, 2019 =
 * NEW - Adding translation file.
@@ -142,10 +128,8 @@ This update relates to fixes applied to Ajax Load More `5.1.1`
 * UPDATE - Setting `$wp_query->in_the_loop` and `$wp_query->is_feed` to true for allowing various 3rd plugins to run hooks ion Ajax content.
 * FIX - Fixed a bug where the browser URL would not update if a user clicked the back or forward browser buttons.
 
-
 = 1.3.1 - January 19, 2019 =
 * FIX - Fix for `$` functions causing JavaScript errors for some users.
-
 
 = 1.3.0 - January 15, 2019 =
 * UPGRADE NOTICE - If you run this update you must also update ALM core to 4.2.0.
@@ -153,15 +137,12 @@ This update relates to fixes applied to Ajax Load More `5.1.1`
 * UPDATE - Renamed addon to `Single Post` from `Previous Post`.
 * UPDATE - Adding strip_tags function to page title
 
-
 = 1.2.3 - January 22, 2018 =
 * NEW - Added support for the new gtag Analytics script.
-
 
 = 1.2.2 - December 7, 2017 =
 * NEW - Added new `Back/Fwd Buttons` global setting that will enable/disable pushstate from hijacking the browser back/fwd buttons.
 * UPDATE - Updated cache URL parameters when using Cache add-on with Previous Post.
-
 
 = 1.2.1 - August 8, 2017 =
 * NEW - Added support for excluding categories from the previous post query. `previous_post_excluded_terms="23, 76, 90"`.

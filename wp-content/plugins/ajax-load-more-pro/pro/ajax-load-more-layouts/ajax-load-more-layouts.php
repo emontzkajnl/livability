@@ -2,12 +2,14 @@
 /**
  * Plugin Name: Ajax Load More: Layouts
  * Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/theme-repeaters/
- * Description: Ajax Load More extension that adds predefined layouts for your repeater templates.
+ * Description: Ajax Load More add-on that adds a library of predefined layouts for your Repeater Templates.
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: http://connekthq.com
- * Version: 2.1.0
+ * Version: 2.1.1
  * Copyright: Darren Cooney & Connekt Media
+ * License: GPL
+ * Requires Plugins: ajax-load-more
  *
  * @package ALMLayouts
  */
@@ -16,43 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ALM_LAYOUTS_VERSION', '2.1.0' );
-define( 'ALM_LAYOUTS_RELEASE', 'January 16, 2024' );
+define( 'ALM_LAYOUTS_VERSION', '2.1.1' );
+define( 'ALM_LAYOUTS_RELEASE', 'June 9, 2025' );
 define( 'ALM_LAYOUTS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_LAYOUTS_URL', plugins_url( '', __FILE__ ) );
-
-/**
- * Activation hook
- *
- *  @since 1.0
- */
-function alm_layouts_install() {
-	if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-		set_transient( 'alm_layouts_admin_notice', true, 5 );
-	}
-}
-register_activation_hook( __FILE__, 'alm_layouts_install' );
-
-/**
- * Display admin notice and de-activate if plugin does not meet the requirements.
- *
- * @since 2.0.0
- */
-function alm_layouts_admin_notice() {
-	$slug   = 'ajax-load-more';
-	$plugin = $slug . '-layouts';
-	// Ajax Load More Notice.
-	if ( get_transient( 'alm_layouts_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>' . __( 'You must install and activate the core Ajax Load More plugin before using the Ajax Load More Layouts Add-on.', 'ajax-load-more-layouts' ) . '</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, __( 'Install Ajax Load More Now', 'ajax-load-more-layouts' ) ) . '</p>';
-		$message    .= '</div>';
-		echo wp_kses_post( $message );
-		delete_transient( 'alm_layouts_admin_notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_layouts_admin_notice' );
 
 if ( ! class_exists( 'ALMLayouts' ) ) :
 	/**

@@ -1,66 +1,57 @@
 <?php
 /**
- * Init Endpoint.
+ * Render Filter REST API endpoint for displaying a filter as PHP.
+ *
+ * @package ALMFilters
  */
-add_action( 'rest_api_init', function () {
-	$my_namespace = 'alm-filters';
-	$my_endpoint  = '/renderfilter';
-	register_rest_route(
-		$my_namespace,
-		$my_endpoint,
-		array(
-			'methods'             => 'POST',
-			'callback'            => 'renderfilter',
-			'permission_callback' => '__return_true',
-		)
-	);
-});
-
-
-
-/*
-*  renderfilter
-*  Get the filter data as PHP
-*
-*  @param $request      $_POST
-*  @return $response    json
-*  @since 1.0
-
-*/
-
-function renderfilter( WP_REST_Request $request ) {
-
-	error_reporting(E_ALL|E_STRICT);
-
-	// Get contents of request and convert to array
-	$data = (array)json_decode($request->get_body());
-
-	// access the data obj
-	$data = $data['data'];
-
-	if($data){
-		// Get the option and unserialize
-		$filter = unserialize(get_option('alm_filter_'. $data));
+add_action(
+	'rest_api_init',
+	function () {
+		$my_namespace = 'alm-filters';
+		$my_endpoint  = '/renderfilter';
+		register_rest_route(
+			$my_namespace,
+			$my_endpoint,
+			[
+				'methods'             => 'POST',
+				'callback'            => 'renderfilter',
+				'permission_callback' => '__return_true',
+			]
+		);
 	}
+);
 
-	// Parse the json
-	$array = json_decode(json_encode($filter), true);
+/**
+ * Get the filter data as PHP
+ *
+ * @param WP_REST_Request $request The HTTP request object.
+ * @return void
+ * @since 1.0
+ */
+function renderfilter( WP_REST_Request $request ) {
+	// Get contents of request and convert to array
+	$data = (array) json_decode( $request->get_body() );
 
+	// Pluck the filter ID from the data.
+	$filter_id = $data['id'];
 
-	if($array){
-		$response = array(
+	// Get the option and unserialize.
+	$filter = $filter_id ? unserialize( get_option( 'alm_filter_' . $filter_id ) ) : '';
+
+	if ( ! $filter ) {
+		wp_send_json(
+			[
+				'success' => false,
+				'msg'     => __( 'Error accessing filter.', 'ajax-load-more-filters ' ),
+				'code'    => '',
+			]
+		);
+	}
+	wp_send_json(
+		[
 			'success' => true,
 			'msg'     => '',
-			'code'    => json_encode($array, JSON_PRETTY_PRINT)
-		);
-	} else {
-		$response = array(
-			'success' => false,
-			'msg'     => __('Error accessing filter', 'ajax-load-more-filters '),
-			'code'    => ''
-		);
-	}
-
-	wp_send_json($response); // Send JSON response
-
+			'code'    => wp_json_encode( $filter, JSON_PRETTY_PRINT ),
+		]
+	);
 }

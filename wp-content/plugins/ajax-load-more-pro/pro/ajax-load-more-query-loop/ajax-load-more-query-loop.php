@@ -6,9 +6,10 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.0
+ * Version: 1.0.1
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
+ * Requires Plugins: ajax-load-more
  *
  * @package ALMQueryLoop
  */
@@ -19,40 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_QUERY_LOOP_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_QUERY_LOOP_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_QUERY_LOOP_VERSION', '1.0.0' );
-define( 'ALM_QUERY_LOOP_RELEASE', 'January 17, 2025' );
-
-/**
- * Activation hook.
- *
- * @since 1.0
- */
-function alm_query_loop_install() {
-	if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-		set_transient( 'alm_query_loop_admin_notice', true, 5 );
-	}
-}
-register_activation_hook( __FILE__, 'alm_query_loop_install' );
-
-/**
- * Display admin notice if plugin does not meet the requirements.
- *
- * @since 1.0.0
- */
-function alm_query_loop_admin_notice() {
-	$slug = 'ajax-load-more';
-	// Ajax Load More Notice.
-	if ( get_transient( 'alm_query_loop_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>' . __( 'You must install and activate the core Ajax Load More plugin before using the Ajax Load More Query Loop Add-on.', 'ajax-load-more-query-loop' ) . '</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, __( 'Install Ajax Load More Now', 'ajax-load-more-query-loop' ) ) . '</p>';
-		$message    .= '</div>';
-		echo wp_kses_post( $message );
-		delete_transient( 'alm_query_loop_admin_notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_query_loop_admin_notice' );
+define( 'ALM_QUERY_LOOP_VERSION', '1.0.1' );
+define( 'ALM_QUERY_LOOP_RELEASE', 'June 9, 2025' );
 
 if ( ! class_exists( 'ALM_QUERY_LOOP' ) ) :
 	/**

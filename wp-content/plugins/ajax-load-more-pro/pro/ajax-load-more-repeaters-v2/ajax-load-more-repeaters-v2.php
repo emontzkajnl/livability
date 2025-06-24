@@ -2,21 +2,22 @@
 /**
  * Plugin Name: Ajax Load More: Custom Repeaters
  * Plugin URI: http://connekthq.com/plugins/ajax-load-more/custom-repeaters/
- * Description: Ajax Load More add-on to allow for unlimited repeater templates.
+ * Description: Ajax Load More add-on to create unlimited Repeater Templates.
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: http://connekthq.com
- * Version: 2.5.12
+ * Version: 2.5.13
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
+ * Requires Plugins: ajax-load-more
  *
- * @package AjaxLoadMoreRepeaters
+ * @package ALM_Repeaters
  */
 
 define( 'ALM_UNLIMITED_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_UNLIMITED_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_UNLIMITED_VERSION', '2.5.12' );
-define( 'ALM_UNLIMITED_RELEASE', 'January 16, 2024' );
+define( 'ALM_UNLIMITED_VERSION', '2.5.13' );
+define( 'ALM_UNLIMITED_RELEASE', 'June 9, 2025' );
 
 /**
  * Core activation hook function.
@@ -27,7 +28,6 @@ define( 'ALM_UNLIMITED_RELEASE', 'January 16, 2024' );
 function alm_unlimited_activation( $network_wide ) {
 	if ( is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
 		// Ajax Load More is activated.
-
 		global $wpdb;
 		add_option( 'alm_unlimited_version', ALM_UNLIMITED_VERSION ); // Add to WP Options table.
 
@@ -43,33 +43,10 @@ function alm_unlimited_activation( $network_wide ) {
 			alm_unlimited_create_table();
 
 		}
-	} else {
-		set_transient( 'alm_custom_repeaters_admin_notice', true, 5 );
 	}
 }
 register_activation_hook( __FILE__, 'alm_unlimited_activation' );
 add_action( 'wpmu_new_blog', 'alm_unlimited_activation' );
-
-/**
- * Display admin notice and de-activate if plugin does not meet the requirements.
- *
- * @since 2.5.6
- */
-function alm_unlimited_admin_notice() {
-	$slug   = 'ajax-load-more';
-	$plugin = $slug . '-repeaters-v2';
-	// Ajax Load More Notice.
-	if ( get_transient( 'alm_custom_repeaters_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>' . __( 'You must install and activate the core Ajax Load More plugin before using the Ajax Load More Custom Repeaters Add-on.', 'ajax-load-more-repeaters-v2' ) . '</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, __( 'Install Ajax Load More Now', 'ajax-load-more-repeaters-v2' ) ) . '</p>';
-		$message    .= '</div>';
-		echo wp_kses_post( $message );
-		delete_transient( 'alm_custom_repeaters_admin_notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_unlimited_admin_notice' );
 
 /**
  * Create Table in WP DB.
@@ -108,28 +85,35 @@ function alm_unlimited_check_table() {
 	}
 }
 
-if ( ! class_exists( 'AjaxLoadMoreRepeaters' ) ) :
+if ( ! class_exists( 'ALM_Repeaters' ) ) :
 
 	/**
-	 * Initiate the core AjaxLoadMoreRepeaters class.
+	 * Initiate the class.
 	 */
-	class AjaxLoadMoreRepeaters {
+	class ALM_Repeaters {
 
 		/**
 		 * Construst the class.
 		 */
 		public function __construct() {
-			add_action( 'alm_unlimited_repeaters', [ &$this, 'alm_unlimited_add_ons' ] );
-			add_action( 'alm_get_unlimited_repeaters', [ &$this, 'alm_get_unlimited_add_ons' ] );
-			add_action( 'alm_unlimited_installed', [ &$this, 'alm_is_unlimited_installed' ] );
-			add_action( 'plugins_loaded', [ &$this, 'alm_unlimited_update' ] );
-			add_action( 'alm_unlimited_settings', [ &$this, 'alm_unlimited_settings' ] );
+			add_action( 'alm_unlimited_repeaters', [ $this, 'alm_unlimited_add_ons' ] );
+			add_action( 'alm_get_unlimited_repeaters', [ $this, 'alm_get_unlimited_add_ons' ] );
+			add_action( 'alm_unlimited_installed', [ $this, 'alm_is_unlimited_installed' ] );
+			add_action( 'plugins_loaded', [ $this, 'alm_unlimited_update' ] );
+			add_action( 'alm_unlimited_settings', [ $this, 'alm_unlimited_settings' ] );
+			add_action( 'init', [ $this, 'init' ] );
 
 			// Ajax actions.
-			add_action( 'wp_ajax_alm_unlimited_create', [ &$this, 'alm_unlimited_create' ] );
-			add_action( 'wp_ajax_alm_unlimited_delete', [ &$this, 'alm_unlimited_delete' ] );
+			add_action( 'wp_ajax_alm_unlimited_create', [ $this, 'alm_unlimited_create' ] );
+			add_action( 'wp_ajax_alm_unlimited_delete', [ $this, 'alm_unlimited_delete' ] );
+		}
 
-			// Load text domain.
+		/**
+		 * Load the plugin text domain for translation.
+		 *
+		 * @return void
+		 */
+		public function init() {
 			load_plugin_textdomain( 'ajax-load-more-repeaters-v2', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
 		}
 
@@ -716,7 +700,7 @@ if ( ! class_exists( 'AjaxLoadMoreRepeaters' ) ) :
 	function alm_unlimited_repeaters() {
 		global $alm_unlimited_repeaters;
 		if ( ! isset( $alm_unlimited_repeaters ) ) {
-			$alm_unlimited_repeaters = new AjaxLoadMoreRepeaters();
+			$alm_unlimited_repeaters = new ALM_Repeaters();
 		}
 		return $alm_unlimited_repeaters;
 	}

@@ -33,10 +33,10 @@ add_action(
  * @since 1.0
  */
 function alm_filters_save_filter( WP_REST_Request $request ) {
-
 	// Get contents of request and convert to array.
 	$data    = json_decode( $request->get_body(), true );
 	$options = json_decode( $data['options'] );
+
 	$filters = json_decode( $data['filters'] );
 
 	$filter_array       = [];
@@ -51,7 +51,7 @@ function alm_filters_save_filter( WP_REST_Request $request ) {
 			$id = isset( $options[ $key ]->id ) ? sanitize_key( $options[ $key ]->id ) : '';
 
 			// Get option from DB.
-			$option = get_option( ALM_FILTERS_PREFIX . $id );
+			$filter_option = unserialize( get_option( ALM_FILTERS_PREFIX . $id ) );
 
 			// Set Options from `$options` data.
 			$filter_array['id']                   = $id;
@@ -88,12 +88,10 @@ function alm_filters_save_filter( WP_REST_Request $request ) {
 			$timestamp = current_time( 'timestamp' );
 
 			// Created Date.
-			if ( ! $option ) { // if filter doesn't yet exist.
+			if ( ! $filter_option ) { // if filter doesn't yet exist.
 				$filter_array['date_created'] = $timestamp;
 			} else {
-
 				// Get current filter for date created attribute.
-				$filter_option = unserialize( $option );
 				if ( ! isset( $filter_option['date_created'] ) ) {
 					// If it doesn't exist, created it.
 					$filter_array['date_created'] = $timestamp;
@@ -372,21 +370,33 @@ function alm_filters_save_filter( WP_REST_Request $request ) {
 			wp_send_json( $response );
 		}
 
+		/**
+		 * Rebuild facet index if post types have changed.
+		 */
+		$rebuild_facet_index = false;
+		if ( $filter_option && $has_facets ) {
+			// Get old and new post type selection.
+			$old_facets_post_types = isset( $filter_option['facets_post_types'] ) ? $filter_option['facets_post_types'] : [];
+			$new_facets_post_types = $filter_array['facets_post_types'];
+			$rebuild_facet_index   = $old_facets_post_types !== $new_facets_post_types;
+		}
+
 		// Create/Update option on success.
-		update_option( ALM_FILTERS_PREFIX . $filter_array['id'], serialize( $filter_array ) );
+		update_option( ALM_FILTERS_PREFIX . $filter_array['id'], serialize( $filter_array ), false );
 
 		// Create response.
 		$response = [
 			'success' => true,
 			'msg'     => __( 'Filter saved successfully.', 'ajax-load-more-filters' ),
 			'code'    => wp_json_encode( $filter_array, JSON_PRETTY_PRINT ),
+			'rebuild' => $rebuild_facet_index,
 		];
 
 	} else {
 		// Create response.
 		$response = [
 			'success' => false,
-			'msg'     => __( 'Error - You are missing some important filter criteria - please fill out all required fields.', 'ajax-load-more-filters' ),
+			'msg'     => __( 'Error - You are missing some important filter criteria. Please fill out all required fields.', 'ajax-load-more-filters' ),
 			'code'    => '',
 		];
 	}

@@ -5,13 +5,13 @@ Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/ajax-load-more/add-ons/next-page/
 Requires at least: 4.0
-Tested up to: 6.7
+Tested up to: 6.8
 Stable tag: trunk
 Homepage: https://connekthq.com/ajax-load-more/
-Version: 1.8.1
+Version: 1.8.2
 
 == Copyright ==
-Copyright 2024 Connekt Media
+Copyright 2025 Connekt Media
 
 This software is NOT to be distributed, but can be INCLUDED in WP themes: Premium or Contracted.
 This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -44,20 +44,22 @@ The Next Page add-on for Ajax Load More works by using <!-‒nextpage‒-> Quick
 
 == Changelog ==
 
+= 1.8.2 - June 9, 2025 =
+* UPDATE: Updated load_text_domain action to remove PHP warning.
+* UPDATE: Added `ajax-load-more` as a required plugin and removed activation hooks/notices.
+* UPDATE: Various code cleanups and organization.
+
 = 1.8.1 - December 4, 2024 =
 * UPDATE: Add default Next Page shortcode when selecting a post type in the ALM setting section.
 * FIX: Fixed issue with Next page settings not functioning correctly.
-
 
 = 1.8.0 - May 10, 2024 =
 * NEW: Added official support for using Next Page add-on with Single Posts add-on.
 * NEW: Added global `alm_nextpage_post_id` PHP variable for use in filters/shortcodes etc. This will allow the current post ID to be accessed within the Ajax request.
 * UPDATE: Code clean up.
 
-
 = 1.7.1 - January 16, 2024 =
 * FIX: Fixed issue with the Auto implementation method attempting to run in the_excerpt() requests. This issue resulted from a core WP bug with excerpt display in Ajax requests.
-
 
 = 1.7.0 - September 27, 2023 =
 * NEW: Added ability to load full post content and split into pages for URL updates without infinite scroll. Use `nextpage_type="fullpage"` shortcode parameter to implement full article pagination URLs.
@@ -69,11 +71,9 @@ The Next Page add-on for Ajax Load More works by using <!-‒nextpage‒-> Quick
 * UPDATE: Removed Analytics shortcode parameter as Google Analytics 4 now handles pageviews automatically.
 * UPDATE: Major code refactoring, cleanup and organization for the long-term health of the add-on.
 
-
 = 1.6.4 - June 11, 2023 =
 * UPDATE: Updated to add compatibility with Cache Add-on 2.0 and Ajax Load More 6.0.
 * FIX: Fixed issue with paged URLs not loading the correct page.
-
 
 = 1.6.3 - January 6, 2023 =
 * FIX: Added DOM loaded event that double checks browser URL vs HTML stored URL for scrolling purposes and to prevent errors.
@@ -101,7 +101,6 @@ add_filter( 'alm_nextpage_the_content', 'my_nextpage_content', 10, 2 );
 = 1.5.0.1 - February 16, 2021 =
 * HOTFIX - Fix for potential issues with trailing commas causing fatal errors on servers PHP 7.2.x and lower.
 
-
 = 1.5.0 - February 11, 2021 =
 * UPGRADE NOTICE - You must update core ALM when updating Next Page add-on.
 * NEW - Added new Page Title Template option that allow for updating the browser title when each load more action. e.g. `Page 3 of 15 | My Post Title | Site Title`.
@@ -110,17 +109,14 @@ add_filter( 'alm_nextpage_the_content', 'my_nextpage_content', 10, 2 );
 * UPDATE - PHP and JS code cleanup.
 * UPDATE - Various updates to support PHP 8.0+.
 
-
 = 1.4.6 - June 29, 2020 =
 * FIX - Fixed issue with querystrings in paging URLs when using Next Page + Cache add-ons.
-
 
 = 1.4.5 - May 1, 2020 =
 * FIX - Fixed issue with push/popstate when using Nextpage and Paging add-ons.
 * FIX - Fixed issue with Google Analytics integration sending a second pageview on page load.
 * UPDATE - Set default `nextpage_scroll` shortcode parameter to false for better UX and accessibility.
 * UPDATE - Disabled `Scroll to Page` functionality if Paging add-on is active. Use Paging add-on to scroll user to the top of the page.
-
 
 = 1.4.4 - April 22, 2020 =
 * FIX - Fixed issue with [Results Text](https://connekthq.com/plugins/ajax-load-more/docs/results-text/) not working when using ALM `id` parameter.
@@ -135,22 +131,18 @@ add_filter('alm_nextpage_paged', function(){
 ```
 * FIX - Fixed issue with paged URLs if an incorrect value was entered in `nextpage-scroll` shortcode parameter.
 
-
 = 1.4.2 - December 17, 2019 =
 FIX - Fixed issue with custom ACF Blocks for Gutenberg not displaying in Ajax requests.
-
 
 = 1.4.1 - May 29, 2019 =
 This update relates to fixes applied to Ajax Load More `5.1.1`
 * FIX - Added fix for browser popstate issue in core Ajax Load More.
 * UPDATE - Removed REST API endpoint.
 
-
 = 1.4.0 - May 6, 2019 =
 * UPGRADE NOTICE - This update requires Ajax Load More 5.1+.
 * NEW - Next Page add-on now uses the REST API for Ajax queries. This change can be reverted in ALM Settings.
 * NEW - Added pagination in a `<noscript/>` tag for SEO and users without JS enabled.
-
 
 = 1.3.0 - March 8, 2019 =
 
@@ -163,7 +155,6 @@ When updating to Next Page 1.3.0 you must also update core (Ajax Load More)[http
 * NEW - Querystring values are now maintained through all page loads.
 * UPDATE - Improved scroll to element functionality and URL updates.
 * UPDATE - Removed Scroll Speed shortcode parameter. Scroll speed is now a global ALM variable.
-
 
 = 1.2.0 - December 6, 2018 =
 * UPDATE - Adding support for URL querystrings on initial page load. 1st page URLs now retain their initial querystring parameters if present.

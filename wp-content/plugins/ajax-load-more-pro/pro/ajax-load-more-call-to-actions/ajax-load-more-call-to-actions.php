@@ -1,55 +1,29 @@
 <?php
-
 /**
  * Plugin Name: Ajax Load More: Call to Actions
  * Plugin URI: http://connekthq.com/plugins/ajax-load-more/call-to-actions/
- * Description: Ajax Load More extension for displaying advertisements and call to actions.
+ * Description: Ajax Load More add-on for displaying advertisements and call to actions.
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: http://connekthq.com
- * Version: 1.1.0
+ * Version: 1.1.1
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
+ * Requires Plugins: ajax-load-more
+ *
+ * @package ALM_CTA
  */
 
 define( 'ALM_CTA_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_CTA_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_CTA_VERSION', '1.1.0' );
-define( 'ALM_CTA_RELEASE', 'January 17, 2025' );
+define( 'ALM_CTA_VERSION', '1.1.1' );
+define( 'ALM_CTA_RELEASE', 'June 9, 2025' );
 
-/**
- *  Install the add-on
- */
-function alm_cta_install() {
-	if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-		set_transient( 'alm_cta_admin_notice', true, 5 );
-	}
-}
-register_activation_hook( __FILE__, 'alm_cta_install' );
-
-/**
- * Display admin notice if plugin does not meet the requirements.
- */
-function alm_cta_admin_notice() {
-	$slug = 'ajax-load-more';
-	// Ajax Load More Notice.
-	if ( get_transient( 'alm_cta_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>' . __( 'You must install and activate the core Ajax Load More plugin before using the Ajax Load More Call-to-Actions Add-on.', 'ajax-load-more-cta' ) . '</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, esc_html__( 'Install Ajax Load More Now', 'ajax-load-more-cta' ) ) . '</p>';
-		$message    .= '</div>';
-		echo wp_kses_post( $message );
-		delete_transient( 'alm_cta_admin_notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_cta_admin_notice' );
-
-if ( ! class_exists( 'ALMCTA' ) ) :
+if ( ! class_exists( 'ALM_CTA' ) ) :
 	/**
 	 * ALM Call to Action Class.
 	 */
-	class ALMCTA {
+	class ALM_CTA {
 
 		/**
 		 * Construct class.
@@ -58,10 +32,10 @@ if ( ! class_exists( 'ALMCTA' ) ) :
 		 * @since 1.0
 		 */
 		public function __construct() {
-			add_action( 'alm_cta_installed', [ &$this, 'alm_cta_installed' ] );
-			add_filter( 'alm_cta_shortcode', [ &$this, 'alm_cta_shortcode' ], 10, 5 );
-			add_action( 'alm_cta_inc', [ &$this, 'alm_cta_inc' ], 10, 8 );
-			add_filter( 'alm_cta_pos_array', [ &$this, 'alm_cta_pos_array' ], 10, 6 );
+			add_action( 'alm_cta_installed', [ $this, 'alm_cta_installed' ] );
+			add_filter( 'alm_cta_shortcode', [ $this, 'alm_cta_shortcode' ], 10, 5 );
+			add_action( 'alm_cta_inc', [ $this, 'alm_cta_inc' ], 10, 8 );
+			add_filter( 'alm_cta_pos_array', [ $this, 'alm_cta_pos_array' ], 10, 6 );
 		}
 
 		/**
@@ -207,7 +181,7 @@ if ( ! class_exists( 'ALMCTA' ) ) :
 	function alm_cta() {
 		global $alm_cta;
 		if ( ! isset( $alm_cta ) ) {
-			$alm_cta = new ALMCTA();
+			$alm_cta = new ALM_CTA();
 		}
 		return $alm_cta;
 	}

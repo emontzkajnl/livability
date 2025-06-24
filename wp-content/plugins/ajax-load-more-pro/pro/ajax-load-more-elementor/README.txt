@@ -5,10 +5,10 @@ Author: Connekt Media
 Author; URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/woocommerce/
 Requires at least: 4.0
-Tested up to: 6.7
+Tested up to: 6.8
 Stable tag: trunk
 Homepage: https://connekthq.com/
-Version: 1.2.2
+Version: 1.2.4
 
 Infinite scroll Elementor widget content with Ajax Load More.
 
@@ -43,7 +43,16 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/elementor/
 4. Ensure Ajax Load More is installed prior to activating the plugin.
 5. Activate the plugin in the WP plugin dashboard.
 
-== Changelog ==
+== Changelog == 
+
+= 1.2.4 - June 9, 2025 =
+* UPDATE: Updated load_text_domain action to remove PHP warning.
+* UPDATE: Added `ajax-load-more` as a required plugin and removed activation hooks/notices.
+* UPDATE: Various code cleanups and organization.
+
+= 1.2.3 - May 25, 2025 =
+* UPDATE: Fix for activation check potentially throwing PHP error.
+* UPDATE: Compatibility with latest Elementor version.
 
 = 1.2.2 - January 17, 2025 =
 * UPDATE: Compatibility with latest Elementor version.
@@ -79,7 +88,6 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/elementor/
 * FIX - Fixed issue with network activation of Elementor Pro causing add-on to not activate.
 
 = 1.1 - November 25, 2020 =
-
 ** UPGRADE NOTICE **
 This update requires Ajax Load More version 5.5.1. This is a breaking change and will require widget updates.
 
@@ -97,5 +105,4 @@ Ajax Load More no longer uses the `Numbers` pagination type, please follow the s
 * NEW - Added integration for Ajax Load More Cache.
 
 = 1.0 - November 11, 2020 =
-
-* Initial Release.eventheimpliedwarrantyofMERCHANTABILITYorFITNESSFORAPARTICULARPURPOSE.DescriptionTheElementoradd-onprovidesfunctionalityrequiredforintegratingwiththeElementorPostsWidget.httpeventheimpliedwarrantyofMERCHANTABILITYorFITNESSFORAPARTICULARPURPOSE.DescriptionTheElementoradd-onprovidesfunctionalityrequiredforintegratingwiththeElementorPostsWidget.http
+* Initial Release

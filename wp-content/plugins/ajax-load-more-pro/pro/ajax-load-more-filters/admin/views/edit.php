@@ -16,6 +16,11 @@
 
 // Does this filter contain a facets array.
 $has_facets = isset( $filter['facets'] ) && $filter['facets'] === true;
+
+// Set a default filter status if it doesn't exist.
+if ( $has_facets && $filter_id ) {
+	ALM_Facets::set_default_facet_status( $filter_id );
+}
 ?>
 
 <!-- Start app -->
@@ -276,9 +281,7 @@ $has_facets = isset( $filter['facets'] ) && $filter['facets'] === true;
 
 				<!-- Add Filter -->
 				<section class="alm-filter--add">
-					<button type="button" v-on:click="addFilter($event)" class="button add-filter">
-						<?php esc_attr_e( 'Add Filter', 'ajax-load-more-filters' ); ?>
-					</button>
+					<button type="button" v-on:click="addFilter($event)" class="button add-filter"><?php esc_attr_e( 'Add Filter', 'ajax-load-more-filters' ); ?></button>
 				</section>
 
 				<!-- Filter Actions -->
@@ -1053,7 +1056,7 @@ $has_facets = isset( $filter['facets'] ) && $filter['facets'] === true;
 					<div class="alm-filter--row_info">
 						<?php
 							$format = __( 'Use the %s hook to adjust the `Reset` button label.', 'ajax-load-more-filters' );
-							printf( $format, '<a href="https://connekthq.com/plugins/ajax-load-more/docs/add-ons/filters/#alm_filters_range_slider_reset_label" target="_blank">alm_filters_range_slider_reset_label</a>' );
+							printf( $format, '<a href="https://connekthq.com/plugins/ajax-load-more/docs/add-ons/filters/hooks/#alm_filters_range_slider_reset_label" target="_blank">alm_filters_range_slider_reset_label</a>' );
 						?>
 					</div>
 				</div>

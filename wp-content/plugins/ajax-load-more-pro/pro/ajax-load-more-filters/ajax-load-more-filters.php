@@ -6,9 +6,10 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 2.3.0.1
+ * Version: 3.0.2
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
+ * Requires Plugins: ajax-load-more
  *
  * @package ALMFilters
  */
@@ -17,8 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ALM_FILTERS_VERSION', '2.3.0.1' );
-define( 'ALM_FILTERS_RELEASE', 'January 22, 2025' );
+define( 'ALM_FILTERS_VERSION', '3.0.2' );
+define( 'ALM_FILTERS_RELEASE', 'June 10, 2025' );
 define( 'ALM_FILTERS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_FILTERS_URL', plugins_url( '', __FILE__ ) );
 define( 'ALM_FILTERS_ADMIN_URL', plugins_url( 'admin/', __FILE__ ) );
@@ -26,41 +27,9 @@ define( 'ALM_FILTERS_SLUG', 'ajax-load-more-filters' );
 define( 'ALM_FILTERS_BASE_URL', get_admin_url() . 'admin.php?page=' . ALM_FILTERS_SLUG );
 define( 'ALM_FILTERS_PREFIX', 'alm_filter_' );
 define( 'ALM_FILTERS_FACET_PREFIX', 'alm_facet_filter_' );
-
-/**
- *  Install the Filters add-on
- *
- *  @since 1.0
- */
-function alm_filters_install() {
-	if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-		set_transient( 'alm_filters_admin_notice', true, 5 );
-	}
-}
-register_activation_hook( __FILE__, 'alm_filters_install' );
-
-/**
- * Display admin notice if plugin does not meet the requirements.
- *
- * @since 2.5.6
- */
-function alm_filters_admin_notice() {
-	$slug = 'ajax-load-more';
-	// Ajax Load More Notice.
-	if ( get_transient( 'alm_filters_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>' . __( 'You must install and activate the core Ajax Load More plugin before using the Ajax Load More Filters Add-on.', 'ajax-load-more-filters' ) . '</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, esc_html__( 'Install Ajax Load More Now', 'ajax-load-more-filters' ) ) . '</p>';
-		$message    .= '</div>';
-		echo wp_kses_post( $message );
-		delete_transient( 'alm_filters_admin_notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_filters_admin_notice' );
+define( 'ALM_FACETS_CACHE_PREFIX', 'alm_facet_cache_' );
 
 if ( ! class_exists( 'ALMFilters' ) ) :
-
 
 	/**
 	 * Initiate the class.
@@ -114,36 +83,31 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 		 * Construct class.
 		 */
 		public function __construct() {
-			add_action( 'alm_filters_installed', [ &$this, 'alm_filters_installed' ] );
-			add_action( 'wp_enqueue_scripts', [ &$this, 'alm_filters_enqueue_scripts' ] );
-			add_action( 'admin_enqueue_scripts', [ &$this, 'alm_filters_admin_enqueue_scripts' ] );
-			add_action( 'ajax_load_more_filters_', [ &$this, 'ajax_load_more_filters_' ] );
-			add_shortcode( 'ajax_load_more_filters', [ &$this, 'alm_filters_shortcode' ] );
-			add_action( 'alm_filters_settings', [ &$this, 'alm_filters_settings' ] );
-			add_filter( 'alm_filters_shortcode_params', [ &$this, 'alm_filters_shortcode_params' ], 10, 8 );
-			add_filter( 'alm_filters_preloaded_args', [ &$this, 'alm_filters_preloaded_args' ], 10, 1 );
-			add_action( 'init', [ &$this, 'alm_filters_facet_publish_actions' ] );
+			add_action( 'alm_filters_installed', [ $this, 'alm_filters_installed' ] );
+			add_action( 'wp_enqueue_scripts', [ $this, 'alm_filters_enqueue_scripts' ] );
+			add_action( 'admin_enqueue_scripts', [ $this, 'alm_filters_admin_enqueue_scripts' ] );
+			add_action( 'ajax_load_more_filters_', [ $this, 'ajax_load_more_filters_' ] );
+			add_action( 'admin_init', [ $this, 'alm_filters_duplicate_filter' ] );
+			add_action( 'admin_init', [ $this, 'alm_filters_deleted' ] );
+			add_action( 'admin_init', [ $this, 'alm_filters_updated' ] );
+			add_action( 'init', [ $this, 'alm_filters_facet_publish_actions' ] );
+			add_action( 'init', [ $this, 'alm_filters_textdomain' ] );
 
-			add_action( 'admin_init', [ &$this, 'alm_filters_export' ] );
-			add_action( 'admin_init', [ &$this, 'alm_filters_import' ] );
-			add_action( 'admin_init', [ &$this, 'alm_filters_rebuild_facets' ] );
-			add_action( 'admin_init', [ &$this, 'alm_filters_duplicate_filter' ] );
-			add_action( 'admin_init', [ &$this, 'alm_filters_deleted' ] );
-			add_action( 'admin_init', [ &$this, 'alm_filters_updated' ] );
+			add_filter( 'alm_filters_shortcode_params', [ $this, 'alm_filters_shortcode_params' ], 10, 8 );
+			add_filter( 'redirect_canonical', [ $this, 'alm_filters_frontpage_canonical_redirect' ] );
+
+			add_shortcode( 'ajax_load_more_filters', [ $this, 'alm_filters_shortcode' ] );
 
 			$this->includes();
-
-			add_filter( 'redirect_canonical', [ &$this, 'alm_filters_frontpage_canonical_redirect' ] );
-			add_action( 'init', [ &$this, 'load_translations' ] );
 		}
 
 		/**
 		 * Loads plugin translations.
 		 *
-		 * @since  2.2
+		 * @since  2.4
 		 * @return void
 		 */
-		public function load_translations() {
+		public function alm_filters_textdomain() {
 			load_plugin_textdomain( 'ajax-load-more-filters', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
 		}
 
@@ -153,6 +117,26 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 		 * @since 1.0
 		 */
 		public function includes() {
+			// Admin only.
+			if ( is_admin() ) {
+				if ( ! class_exists( 'ALM_Filters_Notices' ) ) {
+					require_once 'functions/classes/class-notices.php';
+					$this->notices = new ALM_Filters_Notices();
+				}
+
+				require_once 'functions/classes/class-tools.php';
+				require_once 'functions/classes/class-settings.php';
+
+				if ( ! function_exists( 'alm_list_all_filters' ) ) {
+					require_once 'admin/functions.php';
+				}
+			}
+
+			require_once 'lib/wp-background-processing/wp-background-processing.php';
+			require_once 'functions/facets/class-cache.php';
+			require_once 'functions/facets/class-sidebar.php';
+			require_once 'functions/facets/class-process.php';
+			require_once 'functions/facets/class-facets.php';
 			require_once 'functions/helpers.php';
 			require_once 'functions/dynamic-filter-vars.php';
 			require_once 'functions/checkbox-limit.php';
@@ -162,19 +146,10 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 			require_once 'functions/facets.php';
 			require_once 'functions/preview.php';
 
-			// REST API calls.
+			// API Endpoints.
 			require_once 'admin/api/save.php';
 			require_once 'admin/api/renderfilter.php';
-
-			// Admin only.
-			if ( is_admin() ) {
-				require_once 'functions/class-notices.php';
-				$this->notices = new ALMNotices();
-
-				if ( ! function_exists( 'alm_list_all_filters' ) ) {
-					require_once 'admin/functions.php';
-				}
-			}
+			require_once 'admin/api/facets/status.php';
 		}
 
 		/**
@@ -192,15 +167,16 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 					return;
 				}
 
-				$facets     = self::alm_get_all_filters( ALM_FILTERS_FACET_PREFIX ); // Get all facets.
-				$post_types = $facets ? alm_filters_facet_get_post_types( $facets ) : ''; // Get all post types.
+				$facets     = ALM_Facets::get_all_facets(); // Get all facets.
+				$post_types = alm_filters_facet_get_post_types( $facets ); // Get all post types.
 
 				if ( $post_types ) {
 					self::$facets_post_types = $post_types;
 					$types                   = wp_list_pluck( $post_types, 'post_type' );
 					if ( $types ) {
+						$types = array_unique( $types ); // Remove duplicates.
 						foreach ( $types as $type ) {
-							add_action( 'save_post_' . $type . '', [ &$this, 'alm_filters_update_facets_on_save' ] );
+							add_action( 'save_post_' . $type . '', [ $this, 'alm_filters_update_facets_on_save' ] );
 						}
 					}
 				}
@@ -210,16 +186,16 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 		/**
 		 * Save post hook for updating facets.
 		 *
-		 * @param string  $id      The Post ID.
-		 * @param WP_Post $post    The Post Object.
-		 * @param bool    $update  Whether this is an existing post being updated or not.
+		 * @see https://developer.wordpress.org/reference/hooks/save_post/
+		 * @param string $id      The Post ID.
 		 * @return void
 		 */
 		public function alm_filters_update_facets_on_save( $id ) {
-			$post_type = get_post_type( $id );
-			$facets    = self::$facets_post_types; // Get all facets from global variables.
+			$post_type   = get_post_type( $id );
+			$post_status = get_post_status( $id );
+			$facets      = self::$facets_post_types; // Get all facets from global variables.
 
-			if ( ! $facets ) {
+			if ( $post_status === 'auto-draft' || ! $facets ) {
 				return;
 			}
 
@@ -239,35 +215,8 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 				if ( $filter['id'] ) {
 					$filter = self::alm_filters_get_filter_by_id( $filter['id'], true );
 					if ( $filter ) {
-						alm_filters_update_facet_index( $filter, $id, get_post_status( $id ) );
+						ALM_Facets::update_index( $filter, $id, get_post_status( $id ) );
 					}
-				}
-			}
-		}
-
-		/**
-		 * Rebuild a filter facet via querystring in the WP Admin.
-		 *
-		 * @see wp-admin/admin.php?page=ajax-load-more-filters&rebuild_facet=my_facet
-		 */
-		public function alm_filters_rebuild_facets() {
-			$params = filter_input_array( INPUT_GET ); // phpcs:ignore
-			if ( isset( $params['rebuild_facet_index'] ) ) {
-				$filter_id = $params['rebuild_facet_index'];
-				$filter    = self::alm_filters_get_filter_by_id( $filter_id, true );
-
-				// Confirm filter exist.
-				if ( $filter ) {
-					// Create the facet index.
-					alm_filters_save_facet_index( $filter );
-
-					$msg = sprintf( __( 'Facet index has been rebuilt successfully for the <strong>%s</strong> filter.', 'ajax-load-more-filters' ), $filter_id ); // phpcs:ignore
-					$this->notices->alm_add_admin_notice( $msg, 'ajax-load-more-filters', 'success' );
-
-				} else {
-					$msg = __( 'Filter not found and facets could not be rebuilt.', 'ajax-load-more-filters' );
-					$this->notices->alm_add_admin_notice( $msg, 'ajax-load-more-filters error' );
-
 				}
 			}
 		}
@@ -289,7 +238,7 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 				if ( $new_filter ) {
 					/* translators: %s: Filter ID & admin link */
 					$msg = sprintf( __( 'Filter <a href="%1$s">%2$s</a> already exists - you need to use a unique ID for each filter.', 'ajax-load-more-filters' ), ALM_FILTERS_BASE_URL . '&filter=' . $new_id, $new_id );
-					$this->notices->alm_add_admin_notice( $msg, 'ajax-load-more-filters error' );
+					$this->notices->alm_add_admin_notice( $msg, 'error' );
 					return;
 				}
 
@@ -300,16 +249,22 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 					$filter['date_created']  = $time;
 					$filter['date_modified'] = $time;
 
-					update_option( ALM_FILTERS_PREFIX . $filter['id'], serialize( $filter ) );
+					update_option( ALM_FILTERS_PREFIX . $filter['id'], serialize( $filter ), false );
+
+					$has_facets = isset( $filter['facets'] ) && $filter['facets']; // Locate matching facet.
+					if ( $has_facets ) {
+						// Build the facet index.
+						do_action( 'alm_facets_build_index', $filter );
+					}
 
 					/* translators: %s: Filter ID */
 					$msg = sprintf( __( 'Filter <a href="%1$s">%2$s</a> created sucessfully.', 'ajax-load-more-filters' ), ALM_FILTERS_BASE_URL . '&filter=' . $new_id, $new_id );
-					$this->notices->alm_add_admin_notice( $msg, 'ajax-load-more-filters', 'success' );
+					$this->notices->alm_add_admin_notice( $msg, 'success' );
 
 				} else {
 					/* translators: %s: Filter ID */
 					$msg = sprintf( __( 'Filter <strong>%s</strong> does not exist and could not be duplicated.', 'ajax-load-more-filters' ), $id );
-					$this->notices->alm_add_admin_notice( $msg, 'ajax-load-more-filters error' );
+					$this->notices->alm_add_admin_notice( $msg, 'error' );
 
 				}
 			}
@@ -332,38 +287,47 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 					// Delete related Facet option and transients.
 					$has_facets = isset( $filter['facets'] ) && $filter['facets']; // Locate matching facet.
 					if ( $has_facets ) {
-						delete_option( ALM_FILTERS_FACET_PREFIX . $filter_id ); // Delete the WP option.
-						alm_filters_delete_facet_transients( $filter_id ); // Delete related transients.
+						// Delete facet related WP options and transients.
+						ALM_Facets::delete_facet_options( $filter_id );
+						ALM_Facets::delete_cache( $filter_id );
 					}
 
 					// Delete filter.
 					delete_option( ALM_FILTERS_PREFIX . $filter_id );
 
 					if ( $has_facets ) {
-						$msg = '<strong>' . $filter_id . '</strong> ' . __( 'filter and facets were successfully deleted.', 'ajax-load-more-filters' );
+						$msg = '<strong>' . $filter_id . '</strong> ' . __( 'filter and facet index was deleted successfully.', 'ajax-load-more-filters' );
 					} else {
 						$msg = '<strong>' . $filter_id . '</strong> ' . __( 'filter was deleted successfully.', 'ajax-load-more-filters' );
 					}
-					$this->notices->alm_add_admin_notice( $msg, 'ajax-load-more-filters', 'success' );
+					$this->notices->alm_add_admin_notice( $msg, 'success' );
 				} else {
 					$msg = '<strong>' . $filter_id . '</strong> ' . __( 'filter not found.', 'ajax-load-more-filters' );
-					$this->notices->alm_add_admin_notice( $msg, 'ajax-load-more-filters error' );
+					$this->notices->alm_add_admin_notice( $msg, 'error' );
 				}
 			}
 		}
 
 		/**
-		 * Filter has been updated.
+		 * Filter has been updated or a facet reindex triggered.
 		 *
 		 * @since 1.6
 		 */
 		public function alm_filters_updated() {
 			$params = filter_input_array( INPUT_GET ); // phpcs:ignore
-			if ( isset( $params['filter'] ) && isset( $params['filter_updated'] ) ) {
-				$filter_id = trim( $params['filter'] );
-				$filter    = self::alm_filters_get_filter_by_id( $filter_id, true );
+			if ( isset( $params['filter'] ) && ( isset( $params['filter_updated'] ) || isset( $params['rebuild_index'] ) || isset( $params['auto_rebuild_index'] ) ) ) {
+				$filter_id          = trim( $params['filter'] );
+				$filter             = self::alm_filters_get_filter_by_id( $filter_id, true );
+				$rebuild_index      = isset( $params['rebuild_index'] );
+				$auto_rebuild_index = isset( $params['auto_rebuild_index'] );
+
 				if ( ! $filter ) {
 					$this->notices->alm_add_admin_notice( __( 'Filter does not exist.', 'ajax-load-more-filters' ), 'error' );
+					return;
+				}
+
+				if ( ! isset( $filter['filters'] ) ) {
+					$this->notices->alm_add_admin_notice( __( 'No active filters found.', 'ajax-load-more-filters' ), 'error' );
 					return;
 				}
 
@@ -377,120 +341,28 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 						return;
 					}
 
-					// Create the facet index.
-					alm_filters_save_facet_index( $filter );
-				}
+					$facet_index = $this::get_facet_index_by_id( $filter_id );
 
-				$this->notices->alm_add_admin_notice( __( 'Filter saved successfully.', 'ajax-load-more-filters' ), 'success', 'success' );
-			}
-		}
-
-		/**
-		 * Export ALM Filter Groups.
-		 *
-		 * @since 1.5
-		 */
-		public function alm_filters_export() {
-			$params = filter_input_array( INPUT_POST ); // phpcs:ignore
-			if ( isset( $params['alm_filters_export'] ) ) {
-				$filename = 'alm-filters';
-				if ( ! empty( $params['filter_keys'] ) ) {
-					$export_array = [];
-					foreach ( $params['filter_keys'] as $name ) {
-						$option         = get_option( $name );
-						$export_array[] = unserialize( $option );
-						$filename      .= '[' . self::alm_filters_replace_string( $name ) . ']';
+					// Build facet index if it doesn't exist or a reindex was triggered.
+					if ( ! $facet_index || $rebuild_index || $auto_rebuild_index ) {
+						do_action( 'alm_facets_build_index', $filter );
 					}
 
-					$filename = $filename .= '.json';
-					header( 'Content-Description: File Transfer' );
-					header( "Content-Disposition: attachment; filename={$filename}" );
-					header( 'Content-Type: application/json; charset=utf-8' );
+					if ( $rebuild_index ) {
+						// Rebuild facet index via `rebuild_index` querystring.
+						$this->notices->alm_add_admin_notice( __( 'Facet reindexing triggered successfully.', 'ajax-load-more-filters' ), 'success', 'indexer-rebuild' );
+					} elseif ( $auto_rebuild_index ) {
+						// Rebuild facet index via `auto_rebuild_index` querystring.
+						$this->notices->alm_add_admin_notice( __( 'Filter saved and facet reindexing has been triggered automatically.', 'ajax-load-more-filters' ), 'success', 'indexer-rebuild' );
+					} else {
+						$url = ALM_FILTERS_BASE_URL . '&filter=' . $filter_id . '&rebuild_index';
 
-					// return.
-					echo wp_json_encode( $export_array, JSON_PRETTY_PRINT );
-					die();
-
-				} else {
-					$this->notices->alm_add_admin_notice( __( 'No filters selected. You must select a filter to export.', 'ajax-load-more-filters' ), 'error' );
-				}
-			}
-		}
-
-		/**
-		 * Import ALM Filter Groups.
-		 *
-		 * @since 1.5
-		 */
-		public function alm_filters_import() {
-			$params = filter_input_array( INPUT_POST ); // phpcs:ignore
-			if ( isset( $params['alm_filters_import'] ) ) {
-				$file = $_FILES['alm_import_file']; // phpcs:ignore
-
-				if ( $file ) {
-					// Validate type.
-					if ( pathinfo( $file['name'], PATHINFO_EXTENSION ) !== 'json' ) {
-						$this->notices->alm_add_admin_notice( __( 'Incorrect file type. You can only import JSON files.', 'ajax-load-more-filters' ), 'error' );
-						return;
-					}
-
-					// phpcs:ignore
-					$json = file_get_contents( $file['tmp_name'] ); // read file.
-					$json = json_decode( $json, true ); // decode json.
-
-					// Validate json.
-					if ( empty( $json ) ) {
-						$this->notices->alm_add_admin_notice( __( 'Import file empty.', 'ajax-load-more-filters' ), 'error' );
-						return;
-					}
-
-					// Incorrect JSON format.
-					if ( ! is_array( $json ) ) {
-						$this->notices->alm_add_admin_notice( __( 'JSON file formatted incorrectly.', 'ajax-load-more-filters' ), 'error' );
-						return;
-					}
-
-					// Loop all filters.
-					$count         = 0;
-					$import_string = '';
-					foreach ( $json as $filter ) {
-
-						if ( ! isset( $filter['id'] ) ) {
-							$this->notices->alm_add_admin_notice( __( 'JSON file formatted incorrectly', 'ajax-load-more-filters' ), 'error' );
-							break;
-						}
-						$id = $filter['id'];
-
-						if ( ! isset( $filter['style'] ) ) {
-							$this->notices->alm_add_admin_notice( __( 'JSON file formatted incorrectly', 'ajax-load-more-filters' ), 'error' );
-							break;
-						}
-
-						if ( ! isset( $filter['filters'] ) ) {
-							$this->notices->alm_add_admin_notice( __( 'JSON file formatted incorrectly', 'ajax-load-more-filters' ), 'error' );
-							break;
-						}
-
-						$style   = $filter['style'];
-						$filters = $filter['filters'];
-
-						if ( $filters && $id && $style ) {
-							$filter = serialize( $filter );
-							update_option( ALM_FILTERS_PREFIX . $id, $filter );
-							$import_string .= ( $count > 0 ) ? ', ' : '';
-							$import_string .= '<a href="' . ALM_FILTERS_BASE_URL . '&filter=' . $id . '"><strong>' . $id . '</strong></a>';
-
-							++$count;
-						}
-					}
-
-					if ( $count > 0 ) {
-						$this->notices->alm_add_admin_notice( $import_string . __( ' successfully imported', 'ajax-load-more-filters' ) );
+						/* translators: %1$s is the rebuild URL */
+						$msg = sprintf( wp_kses_post( __( 'Filter saved successfully. <a href="%1$s" id="alm-rebuild-facet-index-notice">Rebuild Index</a>', 'ajax-load-more-filters' ) ), $url );
+						$this->notices->alm_add_admin_notice( $msg, 'success' );
 					}
 				} else {
-					// Error - file does not exist.
-					$this->notices->alm_add_admin_notice( __( 'An error has occurred', 'ajax-load-more-filters' ), 'error' );
-
+					$this->notices->alm_add_admin_notice( __( 'Filter saved successfully.', 'ajax-load-more-filters' ), 'success' );
 				}
 			}
 		}
@@ -1180,6 +1052,8 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 					'root'                => esc_url_raw( rest_url() ),
 					'nonce'               => wp_create_nonce( 'wp_rest' ),
 					'base_url'            => get_admin_url() . 'admin.php?page=ajax-load-more-filters',
+					'cancel_index'        => __( 'Are you sure you want to cancel facet indexing? This will immediately cancel indexing for all facets in the queue.', 'ajax-load-more-filters' ),
+					'rebuild_index'       => __( 'Are you sure you want to rebuild the facet index for this filter?', 'ajax-load-more-filters' ),
 					'delete_filter'       => __( 'Are you sure you want to permanently delete', 'ajax-load-more-filters' ),
 					'ordering_parameters' => __( 'Ordering Parameters', 'ajax-load-more-filters' ),
 					'date_parameters'     => __( 'Date Parameters', 'ajax-load-more-filters' ),
@@ -1309,17 +1183,14 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 		}
 
 		/**
-		 * Replace alm_filter from option name
+		 * Replace `alm_filter_` from option name.
 		 *
 		 * @param strign $string The filter name to replace.
-		 * @return string Updated filter name.
+		 * @return string        Updated filter name.
 		 * @since 1.5
 		 */
 		public static function alm_filters_replace_string( $string = '' ) {
-			if ( $string ) {
-				$string = str_replace( 'alm_filter_', '', $string );
-				return $string;
-			}
+			return $string ? str_replace( 'alm_filter_', '', $string ) : '';
 		}
 
 
@@ -1339,269 +1210,6 @@ if ( ! class_exists( 'ALMFilters' ) ) :
 			}
 			return $redirect;
 		}
-
-		/**
-		 * Create the Comments settings panel.
-		 *
-		 * @since 1.0
-		 */
-		public function alm_filters_settings() {
-			register_setting(
-				'alm_filters_license',
-				'alm_filters_license_key',
-				'alm_filters_sanitize_license'
-			);
-			add_settings_section(
-				'alm_filters_settings',
-				'Filter Settings',
-				'alm_filters_settings_callback',
-				'ajax-load-more'
-			);
-			add_settings_field(
-				'_alm_filters_disable_css',
-				__( 'Disable Filter CSS', 'ajax-load-more-filters' ),
-				'alm_filters_disable_css_callback',
-				'ajax-load-more',
-				'alm_filters_settings'
-			);
-			add_settings_field(
-				'_alm_filters_color',
-				__( 'Color', 'ajax-load-more-filters' ),
-				'alm_filters_color_callback',
-				'ajax-load-more',
-				'alm_filters_settings'
-			);
-			add_settings_field(
-				'_alm_filters_facet_index',
-				__( 'Facet Indexing', 'ajax-load-more-filters' ),
-				'alm_filters_facet_index_callback',
-				'ajax-load-more',
-				'alm_filters_settings'
-			);
-			add_settings_field(
-				'_alm_filters_flatpickr_theme',
-				__( 'Datepicker Theme', 'ajax-load-more-filters' ),
-				'alm_filters_flatpickr_theme_callback',
-				'ajax-load-more',
-				'alm_filters_settings'
-			);
-		}
-	}
-
-	/* Filter Settings (Displayed in ALM Core) */
-
-	/**
-	 * Setting: Section Heading
-	 *
-	 * @since 1.0
-	 */
-	function alm_filters_settings_callback() {
-		$html = '<p>' . __( 'Customize your installation of the <a href="http://connekthq.com/plugins/ajax-load-more/filters/">Filters</a> add-on.', 'ajax-load-more-filters' ) . '</p>';
-
-		echo $html; // phpcs:ignore
-	}
-
-	/**
-	 * Setting: Disable CSS.
-	 *
-	 *  @since 1.0
-	 */
-	function alm_filters_disable_css_callback() {
-		$options = get_option( 'alm_settings' );
-		if ( ! isset( $options['_alm_filters_disable_css'] ) ) {
-			$options['_alm_filters_disable_css'] = '0';
-		}
-
-		$html  = '<input type="hidden" name="alm_settings[_alm_filters_disable_css]" value="0" />';
-		$html .= '<input type="checkbox" id="alm_filters_disable_css_input" name="alm_settings[_alm_filters_disable_css]" value="1"' . ( ( $options['_alm_filters_disable_css'] ) ? ' checked="checked"' : '' ) . ' />';
-		$html .= '<label for="alm_filters_disable_css_input">' . __( 'I want to use my own CSS styles.', 'ajax-load-more-filters' ) . '<br/><span style="display:block;"><i class="fa fa-file-text-o"></i> &nbsp;<a href="' . ALM_FILTERS_URL . '/dist/css/styles.css" target="blank">' . __( 'View Filter CSS', 'ajax-load-more-filters' ) . '</a></span></label>';
-
-		echo $html; // phpcs:ignore
-	}
-
-	/**
-	 * Setting: Rebuild facet indexes on save.
-	 *
-	 *  @since 1.0
-	 */
-	function alm_filters_facet_index_callback() {
-		$options = get_option( 'alm_settings' );
-		if ( ! isset( $options['_alm_filters_facet_index'] ) ) {
-			$options['_alm_filters_facet_index'] = '1';
-		}
-
-		$html  = '<input type="hidden" name="alm_settings[_alm_filters_facet_index]" value="0" />';
-		$html .= '<input type="checkbox" id="alm_filters_facet_index" name="alm_settings[_alm_filters_facet_index]" value="1"' . ( ( $options['_alm_filters_facet_index'] ) ? ' checked="checked"' : '' ) . ' />';
-		$html .= '<label for="alm_filters_facet_index">';
-		$html .= __( 'Rebuild facet indexes when a posts or custom post type is updated.', 'ajax-load-more-filters' );
-		$html .= '<br/><span>' . __( 'Note: Facet indexes are rebuilt on post types used within facets only.', 'ajax-load-more-filters' ) . '</span>';
-		$html .= '</label>';
-
-		echo $html; // phpcs:ignore
-	}
-
-	/**
-	 * Setting: Get the color of the paging element
-	 *
-	 * @since 1.0
-	 */
-	function alm_filters_color_callback() {
-		$options = get_option( 'alm_settings' );
-		if ( ! isset( $options['_alm_filters_color'] ) ) {
-			$options['_alm_filters_color'] = '0';
-		}
-
-		$color     = $options['_alm_filters_color'];
-		$selected0 = '';
-
-		if ( $color === 'default' ) {
-			$selected0 = 'selected="selected"';
-		}
-
-		$selected1 = '';
-		if ( $color === 'blue' ) {
-			$selected1 = 'selected="selected"';
-		}
-
-		$selected2 = '';
-		if ( $color === 'red' ) {
-			$selected2 = 'selected="selected"';
-		}
-
-		$selected3 = '';
-		if ( $color === 'green' ) {
-			$selected3 = 'selected="selected"';
-		}
-
-		$html  = '<label for="alm_settings_filters_color">' . __( 'Choose the color of your filter elements', 'ajax-load-more-filters' ) . '.</label><br/>';
-		$html .= '<select id="alm_settings_filters_color" name="alm_settings[_alm_filters_color]">';
-		$html .= '<option value="default" ' . $selected0 . '>' . __( 'Default', 'ajax-load-more-filters' ) . '</option>';
-		$html .= '<option value="blue" ' . $selected1 . '>' . __( 'Blue', 'ajax-load-more-filters' ) . '</option>';
-		$html .= '<option value="red" ' . $selected2 . '>' . __( 'Red', 'ajax-load-more-filters' ) . '</option>';
-		$html .= '<option value="green" ' . $selected3 . '>' . __( 'Green', 'ajax-load-more-filters' ) . '</option>';
-		$html .= '</select>';
-
-		$html .= '<div class="clear"></div>';
-
-		$html .= '<div class="ajax-load-more-wrap alm-filters alm-filters-container filters-' . $color . '"><span class="pages">' . __( 'Preview', 'ajax-load-more-filters' ) . '</span>';
-
-			// Checkbox.
-			$html     .= '<div class="alm-filter" style="padding: 5px 0 20px; margin: 0; clear: both;">';
-				$html .= '<li class="alm-filter--checkbox"><div class="alm-filter--link field-checkbox active" data-type="checkbox" data-value="design">' . __( 'Checked', 'ajax-load-more-filters' ) . '</div></li>';
-				$html .= '<li class="alm-filter--checkbox"><div class="alm-filter--link field-checkbox" data-type="checkbox" data-value="design">' . __( 'Unchecked', 'ajax-load-more-filters' ) . '</div></li>';
-			$html     .= '</div>';
-
-			// Radio.
-			$html     .= '<div class="alm-filter" style="padding: 10px 0 0; margin: 0; clear: both;">';
-				$html .= '<li class="alm-filter--radio"><div class="alm-filter--link field-radio active" data-type="radio" data-value="design">' . __( 'Checked', 'ajax-load-more-filters' ) . '</div></li>';
-				$html .= '<li class="alm-filter--checkbox"><div class="alm-filter--link field-radio" data-type="radio" data-value="design">' . __( 'Unchecked', 'ajax-load-more-filters' ) . '</div></li>';
-			$html     .= '</div>';
-
-			// Button.
-			$html     .= '<div class="alm-filters" style="padding: 20px 0 5px; margin: 0; clear: both; min-width: 240px;">';
-				$html .= '<div class="alm-filters--submit" style="margin: 0;"><button type="button" class="alm-filters--button" style="margin: 0;">' . apply_filters( 'alm_filters_button_text', __( 'Submit', 'ajax-load-more-filters' ) ) . '</button></div>';
-			$html     .= '</div>';
-
-		$html .= '</div>';
-
-		echo $html; // phpcs:ignore
-		?>
-
-	<script>
-		// Filter Preview
-		var colorArrayFilters = "filters-default filters-red filters-green filters-blue";
-		jQuery("select#alm_settings_filters_color").change(function() {
-			var color = jQuery(this).val();
-			jQuery('.ajax-load-more-wrap.alm-filters').removeClass(colorArrayFilters);
-			jQuery('.ajax-load-more-wrap.alm-filters').addClass('filters-'+color);
-		});
-		jQuery("select#alm_settings_filters_color").click(function(e){
-			e.preventDefault();
-		});
-
-		// Check if Disable CSS  === true
-		if(jQuery('input#alm_filters_disable_css_input').is(":checked")){
-			jQuery('select#alm_settings_filters_color').parent().parent().hide(); // Hide button color
-		}
-
-		// On load
-		jQuery('input#alm_filters_disable_css_input').change(function() {
-			var el = jQuery(this);
-			if(el.is(":checked")) {
-				el.parent().parent('tr').next('tr').hide(); // Hide color
-			}else{
-				el.parent().parent('tr').next('tr').show(); // show color
-			}
-		});
-
-	</script>
-		<?php
-	}
-
-	/**
-	 * Setting: Set the Flatpickr theme.
-	 * alm_filters_disable_css_callback
-	 *
-	 * @since 1.8.0
-	 */
-	function alm_filters_flatpickr_theme_callback() {
-		$options = get_option( 'alm_settings' );
-		if ( ! isset( $options['_alm_filters_flatpickr_theme'] ) ) {
-			$options['_alm_filters_flatpickr_theme'] = 'default';
-		}
-		$selected = $options['_alm_filters_flatpickr_theme'];
-
-		$themes = [
-			[
-				'name' => 'Default',
-				'slug' => 'default',
-			],
-			[
-				'name' => 'AirBnB',
-				'slug' => 'airbnb',
-			],
-			[
-				'name' => 'Confetti',
-				'slug' => 'confetti',
-			],
-			[
-				'name' => 'Dark',
-				'slug' => 'dark',
-			],
-			[
-				'name' => 'Light',
-				'slug' => 'light',
-			],
-			[
-				'name' => 'Material Blue',
-				'slug' => 'material_blue',
-			],
-			[
-				'name' => 'Material Green',
-				'slug' => 'material_green',
-			],
-			[
-				'name' => 'Material Orange',
-				'slug' => 'material_orange',
-			],
-			[
-				'name' => 'Material Red',
-				'slug' => 'material_red',
-			],
-		];
-
-		$html      = '<label for="_alm_filters_flatpickr_theme">';
-			$html .= __( 'Select a <a href="https://flatpickr.js.org/themes/" target="blank">Theme</a> for the Datepicker Field Type.', 'ajax-load-more-filters' );
-		$html     .= '</label>';
-
-		$html .= '<select id="_alm_filters_flatpickr_theme" name="alm_settings[_alm_filters_flatpickr_theme]">';
-		foreach ( $themes as $theme ) {
-			$select_text = ( $selected === $theme['slug'] ) ? ' selected="selected"' : '';
-			$html       .= '<option value="' . $theme['slug'] . '"' . $select_text . '>' . $theme['name'] . '</option>';
-		}
-		$html .= '</select>';
-
-		echo $html; // phpcs:ignore
 	}
 
 	/**

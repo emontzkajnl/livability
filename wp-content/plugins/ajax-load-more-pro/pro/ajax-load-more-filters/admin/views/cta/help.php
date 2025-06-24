@@ -17,7 +17,10 @@
 	</div>
 	<div class="major-publishing-actions">
 		<a class="button" href="https://connekthq.com/plugins/ajax-load-more/docs/add-ons/filters/" target="_blank">
-			<?php esc_html_e( 'View Documentation', 'ajax-load-more-filters' ); ?>
+			<?php esc_html_e( 'Documentation', 'ajax-load-more-filters' ); ?>
+		</a>
+		<a href="admin.php?page=ajax-load-more#filters_settings" class="button">
+			<?php esc_html_e( 'Settings', 'ajax-load-more-filters' ); ?>
 		</a>
 	</div>
 </div>

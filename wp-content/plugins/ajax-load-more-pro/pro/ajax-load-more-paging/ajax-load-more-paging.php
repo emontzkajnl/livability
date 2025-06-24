@@ -2,13 +2,14 @@
 /**
  * Plugin Name: Ajax Load More: Paging
  * Plugin URI: https://connekthq.com/plugins/ajax-load-more/paging/
- * Description: Ajax Load More add-on for replacing infinite scroll with and Ajax powered paging navigation.
+ * Description: Ajax Load More add-on for replacing infinite scroll with and Ajax powered paging navigation system.
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 2.0.0
+ * Version: 2.0.2
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
+ * Requires Plugins: ajax-load-more
  *
  * @package ALM_Paging
  */
@@ -19,42 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_PAGING_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_PAGING_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_PAGING_VERSION', '2.0.0' );
-define( 'ALM_PAGING_RELEASE', 'January 16, 2024' );
-
-/**
- *  Install the add-on.
- *
- *  @since 1.0
- */
-function alm_paging_install() {
-	if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-		set_transient( 'alm_paging_admin_notice', true, 5 );
-	}
-}
-register_activation_hook( __FILE__, 'alm_paging_install' );
-
-/**
- * Display admin notice if plugin does not meet the requirements.
- *
- * @since 2.5.6
- */
-function alm_paging_admin_notice() {
-	$slug   = 'ajax-load-more';
-	$plugin = $slug . '-paging';
-	// Ajax Load More Notice.
-	if ( get_transient( 'alm_paging_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>' . __( 'You must install and activate the core Ajax Load More plugin before using the Ajax Load More Paging Add-on.', 'ajax-load-more-paging' ) . '</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, __( 'Install Ajax Load More Now', 'ajax-load-more-paging' ) ) . '</p>';
-		$message    .= '</div>';
-		echo wp_kses_post( $message );
-		// deactivate_plugins( '/' . $plugin . '/' . $plugin . '.php' );.
-		delete_transient( 'alm_paging_admin_notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_paging_admin_notice' );
+define( 'ALM_PAGING_VERSION', '2.0.2' );
+define( 'ALM_PAGING_RELEASE', 'June 9, 2025' );
 
 if ( ! class_exists( 'ALM_Paging' ) ) :
 
@@ -67,11 +34,21 @@ if ( ! class_exists( 'ALM_Paging' ) ) :
 		 * Constuct Paging Class
 		 */
 		public function __construct() {
-			add_action( 'alm_paging_installed', [ &$this, 'alm_paging_installed' ] );
-			add_action( 'wp_enqueue_scripts', [ &$this, 'alm_paging_enqueue_scripts' ] );
-			add_action( 'admin_enqueue_scripts', [ &$this, 'alm_paging_admin_enqueue_scripts' ] );
-			add_action( 'alm_paging_settings', [ &$this, 'alm_paging_settings' ] );
-			add_filter( 'alm_paging_shortcode', [ &$this, 'alm_paging_shortcode' ], 10, 9 );
+			add_action( 'alm_paging_installed', [ $this, 'alm_paging_installed' ] );
+			add_action( 'wp_enqueue_scripts', [ $this, 'alm_paging_enqueue_scripts' ] );
+			add_action( 'admin_enqueue_scripts', [ $this, 'alm_paging_admin_enqueue_scripts' ] );
+			add_action( 'alm_paging_settings', [ $this, 'alm_paging_settings' ] );
+			add_action( 'init', [ $this, 'init' ] );
+
+			add_filter( 'alm_paging_shortcode', [ $this, 'alm_paging_shortcode' ], 10, 9 );
+		}
+
+		/**
+		 * Load the plugin text domain for translation.
+		 *
+		 * @return void
+		 */
+		public function init() {
 			load_plugin_textdomain( 'ajax-load-more-paging', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
 		}
 

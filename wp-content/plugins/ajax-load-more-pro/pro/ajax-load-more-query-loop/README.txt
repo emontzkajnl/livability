@@ -5,10 +5,10 @@ Author: Connekt Media
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/query-loop/
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 6.8
 Stable tag: trunk
 Homepage: https://connekthq.com/
-Version: 1.0.0
+Version: 1.0.1
 
 == Copyright ==
 Copyright 2025 Darren Cooney & Connekt Media
@@ -41,8 +41,12 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/query-loop/
 4. Ensure Ajax Load More is installed prior to activating the plugin.
 5. Activate the plugin in the WP plugin dashboard.
 
-== Changelog == 
+== Changelog ==
+
+= 1.0.1 - June 9, 2025 =
+* UPDATE: Updated load_text_domain action to remove PHP warning.
+* UPDATE: Added `ajax-load-more` as a required plugin and removed activation hooks/notices.
+* UPDATE: Various code cleanups and organization.
 
 = 1.0 - January 17, 2025 =
-
--  Initial Release.
+* Initial Release.

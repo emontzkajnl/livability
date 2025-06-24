@@ -20,8 +20,8 @@ function alm_filters_list_custom_values( $id, $custom_values, $obj, $querystring
 	$key        = $obj['key'];
 
 	if ( $field_type === 'text' || empty( $custom_values ) ) {
-		// Bail early if textfield or missing custom values array.
-		return;
+
+		return; // Bail early if textfield or missing custom values array.
 	}
 
 	$return             = '';
@@ -36,7 +36,7 @@ function alm_filters_list_custom_values( $id, $custom_values, $obj, $querystring
 
 	// Loop custom values.
 	foreach ( $custom_values as $index => $v ) {
-		$items_count++;
+		++$items_count;
 		$name          = wp_kses_post( $v['label'] );
 		$slug          = esc_attr( $v['value'] );
 		$nested        = isset( $v['nested'] ) && $v['nested'] ? true : false;

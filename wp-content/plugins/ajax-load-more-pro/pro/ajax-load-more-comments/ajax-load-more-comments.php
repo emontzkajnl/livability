@@ -2,15 +2,16 @@
 /**
  * Plugin Name: Ajax Load More: Comments
  * Plugin URI: https://connekthq.com/plugins/ajax-load-more/comments/
- * Description: Ajax Load More extension to infinite scroll blog comments.
+ * Description: Ajax Load More add-on for infinite scrolling blog comments.
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.2.3
+ * Version: 1.2.4
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
+ * Requires Plugins: ajax-load-more
  *
- * @package ALMComments
+ * @package ALM_Comments
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,46 +20,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_COMMENTS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_COMMENTS_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_COMMENTS_VERSION', '1.2.3' );
-define( 'ALM_COMMENTS_RELEASE', 'January 17, 2025' );
-
-/**
- *  Installation hook.
- */
-function alm_comments_install() {
-	if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-		set_transient( 'alm_comments_admin_notice', true, 5 );
-	}
-}
-register_activation_hook( __FILE__, 'alm_comments_install' );
-
-/**
- * Display admin notice if plugin does not meet the requirements.
- */
-function alm_comments_admin_notice() {
-	$slug = 'ajax-load-more';
-	// Ajax Load More Notice.
-	if ( get_transient( 'alm_comments_admin_notice' ) ) {
-		$install_url = get_admin_url() . '/update.php?action=install-plugin&plugin=' . $slug . '&_wpnonce=' . wp_create_nonce( 'install-plugin_' . $slug );
-		$message     = '<div class="error">';
-		$message    .= '<p>You must install and activate the core Ajax Load More plugin before using the Ajax Load More Comments add-on.</p>';
-		$message    .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', $install_url, 'Install Ajax Load More Now' ) . '</p>';
-		$message    .= '</div>';
-		echo wp_kses_post( $message );
-		delete_transient( 'alm_comments_admin_notice' );
-	}
-}
-add_action( 'admin_notices', 'alm_comments_admin_notice' );
+define( 'ALM_COMMENTS_VERSION', '1.2.4' );
+define( 'ALM_COMMENTS_RELEASE', 'June 9, 2025' );
 
 $GLOBALS['alm_comment_repeater']      = '';
 $GLOBALS['alm_comment_repeater_type'] = '';
 
-if ( ! class_exists( 'ALMComments' ) ) :
+if ( ! class_exists( 'ALM_Comments' ) ) :
 
 	/**
 	 * Initiate the class.
 	 */
-	class ALMComments {
+	class ALM_Comments {
 
 		/**
 		 * Set up contructors.
@@ -357,7 +330,7 @@ if ( ! class_exists( 'ALMComments' ) ) :
 	function alm_comments() {
 		global $alm_comments;
 		if ( ! isset( $alm_comments ) ) {
-			$alm_comments = new ALMComments();
+			$alm_comments = new ALM_Comments();
 		}
 		return $alm_comments;
 	}
