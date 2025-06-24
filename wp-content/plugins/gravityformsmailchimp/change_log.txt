@@ -1,3 +1,8 @@
+### 5.7.0 | 2025-06-02
+- Updated the API to return WP_Error instead of throwing an exception when an error occurs.
+- Deprecated GF_MailChimp_Exception.
+- AF: Updated process_feed() return value for compatibility with Gravity Forms 2.9.4, so the framework can save the feed status to the entry meta.
+
 ### 5.6.0 | 2024-12-12
 - Fixed an issue where the List field passes the raw entry value to Mailchimp, instead of the expected comma-separated list of values.
 - Fixed code placement to be consistent with the WordPress coding standards.

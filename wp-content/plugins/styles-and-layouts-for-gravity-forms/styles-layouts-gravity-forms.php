@@ -3,7 +3,7 @@
  * Plugin Name: Gravity Booster ( Style & Layouts )
  * Plugin URI:  http://wpmonks.com/styles-layouts-gravity-forms
  * Description: Create beautiful styles for your gravity forms
- * Version:     5.20
+ * Version:     5.22
  * Author:      Sushil Kumar
  * Author URI:  http://wpmonks.com/
  * License:     GPL2License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'GF_STLA_DIR', WP_PLUGIN_DIR . '/' . basename( __DIR__ ) );
 define( 'GF_STLA_URL', plugins_url() . '/' . basename( __DIR__ ) );
 define( 'GF_STLA_STORE_URL', 'https://wpmonks.com' );
-define( 'GF_STLA_VERSION', '5.20' );
+define( 'GF_STLA_VERSION', '5.22' );
 
 if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) ) {
 	include_once GF_STLA_DIR . '/admin-menu/EDD_SL_Plugin_Updater.php';
@@ -29,6 +29,23 @@ require_once GF_STLA_DIR . '/admin-menu/class-stla-license-page.php';
 require_once GF_STLA_DIR . '/admin-menu/class-stla-addons-page.php';
 require_once GF_STLA_DIR . '/admin-menu/class-gf-stla-welcome-page.php';
 require_once GF_STLA_DIR . '/includes/admin/fetch/stla-admin-fetch-content-area.php';
+require_once GF_STLA_DIR . '/includes/admin/fetch/stla-admin-fetch-anispam.php';
+
+// Antispam keyword files.
+require_once GF_STLA_DIR . '/includes/antispam/keywords/stla-antispam-keyword-mark-spam.php';
+require_once GF_STLA_DIR . '/includes/antispam/keywords/stla-antispam-keyword-precheck.php';
+
+// Antispam Email Files.
+require_once GF_STLA_DIR . '/includes/antispam/emails/class-stla-antispam-email-mark-spam.php';
+require_once GF_STLA_DIR . '/includes/antispam/emails/class-stla-antispam-email-restrict-submission.php';
+
+// Antispam restrict users.
+require_once GF_STLA_DIR . '/includes/antispam/userRestrictions/stla-antispam-user-restrictions.php';
+
+// Antispam helpers.
+require_once GF_STLA_DIR . '/includes/antispam/helpers/stla-antispam-common-helpers.php';
+
+
 
 class Gravity_customizer_admin {
 
@@ -117,9 +134,7 @@ class Gravity_customizer_admin {
 		}
 
 		if ( in_array( 'gravity-theme', $themes ) ) {
-
 				$styles[] = 'gform_basic';
-
 		}
 
 		return $styles;
@@ -358,7 +373,6 @@ class Gravity_customizer_admin {
 			wp_enqueue_script( 'stla_frontend_wp', GF_STLA_URL . '/js/frontend.js', array( 'jquery', 'customize-preview' ), GF_STLA_VERSION, true );
 		}
 	}
-
 	/**
 	 * Runs when plugin is updated.
 	 *
@@ -376,7 +390,7 @@ class Gravity_customizer_admin {
 				if ( $plugin === $our_plugin ) {
 					// Set a transient to record that our plugin has just been updated.
 					if ( class_exists( 'RGFormsModel' ) ) {
-						$forms       = RGFormsModel::get_forms( null, 'title' );
+						$forms       = RGFormsModel::get_forms( null, 'title ' );
 						$field_names = array( 'padding', 'margin' );
 
 						$field_types = array( 'form-wrapper', 'checkbox-inputs', 'confirmation-message', 'dropdown-fields', 'error-message', 'field-descriptions', 'field-labels', 'field-sub-labels', 'form-description', 'form-header', 'form-title', 'form-wrapper', 'list-field', 'paragraph-textarea', 'placeholders', 'radio-inputs', 'section-break-description', 'section-break-title', 'submit-button', 'text-fields' );

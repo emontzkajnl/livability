@@ -1481,7 +1481,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		$lmt      = gp_populate_anything()->live_merge_tags;
 		$gf_token = rgget( 'gf_token' );
 		// Only to be processed for an HTML field with LMT in the context of S&C.
-		if ( $field->type == 'html' && $lmt->has_live_merge_tag( $field->content ) && $gf_token ) {
+		if ( $field->type == 'html' && $lmt->has_live_merge_tag( $field->content ) && $gf_token && isset( $form['pagination'] ) ) {
 			$draft_data = GFFormsModel::get_draft_submission_values( $gf_token );
 			$data_array = json_decode( rgar( $draft_data, 'submission' ), true );
 

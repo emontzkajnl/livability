@@ -22,6 +22,7 @@ class GWAPI {
 	private $author;
 	private $gcgs_upgrade_successful = false;
 	private $should_activate_gcgs = false;
+	private $spellbook_upgrade_successful = false;
 
 	private $_product_update_data = array(
 		'loaded'    => false,
@@ -169,6 +170,51 @@ class GWAPI {
 		add_filter( 'upgrader_post_install', array( $this, 'gpgs_to_gcgs_upgrader_post_install' ), 10, 3 );
 		add_action( 'upgrader_process_complete', array( $this, 'gpgs_to_gcgs_upgrader_process_complete' ), 10, 2 );
 
+		add_filter( 'upgrader_post_install', array( $this, 'gp_to_spellbook_upgrader_post_install' ), 10, 3 );
+		add_action( 'upgrader_process_complete', array( $this, 'gp_to_spellbook_upgrader_process_complete' ), 10, 2 );
+	}
+
+	public function gp_to_spellbook_upgrader_post_install( $response, $hook_extra, $result ) {
+		if ( rgar( $hook_extra, 'plugin' ) !== 'gravityperks/gravityperks.php' ) {
+			return $response;
+		}
+
+		if ( rgar( $result, 'destination_name' ) === 'spellbook' ) {
+			$this->spellbook_upgrade_successful = true;
+		}
+
+		return $response;
+	}
+
+	public function gp_to_spellbook_upgrader_process_complete( $upgrader, $hook_extra ) {
+		if ( rgar( $hook_extra, 'action' ) !== 'update' || rgar( $hook_extra, 'type' ) !== 'plugin' ) {
+			return;
+		}
+
+		if ( ! is_array( rgar( $hook_extra, 'plugins' ) ) || ! in_array( 'gravityperks/gravityperks.php', $hook_extra['plugins'], true ) ) {
+			return;
+		}
+
+		if ( ! $this->spellbook_upgrade_successful ) {
+			return;
+		}
+
+		$upgrader->skin->feedback( __( '<strong>Important Note!</strong> Gravity Perks (plugin) has been converted to Spellbook', 'gravityperks' ) );
+
+		// Check if Gravity Perks was activate as a network plugin.
+		$gp_active_for_network = is_plugin_active_for_network( 'gravityperks/gravityperks.php' );
+
+		if ( $gp_active_for_network ) {
+			deactivate_plugins( 'gravityperks/gravityperks.php', false, true );
+			activate_plugin( 'spellbook/spellbook.php', '', true );
+
+			$upgrader->skin->feedback( __( 'Spellbook has been activated network-wide.', 'gravityperks' ) );
+		} else {
+			deactivate_plugins( 'gravityperks/gravityperks.php' );
+			activate_plugin( 'spellbook/spellbook.php' );
+
+			$upgrader->skin->feedback( __( 'Spellbook has been activated.', 'gravityperks' ) );
+		}
 	}
 
 	public function gpgs_to_gcgs_upgrader_post_install( $response, $hook_extra, $result ) {
@@ -315,6 +361,19 @@ class GWAPI {
 				$perk->slug = 'gp-google-sheets';
 				$perk->plugin = 'gp-google-sheets';
 				$perk->plugin_file = 'gp-google-sheets/gp-google-sheets.php';
+			}
+
+			// Handle Gravity Perks to Spellbook upgrade path.
+			if ( $plugin_file === 'spellbook/spellbook.php' ) {
+				$plugin_file = 'gravityperks/gravityperks.php';
+				$perk->slug = 'gravityperks';
+				$perk->plugin = 'gravityperks';
+				$perk->plugin_file = 'gravityperks/gravityperks.php';
+			}
+
+			// If Gravity Perks is already set in $perks from the Spellbook upgrade, skip it.
+			if ( $plugin_file === 'gravityperks/gravityperks.php' && isset( $perks['gravityperks/gravityperks.php'] ) ) {
+				continue;
 			}
 
 			if ( isset( $perk->icons ) ) {

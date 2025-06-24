@@ -3,8 +3,8 @@ Contributors: wpmonks
 Donate link: https://www.paypal.me/wpmonks
 Tags: Gravity Forms CSS, gravity forms themes, gravity forms styler, Gravity Forms Design, Gravity Forms Material Design, Gravity Forms Tooltips
 Requires at least: 4.0
-Tested up to: 6.7
-Stable tag: 5.20
+Tested up to: 6.8
+Stable tag: 5.22
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,9 @@ Gravity Booster - Styles and Layouts for Gravity Forms plugin lets you design an
 
 == Description ==
 
-**Introducing Gravity Booster formerly Styles and Layouts for Gravity Forms. It  you lets you create beautiful designs for Gravity forms.** It provides you and easy to use interface for designing forms that works with all themes and builders. It is compatible with Divi, Elmentor, Visual composer, Thrive Architect Beaver Builder, Astra, GeneratePress, Oxygen Builder, Avada theme, OceanWP theme, Genesis Framework, The7, Salient and more. The design changes you make with this Gravity Forms Styler plugin are instantaneously visible so, you can see how the form looks in real time.
+**Introducing Gravity Booster formerly Styles and Layouts for Gravity Forms. It is your all in one solution for styling, customizing and protecting your forms. It  you lets you create beautiful designs as well as protect against spam submissions for Gravity forms.** It provides you and easy to use interface for designing forms that works with all themes and builders. It is compatible with Divi, Elmentor, Visual composer, Thrive Architect Beaver Builder, Astra, GeneratePress, Oxygen Builder, Avada theme, OceanWP theme, Genesis Framework, The7, Salient and more. The design changes you make with this Gravity Forms Styler plugin are instantaneously visible so, you can see how the form looks in real time.
+
+With Gravity Booster you can not only design forms but use advance spam submssion filtering like keyword blacklisting, email blacklisting, restricting forms to specific user roles. All of this without writing a single line of code.
 
 [youtube https://www.youtube.com/watch?v=Ib5qRdMr_v4]
 
@@ -26,6 +28,20 @@ Gravity Booster - Styles and Layouts for Gravity Forms plugin lets you design an
 * [ **Field Icons** ](https://wpmonks.com/downloads/field-icons/) 
 * [ **Custom Themes** ](https://wpmonks.com/downloads/custom-themes/)
 * [ **Addon Bundle**](https://wpmonks.com/downloads/addon-bundle/)
+
+= Powerful Anti-Spam Features (New!) =
+Gravity Booster now includes built-in spam protection tools to keep your forms clean and secure:
+
+**Keyword Blocking**
+Block spam messages by setting specific keywords (e.g., "SEO service", "backlink", etc.). Any form submission containing these will be automatically blocked.
+
+**Email Filtering**
+Deny or allow submissions based on full email addresses or specific email domains. Easily block fake or disposable emails like mailinator.com, etc.
+
+**Role-Based Access Control**
+Restrict form visibility to specific WordPress user roles. You can limit form access to certain roles, ensuring the right users see the right forms.
+
+This functionality helps drastically reduce unwanted form submissions, particularly those caused by bots or spammy marketers.
 
 **This Gravity Forms styler comes with 150+ options** to customize various parts of form like form wrapper, form header, form title and description, submit button, radio inputs, checkbox inputs, paragraph textarea, labels, section breaks, descriptions, text inputs , dropdown menus, labels, sub labels, placeholders, list fields, confirmation message, error messages and more. 
 
@@ -125,6 +141,14 @@ Yes, Gravity Forms embedded in Divi themes is also supported. Please check the t
 4. Options in settings
 
 == Changelog ==
+= 5.22 (26th June 2025) =
+* Added user role validation in antispam
+
+= 5.21 (9th June 2025) =
+* Added Antispam option
+* Added option to block keywords for anti spam
+* Added option to block emails for anti spam
+
 = 5.20 (24th January 2025) =
 * Added support for Gravity Forms v2.9
 

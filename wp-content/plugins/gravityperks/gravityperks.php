@@ -3,7 +3,7 @@
  * Plugin Name: Gravity Perks
  * Plugin URI: https://gravitywiz.com/
  * Description: Effortlessly enhance Gravity Forms with powerful add-ons (“perks”) for smarter, more flexible forms—all backed by legendary support.
- * Version: 2.3.15
+ * Version: 2.3.17
  * Author: Gravity Wiz
  * Author URI: https://gravitywiz.com/
  * License: GPL2
@@ -12,7 +12,7 @@
  * Update URI: https://gravitywiz.com/updates/gravityperks
  */
 
-define( 'GRAVITY_PERKS_VERSION', '2.3.15' );
+define( 'GRAVITY_PERKS_VERSION', '2.3.17' );
 
 /**
  * Include the perk model as early as possible to when Perk plugins are loaded, they can safely extend
@@ -215,7 +215,7 @@ class GravityPerks {
 		define( 'GW_URL', GW_PROTOCOL . '://' . GW_DOMAIN );
 
 		if ( ! defined( 'GWAPI_URL' ) ) {
-			define( 'GWAPI_URL', GW_URL . '/gwapi/v4/' ); // @used storefront_api.php
+			define( 'GWAPI_URL', GW_URL . '/gwapi/v5/' ); // @used storefront_api.php
 		}
 
 		define( 'GW_UPGRADE_URL', GW_URL . '/upgrade/' );

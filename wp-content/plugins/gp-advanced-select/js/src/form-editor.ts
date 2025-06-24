@@ -312,7 +312,12 @@ window.gform.addFilter(
 			: Filter.field.type;
 
 		if (
-			$.inArray(inputType, ['select', 'multiselect', 'address']) === -1 ||
+			$.inArray(inputType, [
+				'select',
+				'multiselect',
+				'address',
+				'workflow_user',
+			]) === -1 ||
 			!Filter.field.gpadvsEnable
 		) {
 			return specialValues;

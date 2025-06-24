@@ -774,35 +774,26 @@ class GFMailChimp extends GFFeedAddOn {
 		// If a list/audience is selected, get marketing permissions and add setting.
 		if ( $list ) {
 
-			try {
+			$list = $this->api->get_list( $list );
 
-				// Get Mailchimp list/audience,
-				$list = $this->api->get_list( $list );
+			if ( is_wp_error( $list ) ) {
+				$this->log_error( __METHOD__ . '(): Unable to add Marketing Permissions field because audience could not be retrieved; ' . $list->get_error_message() );
+			} elseif ( rgar( $list, 'marketing_permissions' ) ) {
 
-				// If marketing permissions are enabled for list/audience, add setting.
-				if ( rgar( $list, 'marketing_permissions' ) ) {
+				// Prepare setting.
+				$setting = array(
+					'name'    => 'marketingPermissions',
+					'label'   => esc_html__( 'Marketing Permissions', 'gravityformsmailchimp' ),
+					'type'    => 'marketing_permissions',
+					'tooltip' => sprintf(
+						'<h6>%s</h6>%s',
+						esc_html__( 'Marketing Permissions', 'gravityformsmailchimp' ),
+						esc_html__( 'When enabled and conditions are met, users will be opted into your Mailchimp audience marketing permissions. If a user is already subscribed to your audience, they will not be opted out of permissions they are already opted into.', 'gravityformsmailchimp' )
+					),
+				);
 
-					// Prepare setting.
-					$setting = array(
-						'name'    => 'marketingPermissions',
-						'label'   => esc_html__( 'Marketing Permissions', 'gravityformsmailchimp' ),
-						'type'    => 'marketing_permissions',
-						'tooltip' => sprintf(
-							'<h6>%s</h6>%s',
-							esc_html__( 'Marketing Permissions', 'gravityformsmailchimp' ),
-							esc_html__( 'When enabled and conditions are met, users will be opted into your Mailchimp audience marketing permissions. If a user is already subscribed to your audience, they will not be opted out of permissions they are already opted into.', 'gravityformsmailchimp' )
-						),
-					);
-
-					// Add setting.
-					$settings = $this->add_field_after( 'interestCategories', $setting, $settings );
-
-				}
-
-			} catch ( Exception $e ) {
-
-				// Log that list/audience could not be retrieved.
-				$this->log_error( __METHOD__ . '(): Unable to add Marketing Permissions field because audience could not be retrieved; ' . $e->getMessage() );
+				// Add setting.
+				$settings = $this->add_field_after( 'interestCategories', $setting, $settings );
 
 			}
 
@@ -851,24 +842,19 @@ class GFMailChimp extends GFFeedAddOn {
 			unset( $params['limit'] );
 		}
 
-		try {
+		$this->log_debug( __METHOD__ . '(): Retrieving contact audiences; params: ' . print_r( $params, true ) );
+		$lists = $this->api->get_lists( $params );
 
-			// Log contact lists/audiences request parameters.
-			$this->log_debug( __METHOD__ . '(): Retrieving contact audiences; params: ' . print_r( $params, true ) );
-
-			// Get lists/audiences.
-			$lists = $this->api->get_lists( $params );
-
-		} catch ( Exception $e ) {
-
-			// Log that contact lists/audiences could not be obtained.
-			$this->log_error( __METHOD__ . '(): Could not retrieve Mailchimp contact audiences; ' . $e->getMessage() );
+		if ( is_wp_error( $lists ) ) {
+			$this->log_error( __METHOD__ . '(): Could not retrieve Mailchimp contact audiences; ' . $lists->get_error_message() );
 
 			// Display error message.
-			printf( esc_html__( 'Could not load Mailchimp contact audiences. %sError: %s', 'gravityformsmailchimp' ), '<br/>', $e->getMessage() );
+			$html = sprintf( esc_html__( 'Could not load Mailchimp contact audiences. %sError: %s', 'gravityformsmailchimp' ), '<br/>', $lists->get_error_message() );
+			if ( $echo ) {
+				echo $html;
+			}
 
-			return;
-
+			return $html;
 		}
 
 		// If no lists/audiences were found, display error message.
@@ -878,9 +864,12 @@ class GFMailChimp extends GFFeedAddOn {
 			$this->log_error( __METHOD__ . '(): Could not load Mailchimp contact audiences; no audiences found.' );
 
 			// Display error message.
-			printf( esc_html__( 'Could not load Mailchimp contact audiences. %sError: %s', 'gravityformsmailchimp' ), '<br/>', esc_html__( 'No audiences found.', 'gravityformsmailchimp' ) );
+			$html = sprintf( esc_html__( 'Could not load Mailchimp contact audiences. %sError: %s', 'gravityformsmailchimp' ), '<br/>', esc_html__( 'No audiences found.', 'gravityformsmailchimp' ) );
+			if ( $echo ) {
+				echo $html;
+			}
 
-			return;
+			return $html;
 
 		}
 
@@ -1050,24 +1039,16 @@ class GFMailChimp extends GFFeedAddOn {
 			return rgars( $feed, 'meta/mailchimpList' );
 		}
 
-		try {
+		$list = $this->api->get_list( rgars( $feed, 'meta/mailchimpList' ) );
 
-			// Get list/audience.
-			$list = $this->api->get_list( rgars( $feed, 'meta/mailchimpList' ) );
-
-			// Return list/audience name.
-			return rgar( $list, 'name' );
-
-		} catch ( Exception $e ) {
-
-			// Log error.
-			$this->log_error( __METHOD__ . '(): Unable to get Mailchimp audience for feed list; ' . $e->getMessage() );
+		if ( is_wp_error( $list ) ) {
+			$this->log_error( __METHOD__ . '(): Unable to get Mailchimp audience for feed list; ' . $list->get_error_message() );
 
 			// Return list/audience ID.
 			return rgars( $feed, 'meta/mailchimpList' );
-
 		}
 
+		return rgar( $list, 'name' );
 	}
 
 	/**
@@ -1438,7 +1419,7 @@ class GFMailChimp extends GFFeedAddOn {
 	 * @param array $entry The entry object currently being processed.
 	 * @param array $form  The form object currently being processed.
 	 *
-	 * @return array
+	 * @return array|WP_Error
 	 */
 	public function process_feed( $feed, $entry, $form ) {
 
@@ -1449,7 +1430,7 @@ class GFMailChimp extends GFFeedAddOn {
 		if ( ! $this->initialize_api() ) {
 			$this->add_feed_error( esc_html__( 'Unable to process feed because API could not be initialized.', 'gravityformsmailchimp' ), $feed, $entry, $form );
 
-			return $entry;
+			return new WP_Error( 'api_not_initialized', 'API was not initialized.' );
 		}
 
 		// Set current merge variable name.
@@ -1465,12 +1446,12 @@ class GFMailChimp extends GFFeedAddOn {
 		if ( GFCommon::is_invalid_or_empty_email( $email ) ) {
 			$this->add_feed_error( esc_html__( 'A valid Email address must be provided.', 'gravityformsmailchimp' ), $feed, $entry, $form );
 
-			return $entry;
+			return new WP_Error( 'invalid_email', 'Invalid email address.' );
 		}
 
 		$member = $this->get_existing_member( $email, $feed, $entry, $form );
 		if ( is_wp_error( $member ) ) {
-			return $entry;
+			return $member;
 		}
 
 		/**
@@ -1485,7 +1466,7 @@ class GFMailChimp extends GFFeedAddOn {
 		$allow_resubscription = gf_apply_filters( array( 'gform_mailchimp_allow_resubscription', $form['id'] ), true, $form, $entry, $feed );
 
 		if ( 'unsubscribed' === rgar( $member, 'status' ) && ! $allow_resubscription ) {
-			$this->log_debug( __METHOD__ . '(): User is unsubscribed and resubscription is not allowed.' );
+			$this->log_debug( __METHOD__ . '(): Contact is unsubscribed and resubscription is not allowed.' );
 
 			return $entry;
 		}
@@ -1517,51 +1498,42 @@ class GFMailChimp extends GFFeedAddOn {
 
 		$action = ! empty( $member ) ? 'updated' : 'added';
 
-		try {
+		$this->log_debug( __METHOD__ . "(): Contact to be {$action}: " . print_r( $subscription, true ) );
+		$result = $this->api->update_list_member( $list_id, $subscription['email_address'], $subscription );
 
-			// Log the subscriber to be added or updated.
-			$this->log_debug( __METHOD__ . "(): Subscriber to be {$action}: " . print_r( $subscription, true ) );
+		if ( is_wp_error( $result ) ) {
+			$note = empty( $member ) ? esc_html__( 'Unable to add contact: %s', 'gravityformsmailchimp' ) : esc_html__( 'Unable to update contact. %s', 'gravityformsmailchimp' );
+			$this->add_feed_error( sprintf( $note, $result->get_error_message() ), $feed, $entry, $form );
 
-			// Add or update subscriber.
-			$result = $this->api->update_list_member( $list_id, $subscription['email_address'], $subscription );
-
-			// Log that the subscription was added or updated.
-			$this->log_debug( __METHOD__ . "(): Subscriber successfully {$action}. Result: " . json_encode( $result ) );
-
-		} catch ( Exception $e ) {
-
-			// Log that subscription could not be added or updated.
-			$this->add_feed_error( sprintf( esc_html__( 'Unable to add/update subscriber: %s', 'gravityformsmailchimp' ), $e->getMessage() ), $feed, $entry, $form );
-
-			// Log field errors.
-			if ( $e->hasErrors() ) {
-				$this->log_error( __METHOD__ . '(): Field errors when attempting subscription: ' . print_r( $e->getErrors(), true ) );
+			$error_data = $result->get_error_data();
+			if ( ! empty( $error_data ) ) {
+				$this->log_error( __METHOD__ . '(): Field errors: ' . print_r( $error_data, true ) );
 			}
 
-			return $entry;
-
+			return $result;
 		}
+
+		$this->log_debug( __METHOD__ . "(): Contact successfully {$action}. Result: " . json_encode( $result ) );
+
+		$message = empty( $member ) ? esc_html__( 'Contact added. ID: %s.', 'gravityformsmailchimp' ) : esc_html__( 'Contact updated. ID: %s.', 'gravityformsmailchimp' );
+		$this->add_note( rgar( $entry, 'id' ), sprintf( $message, rgar( $result, 'contact_id' ) ), 'success' );
 
 		if ( ! $note ) {
 			// Abort as there is no note to process.
 			return $entry;
 		}
 
-		try {
+		$result = $this->api->add_member_note( $list_id, $subscription['email_address'], $note );
 
-			// Add the note to the member.
-			$this->api->add_member_note( $list_id, $subscription['email_address'], $note );
-			$this->log_debug( __METHOD__ . '(): Note successfully added to subscriber.' );
+		if ( is_wp_error( $result ) ) {
+			$this->add_feed_error( sprintf( esc_html__( 'Unable to add note to contact: %s', 'gravityformsmailchimp' ), $result->get_error_message() ), $feed, $entry, $form );
 
-		} catch ( Exception $e ) {
-
-			// Log that the note could not be added.
-			$this->add_feed_error( sprintf( esc_html__( 'Unable to add note to subscriber: %s', 'gravityformsmailchimp' ), $e->getMessage() ), $feed, $entry, $form );
-
-			return $entry;
-
+			return $result;
 		}
 
+		$this->log_debug( __METHOD__ . '(): Note successfully added to contact.' );
+
+		return $entry;
 	}
 
 	/**
@@ -1577,21 +1549,14 @@ class GFMailChimp extends GFFeedAddOn {
 	 * @return array|false|WP_Error
 	 */
 	public function get_existing_member( $email, $feed, $entry, $form ) {
-		try {
+		$this->log_debug( __METHOD__ . "(): Checking to see if $email is already on the audience." );
 
-			$this->log_debug( __METHOD__ . "(): Checking to see if $email is already on the audience." );
+		$member = $this->api->get_list_member( rgars( $feed, 'meta/mailchimpList' ), $email );
 
-			$member = $this->api->get_list_member( rgars( $feed, 'meta/mailchimpList' ), $email );
-
-			$this->log_debug( __METHOD__ . "(): $email was found on audience. Status: {$member['status']}" );
-
-			return $member;
-
-		} catch ( Exception $e ) {
-
+		if ( is_wp_error( $member ) ) {
 			// If the exception code is not 404, abort feed processing.
-			if ( 404 !== $e->getCode() ) {
-				$this->add_feed_error( sprintf( esc_html__( 'Unable to check if email address is already used by a member: %s', 'gravityformsmailchimp' ), $e->getMessage() ), $feed, $entry, $form );
+			if ( 404 !== $member->get_error_code() ) {
+				$this->add_feed_error( sprintf( esc_html__( 'Unable to check if email address is already used by a contact: %s', 'gravityformsmailchimp' ), $e->getMessage() ), $feed, $entry, $form );
 
 				return new WP_Error( $e->getCode(), $e->getMessage(), $e->getErrors() );
 			}
@@ -1599,8 +1564,11 @@ class GFMailChimp extends GFFeedAddOn {
 			$this->log_debug( __METHOD__ . "(): $email was not found on audience." );
 
 			return false;
-
 		}
+
+		$this->log_debug( __METHOD__ . "(): $email was found on audience. Status: {$member['status']}" );
+
+		return $member;
 	}
 
 	/**
@@ -1626,24 +1594,19 @@ class GFMailChimp extends GFFeedAddOn {
 		}
 
 		if ( $existing_status === 'pending' ) {
-			try {
-				// Log that we are patching member status.
-				$this->log_debug( __METHOD__ . '(): Patching member status for opt-in.' );
+			$this->log_debug( __METHOD__ . '(): Patching contact status for opt-in.' );
+			$result = $this->api->update_list_member( rgar( $member, 'list_id' ), rgar( $member, 'email_address' ), array( 'status' => 'unsubscribed' ), 'PATCH' );
 
-				// Update member status to unsubscribed.
-				$this->api->update_list_member( rgar( $member, 'list_id' ), rgar( $member, 'email_address' ), array( 'status' => 'unsubscribed' ), 'PATCH' );
+			if ( is_wp_error( $result ) ) {
+				$this->add_feed_error( sprintf( esc_html__( __METHOD__ . '(): Unable to update contact status: %s', 'gravityformsmailchimp' ), $result->get_error_message() ), $feed, $entry, $form );
 
-				// Log that the subscription was successfully updated.
-				$this->log_debug( __METHOD__ . '(): Member status successfully updated.' );
-			} catch ( Exception $e ) {
-				// Log that member status could not be updated.
-				$this->add_feed_error( sprintf( esc_html__( __METHOD__ . '(): Unable to update member status: %s', 'gravityformsmailchimp' ), $e->getMessage() ), $feed, $entry, $form );
-
-				// Log field errors.
-				if ( $e->hasErrors() ) {
-					$this->log_error( __METHOD__ . '(): Error when attempting to update member status: ' . print_r( $e->getErrors(), true ) );
+				$error_data = $result->get_error_data();
+				if ( ! empty( $error_data ) ) {
+					$this->log_error( __METHOD__ . '(): Error when attempting to update contact status: ' . print_r( $error_data, true ) );
 				}
 			}
+
+			$this->log_debug( __METHOD__ . '(): Contact status successfully updated.' );
 		}
 
 		return 'pending';
@@ -2223,7 +2186,7 @@ class GFMailChimp extends GFFeedAddOn {
 
 		// If API is already initialized, return true.
 		if ( ! is_null( $this->api ) ) {
-			return true;
+			return is_object( $this->api );
 		}
 
 		// Log validation step.
@@ -2240,28 +2203,19 @@ class GFMailChimp extends GFFeedAddOn {
 		// Setup a new Mailchimp object with the API credentials.
 		$mc = new GF_MailChimp_API( $settings['access_token'], $settings['server_prefix'] );
 
-		try {
+		$result = $mc->account_details();
 
-			// Retrieve account information.
-			$mc->account_details();
-
-			// Assign API library to class.
-			$this->api = $mc;
-
-			// Log that authentication test passed.
-			$this->log_debug( __METHOD__ . '(): Mailchimp successfully authenticated.' );
-
-			return true;
-
-		} catch ( Exception $e ) {
-
-			// Log that authentication test failed.
-			$this->log_error( __METHOD__ . '(): Unable to authenticate with Mailchimp; ' . $e->getMessage() );
+		if ( is_wp_error( $result ) ) {
+			$this->api = false;
+			$this->log_error( __METHOD__ . '(): Unable to authenticate with Mailchimp; ' . $result->get_error_message() );
 
 			return false;
-
 		}
 
+		$this->api = $mc;
+		$this->log_debug( __METHOD__ . '(): Mailchimp successfully authenticated.' );
+
+		return true;
 	}
 
 	/**
@@ -2296,18 +2250,12 @@ class GFMailChimp extends GFFeedAddOn {
 
 		}
 
-		try {
+		$categories = $this->api->get_list_interest_categories( $list_id );
 
-			// Get groups.
-			$categories = $this->api->get_list_interest_categories( $list_id );
-
-		} catch ( Exception $e ) {
-
-			// Log error.
-			$this->log_error( __METHOD__ . '(): Unable to get interest categories for audience "' . $list_id . '"; ' . $e->getMessage() );
+		if ( is_wp_error( $categories ) ) {
+			$this->log_error( __METHOD__ . '(): Unable to get interest categories for audience "' . $list_id . '"; ' . $categories->get_error_message() );
 
 			return array();
-
 		}
 
 		return $categories;
@@ -2333,18 +2281,12 @@ class GFMailChimp extends GFFeedAddOn {
 			return $permissions;
 		}
 
-		try {
+		$list = $this->api->get_list( $list_id );
 
-			// Get Mailchimp list/audience.
-			$list = $this->api->get_list( $list_id );
-
-		} catch ( Exception $e ) {
-
-			// Log that list/audience could not be retrieved.
-			$this->log_error( __METHOD__ . '(): Unable to get marketing permissions because audience could not be retrieved; ' . $e->getMessage() );
+		if ( is_wp_error( $list ) ) {
+			$this->log_error( __METHOD__ . '(): Unable to get marketing permissions because audience could not be retrieved; ' . $list->get_error_message() );
 
 			return false;
-
 		}
 
 		// If marketing permissions are disabled, return.
@@ -2352,47 +2294,35 @@ class GFMailChimp extends GFFeedAddOn {
 			return false;
 		}
 
-		try {
+		$members = $this->api->get_list_members( $list_id, array( 'count' => 1 ) );
 
-			// Get a list/audience member.
-			$members = $this->api->get_list_members( $list_id, array( 'count' => 1 ) );
-			$member  = rgar( $members, 'members' ) ? $members['members'][0] : false;
-
-
-		} catch ( Exception $e ) {
-
-			// Log that list/audience could not be retrieved.
-			$this->log_error( __METHOD__ . '(): Unable to get marketing permissions because audience members could not be retrieved; ' . $e->getMessage() );
+		if ( is_wp_error( $members ) ) {
+			$this->log_error( __METHOD__ . '(): Unable to get marketing permissions because audience members could not be retrieved; ' . $members->get_error_message() );
 
 			return false;
-
 		}
+
+		$member = rgar( $members, 'members' ) ? $members['members'][0] : false;
 
 		// If list/audience has no members, create one.
 		if ( ! $member ) {
 
-			try {
+			// Prepare member parameters.
+			$member_params = array(
+				'email_address' => 'mailchimp@gravityforms.com',
+				'status'        => 'subscribed',
+			);
 
-				// Prepare member parameters.
-				$member_params = array(
-					'email_address' => 'mailchimp@gravityforms.com',
-					'status'        => 'subscribed',
-				);
+			// Add member to list/audience.
+			$member = $this->api->update_list_member( $list_id, $member_params['email_address'], $member_params );
 
-				// Add member to list/audience.
-				$member = $this->api->update_list_member( $list_id, $member_params['email_address'], $member_params );
-
-				// Delete member.
-				$this->api->delete_list_member( $list_id, $member_params['email_address'] );
-
-			} catch ( Exception $e ) {
-
-				// Log that we could not create test member.
-				$this->log_error( __METHOD__ . '(): Unable to create test audience member to retrieve marketing permissions; ' . $e->getMessage() );
+			if ( is_wp_error( $member ) ) {
+				$this->log_error( __METHOD__ . '(): Unable to create test audience member to retrieve marketing permissions; ' . $member->get_error_message() );
 
 				return false;
-
 			}
+
+			$this->api->delete_list_member( $list_id, $member_params['email_address'] );
 
 		}
 
@@ -2654,19 +2584,17 @@ class GFMailChimp extends GFFeedAddOn {
 			return $this->merge_fields[ $list_id ];
 		}
 
-		try {
+		$result = $this->api->get_list_merge_fields( $list_id );
 
-			// Get merge fields.
-			$this->merge_fields[ $list_id ] = $this->api->get_list_merge_fields( $list_id );
-
-		} catch ( Exception $e ) {
-
-			// Log error.
-			$this->log_error( __METHOD__ . '(): Unable to get merge fields for Mailchimp audience; ' . $e->getMessage() );
+		if ( is_wp_error( $result ) ) {
+			$this->log_error( __METHOD__ . '(): Unable to get merge fields for Mailchimp audience; ' . $result->get_error_message() );
 
 			$this->merge_fields[ $list_id ] = array();
 
+			return array();
 		}
+
+		$this->merge_fields[ $list_id ] = $result;
 
 		return $this->merge_fields[ $list_id ];
 
@@ -2791,25 +2719,21 @@ class GFMailChimp extends GFFeedAddOn {
 			// Initialize categories array.
 			$categories = array();
 
-			try {
+			$list_id = $feed['meta']['mailchimpList'];
 
-				$list_id = $feed['meta']['mailchimpList'];
+			if ( ! isset( $list_interest_categories[ $list_id ] ) ) {
+				// Get interest categories for list/audience.
+				$result = $this->api->get_list_interest_categories( $list_id );
+				if ( is_wp_error( $result ) ) {
+					$this->log_error( __METHOD__ . '(): Unable to updated feed #' . $feed['id'] . ' because interest categories could not be retrieved for Mailchimp audience ' . $feed['meta']['mailchimpList'] );
 
-				if ( ! isset( $list_interest_categories[ $list_id ] ) ) {
-					// Get interest categories for list/audience.
-					$list_interest_categories[ $list_id ] = $this->api->get_list_interest_categories( $list_id );
+					continue;
 				}
 
-				$interest_categories = rgar( $list_interest_categories, $list_id, array() );
-
-			} catch ( Exception $e ) {
-
-				// Log that we could not get interest categories.
-				$this->log_error( __METHOD__ . '(): Unable to updated feed #' . $feed['id'] . ' because interest categories could not be retrieved for Mailchimp audience ' . $feed['meta']['mailchimpList'] );
-
-				continue;
-
+				$list_interest_categories[ $list_id ] = $result;
 			}
+
+			$interest_categories = rgar( $list_interest_categories, $list_id, array() );
 
 			// Loop through interest categories.
 			foreach ( $interest_categories as $interest_category ) {

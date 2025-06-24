@@ -156,7 +156,7 @@ class GPPA_Compatibility_GravityView {
 		$choices = wp_list_pluck( gp_populate_anything()->get_input_choices( $gf_field, $entry ), 'text', 'value' );
 		// Get the placeholder value, if any.
 		if ( rgar( $gf_field, 'placeholder' ) ) {
-			array_unshift( $choices, $gf_field['placeholder'] );
+			$choices = array( $gf_field['placeholder'] ) + $choices;
 		}
 
 		$wrapper_attributes['data-source'] = json_encode( $choices );

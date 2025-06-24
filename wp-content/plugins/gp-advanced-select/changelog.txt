@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.1.15 | June 4, 2025
+
+- Fixed issue where Advanced Select fields retained their data even when conditionally hidden.
+
+## 1.1.14 | May 20, 2025
+
+- Removed redundant check for Gravity Perks in preparation for Spellbook.
+- Fixed issue where scroll position would sometimes be incorrect after lazy loaded options are fetched.
+
+## 1.1.13 | May 14, 2025
+
+- Added support for filtering choices in Gravity Flow User fields with Advanced Select and GP Populate Anything, enabling real-time user selection filters.
+
+## 1.1.12 | April 23, 2025
+
+- Fixed issue where chaining a lazy-loaded Advanced Select field as a filter could result in values not being correct when sent to Zapier.
+
 ## 1.1.11 | December 18, 2024
 
 - Fixed various styling issues, particularly with the Gravity Forms Theme Framework and when selects are dynamically refreshed with Populate Anything.

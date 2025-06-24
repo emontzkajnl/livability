@@ -30,12 +30,6 @@ class GP_Advanced_Select extends GP_Plugin {
 			'wordpress'    => array(
 				'version' => '5.0',
 			),
-			'plugins'      => array(
-				'gravityperks/gravityperks.php' => array(
-					'name'    => 'Gravity Perks',
-					'version' => '2.0',
-				),
-			),
 		);
 	}
 
@@ -394,13 +388,7 @@ class GP_Advanced_Select extends GP_Plugin {
 			}
 		}
 
-		/**
-		 * Handle setting $field_value
-		 *
-		 * @todo extract a lot of the value-handling code in GP_Populate_Anything::hydrate_field() so it can be used here
-		 *   if needed. Especially things like gp_populate_anything()->get_selected_choices() to support Value population if we ever do.
-		 */
-		$field_value = rgar( gp_populate_anything()->get_posted_field_values( $form ), $field->id );
+		$field_value = gp_populate_anything()->populate_field_value( $field, gp_populate_anything()->get_posted_field_values( $form ), $form, $entry, ! $entry );
 
 		if ( is_string( $field_value ) && ( rgar( $field, 'storageType' ) === 'json' && GFCommon::is_json( $field_value ) ) ) {
 			$field_value = GFCommon::maybe_decode_json( $field_value );

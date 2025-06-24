@@ -129,31 +129,14 @@ class Controller implements InitializableInterface
         return $this->settings->getDebugIsEnabled($enabled);
     }
 
-    private function convertPostTypesListIntoOptionsList($list)
-    {
-        $optionsList = [];
-
-        foreach ($list as $postType => $taxonomiesList) {
-            $optionsList[$postType] = [];
-
-            if (empty($taxonomiesList)) {
-                continue;
-            }
-
-            foreach ($taxonomiesList as $taxonomySlug => $taxonomyObject) {
-                $optionsList[$postType][] = ['value' => $taxonomySlug, 'label' => $taxonomyObject->label];
-            }
-        }
-
-        return $optionsList;
-    }
-
     public function onAdminEnqueueScript($screenId)
     {
         try {
             if ($screenId !== 'future_page_publishpress-future-settings') {
                 return;
             }
+
+            $defaultTab = $this->settings->getSettingsDefaultTab();
 
             wp_enqueue_style(
                 'pe-footer',
@@ -181,7 +164,7 @@ class Controller implements InitializableInterface
             );
 
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            if (! isset($_GET['tab']) || $_GET['tab'] === 'advanced') {
+            if ((! isset($_GET['tab']) && $defaultTab === 'advanced') || (isset($_GET['tab']) && $_GET['tab'] === 'advanced')) {
                 wp_enqueue_script(
                     'publishpress-future-settings-advanced-panel',
                     Plugin::getScriptUrl('settingsAdvanced'),
@@ -243,6 +226,58 @@ class Controller implements InitializableInterface
         }
     }
 
+    public function processFormSubmission()
+    {
+        if (isset($_POST['_postExpiratorMenuAdvanced_nonce']) && ! empty($_POST['_postExpiratorMenuAdvanced_nonce'])) {
+            if (
+                ! wp_verify_nonce(
+                    sanitize_key($_POST['_postExpiratorMenuAdvanced_nonce']),
+                    'postexpirator_menu_advanced'
+                )
+            ) {
+                wp_die(esc_html__('Form Validation Failure: Sorry, your nonce did not verify.', 'post-expirator'));
+            }
+
+            $experimentalFeaturesStatus = isset($_POST['future-experimental-features'])
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing
+            ? (int) $_POST['future-experimental-features']
+            : 0;
+            $this->settings->setExperimentalFeaturesStatus($experimentalFeaturesStatus);
+
+            $this->settings->setStepScheduleCompressedArgsStatus(false);
+
+            $stepScheduleCleanupStatus = isset($_POST['future-step-schedule-cleanup'])
+                ? (bool) $_POST['future-step-schedule-cleanup']
+                : false;
+            $this->settings->setScheduledWorkflowStepsCleanupStatus($stepScheduleCleanupStatus);
+
+            $stepScheduleCleanupRetention = isset($_POST['future-step-schedule-cleanup-retention'])
+                // phpcs:ignore WordPress.Security.NonceVerification.Missing
+                ? (int) $_POST['future-step-schedule-cleanup-retention']
+                : 30;
+
+            if ($stepScheduleCleanupRetention < 1) {
+                $stepScheduleCleanupRetention = 30;
+            }
+
+            $this->settings->setScheduledWorkflowStepsCleanupRetention($stepScheduleCleanupRetention);
+
+            $preserveData = isset($_POST['expired-preserve-data-deactivating'])
+                ? (int) $_POST['expired-preserve-data-deactivating']
+                : 0;
+            $this->settings->setPreserveData($preserveData);
+
+            // Redirect to the same page with a success parameter
+            $redirect_url = add_query_arg(
+                'settings-updated',
+                'true',
+                admin_url('admin.php?page=publishpress-future-settings&tab=advanced')
+            );
+            wp_redirect($redirect_url);
+            exit;
+        }
+    }
+
     private function getCurrentTab()
     {
         $allowedTabs = [
@@ -252,32 +287,17 @@ class Controller implements InitializableInterface
         ];
 
         $allowedTabs = $this->hooks->applyFilters(SettingsHooksAbstract::FILTER_ALLOWED_SETTINGS_TABS, $allowedTabs);
+        $defaultTab = $this->settings->getSettingsDefaultTab();
 
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        $tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : '';
+        $tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : $defaultTab;
 
-        if (empty($tab) || ! in_array($tab, $allowedTabs, true)) {
-            $tab = 'advanced';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (! isset($_GET['tab']) || ! in_array($tab, $allowedTabs, true)) {
+            $tab = $this->settings::SETTINGS_DEFAULT_TAB;
         }
 
         return $tab;
-    }
-
-    public function processFormSubmission()
-    {
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        if (empty($_POST)) {
-            return;
-        }
-
-        $tab = $this->getCurrentTab();
-
-        $methodName = 'saveTab' . ucfirst($tab);
-        if (method_exists($this, $methodName)) {
-            call_user_func([$this, $methodName]);
-        }
-
-        $this->hooks->doAction(SettingsHooksAbstract::ACTION_SAVE_TAB_PREFIX . $tab);
     }
 
     public function initMigrations()
@@ -288,68 +308,5 @@ class Controller implements InitializableInterface
         } catch (Throwable $th) {
             $this->logger->error('Error initializing migrations: ' . $th->getMessage());
         }
-    }
-
-    private function convertTermsToIds($taxonomy, $terms)
-    {
-        if (empty($terms)) {
-            return [];
-        }
-
-        $taxonomiesModelFactory = $this->taxonomiesModelFactory;
-        $taxonomiesModel = $taxonomiesModelFactory();
-
-        $terms = explode(',', $terms);
-        $terms = array_map(function ($term) use ($taxonomy, $taxonomiesModel) {
-            $term = \sanitize_text_field($term);
-            $termId = $taxonomiesModel->getTermIdByName($taxonomy, $term);
-
-            if (! $termId) {
-                $termId = $taxonomiesModel->createTermAndReturnId(
-                    $taxonomy,
-                    $term
-                );
-            }
-
-            return $termId;
-        }, $terms);
-
-        return $terms;
-    }
-
-    public function saveTabAdvanced()
-    {
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing
-        $experimentalFeaturesStatus = isset($_POST['future-experimental-features'])
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        ? (int) $_POST['future-experimental-features']
-        : 0;
-        $this->settings->setExperimentalFeaturesStatus($experimentalFeaturesStatus);
-
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing
-        $stepScheduleCompressedArgsStatus = isset($_POST['future-step-schedule-compressed-args'])
-            // phpcs:ignore WordPress.Security.NonceVerification.Missing
-            ? (int) $_POST['future-step-schedule-compressed-args']
-            : 0;
-        $this->settings->setStepScheduleCompressedArgsStatus($stepScheduleCompressedArgsStatus);
-
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing
-        $stepScheduleCleanupStatus = isset($_POST['future-step-schedule-cleanup'])
-            // phpcs:ignore WordPress.Security.NonceVerification.Missing
-            ? (bool) $_POST['future-step-schedule-cleanup']
-            : false;
-        $this->settings->setScheduledWorkflowStepsCleanupStatus($stepScheduleCleanupStatus);
-
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing
-        $stepScheduleCleanupRetention = isset($_POST['future-step-schedule-cleanup-retention'])
-            // phpcs:ignore WordPress.Security.NonceVerification.Missing
-            ? (int) $_POST['future-step-schedule-cleanup-retention']
-            : 30;
-
-        if ($stepScheduleCleanupRetention < 1) {
-            $stepScheduleCleanupRetention = 30;
-        }
-
-        $this->settings->setScheduledWorkflowStepsCleanupRetention($stepScheduleCleanupRetention);
     }
 }

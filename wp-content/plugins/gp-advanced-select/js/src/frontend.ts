@@ -309,3 +309,27 @@ class GPAdvancedSelect implements GPAdvancedSelectInitArgs {
 }
 
 window.GPAdvancedSelect = GPAdvancedSelect;
+
+window.gform.addAction(
+	'gform_post_conditional_logic_field_action',
+	function (
+		formId: any,
+		action: string,
+		targetId: string,
+		defaultValues: any,
+		isInit: any
+	) {
+		if (action === 'hide') {
+			const match = targetId.match(/#field_(\d+)_(\d+)/);
+			if (match) {
+				const inputId = `input_${match[1]}_${match[2]}`;
+
+				const selectElem = $(`#${inputId}`) as any;
+				// Clear the selected value(s)
+				if (selectElem?.[0]?.tomselect) {
+					selectElem[0].tomselect.clear();
+				}
+			}
+		}
+	}
+);

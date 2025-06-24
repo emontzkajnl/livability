@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Gravity Perks 2.3.15\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cloned-perk-OssPdxetmX\n"
+"Project-Id-Version: Gravity Perks 2.3.17\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cloned-perk-gv4sNHXVA3\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-05T18:31:54+00:00\n"
+"POT-Creation-Date: 2025-06-11T13:51:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: gravityperks\n"
@@ -342,11 +342,23 @@ msgstr ""
 msgid "Does this page look strange? Your PHP version is out-of-date. <strong>Please upgrade.</strong>"
 msgstr ""
 
-#: includes/class-gwapi.php:213
+#: includes/class-gwapi.php:202
+msgid "<strong>Important Note!</strong> Gravity Perks (plugin) has been converted to Spellbook"
+msgstr ""
+
+#: includes/class-gwapi.php:211
+msgid "Spellbook has been activated network-wide."
+msgstr ""
+
+#: includes/class-gwapi.php:216
+msgid "Spellbook has been activated."
+msgstr ""
+
+#: includes/class-gwapi.php:259
 msgid "<strong>Important Note!</strong> GP Google Sheets has been converted to GC Google Sheets"
 msgstr ""
 
-#: includes/class-gwapi.php:217
+#: includes/class-gwapi.php:263
 msgid "GC Google Sheets has been activated."
 msgstr ""
 
