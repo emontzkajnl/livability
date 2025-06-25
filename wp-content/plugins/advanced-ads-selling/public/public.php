@@ -1,4 +1,6 @@
-<?php
+<?php // phpcs:ignoreFile
+
+use AdvancedAds\Framework\Utilities\Params;
 
 class Advanced_Ads_Selling {
 
@@ -49,7 +51,7 @@ class Advanced_Ads_Selling {
 			return;
 		}
 
-		wp_register_script( 'advanced-ads-selling-single-product-script', AASA_BASE_URL . 'public/assets/js/ad-setup.js', array( 'jquery' ) );
+		wp_register_script( 'advanced-ads-selling-single-product-script', AASA_BASE_URL . 'assets/js/ad-setup.js', array( 'jquery' ) );
 
 		if ( is_product() ) {
 			$woocommerce_price_decimal_sep = get_option( 'woocommerce_price_decimal_sep' );
@@ -87,6 +89,10 @@ class Advanced_Ads_Selling {
 		if ( isset( $options['wc-fixes'] ) && $options['wc-fixes'] ) {
 			wp_enqueue_style( 'advanced-ads-selling-wc-fixes', AASA_BASE_URL . 'public/assets/css/wc-fixes.css', array( 'woocommerce-layout' ), AASA_VERSION );
 		}
+
+		if ( is_product() ) {
+			wp_enqueue_style( 'advanced-ads-selling-wc-product', AA_SELLING_BASE_URL . 'public/assets/css/screen-wc-product.css', [], AASA_VERSION );
+		}
 	}
 
 	/**
@@ -97,7 +103,7 @@ class Advanced_Ads_Selling {
 			return;
 		}
 
-		add_filter( 'advanced-ads-can-inject-into-content', array( $this, 'prevent_ads_inject_into_woo_content' ), 10, 2 );
+		add_filter( 'advanced-ads-can-inject-into-content', array( $this, 'prevent_ads_inject_into_woo_content' ) );
 		add_action( 'woocommerce_thankyou', array( $this, 'display_ads_setup_data' ), 10, 1 );
 		add_action( 'woocommerce_view_order', array( $this, 'display_ads_setup_data' ), 10, 1 );
 		add_action( 'woocommerce_advanced_ad_add_to_cart', array( $this, 'add_to_cart_template' ) );
@@ -122,27 +128,28 @@ class Advanced_Ads_Selling {
 	 * Load template for add-to-cart with the correct filter for the fields
 	 */
 	public function add_to_cart_template() {
-		$post_id = get_the_ID();
-
+		$post_id    = get_the_ID();
 		$prices     = Advanced_Ads_Selling_Plugin::get_prices( $post_id );
 		$ad_types   = get_post_meta( $post_id, '_ad_types', true );
 		$sales_type = get_post_meta( $post_id, '_ad_sales_type', true );
+
+		if ( ! is_array( $ad_types ) ) {
+			$ad_types = [ 'plain' ];
+		}
+
 		// reset sales type, when Tracking is not enabled
 		if ( in_array( $sales_type, array( 'impressions', 'clicks' ) ) && ! defined( 'AAT_VERSION' ) ) {
 			$sales_type = 'flat';
 		}
 
-		$ad_types_raw = Advanced_Ads::get_instance()->ad_types;
+		$placements_raw = wp_advads_get_placements();
+		$placements     = get_post_meta( $post_id, '_ad_placements', true );
 
-		if ( $placements = get_post_meta( $post_id, '_ad_placements', true ) ) {
-			// load all placements
-			$model          = Advanced_Ads::get_instance()->get_model();
-			$placements_raw = $model->get_ad_placements_array();
-		} else {
-			$placements = array();
+		if ( ! is_array( $placements ) ) {
+			$placements = [];
 		}
 
-		require AASA_BASE_PATH . 'public/views/product-template.php';
+		require AA_SELLING_ABSPATH . 'public/views/product-template.php';
 	}
 
 	/**
@@ -219,15 +226,15 @@ class Advanced_Ads_Selling {
 	/**
 	 * Get order for a setup page
 	 *
-	 * @return false|str
+	 * @return false|string
 	 */
 	public function get_page_hash_from_setup_url( $type = 'page' ) {
-
-		// check if this page has the hash as a get parameter
+		// Check if this page has the hash as a get parameter
 		$page_hash = false;
+		$get_h     = Params::get( 'h' );
 
-		if ( isset( $_GET['h'] ) && $this->is_setup_page( get_the_ID() ) ) {
-			return esc_attr( $_GET['h'] );
+		if ( $get_h && $this->is_setup_page( get_the_ID() ) ) {
+			return esc_attr( $get_h );
 		} else {
 			$protocol = 'http';
 			if ( is_ssl() ) {
@@ -256,6 +263,7 @@ class Advanced_Ads_Selling {
 	 * according to the Settings under Advanced Ads > Settings > Selling Ads
 	 *
 	 * @param integer $post_id WP_Post ID.
+	 *
 	 * @return bool true if the current post is the setup page
 	 */
 	public function is_setup_page( $post_id = 0 ) {
@@ -277,7 +285,7 @@ class Advanced_Ads_Selling {
 	/**
 	 * Prevent Ads from woocommerce content
 	 */
-	public function prevent_ads_inject_into_woo_content( $flag, $content ) {
+	public function prevent_ads_inject_into_woo_content( $flag ) {
 		if ( ! defined( 'ADVANCED_ADS_SELLING_ALLOW_WC_PAGE_INJECTIONS' ) && $this->is_woocommerce_page() ) {
 			$flag = false;
 		}
@@ -312,7 +320,7 @@ class Advanced_Ads_Selling {
 			printf(
 				'<p class="advanced-ads-selling-setup-page-link">' .
 				wp_kses(
-					// translators: %s is the link to the ad setup page.
+					/* translators: %s is the link to the ad setup page. */
 					__( 'You can manage the content of your ads on the <a href="%s">ad setup page</a>.', 'advanced-ads-selling' ),
 					[ 'a' => [ 'href' => [] ] ]
 				) . '</p>',
@@ -352,8 +360,10 @@ class Advanced_Ads_Selling {
 	/**
 	 * Manipulate the price html output adding a unique class if in the loop
 	 *
-	 * @param type $price_html
-	 * @param type $product
+	 * @param string      $price_html
+	 * @param \WC_Product $product
+	 *
+	 * @return string
 	 */
 	public function manipulare_price_html( $price_html, $product ) {
 		global $wp_query;
@@ -397,18 +407,17 @@ class Advanced_Ads_Selling {
 	 * Save ad content sent from backend
 	 */
 	public function save_ad_content() {
-
-		// If $_POST['aas_upload_ad'] is set
-		if ( ! empty( $_POST['advanced-ads-selling-upload-ad'] ) && $_POST['advanced-ads-selling-upload-ad'] == 'advanced-ads-selling-upload-ad' ) {
-			$data = array(); // Declare variables
-			switch ( $_POST['advads_selling_ad_type'] ) { // Switch case on ad_type selected
+		$upload_ad = Params::post( 'advanced-ads-selling-upload-ad' );
+		if ( ! empty( $upload_ad ) && 'advanced-ads-selling-upload-ad' === $upload_ad ) {
+			$data = []; // Declare variables
+			switch ( Params::post( 'advads_selling_ad_type' ) ) { // Switch case on ad_type selected
 				case 'image':
 					$errors     = ''; // Declare variables
 					$file_name  = $_FILES['advads_selling_ad_image']['name']; // Get file name
 					$file_size  = $_FILES['advads_selling_ad_image']['size']; // Get file size
 					$file_tmp   = $_FILES['advads_selling_ad_image']['tmp_name']; // Get file's temporary name
 					$file_type  = $_FILES['advads_selling_ad_image']['type']; // Get file type
-					$target_url = ! empty( $_POST['advads_selling_ad_url'] ) ? $_POST['advads_selling_ad_url'] : '';
+					$target_url = Params::post( 'advads_selling_ad_url', '' );
 
 					$file_datas = explode( '.', $file_name ); // Explode file name to retrieve extension
 					foreach ( $file_datas as $file_data ) {
@@ -416,7 +425,7 @@ class Advanced_Ads_Selling {
 					}
 
 					$file_ext   = strtolower( end( $file_data_arr ) ); // Get file extension
-					$expensions = array( 'jpeg', 'jpg', 'png', 'gif' ); // Declare variables for allowed extension types
+					$expensions = [ 'jpeg', 'jpg', 'png', 'gif' ]; // Declare variables for allowed extension types
 
 					if ( in_array( $file_ext, $expensions ) === false ) { // if file extensions is within allowed extensions
 						$errors = esc_html__( 'Extension not allowed, please choose a JPEG, PNG or GIF file.', 'advanced-ads-selling' );
@@ -425,7 +434,7 @@ class Advanced_Ads_Selling {
 					$max_file_size = apply_filters( 'advanced-ads-selling-upload-file-size', 1048576 );
 					if ( $file_size > $max_file_size ) {
 						$errors = sprintf(
-							// translators: %s is a file size with one decimal
+						/* translators: %s is a file size with one decimal */
 							__( 'The allowed file size is %s MB', 'advanced-ads-selling' ),
 							number_format_i18n( $max_file_size / 1000000, 1 )
 						);
@@ -445,38 +454,15 @@ class Advanced_Ads_Selling {
 						$attach_id = media_handle_upload( 'advads_selling_ad_image', 0 );
 						$post_guid = get_the_guid( $attach_id );
 
-						$ad_id           = Advanced_Ads_Selling_Order::order_item_id_to_ad_id( $_POST['advads_selling_order_item'] );
+						$ad_id           = Advanced_Ads_Selling_Order::order_item_id_to_ad_id( Params::post( 'advads_selling_order_item', 0, FILTER_VALIDATE_INT ) );
 						$ad_post_content = '<img src="' . $post_guid . '" alt="' . $file_name . '" />';
-						/*
-						if( !empty( $target_url ) ) {//check when target url then wrap link with them
-							$ad_post_content	= sprintf( '<a href="%s" target="_blank">%s</a>', $target_url, $ad_post_content );
-						}*/
 
-						// get ad object
-						$ad = new Advanced_Ads_Ad( $ad_id );
-
-						$ad->type = 'image';
-
-						$output['image_id'] = $attach_id;
-
-						$ad->set_option( 'output', $output );
-
-						$ad->url = esc_url( $_POST['advads_selling_ad_url'] );
-
-						// double check if we can use fopen
-						/*
-						if ( !empty ( $post_guid ) && ini_get('allow_url_fopen') && function_exists( 'getimagesize' ) ) {
-							$image_size = getimagesize( $post_guid );
-
-							$ad->width  = $image_size[0];
-							$ad->height = $image_size[1];
-						} else {
-							$ad->width  = 0;
-							$ad->height = 0;
-						}*/
-
-						$ad->content = $ad_post_content;
-						$ad->status  = 'pending';
+						$ad = wp_advads_get_ad( (int) $ad_id );
+						$ad->set_type( 'image' );
+						$ad->set_prop(  'image_id', $attach_id );
+						$ad->set_url( Params::post( 'advads_selling_ad_url', '', FILTER_VALIDATE_URL ) );
+						$ad->set_content( $ad_post_content );
+						$ad->set_status( 'pending' );
 
 						if ( $attach_id ) {
 							$attachment_meta = wp_get_attachment_metadata( $attach_id );
@@ -487,17 +473,8 @@ class Advanced_Ads_Selling {
 							}
 						}
 
-						$ad->width  = isset( $attachment_meta['width'] ) ? absint( $attachment_meta['width'] ) : 0;
-						$ad->height = isset( $attachment_meta['height'] ) ? absint( $attachment_meta['height'] ) : 0;
-
-						// update the ad post
-						$new_ad_content = array(
-							'ID'          => $ad_id,
-							'post_status' => 'pending',
-						);
-
-						$return = wp_update_post( $new_ad_content );
-
+						$ad->set_width( absint( $attachment_meta['width'] ?? 0 ) );
+						$ad->set_height( absint( $attachment_meta['height'] ?? 0 ) );
 						$ad->save();
 
 						$_POST['success'] = 'success';
@@ -508,22 +485,25 @@ class Advanced_Ads_Selling {
 					break;
 
 				case 'plain':
-					if ( ! isset( $_POST['advads_selling_ad_content'] ) || ! trim( $_POST['advads_selling_ad_content'] ) ) {
+					$ad_content = trim( Params::post( 'advads_selling_ad_content' ) );
+					if ( ! $ad_content ) {
 						$errors = esc_html__( 'Ad content missing.', 'advanced-ads-selling' );
 					}
 
+
 					if ( empty( $errors ) ) {
-					$ad_id = Advanced_Ads_Selling_Order::order_item_id_to_ad_id( $_POST['advads_selling_order_item'] );
+						$ad_id = Advanced_Ads_Selling_Order::order_item_id_to_ad_id( Params::post( 'advads_selling_order_item' ) );
 
-					// update the ad post
-					$new_ad_content = array(
-						'ID'           => $ad_id,
-						'post_content' => trim( $_POST['advads_selling_ad_content'] ),
-						'post_status'  => 'pending',
-					);
+						// update the ad post
+						$new_ad_content = [
+							'ID'           => $ad_id,
+							'post_content' => $ad_content,
+							'post_status'  => 'pending',
+						];
 
-					$return = wp_update_post( $new_ad_content );
-					if ( is_wp_error( $return ) ) {
+						$return = wp_update_post( $new_ad_content );
+
+						if ( is_wp_error( $return ) ) {
 							die( esc_html__( 'Error when submitting the ad. Please contact the site admin.', 'advanced-ads-selling' ) );
 						}
 

@@ -1,5 +1,5 @@
-<?php
-$options = isset( $placement['options']['layer_placement']['close'] ) ? $placement['options']['layer_placement']['close'] : array();
+<?php // phpcs:ignoreFile
+$options = isset( $placement_options['layer_placement']['close'] ) ? $placement_options['layer_placement']['close'] : array();
 
 $close_enabled         = isset( $options['enabled'] ) ? $options['enabled'] : 0;
 $close_where           = isset( $options['where'] ) ? $options['where'] : 'inside';
@@ -7,7 +7,7 @@ $close_side            = isset( $options['side'] ) ? $options['side'] : 'right';
 $close_timeout_enabled = isset( $options['timeout_enabled'] ) ? $options['timeout_enabled'] : false;
 $close_timeout         = isset( $options['timeout'] ) ? absint( $options['timeout'] ) : 0;
 
-$option_name = "advads[placements][$placement_slug][options][layer_placement][close]";
+$option_name = "advads[placements][options][layer_placement][close]";
 
 ?><p><label><input type="checkbox" name="<?php echo $option_name; ?>[enabled]" value="1" <?php
 checked( $close_enabled, 1 ); ?> onclick="advads_toggle_box(this, '#advads-close-button-<?php echo $placement_slug; ?>');"/><?php

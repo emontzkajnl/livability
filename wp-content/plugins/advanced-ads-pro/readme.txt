@@ -1,8 +1,8 @@
 === Advanced Ads Pro ===
-Requires at least: WP 4.9
-Tested up to: 6.6
-Requires PHP: 7.2.5
-Stable tag: 2.27.0
+Requires at least: 5.7
+Tested up to: 6.7
+Requires PHP: 7.4
+Stable tag: 3.0.4
 
 Advanced Ads Pro is for those who want to perform magic on their ads.
 
@@ -80,10 +80,49 @@ You can use Advanced Ads along with any other ad management plugin and don’t n
 
 == Changelog ==
 
-= 2.27.0 (September 4, 2024) =
+= 3.0.4 (April 9, 2025) =
+- Improvement: improve visitor profile text when updated
+- Fix: resolves an issue with ads in XML feeds
+- Fix: removed all license-related code from the addons as license management has been moved to the free version.
+- Fix: show warning about privacy when an image ad has a custom code attached to it
+- Fix: correct order of placement icons
+- Fix: fatal error when adblocker item not found
 
-- Improvement: update third-party libraries to prevent deprecation messages in PHP 8.3
-- Improvement: add support for Youzify groups
-- Fix: resolve a PHP error when `$_SERVER['HTTP_HOST']` is not set
+= 3.0.3 (March 19, 2025) =
 
-Build: 2024-10-ae22cfae
+- Improvement: update Arabic, German, German (Austria), German (Switzerland) and German (formal) translations
+- Fix: correct timeout for sticky and popup placements with passive cache busting
+- Fix: restore the background placement background color
+
+= 3.0.2 (March 13, 2025) =
+
+- Fix: prevent PHP errors for some groups using passive Cache Busting
+- Fix: ensure the correct saving of the group margin value
+- Fix: correct an incorrectly called admin notices class
+- Fix: resolve issue with shortcode ads not displaying on multisites
+
+= 3.0.1 (March 11, 2025) =
+
+- Fix: resolve PHP warnings during the update process
+- Fix: remove a specific incompatibility issue with the basic version
+- Fix: correct an error in the loading of the language files
+- Fix: make the "Remove the placeholder if unfilled" option deselectable again
+
+= 3.0.0 (March 10, 2025) =
+
+- Feature: add new ad blocker tab with bundled features
+- Feature: introduce ad blocker visitor condition
+- Feature: introduce ad blocker overlays
+- Feature: add ad blocker redirect functionality
+- Feature: add Ads By Hours
+- Feature: introduce fallbacks for unfilled AdSense ads
+- Feature: add duplicate group functionality
+- Feature: add IP Address visitor condition
+- Feature: pre-check alternative ad blocker images
+- Improvement: hide empty content block placeholder
+- Improvement: add quick & bulk edit for Pro options
+- Improvement: use groups as ad blocker fallback
+- Improvement: optimize AJAX cache busting rotation to conserve server resources
+- Improvement: disable elements in WP-admin bar
+
+Build: 2025-06-44767eef

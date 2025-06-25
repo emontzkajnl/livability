@@ -1,5 +1,5 @@
-<?php
-	$options = isset( $placement['options']['layer_placement']['sticky'] ) ? $placement['options']['layer_placement']['sticky'] : array();
+<?php // phpcs:ignoreFile
+	$options = isset( $placement_options['layer_placement']['sticky'] ) ? $placement_options['layer_placement']['sticky'] : array();
 
 	$enabled   = isset( $options['enabled'] ) ? $options['enabled'] : false;
 	$assistant = isset( $options['assistant'] ) ? $options['assistant'] : 'center';
@@ -7,18 +7,16 @@
 	$width     = isset( $options['position']['width'] ) ? absint( $options['position']['width'] ) : 0;
 	$height    = isset( $options['position']['height'] ) ? absint( $options['position']['height'] ) : 0;
 
-	$option_name = "advads[placements][$placement_slug][options][layer_placement][sticky]";
-	// echo "<pre>";
-	// print_r($placement);
-	// echo "</pre>";
-	if (! isset($layer_class)){
+	$option_name = "advads[placements][options][layer_placement][sticky]";
+
+	if ( ! isset( $layer_class ) ) {
 		$layer_class = Advanced_Ads_Layer::get_layer_class();
 	}
 ?>
 
 <div>
 	<div class="<?php echo $layer_class; ?>-aa-position">
-		
+
 		<div class="<?php echo $layer_class; ?>-assistant-wrapper">
 			<div class="advads-sticky-assistant" id="<?php echo $layer_class; ?>-ads-type-assistant-inputs-<?php echo $placement_slug; ?>">
 				<table>
@@ -39,14 +37,14 @@
 					</tr>
 				</table>
 
-				
+
 				<div <?php if ( $this->fancybox_is_enabled || ( ! $width && ! $height )  ): ?> style="display:none;" <?php endif; ?>>
 					<br/>
 					<p class="advads-error-message"><?php _e( 'These settings are deprecated. Please, set width and height for the ad itself.', 'advanced-ads-layer' ); ?></p>
 					<p class="description"><?php _e( 'Enter banner width and height to correctly center the ad.', 'advanced-ads-layer' ); ?></p>
 					<label><?php _e( 'banner width', 'advanced-ads-layer' ); ?>
 						<input type="number" name="<?php echo $option_name; ?>[position][width]" title="<?php _e( 'banner width', 'advanced-ads-layer' ); ?>" value="<?php echo $width; ?>"/>px
-					</label>, 
+					</label>,
 					<label><?php _e( 'banner height', 'advanced-ads-layer' ); ?>
 						<input type="number" name="<?php echo $option_name; ?>[position][height]" title="<?php _e( 'banner height', 'advanced-ads-layer' ); ?>" value="<?php echo $height; ?>"/>px
 					</label>

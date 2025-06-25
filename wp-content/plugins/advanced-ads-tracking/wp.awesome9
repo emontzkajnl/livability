@@ -1,0 +1,38 @@
+{
+  "product": {
+    "name": "Advanced Ads – Tracking",
+    "uri": "https://wpadvancedads.com/",
+    "description": "Track ad impressions and clicks.",
+    "version": "2.6.0"
+  },
+  "author": {
+    "name": "Advanced Ads",
+    "email": "info@wpadvancedads.com",
+    "url": "https://wpadvancedads.com/"
+  },
+  "wp": {
+    "requireWP": "6.0",
+    "requirePHP": "7.4",
+    "textDomain": "advanced-ads-tracking",
+    "shortname": "ADVANCEDADSTRACKING",
+    "upgradeOptionName": "advanced_ads_tracking_version"
+  },
+  "paths": {
+    "php": "includes",
+    "views": "views",
+    "updates": "updates",
+    "javascript": "assets/src",
+    "scss": "assets/scss"
+  },
+  "misc": {
+    "package": "AdvancedAds\\Tracking",
+    "proxy": "http://wp-ads.vm"
+  },
+  "awesomePackages": [],
+  "year": 2024,
+  "package": {
+    "vendor": "advanced-ads",
+    "name": "advanced-ads-tracking"
+  },
+  "functionName": "advancedads_tracking"
+}

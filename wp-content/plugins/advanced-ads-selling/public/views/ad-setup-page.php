@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignoreFile
 if ( ! defined( 'WPINC' ) || ! ( $order_id ) ) {
 	die;
 }
@@ -8,7 +8,7 @@ if ( ! defined( 'WPINC' ) || ! ( $order_id ) ) {
 	<title><?php echo esc_html( bloginfo( 'name' ) ); ?> | <?php esc_html_e( 'Ad Setup', 'advanced-ads-selling' ); ?></title>
 	<meta name="robots" content="noindex, nofollow" />
 	<script type="text/javascript" src="<?php echo esc_url( includes_url( '/js/jquery/jquery.js' ) ); ?>"></script>
-	<script type="text/javascript" src="<?php echo esc_url( AASA_BASE_URL . 'public/assets/js/ad-setup.js' ); ?>"></script>
+	<script type="text/javascript" src="<?php echo esc_url( AASA_BASE_URL . 'assets/js/ad-setup.js' ); ?>"></script>
 	<script>
 		AdvancedAdSelling = { 'maxFileSize': <?php echo apply_filters( 'advanced-ads-selling-upload-file-size', 1048576 ); ?> }
 	</script>

@@ -2,16 +2,21 @@
 /**
  * List order information on the ad edit screen.
  *
+ * @package AdvancedAds\SellingAds
+ * @author  Advanced Ads <info@wpadvancedads.com>
+ * @since   1.5.0
+ *
  * @var int $order_id ID of the WooCommerce order.
  * @var string $hash hash value for the ad setup URL.
  * @var WC_Product|null|false $product WooCommerce product.
  * @var int $item_id cart item.
  */
+
 ?><ul>
 	<li><a href="<?php echo esc_url( get_edit_post_link( $order_id ) ); ?>">
 							<?php
 							printf(
-							// translators: %d is an order ID.
+								/* translators: %d is an order ID. */
 								esc_html__( 'Order #%d', 'advanced-ads-selling' ),
 								absint( $order_id )
 							);

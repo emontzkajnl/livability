@@ -1,45 +1,48 @@
-# Translation of PopUp and Layer Ads in German
-# This file is distributed under the same license as the PopUp and Layer Ads package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-02-24 11:30:19+0000\n"
+"Project-Id-Version: PopUp and Layer Ads\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: GlotPress/3.0.0\n"
+"POT-Creation-Date: 2025-03-11T15:44:21+00:00\n"
+"PO-Revision-Date: 2025-03-08 09:16:49+0000\n"
 "Language: de\n"
-"Project-Id-Version: PopUp and Layer Ads\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/4.0.1\n"
 
-#: admin/views/metabox.php:13
-msgid "when a user stops scrolling"
-msgstr "wenn ein Benutzer aufhört zu scrollen"
+#. translators: 1: is a link to a support document. 2: closing link
+#: includes/class-autoloader.php:113
+msgid "Your installation of Advanced Ads is incomplete. If you installed Advanced Ads from GitHub, %1$s please refer to this document%2$s to set up your development environment."
+msgstr "Deine Installation von Advanced Ads ist unvollständig. Wenn du Advanced Ads von GitHub installiert hast, %1$s lies bitte dieses Dokument%2$s, um deine Entwicklungsumgebung einzurichten."
 
-#: admin/views/metabox.php:14
-msgid "after a user scrolled half of the page"
-msgstr "nachdem ein Benutzer die Hälfte der Seite gescrollt hat"
-
-#: admin/views/metabox.php:16
-msgid "after a user scrolled %s px"
-msgstr "nachdem ein Benutzer %s px gescrollt hat"
+#. translators: %s: WP_ENVIRONMENT_TYPES
+#: includes/class-autoloader.php:157
+msgid "The %s constant is no longer supported."
+msgstr "Die %s Konstante wird nicht länger unterstützt."
 
 #. Author of the plugin
+#: layer-ads.php
 msgid "Advanced Ads GmbH"
 msgstr "Advanced Ads GmbH"
 
-#: admin/admin.php:80
+#: admin/admin.php:85
 msgid "Install Now"
 msgstr "Jetzt installieren"
 
-#: admin/admin.php:78
+#: admin/admin.php:83
 msgid "Activate Now"
 msgstr "Jetzt aktivieren"
 
-#: admin/admin.php:82
+#. translators: %s link to Advanced Ads plugin
+#: admin/admin.php:89
 msgid "<strong>%s</strong> requires the <strong><a href=\"https://wpadvancedads.com/?utm_source=advanced-ads&utm_medium=link&utm_campaign=activate-layer\" target=\"_blank\">Advanced Ads</a></strong> plugin to be installed and activated on your site."
 msgstr "<strong>%s</strong> setzt voraus, dass <strong><a href=\"https://wpadvancedads.com/?utm_source=advanced-ads&utm_medium=link&utm_campaign=activate-layer\" target=\"_blank\">Advanced Ads</a></strong> auf deiner Seite installiert und aktiviert ist."
 
-#: admin/views/trigger.php:10
+#. translators: %s: number of seconds
+#: admin/views/trigger.php:13
 msgid "after %s seconds"
 msgstr "nach %s Sekunden"
 
@@ -47,39 +50,44 @@ msgstr "nach %s Sekunden"
 msgid "close all ads with click on the background"
 msgstr "Alle Anzeigen nach Klick auf den Hintergrund schließen"
 
-#: admin/views/auto_close.php:9
+#. translators: %s: number of seconds
+#: admin/views/auto_close.php:10
 msgid "close after %s seconds"
 msgstr "schließen nach %s Sekunden"
 
-#: admin/admin.php:433
+#: admin/admin.php:371
 msgid "It is against the AdSense policy to use their ads in popups."
 msgstr "Es verstößt gegen die Richtlinien von AdSense, wenn deren Anzeigen in PopUps eingeblendet werden."
 
-#: admin/admin.php:376
+#: admin/admin.php:314
 msgid "auto close"
 msgstr "Automatisch schließen"
 
 #. Author URI of the plugin
+#: layer-ads.php
 msgid "https://wpadvancedads.com"
 msgstr "https://wpadvancedads.com"
 
-#. URI of the plugin
+#. Plugin URI of the plugin
+#: layer-ads.php
 msgid "https://wpadvancedads.com/add-ons/popup-and-layer-ads/"
 msgstr "https://wpadvancedads.com/add-ons/popup-and-layer-ads/"
 
 #. Description of the plugin
+#: layer-ads.php
 msgid "Create PopUp, Layer ads and Overlays"
 msgstr "Erstelle PopUps, Layer und Overlays mit Anzeigen"
 
-#. Name of the plugin
+#. Plugin Name of the plugin
+#: layer-ads.php
 msgid "Advanced Ads – PopUp and Layer Ads"
 msgstr "Advanced Ads – PopUp and Layer Ads"
 
-#: admin/views/trigger.php:8
+#: admin/views/trigger.php:10
 msgid "when a user wants to leave the page"
 msgstr "wenn ein Benutzer die Seite verlassen will"
 
-#: admin/views/size.php:10
+#: admin/views/size.php:9
 msgid "Needed sometimes to center the ad correctly"
 msgstr "Notwendig, um die Anzeige zu zentrieren"
 
@@ -87,143 +95,102 @@ msgstr "Notwendig, um die Anzeige zu zentrieren"
 msgid "height"
 msgstr "Höhe"
 
-#: admin/views/size.php:2
+#: admin/views/size.php:3
 msgid "width"
 msgstr "Breite"
 
-#: admin/views/position.php:57
+#: admin/views/position.php:55
 msgid "Choose a position on the screen."
 msgstr "Position auf dem Bildschirm."
 
-#: admin/views/position.php:50 admin/views/position.php:51
+#: admin/views/position.php:48
+#: admin/views/position.php:49
 msgid "banner height"
 msgstr "Bannerhöhe"
 
-#: admin/views/position.php:47 admin/views/position.php:48
+#: admin/views/position.php:45
+#: admin/views/position.php:46
 msgid "banner width"
 msgstr "Bannerbreite"
 
-#: admin/views/position.php:46
+#: admin/views/position.php:44
 msgid "Enter banner width and height to correctly center the ad."
 msgstr "Bitte Breite und Höhe der Anzeige angeben, damit diese korrekt zentriert werden kann."
 
-#: admin/views/position.php:45
+#: admin/views/position.php:43
 msgid "These settings are deprecated. Please, set width and height for the ad itself."
 msgstr "Diese Einstellungen sind veraltet. Bitte setze die Breite und Höhe in den Anzeigeneinstellungen."
 
-#: admin/views/position.php:38
+#: admin/views/position.php:36
 msgid "bottom right"
 msgstr "unten rechts"
 
-#: admin/views/position.php:37
+#: admin/views/position.php:35
 msgid "bottom center"
 msgstr "unten mitte"
 
-#: admin/views/position.php:36
+#: admin/views/position.php:34
 msgid "bottom left"
 msgstr "unten links"
 
-#: admin/views/position.php:33
+#: admin/views/position.php:31
 msgid "center right"
 msgstr "mitte rechts"
 
-#: admin/views/position.php:32
+#: admin/views/position.php:30
 msgid "center"
 msgstr "mittig"
 
-#: admin/views/position.php:31
+#: admin/views/position.php:29
 msgid "center left"
 msgstr "mitte links"
 
-#: admin/views/position.php:28
+#: admin/views/position.php:26
 msgid "top right"
 msgstr "oben rechts"
 
-#: admin/views/position.php:27
+#: admin/views/position.php:25
 msgid "top center"
 msgstr "oben mitte"
 
-#: admin/views/position.php:26
+#: admin/views/position.php:24
 msgid "top left"
 msgstr "oben links"
 
-#: admin/views/metabox.php:52
-msgid "in days, 0 = current session"
-msgstr "in Tagen, 0 = aktuelle Session"
-
-#: admin/views/metabox.php:50
-msgid "How long should visitors, that closed the ad, not see it again."
-msgstr "Für wie lange soll die Anzeige geschlossen bleiben?"
-
-#: admin/views/metabox.php:38
-msgid "Where to display the close button"
-msgstr "Position des Schließen-Buttons"
-
-#: admin/views/metabox.php:35
-msgid "Allow visitors to remove this ad."
-msgstr "Besucher können die Anzeige entfernen."
-
-#: admin/views/metabox.php:33
-msgid "Add close button"
-msgstr "Schließen-Button hinzufügen"
-
-#: admin/views/metabox.php:30
-msgid "Close-Button"
-msgstr "Schließen-Button"
-
-#: admin/views/metabox.php:20
-msgid "Effects"
-msgstr "Effekte"
-
-#: admin/views/metabox.php:19
-msgid "Enable background"
-msgstr "Hintergrund aktivieren"
-
-#: admin/views/trigger.php:6
+#. translators: %s: number of pixels
+#: admin/views/trigger.php:8
 msgid "after user scrolled %s px"
 msgstr "nach %s px Scrollen"
 
-#: admin/views/trigger.php:4
+#: admin/views/trigger.php:5
 msgid "after user scrolled to second half of the page"
 msgstr "nach der Hälfte der Seite"
 
-#: admin/views/trigger.php:3
+#: admin/views/trigger.php:4
 msgid "when user stops scrolling"
 msgstr "nach Ende des Scrollens"
 
-#: admin/views/metabox.php:12 admin/views/trigger.php:2
+#: admin/views/trigger.php:3
 msgid "right away"
 msgstr "sofort"
 
-#: admin/views/metabox.php:10
-msgid "Choose when the ad should show up."
-msgstr "Wann soll die Anzeige sichtbar werden?"
-
-#: admin/views/metabox.php:8
-msgid "Show this ad in a PopUp"
-msgstr "Diese Anzeige als PopUp einblenden"
-
-#: admin/views/metabox.php:6
-msgid "These settings are deprecated. Layer ads are now managed through <a href=\"%s\">placements</a>. Please convert your settings as soon as possible."
-msgstr "Diese Einstellungen sind veraltet. Layer werden jetzt über die <a href=\"%s\">Platzierungen</a> verwaltet."
-
-#: admin/views/effects.php:7 admin/views/metabox.php:25
+#: admin/views/effects.php:7
 msgid "Duration of the effect (in milliseconds)."
 msgstr "Dauer des Effektes (in Millisekunden)"
 
-#: admin/views/effects.php:4 admin/views/metabox.php:21
+#: admin/views/effects.php:4
 msgid "Type of effect when the ad is being displayed"
 msgstr "Anzeigeeffekt wählen"
 
-#: admin/views/effects.php:3 admin/views/metabox.php:24
+#: admin/views/effects.php:3
 msgid "Slide"
 msgstr "Einfahren"
 
-#: admin/views/effects.php:2 admin/views/metabox.php:23
+#: admin/views/effects.php:2
 msgid "Fade in"
 msgstr "Einblenden"
 
-#: admin/views/effects.php:1 admin/views/metabox.php:22
+#: admin/views/effects.php:1
 msgid "Show"
 msgstr "Zeigen"
 
@@ -235,23 +202,23 @@ msgstr "Tage, 0 = für aktuelle Sitzung"
 msgid "close the ad for …"
 msgstr "Anzeige schließen für …"
 
-#: admin/views/close-button.php:28 admin/views/metabox.php:47
+#: admin/views/close-button.php:28
 msgid "enable timeout"
 msgstr "Pausierung aktivieren"
 
-#: admin/views/close-button.php:23 admin/views/metabox.php:43
+#: admin/views/close-button.php:23
 msgid "right"
 msgstr "rechts"
 
-#: admin/views/close-button.php:22 admin/views/metabox.php:42
+#: admin/views/close-button.php:22
 msgid "left"
 msgstr "links"
 
-#: admin/views/close-button.php:20 admin/views/metabox.php:40
+#: admin/views/close-button.php:20
 msgid "inside"
 msgstr "innen"
 
-#: admin/views/close-button.php:19 admin/views/metabox.php:39
+#: admin/views/close-button.php:19
 msgid "outside"
 msgstr "außen"
 
@@ -259,58 +226,56 @@ msgstr "außen"
 msgid "add close button"
 msgstr "Schließen-Button"
 
-#: public/public.php:560
+#: public/public.php:532
 msgid "close"
 msgstr "schließen"
 
-#: admin/admin.php:409
+#: admin/admin.php:347
 msgid "size"
 msgstr "Größe"
 
-#: admin/admin.php:396 admin/views/close-button.php:18
+#: admin/admin.php:334
+#: admin/views/close-button.php:18
 msgid "Position"
 msgstr "Position"
 
-#: admin/admin.php:386
+#: admin/admin.php:324
 msgid "close button"
 msgstr "Schließen-Button"
 
-#: admin/admin.php:366
+#: admin/admin.php:304
 msgid "background"
 msgstr "Hintergrund"
 
-#: admin/views/background.php:3 admin/views/metabox.php:18
+#: admin/views/background.php:3
 msgid "Put a half-transparent overlay over the background of the page if this ad is displayed."
 msgstr "Halb-transparenten Hintergrund aktivieren, wenn die Anzeige sichtbar ist."
 
-#: admin/admin.php:353
+#: admin/admin.php:291
 msgid "effect"
 msgstr "Effekt"
 
-#: admin/admin.php:340
+#: admin/admin.php:278
 msgid "show the ad"
 msgstr "Anzeige einblenden"
 
-#: public/public.php:115
+#: includes/placements/types/class-layer.php:56
 msgid "Create PopUp or Layer Ad"
 msgstr "PopUp oder Layer erstellen"
 
-#: admin/admin.php:172 public/public.php:114
+#: admin/admin.php:165
+#: includes/placements/types/class-layer.php:47
 msgid "PopUp and Layer Ads"
 msgstr "PopUp and Layer Ads"
 
-#: admin/admin.php:256
-msgid "Layer and PopUp effects"
-msgstr "Layer und PopUp Effekte"
-
-#: admin/admin.php:228
+#: admin/views/settings/general/enable-fancybox.php:10
 msgid "Activate this if you want to use Fancybox plugin for popup windows"
 msgstr "Aktivieren, um das Fancybox-Skript für PopUps zu nutzen"
 
-#: admin/admin.php:189
+#: admin/admin.php:182
 msgid "Use Fancybox plugin"
 msgstr "Fancybox nutzen"
 
-#: admin/admin.php:94
+#: admin/admin.php:101
 msgid "You shouldn’t have more than one Fancybox on the same page. Please, make sure that you set up the ads for the different layers with display conditions to prevent them from showing up on the same page"
 msgstr "Du solltest nicht mehr als eine Fancybox gleichzeitig auf einer Seite haben. Layer für verschiedene Seiten kannst du über die Anzeigebedingungen steuern."

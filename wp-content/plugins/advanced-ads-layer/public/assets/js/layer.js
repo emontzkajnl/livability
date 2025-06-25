@@ -23,7 +23,7 @@ if ( ! advanced_ads_layer_cache_busting ) {
 
             advads_items.conditions[banner_id] = advads_items.conditions[banner_id] || {};
 
-            advads_layer_center_if_not_sticky ( banner )
+            // advads_layer_center_if_not_sticky ( banner )
 
             if (banner.hasClass('advads-effect') ) {
                 advads_layer_gather_effects(banner_id);
@@ -39,7 +39,7 @@ if ( ! advanced_ads_layer_cache_busting ) {
             if (banner.hasClass(advanced_ads_layer_settings.layer_class + '-onload')) {
                 advads_items.conditions[banner_id].scrolloffset = true;
                 advads_check_item_conditions(banner_id);
-            // exit popup (if the user leaves the page) 
+            // exit popup (if the user leaves the page)
             } else if (banner.hasClass(advanced_ads_layer_settings.layer_class + '-exit')) {
                     ouibounce(banner[0], {
                     // the modal will fire any time the page is reloaded, for the same user
@@ -140,8 +140,7 @@ var layers = function() {
 if (typeof advads !== 'undefined' && typeof advads.privacy.dispatch_event !== 'undefined') {
     document.addEventListener('advanced_ads_privacy', function (event) {
         if (
-            event.detail.previousState === 'unknown'
-            && (event.detail.state === 'accepted' || event.detail.state === 'not_needed')
+            (event.detail.state === 'accepted' || event.detail.state === 'not_needed')
             && window.advanced_ads_layer_settings.placements !== null
         ) {
             window.advanced_ads_layer_settings.placements.forEach(function (value) {
@@ -170,7 +169,7 @@ function advads_layer_center_if_not_sticky( $ad ) {
 	var top = ( jQuery( window ).height() - ad.height() ) / 2;
 	ad.css('left', left);
 	ad.css('top', top);
-	ad.css('position', 'fixed'); 
+	ad.css('position', 'fixed');
 	*/
 
 	var width = parseInt($ad.attr('data-width'), 10);
@@ -273,7 +272,7 @@ function can_remove_background(item) {
 				return false;
 			//}
 		}
-	});	
+	});
 	return remove;
 }
 
@@ -299,81 +298,97 @@ function advads_check_item_conditions(id) {
 
     if ( display ) {
         advads_items.showed.push(id);
-		
+
 		item.trigger( advanced_ads_layer_settings.layer_class + '-trigger' );
-		
+
         if ( item.hasClass('use-fancybox') ) {
             fancybox_display (id);
         } else {
             var ad = jQuery('#' + id);
 
-            var position = jQuery(ad).attr('data-position');
-            var width = parseInt( ad.attr( 'data-width' ), 10 );
+			// responsive CSS as we don't have CSS file.
+			switch( ad.attr('data-position') ) {
+				case 'topcenter':
+				case 'topright':
+				case 'center':
+				case 'centerright':
+				case 'bottomright':
+				case 'bottomcenter':
+					if ( ! parseInt( ad.attr( 'data-width' ), 10 ) ) {
+						if ( jQuery( window ).width() > 768 ) {
+							ad.css( 'width', 'auto' );
+						}
+					}
+					break;
+			}
+
+			// TODO: Remove this block after verifying no issues in v2.1 or later.
+
+            /*var width = parseInt( ad.attr( 'data-width' ), 10 );
             var height = parseInt( ad.attr( 'data-height' ), 10 );
             var is_transform_supported = getSupportedTransform();
 
-
-            switch ( position ) {
-                case 'topcenter': 
+            switch ( jQuery(ad).attr('data-position') ) {
+                case 'topcenter':
                     if ( ! width ) {
                         if ( is_transform_supported ) {
                             set_ad_transform(ad, 'translateX(-50%)');
                         } else {
-                            jQuery( ad ).css({ 'left':'0', 'right':'auto', 'top':'0', 'bottom':'auto' });                              
+                            jQuery( ad ).css({ 'left':'0', 'right':'auto', 'top':'0', 'bottom':'auto' });
                         }
                     }
-                    break; 
-                case 'centerleft': 
+                    break;
+                case 'centerleft':
                     if ( ! height ) {
                         if ( is_transform_supported ) {
-                            set_ad_transform(ad, 'translateY(50%)');                            
+                            set_ad_transform(ad, 'translateY(50%)');
                         } else {
-                            jQuery( ad ).css({ 'left':'0', 'right':'auto', 'top':'0', 'bottom':'auto' });                               
+                            jQuery( ad ).css({ 'left':'0', 'right':'auto', 'top':'0', 'bottom':'auto' });
                         }
                     }
-                    break;  
-                case 'center': 
+                    break;
+                case 'center':
                     var transform_property = '';
                     if ( ! height ) {
                         if ( is_transform_supported ) {
                             transform_property += 'translateY(50%) ';
                         } else {
-                            jQuery( ad ).css({ 'top':'0', 'bottom':'auto' });                              
+                            jQuery( ad ).css({ 'top':'0', 'bottom':'auto' });
                         }
                     }
                     if ( ! width ) {
                         if ( is_transform_supported ) {
                             transform_property += 'translateX(-50%) ';
                         } else {
-                            jQuery( ad ).css({ 'left':'0', 'right':'auto' });                              
+                            jQuery( ad ).css({ 'left':'0', 'right':'auto' });
                         }
 
                     }
                     if (transform_property) {
-                        set_ad_transform(ad, transform_property);   
+                        set_ad_transform(ad, transform_property);
                     }
                     break;
-                case 'centerright': 
+                case 'centerright':
                     if ( ! height ) {
                         if ( is_transform_supported ) {
                             set_ad_transform(ad, 'translateY(50%)');
                         } else {
-                            jQuery( ad ).css({ 'left':'0', 'right':'auto', 'top':'0', 'bottom':'auto' });                              
-                        }
-
-                    }
-                    break; 
-                case 'bottomcenter': 
-                    if ( ! width ) {
-                        if ( is_transform_supported ) {
-                            set_ad_transform(ad, 'translateX(-50%)');
-                        } else {
-                            jQuery( ad ).css({ 'left':'0', 'right':'auto', 'top':'0', 'bottom':'auto' });                              
+                            jQuery( ad ).css({ 'left':'0', 'right':'auto', 'top':'0', 'bottom':'auto' });
                         }
 
                     }
                     break;
-            }
+                case 'bottomcenter':
+                    if ( ! width ) {
+                        if ( is_transform_supported ) {
+                            set_ad_transform(ad, 'translateX(-50%)');
+                        } else {
+                            jQuery( ad ).css({ 'left':'0', 'right':'auto', 'top':'0', 'bottom':'auto' });
+                        }
+
+                    }
+                    break;
+            } */
 
             advads_layer_call_display_callbacks( id );
 
@@ -382,8 +397,8 @@ function advads_check_item_conditions(id) {
             } else {
                 var callback = window[advads_items.display_effect_callbacks[id]];
                 callback(id);
-            }         
-        }       
+            }
+        }
     }
 }
 
@@ -409,7 +424,7 @@ function fancybox_display(id) {
             if ( typeof advads_items.close_functions[ id ] === 'function' ) {
                 advads_items.close_functions[ id ]();
             }
-        },        
+        },
 		// Once the content is displayed.
 		'onComplete': function() {
 			advads_layer_call_display_callbacks( id );
@@ -421,13 +436,13 @@ function fancybox_display(id) {
     } else {
         var callback = advads_items.display_effect_callbacks[id];
         switch ( callback ) {
-            case 'advads_display_effect_fadein': 
-                settings['transitionIn'] = 'fade'; 
+            case 'advads_display_effect_fadein':
+                settings['transitionIn'] = 'fade';
                 break;
-            case 'advads_display_effect_show': 
-                settings['transitionIn'] = 'elastic'; 
-                break;            
-            default: 
+            case 'advads_display_effect_show':
+                settings['transitionIn'] = 'elastic';
+                break;
+            default:
                 settings['transitionIn'] = 'none';
         }
     }
@@ -438,7 +453,7 @@ function fancybox_display(id) {
 
     if ( ! banner.hasClass('advads-close') ) {
         settings['showCloseButton'] = false;
-    }    
+    }
     // extract duration of the transitionIn effect
     var speedIn = advads_extract_duration_from_class(banner);
     settings['speedIn'] = ( speedIn ) ? speedIn : 0;
@@ -447,37 +462,37 @@ function fancybox_display(id) {
     // css for Fancybox
     var output_css = '#fancybox-close { right: -15px; }';
     output_css += '#fancybox-loading, #fancybox-loading div, #fancybox-overlay, #fancybox-wrap, #fancybox-wrap div {';
-    output_css += '-webkit-box-sizing: content-box !important; -moz-box-sizing: content-box !important; box-sizing: content-box !important; }';    
+    output_css += '-webkit-box-sizing: content-box !important; -moz-box-sizing: content-box !important; box-sizing: content-box !important; }';
 
     switch ( position ) {
-        case 'topleft': 
+        case 'topleft':
             output_css += '#fancybox-wrap { position: fixed; bottom: auto !important; top: 0px !important; right: auto !important; left: 0px !important; }';
-            break;  
-        case 'topcenter': 
+            break;
+        case 'topcenter':
             output_css += '#fancybox-wrap { position: fixed; bottom: auto !important; top: 0px !important; }';
-            break; 
-        case 'topright': 
+            break;
+        case 'topright':
             output_css += '#fancybox-wrap { position: fixed; bottom: auto !important; top: 0px !important; right: 0px !important; left: auto !important; }';
             break;
-        case 'centerleft': 
+        case 'centerleft':
             output_css += '#fancybox-wrap { left: 0px !important; right: auto !important; }';
-            break;    
-        case 'center': 
-            break;  
-        case 'centerright': 
+            break;
+        case 'center':
+            break;
+        case 'centerright':
             output_css += '#fancybox-wrap { right: 0px !important; left: auto !important; }';
-            break;    
-        case 'bottomleft': 
+            break;
+        case 'bottomleft':
             output_css += '#fancybox-wrap { position: fixed; bottom: 0px !important; top: auto !important; right: auto !important; left: 0px !important; }';
-            break;                                                                                   
-        case 'bottomcenter': 
+            break;
+        case 'bottomcenter':
             output_css += '#fancybox-wrap { position: fixed; bottom: 0px !important; top: auto !important; }';
             break;
-        case 'bottomright': 
+        case 'bottomright':
             output_css += '#fancybox-wrap { position: fixed; bottom: 0px !important; top: auto !important; right: 0px !important; left: auto !important; }';
             break;
-    }  
-        
+    }
+
 
     jQuery('#' + advanced_ads_layer_settings.layer_class + '-custom-css').html(output_css);
 
@@ -619,7 +634,7 @@ function advads_display_effect_slide(id) {
 
 /**
  * check, if css transform is supported by user's browser
- * 
+ *
  * [http://stackoverflow.com/a/12625986]
  */
 function getSupportedTransform() {
@@ -643,7 +658,7 @@ function set_ad_transform( ad, transform_properties ) {
         '-webkit-transform': transform_properties,
         '-moz-transform': transform_properties,
         'transform': transform_properties
-    }); 
+    });
 }
 
 /**
@@ -673,6 +688,33 @@ function advads_layer_close_items() {
 		}
 	}
 }
+
+/**
+ * Close an item if it contains a GAM ad that did not fill the space.
+ */
+document.addEventListener( 'aagam_empty_slot', function ( ev ) {
+    const div = document.getElementById( ev.detail );
+    if ( ! div ) {
+        return;
+    }
+
+    const layer = div.closest( '.' + document.body.classList.value.split( 'aa-prefix-' )[1].split( ' ' )[0] + 'layer' );
+
+    if ( ! layer ) {
+        return;
+    }
+
+    if ( typeof advads_items.close_functions[layer.id] === 'function' ) {
+        advads_layer_close_item( layer.id );
+    } else {
+        let interval = setInterval( function () {
+            if ( typeof advads_items.close_functions[layer.id] === 'function' ) {
+                advads_layer_close_item( layer.id );
+                clearInterval( interval );
+            }
+        }, 750 );
+    }
+} );
 
 //https://github.com/tonai/jquery-onend
 !function(a){"function"==typeof define&&define.amd?define(["jquery"],a):"object"==typeof exports?module.exports=a(require("jquery")):a(jQuery)}(function(a){a.fn.onEnd=function(){var a,b=Array.prototype.slice.call(arguments),c=b.pop(),d=b.pop(),e=function(){var b=Array.prototype.slice.call(arguments);clearTimeout(a),a=setTimeout(function(){d.apply(this,b)}.bind(this),c)};e.guid=d.guid||(d.guid=jQuery.guid++),b.push(e),this.on.apply(this,b)}});

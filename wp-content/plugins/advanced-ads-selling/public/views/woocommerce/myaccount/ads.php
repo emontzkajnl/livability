@@ -1,4 +1,6 @@
-<?php
+<?php // phpcs:ignoreFile
+
+use AdvancedAds\Tracking\Public_Ad;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -25,10 +27,8 @@ $customer_orders = Advanced_Ads_Selling_Order::get_customer_orders( $customer_id
 	if ( empty( $customer_orders ) ) {
 		esc_html_e( 'No orders found', 'advanced-ads-selling' );
 	} else {
-		foreach ( $customer_orders as $order_key => $order_values ) {
-			$order = wc_get_order( $order_values->ID );
-
-			if ( Advanced_Ads_Selling_Order::has_ads( $order_values->ID ) ) {
+		foreach ( $customer_orders as $order_key => $order ) {
+			if ( Advanced_Ads_Selling_Order::has_ads( $order->get_id() ) ) {
 				foreach ( $order->get_items() as $item_id => $item ) {
 					$item_id      = $item->get_id();
 					$product_name = $item->get_name();
@@ -36,9 +36,8 @@ $customer_orders = Advanced_Ads_Selling_Order::get_customer_orders( $customer_id
 
 					$ad_id = Advanced_Ads_Selling_Order::order_item_id_to_ad_id( $item_id );
 
-					if ( class_exists( 'Advanced_Ads_Tracking_Admin' ) && defined( 'AAT_VERSION' ) && version_compare( AAT_VERSION, '1.8.18', '>=' ) &&
-					     method_exists( Advanced_Ads_Tracking_Admin::get_instance(), 'is_stats_option_saved' ) &&
-					     method_exists( Advanced_Ads_Tracking_Admin::get_instance(), 'get_public_link' ) ) {
+					if ( class_exists( Public_Ad::class ) ) {
+						$public_ad = new Public_Ad( $ad_id );
 						?>
 						<tr>
 							<td>
@@ -46,9 +45,9 @@ $customer_orders = Advanced_Ads_Selling_Order::get_customer_orders( $customer_id
 							</td>
 							<td>
 								<?php
-								if ( Advanced_Ads_Tracking_Admin::get_instance()->is_stats_option_saved( $ad_id ) ) :
+								if ( $public_ad->has_tracking() ) :
 									?>
-									<a style="text-decoration: none; border-bottom: 0;" href="<?php echo esc_url( Advanced_Ads_Tracking_Admin::get_instance()->get_public_link( $ad_id ) ); ?>">
+									<a style="text-decoration: none; border-bottom: 0;" href="<?php echo esc_url( $public_ad->get_url() ); ?>">
 										<?php esc_html_e( 'Link', 'advanced-ads-selling' ); ?>
 									</a>
 								<?php endif; ?>

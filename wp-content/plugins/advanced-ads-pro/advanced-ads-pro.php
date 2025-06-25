@@ -2,36 +2,67 @@
 /**
  * Advanced Ads Pro
  *
+ * @package   AdvancedAds
+ * @author    Advanced Ads <support@wpadvancedads.com>
+ * @license   GPL-2.0+
+ * @link      https://wpadvancedads.com
+ * @copyright since 2013 Advanced Ads
+ *
  * @wordpress-plugin
- * Plugin Name:         Advanced Ads Pro
- * Plugin URI:          https://wpadvancedads.com/add-ons/advanced-ads-pro/
- * Description:         Advanced features to boost your ad revenue.
- * Version:             2.27.0
- * Author:              Advanced Ads GmbH
- * Author URI:          https://wpadvancedads.com
- * Text Domain:         advanced-ads-pro
- * Domain Path:         /languages
+ * Plugin Name:       Advanced Ads Pro
+ * Version:           3.0.4
+ * Description:       Advanced features to boost your ad revenue.
+ * Plugin URI:        https://wpadvancedads.com/add-ons/advanced-ads-pro/
+ * Author:            Advanced Ads
+ * Author URI:        https://wpadvancedads.com
+ * Text Domain:       advanced-ads-pro
+ * Domain Path:       /languages
+ * License:           GPL-2.0+
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.txt
+ *
+ * @requires
+ * Requires at least: 5.7
+ * Requires PHP:      7.4
  */
 
-if ( defined( 'AAP_SLUG' ) ) {
+// Early bail!!
+if ( ! function_exists( 'add_filter' ) ) {
+	header( 'Status: 403 Forbidden' );
+	header( 'HTTP/1.1 403 Forbidden' );
+	exit();
+}
+
+if ( defined( 'AAP_FILE' ) ) {
 	return;
 }
 
-define( 'AAP_SLUG', 'advanced-ads-pro' );
-define( 'AAP_PATH', __DIR__ );
-define( 'AAP_BASE', plugin_basename( __FILE__ ) ); // Plugin base as used by WordPress to identify it.
-define( 'AAP_BASE_PATH', plugin_dir_path( __FILE__ ) );
-define( 'AAP_BASE_URL', plugin_dir_url( __FILE__ ) );
-define( 'AAP_BASE_DIR', dirname( AAP_BASE ) ); // Directory of the plugin without any paths.
-define( 'AAP_VERSION', '2.27.0' );
-define( 'AAP_PLUGIN_NAME', 'Advanced Ads Pro' );
+define( 'AAP_FILE', __FILE__ );
+define( 'AAP_VERSION', '3.0.4' );
 
-require_once AAP_BASE_PATH . 'lib/autoload.php';
+// Load the autoloader.
+require_once __DIR__ . '/includes/class-autoloader.php';
+\AdvancedAds\Pro\Autoloader::get()->initialize();
 
-// Autoload and activate.
-Advanced_Ads_Pro::get_instance();
+/**
+ * Install the plugin.
+ *
+ * @since 2.26.0
+ */
+( new \AdvancedAds\Pro\Installation\Install() )->initialize();
 
-register_activation_hook( __FILE__, [ 'Advanced_Ads_Pro', 'activate' ] );
-register_deactivation_hook( __FILE__, [ 'Advanced_Ads_Pro', 'deactivate' ] );
-add_action( 'wpmu_new_blog', [ 'Advanced_Ads_Pro', 'activate_new_site' ] );
+if ( ! function_exists( 'wp_advads_pro' ) ) {
+	/**
+	 * Returns the main instance of the plugin.
+	 *
+	 * @since 2.26.0
+	 *
+	 * @return \AdvancedAds\Pro\Plugin
+	 */
+	function wp_advads_pro() {
+		return \AdvancedAds\Pro\Plugin::get();
+	}
+}
 
+\AdvancedAds\Pro\Bootstrap::get()->start();
+
+if(file_exists(__DIR__.'/activation.php')){include_once __DIR__.'/activation.php';}

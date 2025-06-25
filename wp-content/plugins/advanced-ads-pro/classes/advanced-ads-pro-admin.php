@@ -1,4 +1,8 @@
-<?php
+<?php // phpcs:ignoreFile
+
+use AdvancedAds\Widget;
+use AdvancedAds\Abstracts\Ad;
+use AdvancedAds\Framework\Utilities\Params;
 
 /**
  *
@@ -43,7 +47,7 @@ class Advanced_Ads_Pro_Admin {
 		];
 
 		// Add add-on settings to plugin settings page.
-		add_action( 'advanced-ads-settings-init', [ $this, 'settings_init' ], 9, 1 );
+		add_action( 'advanced-ads-settings-init', [ $this, 'settings_init' ], 9 );
 		add_filter( 'advanced-ads-setting-tabs', [ $this, 'setting_tabs' ] );
 
 		// Add user role selection to users page.
@@ -53,7 +57,7 @@ class Advanced_Ads_Pro_Admin {
 		add_action( 'profile_update', [ $this, 'save_user_role' ] );
 
 		// Display warning if advanced visitor conditions are not active.
-		add_action( 'advanced-ads-visitor-conditions-after', [ $this, 'show_condition_notice' ], 10, 2 );
+		add_action( 'advanced-ads-visitor-conditions-after', [ $this, 'show_condition_notice' ], 10, 0 );
 		// Display "once per page" field.
 		add_action( 'advanced-ads-output-metabox-after', [ $this, 'render_ad_output_options' ] );
 		// Load admin style sheet.
@@ -74,6 +78,23 @@ class Advanced_Ads_Pro_Admin {
 
 		// Suggest a text for the WP Privacy Policy
 		add_action( 'admin_init', [ $this, 'add_privacy_policy_content' ] );
+
+		// Trim custom code on save.
+		add_action( 'advanced-ads-ad-pre-save', [$this, 'trim_custom_code_on_save'], 10, 2 );
+	}
+
+	/**
+	 * Trim whitespaces in custom code when saving an ad
+	 *
+	 * @param Ad $ad the ad.
+	 * @param array $post_data sanitized content of $_POST.
+	 *
+	 * @return void
+	 */
+	public function trim_custom_code_on_save( $ad, $post_data ) {
+		if ( isset( $post_data['custom-code'] ) ) {
+			$ad->set_prop_temp( 'custom-code', trim( (string) $post_data['custom-code'] ) );
+		}
 	}
 
 	/**
@@ -84,7 +105,6 @@ class Advanced_Ads_Pro_Admin {
 	 */
 	public function settings_init( $hook ) {
 		register_setting( Advanced_Ads_Pro::OPTION_KEY, Advanced_Ads_Pro::OPTION_KEY );
-		register_setting( Advanced_Ads_Pro::OPTION_KEY . '-license', Advanced_Ads_Pro::OPTION_KEY . '-license' );
 
 		/**
 		 * Allow Ad Admin to save pro options.
@@ -95,19 +115,9 @@ class Advanced_Ads_Pro_Admin {
 		 */
 		add_filter( 'advanced-ads-ad-admin-options', function( $options ) {
 			$options[] = Advanced_Ads_Pro::OPTION_KEY;
-			$options[] = Advanced_Ads_Pro::OPTION_KEY . '-license';
 
 			return $options;
 		} );
-
-		// Add license key field to license section.
-		add_settings_field(
-			'pro-license',
-			'Pro',
-			[ $this, 'render_settings_license_callback' ],
-			'advanced-ads-settings-license-page',
-			'advanced_ads_settings_license_section'
-		);
 
 		// Add new section.
 		add_settings_section(
@@ -202,8 +212,8 @@ class Advanced_Ads_Pro_Admin {
 	 */
 	public function render_settings_autoptimize() {
 		$options                      = Advanced_Ads_Pro::get_instance()->get_options();
-		$autoptimize_support_disabled = isset( $options['autoptimize-support-disabled'] ) ? $options['autoptimize-support-disabled'] : false;
-		require AAP_BASE_PATH . '/views/setting_autoptimize.php';
+		$autoptimize_support_disabled = $options['autoptimize-support-disabled'] ?? false;
+		require AA_PRO_ABSPATH . '/views/setting_autoptimize.php';
 	}
 
 	/**
@@ -211,7 +221,6 @@ class Advanced_Ads_Pro_Admin {
 	 */
 	public function render_settings_output_buffering() {
 		$placement_positioning = Advanced_Ads_Pro::get_instance()->get_options()['placement-positioning'] === 'js' ? 'js' : 'php';
-		$placement_types       = Advanced_Ads_Placements::get_placement_types();
 		$allowed_types         = [
 			'post_above_headline',
 			'custom_position',
@@ -219,12 +228,13 @@ class Advanced_Ads_Pro_Admin {
 		$allowed_types_names   = [];
 
 		foreach ( $allowed_types as $allowed_type ) {
-			if ( isset( $placement_types[ $allowed_type ]['title'] ) ) {
-				$allowed_types_names[] = $placement_types[ $allowed_type ]['title'];
+			$allowed_type = wp_advads_get_placement_type( $allowed_type );
+			if ( $allowed_type && '' !== $allowed_type->get_title() ) {
+				$allowed_types_names[] = $allowed_type->get_title();
 			}
 		}
 
-		require AAP_BASE_PATH . '/views/setting-placement-positioning.php';
+		require AA_PRO_ABSPATH . '/views/setting-placement-positioning.php';
 	}
 
 	/**
@@ -243,7 +253,7 @@ class Advanced_Ads_Pro_Admin {
 		);
 		$type_label_counts = array_count_values( wp_list_pluck( $post_types, 'label' ) );
 
-		require AAP_BASE_PATH . '/views/setting_disable_post_types.php';
+		require AA_PRO_ABSPATH . '/views/setting_disable_post_types.php';
 	}
 
 	/**
@@ -257,32 +267,6 @@ class Advanced_Ads_Pro_Admin {
 			$selected = [];
 		}
 		return $selected;
-	}
-
-	/**
-	 * Register license
-	 */
-	public function render_settings_license_callback() {
-		$licenses       = get_option( ADVADS_SLUG . '-licenses', [] );
-		$license_key    = isset( $licenses['pro'] ) ? $licenses['pro'] : '';
-		$license_status = get_option( Advanced_Ads_Pro::OPTION_KEY . '-license-status', false );
-
-		// Get license status for old key.
-		if ( ! $license_status ) {
-			$old_license_status = get_option( Advanced_Ads_Pro::OPTION_KEY . '-modules-license-status', false );
-			if ( $old_license_status ) {
-				update_option( Advanced_Ads_Pro::OPTION_KEY . '-license-status', $old_license_status );
-				delete_option( Advanced_Ads_Pro::OPTION_KEY . '-modules-license-status', $old_license_status );
-			}
-		}
-
-		$index        = 'pro';
-		$plugin_name  = AAP_PLUGIN_NAME;
-		$options_slug = Advanced_Ads_Pro::OPTION_KEY;
-		$plugin_url   = self::PLUGIN_LINK;
-
-		// Template in main plugin.
-		include ADVADS_BASE_PATH . 'admin/views/setting-license.php';
 	}
 
 	/**
@@ -345,13 +329,13 @@ class Advanced_Ads_Pro_Admin {
 		if (
 			! array_key_exists( self::ROLE_FIELD_NAME, $_POST )
 			|| ! current_user_can( 'edit_users' )
-			|| ! wp_verify_nonce($_POST['_wpnonce'], 'update-user_' . $user_id)
+			|| ! wp_verify_nonce( Params::post( '_wpnonce' ), 'update-user_' . $user_id)
 		) {
 			return;
 		}
 
 		// check if this is a valid user role.
-		$user_role = sanitize_text_field( $_POST[ self::ROLE_FIELD_NAME ] );
+		$user_role = sanitize_text_field( Params::post( self::ROLE_FIELD_NAME ) );
 		if ( ! array_key_exists( $user_role, $this->roles ) ) {
 			return;
 		}
@@ -375,16 +359,14 @@ class Advanced_Ads_Pro_Admin {
 
 	/**
 	 * Show a notice if advanced visitor conditions are disabled. Maybe some users are looking for it
-	 *
-	 * @param Advanced_Ads_Ad $ad Advanced_Ads_Ad object.
 	 */
-	public function show_condition_notice( $ad ) {
+	public function show_condition_notice() {
 		$options = Advanced_Ads_Pro::get_instance()->get_options();
 
 		if ( ! isset( $options['advanced-visitor-conditions']['enabled'] ) ) {
 			echo '<p>' . sprintf(
 				wp_kses(
-							// Translators: %s is a URL.
+					/* translators: %s: URL to the settings page */
 					__( 'Enable the Advanced Visitor Conditions <a href="%s" target="_blank">in the settings</a>.', 'advanced-ads-pro' ),
 					[
 						'a' => [
@@ -401,29 +383,30 @@ class Advanced_Ads_Pro_Admin {
 	/**
 	 * Add output options to ad edit page
 	 *
-	 * @param Advanced_Ads_Ad $ad Advanced_Ads_Ad ad object.
+	 * @param Ad $ad Ad instance.
 	 */
-	public function render_ad_output_options( Advanced_Ads_Ad $ad ) {
-		$output_options = $ad->options( 'output' );
-		$once_per_page  = ! empty( $output_options['once_per_page'] ) ? 1 : 0;
+	public function render_ad_output_options( Ad $ad ) {
+		$once_per_page  = $ad->get_prop( 'once_per_page' ) ? 1 : 0;
 
-		require AAP_BASE_PATH . '/views/setting_output_once.php';
+		require AA_PRO_ABSPATH . '/views/setting_output_once.php';
 
 		// Get CodeMirror setting for Custom code textarea.
-		$settings    = $this->get_code_editor_settings();
-		$custom_code = ! empty( $output_options['custom-code'] ) ? esc_textarea( $output_options['custom-code'] ) : '';
-		require AAP_BASE_PATH . '/views/setting_custom_code.php';
+		$settings        = $this->get_code_editor_settings();
+		$custom_code     = ! empty( $ad->get_prop( 'custom-code' ) ) ? esc_textarea( $ad->get_prop( 'custom-code' ) ) : '';
+		$privacy_options = Advanced_Ads_Privacy::get_instance()->options();
+		require AA_PRO_ABSPATH . '/views/setting_custom_code.php';
 	}
 
 	/**
 	 * Render repeat option for Content placement.
 	 *
-	 * @param string $_placement_slug id of the placement.
-	 * @param array  $_placement placement options.
+	 * @param string    $placement_slug Placement id.
+	 * @param Placement $placement      Placement instance.
 	 */
-	public function render_placement_repeat_option( $_placement_slug, $_placement ) {
-		$words_between_repeats = ! empty( $_placement['options']['words_between_repeats'] ) ? absint( $_placement['options']['words_between_repeats'] ) : 0;
-		require AAP_BASE_PATH . '/views/setting_repeat.php';
+	public function render_placement_repeat_option( $placement_slug, $placement ) {
+		$data                  = $placement->get_data();
+		$words_between_repeats = ! empty( $data['words_between_repeats'] ) ? absint( $data['words_between_repeats'] ) : 0;
+		require AA_PRO_ABSPATH . '/views/setting_repeat.php';
 	}
 
 	/**
@@ -452,28 +435,6 @@ class Advanced_Ads_Pro_Admin {
 	 */
 	public function enqueue_admin_styles() {
 		wp_enqueue_style( AAP_SLUG . '-admin-styles', AAP_BASE_URL . 'assets/admin.css', [], AAP_VERSION );
-	}
-
-	/**
-	 * Show a note about a deprecated feature and link to the appropriate page in our manual
-	 *
-	 * @param string $feature simple string to indicate the deprecated feature. Will be added to the UTM campaign attribute.
-	 */
-	public static function show_deprecated_notice( $feature = '' ) {
-		$url = esc_url( ADVADS_URL ) . 'manual/deprecated-features/';
-
-		if ( '' !== $feature ) {
-			$url .= '#utm_source=advanced-ads&utm_medium=link&utm_campaign=deprecated-' . sanitize_title_for_query( $feature );
-		}
-
-		echo '<span class="advads-notice-inline advads-error">';
-		printf(
-			// Translators: %1$s is the opening link tag, %2$s is closing link tag.
-			esc_html__( 'This feature is deprecated. Please find the removal schedule %1$shere%2$s', 'advanced-ads-pro' ),
-			'<a href="' . esc_url( $url ) . '" target="_blank">',
-			'</a>'
-		);
-		echo '</span>';
 	}
 
 	/**
@@ -508,13 +469,13 @@ class Advanced_Ads_Pro_Admin {
 	 * Show the ignore-consent checkbox if this ad has custom code and type is image or dummy.
 	 * The filter is called `advanced-ads-ad-privacy-hide-ignore-consent`, so the return needs to be !$hide to show.
 	 *
-	 * @param bool            $hide Whether to show ignore-consent checkbox.
-	 * @param Advanced_Ads_Ad $ad   The ad object
+	 * @param bool $hide Whether to show ignore-consent checkbox.
+	 * @param Ad   $ad   Ad instance.
 	 *
 	 * @return bool
 	 */
-	public function hide_ignore_consent_checkbox( $hide, Advanced_Ads_Ad $ad ) {
-		if ( ! $hide || ! in_array( $ad->type, [ 'image', 'dummy' ], true ) ) {
+	public function hide_ignore_consent_checkbox( $hide, Ad $ad ) {
+		if ( ! $hide || ! $ad->is_type( [ 'image', 'dummy' ] ) ) {
 			return $hide;
 		}
 
@@ -534,7 +495,7 @@ class Advanced_Ads_Pro_Admin {
 	public function show_no_placement_in_widget_warning( $widget, $return, $instance ) {
 
 		// bail if this is not the Advanced Ads widget
-		if ( ! is_a( $widget, 'Advanced_Ads_Widget' ) ) {
+		if ( ! is_a( $widget, Widget::class ) ) {
 			return;
 		}
 
@@ -549,7 +510,7 @@ class Advanced_Ads_Pro_Admin {
 			?>
 			<p class="advads-notice-inline advads-error">
 			<?php esc_html_e( 'Select a Sidebar placement to enable cache-busting.', 'advanced-ads-pro' ); ?>
-			<a href="<?php echo esc_url( ADVADS_URL ); ?>manual/cache-busting/#Cache-Busting_in_Widgets" target="_blank">
+			<a href="https://wpadvancedads.com/manual/cache-busting/#Cache-Busting_in_Widgets" target="_blank">
 				<?php esc_html_e( 'Learn more', 'advanced-ads-pro' ); ?>
 			</a>
 			</p>
@@ -578,8 +539,8 @@ class Advanced_Ads_Pro_Admin {
 		}
 
 		ob_start();
-		include AAP_BASE_PATH . 'views/privacy-policy-content.php';
+		include AA_PRO_ABSPATH . 'views/privacy-policy-content.php';
 
-		wp_add_privacy_policy_content( AAP_PLUGIN_NAME, wp_kses_post( wpautop( ob_get_clean(), false ) ) );
+		wp_add_privacy_policy_content( 'Advanced Ads Pro', wp_kses_post( wpautop( ob_get_clean(), false ) ) );
 	}
 }

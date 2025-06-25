@@ -365,14 +365,24 @@
 
 					cval['exp'] = expires;
 					advads.set_cookie_sec( cname_vc + '_' + ID, JSON.stringify( cval, 'false', false ), expirySecs, PATH, DOMAIN );
+					if ( 1 === clickLimits[Object.keys( clickLimits )[0]] ) {
+						document.querySelectorAll( '[data-cfpw="' + ID + '"]' ).forEach( function ( node ) {
+							node.remove();
+						} );
+						this.removeEmptyWrappers();
+					}
 				}
+			}
 
+			if ( '1' !== advadsCfpInfo.cfpEnabled ) {
+				return;
 			}
 
 			// use the module wide CFP cookie
 			if ( advads.cookie_exists( cname + '_' + ID ) ) {
 				cookieVisitor = jsonDecode( advads.get_cookie( cname + '_' + ID ) );
 			}
+
 			if ( cookieVisitor ) {
 				// Cookie already exists, increment the counter (keep expiration time)
 				cookieVisitor.count = parseInt( cookieVisitor.count, 10 ) + 1;
@@ -380,7 +390,7 @@
 				var expiry = new Date( cookieVisitor.exp );
 				var expirySecs = ( expiry.getTime() - now.getTime() ) / 1000;
 				advads.set_cookie_sec( cname + '_' + ID, JSON.stringify( cookieVisitor, 'false', false ), expirySecs, PATH, DOMAIN );
-				if ( advadsCfpInfo.cfpClickLimit <= cookieVisitor.count && typeof advadsCfpInfo.cfpBan !== 'undefined' ) {
+				if ( parseInt( advadsCfpInfo.cfpClickLimit,10 ) <= cookieVisitor.count ) {
 					// CFP module enabled - ban this visitor
 					that._banVisitor();
 				}
@@ -388,11 +398,11 @@
 				// create a new cookie
 				var d = new Date();
 				var now = new Date();
-				d.setTime( d.getTime() + ( advadsCfpInfo.cfpExpHours * 60 * 60 * 1000 ) );
+				d.setTime( d.getTime() + ( parseInt( advadsCfpInfo.cfpExpHours, 10 ) * 60 * 60 * 1000 ) );
 				var expires = "expires="+ d.toUTCString();
 				var expirySecs = ( d.getTime() - now.getTime() ) / 1000;
 				advads.set_cookie_sec( cname + '_' + ID, '{"count":1,"exp":"' + expires + '"}', expirySecs, PATH, DOMAIN );
-				if ( advadsCfpInfo.cfpClickLimit === 1 && 'undefined' != typeof advadsCfpInfo.cfpBan ) {
+				if ( parseInt( advadsCfpInfo.cfpClickLimit, 10 ) === 1 ) {
 					// CFP module enabled - ban this visitor
 					that._banVisitor();
 				}
@@ -496,7 +506,7 @@ function advanced_ads_resize_window() {
 
 // Save width in cookie.
 function advanced_ads_save_width( width ) {
-	if ( ! window.advanced_ads_responsive || window.advads === undefined ) {
+	if ( window.advads === undefined ) {
 		return;
 	}
 	var cookieValue = advads.get_cookie( 'advanced_ads_visitor' );
