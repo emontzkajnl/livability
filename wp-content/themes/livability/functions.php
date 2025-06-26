@@ -2079,3 +2079,12 @@ function load_tn_mym_posts() {
 
 add_action('wp_ajax_loadtnmymposts', 'load_tn_mym_posts');
 add_action('wp_ajax_nopriv_loadtnmymposts', 'load_tn_mym_posts');
+
+add_filter( 'wpseo_canonical', 'my_custom_canonical_no_slash', 999 ); // High priority
+function my_custom_canonical_no_slash( $canonical_url ) {
+    // Ensure it's not the homepage or a root URL where a slash is often default and harmless
+    if ( ! empty( $canonical_url ) && $canonical_url !== home_url('/') ) {
+        return untrailingslashit( $canonical_url );
+    }
+    return $canonical_url;
+}
