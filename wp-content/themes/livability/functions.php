@@ -2088,3 +2088,28 @@ function my_custom_canonical_no_slash( $canonical_url ) {
     }
     return $canonical_url;
 }
+
+function wp_rocket_add_purge_posts_to_author() {
+	$role = get_role('advanced_ads_admin');
+	$role->add_cap('rocket_purge_posts', true);
+	$role->add_cap('rocket_purge_cache', true); // Required for purge functionality
+	}
+add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
+
+// testing filter
+// add_filter('acf/fields/post_object/query', 'my_acf_fields_post_object_query', 10, 3);
+// function my_acf_fields_post_object_query( $args, $field, $post_id ) {
+
+    // Show 40 posts per AJAX call.
+	// $args['orderby'] = 'date';
+    // $args['order'] = 'DESC';
+	// print_r($args, true);
+    // Restrict results to children of the current post only.
+    // $args['post_parent'] = $post_id;
+// 	$filtering_field_value = get_field( 'curated_posts_1', $post_id ); 
+// 	if ( ! empty( $filtering_field_value ) ) {
+//         $args['s'] = $filtering_field_value;
+//     }
+
+//     return $args;
+// }
