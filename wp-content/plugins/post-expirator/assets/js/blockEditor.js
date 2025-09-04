@@ -310,6 +310,15 @@ var FutureActionPanel = function FutureActionPanel(props) {
     calendarIsVisible = _useSelect.calendarIsVisible,
     hasValidData = _useSelect.hasValidData,
     newStatus = _useSelect.newStatus;
+  var extraData = useSelect(function (select) {
+    return select(props.storeName).getExtraData();
+  }, [props.storeName]);
+  useEffect(function () {
+    if (props.context === 'block-editor' && props.onChangeData) {
+      props.onChangeData('extraData', extraData);
+    }
+  }, [extraData, props.context, props.onChangeData]);
+  var hiddenFields = props.hiddenFields || {};
   var _useState = useState(''),
     _useState2 = _slicedToArray(_useState, 2),
     validationError = _useState2[0],
@@ -595,7 +604,7 @@ var FutureActionPanel = function FutureActionPanel(props) {
     checked: enabled || false,
     onChange: handleEnabledChange,
     className: "future-action-enable-checkbox"
-  })), enabled && /*#__PURE__*/React.createElement(Fragment, null, /*#__PURE__*/React.createElement(PanelRow, {
+  })), enabled && /*#__PURE__*/React.createElement(Fragment, null, !hiddenFields['_expiration-date-type'] && /*#__PURE__*/React.createElement(PanelRow, {
     className: contentPanelClass + ' future-action-full-width'
   }, /*#__PURE__*/React.createElement(SelectControl, {
     label: props.strings.action,
@@ -607,7 +616,7 @@ var FutureActionPanel = function FutureActionPanel(props) {
     fillProps: {
       storeName: props.storeName
     }
-  }), action === 'change-status' && /*#__PURE__*/React.createElement(PanelRow, {
+  }), !hiddenFields['_expiration-date-post-status'] && action === 'change-status' && /*#__PURE__*/React.createElement(PanelRow, {
     className: "new-status"
   }, /*#__PURE__*/React.createElement(SelectControl, {
     label: props.strings.newStatus,
@@ -615,7 +624,7 @@ var FutureActionPanel = function FutureActionPanel(props) {
     value: newStatus,
     onChange: handleNewStatusChange,
     className: "future-action-select-new-status"
-  })), displayTaxonomyField && (isFetchingTerms && /*#__PURE__*/React.createElement(PanelRow, null, /*#__PURE__*/React.createElement(BaseControl, {
+  })), !hiddenFields['_expiration-date-taxonomy'] && displayTaxonomyField && (isFetchingTerms && /*#__PURE__*/React.createElement(PanelRow, null, /*#__PURE__*/React.createElement(BaseControl, {
     label: taxonomyName
   }, "".concat(props.strings.loading, " (").concat(taxonomyName, ")"), /*#__PURE__*/React.createElement(Spinner, null))) || !taxonomy && /*#__PURE__*/React.createElement(PanelRow, null, /*#__PURE__*/React.createElement(BaseControl, {
     label: taxonomyName,
@@ -640,7 +649,7 @@ var FutureActionPanel = function FutureActionPanel(props) {
     onFocus: forceIgnoreAutoSubmitOnEnter,
     __experimentalExpandOnFocus: true,
     __experimentalAutoSelectFirstMatch: true
-  })))), /*#__PURE__*/React.createElement(PanelRow, {
+  })))), !hiddenFields['_expiration-date'] && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(PanelRow, {
     className: datePanelClass
   }, /*#__PURE__*/React.createElement(_ToggleCalendarDatePicker__WEBPACK_IMPORTED_MODULE_1__.ToggleCalendarDatePicker, {
     currentDate: date,
@@ -656,7 +665,7 @@ var FutureActionPanel = function FutureActionPanel(props) {
     className: "future-action-help-text"
   }, /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement("span", {
     className: "dashicons dashicons-info"
-  }), " ", HelpText)), !hasValidData && /*#__PURE__*/React.createElement(PanelRow, null, /*#__PURE__*/React.createElement(BaseControl, {
+  }), " ", HelpText))), !hasValidData && /*#__PURE__*/React.createElement(PanelRow, null, /*#__PURE__*/React.createElement(BaseControl, {
     className: "notice notice-error"
   }, /*#__PURE__*/React.createElement("div", null, validationError))))), /*#__PURE__*/React.createElement(_wordpress_plugins__WEBPACK_IMPORTED_MODULE_2__.PluginArea, {
     scope: "publishpress-future"
@@ -742,14 +751,12 @@ var FutureActionPanelBlockEditor = function FutureActionPanelBlockEditor(props) 
     var newAttribute = {
       'enabled': store.getEnabled()
     };
-    if (newAttribute.enabled) {
-      newAttribute['action'] = store.getAction();
-      newAttribute['newStatus'] = store.getNewStatus();
-      newAttribute['date'] = store.getDate();
-      newAttribute['terms'] = store.getTerms();
-      newAttribute['taxonomy'] = store.getTaxonomy();
-      newAttribute['extraData'] = store.getExtraData();
-    }
+    newAttribute['action'] = store.getAction();
+    newAttribute['newStatus'] = store.getNewStatus();
+    newAttribute['date'] = store.getDate();
+    newAttribute['terms'] = store.getTerms();
+    newAttribute['taxonomy'] = store.getTaxonomy();
+    newAttribute['extraData'] = store.getExtraData();
     editPostAttribute(newAttribute);
   };
   var rawData = select('core/editor').getEditedPostAttribute('publishpress_future_action');
@@ -800,6 +807,7 @@ var FutureActionPanelBlockEditor = function FutureActionPanelBlockEditor(props) 
     strings: props.strings,
     onDataIsValid: onDataIsValid,
     hideCalendarByDefault: props.hideCalendarByDefault,
+    hiddenFields: props.hiddenFields,
     showTitle: false,
     onDataIsInvalid: onDataIsInvalid
   })));
@@ -924,6 +932,7 @@ var FutureActionPanelBulkEdit = function FutureActionPanelBulkEdit(props) {
     startOfWeek: props.startOfWeek,
     storeName: props.storeName,
     hideCalendarByDefault: props.hideCalendarByDefault,
+    hiddenFields: props.hiddenFields,
     showTitle: false,
     strings: props.strings
   }), /*#__PURE__*/React.createElement("input", {
@@ -1053,6 +1062,7 @@ var FutureActionPanelClassicEditor = function FutureActionPanelClassicEditor(pro
     strings: props.strings,
     onDataIsValid: onDataIsValid,
     hideCalendarByDefault: props.hideCalendarByDefault,
+    hiddenFields: props.hiddenFields,
     showTitle: false,
     onDataIsInvalid: onDataIsInvalid
   }));
@@ -1136,6 +1146,7 @@ var FutureActionPanelQuickEdit = function FutureActionPanelQuickEdit(props) {
     strings: props.strings,
     onDataIsValid: onDataIsValid,
     hideCalendarByDefault: props.hideCalendarByDefault,
+    hiddenFields: props.hiddenFields,
     showTitle: true,
     onDataIsInvalid: onDataIsInvalid
   }), /*#__PURE__*/React.createElement("input", {
@@ -1261,6 +1272,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/hooks */ "@wordpress/hooks");
 /* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_hooks__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _DateOffsetPreview__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./DateOffsetPreview */ "./assets/jsx/components/DateOffsetPreview.jsx");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__);
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -1270,6 +1283,7 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 /*
  * Copyright (c) 2025, Ramble Ventures
  */
+
 
 
 
@@ -1342,6 +1356,21 @@ var PostTypeSettingsPanel = function PostTypeSettingsPanel(props) {
     hasPendingValidation = _useState30[0],
     setHasPendingValidation = _useState30[1];
   var offset = expireOffset ? expireOffset : props.settings.globalDefaultExpireOffset;
+  var isPro = props.isPro != "" && props.isPro === "1";
+  var HelpText = function HelpText(props) {
+    return /*#__PURE__*/React.createElement("p", {
+      className: "description"
+    }, props.children);
+  };
+  var FieldRow = function FieldRow(props) {
+    var className = 'publishpress-settings-field-row';
+    if (props.className) {
+      className += ' ' + props.className;
+    }
+    return /*#__PURE__*/React.createElement("div", {
+      className: className
+    }, props.children);
+  };
   var taxonomyRelatedActions = ['category', 'category-add', 'category-remove', 'category-remove-all'];
   var onChangeTaxonomy = function onChangeTaxonomy(value) {
     setPostTypeTaxonomy(value);
@@ -1465,75 +1494,106 @@ var PostTypeSettingsPanel = function PostTypeSettingsPanel(props) {
       label: props.text.fieldAutoEnableLabel,
       onChange: onChangeAutoEnabled
     })));
-    settingsRows.push( /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.SettingRow, {
-      label: props.text.fieldTaxonomy,
-      key: 'expirationdate_taxonomy-' + props.postType
-    }, /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.SelectControl, {
-      name: 'expirationdate_taxonomy-' + props.postType,
-      options: props.taxonomiesList,
-      selected: postTypeTaxonomy,
-      noItemFoundMessage: props.text.noItemsfound,
-      description: props.text.fieldTaxonomyDescription,
-      data: props.postType,
-      onChange: onChangeTaxonomy
-    })));
-    settingsRows.push( /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.SettingRow, {
-      label: props.text.fieldHowToExpire,
-      key: 'expirationdate_expiretype-' + props.postType
-    }, /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.SelectControl, {
-      name: 'expirationdate_expiretype-' + props.postType,
-      className: 'pe-howtoexpire',
-      options: howToExpireList,
-      description: props.text.fieldHowToExpireDescription,
-      selected: settingHowToExpire,
-      onChange: onChangeHowToExpire
-    }), settingHowToExpire === 'change-status' && /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.SelectControl, {
-      name: 'expirationdate_newstatus-' + props.postType,
-      options: props.statusesList,
-      selected: newStatus,
-      onChange: setNewStatus
-    }), props.taxonomiesList.length > 0 && ['category', 'category-add', 'category-remove'].indexOf(settingHowToExpire) > -1 && /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.TokensControl, {
-      label: props.text.fieldTerm,
-      name: 'expirationdate_terms-' + props.postType,
-      options: termOptionsLabels,
-      value: selectedTerms,
-      isLoading: termsSelectIsLoading,
-      onChange: onChangeTerms,
-      description: props.text.fieldTermDescription,
-      maxSuggestions: 1000,
-      expandOnFocus: true,
-      autoSelectFirstMatch: true
-    })));
-    settingsRows.push( /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.SettingRow, {
-      label: props.text.fieldDefaultDateTimeOffset,
-      key: 'expired-custom-date-' + props.postType
-    }, /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.TextControl, {
-      name: 'expired-custom-date-' + props.postType,
-      value: expireOffset,
-      loading: hasPendingValidation,
-      placeholder: props.settings.globalDefaultExpireOffset,
-      description: props.text.fieldDefaultDateTimeOffsetDescription,
-      unescapedDescription: true,
-      onChange: onChangeExpireOffset
-    }), /*#__PURE__*/React.createElement(_DateOffsetPreview__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      offset: offset,
-      label: props.text.datePreview,
-      labelDatePreview: props.text.datePreviewCurrent,
-      labelOffsetPreview: props.text.datePreviewComputed,
-      setValidationErrorCallback: setValidationError,
-      setHasPendingValidationCallback: setHasPendingValidation,
-      setHasValidDataCallback: setHasValidData
-    })));
-    settingsRows.push( /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.SettingRow, {
-      label: props.text.fieldWhoToNotify,
-      key: 'expirationdate_emailnotification-' + props.postType
-    }, /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.TextControl, {
-      name: 'expirationdate_emailnotification-' + props.postType,
-      className: "large-text",
-      value: emailNotification,
-      description: props.text.fieldWhoToNotifyDescription,
-      onChange: onChangeEmailNotification
-    })));
+    if (isAutoEnabled) {
+      settingsRows.push( /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.SettingRow, {
+        label: props.text.fieldTaxonomy,
+        key: 'expirationdate_taxonomy-' + props.postType
+      }, /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.SelectControl, {
+        name: 'expirationdate_taxonomy-' + props.postType,
+        options: props.taxonomiesList,
+        selected: postTypeTaxonomy,
+        noItemFoundMessage: props.text.noItemsfound,
+        description: props.text.fieldTaxonomyDescription,
+        data: props.postType,
+        onChange: onChangeTaxonomy
+      })));
+      settingsRows.push( /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.SettingRow, {
+        label: props.text.fieldHowToExpire,
+        key: 'expirationdate_expiretype-' + props.postType
+      }, /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.SelectControl, {
+        name: 'expirationdate_expiretype-' + props.postType,
+        className: 'pe-howtoexpire',
+        options: howToExpireList,
+        description: props.text.fieldHowToExpireDescription,
+        selected: settingHowToExpire,
+        onChange: onChangeHowToExpire
+      }), settingHowToExpire === 'change-status' && /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.SelectControl, {
+        name: 'expirationdate_newstatus-' + props.postType,
+        options: props.statusesList,
+        selected: newStatus,
+        onChange: setNewStatus
+      }), props.taxonomiesList.length > 0 && ['category', 'category-add', 'category-remove'].indexOf(settingHowToExpire) > -1 && /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.TokensControl, {
+        label: props.text.fieldTerm,
+        name: 'expirationdate_terms-' + props.postType,
+        options: termOptionsLabels,
+        value: selectedTerms,
+        isLoading: termsSelectIsLoading,
+        onChange: onChangeTerms,
+        description: props.text.fieldTermDescription,
+        maxSuggestions: 1000,
+        expandOnFocus: true,
+        autoSelectFirstMatch: true
+      })));
+      settingsRows.push( /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.SettingRow, {
+        label: props.text.fieldDefaultDateTimeOffset,
+        key: 'expired-custom-date-' + props.postType
+      }, /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+        name: 'expired-custom-date-' + props.postType,
+        value: expireOffset,
+        loading: hasPendingValidation,
+        placeholder: props.settings.globalDefaultExpireOffset,
+        description: props.text.fieldDefaultDateTimeOffsetDescription,
+        unescapedDescription: true,
+        onChange: onChangeExpireOffset
+      }), /*#__PURE__*/React.createElement(_DateOffsetPreview__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        offset: offset,
+        label: props.text.datePreview,
+        labelDatePreview: props.text.datePreviewCurrent,
+        labelOffsetPreview: props.text.datePreviewComputed,
+        setValidationErrorCallback: setValidationError,
+        setHasPendingValidationCallback: setHasPendingValidation,
+        setHasValidDataCallback: setHasValidData
+      })));
+      settingsRows.push( /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.SettingRow, {
+        label: props.text.fieldWhoToNotify,
+        key: 'expirationdate_emailnotification-' + props.postType
+      }, /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+        name: 'expirationdate_emailnotification-' + props.postType,
+        className: "large-text",
+        value: emailNotification,
+        description: props.text.fieldWhoToNotifyDescription,
+        onChange: onChangeEmailNotification
+      })));
+    }
+
+    // Add promotional fields for non-pro users
+    if (!isPro) {
+      // Custom statuses promotional field
+      settingsRows.push( /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.SettingRow, {
+        label: props.text.fieldCustomStatuses,
+        key: 'custom-statuses_promo'
+      }, /*#__PURE__*/React.createElement(FieldRow, null, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
+        type: "checkbox",
+        disabled: true
+      }), props.text.fieldCustomStatusesLabel, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Tooltip, {
+        text: props.text.proFeatureTooltip
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "dashicons dashicons-lock pp-pro-loc-icon"
+      })), /*#__PURE__*/React.createElement(HelpText, null, props.text.fieldCustomStatusesDescription)))));
+
+      // Metadata scheduling promotional field
+      settingsRows.push( /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.SettingRow, {
+        label: props.text.fieldMetadataScheduling,
+        key: 'metadata_mapping_promo'
+      }, /*#__PURE__*/React.createElement(FieldRow, null, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
+        type: "checkbox",
+        disabled: true
+      }), props.text.fieldMetadataSchedulingLabel, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Tooltip, {
+        text: props.text.proFeatureTooltip
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "dashicons dashicons-lock pp-pro-loc-icon"
+      }))), /*#__PURE__*/React.createElement(HelpText, null, props.text.fieldMetadataSchedulingDescription))));
+    }
   }
   settingsRows = (0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_3__.applyFilters)('expirationdate_settings_posttype', settingsRows, props, isActive, _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState);
   var fieldSetClassNames = props.isVisible ? 'pe-settings-fieldset' : 'pe-settings-fieldset hidden';
@@ -1588,6 +1648,7 @@ var PostTypesSettingsPanels = function PostTypesSettingsPanels(props) {
     _useState4 = _slicedToArray(_useState3, 2),
     selectedPostType = _useState4[0],
     setSelectedPostType = _useState4[1];
+  var isPro = props.isPro;
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(function () {
     // Get post type from URL on component mount
     var urlParams = new URLSearchParams(window.location.search);
@@ -1605,6 +1666,7 @@ var PostTypesSettingsPanels = function PostTypesSettingsPanels(props) {
     panels.push( /*#__PURE__*/React.createElement(___WEBPACK_IMPORTED_MODULE_0__.PostTypeSettingsPanel, {
       legend: postTypeSettings.label,
       text: props.text,
+      isPro: isPro,
       postType: postType,
       postTypeLabel: postTypeSettings.label,
       settings: postTypeSettings,
@@ -3426,7 +3488,8 @@ var _window$publishpressF = window.publishpressFutureBlockEditorConfig,
   postTypeDefaultConfig = _window$publishpressF.postTypeDefaultConfig,
   defaultDate = _window$publishpressF.defaultDate,
   statusesSelectOptions = _window$publishpressF.statusesSelectOptions,
-  hideCalendarByDefault = _window$publishpressF.hideCalendarByDefault;
+  hideCalendarByDefault = _window$publishpressF.hideCalendarByDefault,
+  hiddenFields = _window$publishpressF.hiddenFields;
 var storeName = 'publishpress-future/future-action';
 var BlockEditorFutureActionPlugin = function BlockEditorFutureActionPlugin() {
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useEffect)(function () {
@@ -3455,7 +3518,8 @@ var BlockEditorFutureActionPlugin = function BlockEditorFutureActionPlugin() {
     strings: strings,
     taxonomyName: taxonomyName,
     postTypeDefaultConfig: postTypeDefaultConfig,
-    hideCalendarByDefault: hideCalendarByDefault
+    hideCalendarByDefault: hideCalendarByDefault,
+    hiddenFields: hiddenFields
   });
 };
 (0,_wordpress_plugins__WEBPACK_IMPORTED_MODULE_3__.registerPlugin)('publishpress-future-action', {

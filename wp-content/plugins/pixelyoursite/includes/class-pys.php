@@ -274,10 +274,13 @@ final class PYS extends Settings implements Plugin {
         if(PYS()->getOption('session_disable')) return;
 
         // Checking if the directory exists and is writable
-        if (!is_admin() && php_sapi_name() !== 'cli' && session_status() != PHP_SESSION_DISABLED) {
-            if (!headers_sent() && session_status() == PHP_SESSION_NONE) {
-                if(!session_start()) return;
+        if (!is_admin() && PHP_SAPI !== 'cli' && session_status() != PHP_SESSION_DISABLED) {
+            if (!headers_sent() && session_status() === PHP_SESSION_NONE) {
+                if (!session_start()) return;
             }
+
+            if (session_status() !== PHP_SESSION_ACTIVE) return;
+
             if (empty($_SESSION['TrafficSource'])) {
                 $_SESSION['TrafficSource'] = getTrafficSource();
             }
@@ -365,8 +368,6 @@ final class PYS extends Settings implements Plugin {
 		    $this->addOption( 'general_event_on_' . $post_type->name . '_enabled', 'checkbox', false );
 
 	    }
-
-	    maybeMigrate();
 
     }
 
@@ -551,7 +552,9 @@ final class PYS extends Settings implements Plugin {
 
             $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
             $excludedRobots = PYS()->getOption('exclude_blocked_robots');
-
+            $excludedRobots = array_filter($excludedRobots, function($robot) {
+                return trim($robot) !== '';
+            });
             if (!empty($excludedRobots)) {
                 foreach ($excludedRobots as $robot) {
                     if (stripos($userAgent, strtolower($robot)) !== false) {

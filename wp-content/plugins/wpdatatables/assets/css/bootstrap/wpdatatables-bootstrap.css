@@ -4345,6 +4345,13 @@
     color: #e4e4e4;
 }
 
+.wpdt-c .dropdown-menu > .disabled > a:hover, .wpdt-c .dropdown-menu > .disabled > a:focus {
+    text-decoration: none;
+    background-color: transparent;
+    background-image: none;
+    cursor: not-allowed;
+}
+
 .wpdt-c .open > .dropdown-menu {
     display: block;
 }
@@ -7383,7 +7390,6 @@ select.input-group-lg > .input-group-btn > .btn {
         -o-transition: -o-transform 0.6s ease-in-out;
         transition: transform 0.6s ease-in-out;
         -webkit-backface-visibility: hidden;
-        -moz-backface-visibility: hidden;
         backface-visibility: hidden;
         -webkit-perspective: 1000px;
         -moz-perspective: 1000px;
@@ -10243,7 +10249,6 @@ select.input-group-lg > .input-group-btn > .btn {
     -webkit-transition-duration: 500ms;
     transition-duration: 500ms;
     -webkit-backface-visibility: hidden;
-    -moz-backface-visibility: hidden;
     backface-visibility: hidden;
     content: "";
     width: 105px;
@@ -11237,7 +11242,6 @@ select.input-group-lg > .input-group-btn > .btn {
     -o-transition: all;
     transition: all;
     -webkit-backface-visibility: hidden;
-    -moz-backface-visibility: hidden;
     backface-visibility: hidden;
     -webkit-transition-duration: 250ms;
     transition-duration: 250ms;
@@ -11769,7 +11773,7 @@ input:focus {
 }
 
 .wpdt-c .input-group-addon {
-    border-width: 0px 0px 1px 0px;
+    border-width: 0 0 1px 0;
     min-width: 42px;
 }
 
@@ -11888,7 +11892,6 @@ input:focus {
     vertical-align: top;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
-    -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
@@ -12786,7 +12789,7 @@ input:focus {
 
 @media (min-width: 1280px) {
     .wpdt-c .breadcrumb {
-        padding: 10px 33px 11px 0px;
+        padding: 10px 33px 11px 0;
     }
 }
 
@@ -13595,7 +13598,7 @@ input:focus {
     display: block;
 }
 
-.wpdt-c .bootstrap-select.btn-group .dropdown-menu li {
+.wpdt-c .bootstrap-select .dropdown-menu li {
     display: block;
     margin: 0;
 }
@@ -13804,4 +13807,46 @@ input:focus {
     padding: 5px 0 0 0;
     color: #FFFFFF;
     font-size: 12px;
+}
+
+.wpdt-c div#wdt-gf-column-container .bs-actionsbox .btn-group:not(.bootstrap-select),
+.wpdt-c div#wdt-ff-column-container .bs-actionsbox .btn-group:not(.bootstrap-select){
+    box-shadow: none;
+}
+.wpdt-c .bootstrap-select.wdt-select-filter .dropdown-toggle .filter-option{
+    top: 7px;
+    position: absolute;
+}
+/*.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .bootstrap-select.editDialogInput,*/
+/*.wpdt-c .bootstrap-select.editDialogInput{*/
+/*    padding-left: 0px;*/
+/*}*/
+.wpdt-c div#wpdatatable-preview-container .bootstrap-select.wdt-multiselect-filter .dropdown-toggle .filter-option {
+    height: 65%;
+}
+.wpdt-c .bootstrap-select.editDialogInput .dropdown-toggle .filter-option .filter-option-inner-inner{
+    font-family: var(--wpdt-inter-google-font, inherit);
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #6B7280;
+    height: 36px !important;
+    width: 100% !important;
+    padding: 4px 0px !important;
+}
+
+.wdt-datatables-admin-wrap .wpdt-c .bootstrap-select.editDialogInput .dropdown-toggle .filter-option .filter-option-inner-inner{
+    line-height: 1.8;
+}
+.wpdt-c .bootstrap-select .dropdown-toggle .filter-option{
+    top: -1px;
+}
+.wpdt-c .dataTables_length .bootstrap-select .dropdown-toggle .filter-option{
+    top: 0px;
+    height: auto;
+    left: -6px;
+    position: relative;
 }

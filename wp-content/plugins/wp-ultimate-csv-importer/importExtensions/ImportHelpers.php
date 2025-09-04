@@ -262,6 +262,7 @@ class ImportHelpers {
 	
 			foreach($map as $key => $value){	
 				$csv_value= trim($map[$key]);
+$value_assoc = array_combine($header_array, $value_array);
 
 				if(!empty($csv_value)){
 					//$pattern = "/({([a-z A-Z 0-9 | , _ -]+)(.*?)(}))/";
@@ -308,14 +309,35 @@ class ImportHelpers {
 						}	
 					}
 
-					// for custom function without headers in it
-					elseif(preg_match_all($pattern2, $csv_value, $matches2)){
-						$matched_element = $matches2[1][0];
-					
-						$wp_element= trim($key);
-						$csv_element1 = $this->evalPhp($matched_element);
-						$post_values[$wp_element] = $csv_element1;
-					}
+					elseif (preg_match_all($pattern2, $csv_value, $matches2)) {
+
+    $matched_element = $matches2[1][0];
+    $wp_element = trim($key);
+    $csv_element1 = '';
+
+    if ($matched_element === 'fields' && strpos($wp_element, '_wpbdp[fields][') === 0) {
+        if (isset($value_assoc[$wp_element])) {
+            $csv_element1 = $value_assoc[$wp_element];
+        }
+
+        if (!empty($csv_element1)) {
+    if (strpos($csv_element1, '|') !== false) {
+        $csv_element1 = explode('|', $csv_element1);
+    } else {
+        $csv_element1 = trim($csv_element1);
+    }
+}
+
+    } else {
+        $csv_element1 = $this->evalPhp($matched_element);
+    }
+
+    if (!empty($csv_element1) && !empty($wp_element)) {
+        $post_values[$wp_element] = $csv_element1;
+    }
+
+}
+
 					
 					elseif(!in_array($csv_value , $header_array)){
 						$wp_element= trim($key);

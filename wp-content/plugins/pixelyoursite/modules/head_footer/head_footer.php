@@ -41,20 +41,17 @@ class HeadFooter extends Settings {
             /** @var PYS $core */
             $core->registerPlugin( $this );
         } );
+        add_action( 'template_redirect', array( $this, 'output_scripts' ) );
+        add_action('init', array($this, 'init'));
+    }
 
+    public function init()
+    {
         if ( $this->getOption( 'enabled' ) ) {
             add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
             add_action( 'save_post', array( $this, 'save_meta_box' ) );
         }
-
-        $license_status = PYS()->getOption( 'license_status' );
-
-        if ( ! empty( $license_status ) ) {
-            add_action( 'template_redirect', array( $this, 'output_scripts' ) );
-        }
-
     }
-
     /**
      * Register meta box for each public post type.
      */
@@ -189,20 +186,19 @@ class HeadFooter extends Settings {
              * Global
              */
             $disabled_by_post = ! empty( $post_meta ) && isset( $post_meta['disable_global'] ) && $post_meta['disable_global'];
-
             if ( ! $disabled_by_post ) {
                 if ( $this->getOption( 'head_enabled' ) ) {
                     add_action( 'wp_head', array(
                         $this,
                         'output_head_global'
-                    ) );
+                    ), 100 );
                 }
 
                 if ( $this->getOption( 'footer_enabled' ) ) {
                     add_action( 'wp_footer', array(
                         $this,
                         'output_footer_global'
-                    ) );
+                    ), 100);
                 }
             }
         }
@@ -251,7 +247,6 @@ class HeadFooter extends Settings {
     public function output_head_global() {
 
         $scripts_any = $this->getOption( 'head_any' );
-
         if ( $scripts_any ) {
             echo "\r\n" . $this->replace_variables( $scripts_any ) . "\r\n";
         }

@@ -4,7 +4,7 @@ Tags: Meta Pixel, Meta Conversion API, Google Analytics 4, Google Tag Manager, G
 Requires at least: 3.0.1
 Requires PHP: 5.4
 Tested up to: 6.8
-Stable tag: 11.0.0.3
+Stable tag: 11.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -388,7 +388,71 @@ NO, absolutely not! We don't track any type of data about your website. We simpl
 
 == Changelog ==
 
+= PixelYourSite 11.1.0 =
+
+August 27, 2025
+
+* Optimizing the way we store the plugin data and improving interaction with Object Cache. 
+
+* Optimizing our queries to make the site faster. 
+
+* Fixing a bug that could result in errors with subscription renewals. 
+
+= PixelYourSite 11.0.2 =
+
+August 11, 2025
+
+* Small code change to ensure compatibility with Borlabs. 
+
+* Small change to ensure we use the expected parameter names for Google Analytics events with item value, WooCommerce and EDD e-commerce events. 
+
+* Fixing an issue related to passing an invalid limit type to wc_get_related_products.
+
+* Small text changes to reflect pro version features. 
+
+
+= PixelYourSite 11.0.1.2 =
+
+July 23, 2025
+
+* Fixing warnings on PHP 8.3 and some other small changes.
+
+* Small text changes.
+
+
+= PixelYourSite 11.0.1.1 =
+
+July 17, 2025
+
+* Fix for a problem related to our paid add-ons update process that could have resulted in a slower backend. 
+
+= PixelYourSite 11.0.1 =
+
+July 16, 2025
+
+* WooCommerce Purhcase event has some extra optional fields that can be needed for Google Conversion with Card Data (CwCD). Can be useful when configuring Google Automated Discounts inside Google Merchant. 
+
+* Improving the way we handle updates for the extra add-ons (Pinterest, Bing).
+
+* Fixing an issue with the Head and Footer scripts.
+
+* Fixing a warning "constant PYS_VIEW_PATH is undefined."
+
+* Video link updates. 
+
+* Small UI changes to reflect pro version new options (fire event when a form field gets data, track WooCommerce product and cart parameters for custom events).
+
+= PixelYourSite 11.0.0.4 =
+
+July 2, 2025
+
+* Improving the speed for WooCommerce variable products with a very large number of variations. 
+
+* Fixing a possible issue with Avada theme. 
+
 = PixelYourSite 11.0.0.3 =
+
+June 17, 2025
 
 * Code changes related to the way we send custom and partner-defined events for the Pinterest add-on.
 

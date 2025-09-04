@@ -162,10 +162,12 @@ class Permalink_Manager_URI_Functions_Tax {
 	 * @return string
 	 */
 	public static function get_default_term_uri( $term, $native_uri = false, $check_if_disabled = false ) {
-		global $permalink_manager_permastructs, $wp_taxonomies, $icl_adjust_id_url_filter_off;
+		global $permalink_manager_permastructs, $wp_taxonomies;
 
 		// Disable WPML adjust ID filter
-		$icl_adjust_id_url_filter_off = true;
+		if ( class_exists( 'SitePress' ) ) {
+			add_filter( 'wpml_disable_term_adjust_id', '__return_true', 999 );
+		}
 
 		// 1. Load all bases & term
 		$term = is_object( $term ) ? $term : get_term( $term );
@@ -262,8 +264,10 @@ class Permalink_Manager_URI_Functions_Tax {
 			}
 		}
 
-		// Enable WPML adjust ID filter
-		$icl_adjust_id_url_filter_off = false;
+		// Restore WPML adjust ID filter
+		if ( class_exists( 'SitePress' ) ) {
+			remove_filter( 'wpml_disable_term_adjust_id', '__return_true', 999 );
+		}
 
 		return apply_filters( 'permalink_manager_filter_default_term_uri', $default_uri, $term->slug, $term, $term_slug, $native_uri );
 	}

@@ -69,7 +69,8 @@ class ClassicEditorController implements InitializableInterface
 
         $this->hooks->addAction(
             CoreHooksAbstract::ACTION_SAVE_POST,
-            [$this, 'processMetaboxUpdate']
+            [$this, 'processMetaboxUpdate'],
+            20
         );
 
         $this->hooks->addAction(
@@ -86,18 +87,16 @@ class ClassicEditorController implements InitializableInterface
 
         // Some 3rd party plugins send the post as an object of a different class.
         // Try to fallback to the WP_Post class looking for the ID.
-        if ((! $post instanceof WP_Post) && is_object($post)) {
+        if ((! is_a($post, 'WP_Post')) && is_object($post)) {
             $id = null;
             if (isset($post->ID)) {
                 $id = $post->ID;
             } elseif (isset($post->post_id)) {
                 $id = $post->post_id;
+            } elseif (method_exists($post, 'get_id')) {
+                $id = $post->get_id();
             } elseif (isset($post->id)) {
                 $id = $post->id;
-            } else {
-                if (method_exists($post, 'get_id')) {
-                    $id = $post->get_id();
-                }
             }
 
             if (! is_null($id)) {
@@ -105,7 +104,7 @@ class ClassicEditorController implements InitializableInterface
             }
         }
 
-        if (! $post instanceof WP_Post) {
+        if (! is_a($post, 'WP_Post')) {
             return false;
         }
 
@@ -391,6 +390,8 @@ class ClassicEditorController implements InitializableInterface
             $metaboxTitle = $settingsFacade->getMetaboxTitle() ?? __('Future Actions', 'post-expirator');
             $metaboxCheckboxLabel = $settingsFacade->getMetaboxCheckboxLabel() ?? __('Enable Future Action', 'post-expirator');
 
+            $hiddenFields = (array) $this->hooks->applyFilters(HooksAbstract::FILTER_HIDDEN_METABOX_FIELDS, [], $postType);
+
             wp_localize_script(
                 'publishpress-future-classic-editor',
                 'publishpressFutureClassicEditorConfig',
@@ -408,6 +409,7 @@ class ClassicEditorController implements InitializableInterface
                     'postType' => $currentScreen->post_type,
                     'isNewPost' => $isNewPostPage,
                     'hideCalendarByDefault' => $settingsFacade->getHideCalendarByDefault(),
+                    'hiddenFields' => $hiddenFields,
                     'strings' => [
                         'category' => __('Category', 'post-expirator'),
                         'panelTitle' => $metaboxTitle,
