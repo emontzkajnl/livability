@@ -8,7 +8,7 @@ Requires at least: 4.0
 Tested up to: 6.8
 Stable tag: trunk
 Homepage: https://connekthq.com/ajax-load-more/
-Version: 1.7.2
+Version: 1.7.3
 
 == Copyright ==
 Copyright 2025 Connekt Media
@@ -42,6 +42,11 @@ http://connekthq.com/plugins/ajax-load-more/single-post/
 5. Activate the plugin in the Plugin dashboard.
 
 == Changelog ==
+
+= 1.7.3 - August 18, 2025 =
+* UPDATE: Improved caching mechanism for initial single post requests.
+* UPDATE: Enhanced error handling for AJAX requests.
+* UPDATE: Code optimization and cleanup.
 
 = 1.7.2 - June 9, 2025 =
 * UPDATE: Added support for `alm_retain_querystring` hook to retain query string parameters as you load additional posts.

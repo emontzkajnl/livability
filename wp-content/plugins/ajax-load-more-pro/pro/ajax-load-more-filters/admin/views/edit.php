@@ -1349,7 +1349,7 @@ if ( $has_facets && $filter_id ) {
 					<div class="label">
 						<?php esc_attr_e( 'Submit Button Label', 'ajax-load-more-filters' ); ?>
 						<a
-							title="<?php esc_attr_e( 'The label of the input submit button', 'ajax-load-more-filters' ); ?> - <?php esc_attr_e( 'A form/input submit button will render only when a value is present in this field.', 'ajax-load-more-filters' ); ?>"
+							title="<?php esc_attr_e( 'The label of the submit button.', 'ajax-load-more-filters' ); ?>"
 							href="javascript:void(0)"
 							class="fa fa-question-circle tooltip" tabindex="-1"
 						></a>

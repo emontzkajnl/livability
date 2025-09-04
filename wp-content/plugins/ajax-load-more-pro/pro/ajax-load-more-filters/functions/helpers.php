@@ -20,12 +20,10 @@ function alm_filters_render_controls( $options, $obj ) {
 
 	// Reset Button.
 	if ( $options['reset_button'] && ! empty( $options['reset_button_label'] ) ) {
-		$has_qs    = ( $_GET ) ? true : false; // phpcs:ignore
 		$classname = apply_filters( 'alm_filters_reset_button_class', 'alm-filters--reset-button' );
-		$btn_class = ( $has_qs ) ? $classname : $classname . ' hidden';
 
 		$reset_btn .= '<div class="alm-filters--reset">';
-		$reset_btn .= '<button type="reset" id="alm-filters-reset-button" class="' . $btn_class . '"><span>' . $options['reset_button_label'] . '</span></button>';
+		$reset_btn .= '<button type="reset" id="alm-filters-reset-button" class="' . $classname . '" style="display: none;"><span>' . $options['reset_button_label'] . '</span></button>';
 		$reset_btn .= '</div>';
 	}
 

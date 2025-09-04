@@ -34,21 +34,20 @@ $alm_admin_heading = __( 'Ajax Load More Pro', 'ajax-load-more' );
 				<?php
 					$i = 0;
 				foreach ( $alm_addons as $addon ) {
-					$name           = $addon['name'];
-					$intro          = $addon['intro'];
-					$desc           = $addon['desc'];
-					$action         = $addon['action'];
-					$key            = $addon['key'];
-					$status         = $addon['status'];
-					$version        = $addon['version'];
-					$settings_field = $addon['settings_field'];
-					$url            = $addon['url'];
-					$img            = $addon['img'];
-					$slug           = $addon['slug'];
-					$option_name    = ALM_PRO_OPTION_PREFIX . $slug;
-					$option_value   = get_option( $option_name ) ? get_option( $option_name ) : update_option( $option_name, 'inactive' );
-					$plugin_path    = ALM_PRO_ADMIN_PATH . 'pro/ajax-load-more-' . $slug . '/ajax-load-more-' . $slug . '.php';
-					++$i;
+					$name            = $addon['name'];
+					$intro           = $addon['intro'];
+					$desc            = $addon['desc'];
+					$action          = $addon['action'];
+					$key             = $addon['key'];
+					$status          = $addon['status'];
+					$version         = $addon['version'];
+					$settings_field  = $addon['settings_field'];
+					$url             = $addon['url'];
+					$img             = $addon['img'];
+					$slug            = $addon['slug'];
+					$option_name     = ALM_PRO_OPTION_PREFIX . $slug;
+					$option_value    = get_option( $option_name ) ? get_option( $option_name ) : update_option( $option_name, 'inactive' );
+					$plugin_path     = ALM_PRO_ADDON_PATH . 'ajax-load-more-' . $slug . '/ajax-load-more-' . $slug . '.php';
 					$installed       = true;
 					$installed_class = 'installed';
 					if ( ! file_exists( $plugin_path ) ) {
@@ -56,6 +55,7 @@ $alm_admin_heading = __( 'Ajax Load More Pro', 'ajax-load-more' );
 						$installed_class = 'not-installed';
 					}
 					$title = ! $installed ? __( 'Add-on not installed', 'ajax-load-more-pro' ) : '';
+					++$i;
 					?>
 					<section class="item <?php echo esc_attr( get_option( $option_name ) ); ?>
 					" data-status="<?php echo esc_attr( $option_value ); ?>" data-slug="<?php echo esc_attr( $slug ); ?>">
@@ -76,7 +76,6 @@ $alm_admin_heading = __( 'Ajax Load More Pro', 'ajax-load-more' );
 										</span>
 									</h2>
 									<p><?php echo esc_attr( $desc ); ?></p>
-
 								<?php
 								if ( ! $installed ) {
 									echo '<p class="highlight-addon"><span>' . esc_attr__( 'Add-on Not Installed', 'ajax-load-more-pro' ) . '</span><br/>';
@@ -84,7 +83,6 @@ $alm_admin_heading = __( 'Ajax Load More Pro', 'ajax-load-more' );
 									echo '</p>';
 								}
 								?>
-
 								</div>
 							</div>
 							<div class="loader"></div>
@@ -104,7 +102,7 @@ $alm_admin_heading = __( 'Ajax Load More Pro', 'ajax-load-more' );
 			</div>
 		</div>
 		<div class="call-out call-out--centered light no-shadow" style="width: 100%;">
-			<p><?php echo wp_kses_post( __( 'New <a href="https://connekthq.com/plugins/ajax-load-more/add-ons/" target="_blank"><strong>add-ons</strong></a> will be deactivated by default and must be activated before being used', 'ajax-load-more' ) ); ?>.</p>
+			<p><?php echo wp_kses_post( __( 'New <a href="https://connekthq.com/plugins/ajax-load-more/add-ons/" target="_blank"><strong>add-ons</strong></a> included with Ajax Load More Pro will be activated by default.', 'ajax-load-more' ) ); ?>.</p>
 		</div>
 		<div class="spacer lg"></div>
 	</div>

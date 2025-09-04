@@ -2,14 +2,14 @@
 # This file is distributed under the GPL.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ajax Load More: Filters 3.0.2\n"
+"Project-Id-Version: Ajax Load More: Filters 3.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ajax-load-more-filters\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-06-10T13:09:33+00:00\n"
+"POT-Creation-Date: 2025-08-14T13:19:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: ajax-load-more-filters\n"
@@ -91,9 +91,7 @@ msgid "Edit"
 msgstr ""
 
 #: admin/functions.php:115
-#: functions/classes/class-settings.php:196
 #: _out/admin/functions.php:115
-#: _out/functions/classes/class-settings.php:196
 msgid "Preview"
 msgstr ""
 
@@ -318,13 +316,13 @@ msgstr ""
 #: admin/views/edit.php:1358
 #: ajax-load-more-filters.php:491
 #: ajax-load-more-filters.php:533
-#: functions/classes/class-settings.php:211
+#: functions/classes/class-settings.php:207
 #: _out/admin/views/edit.php:120
 #: _out/admin/views/edit.php:1341
 #: _out/admin/views/edit.php:1358
 #: _out/ajax-load-more-filters.php:491
 #: _out/ajax-load-more-filters.php:533
-#: _out/functions/classes/class-settings.php:211
+#: _out/functions/classes/class-settings.php:207
 msgid "Submit"
 msgstr ""
 
@@ -1068,12 +1066,7 @@ msgstr ""
 
 #: admin/views/edit.php:1352
 #: _out/admin/views/edit.php:1352
-msgid "The label of the input submit button"
-msgstr ""
-
-#: admin/views/edit.php:1352
-#: _out/admin/views/edit.php:1352
-msgid "A form/input submit button will render only when a value is present in this field."
+msgid "The label of the submit button."
 msgstr ""
 
 #: admin/views/edit.php:1366
@@ -1671,12 +1664,12 @@ msgstr ""
 
 #: functions/classes/class-settings.php:117
 #: _out/functions/classes/class-settings.php:117
-msgid "Update facet indices when a post or custom post type is updated"
+msgid "Update facet indexes when a post or custom post type is updated"
 msgstr ""
 
 #: functions/classes/class-settings.php:134
 #: _out/functions/classes/class-settings.php:134
-msgid "Allow facet indices to be built with background processing."
+msgid "Allow facet indexes to be built with background processing."
 msgstr ""
 
 #: functions/classes/class-settings.php:139
@@ -1699,47 +1692,32 @@ msgstr ""
 msgid "Learn More"
 msgstr ""
 
-#: functions/classes/class-settings.php:188
-#: _out/functions/classes/class-settings.php:188
+#: functions/classes/class-settings.php:174
+#: _out/functions/classes/class-settings.php:174
 msgid "Choose the theme color of your Ajax Load More Filter form elements."
 msgstr ""
 
-#: functions/classes/class-settings.php:190
-#: _out/functions/classes/class-settings.php:190
-msgid "Default"
+#: functions/classes/class-settings.php:184
+#: _out/functions/classes/class-settings.php:184
+msgid "Filter Preview"
 msgstr ""
 
-#: functions/classes/class-settings.php:191
-#: _out/functions/classes/class-settings.php:191
-msgid "Blue"
-msgstr ""
-
-#: functions/classes/class-settings.php:192
-#: _out/functions/classes/class-settings.php:192
-msgid "Red"
-msgstr ""
-
-#: functions/classes/class-settings.php:193
-#: _out/functions/classes/class-settings.php:193
-msgid "Green"
-msgstr ""
-
-#: functions/classes/class-settings.php:199
-#: functions/classes/class-settings.php:205
-#: _out/functions/classes/class-settings.php:199
-#: _out/functions/classes/class-settings.php:205
+#: functions/classes/class-settings.php:195
+#: functions/classes/class-settings.php:201
+#: _out/functions/classes/class-settings.php:195
+#: _out/functions/classes/class-settings.php:201
 msgid "Checked"
 msgstr ""
 
-#: functions/classes/class-settings.php:200
-#: functions/classes/class-settings.php:206
-#: _out/functions/classes/class-settings.php:200
-#: _out/functions/classes/class-settings.php:206
+#: functions/classes/class-settings.php:196
+#: functions/classes/class-settings.php:202
+#: _out/functions/classes/class-settings.php:196
+#: _out/functions/classes/class-settings.php:202
 msgid "Unchecked"
 msgstr ""
 
-#: functions/classes/class-settings.php:303
-#: _out/functions/classes/class-settings.php:303
+#: functions/classes/class-settings.php:309
+#: _out/functions/classes/class-settings.php:309
 msgid "Select a <a href=\"https://flatpickr.js.org/themes/\" target=\"blank\">Theme</a> for the Datepicker Field Type."
 msgstr ""
 
@@ -1789,7 +1767,7 @@ msgstr ""
 
 #: functions/facets/class-facets.php:65
 #: _out/functions/facets/class-facets.php:65
-msgid "Facet indexing has been cancelled. Some indices may be paritally built and will require a rebuild."
+msgid "Facet indexing has been cancelled. Some indexes may be paritally built and will require a rebuild."
 msgstr ""
 
 #. translators: %s: Filter Admin link
@@ -1874,8 +1852,8 @@ msgstr ""
 msgid "Try saving/updating this filter to restart the indexing process."
 msgstr ""
 
-#: functions/helpers.php:291
-#: _out/functions/helpers.php:291
+#: functions/helpers.php:289
+#: _out/functions/helpers.php:289
 msgid " results for "
 msgstr ""
 

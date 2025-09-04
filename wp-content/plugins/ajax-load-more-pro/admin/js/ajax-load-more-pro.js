@@ -25,7 +25,7 @@ jQuery(document).ready(function ($) {
 
 	/**
     * Activate/Deactive add-ons
-
+	 *
     * @since 1.0
     */
 	let is_working = false;
@@ -77,7 +77,7 @@ jQuery(document).ready(function ($) {
 
 				parent.removeClass("loading");
 
-				// Remove flag
+				// Remove flag.
 				setTimeout(function () {
 					is_working = false;
 					$(".alm-pro-listing").removeClass("loading");
@@ -89,7 +89,7 @@ jQuery(document).ready(function ($) {
 				$(".alm-pro-listing").removeClass("loading");
 				parent.removeClass("loading");
 				almPro.updateActivationTotal();
-				console.log(status);
+				console.error(status);
 			},
 		});
 	});

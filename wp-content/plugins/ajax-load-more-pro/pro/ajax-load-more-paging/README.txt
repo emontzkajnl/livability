@@ -8,15 +8,13 @@ Requires at least: 5.0
 Tested up to: 6.8
 Stable tag: trunk
 Homepage: https://connekthq.com/ajax-load-more/
-Version: 2.0.2
-
+Version: 2.1.0
 
 == Copyright ==
 Copyright 2025 DConnekt Media
 This software is NOT to be distributed, but can be INCLUDED in WP themes: Premium or Contracted.
 This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
 
 == Description ==
 
@@ -43,11 +41,15 @@ http://connekthq.com/plugins/ajax-load-more/paging/
 4. Ensure Ajax Load More is installed prior to activating the plugin.
 5. Activate the plugin in the Plugin dashboard.
 
-
 == Upgrade Notice ==
 
-
 == Changelog ==
+
+= 2.1.0 - August 18, 2025 =
+* NEW: Added new pagination colors.
+* UPDATE: Updated existing pagination colors to match the new core Ajax Load More colors.
+* UPDATE: New hover and focus styles for paging navigation.
+* UPDATE: Code cleanup and various UI/UX updates.
 
 = 2.0.2 - June 9, 2025 =
 * UPDATE: Updated load_text_domain action to remove PHP warning.

@@ -6,7 +6,7 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.7.2
+ * Version: 1.7.3
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
  * Requires Plugins: ajax-load-more
@@ -20,8 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_PREV_POST_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_PREV_POST_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_PREV_POST_VERSION', '1.7.2' );
-define( 'ALM_PREV_POST_RELEASE', 'June 9, 2025' );
+define( 'ALM_PREV_POST_VERSION', '1.7.3' );
+define( 'ALM_PREV_POST_RELEASE', 'August 18, 2025' );
 
 if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 	/**
@@ -37,13 +37,14 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 			add_action( 'alm_single_post_installed', [ $this, 'alm_single_post_installed' ] );
 			add_action( 'wp_ajax_alm_get_single', [ $this, 'alm_get_single_post' ] );
 			add_action( 'wp_ajax_nopriv_alm_get_single', [ $this, 'alm_get_single_post' ] );
-			add_filter( 'alm_single_post_inc', [ $this, 'alm_single_post_inc' ], 10, 5 );
-			add_filter( 'alm_single_post_args', [ $this, 'alm_single_post_args' ], 10, 2 );
-			add_filter( 'alm_single_post_shortcode', [ $this, 'alm_single_post_shortcode' ], 10, 10 );
 			add_action( 'alm_prev_post_settings', [ $this, 'alm_prev_post_settings' ] );
 			add_action( 'wp_enqueue_scripts', [ $this, 'alm_single_post_enqueue_scripts' ] );
 			add_action( 'posts_where', [ $this, 'alm_single_query_where' ], 10, 2 );
 			add_action( 'init', [ $this, 'init' ] );
+
+			add_filter( 'alm_single_post_inc', [ $this, 'alm_single_post_inc' ], 10, 5 );
+			add_filter( 'alm_single_post_args', [ $this, 'alm_single_post_args' ], 10, 2 );
+			add_filter( 'alm_single_post_shortcode', [ $this, 'alm_single_post_shortcode' ], 10, 10 );
 		}
 
 		/**
@@ -74,7 +75,6 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 				$wp_query->is_singular = true;
 				$wp_query->in_the_loop = true;
 
-				// Remove errors.
 				error_reporting( 0 ); // phpcs:ignore
 			}
 			return $where;
@@ -97,8 +97,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 * @return void
 		 */
 		public function alm_get_single_post() {
-			$params = filter_input_array( INPUT_GET );
-
+			$params          = filter_input_array( INPUT_GET );
 			$init            = isset( $params['init'] ) ? $params['init'] : false;
 			$id              = isset( $params['id'] ) ? $params['id'] : '';
 			$exclude_post_id = isset( $params['initial_id'] ) ? $params['initial_id'] : '';
@@ -116,12 +115,18 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 				'exclude_post_id' => $exclude_post_id,
 				'tax'             => $tax,
 				'exclude_terms'   => $exclude_terms,
-				'postType'        => $post_type,
+				'post_type'       => $post_type,
 				'order'           => $order,
 			];
 
-			$data = self::alm_get_single_posts_data( $array );
+			$hash      = md5( serialize( $array ) ); // Create a hash of the array to use as a transient key.
+			$transient = get_transient( 'alm_single_post_' . $hash );
+			if ( $transient ) {
+				wp_send_json( $transient ); // Use transient data.
+			}
 
+			$data = $this->alm_get_single_posts_data( $array );
+			set_transient( 'alm_single_post_' . $hash, $data, apply_filters( 'alm_single_post_transient_expiration', MINUTE_IN_SECONDS ) );
 			wp_send_json( $data );
 		}
 
@@ -131,13 +136,13 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 * @param array $array The array containing query data.
 		 * @return array
 		 */
-		public static function alm_get_single_posts_data( $array ) {
+		public function alm_get_single_posts_data( $array ) {
 			if ( $array && $array['id'] ) {
 
 				switch ( $array['order'] ) {
 					// Get the latest (newest) post.
 					case 'latest':
-						$data = self::alm_get_latest_post( $array['exclude_post_id'], $array['postType'], $array['tax'], $array['exclude_terms'] );
+						$data = self::alm_get_latest_post( $array['exclude_post_id'], $array['post_type'], $array['tax'], $array['exclude_terms'] );
 						return $data;
 
 					// Get next post ordered by date.
@@ -442,20 +447,16 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 * Get the content for the first single post include.
 		 *
 		 * @param string $repeater       The Repeater Template name.
-		 * @param string $repeater_type  The repeater type.
+		 * @param string $type           The Repeater type.
 		 * @param string $theme_repeater The Theme Repeater name.
-		 * @param string $id             The post ID.
-		 * @param string $post_type      The post type.
 		 * @since 1.0
 		 */
-		public function alm_single_post_inc( $repeater, $repeater_type, $theme_repeater, $id, $post_type ) { // phpcs:ignore
+		public function alm_single_post_inc( $repeater, $type, $theme_repeater ) {
 			ob_start();
 			if ( $theme_repeater !== 'null' && has_filter( 'alm_get_theme_repeater' ) ) {
-				// Theme Repeater.
-				do_action( 'alm_get_theme_repeater', $theme_repeater, 1, 1, 1, 1, '' );
+				do_action( 'alm_get_theme_repeater', $theme_repeater, 1, 1, 1, 1, '' ); // Theme Repeater.
 			} else {
-				// Standard Repeaters.
-				include alm_get_current_repeater( $repeater, $repeater_type );
+				include alm_get_current_repeater( $repeater, $type ); // Standard Repeater.
 			}
 			$return = ob_get_contents();
 			ob_end_clean();

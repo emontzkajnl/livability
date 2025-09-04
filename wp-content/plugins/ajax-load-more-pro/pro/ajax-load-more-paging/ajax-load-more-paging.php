@@ -6,7 +6,7 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 2.0.2
+ * Version: 2.1.0
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
  * Requires Plugins: ajax-load-more
@@ -20,8 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_PAGING_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_PAGING_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_PAGING_VERSION', '2.0.2' );
-define( 'ALM_PAGING_RELEASE', 'June 9, 2025' );
+define( 'ALM_PAGING_VERSION', '2.1.0' );
+define( 'ALM_PAGING_RELEASE', 'August 18, 2025' );
 
 if ( ! class_exists( 'ALM_Paging' ) ) :
 
@@ -32,6 +32,8 @@ if ( ! class_exists( 'ALM_Paging' ) ) :
 
 		/**
 		 * Constuct Paging Class
+		 *
+		 * @return void
 		 */
 		public function __construct() {
 			add_action( 'alm_paging_installed', [ $this, 'alm_paging_installed' ] );
@@ -64,7 +66,7 @@ if ( ! class_exists( 'ALM_Paging' ) ) :
 		 * @param string $previous_label Core ALM shortcode parameter.
 		 * @param string $next_label     Core ALM shortcode parameter.
 		 * @param string $scroll         Core ALM shortcode parameter.
-		 * @since 1.2
+		 * @return string
 		 */
 		public function alm_paging_shortcode( $paging, $controls, $show_at_most, $classes, $first_label, $last_label, $previous_label, $next_label, $scroll ) {
 			$return  = ' data-paging="' . $paging . '"';
@@ -93,10 +95,9 @@ if ( ! class_exists( 'ALM_Paging' ) ) :
 		/**
 		 * Enqueue our paging script
 		 *
-		 * @since 1.0
+		 * @return void
 		 */
 		public function alm_paging_enqueue_scripts() {
-
 			// Use minified libraries if SCRIPT_DEBUG is turned off.
 			$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
@@ -104,8 +105,6 @@ if ( ! class_exists( 'ALM_Paging' ) ) :
 			wp_register_script( 'ajax-load-more-paging', plugins_url( '/core/js/alm-paging' . $suffix . '.js', __FILE__ ), [ 'ajax-load-more' ], ALM_PAGING_VERSION, true );
 
 			// Enqueue CSS.
-			$options = get_option( 'alm_settings' );
-
 			if ( ! alm_do_inline_css( '_alm_inline_css' ) && ! alm_css_disabled( '_alm_paging_disable_css' ) ) {
 				// Not inline or disabled.
 				$file = ALM_PAGING_URL . '/core/css/ajax-load-more-paging' . $suffix . '.css';
@@ -118,7 +117,7 @@ if ( ! class_exists( 'ALM_Paging' ) ) :
 		/**
 		 * Enqueue our paging scripts in the admin.
 		 *
-		 * @since 1.0
+		 * @return void
 		 */
 		public function alm_paging_admin_enqueue_scripts() {
 			wp_enqueue_style( 'alm-paging', ALM_PAGING_URL . '/core/css/ajax-load-more-paging.css', [], ALM_PAGING_VERSION );
@@ -127,16 +126,16 @@ if ( ! class_exists( 'ALM_Paging' ) ) :
 		/**
 		 * An empty function to determine if paging is true.
 		 *
-		 * @since 1.0
+		 * @return void
 		 */
 		public function alm_paging_installed() {
-			// Empty.
+			return;
 		}
 
 		/**
 		 * Create the Paging settings panel.
 		 *
-		 * @since 1.2
+		 * @return void
 		 */
 		public function alm_paging_settings() {
 			register_setting(
@@ -159,7 +158,7 @@ if ( ! class_exists( 'ALM_Paging' ) ) :
 			);
 			add_settings_field(
 				'_alm_paging_color',
-				__( 'Paging Color', 'ajax-load-more-paging' ),
+				__( 'Theme Color', 'ajax-load-more-paging' ),
 				'alm_paging_color_callback',
 				'ajax-load-more',
 				'alm_paging_settings'
@@ -170,7 +169,7 @@ if ( ! class_exists( 'ALM_Paging' ) ) :
 	/**
 	 * SEO Setting Heading.
 	 *
-	 * @since 1.0
+	 * @return void
 	 */
 	function alm_paging_settings_callback() {
 		$html = '<p>' . __( 'Customize your installation of the <a href="http://connekthq.com/plugins/ajax-load-more/paging/">Paging</a> add-on.', 'ajax-load-more-paging' ) . '</p>';
@@ -197,46 +196,45 @@ if ( ! class_exists( 'ALM_Paging' ) ) :
 	/**
 	 * Get the color of the paging element.
 	 *
-	 * @since 1.0
+	 * @return void
 	 */
 	function alm_paging_color_callback() {
-
 		$options = get_option( 'alm_settings' );
-		if ( ! isset( $options['_alm_paging_color'] ) ) {
-			$options['_alm_paging_color'] = '0';
-		}
-		$color = $options['_alm_paging_color'];
+		$color   = isset( $options['_alm_paging_color'] ) ? $options['_alm_paging_color'] : 'default';
+		$colors  = [
+			'default' => 'Default',
+			'dark'    => 'Dark',
+			'grey'    => 'Grey',
+			'blue'    => 'Blue',
+			'green'   => 'Green',
+			'purple'  => 'Purple',
+			'white'   => 'White',
+		];
 
-		$selected0 = 'default' === $color ? 'selected="selected"' : '';
-		$selected1 = 'blue' === $color ? 'selected="selected"' : '';
-		$selected2 = 'green' === $color ? 'selected="selected"' : '';
-		$selected3 = 'red' === $color ? 'selected="selected"' : '';
-		$selected4 = 'purple' === $color ? 'selected="selected"' : '';
-		$selected5 = 'grey' === $color ? 'selected="selected"' : '';
-		$selected6 = 'white' === $color ? 'selected="selected"' : '';
-
-		$html  = '<label for="alm_settings_paging_color">' . __( 'Choose your paging navigation color', 'ajax-load-more-paging' ) . '.</label><br/>';
+		$html  = '<label for="alm_settings_paging_color">' . esc_html__( 'Select a theme color for the Ajax Load More pagination.', 'ajax-load-more-paging' ) . '</label>';
 		$html .= '<select id="alm_settings_paging_color" name="alm_settings[_alm_paging_color]">';
-		$html .= '<option value="default" ' . $selected0 . '>Default</option>';
-		$html .= '<option value="blue" ' . $selected1 . '>Blue</option>';
-		$html .= '<option value="green" ' . $selected2 . '>Green</option>';
-		$html .= '<option value="red" ' . $selected3 . '>Red</option>';
-		$html .= '<option value="purple" ' . $selected4 . '>Purple</option>';
-		$html .= '<option value="grey" ' . $selected5 . '>Grey</option>';
-		$html .= '<option value="white" ' . $selected6 . '>White</option>';
+		foreach ( $colors as $key => $value ) {
+			$selected = ( $color === $key ) ? ' selected="selected"' : '';
+			$html    .= '<option class="alm-color ' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '" ' . esc_html( $selected ) . '>' . esc_html( ucfirst( $value ) ) . '</option>';
+		}
 		$html .= '</select>';
-
-		$html .= '<div class="clear"></div>';
-		$html .= '<div class="ajax-load-more-wrap pages paging-' . $color . '"><span class="pages">' . __( 'Preview', 'ajax-load-more-paging' ) . '</span>';
-		$html .= '<ul class="alm-paging" style="opacity: 1;"><li class="active"><a href="javascript:void(0);"><span>1</span></a></li><li><a href="javascript:void(0);"><span>2</span></a></li><li><a href="javascript:void(0);"><span>3</span></a></li><li><a href="javascript:void(0);"><span>4</span></a></li><li><a href="javascript:void(0);"><span>5</span></a></li></ul>';
+		$html .= '<div class="ajax-load-more-wrap pages paging-' . $color . '">';
+		$html .= '<span class="pages">' . __( 'Preview', 'ajax-load-more-paging' ) . '</span>';
+		$html .= '<ul class="alm-paging" style="opacity: 1;">';
+		$html .= '<li class="prev"><a data-page="prev" href="javascript:void(0);" role="button"><span>&larr;</span></a></li>';
+		for ( $i = 0; $i < 5; $i++ ) {
+			$active = ( 1 === $i ) ? ' class="active"' : '';
+			$html  .= '<li' . $active . '><a href="javascript:void(0);"><span>' . ( $i + 1 ) . '</span></a></li>';
+		}
+		$html .= '<li class="next"><a data-page="next" href="javascript:void(0);" role="button"><span>&rarr;</span></a></li>';
+		$html .= '</ul>';
 		$html .= '</div>';
 		echo $html; // @codingStandardsIgnoreLine
-
 		?>
 
 		<script>
 		//Button preview.
-		var colorArray = "paging-default paging-grey paging-purple paging-green paging-red paging-blue paging-white";
+		var colorArray = "paging-default paging-dark paging-grey paging-purple paging-green paging-red paging-blue paging-white";
 		jQuery("select#alm_settings_paging_color").change(function() {
 			var color = jQuery(this).val();
 			jQuery('.ajax-load-more-wrap.pages' ).removeClass(colorArray);
@@ -266,7 +264,7 @@ if ( ! class_exists( 'ALM_Paging' ) ) :
 	 * Sanitize license activation.
 	 *
 	 * @param string $key The new license key.
-	 * @since 1.0.0
+	 * @return string     The sanitized license key.
 	 */
 	function alm_paging_sanitize_license( $key ) {
 		$old = get_option( 'alm_paging_license_key' );
@@ -279,7 +277,7 @@ if ( ! class_exists( 'ALM_Paging' ) ) :
 	/**
 	 * The main paging function.
 	 *
-	 * @since 1.0
+	 * @return mixed
 	 */
 	function alm_paging() {
 		global $alm_paging;

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ajax Load More Pro\n"
-"POT-Creation-Date: 2023-07-27 08:55-0400\n"
+"POT-Creation-Date: 2025-07-15 10:56-0400\n"
 "PO-Revision-Date: 2018-04-16 12:58-0500\n"
 "Last-Translator: Darren Cooney <darren@connekthq.com>\n"
 "Language-Team: \n"
@@ -17,66 +17,49 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: pro\n"
 
-#: admin/views/pro.php:11
+#: admin/views/pro.php:9
 msgid "Ajax Load More Pro"
 msgstr ""
 
-#: admin/views/pro.php:23
+#: admin/views/pro.php:21
 msgid "Add-ons"
 msgstr ""
 
-#: admin/views/pro.php:24
+#: admin/views/pro.php:22
 msgid "Toggle the activation status of Ajax Load More add-ons below"
 msgstr ""
 
-#: admin/views/pro.php:27
+#: admin/views/pro.php:25
 msgid "of"
 msgstr ""
 
-#: admin/views/pro.php:27
+#: admin/views/pro.php:25
 msgid "activated"
 msgstr ""
 
-#: admin/views/pro.php:66
+#: admin/views/pro.php:57
 msgid "Add-on not installed"
 msgstr ""
 
-#: admin/views/pro.php:70
+#: admin/views/pro.php:64
 msgid "Toggle activation"
 msgstr ""
 
-#: admin/views/pro.php:88
+#: admin/views/pro.php:81
 msgid "Add-on Not Installed"
 msgstr ""
 
-#: admin/views/pro.php:89
+#: admin/views/pro.php:82
 msgid ""
 "You need to update ALM Pro or renew your subscription to access this add-on."
 msgstr ""
 
-#: admin/views/pro.php:100
+#: admin/views/pro.php:92
 msgid "Activated"
 msgstr ""
 
-#: admin/views/pro.php:103
+#: admin/views/pro.php:95
 msgid "Deactivated"
-msgstr ""
-
-#: admin/views/pro.php:113
-msgid ""
-"New <a href=\"https://connekthq.com/plugins/ajax-load-more/add-ons/\" "
-"target=\"_blank\"><strong>add-ons</strong></a> will be deactivated by "
-"default and must be activated before being used"
-msgstr ""
-
-#: ajax-load-more-pro.php:67
-msgid ""
-"You must install and activate the core Ajax Load More plugin before using "
-"Ajax Load More Pro."
-msgstr ""
-
-#: ajax-load-more-pro.php:68
-msgid "Install Ajax Load More Now"
 msgstr ""
 
 #~ msgid "404 Error"

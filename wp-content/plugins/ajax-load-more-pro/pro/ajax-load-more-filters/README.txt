@@ -8,7 +8,7 @@ Requires at least: 5.0
 Tested up to: 6.8
 Stable tag: trunk
 Homepage: https://connekthq.com/
-Version: 3.0.2
+Version: 3.1.0
 
 == Copyright ==
 Copyright 2025 Darren Cooney & Connekt Media
@@ -43,8 +43,15 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/filters/
 4. Ensure Ajax Load More is installed prior to activating the plugin.
 5. Activate the plugin in the WP plugin dashboard.
 
-
 == Changelog ==
+
+= 3.1.0 - August 18, 2025 =
+* NEW: Added new Filter element theme colors.
+* UPDATE: Updated existing colors to match the new core Ajax Load More colors.
+* UPDATE: Added better cache handling for facet creation and indexing.
+* UPDATE: Various code cleanup and refactoring.
+* FIX: Fixed multiple potential issues with empty search values.
+* FIX: Fixed issue with show/hide of Filter Reset button for users with Filters CSS disabled.
 
 = 3.0.2 - June 10, 2025 =
 * HOTFIX: Fixed issues with updated CSS for the Range Slider not being applied correctly.

@@ -10230,7 +10230,7 @@ var almFiltersInit = function almFiltersInit(filter) {
 		});
 	}
 
-	// Textfield Button Event listeners
+	// Textfield Button Event listeners.
 	var almFiltertextButtons = filter.querySelectorAll('.alm-filter--text-wrap.has-button button');
 	if (almFiltertextButtons) {
 		[].concat(_toConsumableArray(almFiltertextButtons)).forEach(function (button) {
@@ -10238,7 +10238,7 @@ var almFiltersInit = function almFiltersInit(filter) {
 		});
 	}
 
-	// Change Event (Select)
+	// Change Event (Select).
 	if (style === 'change') {
 		// Loop all items and add the event listener
 		var almFilterItems = filter.querySelectorAll('.alm-filter--item');
@@ -10249,7 +10249,7 @@ var almFiltersInit = function almFiltersInit(filter) {
 		}
 	}
 
-	// Button
+	// Button.
 	if (style === 'button') {
 		var almFilterButton = filter.querySelector('.alm-filters--button');
 		if (almFilterButton) {
@@ -10257,7 +10257,7 @@ var almFiltersInit = function almFiltersInit(filter) {
 		}
 	}
 
-	// Reset Button
+	// Reset Button.
 	var resetButton = filter.querySelector(_Variables2.default.reset_btn_classname);
 	if (resetButton) {
 		resetButton.addEventListener('click', function () {
@@ -10265,7 +10265,7 @@ var almFiltersInit = function almFiltersInit(filter) {
 		});
 	}
 
-	// Attach enter click listener for textfields
+	// Event listeners for input textfields.
 	var almFilterTextfields = filter.querySelectorAll('.alm-filter--textfield');
 	if (almFilterTextfields) {
 		[].concat(_toConsumableArray(almFilterTextfields)).forEach(function (item) {
@@ -10273,9 +10273,17 @@ var almFiltersInit = function almFiltersInit(filter) {
 				var keyCode = event.keyCode;
 
 				if (keyCode === 13) {
-					// Enter/return click
-					almFiltersClick();
+					almFiltersClick(); // Enter/return click
 				}
+			});
+			// Focus + Focusout for Textfields.
+			item.addEventListener('focus', function (event) {
+				var parent = event.target.parentNode;
+				parent.classList.add('has-focus');
+			});
+			item.addEventListener('focusout', function (event) {
+				var parent = event.target.parentNode;
+				parent.classList.remove('has-focus');
 			});
 		});
 	}
@@ -10330,9 +10338,9 @@ window.almFiltersResetStatus = function (obj) {
 
 	[].concat(_toConsumableArray(resetButtons)).forEach(function (button) {
 		if (obj === '') {
-			button.classList.add('hidden');
+			button.style.display = 'none';
 		} else {
-			button.classList.remove('hidden');
+			button.style.display = 'block';
 		}
 	});
 };
@@ -10500,12 +10508,12 @@ window.addEventListener('popstate', function (event) {
 	if (!url || querystring === '') {
 		window.almFiltersClear(false);
 		if (resetButton) {
-			resetButton.classList.add('hidden');
+			resetButton.style.display = 'none';
 		}
 	} else {
 		(0, _SetSelectedElements2.default)((0, _ParseQuerystring2.default)(url));
 		if (resetButton) {
-			resetButton.classList.remove('hidden');
+			resetButton.style.display = 'block';
 		}
 	}
 });
@@ -11004,7 +11012,10 @@ var buildURL = function buildURL(filter, currentURL) {
 				break; // exit if empty
 			}
 
-			url += textfield.value === '' ? '' : title + '=' + textfield.value;
+			var inputValue = textfield.value;
+
+			// If inputValue is empty or whitespace, return empty string.
+			url += inputValue === '' || inputValue.trim().length === 0 ? '' : title + '=' + inputValue;
 
 			break;
 
@@ -11825,17 +11836,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
  */
 var getTerms = function getTerms(filter, data) {
 	var count = 0;
-	var returnVal = "";
-	var value = "";
-	var key = filter.dataset.key;
+	var returnVal = '';
+	var value = '';
 	var fieldtype = filter.dataset.fieldtype;
-	var defaultValue = filter.dataset.defaultValue;
 
 	switch (fieldtype) {
-		case "select_multiple":
-			var mSelect = filter.querySelector("select");
+		case 'select_multiple':
+			var mSelect = filter.querySelector('select');
 			var options = mSelect && mSelect.options;
-			var mSelectVal = "";
+			var mSelectVal = '';
 			var mSelectCount = 0;
 
 			if (!mSelect) {
@@ -11845,8 +11854,8 @@ var getTerms = function getTerms(filter, data) {
 			// Loop all <option/> elements to build URL
 			[].concat(_toConsumableArray(options)).forEach(function (option, e) {
 				if (option.selected) {
-					mSelectVal += mSelectCount > 0 ? "," : "";
-					if (option.value !== "") {
+					mSelectVal += mSelectCount > 0 ? ',' : '';
+					if (option.value !== '') {
 						// Confirm option has a value
 						mSelectVal += option.value;
 						mSelectCount++;
@@ -11855,57 +11864,58 @@ var getTerms = function getTerms(filter, data) {
 			});
 
 			// Replace + with comma
-			value = mSelectVal.replace("+", ",");
-			returnVal += value === "#" ? "" : value;
+			value = mSelectVal.replace('+', ',');
+			returnVal += value === '#' ? '' : value;
 
 			break;
 
-		case "select":
-			var select = filter.querySelector("select");
+		case 'select':
+			var select = filter.querySelector('select');
 			if (!select) {
 				break; // exit if empty
 			}
 
-			value = select.value.replace("+", ","); // Replace + with comma
-			returnVal += value === "#" ? "" : value;
+			value = select.value.replace('+', ','); // Replace + with comma
+			returnVal += value === '#' ? '' : value;
 
 			break;
 
-		case "text":
-		case "range_slider":
-			var text = filter.querySelector("input");
-			if (!text) {
+		case 'text':
+		case 'range_slider':
+			var textfield = filter.querySelector('input');
+			if (!textfield) {
 				break; // exit if empty
 			}
 
-			returnVal += text.value === "" ? "" : text.value;
+			var inputValue = textfield.value;
+			returnVal += inputValue === '' || inputValue.trim().length === 0 ? '' : inputValue; // If inputValue is empty or whitespace, return empty string.
 
 			break;
 
-		case "date_picker":
-			var datepicker = filter.querySelector(".flatpickr-input");
+		case 'date_picker':
+			var datepicker = filter.querySelector('.flatpickr-input');
 			if (!datepicker) {
 				break; // exit if empty
 			}
 
-			returnVal += datepicker.value === "" ? "" : datepicker.value.split(" | ");
+			returnVal += datepicker.value === '' ? '' : datepicker.value.split(' | ');
 
 			break;
 
 		default:
-			var items = filter.querySelectorAll(".alm-filter--link"); // Get all link fields
+			var items = filter.querySelectorAll('.alm-filter--link'); // Get all link fields
 			if (!items.length) {
 				break; // exit if empty
 			}
 
 			[].concat(_toConsumableArray(items)).forEach(function (item, e) {
-				if (item.classList.contains("active") && item.dataset.value !== "") {
+				if (item.classList.contains('active') && item.dataset.value !== '') {
 					// Replace + with comma
-					value = item.dataset.value.replace("+", ",");
+					value = item.dataset.value.replace('+', ',');
 
 					// If items have multiple selections split with comma
 					if (count > 0) {
-						returnVal += ",";
+						returnVal += ',';
 					}
 					returnVal += value;
 					count++;

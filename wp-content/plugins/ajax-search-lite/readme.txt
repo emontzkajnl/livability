@@ -5,7 +5,7 @@ Tags: search, better search, live search, product search, woocommerce search
 Requires at least: 3.5
 Requires PHP: 7.4
 Tested up to: 6.8
-Stable tag: 4.12.7
+Stable tag: 4.13.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,10 +17,13 @@ The Best Ajax Live Search and Filter for WordPress. Live suggestions, Custom Pos
 
 [youtube https://www.youtube.com/watch?v=qI2_iKK4n_4]
 
+
 Very smooth animations with mobile device support and regular updates. Use **Ajax Search Lite** as a replacement for the default WordPress search with a better looking, more efficient search engine.
 Fine-tune the user experience by providing a powerful ajax search plugin to your visitors. Supports custom post types and custom fields and more. Boost your site search engine with this custom built live search engine.
 
 [Home](https://ajaxsearchpro.com) | [Features](https://ajaxsearchpro.com/features) | [Lite Docs](https://documentation.ajaxsearchlite.com/) | [Pro Docs](https://documentation.ajaxsearchpro.com/)
+
+[youtube https://www.youtube.com/watch?v=tMde9nDQOEU]
 
 Ajax Search Lite and Ajax Search Pro **does not require monthly subscriptions**, does not store your data on external servers – **everything is done locally**, on your server.
 
@@ -134,6 +137,27 @@ notify the developers of this plugin.
 2. Administrator area – nice and smooth
 
 == Changelog ==
+= 4.13.2 =
+* Fixed a security issue, where password protected posts were returned by default, see [CVE-2025-7956](https://www.cve.org/CVERecord?id=CVE-2025-7956)
+* A full scale code review was performed, implementing additional sanitization and escaping of all output based on WP Codesniffs and recommendations
+* Removed a lot of unused code and some unused files
+* Fixed an issue with the results page live loader, where in some cases it was not working
+* Fixed an issue with the thumbnail generator where in some cases a notice was generated
+* Fixed an issue with the facet change trigger settings
+
+= 4.13.1 =
+* Quickfix on 4.13 advanced title and field types, where a bug caused an error 500 in some cases
+
+= 4.13 =
+* Added advanced [title and content fields](https://documentation.ajaxsearchpro.com/advanced-options/advanced-title-and-description-fields) visual editor
+* WooCommerce Add To cart button is now available as content field
+* WooCommerce Price field is now available as content field
+* Keyword highligher scrolling now prioritizes exact matches
+* Fixed an issue where Polylang strings were not properly registered
+* Fixed an issue with Google Analytics integration
+* Fixed an issue with Divi Pop-ups, now the floating results window closes when pop-up is closed
+* Front-end scripts sources have been refactored to TypeScript for more stability
+
 = 4.12.7 =
 * Fixed an issue when the plugin textdomain was registered too early
 * Fixed an issue with sorting parameters on the results page

@@ -114,7 +114,7 @@ function alm_filters_facet_index_callback() {
 
 	$html  = '<input type="hidden" name="alm_settings[' . $name . ']" value="0" />';
 	$html .= '<input type="checkbox" id="' . $name . '" name="alm_settings[' . $name . ']" value="1"' . ( ( $options[ $name ] ) ? ' checked="checked"' : '' ) . ' />';
-	$html .= '<label for="' . $name . '">' . __( 'Update facet indices when a post or custom post type is updated', 'ajax-load-more-filters' ) . '</label>';
+	$html .= '<label for="' . $name . '">' . __( 'Update facet indexes when a post or custom post type is updated', 'ajax-load-more-filters' ) . '</label>';
 	echo $html; // phpcs:ignore
 }
 
@@ -131,7 +131,7 @@ function alm_filters_background_indexing_callback() {
 	}
 
 	$enabled = ALM_Facets::check_basic_auth() === 200 ? true : false;
-	$html    = '<span style="display: block; margin-bottom: 15px;">' . __( 'Allow facet indices to be built with background processing.', 'ajax-load-more-filters' ) . '</span>';
+	$html    = '<span style="display: block; margin-bottom: 15px;">' . __( 'Allow facet indexes to be built with background processing.', 'ajax-load-more-filters' ) . '</span>';
 
 	if ( $enabled ) {
 		$html .= '<input type="hidden" name="alm_settings[' . $name . ']" value="0" />';
@@ -159,43 +159,39 @@ function alm_filters_background_indexing_callback() {
  */
 function alm_filters_color_callback() {
 	$options = get_option( 'alm_settings' );
-	if ( ! isset( $options['_alm_filters_color'] ) ) {
-		$options['_alm_filters_color'] = '0';
-	}
+	$color   = isset( $options['_alm_filters_color'] ) ? $options['_alm_filters_color'] : 'default';
+	$colors  = [
+		'default' => 'Default',
+		'white'   => 'White/Light',
+		'dark'    => 'Dark',
+		'blue'    => 'Blue',
+		'red'     => 'Red',
+		'green'   => 'Green',
+		'purple'  => 'Purple',
+	];
 
-	$color     = $options['_alm_filters_color'];
-	$selected0 = '';
+	$html  = '<label for="alm_settings_filters_color">';
+	$html .= esc_html__( 'Choose the theme color of your Ajax Load More Filter form elements.', 'ajax-load-more-filters' );
+	$html .= '</label>';
 
-	if ( $color === 'default' ) {
-		$selected0 = 'selected="selected"';
-	}
-
-	$selected1 = '';
-	if ( $color === 'blue' ) {
-		$selected1 = 'selected="selected"';
-	}
-
-	$selected2 = '';
-	if ( $color === 'red' ) {
-		$selected2 = 'selected="selected"';
-	}
-
-	$selected3 = '';
-	if ( $color === 'green' ) {
-		$selected3 = 'selected="selected"';
-	}
-
-	$html  = '<label for="alm_settings_filters_color">' . __( 'Choose the theme color of your Ajax Load More Filter form elements.', 'ajax-load-more-filters' ) . '</label>';
 	$html .= '<select id="alm_settings_filters_color" name="alm_settings[_alm_filters_color]">';
-	$html .= '<option value="default" ' . $selected0 . '>' . __( 'Default', 'ajax-load-more-filters' ) . '</option>';
-	$html .= '<option value="blue" ' . $selected1 . '>' . __( 'Blue', 'ajax-load-more-filters' ) . '</option>';
-	$html .= '<option value="red" ' . $selected2 . '>' . __( 'Red', 'ajax-load-more-filters' ) . '</option>';
-	$html .= '<option value="green" ' . $selected3 . '>' . __( 'Green', 'ajax-load-more-filters' ) . '</option>';
+	foreach ( $colors as $key => $value ) {
+		$selected = ( $color === $key ) ? ' selected="selected"' : '';
+		$html    .= '<option class="alm-color is-filter ' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '" ' . esc_html( $selected ) . '>' . esc_html( ucfirst( $value ) ) . '</option>';
+	}
 	$html .= '</select>';
 
-	$html .= '<div class="ajax-load-more-wrap alm-filters alm-filters-container filters-' . $color . '"><span class="pages">' . __( 'Preview', 'ajax-load-more-filters' ) . '</span>';
+	$html .= '<div class="ajax-load-more-wrap alm-filters alm-filters-container filters-' . $color . '"><span class="pages">' . __( 'Filter Preview', 'ajax-load-more-filters' ) . '</span>';
+
+		// Search.
+		$html .= '<div class="alm-filter" style="padding: 5px 0 30px; margin: 0 0 10px; clear: both;">';
+		$html .= '<div class="alm-filter--text">';
+		$html .= '<label for="search-text-1" style="font-size: 13px !important; margin-bottom: 5px;">Enter Search Term:</label>';
+		$html .= '<div class="alm-filter--text-wrap has-button"><input class="alm-filter--textfield textfield" id="search-text-1" name="search-text" type="text" value="" placeholder="Enter search term..."><button type="button">Search</button></div></div>';
+		$html .= '</div>';
+
 		// Checkbox.
-		$html .= '<div class="alm-filter" style="padding: 5px 0 20px; margin: 0; clear: both;">';
+		$html .= '<div class="alm-filter" style="padding: 5px 0 30px; margin: 0 0 10px; clear: both;">';
 		$html .= '<li class="alm-filter--checkbox"><div class="alm-filter--link field-checkbox active" data-type="checkbox" data-value="design">' . __( 'Checked', 'ajax-load-more-filters' ) . '</div></li>';
 		$html .= '<li class="alm-filter--checkbox"><div class="alm-filter--link field-checkbox" data-type="checkbox" data-value="design">' . __( 'Unchecked', 'ajax-load-more-filters' ) . '</div></li>';
 		$html .= '</div>';
@@ -218,10 +214,20 @@ function alm_filters_color_callback() {
 
 	<script>
 		// Filter Preview
-		var colorArrayFilters = "filters-default filters-red filters-green filters-blue";
+		var colorArrayFilters = [
+			"filters-default",
+			"filters-dark",
+			"filters-blue",
+			"filters-green",
+			"filters-red",
+			"filters-blue",
+			"filters-purple",
+			"filters-white"
+	];
+
 		jQuery("select#alm_settings_filters_color").change(function() {
 			var color = jQuery(this).val();
-			jQuery('.ajax-load-more-wrap.alm-filters').removeClass(colorArrayFilters);
+			jQuery('.ajax-load-more-wrap.alm-filters').removeClass(colorArrayFilters.join(' '));
 			jQuery('.ajax-load-more-wrap.alm-filters').addClass('filters-'+color);
 		});
 		jQuery("select#alm_settings_filters_color").click(function(e){

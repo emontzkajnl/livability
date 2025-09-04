@@ -62,7 +62,7 @@ class ALM_Facets {
 				}
 			}
 
-			$msg = __( 'Facet indexing has been cancelled. Some indices may be paritally built and will require a rebuild.', 'ajax-load-more-filters' );
+			$msg = __( 'Facet indexing has been cancelled. Some indexes may be paritally built and will require a rebuild.', 'ajax-load-more-filters' );
 
 			$filter_id = isset( $params['id'] ) ? $params['id'] : false;
 			if ( $filter_id ) {
@@ -237,7 +237,7 @@ class ALM_Facets {
 	public static function get_index( $filter, $paged = 1, $test = false, $all = false ) {
 		$index          = [];
 		$post_types     = isset( $filter['facets_post_types'] ) ? $filter['facets_post_types'] : [ 'post' ];
-		$posts_per_page = ! $all ? apply_filters( 'alm_filters_facets_posts_per_page', 100 ) : -1;
+		$posts_per_page = ! $all ? apply_filters( 'alm_filters_facets_posts_per_page', 100 ) : PHP_INT_MAX;
 
 		$args = [
 			'post_type'              => $post_types,

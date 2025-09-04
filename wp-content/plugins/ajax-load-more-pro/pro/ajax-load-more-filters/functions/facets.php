@@ -57,8 +57,11 @@ function alm_filters_get_facet( $args = [], $facet_id = '' ) {
 	$args['alm_facet_id'] = $facet_id;
 
 	// Override ALM query $args for the facet query.
-	$args['fields']         = 'ids'; // Return only post IDs.
-	$args['posts_per_page'] = apply_filters( 'alm_filters_facets_query_posts_per_page', -1 ); // Get all posts.
+	$args['fields']                 = 'ids'; // Return only post IDs.
+	$args['update_post_meta_cache'] = false; // Don't update post meta cache.
+	$args['update_post_term_cache'] = false; // Don't update post term cache.
+	$args['cache_results']          = false; // Don't cache results.
+	$args['posts_per_page']         = apply_filters( 'alm_filters_facets_query_posts_per_page', PHP_INT_MAX ); // Get all posts.
 
 	// Supported query keys.
 	$supported_keys = [
@@ -550,42 +553,4 @@ function alm_filters_facet_get_querystring() {
 		parse_str( $_SERVER['QUERY_STRING'], $params );
 		return $params;
 	}
-}
-
-/******************* - *********************/
-/************* TEST INDEX ******************/
-/******************* - *********************/
-
-/**
- * Build a test index.
- */
-function alm_filters_test_index() {
-	$args = [
-		'post_type'      => [ 'movie' ],
-		'post_status'    => [ 'publish' ],
-		'posts_per_page' => -1,
-	];
-
-	$array  = [];
-	$facets = [
-		'taxonomies' => [ 'actor', 'post_tag', 'movie_type' ],
-		'meta'       => [ 'test_cf' ],
-		'author'     => true,
-	];
-
-	// WP_Query.
-	$query = new WP_Query( $args );
-	while ( $query->have_posts() ) :
-		$query->the_post();
-		$post_id = get_the_ID();
-		$array[] = [
-			'id'       => $post_id,
-			'taxonomy' => alm_filters_get_facet_taxonomies( $post_id, $facets['taxonomies'] ),
-			'meta'     => alm_filters_get_facet_meta( $post_id, $facets['meta'] ),
-			'author'   => alm_filters_get_facet_author( $post_id ),
-		];
-	endwhile;
-	wp_reset_postdata();
-
-	return $array;
 }

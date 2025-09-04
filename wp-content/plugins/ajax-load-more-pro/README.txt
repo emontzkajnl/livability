@@ -10,7 +10,7 @@ Stable tag: trunk
 Requires PHP: 7.0
 Homepage: https://connekthq.com/ajax-load-more/
 Donate: https://connekthq.com/donate
-Version: 1.3.2.1
+Version: 1.4.1
 
 == Copyright ==
 Copyright 2025 Darren Cooney & Connekt Media
@@ -45,11 +45,31 @@ http://connekthq.com/ajax-load-more/pro/
 
 == Changelog ==
 
-** 1.3.2.1 - June 10, 2025 **
+** 1.4.1 - August 18, 2025 **
 
-Filters - 3.0.2
-* HOTFIX: Fixed issues with updated CSS for the Range Slider not being applied correctly.
-* HOTFIX: Remove PHP function decalrations to maintain backwards compatibility with older PHP versions.
+Filters - 3.1.0
+- NEW: Added new Filter element theme colors.
+- UPDATE: Updated existing colors to match the new core Ajax Load More colors.
+- UPDATE: Added better cache handling for facet creation and indexing.
+- UPDATE: Various code cleanup and refactoring.
+- FIX: Fixed multiple potential issues with empty search values.
+- FIX: Fixed issue with show/hide of Filter Reset button for users with Filters CSS disabled.
+
+Paging - 2.1.0
+- NEW: Added new pagination colors.
+- UPDATE: Updated existing pagination colors to match the new core Ajax Load More colors.
+- UPDATE: New hover and focus styles for paging navigation.
+- UPDATE: Code cleanup and various UI/UX updates.
+
+Single Posts - 1.7.3
+- UPDATE: Improved caching mechanism for initial single post requests.
+- UPDATE: Enhanced error handling for AJAX requests.
+- UPDATE: Code optimization and cleanup.
+
+** 1.4.0 - July 23, 2025 **
+
+* UPGRADE NOTICE: This Ajax Load More Pro update combines the Custom Repeaters and Theme Repeaters add-ons into a single add-on called "Templates". It's recommended to update the Ajax Load More plugin to 7.5.0 or greater before updating this add-on.
+* UPDATE: Code cleanup and organization.
 
 ** 1.3.2 - June 10, 2025 **
 

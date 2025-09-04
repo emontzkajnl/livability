@@ -1,3 +1,5 @@
+/* Select Arrow */
+/* Replace a substring in a string */
 /**
  * Ajax Load More - Paging Add-on
  * @see https://connekthq.com/plugins/ajax-load-more/add-ons/paging/
@@ -26,7 +28,6 @@ ul.alm-paging .alm-paging.empty {
 
 ul.alm-paging li {
   background: none;
-  overflow: hidden;
   position: relative;
   list-style: none;
   padding: 0;
@@ -34,11 +35,11 @@ ul.alm-paging li {
   line-height: 1;
   display: inline-block;
   vertical-align: top;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 ul.alm-paging li:before, ul.alm-paging li:after {
-  content: none;
+  content: '';
 }
 
 ul.alm-paging li a {
@@ -46,24 +47,28 @@ ul.alm-paging li a {
   padding: 8px 10px;
   -webkit-border-radius: 3px;
           border-radius: 3px;
-  color: #666;
-  border: 1px solid #f1f1f1;
+  color: #7c8087;
+  border: 1px solid #efefef;
   background: #f7f7f7;
   line-height: 1;
   text-decoration: none;
-  -webkit-transition: all 0.15s ease;
-  -o-transition: all 0.15s ease;
-  transition: all 0.15s ease;
+  -webkit-transition: all 0.1s ease;
+  -o-transition: all 0.1s ease;
+  transition: all 0.1s ease;
 }
 
 ul.alm-paging li a:hover, ul.alm-paging li a:focus {
-  color: #222;
-  border-color: #e1e1e1;
-  background-color: #efefef;
+  color: #3f3f46;
+  background-color: #fdf1f1;
+  border-color: #edc2c2;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.075);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.075);
+  outline: none;
 }
 
 ul.alm-paging li a:active {
-  background-color: #e1e1e1;
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+          box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 ul.alm-paging li.disabled a {
@@ -83,41 +88,80 @@ ul.alm-paging li.active a {
   pointer-events: none;
 }
 
+/* Dark */
+.ajax-load-more-wrap.paging-dark ul.alm-paging li a:hover,
+.ajax-load-more-wrap.paging-dark ul.alm-paging li a:focus {
+  background-color: #ececed;
+  border-color: #9f9fa3;
+}
+
+.ajax-load-more-wrap.paging-dark ul.alm-paging li.active a {
+  background-color: #3f3f46;
+  border-color: #3f3f46;
+}
+
 /* Blue */
+.ajax-load-more-wrap.paging-blue ul.alm-paging li a:hover,
+.ajax-load-more-wrap.paging-blue ul.alm-paging li a:focus {
+  background-color: #e6f0f6;
+  border-color: #8ebcd5;
+}
+
 .ajax-load-more-wrap.paging-blue ul.alm-paging li.active a {
-  background-color: #6bb1d9;
-  border-color: #6bb1d9;
+  background-color: #0284c7;
+  border-color: #0284c7;
 }
 
 /* Green */
-.ajax-load-more-wrap.paging-green ul.alm-paging li.active a {
-  background-color: #98ca68;
-  border-color: #98ca68;
+.ajax-load-more-wrap.paging-green ul.alm-paging li a:hover,
+.ajax-load-more-wrap.paging-green ul.alm-paging li a:focus {
+  background-color: #e6f2ee;
+  border-color: #8ec2b3;
 }
 
-/* Red */
-.ajax-load-more-wrap.paging-red ul.alm-paging li.active a {
-  background-color: #ca4b4b;
-  border-color: #ca4b4b;
+.ajax-load-more-wrap.paging-green ul.alm-paging li.active a {
+  background-color: #059669;
+  border-color: #059669;
 }
 
 /* Purple */
+.ajax-load-more-wrap.paging-purple ul.alm-paging li a:hover,
+.ajax-load-more-wrap.paging-purple ul.alm-paging li a:focus {
+  background-color: #eeebf9;
+  border-color: #b9b1e7;
+}
+
 .ajax-load-more-wrap.paging-purple ul.alm-paging li.active a {
-  background-color: #b369c8;
-  border-color: #b369c8;
+  background-color: #6146e5;
+  border-color: #6146e5;
 }
 
 /* Grey */
-.ajax-load-more-wrap.paging-grey ul.alm-paging li.active a {
-  background-color: #666;
-  border-color: #666;
+.ajax-load-more-wrap.paging-grey ul.alm-paging li a:hover,
+.ajax-load-more-wrap.paging-grey ul.alm-paging li a:focus,
+.ajax-load-more-wrap.paging-white ul.alm-paging li a:hover,
+.ajax-load-more-wrap.paging-white ul.alm-paging li a:focus {
+  background-color: #f2f2f3;
+  border-color: #dedfe1;
+}
+
+.ajax-load-more-wrap.paging-grey ul.alm-paging li.active a,
+.ajax-load-more-wrap.paging-white ul.alm-paging li.active a {
+  background-color: #7c8087;
+  border-color: #7c8087;
 }
 
 /* White */
+.ajax-load-more-wrap.paging-white ul.alm-paging li a:hover,
+.ajax-load-more-wrap.paging-white ul.alm-paging li a:focus {
+  background-color: #f2f2f3;
+  border-color: #dedfe1;
+}
+
 .ajax-load-more-wrap.paging-white ul.alm-paging li.active a {
+  color: #3f3f46;
   background-color: #fff;
-  color: #333;
-  border-color: #fff;
+  border-color: #f3f4f6;
 }
 
 /* Page Loading styles */
@@ -133,7 +177,9 @@ ul.alm-paging li.active a {
 
 .alm-paging-wrap .alm-paging-loading {
   background-color: rgba(255, 255, 255, 0.1);
-  background-image: url(../../img/ajax-loader.gif);
+  background-image: url('data:image/svg+xml,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 2400 2400" xml:space="preserve"><g stroke-width="200" stroke-linecap="round" stroke="%235e5e60" fill="none" id="spinner"><line x1="1200" y1="600" x2="1200" y2="100"/><line opacity="0.5" x1="1200" y1="2300" x2="1200" y2="1800"/><line opacity="0.917" x1="900" y1="680.4" x2="650" y2="247.4"/><line opacity="0.417" x1="1750" y1="2152.6" x2="1500" y2="1719.6"/><line opacity="0.833" x1="680.4" y1="900" x2="247.4" y2="650"/><line opacity="0.333" x1="2152.6" y1="1750" x2="1719.6" y2="1500"/><line opacity="0.75" x1="600" y1="1200" x2="100" y2="1200"/><line opacity="0.25" x1="2300" y1="1200" x2="1800" y2="1200"/><line opacity="0.667" x1="680.4" y1="1500" x2="247.4" y2="1750"/><line opacity="0.167" x1="2152.6" y1="650" x2="1719.6" y2="900"/><line opacity="0.583" x1="900" y1="1719.6" x2="650" y2="2152.6"/><line opacity="0.083" x1="1750" y1="247.4" x2="1500" y2="680.4"/><animateTransform attributeName="transform" attributeType="XML" type="rotate" keyTimes="0;0.08333;0.16667;0.25;0.33333;0.41667;0.5;0.58333;0.66667;0.75;0.83333;0.91667" values="0 1199 1199;30 1199 1199;60 1199 1199;90 1199 1199;120 1199 1199;150 1199 1199;180 1199 1199;210 1199 1199;240 1199 1199;270 1199 1199;300 1199 1199;330 1199 1199" dur="0.83333s" begin="0s" repeatCount="indefinite" calcMode="discrete"/></g></svg>');
+  -webkit-background-size: 32px 32px;
+          background-size: 32px 32px;
   background-repeat: no-repeat;
   background-position: center center;
 }
@@ -179,7 +225,7 @@ ul.alm-paging li.active a {
   visibility: visible;
   opacity: 1;
   background-color: rgba(255, 255, 255, 0.35);
-  background-image: url(../../img/ajax-loader.gif);
+  background-image: url('data:image/svg+xml,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 2400 2400" xml:space="preserve"><g stroke-width="200" stroke-linecap="round" stroke="%235e5e60" fill="none" id="spinner"><line x1="1200" y1="600" x2="1200" y2="100"/><line opacity="0.5" x1="1200" y1="2300" x2="1200" y2="1800"/><line opacity="0.917" x1="900" y1="680.4" x2="650" y2="247.4"/><line opacity="0.417" x1="1750" y1="2152.6" x2="1500" y2="1719.6"/><line opacity="0.833" x1="680.4" y1="900" x2="247.4" y2="650"/><line opacity="0.333" x1="2152.6" y1="1750" x2="1719.6" y2="1500"/><line opacity="0.75" x1="600" y1="1200" x2="100" y2="1200"/><line opacity="0.25" x1="2300" y1="1200" x2="1800" y2="1200"/><line opacity="0.667" x1="680.4" y1="1500" x2="247.4" y2="1750"/><line opacity="0.167" x1="2152.6" y1="650" x2="1719.6" y2="900"/><line opacity="0.583" x1="900" y1="1719.6" x2="650" y2="2152.6"/><line opacity="0.083" x1="1750" y1="247.4" x2="1500" y2="680.4"/><animateTransform attributeName="transform" attributeType="XML" type="rotate" keyTimes="0;0.08333;0.16667;0.25;0.33333;0.41667;0.5;0.58333;0.66667;0.75;0.83333;0.91667" values="0 1199 1199;30 1199 1199;60 1199 1199;90 1199 1199;120 1199 1199;150 1199 1199;180 1199 1199;210 1199 1199;240 1199 1199;270 1199 1199;300 1199 1199;330 1199 1199" dur="0.83333s" begin="0s" repeatCount="indefinite" calcMode="discrete"/></g></svg>');
   background-repeat: no-repeat;
   background-position: center center;
 }
