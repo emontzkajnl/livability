@@ -99,7 +99,7 @@ class GP_Advanced_Select extends GP_Plugin {
 			</div>
 
 			<?php
-		} else {
+		} elseif ( $field['type'] !== 'address' ) {
 			?>
 			<div class="ginput_container ginput_container_multiselect gform-theme__disable" inert>
 				<select multiple="multiple" size="7" name="input_<?php echo $field['id']; ?>[]" id="<?php echo $select_id; ?>" class="large tomselected ts-hidden-accessible" aria-invalid="false" tabindex="-1">

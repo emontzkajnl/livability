@@ -130,9 +130,6 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
-		// If filter value has special characters like &, escape them.
-		$filter_value = is_scalar( $filter_value ) ? htmlspecialchars( $filter_value, ENT_NOQUOTES, 'UTF-8', false ) : $filter_value;
-
 		$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), $filter['operator'], $filter_value );
 
 		return $query_builder_args;

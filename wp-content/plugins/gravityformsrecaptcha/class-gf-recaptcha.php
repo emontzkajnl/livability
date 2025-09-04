@@ -188,15 +188,28 @@ class GF_RECAPTCHA extends GFAddOn {
 	 *
 	 * disabled: reCAPTCHA is disabled in feed settings.
 	 * disconnected: No valid v3 site and secret keys are saved.
-	 * quota_bypass: reCAPTCHA API quota limit hit.
+	 * disabled (quota limit): reCAPTCHA API quota limit hit.
+	 * disabled (token refresh in progress): Another settings page view or form submission was refreshing the Enterprise auth token.
+	 * disabled (token refresh failed): The request to refresh the Enterprise auth token failed.
 	 *
 	 * @var array
 	 */
 	private $v3_disabled_states = array(
 		'disabled',
 		'disconnected',
-		'disabled (quota limit)'
+		'disabled (quota limit)',
+		'disabled (token refresh in progress)',
+		'disabled (token refresh failed)',
 	);
+
+	/**
+	 * The value to be saved to the entry meta for the score when initializing the API fails.
+	 *
+	 * @since 2.0
+	 *
+	 * @var string
+	 */
+	private $init_error_status = 'disconnected';
 
 	/**
 	 * Returns an instance of this class, and stores it in the $_instance property.
@@ -232,6 +245,7 @@ class GF_RECAPTCHA extends GFAddOn {
 		GF_Fields::register( $this->field );
 
 		add_filter( 'gform_settings_menu', array( $this, 'replace_core_recaptcha_menu_item' ) );
+		add_action( 'gform_update_status', array( $this, 'entry_status_change' ), 1, 3 );
 
 		parent::pre_init();
 	}
@@ -276,7 +290,7 @@ class GF_RECAPTCHA extends GFAddOn {
 
 		// Enqueue shared scripts that need to run everywhere, instead of just on forms pages.
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_recaptcha_script' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_enterprise_recaptcha_script' ) );
+		add_action( 'gform_preview_init', array( $this, 'maybe_enqueue_recaptcha_script' ) );
 
 		// Add Recaptcha field to the form output.
 		add_filter( 'gform_form_tag', array( $this, 'add_recaptcha_input' ), 50, 2  );
@@ -306,8 +320,7 @@ class GF_RECAPTCHA extends GFAddOn {
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'maybe_enqueue_recaptcha_script' ) );
 		add_action( 'admin_notices', array( $this, 'recaptcha_quota_notice' ), 10, 0 );
-
-		add_action( 'admin_enqueue_scripts', array( $this, 'maybe_enqueue_enterprise_recaptcha_script' ) );
+		add_filter( 'gform_entries_field_value', array( $this, 'entries_field_value' ), 10, 3 );
 	}
 
 	/**
@@ -346,24 +359,12 @@ class GF_RECAPTCHA extends GFAddOn {
 	 * @return array
 	 */
 	public function scripts() {
-		$frontend_script_name = version_compare( GFForms::$version, '2.9.0-dev-1', '<' ) ? 'frontend-legacy' : 'frontend';
-		$scripts = array(
-			array(
-				'handle'    => $this->asset_prefix . $frontend_script_name,
-				'src'       => $this->get_script_url( $frontend_script_name ),
-				'version'   => $this->_version,
-				'deps'      => array( 'jquery', "{$this->asset_prefix}recaptcha" ),
-				'in_footer' => true,
-				'enqueue'   => array(
-					array( $this, 'frontend_script_callback' ),
-				),
-			),
-		);
+		$scripts = array();
 
 		// Prevent plugin settings from loading on the frontend. Remove this condition to see it in action.
 		if ( is_admin() ) {
 			if ( $this->requires_recaptcha_script() ) {
-				$admin_deps = array( 'jquery', "{$this->asset_prefix}recaptcha" );
+				$admin_deps = array( 'jquery', "{$this->asset_prefix}recaptcha", 'gform_gravityforms' );
 			} else {
 				$admin_deps = array( 'jquery' );
 			}
@@ -383,6 +384,22 @@ class GF_RECAPTCHA extends GFAddOn {
 		}
 
 		return array_merge( parent::scripts(), $scripts );
+	}
+
+	/**
+	 * Registers the reCAPTCHA front-end scripts with no-conflict mode, so the badge will display or hide on the settings page.
+	 *
+	 * @since 2.0
+	 *
+	 * @param array $scripts The script handles registered with no-conflict mode.
+	 *
+	 * @return array
+	 */
+	public function register_noconflict_scripts( $scripts ) {
+		$scripts[] = $this->asset_prefix . 'recaptcha';
+		$scripts[] = $this->asset_prefix . ( version_compare( GFForms::$version, '2.9.0-dev-1', '<' ) ? 'frontend-legacy' : 'frontend' );
+
+		return parent::register_noconflict_scripts( $scripts );
 	}
 
 	/**
@@ -443,6 +460,10 @@ class GF_RECAPTCHA extends GFAddOn {
 		$current_settings = parent::get_plugin_settings();
 		// If the mode is enterprise, we don't need the v2 core settings.
 		if ( rgar( $current_settings, 'connection_type' ) === 'enterprise' ) {
+			if ( empty( $current_settings['access_token'] ) && empty( $current_settings['action'] ) ) {
+				unset( $current_settings['action'] );
+			}
+
 			return $current_settings;
 		}
 
@@ -508,6 +529,43 @@ class GF_RECAPTCHA extends GFAddOn {
 	}
 
 	/**
+	 * Returns the message to display when there is an issue communicating with Google.
+	 *
+	 * @since 2.0
+	 *
+	 * @return string
+	 */
+	private function comms_error_message() {
+		if ( method_exists( 'GFCommon', 'get_support_url' ) ) {
+			$support_url = GFCommon::get_support_url();
+		} else {
+			$support_url = 'https://www.gravityforms.com/open-support-ticket/';
+		}
+
+		/* translators: 1: Open link tag 2: Screen reader text opening span tag 3: Screen reader text closing span tag, external link span tags, and closing link tag */
+
+		return sprintf( esc_html__( 'There is a problem communicating with Google right now. Please check back later. If this issue persists for more than a day, please %1$sopen a support ticket%2$s(opens in a new tab)%3$s.', 'gravityformsrecaptcha' ), "<a href='" . esc_url( $support_url ) . "' target='_blank'>", '<span class="screen-reader-text">', '</span>&nbsp;<span class="gform-icon gform-icon--external-link"></span></a>' );
+	}
+
+	/**
+	 * Echos an error message.
+	 *
+	 * @since 2.0
+	 *
+	 * @return void
+	 */
+	private function echo_error_message( $message ) {
+		echo '<div class="error-alert-container alert-container">
+					<div class="gform-alert gform-alert--error" data-js="gform-alert">
+						<span class="gform-alert__icon gform-icon gform-icon--circle-close" aria-hidden="true"></span>
+						<div class="gform-alert__message-wrap">
+							<p class="gform-alert__message">' . $message . '</p>
+						</div>
+					</div>
+				</div>';
+	}
+
+	/**
 	 * Setting to display the reCAPTCHA Enterprise fields.
 	 *
 	 * @since 1.7.0
@@ -520,6 +578,7 @@ class GF_RECAPTCHA extends GFAddOn {
 		$current_site_key       = rgar( $plugin_settings, 'site_key_v3_enterprise' ) ? rgar( $plugin_settings, 'site_key_v3_enterprise' ) : '';
 		if ( ! $this->initialize_api() ) {
 			$this->log_debug( __METHOD__ . '(): Unable to initialize reCAPTCHA API.' );
+			$this->echo_error_message( $this->comms_error_message() );
 
 			return false;
 		}
@@ -533,9 +592,10 @@ class GF_RECAPTCHA extends GFAddOn {
 		$response = $this->api->get_recaptcha_projects();
 
 		if ( is_wp_error( $response ) ) {
-			$this->log_debug( __METHOD__ . '(): Could not retrieve Google projects' );
+			$this->log_debug( __METHOD__ . '(): Could not retrieve Google projects.' );
+			$this->echo_error_message( esc_html__( 'You have no available projects for reCAPTCHA or have insufficient permissions', 'gravityformsrecaptcha' ) );
 
-			return esc_html_e( 'You have no available projects for reCAPTCHA or have insufficient permissions', 'gravityformsrecaptcha' );
+			return false;
 		}
 
 		if ( defined( 'GF_RECAPTCHA_PROJECT_NUMBER' ) ) {
@@ -574,8 +634,10 @@ class GF_RECAPTCHA extends GFAddOn {
 				$site_keys = $this->api->get_enterprise_site_keys( $current_project_number );
 
 				if ( is_wp_error( $site_keys ) ) {
-					$this->log_debug( __METHOD__ . '(): Error retrieving sitekeys associated with the selected project.' );
-					wp_send_json_error( new WP_Error( 'google_recaptcha_error', wp_strip_all_tags( __( 'There was an error retrieving reCAPTHCA site keys.', 'gravityformsrecaptcha' ) ) ) );
+					$this->log_debug( __METHOD__ . '(): Error retrieving site keys associated with the selected project.' );
+					$this->echo_error_message( esc_html__( 'There was an error retrieving the reCAPTCHA site keys.', 'gravityformsrecaptcha' ) );
+
+					return false;
 				}
 
 				// Create select field markup.
@@ -718,7 +780,7 @@ class GF_RECAPTCHA extends GFAddOn {
 	 * @return string
 	 */
 	public function add_recaptcha_input( $form_tag, $form ) {
-		if ( empty( $form_tag ) || $this->is_disabled_by_form_setting( $form ) || ! $this->initialize_api() ) {
+		if ( empty( $form_tag ) || $this->is_disabled_by_form_setting( $form ) || ! $this->initialize_api( false ) ) {
 			return $form_tag;
 		}
 
@@ -806,70 +868,116 @@ class GF_RECAPTCHA extends GFAddOn {
 	 *
 	 * @since 1.0
 	 * @since 1.7.0 Separate methods for initialize enterprise and classic APIs.
+	 * @since 1.8.0 Added the optional $refresh_token param.
+	 *
+	 * @param bool $refresh_token Indicates if the auth token should be refreshed.
 	 *
 	 * @return bool
 	 */
-	private function initialize_api() {
-		$plugin_settings = $this->get_plugin_settings();
+	private function initialize_api( $refresh_token = true ) {
+		static $result = null;
 
-		if ( rgar( $plugin_settings, 'connection_type' ) === 'enterprise' ) {
-			return $this->initialize_enterprise_api( $plugin_settings );
-		} else {
-			return $this->initialize_classic_api();
+		if ( is_bool( $result ) ) {
+			return $result;
 		}
+
+		$plugin_settings = $this->get_plugin_settings();
+		$connection_type = rgar( $plugin_settings, 'connection_type' );
+
+		switch ( $connection_type ) {
+			case 'enterprise':
+				$result = $this->initialize_enterprise_api( $plugin_settings, $refresh_token );
+				break;
+			case 'v2':
+				$this->log_debug( __METHOD__ . '(): Aborting; v2 connection type selected.' );
+				$result = false;
+				break;
+			default:
+				$result = $this->initialize_classic_api();
+		}
+
+		return $result;
 	}
 
 	/**
 	 * Initialize the Enterprise API.
 	 *
-	 * @param array $plugin_settings The plugin settings.
-	 *
 	 * @since 1.7.0
+	 * @since 1.8.0 Added the optional $refresh_token param and refresh locking.
+	 *
+	 * @param array $plugin_settings The plugin settings.
+	 * @param bool  $refresh_token   Indicates if the auth token should be refreshed.
 	 *
 	 * @return bool
 	 */
-	private function initialize_enterprise_api( $plugin_settings ) {
-		if ( rgar( $plugin_settings, 'access_token' ) ) {
-			$date_created = rgar( $plugin_settings, 'date_created' ) ? $plugin_settings['date_created'] : 0;
-
-			if ( time() > ( $date_created + 3600 ) ) {
-				$this->log_debug( __METHOD__ . '(): API tokens expired, start refreshing.' );
-
-				if ( rgar( $plugin_settings, 'refresh_token' ) ) {
-					// Refresh token.
-					$auth_response = $this->api->refresh_token( $plugin_settings['refresh_token'] );
-
-					$decoded_response = json_decode( rgar( $auth_response, 'auth_payload' ), true );
-
-					if ( is_wp_error( $decoded_response ) || rgar( $decoded_response, 'auth_error' ) ) {
-						$this->log_debug( __METHOD__ . '(): API access token failed to be refreshed; ' . $auth_response->get_error_message() );
-
-						return false;
-					}
-
-					$plugin_settings['access_token']  = rgar( $decoded_response, 'access_token' );
-					$plugin_settings['refresh_token'] = rgar( $decoded_response, 'refresh_token' );
-					$plugin_settings['date_token']    = rgar( $decoded_response, 'created' );
-
-					// Save plugin settings.
-					$this->update_plugin_settings( $plugin_settings );
-					$this->log_debug( __METHOD__ . '(): API access token has been refreshed.' );
-
-					return $this->get_api_instance();
-				} else {
-					$this->log_debug( __METHOD__ . '(): Refresh token does not exist, unable to refresh access token.' );
-				}
-			} else {
-				$this->log_debug( __METHOD__ . '(): Enterprise API Initialized.' );
-				$this->api = $this->get_api_instance();
-
-				return true;
-			}
-		} else {
+	private function initialize_enterprise_api( $plugin_settings, $refresh_token ) {
+		if ( ! rgar( $plugin_settings, 'access_token' ) ) {
 			$this->log_debug( __METHOD__ . '(): Access token does not exist, unable to initialize API.' );
 
 			return false;
 		}
+
+		$date_created = (int) rgar( $plugin_settings, 'date_token', 0 );
+		if ( empty( $date_created ) ) {
+			$date_created = (int) rgar( $plugin_settings, 'date_created', 0 );
+		}
+
+		if ( ! $refresh_token || ! ( time() > ( $date_created + 3600 ) ) ) {
+			$this->log_debug( __METHOD__ . '(): Enterprise API Initialized.' );
+			$this->get_api_instance();
+
+			return true;
+		}
+
+		if ( ! rgar( $plugin_settings, 'refresh_token' ) ) {
+			$this->log_error( __METHOD__ . '(): API tokens expired; refresh token does not exist, unable to refresh access token.' );
+
+			return false;
+		}
+
+		$this->log_debug( __METHOD__ . '(): API tokens expired, start refreshing.' );
+
+		if ( ! class_exists( 'Gravity_Forms\Gravity_Forms_RECAPTCHA\Refresh_Lock_Handler' ) ) {
+			require_once 'includes/class-refresh-lock-handler.php';
+		}
+
+		$refresh_lock_handler = new Refresh_Lock_Handler( $this );
+
+		if ( $refresh_lock_handler->can_refresh_token() === false ) {
+			$this->log_debug( __METHOD__ . '():  Aborting; ' . $refresh_lock_handler->refresh_lock_reason );
+			$this->init_error_status = 'disabled (token refresh in progress)';
+
+			return false;
+		}
+
+		$refresh_lock_handler->lock();
+
+		// Refresh token.
+		$auth_response = $this->api->refresh_token( $plugin_settings['refresh_token'] );
+
+		if ( is_wp_error( $auth_response ) ) {
+			$this->log_error( __METHOD__ . '(): API access token failed to be refreshed; ' . $auth_response->get_error_message() );
+			$refresh_lock_handler->release_lock();
+			$refresh_lock_handler->increment_rate_limit();
+			$this->init_error_status = 'disabled (token refresh failed)';
+
+			return false;
+		}
+
+		$decoded_response = json_decode( rgar( $auth_response, 'auth_payload' ), true );
+
+		$plugin_settings['access_token']  = rgar( $decoded_response, 'access_token' );
+		$plugin_settings['refresh_token'] = rgar( $decoded_response, 'refresh_token' );
+		$plugin_settings['date_token']    = rgar( $decoded_response, 'created' );
+
+		// Save plugin settings.
+		$this->update_plugin_settings( $plugin_settings );
+		$this->log_debug( __METHOD__ . '(): API access token has been refreshed; Enterprise API Initialized.' );
+		$this->get_api_instance();
+		$refresh_lock_handler->release_lock();
+		$refresh_lock_handler->reset_rate_limit();
+
+		return true;
 	}
 
 	/**
@@ -942,7 +1050,7 @@ class GF_RECAPTCHA extends GFAddOn {
 	 * @return bool
 	 */
 	private function requires_recaptcha_script() {
-		return is_admin() ? $this->is_plugin_settings( $this->_slug ) : $this->initialize_api();
+		return is_admin() ? $this->is_plugin_settings( $this->_slug ) : $this->initialize_api( false );
 	}
 
 	/**
@@ -956,7 +1064,13 @@ class GF_RECAPTCHA extends GFAddOn {
 	 * @see GF_RECAPTCHA::init()
 	 */
 	public function maybe_enqueue_recaptcha_script() {
-		if ( ! $this->requires_recaptcha_script() || $this->get_connection_type() === 'enterprise' ) {
+		if ( ! $this->requires_recaptcha_script() ) {
+			return;
+		}
+
+		if ( $this->get_connection_type() === 'enterprise' ) {
+			$this->enqueue_enterprise_recaptcha_script();
+
 			return;
 		}
 
@@ -969,39 +1083,72 @@ class GF_RECAPTCHA extends GFAddOn {
 		wp_enqueue_script(
 			"{$this->asset_prefix}recaptcha",
 			$script_url,
-			array( 'jquery' ),
+			array(),
 			$this->_version,
-			true
+			$this->get_enqueue_script_args()
 		);
 
 		$strings                    = $this->localize_script_common_strings();
 		$strings['site_key']        = $this->plugin_settings->get_recaptcha_key( 'site_key_v3' );
 		$strings['connection_type'] = 'classic';
 
-
 		wp_localize_script(
 			"{$this->asset_prefix}recaptcha",
 			"{$this->asset_prefix}recaptcha_strings",
 			$strings
 		);
+
+		$this->enqueue_frontend_script();
 	}
 
 	/**
-	 * Custom enqueuing of the external reCAPTCHA Enterpise script.
+	 * Enqueues our frontend script that handles executing the external script and hiding the badge.
+	 *
+	 * @since 1.8.0
+	 *
+	 * @return void
+	 */
+	private function enqueue_frontend_script() {
+		$frontend_script_name = version_compare( GFForms::$version, '2.9.0-dev-1', '<' ) ? 'frontend-legacy' : 'frontend';
+		$deps                 = array( "{$this->asset_prefix}recaptcha" );
+
+		if ( $frontend_script_name === 'frontend-legacy' ) {
+			$deps[] = 'jquery';
+		}
+
+		wp_enqueue_script(
+			$this->asset_prefix . $frontend_script_name,
+			$this->get_script_url( $frontend_script_name ),
+			$deps,
+			$this->_version,
+			$this->get_enqueue_script_args()
+		);
+	}
+
+	/**
+	 * Returns the array used for the args param of wp_enqueue_script().
+	 *
+	 * @since 1.8.0
+	 *
+	 * @return array
+	 */
+	private function get_enqueue_script_args() {
+		return array(
+			'strategy'  => 'defer',
+			'in_footer' => true,
+		);
+	}
+
+	/**
+	 * Custom enqueuing of the external reCAPTCHA Enterprise script.
 	 *
 	 * This script is enqueued via the normal WordPress process because, on the front-end, it's needed on every
 	 * single page of the site in order for reCAPTCHA to properly score the interactions leading up to the form
 	 * submission.
 	 *
-	 * @since 1.7.0
-	 *
-	 * @see GF_RECAPTCHA::init()
+	 * @since 1.8.0
 	 */
-	public function maybe_enqueue_enterprise_recaptcha_script() {
-		if ( ! $this->requires_recaptcha_script() || $this->get_connection_type() !== 'enterprise' ) {
-			return;
-		}
-
+	private function enqueue_enterprise_recaptcha_script() {
 		$script_url = add_query_arg(
 			'render',
 			$this->plugin_settings->get_recaptcha_key( 'site_key_v3_enterprise' ),
@@ -1011,9 +1158,9 @@ class GF_RECAPTCHA extends GFAddOn {
 		wp_enqueue_script(
 			"{$this->asset_prefix}recaptcha",
 			$script_url,
-			array( 'jquery' ),
+			array(),
 			$this->_version,
-			true
+			$this->get_enqueue_script_args()
 		);
 
 		$strings                    = $this->localize_script_common_strings();
@@ -1026,6 +1173,8 @@ class GF_RECAPTCHA extends GFAddOn {
 			"{$this->asset_prefix}recaptcha_strings",
 			$strings
 		);
+
+		$this->enqueue_frontend_script();
 	}
 
 	/**
@@ -1036,9 +1185,7 @@ class GF_RECAPTCHA extends GFAddOn {
 	 * @return array
 	 */
 	private function localize_script_common_strings() {
-		$disable_badge = array_key_exists( '_gform_setting_disable_badge_v3', $_POST )
-			? rgpost( '_gform_setting_disable_badge_v3' ) === '1'
-			: $this->get_plugin_setting( 'disable_badge_v3' ) === '1';
+		$disable_badge = ( $this->is_plugin_settings( $this->_slug ) && rgpost( '_gform_setting_disable_badge_v3' ) === '1' ) || $this->get_plugin_setting( 'disable_badge_v3' ) === '1';
 
 		return array(
 			'nonce'                          => wp_create_nonce( "{$this->_slug}_verify_token_nonce" ),
@@ -1050,21 +1197,8 @@ class GF_RECAPTCHA extends GFAddOn {
 			'change_connection_type_title'   => __( 'Change Connection Type', 'gravityformsrecaptcha' ),
 			'change_connection_type_message' => __( 'Changing the connection type will delete your current settings.  Do you want to proceed?', 'gravityformsrecaptcha' ),
 			'disconnect_title'               => __( 'Disconnect', 'gravityformsrecaptcha' ),
-			'disconnect_message' 		     => __( 'Disconnecting from reCAPTCHA will delete your current settings.  Do you want to proceed?', 'gravityformsrecaptcha' ),
+			'disconnect_message'             => __( 'Disconnecting from reCAPTCHA will delete your current settings.  Do you want to proceed?', 'gravityformsrecaptcha' ),
 		);
-	}
-
-	/**
-	 * Callback to determine whether to render the frontend script.
-	 *
-	 * @since 1.0
-	 *
-	 * @param array $form The form array.
-	 *
-	 * @return bool
-	 */
-	public function frontend_script_callback( $form ) {
-		return $form && ! is_admin();
 	}
 
 	/**
@@ -1095,6 +1229,7 @@ class GF_RECAPTCHA extends GFAddOn {
 	 * Save the Recaptcha metadata values to the entry.
 	 *
 	 * @since 1.0
+	 * @since 2.0 Updated to save the Enterprise assessment ID, if available.
 	 *
 	 * @see   GF_RECAPTCHA::get_entry_meta()
 	 *
@@ -1109,25 +1244,48 @@ class GF_RECAPTCHA extends GFAddOn {
 			return;
 		}
 
+		$existing_value = rgar( $entry, $key );
+		if ( $this->is_entry_edit() || ! rgblank( $existing_value ) ) {
+			return $existing_value;
+		}
+
+		$entry_id = rgar( $entry, 'id' );
+		$form_id  = rgar( $form, 'id' );
+
 		if ( $this->is_disabled_by_form_setting( $form ) ) {
-			$this->log_debug( __METHOD__ . '(): reCAPTCHA v3 disabled on form ' . rgar( $form, 'id' ) );
+			$this->log_debug( __METHOD__ . sprintf( '(): Not saving score for entry #%d for form #%d; disabled via setting.', $entry_id, $form_id ) );
+
 			return 'disabled';
 		}
 
 		if ( $this->is_disabled_by_quota_limit() ) {
-			$this->log_debug( __METHOD__ . '(): reCAPTCHA v3 disabled due to API quota limit.' );
+			$this->log_debug( __METHOD__ . sprintf( '(): Not saving score for entry #%d for form #%d; disabled due to API quota limit.', $entry_id, $form_id ) );
+
 			return 'disabled (quota limit)';
 		}
 
 		if ( ! $this->initialize_api() ) {
-			return 'disconnected';
+			$this->log_debug( __METHOD__ . sprintf( '(): Not saving score for entry #%d for form #%d; API not initialized.', $entry_id, $form_id ) );
+
+			return $this->init_error_status;
 		}
 
 		if ( $this->get_connection_type() === 'enterprise' && ! $this->enterprise_keys_configured() ) {
+			$this->log_debug( __METHOD__ . sprintf( '(): Not saving score for entry #%d for form #%d; the Enterprise project and/or key settings are not configured.', $entry_id, $form_id ) );
+
 			return 'disconnected';
 		}
 
-		return $this->token_verifier->get_score();
+		$assessment_id = $this->token_verifier->get_assessment_id();
+		if ( $assessment_id ) {
+			$this->log_debug( __METHOD__ . sprintf( '(): Saving assessment ID (%s) for entry #%d for form #%d.', $assessment_id, $entry_id, $form_id ) );
+			gform_update_meta( $entry_id, $this->get_slug() . '_assessment_id', $assessment_id, $form_id );
+		}
+
+		$score = $this->token_verifier->get_score();
+		$this->log_debug( __METHOD__ . sprintf( '(): Saving score (%s) for entry #%d for form #%d.', $score, $entry_id, $form_id ) );
+
+		return $score;
 	}
 
 	/**
@@ -1171,10 +1329,29 @@ class GF_RECAPTCHA extends GFAddOn {
 		printf(
 			'<div><p>%s: %s</p><p><a href="%s">%s</a></p></div>',
 			esc_html__( 'Score', 'gravityformsrecaptcha' ),
-			esc_html( $score ),
+			esc_html( $this->get_score_display_value( $score ) ),
 			esc_html( 'https://docs.gravityforms.com/captcha/' ),
 			esc_html__( 'Click here to learn more about reCAPTCHA.', 'gravityformsrecaptcha' )
 		);
+	}
+
+	/**
+	 * Returns the value to be displayed on the entries list page.
+	 *
+	 * @since 2.0
+	 *
+	 * @param mixed $value    The value to be displayed.
+	 * @param int   $form_id  The ID of the form the entries are being listed for.
+	 * @param int   $field_id The field ID or entry meta key for the value being displayed.
+	 *
+	 * @return mixed
+	 */
+	public function entries_field_value( $value, $form_id, $field_id ) {
+		if ( empty( $value ) || $field_id !== "{$this->_slug}_score" ) {
+			return $value;
+		}
+
+		return esc_html( $this->get_score_display_value( $value ) );
 	}
 
 	/**
@@ -1221,11 +1398,16 @@ class GF_RECAPTCHA extends GFAddOn {
 			return false;
 		}
 
-		$score     = empty( $entry ) ? $this->token_verifier->get_score() : $this->get_score_from_entry( $entry );
+		$score = empty( $entry ) ? $this->token_verifier->get_score() : $this->get_score_from_entry( $entry );
+		if ( ! is_numeric( $score ) ) {
+			return false;
+		}
+
 		$threshold = $this->get_spam_score_threshold();
 
 		return (float) $score <= (float) $threshold;
 	}
+
 	/**
 	 * Get the Recaptcha score from the entry details.
 	 *
@@ -1243,6 +1425,31 @@ class GF_RECAPTCHA extends GFAddOn {
 		}
 
 		return $score ? (float) $score : $this->token_verifier->get_score();
+	}
+
+	/**
+	 * Returns the score to be displayed or the state display label.
+	 *
+	 * @since 2.0
+	 *
+	 * @param float|string $meta_value The entry meta value.
+	 *
+	 * @return float|string
+	 */
+	private function get_score_display_value( $meta_value ) {
+		if ( is_numeric( $meta_value ) ) {
+			return $meta_value;
+		}
+
+		$states = array(
+			'disabled'                             => __( 'Disabled', 'gravityformsrecaptcha' ),
+			'disconnected'                         => __( 'Disconnected', 'gravityformsrecaptcha' ),
+			'disabled (quota limit)'               => __( 'Disabled (quota limit)', 'gravityformsrecaptcha' ),
+			'disabled (token refresh in progress)' => __( 'Disabled (token refresh in progress)', 'gravityformsrecaptcha' ),
+			'disabled (token refresh failed)'      => __( 'Disabled (token refresh failed)', 'gravityformsrecaptcha' ),
+		);
+
+		return rgar( $states, $meta_value, $meta_value );
 	}
 
 	/**
@@ -1675,6 +1882,53 @@ class GF_RECAPTCHA extends GFAddOn {
 			admin_url( 'admin.php' )
 		);
 		wp_send_json_success( esc_url_raw( $redirect_url ) );
+	}
+
+	/**
+	 * Callback for gform_update_status; notifies Google that the entry has been manually marked as spam or ham.
+	 *
+	 * @since 2.0
+	 *
+	 * @param int    $entry_id       The ID of the entry the status changed for.
+	 * @param string $new_value      The value value of the status property.
+	 * @param string $previous_value The previous value of the status property.
+	 *
+	 * @return void
+	 */
+	public function entry_status_change( $entry_id, $new_value, $previous_value ) {
+		$mark_as_spam = ( $new_value === 'spam' && $previous_value === 'active' );
+		$mark_as_ham  = ( $new_value === 'active' && $previous_value === 'spam' );
+
+		if ( ! $mark_as_spam && ! $mark_as_ham ) {
+			return;
+		}
+
+		$assessment_id = gform_get_meta( $entry_id, $this->get_slug() . '_assessment_id' );
+		if ( empty( $assessment_id ) ) {
+			$this->log_debug( __METHOD__ . sprintf( '(): Not processing entry #%d; No assessment ID.', $entry_id ) );
+
+			return;
+		}
+
+		if ( $this->get_connection_type() !== 'enterprise' || ! $this->initialize_api() ) {
+			$this->log_debug( __METHOD__ . sprintf( '(): Not processing entry #%d; Enterprise API not initialized.', $entry_id ) );
+
+			return;
+		}
+
+		if ( $mark_as_spam ) {
+			$note       = esc_html__( 'Google notified that the entry was marked as spam.', 'gravityformsrecaptcha' );
+			$action     = 'spam';
+			$annotation = 'FRAUDULENT';
+		} else {
+			$note       = esc_html__( 'Google notified that the entry was marked as not spam.', 'gravityformsrecaptcha' );
+			$action     = 'ham';
+			$annotation = 'LEGITIMATE';
+		}
+
+		$response = $this->api->annotate_assessment( $assessment_id, $annotation );
+		$this->add_note( $entry_id, $note );
+		$this->log_debug( __METHOD__ . sprintf( '(): Google notified that entry #%d (assessment ID: %s) was marked as %s.%s', $entry_id, $assessment_id, $action, ( $response ? ' Response: ' . print_r( $response, true ) : '' ) ) );
 	}
 
 }

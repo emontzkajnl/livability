@@ -80,10 +80,15 @@ class GPAdvancedSelect implements GPAdvancedSelectInitArgs {
 				'_'
 			)}`;
 
-			// Add 'gform-theme__disable' class to the '.ginput-container' parent, we do this prior to init as we get FOUT, otherwise
-			$select
-				.closest('.ginput_container')
-				.addClass('gform-theme__disable');
+			// Add 'gform-theme__disable' class to the '.ginput-container' parent, we do this prior to init as we get FOUT.
+			// For address fields, apply to the select element itself to avoid affecting other non-select fields within the Address field.
+			if (this.fieldType === 'address') {
+				$select.addClass('gform-theme__disable');
+			} else {
+				$select
+					.closest('.ginput_container')
+					.addClass('gform-theme__disable');
+			}
 
 			window[namespace] = new TomSelect(
 				`#${select.id}`,
@@ -316,7 +321,7 @@ window.gform.addAction(
 		formId: any,
 		action: string,
 		targetId: string,
-		defaultValues: any,
+		defaultValues: any = [],
 		isInit: any
 	) {
 		if (action === 'hide') {
@@ -325,9 +330,11 @@ window.gform.addAction(
 				const inputId = `input_${match[1]}_${match[2]}`;
 
 				const selectElem = $(`#${inputId}`) as any;
-				// Clear the selected value(s)
+				// Clear the selected value(s) and keep the default values.
 				if (selectElem?.[0]?.tomselect) {
-					selectElem[0].tomselect.clear();
+					const tomSelectInstance = selectElem[0].tomselect;
+					tomSelectInstance.clear();
+					tomSelectInstance.addItems(defaultValues, true);
 				}
 			}
 		}

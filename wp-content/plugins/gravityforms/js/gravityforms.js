@@ -1277,7 +1277,7 @@ function gformToggleCheckboxes( toggleElement ) {
 	var checked,
         $toggleElement        = jQuery( toggleElement ),
         toggleElementCheckbox = $toggleElement.is( 'input[type="checkbox"]' ),
-        $toggle               = toggleElementCheckbox ? $toggleElement.parent() : $toggleElement.prev(),
+        $toggle               = $toggleElement.parent(),
 	    $toggleLabel          = $toggle.find( 'label' ),
 	    $checkboxes           = $toggle.parent().find( '.gchoice:not( .gchoice_select_all )' ),
 	    formId         = gf_get_form_id_by_html_id( $toggle.parents( '.gfield' ).attr( 'id' ) ),
@@ -1421,9 +1421,15 @@ function gformAddListItem( addButton, max ) {
 
 function gformDeleteListItem( deleteButton, max ) {
 
-    var $deleteButton = jQuery( deleteButton ),
-        $group        = $deleteButton.parents( '.gfield_list_group' ),
-        $container    = $group.parents( '.gfield_list_container' );
+	var $deleteButton = jQuery( deleteButton );
+	if ( $deleteButton.prop( 'disabled' ) ) {
+		return;
+	} else {
+		$deleteButton.prop( 'disabled', true );
+	}
+
+	var $group     = $deleteButton.parents( '.gfield_list_group' ),
+		$container = $group.parents( '.gfield_list_container' );
 
     $group.remove();
 
@@ -1479,7 +1485,11 @@ function gformToggleIcons( $container, max ) {
         $addButtons = $container.find( '.add_list_item' ),
         isLegacy    =  typeof gf_legacy !== 'undefined' && gf_legacy.is_legacy;
 
-    $container.find( '.delete_list_item' ).css( 'visibility', groupCount == 1 ? 'hidden' : 'visible' );
+	if ( groupCount === 1 ) {
+		$container.find( '.delete_list_item' ).prop( 'disabled', true ).css( 'visibility', 'hidden' );
+	} else {
+		$container.find( '.delete_list_item' ).prop( 'disabled', false ).css( 'visibility', 'visible' );
+	}
 
     if ( max > 0 && groupCount >= max ) {
 
@@ -2395,9 +2405,13 @@ gform.recaptcha = {
 		jQuery( '.ginput_recaptcha:not(.gform-initialized)' ).each( function() {
 			let $elem      = jQuery( this ),
 				parameters = {
-					'sitekey':  $elem.data( 'sitekey' ),
-					'theme':    $elem.data( 'theme' ),
-					'tabindex': $elem.data( 'tabindex' )
+					'sitekey':        $elem.data( 'sitekey' ),
+					'theme':          $elem.data( 'theme' ),
+					'tabindex':       $elem.data( 'tabindex' ),
+					'error-callback': () => {
+						console.error( 'Gravity Forms: There was an error initializing reCAPTCHA v2. Please ensure your reCAPTCHA API keys are valid.' );
+						$elem.attr( 'data-recaptcha-error', '1' );
+					}
 				};
 
 			if ( $elem.data( 'stoken' ) ) {
@@ -2493,6 +2507,12 @@ gform.recaptcha = {
 	 * @returns {Promise<string>} Returns the recaptcha response when it becomes available in the .g-recaptcha-response
 	 */
 	executeRecaptcha: async function( widgetId, form ) {
+
+		// If there was an error loading recaptcha, just abort and let the submission fail validation.
+		const recaptcha = gform.utils.getNode( '.ginput_recaptcha', form, true );
+		if ( recaptcha.getAttribute( 'data-recaptcha-error' ) === '1' ) {
+			return;
+		}
 
 		// Executes recaptcha.
 		window.grecaptcha.execute( widgetId );

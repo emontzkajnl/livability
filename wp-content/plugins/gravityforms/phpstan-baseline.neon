@@ -6,11 +6,6 @@ parameters:
 			path: common.php
 
 		-
-			message: "#^@param string \\$headers does not accept actual type of parameter\\: array\\{From\\: non\\-falsy\\-string, Reply\\-To\\?\\: non\\-falsy\\-string, Bcc\\?\\: non\\-falsy\\-string, Cc\\?\\: non\\-falsy\\-string, Content\\-type\\: non\\-falsy\\-string\\}\\.$#"
-			count: 1
-			path: common.php
-
-		-
 			message: "#^Expected 4 @param tags, found 3\\.$#"
 			count: 1
 			path: common.php
@@ -126,11 +121,6 @@ parameters:
 			path: entry_list.php
 
 		-
-			message: "#^Expected 3 @param tags, found 1\\.$#"
-			count: 1
-			path: entry_list.php
-
-		-
 			message: "#^Expected 4 @param tags, found 3\\.$#"
 			count: 1
 			path: entry_list.php
@@ -183,11 +173,6 @@ parameters:
 		-
 			message: "#^One or more @param tags has an invalid name or invalid syntax\\.$#"
 			count: 3
-			path: form_detail.php
-
-		-
-			message: "#^Variable \\$fixed_menu_items might not be defined\\.$#"
-			count: 1
 			path: form_detail.php
 
 		-
@@ -402,11 +387,6 @@ parameters:
 
 		-
 			message: "#^Static method GFFormSettings\\:\\:form_settings_page\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: gravityforms.php
-
-		-
-			message: "#^Variable \\$fixed_menu_items might not be defined\\.$#"
 			count: 1
 			path: gravityforms.php
 
@@ -1104,11 +1084,6 @@ parameters:
 			message: "#^Class Gravity_Forms\\\\Gravity_Forms\\\\Save_Form\\\\GF_Form_CRUD_Handler referenced with incorrect case\\: Gravity_Forms\\\\Gravity_Forms\\\\Save_Form\\\\GF_Form_CRUD_handler\\.$#"
 			count: 1
 			path: includes/save-form/class-gf-save-form-service-provider.php
-
-		-
-			message: "#^Call to static method get_support_url\\(\\) on an unknown class Gravity_Forms\\\\Gravity_Forms\\\\Save_Form\\\\Endpoints\\\\GFCommon\\.$#"
-			count: 1
-			path: includes/save-form/endpoints/class-gf-save-form-endpoint-admin.php
 
 		-
 			message: "#^@param tag must not be named \\$this\\. Choose a descriptive alias, for example \\$instance\\.$#"

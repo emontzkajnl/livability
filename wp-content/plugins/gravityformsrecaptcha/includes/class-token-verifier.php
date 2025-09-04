@@ -74,7 +74,7 @@ class Token_Verifier {
 	/**
 	 * Result of the recaptcha request.
 	 *
-	 * @var stdClass
+	 * @var stdClass|array
 	 */
 	private $recaptcha_result;
 
@@ -415,7 +415,7 @@ class Token_Verifier {
 			return true;
 		}
 
-		return ( is_float( $score ) && $score >= 0.0 && $score <= 1.0 );
+		return ( is_numeric( $score ) && $score >= 0.0 && $score <= 1.0 );
 	}
 
 	/**
@@ -459,6 +459,17 @@ class Token_Verifier {
 		}
 
 		return (float) $score;
+	}
+
+	/**
+	 * Gets the assessment ID (name) from the reCAPTCHA assessment response.
+	 *
+	 * @since 1.10
+	 *
+	 * @return string
+	 */
+	public function get_assessment_id() {
+		return $this->addon->is_preview() ? '' : rgar( $this->recaptcha_result, 'name', '' );
 	}
 
 	/**

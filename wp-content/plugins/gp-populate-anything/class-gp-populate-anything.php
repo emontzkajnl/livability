@@ -1623,7 +1623,7 @@ class GP_Populate_Anything extends GP_Plugin {
 	 * be formatted numbers with currency.
 	 */
 	public function maybe_add_currency_to_price( $template_value, $field, $template, $populate, $object, $object_type, $objects ) {
-		if ( rgar( $field, 'type' ) !== 'product' || $template !== 'price' ) {
+		if ( rgar( $field, 'type' ) !== 'product' ) {
 			return $template_value;
 		}
 
@@ -1928,6 +1928,21 @@ class GP_Populate_Anything extends GP_Plugin {
 				array(
 					// Unchecked checkboxes need to have a non-empty value otherwise they will automatically be checked by GF.
 					'value'           => apply_filters( 'gppa_no_choices_value', $field->get_input_type() === 'checkbox', $field ),
+					/**
+					 * Filter the field text (or label) for choice-based fields that are dynamically populated but have no available objects based on the current filters.
+					 *
+					 * @param string   $label The choice label. Default: '– No Results –'
+					 * @param GF_Field $field Current field.
+					 *
+					 * @usage gppa_no_choices_text Filter applied globally to all fields
+					 *
+					 * @example Change No Choices Text
+					 * This example shows how to change the text displayed when no choices are available
+					 * for dynamically populated fields.
+					 * <github-file>snippet-library/gp-populate-anything/gppa-change-no-choices-text.php</github-file>
+					 *
+					 * @since 1.0
+					 */
 					'text'            => apply_filters( 'gppa_no_choices_text', '&ndash; ' . esc_html__( 'No Results', 'gp-populate-anything' ) . ' &ndash;', $field ),
 					'isSelected'      => false,
 					'gppaErrorChoice' => 'no_choices',
@@ -1979,14 +1994,22 @@ class GP_Populate_Anything extends GP_Plugin {
 				}
 
 				/**
-				 * Modify the choice to be populated into the current field.
+				 * Modify the current choice that's being populated into the current field.
+				 *
+				 * @param array     $choice  The current choice being populated.
+				 * @param \GF_Field $field   The current field being populated.
+				 * @param array     $object  The current object being populated into the current choice.
+				 * @param array     $objects An array of objects being populated as choices into the field.
+				 *
+				 * @usage gppa_input_choice Filter applied to all fields on all forms
+				 * @usage gppa_input_choice_FORMID Filter applied to all fields on a specific form
+				 * @usage gppa_input_choice_FORMID_FIELDID Filter applied to a specific field on a specific form
+				 *
+				 * @example Add a custom choice template to choices
+				 * Add a choice template named `image` to choices. This pairs well with the gppa_template_rows JavaScript filter.
+				 * <github-file>snippet-library/gp-populate-anything/gppa-add-a-custom-choice-template.php</github-file>
 				 *
 				 * @since 1.0-beta-4.116
-				 *
-				 * @param array     $choice  The current choice being modified.
-				 * @param \GF_Field $field   The current field being populated.
-				 * @param array     $object  The current object being populated into the choice.
-				 * @param array     $objects An array of objects being populated as choices into the field.
 				 */
 				$choices[] = gf_apply_filters( array( 'gppa_input_choice', $field->formId, $field->id ), $choice, $field, $object, $objects );
 
@@ -2652,6 +2675,18 @@ class GP_Populate_Anything extends GP_Plugin {
 		$field       = $this->populate_field_choices( $field, $field_values, $preselected_choice_value );
 		$field_value = $this->populate_field_value( $field, $field_values, $form, $entry, $force_use_field_value );
 
+		$currency      = new RGCurrency( GFCommon::get_currency() );
+		$number_format = rgar( $currency, 'decimal_separator' ) === '.' ? 'decimal_dot' : 'decimal_comma';
+
+		// If the field is a product field, we need to ensure that the value is formatted correctly.
+		if ( $field->type === 'product' && $number_format === 'decimal_comma' ) {
+			// Convert the field value to a decimal comma format.
+			$index = $field->id . '.2';
+			if ( isset( $field_value[ $index ] ) && is_numeric( $field_value[ $index ] ) ) {
+				$field_value[ $index ] = GFCommon::format_number( $field_value[ $index ], 'decimal_comma' );
+			}
+		}
+
 		if ( in_array( $field->type, self::get_multi_selectable_choice_field_types(), true ) || self::is_multi_selectable_choice_field_types( $field ) ) {
 			$selected_choices_value = $this->get_selected_choices( $field, $field_values );
 		}
@@ -2983,7 +3018,7 @@ class GP_Populate_Anything extends GP_Plugin {
 
 			// Only set preselected value if there is no posted value for this field
 			$has_posted_value = false;
-			if ( is_array( $field_values ) ) {
+			if ( is_array( $field_values ) && ! $field->allowsPrepopulate ) {
 				// For checkboxes, check if any input for this field has a value
 				foreach ( $field_values as $key => $val ) {
 					if ( (string) $key === (string) $field->id || strpos( (string) $key, $field->id . '.' ) === 0 ) {
@@ -4182,6 +4217,13 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		// Add filter.
 		add_filter( 'gform_field_value_' . $filter_name, function( $val ) use ( $value ) {
+			// If the value is serialized, unserialize it so that it displays correctly in the form.
+			// Otherwise, the serialized value will be displayed as a string.
+			// This is specifically the case for List fields.
+			if ( is_serialized( $value ) ) {
+				$value = maybe_unserialize( $value );
+			}
+
 			return $value;
 		} );
 

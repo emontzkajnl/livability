@@ -66,8 +66,8 @@ class Stla_Antispam_Email_Restrict_Submission {
 			return $validation_result;
 		}
 
-		$form    = $validation_result['form'];
-		$form_id = absint( rgar( $form, 'id' ) );
+		// $form    = $validation_result['form'];
+		$form_id = rgar( $validation_result['form'], 'id' );
 
 		// Fetch saved anti-spam settings.
 		$saved_antispam_settings = get_option( 'gf_stla_antispam_settings_' . $form_id, array() );
@@ -103,7 +103,7 @@ class Stla_Antispam_Email_Restrict_Submission {
 		$block_submission = false;
 
 		// Loop through all email fields.
-		foreach ( $form['fields'] as &$field ) {
+		foreach ( $validation_result['form']['fields'] as &$field ) {
 			if ( 'email' !== $field->type ) {
 				continue;
 			}
@@ -135,8 +135,9 @@ class Stla_Antispam_Email_Restrict_Submission {
 			}
 		}
 
+		unset( $field );
+
 		// Pass the updated form back.
-		$validation_result['form'] = $form;
 		return $validation_result;
 	}
 }

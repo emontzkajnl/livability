@@ -317,6 +317,7 @@ window.gform.addFilter(
 				'multiselect',
 				'address',
 				'workflow_user',
+				'workflow_multi_user',
 			]) === -1 ||
 			!Filter.field.gpadvsEnable
 		) {

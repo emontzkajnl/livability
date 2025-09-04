@@ -1381,21 +1381,27 @@ abstract class GFAddOn {
 	public function output_third_party_styles( $markup, $form ) {
 		$settings           = $this->get_current_settings();
 		$all_block_settings = apply_filters( 'gform_form_block_attribute_values', array() );
-		$page_instance      = isset( $form['page_instance'] ) ? $form['page_instance'] : 0;
-		$block_settings     = isset( $all_block_settings[ $form['id'] ][ $page_instance ] ) ? $all_block_settings[ $form['id'] ][ $page_instance ] : array();
-		$properties         = call_user_func_array( array( $this, 'theme_layer_third_party_styles' ), array( $form['id'], $settings, $block_settings ) );
+		$page_instance      = rgar( $form, 'page_instance', 0 );
+		$form_id            = absint( rgar( $form, 'id' ) );
+		$block_settings     = rgars( $all_block_settings, $form_id . '/' . $page_instance, array() );
+		$properties         = call_user_func_array(
+			array( $this, 'theme_layer_third_party_styles' ),
+			array(
+				$form_id,
+				$settings,
+				$block_settings,
+			)
+		);
 
 		if ( empty( $properties ) ) {
 			return $markup;
 		}
 
 		$base_identifier = sprintf( 'gform.extensions.styles.%s', $this->get_slug() );
-		$form_identifier = sprintf( 'gform.extensions.styles.%s[%s]', $this->get_slug(), $form['id'] );
-		$full_identifier = sprintf( 'gform.extensions.styles.%s[%s][%s]', $this->get_slug(), $form['id'], $page_instance );
+		$form_identifier = sprintf( 'gform.extensions.styles.%s[%s]', $this->get_slug(), $form_id );
+		$full_identifier = sprintf( 'gform.extensions.styles.%s[%s][%s]', $this->get_slug(), $form_id, $page_instance );
 
 		ob_start(); ?>
-
-		<script>
 			if ( typeof gform !== 'undefined' ) {
 				gform.extensions = gform.extensions || {};
 				gform.extensions.styles = gform.extensions.styles || {};
@@ -1403,12 +1409,11 @@ abstract class GFAddOn {
 				<?php echo $form_identifier; ?> = <?php echo $form_identifier; ?> || {};
 				<?php echo $full_identifier; ?> = <?php echo json_encode( $properties ); ?>;
 			}
-		</script>
-
 		<?php
 
-		$props = ob_get_clean();
-		return $markup . $props;
+		$script = rtrim( ob_get_clean() );
+
+		return $markup . GFCommon::get_inline_script_tag( $script, false );
 	}
 
 
@@ -1918,27 +1923,25 @@ abstract class GFAddOn {
 	 */
 	public function prepare_settings_sections( $sections = array(), $type = 'plugin_settings' ) {
 
-		// If interface is tabbed, ignore.
-		foreach ( $sections as $section ) {
-			if ( array_key_exists( 'sections', $section ) ) {
-				return $sections;
-			}
-		}
-
 		// Get first section key.
 		$first_section = array_keys( $sections );
 		$first_section = array_shift( $first_section );
 
-		// Loop through sections, add full class.
 		foreach ( $sections as $s => &$section ) {
+			if ( array_key_exists( 'sections', $section ) ) {
+				foreach ( $section['sections'] as &$sub_section ) {
+					if ( isset( $sub_section['fields'] ) ) {
+						$sub_section['fields'] = $this->prepare_settings_fields( $sub_section['fields'] );
+					}
+				}
+			} else {
+				// If this is the first section, set title.
+				if ( $s === $first_section && in_array( $type, array( 'plugin_settings' ) ) && ! rgar( $section, 'title', false ) ) {
+					$section['title'] = sprintf( esc_html__( '%s Settings', 'gravityforms' ), $this->get_short_title() );
+				}
 
-			// If this is the first section, set title.
-			if ( $s === $first_section && in_array( $type, array( 'plugin_settings' ) ) && ! rgar( $section, 'title', false ) ) {
-				$section['title'] = sprintf( esc_html__( '%s Settings', 'gravityforms' ), $this->get_short_title() );
+				$this->prepare_settings_fields( $section['fields'] );
 			}
-
-			$this->prepare_settings_fields( $section['fields'] );
-
 		}
 
 		return $sections;

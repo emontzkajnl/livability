@@ -76,7 +76,7 @@ class Stla_Antispam_Email_Mark_Spam {
 		}
 
 		// the form id.
-		$form_id = absint( rgar( $form, 'id' ) );
+		$form_id = rgar( $form, 'id' );
 
 		// Fetch saved anti-spam settings.
 		$saved_antispam_settings = get_option( 'gf_stla_antispam_settings_' . $form_id, array() );

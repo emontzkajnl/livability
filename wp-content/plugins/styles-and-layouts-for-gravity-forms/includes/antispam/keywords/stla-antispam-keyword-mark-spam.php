@@ -38,6 +38,14 @@ class Stla_Antispam_Keyword_Mark_spam {
 		return self::$instance;
 	}
 
+	/**
+	 * Initializes the anti-spam keyword filter for Gravity Forms submissions.
+	 *
+	 * Adds a filter to check form submissions against predefined spam keywords
+	 * and potentially mark entries as spam based on configured settings.
+	 *
+	 * @access public
+	 */
 	public function __construct() {
 		add_filter( 'gform_entry_is_spam', array( $this, 'stla_handle_gf_submissions_for_anispam' ), 10, 3 );
 	}
@@ -83,11 +91,18 @@ class Stla_Antispam_Keyword_Mark_spam {
 			return $is_spam;
 		}
 
+		// exclude these fields from checking.
+		$radio_types    = Stla_Antispam_Common_Helpers::get_radio_types();
+		$checkbox_types = Stla_Antispam_Common_Helpers::get_checkbox_types();
+		$email_types    = Stla_Antispam_Common_Helpers::get_email_types();
+
+		$exclude_fields = array_merge( $radio_types, $checkbox_types, $email_types );
+
 		// check for all fields.
 		foreach ( $form['fields'] as $field ) {
 
 			// Skipping fields which are administrative or the wrong type.
-			if ( $field->is_administrative() ) {
+			if ( $field->is_administrative() || in_array( $field->type, $exclude_fields, true ) ) {
 				continue;
 			}
 
@@ -114,6 +129,7 @@ class Stla_Antispam_Keyword_Mark_spam {
 						GFCommon::set_spam_filter( $form_id, 'Gravity Booster Anti-spam', $spam_filter_message );
 				}
 
+				// mark as spam.
 				return true;
 			}
 		}

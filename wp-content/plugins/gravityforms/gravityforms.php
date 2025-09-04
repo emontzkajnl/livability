@@ -3,7 +3,7 @@
 Plugin Name: Gravity Forms
 Plugin URI: https://gravityforms.com
 Description: Easily create web forms and manage form entries within the WordPress admin.
-Version: 2.9.10
+Version: 2.9.16
 Requires at least: 6.5
 Requires PHP: 7.4
 Author: Gravity Forms
@@ -257,7 +257,7 @@ class GFForms {
 	 *
 	 * @var string $version The version number.
 	 */
-	public static $version = '2.9.10';
+	public static $version = '2.9.16';
 
 	/**
 	 * Handles background upgrade tasks.
@@ -2699,7 +2699,7 @@ class GFForms {
 							__( 'The %1$s is not available with the configured license; please visit the %2$sGravity Forms website%3$s to verify your license. ', 'gravityforms' ),
 								esc_html( rgar( $plugin_data, 'Name' ) ),
 								'<a href="https://www.gravityforms.com/my-account/licenses/?utm_source=gf-admin&utm_medium=purchase-link&utm_campaign=license-enforcement" target="_blank">',
-								'</a>'
+								'<span class="screen-reader-text">' . esc_html__( '(opens in a new tab)', 'gravityforms' ) . '</span>&nbsp;<span class="gform-icon gform-icon--external-link"></span></a>'
 							);
 			}
 		}
@@ -4195,7 +4195,7 @@ class GFForms {
 		if ( $view == 'entry' && ( rgget( 'lid' ) || ! rgblank( rgget( 'pos' ) ) ) ) {
 			require_once( GFCommon::get_base_path() . '/entry_detail.php' );
 			GFEntryDetail::lead_detail_page();
-		} else if ( $view == 'entries' || empty( $view ) ) {
+		} else if ( $view == 'entries' || empty( $view ) || ! has_action( 'gform_entries_view' ) ) {
 			require_once( GFCommon::get_base_path() . '/entry_list.php' );
 			GFEntryList::all_entries_page();
 		} else {
@@ -5417,12 +5417,18 @@ class GFForms {
 	 * @uses   GFForms::format_toolbar_menu_items()
 	 */
 	public static function top_toolbar() {
-
-		$forms = RGFormsModel::get_forms( null, 'title' );
-		$id    = rgempty( 'id', $_GET ) ? count( $forms ) > 0 ? $forms[0]->id : '0' : rgget( 'id' );
+		if ( ! empty( $_GET['id'] ) ) {
+			$id = absint( $_GET['id'] );
+		} else {
+			$forms = RGFormsModel::get_forms( null, 'title' );
+			$id    = count( $forms ) > 0 ? absint( $forms[0]->id ) : '0';
+		}
 
 		// Get form.
 		$form = GFAPI::get_form( $id );
+		if ( empty( $form ) ) {
+			return;
+		}
 
 		?>
 		<div id="gform-form-toolbar" class="gform-form-toolbar">
@@ -5443,7 +5449,9 @@ class GFForms {
 							$dynamic_menu_items[ $key ] = $item;
 						}
 					}
-					echo self::format_toolbar_menu_items( $fixed_menu_items );
+					if ( ! empty( $fixed_menu_items ) ) {
+						echo self::format_toolbar_menu_items( $fixed_menu_items );
+					}
 					if ( ! empty( $dynamic_menu_items ) ) {
 						echo '<span class="gform-form-toolbar__divider"></span>';
 						echo GFForms::format_toolbar_menu_items( $dynamic_menu_items );
@@ -7207,8 +7215,8 @@ if ( ! function_exists( 'rgempty' ) ) {
 	 * @since  Unknown
 	 * @access public
 	 *
-	 * @param string $name The property name to check.
-	 * @param array $array Optional. An array to check through.  Otherwise, checks for POST variables.
+	 * @param string|array $name  The property name or array to check.
+	 * @param array        $array Optional. An array to check through. Otherwise, checks for POST variables.
 	 *
 	 * @return bool True if empty.  False otherwise.
 	 */

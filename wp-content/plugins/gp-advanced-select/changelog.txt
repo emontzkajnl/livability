@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.1.19 | August 27, 2025
+
+- Added support for filtering based on the Advanced Select Search Value for Gravity Flow Multi-User fields.
+
+## 1.1.18 | July 30, 2025
+
+- Fixed issue where enabling Advanced Select on Address fields broke the field's styling.
+- Fixed issue where Multi Select fields were incorrectly appended to Advanced Select-enabled Address fields in the form editor.
+
+## 1.1.17 | July 23, 2025
+
+- Fixed an issue where the default option for Advanced Select fields displays correctly on initial page load but fails to appear when the field is conditionally shown after being hidden.
+
+## 1.1.16 | July 9, 2025
+
+- Fixed issue with Tom Select drag and drop plugin where `jQuery` was not defined.
+
 ## 1.1.15 | June 4, 2025
 
 - Fixed issue where Advanced Select fields retained their data even when conditionally hidden.

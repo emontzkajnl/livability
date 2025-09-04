@@ -58,7 +58,6 @@ class Stla_Antispam_User_Restrictions {
 	 * @return string Modified message indicating form access restrictions.
 	 */
 	public function handle_form_not_found( $message, $form_id ) {
-
 		// should only work on frontend.
 		if ( is_admin() || wp_doing_ajax() || wp_doing_cron() ) {
 			return $message;
@@ -71,7 +70,7 @@ class Stla_Antispam_User_Restrictions {
 
 		$user_validation_message = self::get_user_role_validation_setting( $form_id, 'userRolesValidationMessage' );
 		if ( is_wp_error( $user_validation_message ) || empty( $user_validation_message ) || ! is_string( $user_validation_message ) ) {
-			$user_validation_message = 'You are not allowed to preview this form';
+			$user_validation_message = 'You are not allowed to view this form';
 		}
 
 		return "<p class=\"gform_not_found\">$user_validation_message</p>";
@@ -87,9 +86,7 @@ class Stla_Antispam_User_Restrictions {
 	 * @return array Modified form arguments, potentially with form_id set to 0 if access is restricted.
 	 */
 	public function handle_form_display( $form_args ) {
-
 		// should only work on frontend and for adminstrators.
-
 		if ( is_admin() || wp_doing_ajax() || wp_doing_cron() ) {
 			return $form_args;
 		}
@@ -129,13 +126,8 @@ class Stla_Antispam_User_Restrictions {
 		$allowed_user_roles = self::get_user_role_validation_setting( $form_id, 'allowedUserRolesToViewForm' );
 
 		// if invalid or no antispam data is saved then show the form.
-		if ( is_wp_error( $allowed_user_roles ) ) {
+		if ( is_wp_error( $allowed_user_roles ) || empty( $allowed_user_roles ) ) {
 			return true;
-		}
-
-		// if the setting is saved empty or key is not saved then don't show the form.
-		if ( false === $allowed_user_roles ) {
-			return false;
 		}
 
 		// if form is allowed to specific user role then logged out user can not see the form.
@@ -153,7 +145,6 @@ class Stla_Antispam_User_Restrictions {
 				return true;
 			}
 		}
-
 		return false;
 	}
 
@@ -182,21 +173,20 @@ class Stla_Antispam_User_Restrictions {
 
 		$restriction_settings = $antispam_settings['restriction'];
 
-		// Check if the setting is enabled and has the required user roles
+		// Check if the setting is enabled and has the required user roles.
 		if ( empty( $restriction_settings['userRolesValidationEnabled'] ) ) {
 			return new WP_Error( 'invalid_data_saved', 'Invalid user data saved in antispam settings.' );
 		}
 
-		// if no setting is saved for key requested then return false.
-		if ( empty( $restriction_settings[ $user_validation_setting ] ) ) {
-			return false;
-		}
-
-		$settings_data = $restriction_settings[ $user_validation_setting ];
+		$settings_data = ! empty( $restriction_settings[ $user_validation_setting ] ) ? $restriction_settings[ $user_validation_setting ] : false;
 
 		// always allow the administrator to view the form.
-		if ( 'allowedUserRolesToViewForm' === $user_validation_setting && is_array( $settings_data ) ) {
-			$settings_data[] = 'administrator';
+		if ( 'allowedUserRolesToViewForm' === $user_validation_setting ) {
+			if ( is_array( $settings_data ) ) {
+				$settings_data[] = 'administrator';
+			} else {
+				$settings_data = array( 'administrator' );
+			}
 		}
 
 		return $settings_data;

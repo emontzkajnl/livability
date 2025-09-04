@@ -11,6 +11,33 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Stla_Antispam_Common_Helpers {
 
+
+	/**
+	 * Retrieves an array of field types that are considered checkboxes.
+	 *
+	 * @return array List of checkbox-like field types in Gravity Forms.
+	 */
+	public static function get_checkbox_types() {
+		return array( 'checkbox', 'post_tags', 'post_custom_field', 'post_category', 'quantity', 'option', 'consent', 'multi_choice', 'image_choice' );
+	}
+
+	/**
+	 * Retrieves an array of field types that are considered radio buttons.
+	 *
+	 * @return array List of radio button-like field types in Gravity Forms.
+	 */
+	public static function get_radio_types() {
+		return array( 'radio', 'post_tags', 'post_custom_field', 'post_category', 'option', 'shipping', 'product', 'image_choice', 'multi_choice' );
+	}
+
+	/**
+	 * Retrieves an array of field types that are considered email fields.
+	 *
+	 * @return array List of email field types in Gravity Forms.
+	 */
+	public static function get_email_types() {
+		return array( 'email' );
+	}
 	/**
 	 * Checks if any keywords match a given value.
 	 *

@@ -1,3 +1,25 @@
+## 2.0.0 | 2025-08-20
+- Added support for notifying Google (annotating the assessment) when an entry that has a reCAPTCHA score is marked as spam or not spam via the entries list or detail pages. Note: only applies to the Enterprise connection type and entries created after this version is installed.
+- Fixed a JavaScript error on the Forms > Settings > reCAPTCHA page when no-conflict mode is enabled.
+- Fixed an issue where the Forms > Settings > reCAPTCHA page reloads with the connection type settings displayed when attempting to connect using the Enterprise connection type.
+- Fixed a PHP fatal error that can occur in some hosting environments when determining if the badge is disabled on script enqueue if $_POST is null.
+- Fixed an issue where the status displayed instead of the score on the entries list and entry detail pages is not translatable.
+- Fixed an issue where new submissions not processed because of an Enterprise API auth token refresh issue save a status of disconnected to the entry meta.
+- Fixed an issue where the score changes to 0 or a status (e.g. disconnected) when an existing entry is updated.
+- Fixed handling of an unexpected response during the Enterprise API auth token refresh.
+- Fixed an issue where an incorrect logging statement can be written to the Gravity Forms core log when using the Enterprise connection type.
+- Fixed an unhandled WP_Error during the Enterprise API auth token refresh that caused the add-on to become disconnected.
+
+## 1.9.0 | 2025-07-21
+- Fixed an issue where reCAPTCHA Enterprise can fail if reCAPTCHA returns a response of 1 instead of 1.0.
+
+## 1.8.0 | 2025-07-08
+- Added a new [`gform_recaptcha_enterprise_keys_page_size`](https://docs.gravityforms.com/gform_recaptcha_enterprise_keys_page_size/) filter to control the number of keys returned per API call.
+- Fixed an issue where when connected with the Enterprise connection method, the settings page only retrieves 10 reCAPTCHA keys.
+- Fixed an issue where the reCAPTCHA badge is visible on pages that don't include a form when the "Disable Google reCAPTCHA Badge" setting is enabled.
+- Fixed an issue where multiple Enterprise API auth token refresh requests can occur when the site has multiple concurrent visitors, causing the add-on to become disconnected.
+- Fixed an issue where the Enterprise API can be initialised multiple times during the same request.
+
 ## 1.7.0 | 2025-06-04
 - Added support for using reCAPTCHA Enterprise keys and the reCAPTCHA Enterprise API.
 - Updated the connection screen to improve clarity and differentiate connection options.
