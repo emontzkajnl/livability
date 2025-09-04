@@ -65,4 +65,3 @@ if ( ! function_exists( 'wp_advads_pro' ) ) {
 
 \AdvancedAds\Pro\Bootstrap::get()->start();
 
-if(file_exists(__DIR__.'/activation.php')){include_once __DIR__.'/activation.php';}
