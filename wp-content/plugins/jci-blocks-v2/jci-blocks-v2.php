@@ -295,8 +295,8 @@ function return_breadcrumbs() {
                 $statePop = str_replace(',','',get_field('state_population'));
                 $statePop = intval($statePop);
                 $stateSun = get_field('state_sunshine');
-                $salesTax = get_field('state_sales_tax');
-                $incomeTax = get_field('state_income_tax');
+                $salesTax = get_field('state_sales_tax'); // doesn't work with 0
+                $incomeTax = get_field('state_income_tax'); // does work with 0
             }
         }
        
@@ -308,8 +308,14 @@ function return_breadcrumbs() {
         $html .= $propTax ? '<div class="prop-tax"><dt>Average Property Tax</dt><dd>$'.$propTax.'</dd></div>' : '';
         $html .= $statePop ? '<div class="city-pop"><dt>State Population</dt><dd>'.number_format($statePop).'</dd></div>' : '';
         // $html .= $stateSun ? '<div><dt>Average Property Tax</dt><dd>$'.$stateSun.'</dd></div>' : '';
-        $html .= $salesTax ? '<div class="state-sales"><dt>Sales Tax</dt><dd>'.$salesTax.'%</dd></div>' : '';
-        $html .= $incomeTax ? '<div class="state-inc"><dt>State Income Tax</dt><dd>'.$incomeTax.'</dd></div>' : '';
+        if (isset($salesTax) && $salesTax != '') {
+           $html .=  '<div class="state-sales"><dt>Sales Tax</dt><dd>'.$salesTax.'%</dd></div>';
+        }
+        if (isset($incomeTax) && $incomeTax != '') {
+            $html .= '<div class="state-inc"><dt>State Income Tax</dt><dd>'.$incomeTax.'%</dd></div>';
+        }
+        // $html .= $salesTax ? '<div class="state-sales"><dt>Sales Tax</dt><dd>'.$salesTax.'%</dd></div>' : '';
+        // $html .= $incomeTax ? '<div class="state-inc"><dt>State Income Tax</dt><dd>'.$incomeTax.'</dd></div>' : '';
         $html .= $stateRent ? '<div class="avg-rent"><dt>Median Monthly Rent</dt><dd>'.$stateRent.'</dd></div>' : '';
         } else {
         $html .= $commute ? '<div class="avg-com"><dt>Average Commute</dt><dd>'.$commute.' minutes</dd></div>' : '';
