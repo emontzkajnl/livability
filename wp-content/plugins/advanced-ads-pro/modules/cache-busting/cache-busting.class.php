@@ -9,6 +9,7 @@ use AdvancedAds\Framework\Utilities\Params;
 use AdvancedAds\Frontend\Stats;
 use AdvancedAds\Slider\Frontend\Frontend;
 use AdvancedAds\Tracking\Utilities\Data;
+use AdvancedAds\Utilities\Conditional;
 use AdvancedAds\Utilities\WordPress;
 
 /**
@@ -314,9 +315,9 @@ class Advanced_Ads_Pro_Module_Cache_Busting {
     public function init_frontend() {
         global $wp_the_query;
 
-        if ( apply_filters( 'advanced-ads-pro-cb-frontend-disable', false )
-            // Disable cache-busting on AMP pages.
-            || ( function_exists( 'advads_is_amp' ) && advads_is_amp() )
+        if (
+			apply_filters( 'advanced-ads-pro-cb-frontend-disable', false )
+            || Conditional::is_amp()
             || $wp_the_query->is_feed()
         ) {
 			return;
@@ -398,7 +399,7 @@ class Advanced_Ads_Pro_Module_Cache_Busting {
 	    }
 
 		// Include in footer to prevent conflict when Autoptimize and NextGen Gallery are used at the same time.
-		wp_register_script( 'advanced-ads-pro/cache_busting', AA_PRO_BASE_URL . 'assets/js/front/front.js', $dependencies, AAP_VERSION, true );
+		wp_register_script( 'advanced-ads-pro/cache_busting', AA_PRO_BASE_URL . 'assets/dist/front.js', $dependencies, AAP_VERSION, true );
 
 		$info = [
 			'ajax_url'                 => admin_url( 'admin-ajax.php' ),
@@ -1974,7 +1975,7 @@ class Advanced_Ads_Pro_Module_Cache_Busting {
 		wp_enqueue_script(
 			// we need the same handle as with cache-busting so tracking still works.
 			'advanced-ads-pro/cache_busting',
-			AAP_BASE_URL . 'assets/js/privacy' . ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min' ) . '.js',
+			AAP_BASE_URL . 'assets/dist/privacy.js',
 			[ ADVADS_SLUG . '-advanced-js', 'jquery'],
 			AAP_VERSION,
 			true

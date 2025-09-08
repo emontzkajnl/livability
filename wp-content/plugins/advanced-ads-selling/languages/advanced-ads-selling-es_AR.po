@@ -1,17 +1,15 @@
+# Translation of Selling Ads in Spanish (Argentina)
+# This file is distributed under the same license as the Selling Ads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Selling Ads\n"
-"Report-Msgid-Bugs-To: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2021-04-07 07:19:56+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-11T15:45:10+00:00\n"
-"PO-Revision-Date: 2021-04-07 07:19:56+0000\n"
-"Language: es_AR\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: GlotPress/4.0.1\n"
+"Language: es_AR\n"
+"Project-Id-Version: Selling Ads\n"
 
 #. translators: 1: is a link to a support document. 2: closing link
 #: includes/class-autoloader.php:113
@@ -283,24 +281,20 @@ msgstr "Cuando hagas clic en «Publicar», este anuncio se publicará en la ubic
 msgid "Ad Types"
 msgstr "Tipos de anuncios"
 
-#: admin/includes/order-page.php:110
-#: admin/views/ad-order-meta-box.php:39
+#: admin/includes/order-page.php:110 admin/views/ad-order-meta-box.php:39
 #: public/views/ad-setup-form.php:70
 msgid "Placement"
 msgstr "Ubicación"
 
-#: admin/includes/order-page.php:109
-#: admin/views/ad-order-meta-box.php:45
+#: admin/includes/order-page.php:109 admin/views/ad-order-meta-box.php:45
 msgid "Sales Type"
 msgstr "Tipo de ventas"
 
-#: admin/includes/order-page.php:108
-#: admin/views/ad-order-meta-box.php:57
+#: admin/includes/order-page.php:108 admin/views/ad-order-meta-box.php:57
 msgid "Pricing Label"
 msgstr "Etiqueta de precio"
 
-#: admin/includes/order-page.php:107
-#: admin/views/ad-order-meta-box.php:51
+#: admin/includes/order-page.php:107 admin/views/ad-order-meta-box.php:51
 msgid "Pricing Value"
 msgstr "Valor del precio"
 
@@ -316,8 +310,7 @@ msgstr "Datos del anuncio"
 msgid "Available placements"
 msgstr "Ubicaciones disponibles"
 
-#: admin/includes/ad-product.php:120
-#: admin/includes/ad-product.php:122
+#: admin/includes/ad-product.php:120 admin/includes/ad-product.php:122
 msgid "define label, value and price separated by |, e.g. 100.000 impressions|100000|20.00"
 msgstr "define la etiqueta, el valor y el precio separados por |, por ejemplo: 100.000 impresiones|100000|20.00"
 
@@ -329,8 +322,7 @@ msgstr "Opciones de precios"
 msgid "Customer can buy per …"
 msgstr "El cliente puede comprar por…"
 
-#: admin/includes/ad-product.php:105
-#: public/views/product-template.php:75
+#: admin/includes/ad-product.php:105 public/views/product-template.php:75
 msgid "Available ad types"
 msgstr "Tipos de anuncios disponibles"
 
@@ -352,13 +344,11 @@ msgstr "Opciones del anuncio"
 msgid "Order Data"
 msgstr "Datos del pedido"
 
-#: public/includes/ajax.php:58
-#: public/public.php:493
+#: public/includes/ajax.php:58 public/public.php:493
 msgid "Error when submitting the ad. Please contact the site admin."
 msgstr "Error al enviar el anuncio. Por favor, contacta con el administrador del sitio."
 
-#: public/includes/ajax.php:43
-#: public/public.php:478
+#: public/includes/ajax.php:43 public/public.php:478
 msgid "Ad content missing."
 msgstr "Falta el contenido del anuncio."
 
@@ -434,17 +424,14 @@ msgstr ""
 msgid "Ad #%d needs approval"
 msgstr "El anuncio #%d necesita aprobación"
 
-#: classes/notifications.php:61
-#: classes/notifications.php:159
+#: classes/notifications.php:61 classes/notifications.php:159
 #: classes/notifications.php:207
 msgid "PS: If you want to contact the ad manager directly, just reply to this email."
 msgstr "Nota: si quieres contactar al gestor de anuncios directamente, solo responde a este correo electrónico."
 
 #. translators: %s is the site URL
-#: classes/notifications.php:60
-#: classes/notifications.php:110
-#: classes/notifications.php:158
-#: classes/notifications.php:206
+#: classes/notifications.php:60 classes/notifications.php:110
+#: classes/notifications.php:158 classes/notifications.php:206
 msgid ""
 "Sincerely,\n"
 "Your ad team\n"
@@ -491,12 +478,10 @@ msgstr "<em>Advanced Ads – Selling Ads</em> necesita el plugin gratuito <stron
 msgid "<em>Advanced Ads – Selling Ads</em> requires the <strong><a href=\"https://wpadvancedads.com\" target=\"_blank\">Advanced Ads</a></strong> plugin to be installed and activated on your site."
 msgstr "<em>Advanced Ads – Selling Ads</em> necesita el plugin <strong><a href=\"https://wpadvancedads.com\" target=\"_blank\">Advanced Ads</a></strong> instalado y activado en tu sitio."
 
-#: admin/admin.php:124
-#: admin/admin.php:142
+#: admin/admin.php:124 admin/admin.php:142
 msgid "Install Now"
 msgstr "Instalar ahora"
 
-#: admin/admin.php:122
-#: admin/admin.php:140
+#: admin/admin.php:122 admin/admin.php:140
 msgid "Activate Now"
 msgstr "Activar ahora"

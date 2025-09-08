@@ -10,7 +10,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Advanced Ads – PopUp and Layer Ads
- * Version:           2.0.1
+ * Version:           2.0.2
  * Description:       Create PopUp, Layer ads and Overlays
  * Plugin URI:        https://wpadvancedads.com/add-ons/popup-and-layer-ads/
  * Author:            Advanced Ads
@@ -38,7 +38,7 @@ if ( defined( 'AAPLDS_FILE' ) ) {
 }
 
 define( 'AAPLDS_FILE', __FILE__ );
-define( 'AAPLDS_VERSION', '2.0.1' );
+define( 'AAPLDS_VERSION', '2.0.2' );
 
 // Load the autoloader.
 require_once __DIR__ . '/includes/class-autoloader.php';

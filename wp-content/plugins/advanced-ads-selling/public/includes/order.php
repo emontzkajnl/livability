@@ -89,7 +89,7 @@ class Advanced_Ads_Selling_Public_Order {
 	 * @return bool|void
 	 */
 	public function sold_individually( $ret, $product ) {
-		return 'advanced_ad' === $product->product_type ? true : $ret;
+		return 'advanced_ad' === $product->get_type() ? true : $ret;
 	}
 
 	/**

@@ -1,6 +1,7 @@
 <?php // phpcs:ignoreFile
 use AdvancedAds\Abstracts\Ad;
 use AdvancedAds\Tracking\Helpers;
+use AdvancedAds\Utilities\Conditional;
 
 /**
  * Background ads class.
@@ -31,8 +32,6 @@ class Advanced_Ads_Pro_Module_Background_Ads {
 	 * @return void
 	 */
 	public function initialise_rotating_click_listener() {
-		$this->placements = wp_advads_get_placements();
-
 		if ( ! $this->contains_background_placement() ) {
 			return;
 		}
@@ -48,7 +47,7 @@ class Advanced_Ads_Pro_Module_Background_Ads {
 	 * @return void
 	 */
 	public function footer_injection() {
-		foreach ( $this->placements as $placement ) {
+		foreach ( wp_advads_get_placements() as $placement ) {
 			if ( $placement->is_type( 'background' ) ) {
 				the_ad_placement( $placement );
 			}
@@ -61,7 +60,7 @@ class Advanced_Ads_Pro_Module_Background_Ads {
 	 * @return bool
 	 */
 	protected function contains_background_placement(): bool {
-		foreach ( $this->placements as $placement ) {
+		foreach ( wp_advads_get_placements() as $placement ) {
 			if ( $placement->is_type( 'background' ) ) {
 				return true;
 			}
@@ -79,7 +78,7 @@ class Advanced_Ads_Pro_Module_Background_Ads {
 	 * @return string
 	 */
 	public function ad_output( $output, $ad ) {
-		$parent = $ad->get_parent();
+		$parent = $ad->get_root_placement();
 
 		if ( ! $parent || ! $parent->is_type( 'background' ) || ! $ad->is_type( 'image' ) ) {
 			return $output;
@@ -99,7 +98,7 @@ class Advanced_Ads_Pro_Module_Background_Ads {
 		[ $image_url, $image_width, $image_height ] = $image;
 
 		$selector = apply_filters( 'advanced-ads-pro-background-selector', 'body' );
-		$is_amp   = function_exists( 'advads_is_amp' ) && advads_is_amp();
+		$is_amp   = Conditional::is_amp();
 
 		/**
 		 * Filter the background placement URL.

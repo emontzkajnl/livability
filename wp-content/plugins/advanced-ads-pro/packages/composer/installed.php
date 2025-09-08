@@ -38,9 +38,9 @@
             'dev_requirement' => false,
         ),
         'maxmind-db/reader' => array(
-            'pretty_version' => 'v1.12.0',
-            'version' => '1.12.0.0',
-            'reference' => '5b2d7a721dedfaef9dc20822c5fe7d26f9f8eb90',
+            'pretty_version' => 'v1.12.1',
+            'version' => '1.12.1.0',
+            'reference' => '815939e006b7e68062b540ec9e86aaa8be2b6ce4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../maxmind-db/reader',
             'aliases' => array(),

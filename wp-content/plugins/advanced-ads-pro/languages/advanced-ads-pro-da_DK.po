@@ -1,17 +1,15 @@
+# Translation of Advanced Ads Pro in Danish
+# This file is distributed under the same license as the Advanced Ads Pro package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Advanced Ads Pro\n"
-"Report-Msgid-Bugs-To: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2025-02-22 10:13:19+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-25T23:54:42+00:00\n"
-"PO-Revision-Date: 2025-02-22 10:13:19+0000\n"
-"Language: da_DK\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: GlotPress/4.0.1\n"
+"Language: da_DK\n"
+"Project-Id-Version: Advanced Ads Pro\n"
 
 #: views/admin/placements/bulk-edit.php:21
 msgid "Off"
@@ -197,8 +195,7 @@ msgstr ""
 msgid "Inject after %s post"
 msgstr ""
 
-#: includes/class-bootstrap.php:129
-#: includes/class-bootstrap.php:152
+#: includes/class-bootstrap.php:129 includes/class-bootstrap.php:152
 msgid "Important Notice"
 msgstr ""
 
@@ -346,8 +343,7 @@ msgstr ""
 msgid "Automatically redirect users with ad blockers enabled to an internal page. Content access is granted after turning off the ad blocker."
 msgstr ""
 
-#: includes/class-bootstrap.php:71
-#: includes/class-bootstrap.php:78
+#: includes/class-bootstrap.php:71 includes/class-bootstrap.php:78
 msgid "Advanced Ads - Pro"
 msgstr ""
 
@@ -972,8 +968,7 @@ msgstr "Palau"
 msgid "Pakistan"
 msgstr "Pakistan"
 
-#: modules/geo/classes/admin.php:332
-#: modules/geo/classes/admin.php:334
+#: modules/geo/classes/admin.php:332 modules/geo/classes/admin.php:334
 msgid "or"
 msgstr "eller"
 
@@ -1617,8 +1612,7 @@ msgstr "Colombia"
 msgid "Cocos Islands"
 msgstr "Cocosøerne"
 
-#: modules/geo/classes/admin.php:335
-#: modules/geo/classes/admin.php:388
+#: modules/geo/classes/admin.php:335 modules/geo/classes/admin.php:388
 msgid "City"
 msgstr "By"
 
@@ -1840,14 +1834,12 @@ msgstr "Adresse ikke fundet: %s"
 msgid "Activate now"
 msgstr "Aktiver nu"
 
-#: modules/geo/classes/admin.php:219
-#: modules/geo/classes/public.php:208
+#: modules/geo/classes/admin.php:219 modules/geo/classes/public.php:208
 #: modules/geo/classes/public.php:372
 msgid "(unknown region)"
 msgstr "(ukendt region)"
 
-#: modules/geo/classes/admin.php:208
-#: modules/geo/classes/public.php:200
+#: modules/geo/classes/admin.php:208 modules/geo/classes/public.php:200
 #: modules/geo/classes/public.php:368
 msgid "(unknown city)"
 msgstr "(ukendt by)"
@@ -1856,8 +1848,7 @@ msgstr "(ukendt by)"
 msgid "&#197;land Islands"
 msgstr "&#197;land øer"
 
-#: modules/lazy-load/admin.class.php:23
-#: modules/lazy-load/admin.class.php:64
+#: modules/lazy-load/admin.class.php:23 modules/lazy-load/admin.class.php:64
 #: views/admin/placements/bulk-edit.php:27
 msgid "Lazy Loading"
 msgstr "Lazy Loading"
@@ -2197,8 +2188,7 @@ msgstr "Vis annoncer baseret på BuddyPress profilfelter"
 msgid "BuddyPress profile field"
 msgstr "BuddyPress profilfelter"
 
-#: modules/buddypress/views/position-option.php:44
-#: views/setting_repeat.php:4
+#: modules/buddypress/views/position-option.php:44 views/setting_repeat.php:4
 msgid "repeat the position"
 msgstr "gentag positionen"
 
@@ -2569,8 +2559,7 @@ msgstr "Placer følgende element, hvor annoncen skal vises."
 msgid "by new element"
 msgstr "ved nyt element"
 
-#: modules/bbpress/class-admin.php:64
-#: modules/bbpress/class-admin.php:87
+#: modules/bbpress/class-admin.php:64 modules/bbpress/class-admin.php:87
 #: modules/bbpress/class-admin.php:130
 #: modules/inject-content/admin.class.php:58
 msgid "Position"
@@ -2724,8 +2713,7 @@ msgstr "Medlemsliste"
 msgid "Group List"
 msgstr "Gruppeliste"
 
-#: modules/buddypress/class-admin.php:63
-#: modules/buddypress/class-admin.php:71
+#: modules/buddypress/class-admin.php:63 modules/buddypress/class-admin.php:71
 msgid "Activity Entry"
 msgstr "Aktivitets indgang"
 
@@ -2750,8 +2738,7 @@ msgstr "forum side"
 msgid "single forum page"
 msgstr "enkelt forumside"
 
-#: modules/bbpress/class-admin.php:142
-#: modules/bbpress/class-admin.php:164
+#: modules/bbpress/class-admin.php:142 modules/bbpress/class-admin.php:164
 msgid "forum topic page"
 msgstr "forumets emneside"
 

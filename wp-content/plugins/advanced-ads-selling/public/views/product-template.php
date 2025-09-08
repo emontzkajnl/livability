@@ -29,7 +29,7 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 	<form class="cart" method="post" enctype='multipart/form-data'>
 
 		<?php if ( is_array( $prices ) && count( $prices ) ) : ?>
-			<ul id="advads_selling_option_ad_price">
+			<ul id="advads-selling-option-ad-price">
 				<?php
 				$first = true;
 				foreach ( $prices as $_price ) {

@@ -10,6 +10,7 @@
 namespace Advanced_Ads_Pro\Module\Responsive_Ads;
 
 use Advanced_Ads_Pro;
+use AdvancedAds\Utilities\Conditional;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -48,7 +49,7 @@ class Frontend {
 	 * @return void
 	 */
 	public function register_scripts() {
-		if ( function_exists( 'advads_is_amp' ) && advads_is_amp() ) {
+		if ( Conditional::is_amp() ) {
 			return;
 		}
 

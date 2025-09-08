@@ -97,7 +97,7 @@ class Advanced_Ads_Pro_Module_Inject_Content {
 			return $content;
 		}
 
-		$is_amp = function_exists( 'advads_is_amp' ) && advads_is_amp();
+		$is_amp = Conditional::is_amp();
 
 		// check if admin allows injection in all places.
 		if ( ! isset( $options['content-injection-everywhere'] ) ) {
@@ -172,7 +172,7 @@ class Advanced_Ads_Pro_Module_Inject_Content {
 		$placements = wp_advads_get_placements();
 
 		foreach ( $placements as $placement ) {
-			if ( ! $placement->is_type( 'custom_position' ) || ( function_exists( 'advads_is_amp' ) && advads_is_amp() ) ) {
+			if ( ! $placement->is_type( 'custom_position' ) || Conditional::is_amp() ) {
 				continue;
 			}
 			$placement_options = $placement->get_data();
@@ -265,7 +265,9 @@ class Advanced_Ads_Pro_Module_Inject_Content {
 	private function get_output_js( $wrapper_id, $entity ) {
 		$content = '';
 		// Do not inject js on AMP pages.
-		if ( function_exists( 'advads_is_amp' ) && advads_is_amp() ) { return $content; }
+		if ( Conditional::is_amp() ) {
+			return $content;
+		}
 
 		$ad_args = $entity->get_prop( 'ad_args' );
 
@@ -587,7 +589,7 @@ class Advanced_Ads_Pro_Module_Inject_Content {
 	 * @return bool
 	 */
 	private function content_random_use_js( $placement ) {
-		if ( function_exists( 'advads_is_amp' ) && advads_is_amp() ) {
+		if ( Conditional::is_amp() ) {
 			return false;
 		}
 

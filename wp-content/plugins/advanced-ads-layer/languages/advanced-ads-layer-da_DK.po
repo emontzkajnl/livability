@@ -1,27 +1,25 @@
+# Translation of PopUp and Layer Ads in Danish
+# This file is distributed under the same license as the PopUp and Layer Ads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: PopUp and Layer Ads\n"
-"Report-Msgid-Bugs-To: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2025-05-12 10:02:09+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-11T15:44:21+00:00\n"
-"PO-Revision-Date: 2025-02-22 10:17:05+0000\n"
-"Language: da_DK\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: GlotPress/4.0.1\n"
+"Language: da_DK\n"
+"Project-Id-Version: PopUp and Layer Ads\n"
 
 #. translators: 1: is a link to a support document. 2: closing link
 #: includes/class-autoloader.php:113
 msgid "Your installation of Advanced Ads is incomplete. If you installed Advanced Ads from GitHub, %1$s please refer to this document%2$s to set up your development environment."
-msgstr ""
+msgstr "Din installation af Advanced Ads er ufuldstændig. Hvis du har installeret Advanced Ads fra GitHub, %1$s, se venligst dette dokument%2$s for at konfigurere dit udviklingsmiljø."
 
 #. translators: %s: WP_ENVIRONMENT_TYPES
 #: includes/class-autoloader.php:157
 msgid "The %s constant is no longer supported."
-msgstr ""
+msgstr "%s konstanten understøttes ikke længere."
 
 #. Author of the plugin
 #: layer-ads.php
@@ -103,13 +101,11 @@ msgstr "bredde"
 msgid "Choose a position on the screen."
 msgstr "Vælg en position på skærmen."
 
-#: admin/views/position.php:48
-#: admin/views/position.php:49
+#: admin/views/position.php:48 admin/views/position.php:49
 msgid "banner height"
 msgstr "banner højde"
 
-#: admin/views/position.php:45
-#: admin/views/position.php:46
+#: admin/views/position.php:45 admin/views/position.php:46
 msgid "banner width"
 msgstr "banner bredde"
 
@@ -234,8 +230,7 @@ msgstr "luk"
 msgid "size"
 msgstr "størrelse"
 
-#: admin/admin.php:334
-#: admin/views/close-button.php:18
+#: admin/admin.php:334 admin/views/close-button.php:18
 msgid "Position"
 msgstr "Position"
 
@@ -263,8 +258,7 @@ msgstr "vis annoncen"
 msgid "Create PopUp or Layer Ad"
 msgstr "Lav popup eller Annonce lag"
 
-#: admin/admin.php:165
-#: includes/placements/types/class-layer.php:47
+#: admin/admin.php:165 includes/placements/types/class-layer.php:47
 msgid "PopUp and Layer Ads"
 msgstr "PopUp and Layer Ads"
 

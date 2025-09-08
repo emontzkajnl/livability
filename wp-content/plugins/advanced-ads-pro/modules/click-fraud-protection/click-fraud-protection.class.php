@@ -3,6 +3,7 @@
 use AdvancedAds\Abstracts\Ad;
 use AdvancedAds\Abstracts\Group;
 use AdvancedAds\Framework\Utilities\Params;
+use AdvancedAds\Utilities\Conditional;
 
 /**
  * Click Fraud Protection class.
@@ -239,14 +240,14 @@ class Advanced_Ads_Pro_Module_CFP {
 	 */
 	public function add_frontend_script_data() {
 		// Do not enqueue on AMP pages.
-		if ( function_exists( 'advads_is_amp' ) && advads_is_amp() ) {
+		if ( Conditional::is_amp() ) {
 			return;
 		}
 
 		$options = Advanced_Ads_Pro::get_instance()->get_options();
 		$pnd     = $this->get_path_and_domain();
 
-		wp_localize_script( Advanced_Ads_Pro::FRONTEND_SCRIPT_HANDLE, 'advadsCfpInfo', [
+		wp_localize_script( wp_advads_pro()->registry->prefix_it( 'main' ), 'advadsCfpInfo', [
 			'cfpExpHours'   => isset( $options['cfp']['cookie_expiration'] ) ? $options['cfp']['cookie_expiration'] : 3,
 			'cfpClickLimit' => isset( $options['cfp']['click_limit'] ) ? absint( $options['cfp']['click_limit'] ) : 3,
 			'cfpBan'        => isset( $options['cfp']['ban_duration'] ) ? $options['cfp']['ban_duration'] : 7,
@@ -265,7 +266,7 @@ class Advanced_Ads_Pro_Module_CFP {
 	 */
 	public function ad_output( $output, $ad ) {
 		// Do not enqueue on AMP pages.
-		if ( function_exists( 'advads_is_amp' ) && advads_is_amp() ) {
+		if ( Conditional::is_amp() ) {
 			return $output;
 		}
 		$cond = $this->get_conditions_options( $ad );

@@ -1,33 +1,30 @@
+# Translation of Sticky Ads in Danish
+# This file is distributed under the same license as the Sticky Ads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Sticky Ads\n"
-"Report-Msgid-Bugs-To: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2025-05-12 10:09:07+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-11T15:48:04+00:00\n"
-"PO-Revision-Date: 2025-02-22 10:21:21+0000\n"
-"Language: da_DK\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: GlotPress/4.0.1\n"
+"Language: da_DK\n"
+"Project-Id-Version: Sticky Ads\n"
 
 #. translators: 1: is a link to a support document. 2: closing link
 #: includes/class-autoloader.php:113
 msgid "Your installation of Advanced Ads is incomplete. If you installed Advanced Ads from GitHub, %1$s please refer to this document%2$s to set up your development environment."
-msgstr ""
+msgstr "Din installation af Advanced Ads er ufuldstændig. Hvis du har installeret Advanced Ads fra GitHub, %1$s, se venligst dette dokument%2$s for at konfigurere dit udviklingsmiljø."
 
 #. translators: %s: WP_ENVIRONMENT_TYPES
 #: includes/class-autoloader.php:157
 msgid "The %s constant is no longer supported."
-msgstr ""
+msgstr "%s konstanten understøttes ikke længere."
 
-#: includes/admin/class-metabox.php:60
-#: includes/admin/class-settings.php:43
+#: includes/admin/class-metabox.php:60 includes/admin/class-settings.php:43
 #: includes/admin/class-settings.php:52
 msgid "Sticky Ads"
-msgstr ""
+msgstr "Sticky Ads"
 
 #: includes/admin/class-placement-settings.php:146
 msgctxt "frontend picker"
@@ -42,7 +39,7 @@ msgstr "Advanced Ads GmbH"
 #. Author URI of the plugin
 #: sticky-ads.php
 msgid "https://wpadvancedads.com"
-msgstr ""
+msgstr "https://wpadvancedads.com"
 
 #. Plugin URI of the plugin
 #: sticky-ads.php
@@ -197,13 +194,11 @@ msgstr "luk annoncen for ..."
 msgid "enable timeout"
 msgstr "aktivere timeout"
 
-#: views/admin/close-button.php:51
-#: views/admin/metabox.php:62
+#: views/admin/close-button.php:51 views/admin/metabox.php:62
 msgid "right"
 msgstr "højre"
 
-#: views/admin/close-button.php:47
-#: views/admin/metabox.php:60
+#: views/admin/close-button.php:47 views/admin/metabox.php:60
 msgid "left"
 msgstr "venstre"
 
@@ -235,8 +230,7 @@ msgstr "Brug <a href=\"https://api.jquery.com/category/selectors/\" target=\"_bl
 msgid "select position"
 msgstr "vælg position"
 
-#: views/admin/close-button.php:34
-#: views/admin/vertical-center.php:29
+#: views/admin/close-button.php:34 views/admin/vertical-center.php:29
 msgid "Position"
 msgstr "Position"
 

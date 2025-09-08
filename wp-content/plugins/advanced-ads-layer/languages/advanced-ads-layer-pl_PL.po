@@ -1,17 +1,15 @@
+# Translation of PopUp and Layer Ads in Polish
+# This file is distributed under the same license as the PopUp and Layer Ads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: PopUp and Layer Ads\n"
-"Report-Msgid-Bugs-To: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2022-02-10 12:25:41+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-11T15:44:21+00:00\n"
-"PO-Revision-Date: 2022-02-10 12:25:41+0000\n"
-"Language: pl\n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);\n"
 "X-Generator: GlotPress/4.0.1\n"
+"Language: pl\n"
+"Project-Id-Version: PopUp and Layer Ads\n"
 
 #. translators: 1: is a link to a support document. 2: closing link
 #: includes/class-autoloader.php:113
@@ -103,13 +101,11 @@ msgstr "szerokość"
 msgid "Choose a position on the screen."
 msgstr "Wybierz pozycję na ekranie."
 
-#: admin/views/position.php:48
-#: admin/views/position.php:49
+#: admin/views/position.php:48 admin/views/position.php:49
 msgid "banner height"
 msgstr "wysokość banera"
 
-#: admin/views/position.php:45
-#: admin/views/position.php:46
+#: admin/views/position.php:45 admin/views/position.php:46
 msgid "banner width"
 msgstr "szerokość banera"
 
@@ -234,8 +230,7 @@ msgstr "zamknij"
 msgid "size"
 msgstr "rozmiar"
 
-#: admin/admin.php:334
-#: admin/views/close-button.php:18
+#: admin/admin.php:334 admin/views/close-button.php:18
 msgid "Position"
 msgstr "Pozycja"
 
@@ -263,8 +258,7 @@ msgstr "pokaż reklamę"
 msgid "Create PopUp or Layer Ad"
 msgstr "Utwórz PopUp lub Reklamę na warstwie"
 
-#: admin/admin.php:165
-#: includes/placements/types/class-layer.php:47
+#: admin/admin.php:165 includes/placements/types/class-layer.php:47
 msgid "PopUp and Layer Ads"
 msgstr "PopUp and Layer Ads"
 

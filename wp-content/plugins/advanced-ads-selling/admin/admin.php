@@ -13,14 +13,6 @@ class Advanced_Ads_Selling_Admin {
 	protected $settings_page_hook = '';
 
 	/**
-	 * link to plugin page
-	 *
-	 * @since    1.0.0
-	 * @const
-	 */
-	const PLUGIN_LINK = 'https://wpadvancedads.com/add-ons/selling-ads/';
-
-	/**
 	 * holds base class
 	 *
 	 * @var Advanced_Ads_Selling_Plugin

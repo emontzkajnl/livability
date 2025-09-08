@@ -11,15 +11,19 @@ namespace AdvancedAds\Pro;
 
 use Advanced_Ads_Pro;
 use AdvancedAds\Pro\Admin;
-use AdvancedAds\Framework\Loader;
+use AdvancedAds\Framework;
 use AdvancedAds\Pro\Placements\Placement_Types;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Plugin.
+ *
+ * Containers:
+ *
+ * @property Framework\Assets_Registry $registry Assets registry.
  */
-class Plugin extends Loader {
+class Plugin extends Framework\Loader {
 
 	/**
 	 * Main instance
@@ -57,6 +61,7 @@ class Plugin extends Loader {
 		$this->define_constants();
 		$this->includes();
 		$this->includes_admin();
+		$this->includes_frontend();
 
 		/**
 		 * Old loading strategy
@@ -142,6 +147,7 @@ class Plugin extends Loader {
 		$this->register_integration( Adsense::class );
 		$this->register_integration( Assets_Manager::class, 'registry' );
 		$this->register_integration( Placement_Types::class );
+		$this->register_integration( Shortcodes::class );
 	}
 
 	/**
@@ -155,11 +161,27 @@ class Plugin extends Loader {
 			return;
 		}
 
+		$this->register_integration( Admin\Admin::class );
 		$this->register_initializer( Upgrades::class, 'upgrades' );
 		$this->register_integration( Admin\Adsense::class );
 		$this->register_integration( Admin\Ad_List_Table::class );
 		$this->register_integration( Admin\Group_Duplication::class );
 		$this->register_integration( Admin\Duplicate_Placement::class );
 		$this->register_integration( Admin\Placements\Bulk_Edit::class );
+		$this->register_integration( Admin\Settings::class );
+	}
+
+	/**
+	 * Includes the necessary files for the frontend section of the plugin.
+	 *
+	 * @return void
+	 */
+	private function includes_frontend(): void {
+		// Early bail!!
+		if ( is_admin() ) {
+			return;
+		}
+
+		$this->register_integration( Frontend\Scripts::class );
 	}
 }

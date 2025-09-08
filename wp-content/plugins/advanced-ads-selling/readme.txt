@@ -1,8 +1,8 @@
 === Advanced Ads – Selling Ads ===
 Requires at least: 5.7
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 
 Let users purchase ads directly on the frontend of your site.
 
@@ -39,6 +39,12 @@ You can use Advanced Ads along any other ad management plugin and don’t need t
 
 == Changelog ==
 
+= 2.0.3 (June 25, 2025) =
+
+- Improvement: add undefined translations
+- Improvement: Test plugin compatibility with WordPress 6.8.
+- Fix: WooCommerce product type deprecation warning
+
 = 2.0.2 (April 9, 2025) =
 
 - Fix: disable item quantity in WooCommerce blocks
@@ -60,4 +66,4 @@ You can use Advanced Ads along any other ad management plugin and don’t need t
 = 1.4.6 =
 - Improvement: add compatibility code for Advanced Ads 2.0
 
-Build: 2025-06-f1284c7f
+Build: 2025-09-5b2548ae

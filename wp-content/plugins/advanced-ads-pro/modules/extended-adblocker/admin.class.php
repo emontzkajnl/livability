@@ -69,9 +69,7 @@ class Advanced_Ads_Pro_Module_Extended_Adblocker_Admin {
 			return;
 		}
 
-		$admin_js = plugin_dir_url( __FILE__ ) . ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG
-			? 'assets/js/admin.js'
-			: 'assets/js/admin.min.js' );
+		$admin_js = AA_PRO_BASE_URL . 'assets/dist/extended-adblocker-admin.js';
 		wp_enqueue_script( 'eab-admin', $admin_js, [ 'jquery' ], AAP_VERSION, true );
 	}
 

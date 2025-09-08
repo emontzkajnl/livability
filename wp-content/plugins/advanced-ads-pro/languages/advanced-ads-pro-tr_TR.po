@@ -1,46 +1,44 @@
+# Translation of Advanced Ads Pro in Turkish
+# This file is distributed under the same license as the Advanced Ads Pro package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Advanced Ads Pro\n"
-"Report-Msgid-Bugs-To: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2025-05-17 10:06:58+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-25T23:54:42+00:00\n"
-"PO-Revision-Date: 2025-03-12 12:42:05+0000\n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: GlotPress/4.0.1\n"
+"Language: tr\n"
+"Project-Id-Version: Advanced Ads Pro\n"
 
 #: views/admin/placements/bulk-edit.php:21
 msgid "Off"
-msgstr ""
+msgstr "Kapalı"
 
 #: views/admin/placements/bulk-edit.php:18
 #: views/admin/placements/bulk-edit.php:29
 #: views/admin/placements/bulk-edit.php:39
 msgid "No Change"
-msgstr ""
+msgstr "Değişiklik Yok"
 
 #: modules/cache-busting/cache-busting.class.php:253
 #: views/admin/placements/bulk-edit.php:37
 msgid "Hide when empty"
-msgstr ""
+msgstr "Boş olduğunda gizle"
 
 #: views/admin/placements/bulk-edit.php:31
 #: views/admin/placements/bulk-edit.php:41
 msgid "Disabled"
-msgstr ""
+msgstr "Devredışı"
 
 #: views/admin/placements/bulk-edit.php:19
 msgid "Auto"
-msgstr ""
+msgstr "Otomatik"
 
 #. Author of the plugin
 #: advanced-ads-pro.php
 msgid "Advanced Ads"
-msgstr ""
+msgstr "Advanced Ads"
 
 #. translators: %s: Plugin name
 #: includes/class-bootstrap.php:155
@@ -50,373 +48,371 @@ msgstr "Aşağıda listelenen Advanced Ads eklentilerinizin sürümleri <strong>
 #. translators: %s: Plugin name
 #: includes/class-bootstrap.php:109
 msgid "Your version of <strong>Advanced Ads - Pro</strong> is incompatible with <strong>Advanced Ads %s</strong> and has been deactivated. Please update the plugin to the latest version."
-msgstr ""
+msgstr "<strong>Advanced Ads - Pro</strong> sürümünüz <strong>Advanced Ads %s</strong> ile uyumlu değil ve devre dışı bırakıldı. Lütfen eklentiyi en son sürüme güncelleyin."
 
 #. translators: 1: is a link to a support document. 2: closing link
 #: includes/class-autoloader.php:113
 msgid "Your installation of Advanced Ads is incomplete. If you installed Advanced Ads from GitHub, %1$s please refer to this document%2$s to set up your development environment."
-msgstr ""
+msgstr "Advanced Ads kurulumunuz tamamlanmadı. Advanced Ads'i GitHub'dan yüklediyseniz, %1$s lütfen geliştirme ortamınızı kurmak için bu belgeye%2$s bakın."
 
 #: modules/geo/admin/views/setting-download.php:22
 msgid "You are currently using filter hooks to load custom database files."
-msgstr ""
+msgstr "Şu anda özel veritabanı dosyalarını yüklemek için filtre kancaları kullanıyorsunuz."
 
 #: modules/extended-adblocker/views/setting-dismissible.php:17
 msgid "When to show overlay again?"
-msgstr ""
+msgstr "Overlay tekrar ne zaman gösterilsin?"
 
 #: modules/placement_conditions/admin.class.php:70
 msgid "Visitor Conditions"
-msgstr ""
+msgstr "Ziyaretçi Koşulları"
 
 #: modules/ads-by-hours/src/class-admin.php:135
 msgid "viewer time zone"
-msgstr ""
+msgstr "ziyaretçi saat dilimi"
 
 #: modules/advanced-visitor-conditions/main.class.php:218
 msgid "User IP Address"
-msgstr ""
+msgstr "Kullanıcı IP Adresi"
 
 #: modules/ads-by-hours/views/publish-metabox-inputs.php:54
 msgid "To"
-msgstr ""
+msgstr "Kime"
 
 #. translators: 1 opening link tag. 2 closing tag
 #: modules/cache-busting/views/settings.php:53
 msgid "This option does not work with the current active theme and %1$sblock themes%2$s in general."
-msgstr ""
+msgstr "Bu seçenek şu anda etkin tema ve genel olarak %1$sblok temaları%2$s ile çalışmaz."
 
 #. translators: %s: dashicon class
 #: modules/lazy-load/views/settings.php:22
 msgid "This module requires: <br> <span class=\"dashicons %s\"></span> Cache Busting"
-msgstr ""
+msgstr "Bu modül şunları gerektirir: <br> <span class=\"dashicons %s\"></span> Önbellek Bozma"
 
 #: modules/ads-for-adblockers/views/settings.php:25
 msgid "This module requires:"
-msgstr ""
+msgstr "Bu modül şunları gerektirir:"
 
 #: views/admin/tables/ads/adsense-fallback.php:47
 #: views/admin/tables/ads/adsense-fallback.php:66
 msgid "The selected item will be displayed when an AdSense ad is unavailable, ensuring your ad space remains filled."
-msgstr ""
+msgstr "AdSense reklamı kullanılamadığında seçili öğe görüntülenir ve böylece reklam alanınız dolu kalır."
 
 #: includes/class-bootstrap.php:180
 msgid "The following addons are affected:"
-msgstr ""
+msgstr "Aşağıdaki eklentiler etkileniyor:"
 
 #. translators: group or ad title.
 #: views/admin/tables/ads/adsense-fallback.php:58
 msgid "The default fallback is \"%s\". You can change this in the AdSense settings."
-msgstr ""
+msgstr "Varsayılan geri dönüş \"%s\"dir. Bunu AdSense ayarlarında değiştirebilirsiniz."
 
 #: views/admin/tables/ads/adsense-fallback.php:75
 msgid "The AdSense fallback feature requires the ad to be assigned to a placement with enabled Cache Busting."
-msgstr ""
+msgstr "AdSense geri dönüş özelliği, reklamın Önbellek Bozma özelliğinin etkinleştirildiği bir yerleşime atanmasını gerektirir."
 
 #. translators: %s: WP_ENVIRONMENT_TYPES
 #: includes/class-autoloader.php:157
 msgid "The %s constant is no longer supported."
-msgstr ""
+msgstr "%s sabiti artık desteklenmiyor."
 
 #: modules/weekdays/class-advanced-ads-pro-weekdays.php:177
 msgid "Shows up"
-msgstr ""
+msgstr "Gösterir"
 
 #: modules/ads-by-hours/src/class-admin.php:79
 msgid "Showing ads depending on the visitor's time requires enabling Cache Busting."
-msgstr ""
+msgstr "Ziyaretçinin saatine bağlı olarak reklam gösterebilmek için Cache Busting'in etkinleştirilmesi gerekmektedir."
 
 #: modules/extended-adblocker/views/setting-activate-extended.php:26
 msgid "Show a custom overlay to users with an ad blocker enabled, prompting them to turn it off on your website."
-msgstr ""
+msgstr "Reklam engelleyicisi etkin olan kullanıcılara özel bir katman gösterin ve web sitenizde reklam engelleyiciyi kapatmalarını isteyin."
 
 #: modules/ads-for-adblockers/admin.class.php:89
 #: modules/lazy-load/admin.class.php:58
 msgid "Settings"
-msgstr ""
+msgstr "Ayarlar"
 
 #: modules/extended-adblocker/views/setting-dismissible.php:20
 msgid "Set the timing for the overlay to reappear after being dismissed."
-msgstr ""
+msgstr "Kapatıldıktan sonra kaplamanın tekrar görünme zamanını ayarlayın."
 
 #: modules/ads-by-hours/views/publish-metabox-inputs.php:21
 msgid "Set specific hours"
-msgstr ""
+msgstr "Belirli saatler ayarlayın"
 
 #: modules/cache-busting/cache-busting.class.php:257
 #: views/admin/placements/bulk-edit.php:45
 msgid "Remove the placeholder if unfilled."
-msgstr ""
+msgstr "Doldurulmamışsa yer tutucuyu kaldırın."
 
 #: modules/extended-adblocker/views/setting-activate-extended.php:64
 msgid "Redirect URL"
-msgstr ""
+msgstr "Yönlendirme URL'si"
 
 #: modules/extended-adblocker/views/setting-activate-extended.php:37
 msgid "Redirect"
-msgstr ""
+msgstr "Yönlendir"
 
 #: modules/lazy-load/admin.class.php:68
 msgid "Prevent ads from getting loaded before they appear in the visitor’s visible area."
-msgstr ""
+msgstr "Reklamların ziyaretçinin görünür alanında görünmeden önce yüklenmesini önleyin."
 
 #: modules/extended-adblocker/views/setting-activate-extended.php:22
 msgid "Overlay"
-msgstr ""
+msgstr "Kaplama"
 
 #: views/admin/tables/ads/adsense-fallback.php:27
 msgid "None"
-msgstr ""
+msgstr "Hiçbiri"
 
 #: views/admin/tables/ads/adsense-fallback.php:52
 msgid "No default fallback ad selected. Choose one in the AdSense settings."
-msgstr ""
+msgstr "Varsayılan yedek reklam seçilmedi. AdSense ayarlarından birini seçin."
 
 #: modules/extended-adblocker/views/setting-activate-extended.php:17
 msgid "No additional actions"
-msgstr ""
+msgstr "Ek eylem yok"
 
 #: modules/extended-adblocker/views/setting-dismissible.php:43
 msgid "Never"
-msgstr ""
+msgstr "Asla"
 
 #: modules/extended-adblocker/views/setting-styling.php:19
 msgid "Insert CSS to customize the overlay container layout."
-msgstr ""
+msgstr "Kaplama kabının düzenini özelleştirmek için CSS ekleyin."
 
 #: modules/extended-adblocker/views/setting-dismissible.php:84
 msgid "Insert CSS to customize the dismiss button layout."
-msgstr ""
+msgstr "Kapatma düğmesinin düzenini özelleştirmek için CSS ekleyin."
 
 #: modules/extended-adblocker/views/setting-styling.php:36
 msgid "Insert CSS to customize the background of the overlay."
-msgstr ""
+msgstr "Kaplamanın arka planını özelleştirmek için CSS'yi ekleyin."
 
 #. translators: %s: index input field
 #: modules/bbpress/class-admin.php:106
 msgid "Inject after %s post"
-msgstr ""
+msgstr "%s gönderisinden sonra yerleştir"
 
-#: includes/class-bootstrap.php:129
-#: includes/class-bootstrap.php:152
+#: includes/class-bootstrap.php:129 includes/class-bootstrap.php:152
 msgid "Important Notice"
-msgstr ""
+msgstr "Önemli Bilgilendirme"
 
 #: modules/extended-adblocker/views/setting-dismissible.php:55
 msgid "Hide dismiss button"
-msgstr ""
+msgstr "Kapatma düğmesini gizle"
 
 #: modules/ads-for-adblockers/views/placement-item.php:18
 msgid "Groups"
-msgstr ""
+msgstr "Gruplar"
 
 #. translators: %s: first field, %s: last field
 #: modules/advanced-display-conditions/main.class.php:571
 msgid "from %1$s to %2$s"
-msgstr ""
+msgstr "%1$s'den %2$s'ye"
 
 #: modules/ads-by-hours/views/publish-metabox-inputs.php:35
 msgid "From"
-msgstr ""
+msgstr "Bundan:"
 
 #: includes/admin/class-adsense.php:38
 msgid "Fallback ad/group"
-msgstr ""
+msgstr "Alternatif reklam/grup"
 
 #: views/admin/tables/ads/adsense-fallback.php:20
 msgid "Fallback"
-msgstr ""
+msgstr "Alternatif"
 
 #: modules/extended-adblocker/views/setting-exclude.php:13
 msgid "Exclude"
-msgstr ""
+msgstr "Hariç tut"
 
 #: modules/extended-adblocker/views/setting-dismissible.php:28
 msgid "Everytime"
-msgstr ""
+msgstr "Her zaman"
 
 #. translators: 1: The download URL, 2: The HTTP error code, 3: The HTTP header
 #. title, 4: The response body
 #: modules/geo/classes/admin.php:545
 msgid "Error downloading database from: %1$s - %2$s %3$s - %4$s"
-msgstr ""
+msgstr "Veritabanı şuradan indirilirken hata oluştu: %1$s - %2$s %3$s - %4$s"
 
 #: modules/extended-adblocker/views/setting-dismissible.php:68
 msgid "Enter the text that you want to appear on the dismiss button."
-msgstr ""
+msgstr "Kapatma butonunda görünmesini istediğiniz metni girin."
 
 #: modules/extended-adblocker/views/setting-activate-extended.php:68
 msgid "Enter a specific page on your domain to which users with activated AdBlocker should be automatically redirected."
-msgstr ""
+msgstr "Alan adınızda AdBlocker'ı aktif olan kullanıcıların otomatik olarak yönlendirileceği belirli bir sayfa girin."
 
 #: modules/extended-adblocker/views/setting-dismissible.php:77
 #: modules/extended-adblocker/views/setting-dismissible.php:94
 #: modules/extended-adblocker/views/setting-styling.php:29
 #: modules/extended-adblocker/views/setting-styling.php:46
 msgid "Empty and save to revert to defaults."
-msgstr ""
+msgstr "Varsayılanlara dönmek için boşaltın ve kaydedin."
 
 #: modules/advanced-visitor-conditions/main.class.php:211
 msgid "Display or hide ad when user use adblocker."
-msgstr ""
+msgstr "Kullanıcı reklam engelleyici kullandığında reklamı göster veya gizle."
 
 #: includes/admin/class-ad-list-table.php:42
 #: includes/admin/class-ad-list-table.php:86
 msgid "Display Once"
-msgstr ""
+msgstr "Bir kez görüntüle"
 
 #: modules/placement_conditions/admin.class.php:52
 msgid "Display Conditions"
-msgstr ""
+msgstr "Görüntüleme Koşulları"
 
 #: modules/advanced-visitor-conditions/main.class.php:219
 msgid "Display ads based on the user IP address. Enter one IP address per line."
-msgstr ""
+msgstr "Kullanıcı IP adresine göre reklamları görüntüleyin. Satır başına bir IP adresi girin."
 
 #: modules/buddypress/class-buddypress.php:324
 msgid "Display ads based on existing BuddyPress groups."
-msgstr ""
+msgstr "Mevcut BuddyPress gruplarına dayalı reklamları görüntüleyin."
 
 #: modules/extended-adblocker/views/setting-dismissible.php:65
 msgid "Dismiss button text"
-msgstr ""
+msgstr "Kapat düğmesi metni"
 
 #: modules/extended-adblocker/views/setting-dismissible.php:81
 msgid "Dismiss button styling"
-msgstr ""
+msgstr "Kapat düğmesi stili"
 
 #: modules/extended-adblocker/views/setting-dismissible.php:48
 msgid "Dismiss button"
-msgstr ""
+msgstr "Kapat düğmesi"
 
 #: modules/extended-adblocker/main.class.php:83
 #: modules/extended-adblocker/views/setting-dismissible.php:75
 msgid "Dismiss"
-msgstr ""
+msgstr "Kapat"
 
 #: modules/extended-adblocker/views/setting-dismissible.php:58
 msgid "Disabling the dismiss button significantly limits site interaction."
-msgstr ""
+msgstr "Kapatma butonunun devre dışı bırakılması site etkileşimini önemli ölçüde sınırlar."
 
 #: modules/cache-busting/cache-busting.class.php:261
 msgid "Deleting an empty placement might lead to a layout shift."
-msgstr ""
+msgstr "Boş bir yerleşimin silinmesi düzenin değişmesine yol açabilir."
 
 #: views/admin/tables/ads/adsense-fallback.php:25
 msgid "Default"
-msgstr ""
+msgstr "Varsayılan"
 
 #: includes/admin/class-duplicate-placement.php:101
 msgid "Create a copy of this placement"
-msgstr ""
+msgstr "Bu yerleşimin bir kopyasını oluşturun"
 
 #: includes/admin/class-group-duplication.php:77
 msgid "Create a copy of this group"
-msgstr ""
+msgstr "Bu grubun bir kopyasını oluştur"
 
 #: modules/extended-adblocker/views/setting-overlay-content.php:11
 msgid "Content"
-msgstr ""
+msgstr "İçerik"
 
 #: modules/extended-adblocker/views/setting-styling.php:16
 msgid "Container styling"
-msgstr ""
+msgstr "Konteyner stili"
 
 #: modules/extended-adblocker/views/setting-exclude.php:16
 msgid "Choose which user roles to exclude from this ad blocker countermeasure."
-msgstr ""
+msgstr "Bu reklam engelleyici önleminden hangi kullanıcı rollerinin hariç tutulacağını seçin."
 
 #: modules/lazy-load/admin.class.php:56
 msgid "Cache Busting needs to be enabled"
-msgstr ""
+msgstr "Önbellek Bozma özelliğinin etkinleştirilmesi gerekiyor"
 
 #: modules/ads-for-adblockers/admin.class.php:87
 msgid "Cache Busting and Ad blocker disguise need to be enabled"
-msgstr ""
+msgstr "Önbellek Bozma ve Reklam Engelleyici Gizleme özelliğinin etkinleştirilmesi gerekiyor"
 
 #: modules/buddypress/class-buddypress.php:323
 msgid "BuddyPress group"
-msgstr ""
+msgstr "BuddyPress grubu"
 
 #: modules/extended-adblocker/views/setting-styling.php:33
 msgid "Background styling"
-msgstr ""
+msgstr "Arkaplan stili"
 
 #: modules/extended-adblocker/views/setting-activate-extended.php:41
 msgid "Automatically redirect users with ad blockers enabled to an internal page. Content access is granted after turning off the ad blocker."
-msgstr ""
+msgstr "Reklam engelleyicileri etkinleştirilmiş kullanıcıları otomatik olarak dahili bir sayfaya yönlendirin. Reklam engelleyicisi kapatıldıktan sonra içerik erişimi sağlanır."
 
-#: includes/class-bootstrap.php:71
-#: includes/class-bootstrap.php:78
+#: includes/class-bootstrap.php:71 includes/class-bootstrap.php:78
 msgid "Advanced Ads - Pro"
-msgstr ""
+msgstr "Advanced Ads - Pro"
 
 #. translators: ad title.
 #: includes/class-adsense.php:52
 msgid "AdSense fallback was loaded for empty AdSense ad \"%s\""
-msgstr ""
+msgstr "Boş AdSense reklamı \"%s\" için AdSense alternatifi yüklendi"
 
 #: includes/class-bootstrap.php:130
 msgid "Addons listed below requires the <strong><a href=\"https://wpadvancedads.com/?utm_source=advanced-ads&utm_medium=link&utm_campaign=activate-advanced-ads-pro\" target=\"_blank\">Advanced Ads</a></strong> plugin to be installed and activated on your site."
-msgstr ""
+msgstr "Aşağıda listelenen eklentiler, sitenize <strong><a href=\"https://wpadvancedads.com/?utm_source=advanced-ads&utm_medium=link&utm_campaign=activate-advanced-ads-pro\" target=\"_blank\">Gelişmiş Reklamlar</a></strong> eklentisinin kurulmasını ve etkinleştirilmesini gerektirir."
 
 #: modules/advanced-visitor-conditions/main.class.php:210
 msgid "Adblocker"
-msgstr ""
+msgstr "Reklam engelleyici"
 
 #: views/admin/tables/ads/adsense-fallback.php:29
 msgid "Ad groups"
-msgstr ""
+msgstr "Reklam grupları"
 
 #: modules/extended-adblocker/admin.class.php:49
 msgid "Ad blocker countermeasures"
-msgstr ""
+msgstr "Reklam engelleyici karşı önlemleri"
 
 #: modules/ads-for-adblockers/views/settings.php:29
 msgid "Ad block disguise"
-msgstr ""
+msgstr "Reklam engelleyici gizleyici"
 
 #: modules/extended-adblocker/views/setting-activate-extended.php:51
 msgid "Activate the ad blocker disguise above to display the overlay."
-msgstr ""
+msgstr "Üstteki reklam engelleyiciyi gizleyicisini aktifleştirerek kaplamayı görüntüleyin."
 
 #: modules/ads-by-hours/src/class-admin.php:70
 msgid "A cache plugin has been detected. It is recommended to enable Cache Busting and check the visitor's time when displaying the ad on the frontend."
-msgstr ""
+msgstr "Bir önbellek eklentisi tespit edildi. Önbellek Bozma'yı etkinleştirmeniz ve reklamı ön uçta görüntülerken ziyaretçinin zamanını kontrol etmeniz önerilir."
 
 #: includes/class-bootstrap.php:95
 msgid "<strong>Advanced Ads - Pro</strong> requires the <strong>Advanced Ads free</strong> plugin to be installed and activated on your site."
-msgstr ""
+msgstr "<strong>Advanced Ads - Pro</strong> eklentisi için <strong>Advanced Ads ücretsiz</strong> eklentisinin sitenize kurulup etkinleştirilmesi gerekiyor."
 
 #: modules/extended-adblocker/views/setting-dismissible.php:37
 msgid "1 week"
-msgstr ""
+msgstr "1 hafta"
 
 #: modules/extended-adblocker/views/setting-dismissible.php:40
 msgid "1 month"
-msgstr ""
+msgstr "1 ay"
 
 #: modules/extended-adblocker/views/setting-dismissible.php:31
 msgid "1 hour"
-msgstr ""
+msgstr "1 saat"
 
 #: modules/extended-adblocker/views/setting-dismissible.php:34
 msgid "1 day"
-msgstr ""
+msgstr "1 gün"
 
 #: modules/ads-for-adblockers/views/placement-item.php:15
 msgid "--not selected--"
-msgstr ""
+msgstr "--seçilmedi--"
 
 #. translators: comma separated list of days.
 #: modules/weekdays/class-advanced-ads-pro-weekdays.php:181
 msgid " on: %s"
-msgstr ""
+msgstr " Tarih:%s"
 
 #. translators: 1. localized time 2. localized time 3. timezone name.
 #: modules/weekdays/class-advanced-ads-pro-weekdays.php:187
 msgid " between %1$s and %2$s %3$s"
-msgstr ""
+msgstr " %1$s ile %2$s %3$s arasında"
 
 #: modules/responsive-ads/views/setting_reload_ads.php:19
 msgid "You need to enable cache-busting in order to use this feature."
@@ -972,8 +968,7 @@ msgstr "Palau"
 msgid "Pakistan"
 msgstr "Pakistan"
 
-#: modules/geo/classes/admin.php:332
-#: modules/geo/classes/admin.php:334
+#: modules/geo/classes/admin.php:332 modules/geo/classes/admin.php:334
 msgid "or"
 msgstr "ya da"
 
@@ -1617,8 +1612,7 @@ msgstr "Kolombiya"
 msgid "Cocos Islands"
 msgstr "Cocos (Keeling) Adaları"
 
-#: modules/geo/classes/admin.php:335
-#: modules/geo/classes/admin.php:388
+#: modules/geo/classes/admin.php:335 modules/geo/classes/admin.php:388
 msgid "City"
 msgstr "Şehir"
 
@@ -1840,14 +1834,12 @@ msgstr "Adres bulunamadı: %s"
 msgid "Activate now"
 msgstr "Şimdi etkinleştir"
 
-#: modules/geo/classes/admin.php:219
-#: modules/geo/classes/public.php:208
+#: modules/geo/classes/admin.php:219 modules/geo/classes/public.php:208
 #: modules/geo/classes/public.php:372
 msgid "(unknown region)"
 msgstr "(bilinmeyen bölge)"
 
-#: modules/geo/classes/admin.php:208
-#: modules/geo/classes/public.php:200
+#: modules/geo/classes/admin.php:208 modules/geo/classes/public.php:200
 #: modules/geo/classes/public.php:368
 msgid "(unknown city)"
 msgstr "(bilinmeyen şehir)"
@@ -1856,8 +1848,7 @@ msgstr "(bilinmeyen şehir)"
 msgid "&#197;land Islands"
 msgstr "Åland Adaları"
 
-#: modules/lazy-load/admin.class.php:23
-#: modules/lazy-load/admin.class.php:64
+#: modules/lazy-load/admin.class.php:23 modules/lazy-load/admin.class.php:64
 #: views/admin/placements/bulk-edit.php:27
 msgid "Lazy Loading"
 msgstr "Lazy Loading"
@@ -2152,7 +2143,7 @@ msgstr "Güncellendi"
 #. translators: %s is a placeholder for the URL.
 #: modules/advanced-visitor-conditions/main.class.php:163
 msgid "Display ads based on the user's roles. See <a href=\"%s\" target=\"_blank\">List of roles in WordPress</a>."
-msgstr ""
+msgstr "Reklamları kullanıcı rollerine göre görüntüleyin. <a href=\"%s\" target=\"_blank\">WordPress'teki rollerin listesine</a> bakın."
 
 #: modules/advanced-visitor-conditions/main.class.php:160
 msgid "user role"
@@ -2197,8 +2188,7 @@ msgstr "BuddyPress profil alanlarına göre reklamları görüntüleyin."
 msgid "BuddyPress profile field"
 msgstr "BuddyPress profil alanı"
 
-#: modules/buddypress/views/position-option.php:44
-#: views/setting_repeat.php:4
+#: modules/buddypress/views/position-option.php:44 views/setting_repeat.php:4
 msgid "repeat the position"
 msgstr "pozisyonu tekrarla"
 
@@ -2473,7 +2463,7 @@ msgstr "Süresi dolmuş yerleştirme testleri"
 
 #: modules/placement-tests/views/setting_placement_test_weight.php:28
 msgid "Save new test"
-msgstr ""
+msgstr "Yeni bir test kaydet"
 
 #: modules/paid-memberships-pro/main.class.php:157
 msgid "Display ads only to users with a specific membership level set with PaidMembershipsPro."
@@ -2569,8 +2559,7 @@ msgstr "Aşağıdaki öğeyi reklamın görüntülenmesi gereken yere yerleştir
 msgid "by new element"
 msgstr "yeni eleman aracılığıyla"
 
-#: modules/bbpress/class-admin.php:64
-#: modules/bbpress/class-admin.php:87
+#: modules/bbpress/class-admin.php:64 modules/bbpress/class-admin.php:87
 #: modules/bbpress/class-admin.php:130
 #: modules/inject-content/admin.class.php:58
 msgid "Position"
@@ -2724,8 +2713,7 @@ msgstr "Üye Listesi"
 msgid "Group List"
 msgstr "Grup Listesi"
 
-#: modules/buddypress/class-admin.php:63
-#: modules/buddypress/class-admin.php:71
+#: modules/buddypress/class-admin.php:63 modules/buddypress/class-admin.php:71
 msgid "Activity Entry"
 msgstr "Aktivite Kaydı"
 
@@ -2750,8 +2738,7 @@ msgstr "forumlar sayfası"
 msgid "single forum page"
 msgstr "tekil forum sayfası"
 
-#: modules/bbpress/class-admin.php:142
-#: modules/bbpress/class-admin.php:164
+#: modules/bbpress/class-admin.php:142 modules/bbpress/class-admin.php:164
 msgid "forum topic page"
 msgstr "forum konu sayfası"
 

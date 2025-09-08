@@ -91,7 +91,7 @@ class Background_Ad extends Base implements Placement_Type {
 	public function get_options(): array {
 		return $this->apply_filter_on_options(
 			[
-				'allowed_ad_types' => [ 'image', 'plain' ],
+				'allowed_ad_types' => [ 'image' ],
 			]
 		);
 	}

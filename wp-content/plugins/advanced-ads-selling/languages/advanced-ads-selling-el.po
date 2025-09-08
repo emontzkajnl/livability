@@ -1,17 +1,15 @@
+# Translation of Selling Ads in Greek
+# This file is distributed under the same license as the Selling Ads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Selling Ads\n"
-"Report-Msgid-Bugs-To: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2025-04-08 15:58:14+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-04-09T03:37:39+00:00\n"
-"PO-Revision-Date: 2025-04-08 15:58:14+0000\n"
-"Language: el_GR\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: GlotPress/4.0.1\n"
+"Language: el_GR\n"
+"Project-Id-Version: Selling Ads\n"
 
 #. translators: 1: is a link to a support document. 2: closing link
 #: includes/class-autoloader.php:113
@@ -283,24 +281,20 @@ msgstr "Όταν πατήσετε \"Δημοσίευση\", αυτή η διαφ
 msgid "Ad Types"
 msgstr "Τύποι διαφημίσεων"
 
-#: admin/includes/order-page.php:110
-#: admin/views/ad-order-meta-box.php:39
+#: admin/includes/order-page.php:110 admin/views/ad-order-meta-box.php:39
 #: public/views/ad-setup-form.php:70
 msgid "Placement"
 msgstr "Τοποθέτηση"
 
-#: admin/includes/order-page.php:109
-#: admin/views/ad-order-meta-box.php:45
+#: admin/includes/order-page.php:109 admin/views/ad-order-meta-box.php:45
 msgid "Sales Type"
 msgstr "Τύπος πωλήσεων"
 
-#: admin/includes/order-page.php:108
-#: admin/views/ad-order-meta-box.php:57
+#: admin/includes/order-page.php:108 admin/views/ad-order-meta-box.php:57
 msgid "Pricing Label"
 msgstr "Ετικέτα τιμολόγησης"
 
-#: admin/includes/order-page.php:107
-#: admin/views/ad-order-meta-box.php:51
+#: admin/includes/order-page.php:107 admin/views/ad-order-meta-box.php:51
 msgid "Pricing Value"
 msgstr "Αξία τιμολόγησης"
 
@@ -316,8 +310,7 @@ msgstr "Δεδομένα διαφήμισης"
 msgid "Available placements"
 msgstr "Διαθέσιμες τοποθετήσεις"
 
-#: admin/includes/ad-product.php:120
-#: admin/includes/ad-product.php:122
+#: admin/includes/ad-product.php:120 admin/includes/ad-product.php:122
 msgid "define label, value and price separated by |, e.g. 100.000 impressions|100000|20.00"
 msgstr "ορίστε ετικέτα, αξία και τιμή διαχωρισμένα με |, π.χ. 100.000 εμφανίσεις|100.000|20.00"
 
@@ -329,8 +322,7 @@ msgstr "Επιλογές τιμής"
 msgid "Customer can buy per …"
 msgstr "Ο πελάτης μπορεί να αγοράσει ανά …"
 
-#: admin/includes/ad-product.php:105
-#: public/views/product-template.php:75
+#: admin/includes/ad-product.php:105 public/views/product-template.php:75
 msgid "Available ad types"
 msgstr "Διαθέσιμοι τύποι διαφημίσεων"
 
@@ -352,13 +344,11 @@ msgstr "Επιλογές διαφημίσεων"
 msgid "Order Data"
 msgstr "Δεδομένα παραγγελίας"
 
-#: public/includes/ajax.php:58
-#: public/public.php:493
+#: public/includes/ajax.php:58 public/public.php:493
 msgid "Error when submitting the ad. Please contact the site admin."
 msgstr "Σφάλμα κατά την υποβολή της διαφήμισης. Επικοινωνήστε με τον διαχειριστή του ιστότοπου."
 
-#: public/includes/ajax.php:43
-#: public/public.php:478
+#: public/includes/ajax.php:43 public/public.php:478
 msgid "Ad content missing."
 msgstr "Λείπει περιεχόμενο διαφήμισης."
 
@@ -434,17 +424,14 @@ msgstr "Το περιεχόμενο διαφήμισης για τη διαφή�
 msgid "Ad #%d needs approval"
 msgstr "Η διαφήμιση #%d χρειάζεται έγκριση"
 
-#: classes/notifications.php:61
-#: classes/notifications.php:159
+#: classes/notifications.php:61 classes/notifications.php:159
 #: classes/notifications.php:207
 msgid "PS: If you want to contact the ad manager directly, just reply to this email."
 msgstr "ΥΓ: Εάν θέλετε να επικοινωνήσετε απευθείας με τον διαχειριστή διαφημίσεων, απλώς απαντήστε σε αυτό το μήνυμα ηλεκτρονικού ταχυδρομείου."
 
 #. translators: %s is the site URL
-#: classes/notifications.php:60
-#: classes/notifications.php:110
-#: classes/notifications.php:158
-#: classes/notifications.php:206
+#: classes/notifications.php:60 classes/notifications.php:110
+#: classes/notifications.php:158 classes/notifications.php:206
 msgid ""
 "Sincerely,\n"
 "Your ad team\n"
@@ -491,12 +478,10 @@ msgstr "Οι <em>Προηγμένες διαφημίσεις – Διαφημί�
 msgid "<em>Advanced Ads – Selling Ads</em> requires the <strong><a href=\"https://wpadvancedads.com\" target=\"_blank\">Advanced Ads</a></strong> plugin to be installed and activated on your site."
 msgstr "Για τις <em>Προηγμένες διαφημίσεις – Διαφημίσεις πώλησης</em> απαιτείται η εγκατάσταση και η ενεργοποίηση του πρόσθετου <strong><a href=\"https://wpadvancedads.com\" target=\"_blank\">Προηγμένες διαφημίσεις</a></strong> στον ιστότοπό σας."
 
-#: admin/admin.php:124
-#: admin/admin.php:142
+#: admin/admin.php:124 admin/admin.php:142
 msgid "Install Now"
 msgstr "Εγκατάσταση τώρα"
 
-#: admin/admin.php:122
-#: admin/admin.php:140
+#: admin/admin.php:122 admin/admin.php:140
 msgid "Activate Now"
 msgstr "Ενεργοποίηση τώρα"

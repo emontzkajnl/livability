@@ -1,5 +1,6 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
 
+use AdvancedAds\Options;
 use AdvancedAds\Abstracts\Ad;
 use AdvancedAds\Framework\Utilities\Params;
 
@@ -52,11 +53,8 @@ class Advanced_Ads_Pro_Module_Ad_Server {
 	 * Based on Advanced_Ads_Ajax::advads_ajax_ad_select()
 	 */
 	public function get_placement() {
-		$options           = Advanced_Ads_Pro::get_instance()->get_options();
-		$block_no_referrer = ! empty( $options['ad-server']['block-no-referrer'] ); // True if option is set.
-
 		// Prevent direct access through the URL.
-		if ( $block_no_referrer && ! Params::server( 'HTTP_REFERER' ) ) {
+		if ( Options::instance()->get( 'pro.ad-server.block-no-referrer', false ) && ! Params::server( 'HTTP_REFERER' ) ) {
 			die( 'direct access forbidden' );
 		}
 
@@ -68,13 +66,16 @@ class Advanced_Ads_Pro_Module_Ad_Server {
 
 		// Cross Origin Resource Sharing.
 		if ( ! empty( $embedding_urls ) ) {
-			$embedding_urls_string = implode( ' ', $embedding_urls );
-			header( 'Content-Security-Policy: frame-ancestors ' . $embedding_urls_string );
-			foreach ( $embedding_urls as $url ) {
-				$parsed_url = wp_parse_url( $url );
-				$scheme     = isset( $parsed_url['scheme'] ) ? $parsed_url['scheme'] . '://' : 'https://';
-				header( 'Access-Control-Allow-Origin: ' . $scheme . $parsed_url['host'] );
+			$request_origin          = Params::server( 'HTTP_ORIGIN' );
+			$request_host            = wp_parse_url( $request_origin, PHP_URL_HOST ) ?? '';
+			$normalized_request_host = preg_replace( '/^www\./', '', strtolower( $request_host ) );
+
+			if ( in_array( $normalized_request_host, $embedding_urls, true ) ) {
+				header( 'Access-Control-Allow-Origin: ' . $request_origin );
 			}
+
+			// Set Content-Security-Policy for frame-ancestors.
+			header( 'Content-Security-Policy: frame-ancestors ' . implode( ' ', $embedding_urls ) );
 		}
 
 		$public_slug = Params::request( 'p', null );
@@ -177,19 +178,27 @@ class Advanced_Ads_Pro_Module_Ad_Server {
 	/**
 	 * Get the embedding URL array
 	 *
-	 * @return array $embedding_urls.
+	 * @return array
 	 */
-	public function get_embedding_urls() {
-		$options              = Advanced_Ads_Pro::get_instance()->get_options();
-		$embedding_url_option = isset( $options['ad-server']['embedding-url'] ) ? $options['ad-server']['embedding-url'] : false;
+	private function get_embedding_urls() {
+		$embedding_urls_raw = explode( ',', Options::instance()->get( 'pro.ad-server.embedding-url', '' ) );
+		$embedding_urls     = [];
 
-		$embedding_urls_raw = explode( ',', $embedding_url_option );
-
-		$embedding_urls = [];
 		foreach ( $embedding_urls_raw as $_url ) {
-			$embedding_urls[] = esc_url_raw( $_url );
+			$parsed_host = wp_parse_url( $_url, PHP_URL_HOST ) ?: $_url; // phpcs:ignore Universal.Operators.DisallowShortTernary
+			$parsed_host = preg_replace( '/^www\./', '', $parsed_host );
+
+			if ( $parsed_host ) {
+				$embedding_urls[] = strtolower( $parsed_host );
+			}
 		}
 
-		return $embedding_urls;
+		// Automatically include the WordPress site's domain.
+		$wp_host = preg_replace( '/^www\./', '', strtolower( wp_parse_url( get_site_url(), PHP_URL_HOST ) ) );
+		if ( $wp_host ) {
+			$embedding_urls[] = $wp_host;
+		}
+
+		return array_unique( $embedding_urls );
 	}
 }

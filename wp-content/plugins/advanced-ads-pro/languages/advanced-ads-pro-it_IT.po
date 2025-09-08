@@ -1,17 +1,15 @@
+# Translation of Advanced Ads Pro in Italian
+# This file is distributed under the same license as the Advanced Ads Pro package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Advanced Ads Pro\n"
-"Report-Msgid-Bugs-To: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2025-07-01 20:07:01+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-25T23:54:42+00:00\n"
-"PO-Revision-Date: 2023-11-08 21:29:44+0000\n"
-"Language: it\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: GlotPress/4.0.1\n"
+"Language: it\n"
+"Project-Id-Version: Advanced Ads Pro\n"
 
 #: views/admin/placements/bulk-edit.php:21
 msgid "Off"
@@ -40,7 +38,7 @@ msgstr ""
 #. Author of the plugin
 #: advanced-ads-pro.php
 msgid "Advanced Ads"
-msgstr ""
+msgstr "Advanced Ads"
 
 #. translators: %s: Plugin name
 #: includes/class-bootstrap.php:155
@@ -178,11 +176,11 @@ msgstr ""
 
 #: modules/extended-adblocker/views/setting-dismissible.php:43
 msgid "Never"
-msgstr ""
+msgstr "Mai"
 
 #: modules/extended-adblocker/views/setting-styling.php:19
 msgid "Insert CSS to customize the overlay container layout."
-msgstr ""
+msgstr "Inserisci CSS per personalizzare il layout del contenitore sovrapposto."
 
 #: modules/extended-adblocker/views/setting-dismissible.php:84
 msgid "Insert CSS to customize the dismiss button layout."
@@ -197,8 +195,7 @@ msgstr ""
 msgid "Inject after %s post"
 msgstr ""
 
-#: includes/class-bootstrap.php:129
-#: includes/class-bootstrap.php:152
+#: includes/class-bootstrap.php:129 includes/class-bootstrap.php:152
 msgid "Important Notice"
 msgstr ""
 
@@ -208,7 +205,7 @@ msgstr ""
 
 #: modules/ads-for-adblockers/views/placement-item.php:18
 msgid "Groups"
-msgstr ""
+msgstr "Gruppi"
 
 #. translators: %s: first field, %s: last field
 #: modules/advanced-display-conditions/main.class.php:571
@@ -217,7 +214,7 @@ msgstr ""
 
 #: modules/ads-by-hours/views/publish-metabox-inputs.php:35
 msgid "From"
-msgstr ""
+msgstr "Da"
 
 #: includes/admin/class-adsense.php:38
 msgid "Fallback ad/group"
@@ -346,10 +343,9 @@ msgstr ""
 msgid "Automatically redirect users with ad blockers enabled to an internal page. Content access is granted after turning off the ad blocker."
 msgstr ""
 
-#: includes/class-bootstrap.php:71
-#: includes/class-bootstrap.php:78
+#: includes/class-bootstrap.php:71 includes/class-bootstrap.php:78
 msgid "Advanced Ads - Pro"
-msgstr ""
+msgstr "Advanced Ads - Pro"
 
 #. translators: ad title.
 #: includes/class-adsense.php:52
@@ -390,33 +386,33 @@ msgstr ""
 
 #: modules/extended-adblocker/views/setting-dismissible.php:37
 msgid "1 week"
-msgstr ""
+msgstr "1 settimana"
 
 #: modules/extended-adblocker/views/setting-dismissible.php:40
 msgid "1 month"
-msgstr ""
+msgstr "1 mese"
 
 #: modules/extended-adblocker/views/setting-dismissible.php:31
 msgid "1 hour"
-msgstr ""
+msgstr "1 ora"
 
 #: modules/extended-adblocker/views/setting-dismissible.php:34
 msgid "1 day"
-msgstr ""
+msgstr "1 giorno"
 
 #: modules/ads-for-adblockers/views/placement-item.php:15
 msgid "--not selected--"
-msgstr ""
+msgstr "--non selezionato--"
 
 #. translators: comma separated list of days.
 #: modules/weekdays/class-advanced-ads-pro-weekdays.php:181
 msgid " on: %s"
-msgstr ""
+msgstr " su: %s"
 
 #. translators: 1. localized time 2. localized time 3. timezone name.
 #: modules/weekdays/class-advanced-ads-pro-weekdays.php:187
 msgid " between %1$s and %2$s %3$s"
-msgstr ""
+msgstr " tra %1$s e %2$s %3$s"
 
 #: modules/responsive-ads/views/setting_reload_ads.php:19
 msgid "You need to enable cache-busting in order to use this feature."
@@ -972,8 +968,7 @@ msgstr "Palau"
 msgid "Pakistan"
 msgstr "Pakistan"
 
-#: modules/geo/classes/admin.php:332
-#: modules/geo/classes/admin.php:334
+#: modules/geo/classes/admin.php:332 modules/geo/classes/admin.php:334
 msgid "or"
 msgstr "o"
 
@@ -1617,8 +1612,7 @@ msgstr "Colombia"
 msgid "Cocos Islands"
 msgstr "Isole Cocos"
 
-#: modules/geo/classes/admin.php:335
-#: modules/geo/classes/admin.php:388
+#: modules/geo/classes/admin.php:335 modules/geo/classes/admin.php:388
 msgid "City"
 msgstr "Città"
 
@@ -1840,14 +1834,12 @@ msgstr "Indirizzo non trovato: %s"
 msgid "Activate now"
 msgstr "Attiva ora"
 
-#: modules/geo/classes/admin.php:219
-#: modules/geo/classes/public.php:208
+#: modules/geo/classes/admin.php:219 modules/geo/classes/public.php:208
 #: modules/geo/classes/public.php:372
 msgid "(unknown region)"
 msgstr "(regione sconosciuta)"
 
-#: modules/geo/classes/admin.php:208
-#: modules/geo/classes/public.php:200
+#: modules/geo/classes/admin.php:208 modules/geo/classes/public.php:200
 #: modules/geo/classes/public.php:368
 msgid "(unknown city)"
 msgstr "(città sconosciuta)"
@@ -1856,8 +1848,7 @@ msgstr "(città sconosciuta)"
 msgid "&#197;land Islands"
 msgstr "Isole Aland"
 
-#: modules/lazy-load/admin.class.php:23
-#: modules/lazy-load/admin.class.php:64
+#: modules/lazy-load/admin.class.php:23 modules/lazy-load/admin.class.php:64
 #: views/admin/placements/bulk-edit.php:27
 msgid "Lazy Loading"
 msgstr "Lazy loading"
@@ -2152,7 +2143,7 @@ msgstr "Aggiornato"
 #. translators: %s is a placeholder for the URL.
 #: modules/advanced-visitor-conditions/main.class.php:163
 msgid "Display ads based on the user's roles. See <a href=\"%s\" target=\"_blank\">List of roles in WordPress</a>."
-msgstr ""
+msgstr "Visualizza annunci in base al ruolo utente. Vedi <a href=\"%s\" target=\"_blank\">la lista dei ruoli in WordPress</a>."
 
 #: modules/advanced-visitor-conditions/main.class.php:160
 msgid "user role"
@@ -2197,8 +2188,7 @@ msgstr "Visualizza annunci basati sui campi del profilo BuddyPress"
 msgid "BuddyPress profile field"
 msgstr "Campo profilo BuddyPress"
 
-#: modules/buddypress/views/position-option.php:44
-#: views/setting_repeat.php:4
+#: modules/buddypress/views/position-option.php:44 views/setting_repeat.php:4
 msgid "repeat the position"
 msgstr "ripeti la posizione"
 
@@ -2473,7 +2463,7 @@ msgstr "Prove di posizionamento scadute"
 
 #: modules/placement-tests/views/setting_placement_test_weight.php:28
 msgid "Save new test"
-msgstr ""
+msgstr "Salva nuovo test"
 
 #: modules/paid-memberships-pro/main.class.php:157
 msgid "Display ads only to users with a specific membership level set with PaidMembershipsPro."
@@ -2569,8 +2559,7 @@ msgstr "Posiziona il seguente elemento dove l'annuncio dovrebbe essere visualizz
 msgid "by new element"
 msgstr "da un nuovo elemento"
 
-#: modules/bbpress/class-admin.php:64
-#: modules/bbpress/class-admin.php:87
+#: modules/bbpress/class-admin.php:64 modules/bbpress/class-admin.php:87
 #: modules/bbpress/class-admin.php:130
 #: modules/inject-content/admin.class.php:58
 msgid "Position"
@@ -2724,8 +2713,7 @@ msgstr "Elenco membri"
 msgid "Group List"
 msgstr "Elenco  gruppo"
 
-#: modules/buddypress/class-admin.php:63
-#: modules/buddypress/class-admin.php:71
+#: modules/buddypress/class-admin.php:63 modules/buddypress/class-admin.php:71
 msgid "Activity Entry"
 msgstr "Inserimento attività"
 
@@ -2750,8 +2738,7 @@ msgstr "pagina dei forum"
 msgid "single forum page"
 msgstr "pagina forum singola"
 
-#: modules/bbpress/class-admin.php:142
-#: modules/bbpress/class-admin.php:164
+#: modules/bbpress/class-admin.php:142 modules/bbpress/class-admin.php:164
 msgid "forum topic page"
 msgstr "pagina argomento del forum"
 

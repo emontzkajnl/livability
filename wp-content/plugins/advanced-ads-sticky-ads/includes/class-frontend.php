@@ -10,6 +10,7 @@
 namespace AdvancedAds\StickyAds;
 
 use AdvancedAds\Abstracts\Ad;
+use AdvancedAds\Utilities\Conditional;
 use AdvancedAds\Framework\Interfaces\Integration_Interface;
 
 defined( 'ABSPATH' ) || exit;
@@ -43,13 +44,13 @@ class Frontend implements Integration_Interface {
 	 * @return void
 	 */
 	public function enqueue_scripts(): void {
-		if ( function_exists( 'advads_is_amp' ) && advads_is_amp() ) {
+		if ( Conditional::is_amp() ) {
 			return;
 		}
 
 		$options = wp_advads_stickyads()->get_options();
 
-		wp_enqueue_script( 'advanced-ads-sticky-footer-js', AA_STICKY_ADS_BASE_URL . 'assets/js/sticky.js', [], AA_STICKY_ADS_VERSION, true );
+		wp_enqueue_script( 'advanced-ads-sticky-footer-js', AA_STICKY_ADS_BASE_URL . 'assets/dist/sticky.js', [], AA_STICKY_ADS_VERSION, true );
 		wp_localize_script(
 			'advanced-ads-sticky-footer-js',
 			'advanced_ads_sticky_settings',

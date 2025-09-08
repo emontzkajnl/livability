@@ -1,17 +1,15 @@
+# Translation of Advanced Ads Pro in Arabic
+# This file is distributed under the same license as the Advanced Ads Pro package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Advanced Ads Pro\n"
-"Report-Msgid-Bugs-To: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2025-03-08 10:52:29+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-04-09T03:52:05+00:00\n"
-"PO-Revision-Date: 2025-03-08 10:52:29+0000\n"
-"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));\n"
 "X-Generator: GlotPress/4.0.1\n"
+"Language: ar\n"
+"Project-Id-Version: Advanced Ads Pro\n"
 
 #: views/admin/placements/bulk-edit.php:21
 msgid "Off"
@@ -197,8 +195,7 @@ msgstr "أضف CSS لتخصيص خلفية التراكب."
 msgid "Inject after %s post"
 msgstr "إدراج بعد %s مقالة"
 
-#: includes/class-bootstrap.php:129
-#: includes/class-bootstrap.php:152
+#: includes/class-bootstrap.php:129 includes/class-bootstrap.php:152
 msgid "Important Notice"
 msgstr "إشعار هام"
 
@@ -346,8 +343,7 @@ msgstr "تنسيق الخلفية"
 msgid "Automatically redirect users with ad blockers enabled to an internal page. Content access is granted after turning off the ad blocker."
 msgstr "إعادة توجيه المستخدمين الذين لديهم مانع إعلانات مفعّل تلقائيًا إلى صفحة داخلية. يتم منح الوصول إلى المحتوى بعد إيقاف تشغيل مانع الإعلانات."
 
-#: includes/class-bootstrap.php:71
-#: includes/class-bootstrap.php:78
+#: includes/class-bootstrap.php:71 includes/class-bootstrap.php:78
 msgid "Advanced Ads - Pro"
 msgstr "Advanced Ads - Pro"
 
@@ -972,8 +968,7 @@ msgstr "بالاو"
 msgid "Pakistan"
 msgstr "باكستان\t"
 
-#: modules/geo/classes/admin.php:332
-#: modules/geo/classes/admin.php:334
+#: modules/geo/classes/admin.php:332 modules/geo/classes/admin.php:334
 msgid "or"
 msgstr "أو"
 
@@ -1617,8 +1612,7 @@ msgstr "كولومبيا"
 msgid "Cocos Islands"
 msgstr "جزر كوكوس"
 
-#: modules/geo/classes/admin.php:335
-#: modules/geo/classes/admin.php:388
+#: modules/geo/classes/admin.php:335 modules/geo/classes/admin.php:388
 msgid "City"
 msgstr "مدينة"
 
@@ -1840,14 +1834,12 @@ msgstr "لم يتم العثور على العنوان: %s"
 msgid "Activate now"
 msgstr "تفعيل الآن"
 
-#: modules/geo/classes/admin.php:219
-#: modules/geo/classes/public.php:208
+#: modules/geo/classes/admin.php:219 modules/geo/classes/public.php:208
 #: modules/geo/classes/public.php:372
 msgid "(unknown region)"
 msgstr "(منطقة غير معروفة)"
 
-#: modules/geo/classes/admin.php:208
-#: modules/geo/classes/public.php:200
+#: modules/geo/classes/admin.php:208 modules/geo/classes/public.php:200
 #: modules/geo/classes/public.php:368
 msgid "(unknown city)"
 msgstr "(مدينة غير معروفة)"
@@ -1856,8 +1848,7 @@ msgstr "(مدينة غير معروفة)"
 msgid "&#197;land Islands"
 msgstr "جزر آلاند"
 
-#: modules/lazy-load/admin.class.php:23
-#: modules/lazy-load/admin.class.php:64
+#: modules/lazy-load/admin.class.php:23 modules/lazy-load/admin.class.php:64
 #: views/admin/placements/bulk-edit.php:27
 msgid "Lazy Loading"
 msgstr "تحميل مؤجل"
@@ -2197,8 +2188,7 @@ msgstr "عرض الإعلانات على أساس حقول الملف الشخص
 msgid "BuddyPress profile field"
 msgstr "حقل ملف تعريف BuddyPress"
 
-#: modules/buddypress/views/position-option.php:44
-#: views/setting_repeat.php:4
+#: modules/buddypress/views/position-option.php:44 views/setting_repeat.php:4
 msgid "repeat the position"
 msgstr "تكرار الموضع"
 
@@ -2569,8 +2559,7 @@ msgstr "ضع العنصر التالي حيث يجب عرض الإعلان."
 msgid "by new element"
 msgstr "بواسطة عنصر جديد"
 
-#: modules/bbpress/class-admin.php:64
-#: modules/bbpress/class-admin.php:87
+#: modules/bbpress/class-admin.php:64 modules/bbpress/class-admin.php:87
 #: modules/bbpress/class-admin.php:130
 #: modules/inject-content/admin.class.php:58
 msgid "Position"
@@ -2726,8 +2715,7 @@ msgstr "قائمة الأعضاء"
 msgid "Group List"
 msgstr "قائمة المجموعة"
 
-#: modules/buddypress/class-admin.php:63
-#: modules/buddypress/class-admin.php:71
+#: modules/buddypress/class-admin.php:63 modules/buddypress/class-admin.php:71
 msgid "Activity Entry"
 msgstr "دخول النشاط"
 
@@ -2752,8 +2740,7 @@ msgstr "صفحة المنتديات"
 msgid "single forum page"
 msgstr "صفحة منتدى واحدة"
 
-#: modules/bbpress/class-admin.php:142
-#: modules/bbpress/class-admin.php:164
+#: modules/bbpress/class-admin.php:142 modules/bbpress/class-admin.php:164
 msgid "forum topic page"
 msgstr "صفحة موضوع المنتدى"
 

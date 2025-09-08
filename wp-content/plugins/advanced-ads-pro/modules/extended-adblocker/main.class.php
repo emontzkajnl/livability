@@ -2,6 +2,7 @@
 
 use AdvancedAds\Modal;
 use AdvancedAds\Framework\Utilities\Params;
+use AdvancedAds\Utilities\Conditional;
 
 /**
  * Adblocker
@@ -148,7 +149,7 @@ class Advanced_Ads_Pro_Module_Extended_Adblocker {
 		 * - on AMP
 		 * - when method is set to 'nothing'
 		 */
-		if ( advads_is_amp() || 'nothing' === $this->options['method'] ) {
+		if ( Conditional::is_amp() || 'nothing' === $this->options['method'] ) {
 			return false;
 		}
 

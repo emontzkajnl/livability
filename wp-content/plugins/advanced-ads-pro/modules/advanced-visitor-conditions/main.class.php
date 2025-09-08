@@ -1,6 +1,7 @@
 <?php // phpcs:ignoreFile
 use AdvancedAds\Abstracts\Ad;
 use AdvancedAds\Framework\Utilities\Params;
+use AdvancedAds\Utilities\Conditional;
 
 /**
  * Advanced Visitor Conditions module.
@@ -82,20 +83,10 @@ class Advanced_Ads_Pro_Module_Advanced_Visitor_Conditions {
 	 * Add scripts to non-ajax frontend calls.
 	 */
 	public function enqueue_scripts() {
-		if ( function_exists( 'advads_is_amp' ) && advads_is_amp() ) {
+		if ( Conditional::is_amp() ) {
 			return;
 		}
-		// add dependency to manipulate cookies easily
-		/*wp_enqueue_script( 'jquery' );
-		wp_enqueue_script(
-			'js.cookie',
-			'//cdnjs.cloudflare.com/ajax/libs/js-cookie/1.5.1/js.cookie.min.js',
-			array( 'jquery' ),
-			'1.5.1',
-			true
-		);*/
 
-		// add own code
 		wp_register_script(
 			'advanced_ads_pro/visitor_conditions',
 			sprintf( '%sinc/conditions%s.js', plugin_dir_url( __FILE__ ), defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min' ),
@@ -867,7 +858,7 @@ class Advanced_Ads_Pro_Module_Advanced_Visitor_Conditions {
 	 */
 	public function after_ad_output( $content, Ad $ad ) {
 		// Do not enqueue on AMP pages.
-		if ( function_exists( 'advads_is_amp' ) && advads_is_amp() ) {
+		if ( Conditional::is_amp() ) {
 			return $content;
 		}
 		$options = $ad->get_visitor_conditions();

@@ -14,10 +14,11 @@
 	-moz-transition: opacity 400ms ease-in;
 	transition: opacity 400ms ease-in;
 }
+
 .advads-modal:target,
 .advads-modal[open] {
 	display: flex;
-    align-items: center;
+	align-items: center;
 	opacity: 1;
 	pointer-events: auto;
 	z-index: 9999;
@@ -35,7 +36,9 @@ dialog.advads-modal {
 	background-color: #fff;
 	border: 3px solid #20802d;
 	border-radius: 10px;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	box-shadow:
+		0 4px 8px 0 rgba(0, 0, 0, 0.2),
+		0 6px 20px 0 rgba(0, 0, 0, 0.19);
 	box-sizing: border-box;
 	margin: calc(5vh + var(--wp-admin--admin-bar--height, 0px)) auto 5vh;
 	width: 50em;
@@ -63,7 +66,7 @@ dialog.advads-modal {
 button.advads-modal-close-action {
 	padding: 10px 20px;
 	border-radius: 3px;
-	font-weight: bold;
+	font-weight: 700;
 	text-decoration: none;
 	cursor: pointer;
 	outline: inherit;
@@ -76,11 +79,12 @@ button.advads-modal-close-action {
 @keyframes advads-modal-animatetop {
 	from {
 		top: -300px;
-		opacity: 0
+		opacity: 0;
 	}
+
 	to {
 		top: 0;
-		opacity: 1
+		opacity: 1;
 	}
 }
 

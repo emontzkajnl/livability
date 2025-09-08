@@ -14,8 +14,6 @@ class Advanced_Ads_Layer_Admin {
 	 */
 	protected $settings_page_hook = '';
 
-	const PLUGIN_LINK = 'https://wpadvancedads.com/add-ons/popup-and-layer-ads/';
-
 	/**
 	 * holds base class
 	 *

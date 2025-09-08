@@ -10,7 +10,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Advanced Ads – Selling Ads
- * Version:           2.0.2
+ * Version:           2.0.3
  * Description:       Let users purchase ads directly in the frontend of your site.
  * Plugin URI:        https://wpadvancedads.com/add-ons/selling-ads/
  * Author:            Advanced Ads
@@ -37,7 +37,7 @@ if ( defined( 'AASA_FILE' ) ) {
 }
 
 define( 'AASA_FILE', __FILE__ );
-define( 'AASA_VERSION', '2.0.2' );
+define( 'AASA_VERSION', '2.0.3' );
 
 // Load the autoloader.
 require_once __DIR__ . '/includes/class-autoloader.php';

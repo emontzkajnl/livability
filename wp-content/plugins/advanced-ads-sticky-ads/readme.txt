@@ -1,8 +1,8 @@
 === Advanced Ads – Sticky Ads ===
 Requires at least: 5.7
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.0.1
+Stable tag: 2.0.3
 
 Sticky Ad allows to stick an ad to a position in the browser window and scroll with the content.
 
@@ -40,6 +40,16 @@ You can use Advanced Ads along any other ad management plugin and don’t need t
 
 == Changelog ==
 
+= 2.0.3 (July 28, 2025) =
+
+- Improvement: add undefined translations
+- Improvement: show note when close button is not available due to group refresh setting
+
+= 2.0.2 (June 25, 2025) =
+
+- Improvement: add undefined translations
+- Improvement: Test plugin compatibility with WordPress 6.8.
+
 = 2.0.1 (April 9, 2025) =
 
 - Fix: removed all license-related code from the addons as license management has been moved to the free version.
@@ -62,4 +72,4 @@ You can use Advanced Ads along any other ad management plugin and don’t need t
 
 - Improvement: close a placement if the GAM ad within it is empty
 
-Build: 2025-06-500233fe
+Build: 2025-09-09c58270

@@ -1,8 +1,8 @@
 === Advanced Ads – PopUp and Layer Ads ===
 Requires at least: 5.7
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 
 Create Ads with a popup and layer effect.
 
@@ -40,6 +40,11 @@ You can use Advanced Ads along any other ad management plugin and don’t need t
 
 == Changelog ==
 
+= 2.0.2 (June 23, 2025) =
+
+- Improvement: add undefined translations
+- Improvement: Test plugin compatibility with WordPress 6.8.
+
 = 2.0.1 (April 9, 2025) =
 - Improvement: placement positioning and responsiveness
 - Fix: correct order of placement icons
@@ -64,4 +69,4 @@ You can use Advanced Ads along any other ad management plugin and don’t need t
 
 - Fix: close an ad if the GAM ad unit within it is empty
 
-Build: 2025-06-de49e001
+Build: 2025-09-597fab3f

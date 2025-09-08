@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Advanced Ads – Selling Ads 2.0.1\n"
+"Project-Id-Version: Advanced Ads – Selling Ads 2.0.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/advanced-ads-selling\n"
-"Last-Translator: Thomas Maier <post@webzunft.de>\n"
-"Language-Team: webgilde <support@wpadvancedads.com>\n"
+"Last-Translator: Shakeeb Ahmed <me@shakeebahmed.com>\n"
+"Language-Team: Advanced Ads <support@wpadvancedads.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-04-09T03:37:39+00:00\n"
+"POT-Creation-Date: 2025-06-24T21:18:54+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: advanced-ads-selling\n"
@@ -41,49 +41,49 @@ msgstr ""
 msgid "https://wpadvancedads.com"
 msgstr ""
 
-#: admin/admin.php:121
+#: admin/admin.php:113
 #: includes/class-bootstrap.php:233
 msgid "Activate Now"
 msgstr ""
 
-#: admin/admin.php:123
+#: admin/admin.php:115
 #: includes/class-bootstrap.php:225
 msgid "Install Now"
 msgstr ""
 
-#: admin/admin.php:127
+#: admin/admin.php:119
 msgid "<em>Advanced Ads – Selling Ads</em> requires the free <strong>WooCommerce</strong> to be installed and activated on your site."
 msgstr ""
 
-#: admin/admin.php:153
+#: admin/admin.php:145
 msgid "Ad Store"
 msgstr ""
 
-#: admin/admin.php:158
+#: admin/admin.php:150
 msgid "Store admin email"
 msgstr ""
 
-#: admin/admin.php:162
+#: admin/admin.php:154
 msgid "Store sender email"
 msgstr ""
 
-#: admin/admin.php:166
+#: admin/admin.php:158
 msgid "Setup page"
 msgstr ""
 
-#: admin/admin.php:170
+#: admin/admin.php:162
 msgid "Hide ad setup"
 msgstr ""
 
-#: admin/admin.php:174
+#: admin/admin.php:166
 msgid "WooCommerce adjustments"
 msgstr ""
 
-#: admin/admin.php:180
+#: admin/admin.php:172
 msgid "List ads in the customer account"
 msgstr ""
 
-#: admin/admin.php:255
+#: admin/admin.php:247
 msgid "No static pages found."
 msgstr ""
 

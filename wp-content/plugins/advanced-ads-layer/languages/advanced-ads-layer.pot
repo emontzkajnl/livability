@@ -4,12 +4,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Advanced Ads – PopUp and Layer Ads 2.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/advanced-ads-layer\n"
-"Last-Translator: Thomas Maier <post@webzunft.de>\n"
-"Language-Team: webgilde <support@wpadvancedads.com>\n"
+"Last-Translator: Shakeeb Ahmed <me@shakeebahmed.com>\n"
+"Language-Team: Advanced Ads <support@wpadvancedads.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-04-09T04:18:26+00:00\n"
+"POT-Creation-Date: 2025-06-23T15:23:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: advanced-ads-layer\n"
@@ -41,44 +41,44 @@ msgstr ""
 msgid "https://wpadvancedads.com"
 msgstr ""
 
-#: admin/admin.php:78
+#: admin/admin.php:76
 msgid "You shouldn’t have more than one Fancybox on the same page. Please, make sure that you set up the ads for the different layers with display conditions to prevent them from showing up on the same page"
 msgstr ""
 
-#: admin/admin.php:150
+#: admin/admin.php:148
 msgid "Use Fancybox plugin"
 msgstr ""
 
-#: admin/admin.php:228
+#: admin/admin.php:226
 msgid "show the ad"
 msgstr ""
 
-#: admin/admin.php:241
+#: admin/admin.php:239
 msgid "effect"
 msgstr ""
 
-#: admin/admin.php:254
+#: admin/admin.php:252
 msgid "background"
 msgstr ""
 
-#: admin/admin.php:264
+#: admin/admin.php:262
 msgid "auto close"
 msgstr ""
 
-#: admin/admin.php:274
+#: admin/admin.php:272
 msgid "close button"
 msgstr ""
 
-#: admin/admin.php:284
+#: admin/admin.php:282
 #: admin/views/close-button.php:18
 msgid "Position"
 msgstr ""
 
-#: admin/admin.php:297
+#: admin/admin.php:295
 msgid "size"
 msgstr ""
 
-#: admin/admin.php:321
+#: admin/admin.php:319
 msgid "It is against the AdSense policy to use their ads in popups."
 msgstr ""
 

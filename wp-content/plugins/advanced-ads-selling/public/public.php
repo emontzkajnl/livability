@@ -51,7 +51,7 @@ class Advanced_Ads_Selling {
 			return;
 		}
 
-		wp_register_script( 'advanced-ads-selling-single-product-script', AASA_BASE_URL . 'assets/js/ad-setup.js', array( 'jquery' ) );
+		wp_register_script( 'advanced-ads-selling-single-product-script', AASA_BASE_URL . 'assets/dist/ad-setup.js', array( 'jquery' ) );
 
 		if ( is_product() ) {
 			$woocommerce_price_decimal_sep = get_option( 'woocommerce_price_decimal_sep' );
@@ -91,7 +91,7 @@ class Advanced_Ads_Selling {
 		}
 
 		if ( is_product() ) {
-			wp_enqueue_style( 'advanced-ads-selling-wc-product', AA_SELLING_BASE_URL . 'public/assets/css/screen-wc-product.css', [], AASA_VERSION );
+			wp_enqueue_style( 'advanced-ads-selling-wc-product', AA_SELLING_BASE_URL . 'assets/dist/screen-wc-product.css', [], AASA_VERSION );
 		}
 	}
 

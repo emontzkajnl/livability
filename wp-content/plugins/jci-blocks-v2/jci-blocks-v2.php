@@ -314,8 +314,7 @@ function return_breadcrumbs() {
         if (isset($incomeTax) && $incomeTax != '') {
             $html .= '<div class="state-inc"><dt>State Income Tax</dt><dd>'.$incomeTax.'%</dd></div>';
         }
-        // $html .= $salesTax ? '<div class="state-sales"><dt>Sales Tax</dt><dd>'.$salesTax.'%</dd></div>' : '';
-        // $html .= $incomeTax ? '<div class="state-inc"><dt>State Income Tax</dt><dd>'.$incomeTax.'</dd></div>' : '';
+
         $html .= $stateRent ? '<div class="avg-rent"><dt>Median Monthly Rent</dt><dd>'.$stateRent.'</dd></div>' : '';
         } else {
         $html .= $commute ? '<div class="avg-com"><dt>Average Commute</dt><dd>'.$commute.' minutes</dd></div>' : '';
