@@ -2096,6 +2096,145 @@ function wp_rocket_add_purge_posts_to_author() {
 	}
 add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 
+	// Register Custom Post Type
+	if ( ! function_exists('place_category_page') ) {
+	function place_category_page() {
+	
+		$labels = array(
+			'name'                  => _x( 'Place Category Pages', 'Post Type General Name', 'text_domain' ),
+			'singular_name'         => _x( 'Place Category Page', 'Post Type Singular Name', 'text_domain' ),
+			'menu_name'             => __( 'Place Category Pages', 'text_domain' ),
+			'name_admin_bar'        => __( 'Place Category Page', 'text_domain' ),
+			'archives'              => __( 'Place Category Page Archives', 'text_domain' ),
+			'attributes'            => __( 'Add to Place Category Pages List', 'text_domain' ),
+			'parent_item_colon'     => __( 'Select a place:', 'text_domain' ),
+			'all_items'             => __( 'All Place Category Pages', 'text_domain' ),
+			'add_new_item'          => __( 'Add a Place Category Page', 'text_domain' ),
+			'add_new'               => __( 'Add a Place Category Page', 'text_domain' ),
+			'new_item'              => __( 'New Place Category Page', 'text_domain' ),
+			'edit_item'             => __( 'Edit Place Category Page', 'text_domain' ),
+			'update_item'           => __( 'Update Place Category Page', 'text_domain' ),
+			'view_item'             => __( 'View Place Category Page', 'text_domain' ),
+			'view_items'            => __( 'View Place Category Pages', 'text_domain' ),
+			'search_items'          => __( 'Search Place Category Pages', 'text_domain' ),
+			'not_found'             => __( 'Not found', 'text_domain' ),
+			'not_found_in_trash'    => __( 'Not found in Trash', 'text_domain' ),
+			'featured_image'        => __( 'Featured Image', 'text_domain' ),
+			'set_featured_image'    => __( 'Set featured image', 'text_domain' ),
+			'remove_featured_image' => __( 'Remove featured image', 'text_domain' ),
+			'use_featured_image'    => __( 'Use as featured image', 'text_domain' ),
+			'insert_into_item'      => __( 'Insert into Place', 'text_domain' ),
+			'uploaded_to_this_item' => __( 'Uploaded to this Place Category Page', 'text_domain' ),
+			'items_list'            => __( 'Place Category Pages list', 'text_domain' ),
+			'items_list_navigation' => __( 'Place Category Pages list navigation', 'text_domain' ),
+			'filter_items_list'     => __( 'Filter Place Category Pages list', 'text_domain' ),
+		);
+		// $rewrite = array(
+		// 	'slug'                  => 'best-places',
+		// 	'with_front'            => false,
+		// 	'pages'                 => true,
+		// 	'feeds'                 => true,
+		// );
+		$args = array(
+			'label'                 => __( 'Place Category Page', 'text_domain' ),
+			'description'           => __( 'Category page for places', 'text_domain' ),
+			'labels'                => $labels,
+			'supports'              => array( 'title', 'editor', 'thumbnail', 'revisions'),
+			'hierarchical'          => false,
+			'public'                => false,
+			'show_ui'               => true,
+			'show_in_menu'          => true,
+			'menu_position'         => 10,
+			'show_in_admin_bar'     => true,
+			'show_in_nav_menus'     => false,
+			'show_in_rest'			=> true,
+			'can_export'            => true,
+			'has_archive'           => false,
+			'exclude_from_search'   => true,
+			'publicly_queryable'    => true,
+			'taxonomies'			=> array( 'category' ),
+			// 'rewrite'				=> $rewrite,
+			'capability_type'       => 'page',
+			'menu_icon'   			=> 'dashicons-location-alt',
+		);
+		register_post_type( 'place_category_page', $args );
+	
+	}
+	add_action( 'init', 'place_category_page', 0 );
+	
+	}
+	function make_place_category_pages() {
+		add_meta_box( 'add_place_cat_page', __( 'Place Category Pages' , 'livability' ), 'make_pc_pages_callback', 'liv_place');
+	}
+	function make_pc_pages_callback($post) {
+		$place_ID = $post->ID;
+		$all_cats = get_terms(['taxonomy' => 'category']);
+		$cp_args = array(
+			'post_type'		=> 'place_category_page',
+			'meta_key'		=> 'place_relationship',
+			'post_status'	=> array('publish', 'draft'),
+			'meta_value'	=> $place_ID	
+		);
+		$current_posts = get_posts($cp_args); 
+		foreach ($all_cats as $cat) { 
+			$has_pcp = false;
+			if ($current_posts) {
+				foreach ($current_posts as $cp) {
+					if (has_term($cat->term_id, 'category', $cp->ID)) {
+						$has_pcp = true;
+						echo '<p><a href="'.get_the_permalink($cp->ID).'">'.$cat->name.'</a></p>';
+						break;
+					}
+				}
+			}
+			if ($has_pcp == false) {
+			?>
+				<p><input type="checkbox" id="<?php echo $cat->slug; ?>" name="<?php echo $cat->slug ?>" value="<?php echo $cat->term_id; ?>">
+				<label for="" ><?php echo $cat->name; ?></label></p>
+		<?php }
+		}
+		?>
+		
+	<?php 
+		// echo 'id is '.$post->ID;
+		// get all place category pages of this place
+		// loop through categories
+		// if category matches pcp, create a link
+		// wp_insert_post with array including post_category (id) and meta_input
+		// if not matching, create checkbox to run function on save
+		// 
+
+	}
+	add_action( 'add_meta_boxes', 'make_place_category_pages');
+
+	function save_place_category_pages( $post_id) {
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+		if ( wp_is_post_revision( $post_id ) ) {
+			return;
+		}
+		$all_cats = get_terms(['taxonomy' => 'category']);
+		foreach ($all_cats as $cat) {
+			// $cat_id = $cat->term_id;
+			if ( array_key_exists( $cat->slug, $_POST ) ) {
+				$insert_args = array(
+					'post_category'		=> array($cat->term_id),
+					'post_type'			=> 'place_category_page',
+					'post_title'		=> get_the_title($post_id).', '.$cat->name, 
+					// 'post_name'			=> get_the_title($post_id).' '.$cat->name, 
+					'post_status'		=> 'draft',  
+					'meta_input'		=> array('place_relationship' => $post_id) 
+				);
+				remove_action( 'save_post_liv_place', 'save_place_category_pages'); // to avoid infinite loop
+				wp_insert_post( $insert_args, true, true );
+				add_action( 'save_post_liv_place', 'save_place_category_pages');
+			}
+		}
+	}
+
+	add_action( 'save_post_liv_place', 'save_place_category_pages');
+
 // testing filter
 // add_filter('acf/fields/post_object/query', 'my_acf_fields_post_object_query', 10, 3);
 // function my_acf_fields_post_object_query( $args, $field, $post_id ) {

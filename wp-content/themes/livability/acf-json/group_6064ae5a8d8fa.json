@@ -27,7 +27,8 @@
             "elements": "",
             "min": "",
             "max": "",
-            "return_format": "id"
+            "return_format": "id",
+            "bidirectional_target": []
         }
     ],
     "location": [
@@ -49,6 +50,13 @@
                 "operator": "==",
                 "value": "cc-page.php"
             }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "place_category_page"
+            }
         ]
     ],
     "menu_order": 0,
@@ -60,5 +68,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1677084168
+    "modified": 1757531014
 }
