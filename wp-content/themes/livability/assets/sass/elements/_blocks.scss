@@ -1824,7 +1824,6 @@ p.insights-connect-with {
   font-size: 1rem;
   margin-top: 0;
   line-height: 1.8rem;
-  
 }
 .insights-social {
   padding-left: 0;
@@ -1845,6 +1844,31 @@ p.insights-connect-with {
 //   font-weight:bold;
 //   font-family: 'Jost', arial, sans-serif;
 // }
+
+.category-nav {
+  padding: 0px;
+  background: #fff;
+  width: 100%;
+  position: sticky;
+  top: 70px;
+  z-index: 100;
+  display: flex;
+  a {
+    padding: 8px 24px;
+    background: #2c5a99;
+    color: #fff;
+    font-family: "Jost", Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    display: inline-block;
+    margin: 0;
+    &:hover {
+      background: #1b365d;
+    }
+    &.active {
+      background: #1b365d;
+    }
+  }
+}
 @media all and (min-width: 992px) {
   .insights {
     padding-left: 200px;

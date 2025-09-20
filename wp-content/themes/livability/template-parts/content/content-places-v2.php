@@ -99,8 +99,9 @@ $topic_args = array(
     </ul>
     </div>
     <div class="place-column__content">
-    
+    <?php get_template_part( 'template-parts/blocks/place-categories'); ?>
         <div class="wp-block-columns liv-column-p">
+            
             <div class="wp-block-column">
             <div id="crumbs">
                 <?php if (function_exists('return_breadcrumbs')) {
@@ -117,12 +118,13 @@ $topic_args = array(
                      } else {
                         echo '<h1 class="h1" id="overview">'.get_the_title().'</h1>';
                      }
-                     
+                     echo '<h1>Content places v2</h1>';
                      //If there is and article connected to this place with a 
                      // topic of connected community, show block
                      echo do_shortcode('[addtoany]'); 
                      get_template_part( 'template-parts/blocks/cc-cta-block' );
                      get_template_part( 'template-parts/blocks/liv-place-accolades');
+                    //  get_template_part( 'template-parts/blocks/place-categories');
                      
                      if (get_field('client_place') || get_field('non-client_city_with_content')) {
                         the_content( );
