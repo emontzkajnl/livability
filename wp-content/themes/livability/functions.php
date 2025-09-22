@@ -2139,9 +2139,9 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 			'label'                 => __( 'Place Category Page', 'text_domain' ),
 			'description'           => __( 'Category page for places', 'text_domain' ),
 			'labels'                => $labels,
-			'supports'              => array( 'title', 'editor', 'thumbnail', 'revisions'),
+			'supports'              => array( 'title', 'editor', 'thumbnail', 'revisions', 'page-attributes'),
 			'hierarchical'          => false,
-			'public'                => false,
+			'public'                => true,
 			'show_ui'               => true,
 			'show_in_menu'          => true,
 			'menu_position'         => 10,
@@ -2149,8 +2149,8 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 			'show_in_nav_menus'     => false,
 			'show_in_rest'			=> true,
 			'can_export'            => true,
-			'has_archive'           => false,
-			'exclude_from_search'   => true,
+			'has_archive'           => true,
+			'exclude_from_search'   => false,
 			'publicly_queryable'    => true,
 			'taxonomies'			=> array( 'category' ),
 			// 'rewrite'				=> $rewrite,
@@ -2158,7 +2158,6 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 			'menu_icon'   			=> 'dashicons-location-alt',
 		);
 		register_post_type( 'place_category_page', $args );
-	
 	}
 	add_action( 'init', 'place_category_page', 0 );
 	
@@ -2171,9 +2170,7 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 		$all_cats = get_terms(['taxonomy' => 'category']);
 		$cp_args = array(
 			'post_type'		=> 'place_category_page',
-			// 'meta_key'		=> 'place_relationship',
 			'post_status'	=> array('publish', 'draft'),
-			// 'meta_value'	=> $place_ID,
 			'meta_query'        => array(
 				array( 
 					'key'       => 'place_relationship',
