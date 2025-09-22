@@ -118,7 +118,7 @@ $topic_args = array(
                      } else {
                         echo '<h1 class="h1" id="overview">'.get_the_title().'</h1>';
                      }
-                     echo '<h1>Content places v2</h1>';
+                    
                      //If there is and article connected to this place with a 
                      // topic of connected community, show block
                      echo do_shortcode('[addtoany]'); 
