@@ -2171,18 +2171,35 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 		$all_cats = get_terms(['taxonomy' => 'category']);
 		$cp_args = array(
 			'post_type'		=> 'place_category_page',
-			'meta_key'		=> 'place_relationship',
+			// 'meta_key'		=> 'place_relationship',
 			'post_status'	=> array('publish', 'draft'),
-			'meta_value'	=> $place_ID	
+			// 'meta_value'	=> $place_ID,
+			'meta_query'        => array(
+				array( 
+					'key'       => 'place_relationship',
+					'value'     => $place_ID,
+					'compare'   => 'LIKE'
+				)
+			),
+			'numberposts'	=> 100	
 		);
 		$current_posts = get_posts($cp_args); 
+		// echo 'place id is '.$place_ID;
+		// echo '<pre>';
+		// print_r($current_posts);
+		// echo '</pre>';
+		// foreach ($current_posts as $cp ) {
+		// 	$p = get_post_meta($cp->ID, 'place_relationship');
+		// 	echo 'title is '.$cp->post_title.' and place id is '.$p[0].'<br />';
+		// }
 		foreach ($all_cats as $cat) { 
 			$has_pcp = false;
 			if ($current_posts) {
 				foreach ($current_posts as $cp) {
 					if (has_term($cat->term_id, 'category', $cp->ID)) {
 						$has_pcp = true;
-						echo '<p><a href="'.get_the_permalink($cp->ID).'">'.$cat->name.'</a></p>';
+						// echo '<p><a href="'.get_the_permalink($cp->ID).'">'.$cat->name.'</a></p>';
+						echo edit_post_link( $cat->name, '<p>', '</p>', $cp->ID);
 						break;
 					}
 				}
