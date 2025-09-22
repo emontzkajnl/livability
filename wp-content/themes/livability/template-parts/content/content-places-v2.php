@@ -99,7 +99,7 @@ $topic_args = array(
     </ul>
     </div>
     <div class="place-column__content">
-    <?php get_template_part( 'template-parts/blocks/place-categories'); ?>
+    
         <div class="wp-block-columns liv-column-p">
             
             <div class="wp-block-column">
@@ -124,7 +124,7 @@ $topic_args = array(
                      echo do_shortcode('[addtoany]'); 
                      get_template_part( 'template-parts/blocks/cc-cta-block' );
                      get_template_part( 'template-parts/blocks/liv-place-accolades');
-                    //  get_template_part( 'template-parts/blocks/place-categories');
+                     get_template_part( 'template-parts/blocks/place-categories');
                      
                      if (get_field('client_place') || get_field('non-client_city_with_content')) {
                         the_content( );
