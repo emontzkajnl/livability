@@ -14,7 +14,7 @@ $args = array(
     'posts_per_page'    => 20
 );
 $place_category_pages = new WP_Query($args);
-echo 'place category '.get_the_ID();
+
 if ($place_category_pages->have_posts()) {
     echo '<div class="category-nav">';
     while ($place_category_pages->have_posts()) {
