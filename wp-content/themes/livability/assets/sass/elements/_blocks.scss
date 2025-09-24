@@ -1853,6 +1853,8 @@ p.insights-connect-with {
   top: 70px;
   z-index: 100;
   display: flex;
+  flex-wrap: wrap;
+  background-color: #2c5a99;
   a {
     padding: 8px 24px;
     background: #2c5a99;

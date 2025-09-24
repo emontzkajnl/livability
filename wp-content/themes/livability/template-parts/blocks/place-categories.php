@@ -1,13 +1,22 @@
-<?php 
+<?php  
+if (get_post_type() == 'liv_place') {
+    $meta_value = get_the_ID();
+} elseif (get_post_type() == 'place_category_page') {
+    $pr = get_field('place_relationship');
+    $meta_value = $pr[0];
+} else {
+    $meta_value = null;
+} 
+
 $args = array(
     'post_type'         => 'place_category_page', 
-    'post_status'       => 'publish',
+    'post_status'       => array('publish', 'draft'),
     // 'meta_key'          => 'place_relationship',
     // 'meta_value'        => get_the_ID(),
     'meta_query'        => array(
         array( 
             'key'       => 'place_relationship',
-            'value'     => '"' . get_the_ID() . '"',
+            'value'     => $meta_value,
             'compare'   => 'LIKE'
         ),
     ),
