@@ -14,7 +14,7 @@ $hero_section = get_field('display_hero');
 if ($hero_section) {
 	get_template_part( 'template-parts/page-hero-section' );
 }
-echo 'page template';
+
 /* Start the Loop */
 while ( have_posts() ) :
 	the_post();

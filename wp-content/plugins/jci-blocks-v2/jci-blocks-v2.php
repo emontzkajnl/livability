@@ -162,8 +162,26 @@ function return_breadcrumbs() {
             }
 
             $output .= ' <a href="' . getCategoryPageUrl($cat) . '">'  . $cat[0]->name . '</a> ' . $delimiter . ' ';
+            $output .=  $before . get_the_title() . $after;
+        } // end if post type is post
+        if ($post_type == 'place_category_page') {
+            $parsed = wp_parse_url( get_permalink());
+            $split = explode('/',$parsed['path']);
+            if (count($split) > 3) { // is state
+                $state_segment = '/'.$split[1].'/';
+                $ss_obj = get_page_by_path($state_segment, OBJECT, 'liv_place');
+                if ($ss_obj) {
+                    $output .= ' <a href="' . get_permalink( $ss_obj->ID) . '"> ' . get_field('state_code', $ss_obj->ID) . '</a> ' . $delimiter . ' ';
+                }
+            } 
+            if (count($split) > 4) { // is city
+                $city_rel = get_field('place_relationship');
+                $city_title = ucwords(str_replace('-', ' ', $split[2]));
+                $city_link = get_the_permalink( $city_rel[0]);
+                $output .= ' <a href="' . $city_link . '"> ' . $city_title . '</a> ' . $delimiter . ' ';
+            } 
+            $output .= ' <a href="' . getCategoryPageUrl($cat) . '">'  . $cat[0]->name . '</a> ';
         }
-        $output .=  $before . get_the_title() . $after;
     } elseif (has_post_parent($currentID)) {
         $parent_id  = wp_get_post_parent_id($currentID);
         $breadcrumbs = array();
