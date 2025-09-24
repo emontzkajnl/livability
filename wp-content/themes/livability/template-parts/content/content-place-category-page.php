@@ -30,11 +30,12 @@
 
         <div class="wp-block-columns liv-columns">
             <div class="wp-block-column">
-                <div class="wp-block-columns liv-columns-2">
-                    <div class="wp-block-column">
+            
+                <!-- <div class="wp-block-columns "> -->
+                    <!-- <div class="wp-block-column">
                       
-                    </div>
-                    <div class="wp-block-column">
+                    </div> -->
+                    <!-- <div class="wp-block-column"> -->
                         <div id="crumbs">
                             <?php if (function_exists('return_breadcrumbs')) {
                                 echo return_breadcrumbs(); 
@@ -42,17 +43,18 @@
                         </div>
                        
                         <h1 class="h2"><?php echo the_title(); ?></h1>
-                        <?php get_template_part( 'template-parts/blocks/place-categories'); ?>
+                        <?php get_template_part( 'template-parts/blocks/place-categories'); ?> 
+                        <?php echo do_shortcode( '[addtoany]' ); ?> 
                      
-                    </div>
-                </div>
+                    <!-- </div> -->
+                <!-- </div> -->
                     <!-- <div class="wp-block-columns liv-columns-2"> -->
 
                     <!-- </div> -->
                 <!-- </div> -->
-                <div class="wp-block-columns liv-columns-2">
-                    <div class="wp-block-column">
-                        <?php echo do_shortcode( '[addtoany]' ); ?> 
+                <div class="wp-block-columns ">
+                    <!-- <div class="wp-block-column"> -->
+                        <?php //echo do_shortcode( '[addtoany]' ); ?> 
                         <!-- <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
                             <a class="a2a_button_copy_link"></a>
                             <a class="a2a_button_linkedin"></a>
@@ -64,9 +66,9 @@
                             a2a_config.linkurl = '<?php //echo get_the_permalink(); ?>';
                              a2a.init('page');
                         </script> -->
-                       <?php get_template_part( 'template-parts/blocks/more-like-this'); ?>
+                       <?php //get_template_part( 'template-parts/blocks/more-like-this'); ?>
                        
-                    </div>
+                    <!-- </div> -->
                     <div class="wp-block-column">
                      
                         
