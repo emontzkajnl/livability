@@ -1175,6 +1175,11 @@ div[class^="curated-posts-"] {
 
   }
 }
+.sponsor-table {
+  td:nth-child(2) {
+    max-width: 300px;
+  }
+}
 
 
 .wp-block-jci-blocks-info-box {

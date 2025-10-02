@@ -24,7 +24,7 @@ $place_category_pages = new WP_Query($args);
 
 if ($place_category_pages->have_posts()) {
     $catnavholder = array();
-    $catorder = array('live','work','play','visit', 'basics','affordable-places-to-live', 'education-careers-opportunity', 'experiences-adventures', 'healthy-places', 'food-scenes', 'love-where-you-live', 'make-your-move', 'where-to-live-now' );
+    $catorder = array('live', 'where-to-live', 'neighborhoods', 'homes-for-sale', 'work', 'jobs', 'job-opportunities', 'play', 'things-to-do', 'visit', 'basics','affordable-places-to-live', 'education-careers-opportunity', 'experiences-adventures', 'healthy-places', 'food-scenes', 'love-where-you-live', 'make-your-move', 'where-to-live-now' );
 
     while ($place_category_pages->have_posts()) {
         $place_category_pages->the_post();

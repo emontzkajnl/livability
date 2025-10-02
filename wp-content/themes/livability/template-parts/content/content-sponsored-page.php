@@ -81,9 +81,10 @@
                     <table class="sponsor-table">
                         <thead>
                         <tr>
-                            <th></th>
+                            <th>Image</th>
                             <th>Title</th>
-                            <th>Published</th>
+                            <th>Status</th>
+                            <th>Published on</th>
                             <th>Expiration</th>
                             <th>Place</th>
                         </tr>
@@ -92,15 +93,7 @@
                         
                     
                 <?php while ($sponsor_query->have_posts()): $sponsor_query->the_post(); ?>
-                <?php $expire_date = do_shortcode( '[futureaction type=date dateformat="F j, Y"]'); ?>
-                <tr>
-                    <td style="max-width: 100px;"><?php echo the_post_thumbnail( 'thumb'); ?></td>
-                    <td><p><a href="<?php echo get_the_permalink(); ?>"><?php echo get_the_title(  ); ?></a></p></td>
-                    <td><p><?php echo get_post_status(); ?></p></td>
-                    <td>Published <?php echo get_the_date(); ?></td>
-                    <td>Expires <?php echo $expire_date; ?></td>
-                    <td></td>
-                </tr>
+                <?php get_template_part( 'template-parts/content/content-sponsored-list' ); ?>
                 <?php endwhile; ?>
                 </tbody>
                 </table>
