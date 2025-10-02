@@ -11,8 +11,6 @@ if (get_post_type() == 'liv_place') {
 $args = array(
     'post_type'         => 'place_category_page', 
     'post_status'       => array('publish', 'draft'),
-    // 'meta_key'          => 'place_relationship',
-    // 'meta_value'        => get_the_ID(),
     'meta_query'        => array(
         array( 
             'key'       => 'place_relationship',
@@ -25,14 +23,32 @@ $args = array(
 $place_category_pages = new WP_Query($args);
 
 if ($place_category_pages->have_posts()) {
-    echo '<div class="category-nav">';
+    $catnavholder = array();
+    $catorder = array('live','work','play','visit', 'basics','affordable-places-to-live', 'education-careers-opportunity', 'experiences-adventures', 'healthy-places', 'food-scenes', 'love-where-you-live', 'make-your-move', 'where-to-live-now' );
+
     while ($place_category_pages->have_posts()) {
         $place_category_pages->the_post();
         $cats = get_the_category();
-        $cat = $cats[0]; ?>
-        <a href="<?php echo get_the_permalink(); ?>"><?php echo $cat->name; ?></a>
+        $cat = $cats[0]; 
+       // print_r($cat);
+       $catnavholder[$cat->slug] = '<a href="'.get_the_permalink().'">'.$cat->name.'</a>';
+       
+       ?>
+        
 
-    <?php }
-    echo '</div>';
+    <?php } // end while
+    $html = '<div class="category-nav">';
+    $html .= '<a href="'.get_the_permalink($meta_value).'">'.get_the_title($meta_value).'</a>';
+    foreach ($catorder as $co) {
+        foreach ($catnavholder as $index => $cnh) {
+            if ($co ==  $index) {
+                $html .= $cnh;
+                break;
+            }
+        }
+    }
+    $html .= '</div>';
+    echo $html;
+
 }
 wp_reset_postdata(  );
