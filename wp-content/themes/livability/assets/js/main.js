@@ -124,47 +124,6 @@
 
 
 
-  // $('.mega-menu-wrap').on('click', function(e) {
-  //   // console.log('event is ',e.target); //mega-toggle-on
-  //   const theTarget = $(e.target).parent('.mega-menu-item');
-  //   console.log('parent is ',theTarget.length);
-  //   if (theTarget.length && theTarget.hasClass('mega-toggle-on')) {
-  //     e.preventDefault();
-  //    console.log(theTarget);
-  //   //  theTarget.removeClass('mega-toggle-on');
-
-  //   }
-  // });
-
-  // $('.mega-menu-link').on('click', function(e) {
-  //   e.preventDefault();
-  //   console.log('clicked');
-  // });
-
-
-
-
-
-  // const bp2lTabs = document.querySelectorAll('.bp2l__tab-nav li');
-  // console.log(bp2lTabs);
-  // bp2lTabs.forEach(tab => {tab.addEventListener('click', bptTab))});
-  // bp2lTabs.addEventListener('click', 'bptlTab');
-  // Array.from(bp2lTabs).forEach(tab => {
-  //   tab.addEventListener('click', bptlTab(event));
-  // })
-  // function bptlTab(event) {
-  //   console.log('bptlTab');
-  //   const tabcontent = document.getElementsByClassName("tab-content");
-  //   for (let i = 0; i < tabcontent.length; i++) {
-  //       tabcontent[i].style.display = "none";
-  //   }
-  //   const tablinks = document.querySelectorAll('.bp2l__tab-nav li');
-  //   for (let i = 0; i < tablinks.length; i++) {
-  //       tablinks[i].className = tablinks[i].className.replace(" active", "");
-  //   }
-  //   document.getElementById(tab).style.display = "block";
-  //   event.currentTarget.className += " active";
-  // }
   const siteHeader = document.querySelector(".site-header");
   if (siteHeader) {
     const headroom = new Headroom(siteHeader);
@@ -1319,12 +1278,81 @@ if ( !$('body').hasClass('single-post')) {
 
   }); // end each
 } // end if has class
+$('#post-status').on('change', function(e){
+  filterSponsors();
+  // console.log('radio',$('input[name="post-status"]:checked').val());
+});
+
 
 $(".c4l__load-more-btn").on("click", function(){
   console.log('load more clicked');
   $(this).remove();
   $('.bp2l__hidden').css('display','flex');
 });
+
+function createSponsorList(){
+  $.ajax({
+    url: params.ajaxurl,
+    data: {
+      action: 'createSponsorList'
+    },
+    type: "POST",
+    dataType: "JSON",
+    success: function(res) {
+      let newArray = [];
+      for (const key in res) {
+        if (Object.hasOwnProperty.call(res, key)) {
+          newArray.push({
+            'label' : res[key],
+            'value' : key
+          });
+          
+        }
+      }
+      $( "#autocomplete" ).autocomplete({
+        source: newArray,
+        select: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label);
+          $("#hidden-autocomplete").val(ui.item.value);
+          filterSponsors();
+        }
+      });
+    }
+  });
+};
+
+createSponsorList();
+
+function filterSponsors() {
+  const placeID = $("#hidden-autocomplete").val();
+  const status = $('input[name="post-status"]:checked').val();
+  console.log('place: ',placeID,' status ',status);
+}
+
+
+
+$( "#autocomplete" ).on("change", function(){
+  if ($(this).val() === "") {
+    $("#hidden-autocomplete").val(null);
+  }
+});
+
+$('.sponsor__grid-tab, .sponsor__list-tab').on("click", function(e){
+  const targetTab = $(e.target);
+  
+  const tabData = targetTab.data('tab');
+  console.log('content ',tabData);
+  const tabContent = $('#'+tabData);
+  console.log(tabContent);
+  tabContent.show();
+  tabContent.siblings().hide();
+
+  // targetTab.show();
+  // targetTab.siblings().hide();
+} )
+
+
 
 // if ($('body').hasClass('page-id-91275')) { // newsletter page
 //   console.log('newsletter page');

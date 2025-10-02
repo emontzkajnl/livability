@@ -23,7 +23,7 @@ function myStartSession() {
 function livability_enqueue_scripts() {
 	global $topics;
 	wp_enqueue_script( 'headroom', get_stylesheet_directory_uri() . '/assets/js/headroom.js', array('jquery'),null, true );
-	wp_enqueue_script( 'main-theme', get_stylesheet_directory_uri() . '/assets/js/main.js', array('jquery', 'slick', 'waypoints','waypoints-sticky', 'megamenu'), null, true);
+	wp_enqueue_script( 'main-theme', get_stylesheet_directory_uri() . '/assets/js/main.js', array('jquery', 'slick', 'waypoints','waypoints-sticky', 'megamenu', 'jquery-ui-autocomplete'), null, true);
 	wp_enqueue_style( 'style', get_stylesheet_uri(), array('twenty-twenty-one-style'));
 	wp_enqueue_style( 'compressed', get_stylesheet_directory_uri() . '/compressed-style.css', array('style'));
 	wp_enqueue_script( 'slick', get_stylesheet_directory_uri() . '/assets/js/slick.min.js', array('jquery'), null, true);
@@ -2248,6 +2248,39 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 	}
 
 	add_action( 'save_post_liv_place', 'save_place_category_pages');
+
+	function return_sponsor_list() {
+		$ac_objects = array();
+		$sponsor_args = array(
+            'post_type'			=> 'post',
+            'meta_key'			=> 'sponsored',
+            'meta_value'		=> true,
+            'posts_per_page'	=> -1,
+            'post_status'		=> array('publish', 'draft')
+        );
+        $sponsor_query = new WP_Query($sponsor_args);
+		if ($sponsor_query->have_posts()) {
+			while ($sponsor_query->have_posts()) {
+				$sponsor_query->the_post();
+				$place = get_field('place_relationship');
+				if ($place) { 
+					// foreach ($ac_objects as $ac) {
+					// 	if ($array_key_exists($place[0], $ac)) {
+					// 		// break;
+					// 	}
+					// }
+						$ac_objects[$place[0]] = get_the_title($place[0]);
+				}
+			}
+		}
+		wp_send_json($ac_objects);
+		die();
+	}
+
+	add_action('wp_ajax_createSponsorList', 'return_sponsor_list');
+	add_action('wp_ajax_nopriv_createSponsorList', 'return_sponsor_list');
+
+
 
 // testing filter
 // add_filter('acf/fields/post_object/query', 'my_acf_fields_post_object_query', 10, 3);

@@ -27,41 +27,8 @@ if ($hero_section) {
 while ( have_posts() ) :
 	the_post();
 
+	get_template_part( 'template-parts/content/content-sponsored-page' );
 
-
-	get_template_part( 'template-parts/content/content-page' );
-	$sponsor_args = array(
-		'post_type'			=> 'post',
-		'meta_key'			=> 'sponsored',
-		'meta_value'		=> true,
-		'posts_per_page'	=> -1,
-		'post_status'		=> 'publish'
-	);
-	$sponsor_query = new WP_Query($sponsor_args);
-
-	if ($sponsor_query->have_posts()): ?>
-		<div class="container">
-			<div style="display: flex; justify-content: center; flex-wrap: wrap;">
-		<?php while ($sponsor_query->have_posts()): $sponsor_query->the_post();
-		$ID = get_the_ID(  ); ?>
-		<div class="sponsor-card" style="width: 300px;">
-			<a href="<?php echo get_the_permalink(); ?>">
-				<div class="sp-img" style="background-image: url(<?php echo get_the_post_thumbnail_url($ID, 'rel_article'); ?>); height: 200px; width: 100%;"></div>
-				<div class="sma-title">
-					<?php echo '<h4>'.get_the_title().'</h4>'; ?>
-				</div>
-			</a>
-		</div>
-		<?php endwhile; ?>
-			</div>
-		</div>
-	<?php endif;
-	wp_reset_query();
-
-	// If comments are open or there is at least one comment, load up the comment template.
-	if ( comments_open() || get_comments_number() ) {
-		comments_template();
-	}
 endwhile; // End of the loop.
 // dynamic_sidebar( 'sidebar-2' );
 

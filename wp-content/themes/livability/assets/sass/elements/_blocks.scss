@@ -1139,6 +1139,43 @@ div[class^="curated-posts-"] {
   }
 
 }
+.sponsor {
+  &__tab-nav { 
+    display: flex;
+    li {
+      border-bottom: 1px solid gray;
+      padding: 10px;
+      list-style: none;
+      text-transform: uppercase;
+      cursor: pointer;
+      &:first-child {
+        border-right: 1px solid gray;
+      }
+    }
+  }
+}
+.sponsor-grid {
+  display: flex; 
+  justify-content: center; 
+  flex-wrap: wrap;
+  gap: 30px;
+  &__card {
+    background-color: $white2;
+    width: 100%;
+  }
+  &__img {
+    height: 175px;
+    width: 100%;
+  }
+  &__text-container {
+    padding: 20px;
+  }
+  &__tab-nav {
+    display: flex;
+
+  }
+}
+
 
 .wp-block-jci-blocks-info-box {
   background-color: $white2;
@@ -3537,7 +3574,14 @@ border-bottom: 1px solid $green;
     }
   }
 }
+
 @media screen and (min-width: 768px) {
+  .sponsor-grid {
+    gap: 30px;
+    &__card {
+      flex-basis: calc(50% - 15px);
+    }
+  }
   .tn-mym {
     display: flex;
     flex-direction: row;
@@ -4150,6 +4194,12 @@ border-bottom: 1px solid $green;
 }
 
 @media screen and (min-width: 1030px) {
+  .sponsor-grid {
+    // gap: 30px;
+    &__card {
+      flex-basis: calc(33.33% - 20px);
+    }
+  }
 
   .more-about-living {
     &__cards {

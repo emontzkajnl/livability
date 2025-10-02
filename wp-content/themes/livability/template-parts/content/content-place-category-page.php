@@ -72,32 +72,7 @@
                     <div class="wp-block-column">
                      
                         
-                        <?php if (has_post_thumbnail() && !get_field('hide_featured_image')): ?>
-                        <figure class="wp-block-image size-full">
-                        <div class="img-container">
-                            <?php
-                            $caption = get_the_post_thumbnail_caption();
-                            $f_post_image_id = get_post_thumbnail_id();
-                            $f_img_byline = get_field('img_byline', $f_post_image_id);
-                            $f_img_place_name = get_field('img_place_name', $f_post_image_id);
-                            if ($f_img_byline || $f_img_place_name) {
-                                echo get_the_post_thumbnail($post->ID, 'medium_large', array('style'=> 'height: auto; max-width: none;') );
-                                echo '<div class="livability-image-meta">';
-                                echo $f_img_place_name ? $f_img_place_name : '' ;
-                                echo $f_img_place_name && $f_img_byline ? ' / ' : '';
-                                echo $f_img_byline ?  strip_tags($f_img_byline, "<a>") : '' ;
-                                echo '</div>';
-                            } else {
-                                echo get_the_post_thumbnail($post->ID, 'medium_large', array('style'=> 'height: auto; max-width: none;') );
-                            }
-                             ?>
-                            
-                        </div>
-                        <?php if ($caption) {
-                            echo '<figcaption>'.$caption.'</figcaption>';
-                        } ?>
-                        </figure>
-                        <?php endif; ?>
+                
                         <?php the_content(); ?>
                        
                     
