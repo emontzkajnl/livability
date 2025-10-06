@@ -1327,7 +1327,31 @@ createSponsorList();
 function filterSponsors() {
   const placeID = $("#hidden-autocomplete").val();
   const status = $('input[name="post-status"]:checked').val();
-  console.log('place: ',placeID,' status ',status);
+  // console.log('place: ',placeID,' status ',status);
+  $.ajax({
+    url: params.ajaxurl,
+    data: {
+      place: placeID,
+      status: status,
+      action: 'filterSponsors'
+    }, 
+    type: "POST",
+    // dataType: "html",
+    success: function(response) {
+      console.log(response);
+      if (response.success) {
+        console.log("success ",response);
+        $('.sponsor-grid-container').html(response.data.html1);
+        $('.sponsor-list-container').html(response.data.html2);
+      } else {
+        console.error('AJAX request failed:', response);
+      }
+      console.log(response);
+    },
+  //   error: function(xhr, status, error) {
+  //     console.error('AJAX error:', error);
+  // }
+  });
 }
 
 
@@ -1335,6 +1359,7 @@ function filterSponsors() {
 $( "#autocomplete" ).on("change", function(){
   if ($(this).val() === "") {
     $("#hidden-autocomplete").val(null);
+    filterSponsors();
   }
 });
 

@@ -2280,22 +2280,84 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 	add_action('wp_ajax_createSponsorList', 'return_sponsor_list');
 	add_action('wp_ajax_nopriv_createSponsorList', 'return_sponsor_list');
 
+	function filter_sponsors() {
+		// error_log("POST Data: " . print_r($_POST, true));
 
+		$statusFilter = $_POST['status'];
+		$placeFilter = $_POST['place'];
+		// error_log('place filter is '.$placeFilter, true);
+		$listHtml = '';
+		$gridHtml = '';
+		$sponsor_args = array(
+            'post_type'			=> 'post',
+            'meta_key'			=> 'sponsored',
+            'meta_value'		=> true,
+            'posts_per_page'	=> -1,
+            // 'post_status'		=> array('publish', 'draft')
+        );
+		if ($statusFilter == 'all') {
+			$sponsor_args['post_status'] = array('publish', 'draft');
+		} elseif($statusFilter == 'publish') {
+			$sponsor_args['post_status'] = 'publish';
+		} else {
+			$sponsor_args['post_status'] = 'draft';
+		}
+		if ($placeFilter) {
+			$sponsor_args['meta_query'] = array( array( 'key' => 'place_relationship', 'value' => '"'.$placeFilter.'"', 'compare' => 'LIKE'));
+		}
+        $sponsor_query = new WP_Query($sponsor_args);
+		if ($sponsor_query->have_posts()) {
+			while ($sponsor_query->have_posts()) {
+				$sponsor_query->the_post();
 
-// testing filter
-// add_filter('acf/fields/post_object/query', 'my_acf_fields_post_object_query', 10, 3);
-// function my_acf_fields_post_object_query( $args, $field, $post_id ) {
+				$ID = get_the_ID(  ); 
+				$status = get_post_status();
+				$place = get_field('place_relationship');
+				$sponsor_name = get_field('sponsor_name');
+				$sponsor_url = get_field('sponsor_url') ? get_field('sponsor_url') : '' ;
+				$expire_date = do_shortcode( '[futureaction type=date dateformat="F j, Y"]');
 
-    // Show 40 posts per AJAX call.
-	// $args['orderby'] = 'date';
-    // $args['order'] = 'DESC';
-	// print_r($args, true);
-    // Restrict results to children of the current post only.
-    // $args['post_parent'] = $post_id;
-// 	$filtering_field_value = get_field( 'curated_posts_1', $post_id ); 
-// 	if ( ! empty( $filtering_field_value ) ) {
-//         $args['s'] = $filtering_field_value;
-//     }
+				// GRID
+				$gridHtml .= '<div class="sponsor-grid__card" >';
+				$gridHtml .= '<a href="'.get_the_permalink().'">';
+				$gridHtml .= '<div class="sp-img sponsor-grid__img" style="background-image: url("'.get_the_post_thumbnail_url($ID, 'rel_article').'"); height: 200px; width: 100%;"></div>';
+				$gridHtml .= '<div class="sma-title sponsor-grid__text-container">';
+				$gridHtml .= '<h4 class="sponsor-grid__title"><a href="'.get_the_permalink().'">'.get_the_title().'</a></h4>';
+				$gridHtml .= '<p>'.get_the_title($place[0]).'</p>';
+				$gridHtml .= '<p>Status: '.$status.'</p>';
+				$gridHtml .= '<p>Published '.get_the_date('F j, Y').'</p>';
+				if ($expire_date) {
+					$gridHtml .= '<p>Expires '.$expire_date.'</p>';
+				} 
+				if ($sponsor_name) {
+					$gridHtml .= '<p>Sponsor: <a href="'.$sponsor_url.'" target="_blank">'.$sponsor_name.'</a></p>';
+				}
+				$gridHtml .= '</div></a></div>';
 
-//     return $args;
-// }
+				// LIST
+				$listHtml .= '<tr>';
+				$listHtml .= '<td style="max-width: 100px;">'.get_the_post_thumbnail( 'thumb').'</td>';
+				$listHtml .= '<td>'.get_the_title($place[0]).'</td>';
+				$listHtml .= '<td style="max-width: 300px;"><a class="unstyle-link" href="'.get_the_permalink().'">'.get_the_title(  ).'</a></td>';
+				$listHtml .= '<td>'.get_post_status().'</td><td>';
+				$listHtml .= $sponsor_name ? '<a class="unstyle-link" href="'.$sponsor_url.'">'.$sponsor_name.'</a>' : 'no sponsor name';
+				$listHtml .= '</td><td>Published '.get_the_date().'</td><td>';
+				$listHtml .= $expire_date ? 'Expires: '.$expire_date : 'No Expiration';
+				$listHtml .= '</td></tr>';
+				
+			} //end while
+
+			$res = array(
+				"html1"		=> $gridHtml,
+				"html2"		=> $listHtml
+			);
+			// echo  $res;
+			// error_log("response Data: " . print_r($gridHtml, true));
+			wp_send_json_success($res);
+			// wp_die();
+		} // end if
+	}
+
+	add_action('wp_ajax_filterSponsors', 'filter_sponsors');
+	add_action('wp_ajax_nopriv_filterSponsors', 'filter_sponsors');
+

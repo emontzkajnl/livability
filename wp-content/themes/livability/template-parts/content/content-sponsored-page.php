@@ -82,11 +82,13 @@
                         <thead>
                         <tr>
                             <th>Image</th>
+                            <th>Place</th>
                             <th>Title</th>
                             <th>Status</th>
+                            <th>Sponsor</th>
                             <th>Published on</th>
                             <th>Expiration</th>
-                            <th>Place</th>
+                            
                         </tr>
                         </thead>
                         <tbody class="sponsor-list-container">
