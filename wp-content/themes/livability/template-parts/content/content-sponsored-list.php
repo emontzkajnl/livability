@@ -11,5 +11,5 @@ $sponsor_url = get_field('sponsor_url') ? get_field('sponsor_url') : '' ;
     <td><?php echo get_post_status(); ?></td>
     <td><?php echo $sponsor_name ? '<a class="unstyle-link" href="'.$sponsor_url.'">'.$sponsor_name.'</a>' : 'no sponsor name'; ?></td>
     <td><?php echo get_the_date("M j, Y"); ?></td>
-    <td><?php echo $expire_date ? $expire_date : 'No Expiration'; ?></td>
+    <td><?php echo do_shortcode( '[futureaction type=date dateformat="M j, Y"]'); ?></td>
 </tr>
