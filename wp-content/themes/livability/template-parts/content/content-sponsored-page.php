@@ -22,6 +22,8 @@
 
 
         // Filters: publish, digital/print, place, ?>
+
+<div class="sponsor-filter-container">
 <div>
 <label for="autocomplete">Filter by Location: </label>
 <input id="autocomplete" placeholder="Enter city or state">
@@ -31,7 +33,8 @@
 
 
 
-         <fieldset id="post-status">
+         <!-- <fieldset id="post-status"> -->
+            <div id="post-status">
         <legend>Post Status</legend>
         <div class="radio-container">
             <input type="radio" name="post-status" id="allStatus" value="All" checked />
@@ -45,7 +48,15 @@
             <input type="radio" name="post-status" id="draft" value="draft"  />
             <label for="draft">Draft</label>
         </div>
-        </fieldset>
+        </div>
+        <!-- </fieldset> -->
+
+        <ul class="sponsor__tab-nav">
+            <li class="sponsor__grid-tab" data-tab="sponsor-tab-one">Grid View</li>
+            <li class="sponsor__list-tab" data-tab="sponsor-tab-two">List View</li>
+        </ul>
+
+        </div> <!-- sponsor filter container -->
         <?php 
         $sponsor_args = array(
             'post_type'			=> 'post',
@@ -56,10 +67,7 @@
         );
         $sponsor_query = new WP_Query($sponsor_args); ?>
 
-        <ul class="sponsor__tab-nav">
-            <li class="sponsor__grid-tab" data-tab="sponsor-tab-one">Grid View</li>
-            <li class="sponsor__list-tab" data-tab="sponsor-tab-two">List View</li>
-        </ul>
+      
     
         <?php if ($sponsor_query->have_posts()): ?>
             

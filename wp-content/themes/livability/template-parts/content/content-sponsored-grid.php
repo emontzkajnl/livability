@@ -12,9 +12,9 @@ $sponsor_url = get_field('sponsor_url') ? get_field('sponsor_url') : '' ;
         <div class="sma-title sponsor-grid__text-container">
             <?php echo '<h4 class="sponsor-grid__title"><a href="'.get_the_permalink().'">'.get_the_title().'</a></h4>';
             echo '<p>'.get_the_title($place[0]).'</p>';
-            $expire_date = do_shortcode( '[futureaction type=date dateformat="F j, Y"]');
+            $expire_date = do_shortcode( '[futureaction type=date dateformat="M j, Y"]');
             echo '<p>Status: '.$status.'</p>';
-            echo '<p>Published '.get_the_date('F j, Y').'</p>';
+            echo '<p>Published '.get_the_date('M j, Y').'</p>';
             if ($expire_date) {
                 echo '<p>Expires '.$expire_date.'</p>';
             } 

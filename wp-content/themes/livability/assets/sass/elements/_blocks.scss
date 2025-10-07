@@ -1139,18 +1139,30 @@ div[class^="curated-posts-"] {
   }
 
 }
+.sponsor-filter-container {
+  display: flex;
+  flex-direction: row;
+  legend {
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+  input[type="radio"] + label {
+    padding-left: 0;
+    padding-right: 10px;
+  }
+  #post-status {
+    display: flex;
+  }
+}
+
 .sponsor {
   &__tab-nav { 
     display: flex;
     li {
-      border-bottom: 1px solid gray;
-      padding: 10px;
+      margin-right: 10px;
       list-style: none;
       text-transform: uppercase;
       cursor: pointer;
-      &:first-child {
-        border-right: 1px solid gray;
-      }
     }
   }
 }
