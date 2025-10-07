@@ -2404,7 +2404,7 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 								echo '<p>Expires '.$expire_date.'</p>';
 							} 
 								echo '<p>Sponsor: <a href="'.$sponsor_url.'" target="_blank">'.$sponsor_name.'</a></p>';
-							}
+							
 				?>
 						</div>
 					</a>
