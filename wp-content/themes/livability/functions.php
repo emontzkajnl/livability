@@ -2441,7 +2441,6 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 		if ($sponsor_query->have_posts()) {
 			while ($sponsor_query->have_posts()) {
 				$sponsor_query->the_post();
-				$expire_date = do_shortcode( '[futureaction type=date dateformat="F j, Y"]');
 				$place = get_field('place_relationship');
 				$sponsor_name = get_field('sponsor_name');
 				$sponsor_url = get_field('sponsor_url') ? get_field('sponsor_url') : '' ;
@@ -2453,7 +2452,7 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 					<td><?php echo get_post_status(); ?></td>
 					<td><?php echo $sponsor_name ? '<a class="unstyle-link" href="'.$sponsor_url.'">'.$sponsor_name.'</a>' : 'no sponsor name'; ?></td>
 					<td>Published <?php echo get_the_date(); ?></td>
-					<td><?php echo $expire_date ? 'Expires: '.$expire_date : 'No Expiration'; ?></td>
+					<td><?php echo do_shortcode( '[futureaction type=date dateformat="F j, Y"]'); ?></td>
 				</tr>
 			<?php }
 		}

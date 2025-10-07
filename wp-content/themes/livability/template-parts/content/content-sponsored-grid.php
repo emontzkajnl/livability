@@ -11,7 +11,7 @@ $sponsor_url = get_field('sponsor_url') ? get_field('sponsor_url') : '' ;
         <div class="sp-img sponsor-grid__img" style="background-image: url(<?php echo get_the_post_thumbnail_url($ID, 'rel_article'); ?>); height: 200px; width: 100%;"></div>
         <div class="sma-title sponsor-grid__text-container">
             <?php echo '<h4 class="sponsor-grid__title"><a href="'.get_the_permalink().'">'.get_the_title().'</a></h4>';
-            echo '<p>'.get_the_title($place[0]).'</p>';
+            echo $place ? '<p>'.get_the_title($place[0]).'</p>' : '';
             $expire_date = do_shortcode( '[futureaction type=date dateformat="M j, Y"]');
             echo '<p>Status: '.$status.'</p>';
             echo '<p>Published '.get_the_date('M j, Y').'</p>';
