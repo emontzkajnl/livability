@@ -2293,7 +2293,6 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
             'meta_key'			=> 'sponsored',
             'meta_value'		=> true,
             'posts_per_page'	=> -1,
-            // 'post_status'		=> array('publish', 'draft')
         );
 		if ($statusFilter == 'all') {
 			$sponsor_args['post_status'] = array('publish', 'draft');
@@ -2320,7 +2319,7 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 				// GRID
 				$gridHtml .= '<div class="sponsor-grid__card" >';
 				$gridHtml .= '<a href="'.get_the_permalink().'">';
-				$gridHtml .= '<div class="sp-img sponsor-grid__img" style="background-image: url("'.get_the_post_thumbnail_url($ID, 'rel_article').'"); height: 200px; width: 100%;"></div>';
+				$gridHtml .= '<div class="sp-img sponsor-grid__img" style="background-image: url("'.stripslashes(get_the_post_thumbnail_url($ID, 'rel_article')).'"); height: 200px; width: 100%;"></div>';
 				$gridHtml .= '<div class="sma-title sponsor-grid__text-container">';
 				$gridHtml .= '<h4 class="sponsor-grid__title"><a href="'.get_the_permalink().'">'.get_the_title().'</a></h4>';
 				$gridHtml .= '<p>'.get_the_title($place[0]).'</p>';
@@ -2346,9 +2345,10 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 				$listHtml .= '</td></tr>';
 				
 			} //end while
-
+			error_log('print grid html');
+			error_log(print_r($gridHtml, true));
 			$res = array(
-				"html1"		=> $gridHtml,
+				"html1"		=> $gridHtml, 
 				"html2"		=> $listHtml
 			);
 			// echo  $res;
@@ -2360,4 +2360,106 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 
 	add_action('wp_ajax_filterSponsors', 'filter_sponsors');
 	add_action('wp_ajax_nopriv_filterSponsors', 'filter_sponsors');
+
+	function filter_grid_sponsors() {
+		$statusFilter = $_POST['status'];
+		$placeFilter = $_POST['place'];
+		$sponsor_args = array(
+            'post_type'			=> 'post',
+            'meta_key'			=> 'sponsored',
+            'meta_value'		=> true,
+            'posts_per_page'	=> -1,
+        );
+		if ($statusFilter == 'all') {
+			$sponsor_args['post_status'] = array('publish', 'draft');
+		} elseif($statusFilter == 'publish') {
+			$sponsor_args['post_status'] = 'publish';
+		} else {
+			$sponsor_args['post_status'] = 'draft';
+		}
+		if ($placeFilter) {
+			$sponsor_args['meta_query'] = array( array( 'key' => 'place_relationship', 'value' => '"'.$placeFilter.'"', 'compare' => 'LIKE'));
+		}
+        $sponsor_query = new WP_Query($sponsor_args);
+		if ($sponsor_query->have_posts()) {
+			while ($sponsor_query->have_posts()) {
+				$sponsor_query->the_post();
+				$ID = get_the_ID(  ); 
+				$status = get_post_status();
+				$place = get_field('place_relationship');
+				$sponsor_name = get_field('sponsor_name');
+				$sponsor_url = get_field('sponsor_url') ? get_field('sponsor_url') : '' ;
+				$expire_date = do_shortcode( '[futureaction type=date dateformat="F j, Y"]');
+				?>
+				<div class="sponsor-grid__card" >
+					<a href="<?php echo get_the_permalink(); ?>">
+						<div class="sp-img sponsor-grid__img" style="background-image: url(<?php echo get_the_post_thumbnail_url($ID, 'rel_article'); ?>); height: 200px; width: 100%;"></div>
+						<div class="sma-title sponsor-grid__text-container">
+							<?php echo '<h4 class="sponsor-grid__title"><a href="'.get_the_permalink().'">'.get_the_title().'</a></h4>';
+							echo '<p>'.get_the_title($place[0]).'</p>';
+							
+							echo '<p>Status: '.$status.'</p>';
+							echo '<p>Published '.get_the_date('F j, Y').'</p>';
+							if ($expire_date) {
+								echo '<p>Expires '.$expire_date.'</p>';
+							} 
+								echo '<p>Sponsor: <a href="'.$sponsor_url.'" target="_blank">'.$sponsor_name.'</a></p>';
+							}
+				?>
+						</div>
+					</a>
+				</div>
+			<?php }
+		}
+		wp_die();
+
+	}
+
+	add_action('wp_ajax_filterGridSponsors', 'filter_grid_sponsors');
+	add_action('wp_ajax_nopriv_filterGridSponsors', 'filter_grid_sponsors');
+
+	function filter_list_sponsors() {
+		$statusFilter = $_POST['status'];
+		$placeFilter = $_POST['place'];
+		$sponsor_args = array(
+            'post_type'			=> 'post',
+            'meta_key'			=> 'sponsored',
+            'meta_value'		=> true,
+            'posts_per_page'	=> -1,
+        );
+		if ($statusFilter == 'all') {
+			$sponsor_args['post_status'] = array('publish', 'draft');
+		} elseif($statusFilter == 'publish') {
+			$sponsor_args['post_status'] = 'publish';
+		} else {
+			$sponsor_args['post_status'] = 'draft';
+		}
+		if ($placeFilter) {
+			$sponsor_args['meta_query'] = array( array( 'key' => 'place_relationship', 'value' => '"'.$placeFilter.'"', 'compare' => 'LIKE'));
+		}
+        $sponsor_query = new WP_Query($sponsor_args);
+		if ($sponsor_query->have_posts()) {
+			while ($sponsor_query->have_posts()) {
+				$sponsor_query->the_post();
+				$expire_date = do_shortcode( '[futureaction type=date dateformat="F j, Y"]');
+				$place = get_field('place_relationship');
+				$sponsor_name = get_field('sponsor_name');
+				$sponsor_url = get_field('sponsor_url') ? get_field('sponsor_url') : '' ;
+				?>
+				<tr>
+					<td style="max-width: 100px;"><?php echo the_post_thumbnail( 'thumb'); ?></td>
+					<td><?php echo get_the_title($place[0]); ?></td>
+					<td style="max-width: 300px;"><a class="unstyle-link" href="<?php echo get_the_permalink(); ?>"><?php echo get_the_title(  ); ?></a></td>
+					<td><?php echo get_post_status(); ?></td>
+					<td><?php echo $sponsor_name ? '<a class="unstyle-link" href="'.$sponsor_url.'">'.$sponsor_name.'</a>' : 'no sponsor name'; ?></td>
+					<td>Published <?php echo get_the_date(); ?></td>
+					<td><?php echo $expire_date ? 'Expires: '.$expire_date : 'No Expiration'; ?></td>
+				</tr>
+			<?php }
+		}
+		wp_die();
+	}
+
+	add_action('wp_ajax_filterListSponsors', 'filter_list_sponsors');
+	add_action('wp_ajax_nopriv_filterListSponsors', 'filter_list_sponsors');
 

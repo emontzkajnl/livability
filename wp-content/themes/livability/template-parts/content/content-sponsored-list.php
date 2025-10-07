@@ -1,4 +1,5 @@
-<?php $expire_date = do_shortcode( '[futureaction type=date dateformat="F j, Y"]');
+<?php
+ $expire_date = do_shortcode( '[futureaction type=date dateformat="F j, Y"]');
 $place = get_field('place_relationship');
 $sponsor_name = get_field('sponsor_name');
 $sponsor_url = get_field('sponsor_url') ? get_field('sponsor_url') : '' ;

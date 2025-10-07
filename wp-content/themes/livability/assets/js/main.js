@@ -1333,24 +1333,28 @@ function filterSponsors() {
     data: {
       place: placeID,
       status: status,
-      action: 'filterSponsors'
+      action: 'filterGridSponsors'
     }, 
     type: "POST",
-    // dataType: "html",
+    dataType: "html",
     success: function(response) {
       console.log(response);
-      if (response.success) {
-        console.log("success ",response);
-        $('.sponsor-grid-container').html(response.data.html1);
-        $('.sponsor-list-container').html(response.data.html2);
-      } else {
-        console.error('AJAX request failed:', response);
-      }
+      $('.sponsor-grid-container').html(response);
+    }
+  });
+  $.ajax({
+    url: params.ajaxurl,
+    data: {
+      place: placeID,
+      status: status,
+      action: 'filterListSponsors'
+    }, 
+    type: "POST",
+    dataType: "html",
+    success: function(response) {
       console.log(response);
-    },
-  //   error: function(xhr, status, error) {
-  //     console.error('AJAX error:', error);
-  // }
+      $('.sponsor-list-container').html(response);
+    }
   });
 }
 
