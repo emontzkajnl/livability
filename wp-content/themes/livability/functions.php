@@ -2487,11 +2487,16 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 	function filter_list_sponsors() {
 		$statusFilter = $_POST['status'];
 		$placeFilter = $_POST['place'];
+		$orderbyFilter = $_POST['orderby'];
 		$sponsor_args = array(
             'post_type'			=> 'post',
-            'meta_key'			=> 'sponsored',
-            'meta_value'		=> true,
             'posts_per_page'	=> -1,
+			'meta_query'		=> array(
+				array(
+					'meta_key'	=> 'sponsored',
+					'meta_value'	=> true
+				)
+			)
         );
 		if ($statusFilter == 'all') {
 			$sponsor_args['post_status'] = array('publish', 'draft');
@@ -2501,7 +2506,7 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 			$sponsor_args['post_status'] = 'draft';
 		}
 		if ($placeFilter) {
-			$sponsor_args['meta_query'] = array( array( 'key' => 'place_relationship', 'value' => '"'.$placeFilter.'"', 'compare' => 'LIKE'));
+			$sponsor_args['meta_query'][] = array( 'key' => 'place_relationship', 'value' => '"'.$placeFilter.'"', 'compare' => 'LIKE');
 		}
 		if ($orderbyFilter) {
 			switch ($orderbyFilter) {
