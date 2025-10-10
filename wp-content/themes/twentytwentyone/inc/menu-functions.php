@@ -25,13 +25,15 @@
  * @return string Nav menu item start element.
  */
 function twenty_twenty_one_add_sub_menu_toggle( $output, $item, $depth, $args ) {
-	if ( in_array( 'menu-item-has-children', $item->classes, true ) ) {
+	if ( 'primary' === $args->theme_location
+		&& 0 === $depth && in_array( 'menu-item-has-children', $item->classes, true )
+	) {
 
 		// Add toggle button.
-		// $output .= '<button class="sub-menu-toggle" aria-expanded="false" onClick="twentytwentyoneExpandSubMenu(this)">';
-		$output .= '<button class="sub-menu-toggle" aria-expanded="false" >';
-		$output .= '<span class="icon-plus">' . twenty_twenty_one_get_icon_svg( 'ui', 'plus', 25 ) . '</span>';
-		$output .= '<span class="icon-minus">' . twenty_twenty_one_get_icon_svg( 'ui', 'minus', 25 ) . '</span>';
+		$output .= '<button class="sub-menu-toggle" aria-expanded="false" onClick="twentytwentyoneExpandSubMenu(this)">';
+		$output .= '<span class="icon-plus">' . twenty_twenty_one_get_icon_svg( 'ui', 'plus', 18 ) . '</span>';
+		$output .= '<span class="icon-minus">' . twenty_twenty_one_get_icon_svg( 'ui', 'minus', 18 ) . '</span>';
+		/* translators: Hidden accessibility text. */
 		$output .= '<span class="screen-reader-text">' . esc_html__( 'Open menu', 'twentytwentyone' ) . '</span>';
 		$output .= '</button>';
 	}

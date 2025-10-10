@@ -1283,6 +1283,10 @@ $('#post-status').on('change', function(e){
   // console.log('radio',$('input[name="post-status"]:checked').val());
 });
 
+$('#order-sponsors').on('change', function() {
+  filterSponsors();
+});
+
 
 $(".c4l__load-more-btn").on("click", function(){
   console.log('load more clicked');
@@ -1327,12 +1331,15 @@ createSponsorList();
 function filterSponsors() {
   const placeID = $("#hidden-autocomplete").val();
   const status = $('input[name="post-status"]:checked').val();
+  const orderby = $('#order-sponsors').val();
+ 
   // console.log('place: ',placeID,' status ',status);
   $.ajax({
     url: params.ajaxurl,
     data: {
       place: placeID,
       status: status,
+      orderby: orderby,
       action: 'filterGridSponsors'
     }, 
     type: "POST",
@@ -1352,7 +1359,7 @@ function filterSponsors() {
     type: "POST",
     dataType: "html",
     success: function(response) {
-      console.log(response);
+      // console.log(response);
       $('.sponsor-list-container').html(response);
     }
   });
@@ -1369,11 +1376,8 @@ $( "#autocomplete" ).on("change", function(){
 
 $('.sponsor__grid-tab, .sponsor__list-tab').on("click", function(e){
   const targetTab = $(e.target);
-  
   const tabData = targetTab.data('tab');
-  console.log('content ',tabData);
   const tabContent = $('#'+tabData);
-  console.log(tabContent);
   tabContent.show();
   tabContent.siblings().hide();
 

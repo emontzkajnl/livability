@@ -37,7 +37,7 @@
             <div id="post-status">
         <legend>Post Status</legend>
         <div class="radio-container">
-            <input type="radio" name="post-status" id="allStatus" value="All" checked />
+            <input type="radio" name="post-status" id="allStatus" value="all" checked />
             <label for="allStatus">All</label>
         </div>
         <div class="radio-container">
@@ -50,6 +50,20 @@
         </div>
         </div>
         <!-- </fieldset> -->
+
+        <div class="sponsor__orderby">
+            <label for="order-sponsors">Order by:</label> <!-- published, expiration, sponsor, place -->
+            <select name="order" id="order-sponsors">
+            <option value="publish-asc">Publish date (ascending)</option>
+            <option value="publish-desc">Publish date (descending)</option>
+            <!-- <option value="expire-asc">Expiration date (ascending)</option> -->
+            <!-- <option value="expire-desc">Expiration date (descending)</option> -->
+            <option value="sponsor-asc">Sponsor Name (ascending)</option>
+            <option value="sponsor-desc">Sponsor Name (descending)</option>
+            <option value="place-asc">Place (ascending)</option>
+            <option value="place-desc">Place (descending)</option>
+            </select>
+        </div>
 
         <ul class="sponsor__tab-nav">
             <li class="sponsor__grid-tab" data-tab="sponsor-tab-one">Grid View</li>
@@ -94,7 +108,7 @@
                             <th>Title</th>
                             <th>Status</th>
                             <th>Sponsor</th>
-                            <th>Published on</th>
+                            <th>Published</th>
                             <th>Expiration</th>
                             
                         </tr>
