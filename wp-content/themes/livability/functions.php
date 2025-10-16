@@ -11,9 +11,9 @@ add_action( 'init', 'liv_mobile_menu' );
 
 add_action('init', 'myStartSession', 1);
 function myStartSession() {
-    if(!session_id()) {
+    // if(!session_id()) {
         session_start();
-    }
+    // }
 }
 
 // wp_enqueue_script( 'slick', get_stylesheet_directory_uri() . '/js/slick.min.js', array('jquery'), null, true);
@@ -2389,13 +2389,182 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 		}
 	}
 
+	function filter_sponsors() {
+		$statusFilter = $_POST['status'];
+		$placeFilter = $_POST['place'];
+		$orderbyFilter = $_POST['orderby'];
+		$sponsor_args = array(
+            'post_type'			=> 'post',
+            'meta_key'			=> 'sponsored',
+            'meta_value'		=> true,
+            'posts_per_page'	=> -1,
+            'post_status'		=> array('publish', 'draft')
+        );
+        $sponsor_query = new WP_Query($sponsor_args); 
+
+        // $sponsor_posts = get_posts($sponsor_args);
+        $sponsor_array = array();
+        if ($sponsor_query->have_posts()):
+            while ($sponsor_query->have_posts()):
+                $sponsor_query->the_post();
+     
+            $ID = get_the_ID();
+            $places = get_post_meta( $ID, 'place_relationship', true );
+			$temp_array = array();
+            $temp_array['title'] = get_the_title();
+            $temp_array['thumb_url'] = get_the_post_thumbnail_url( $ID, 'rel_article');
+            $temp_array['thumb'] = get_the_post_thumbnail( $ID, 'rel_article');
+            $temp_array['permalink'] = get_the_permalink( );
+            $temp_array['place'] = $places ? $places[0] : '';
+            $temp_array['place_name'] = $places ? get_the_title($places[0]) : '';
+            $temp_array['status'] = get_post_status();
+            $temp_array['sponsor_name'] = get_post_meta( $ID, 'sponsor_name', true );
+            $temp_array['sponsor_url'] = get_post_meta( $ID, 'sponsor_url', true );
+            $temp_array['post_time'] = get_post_time('U', true, $ID);
+            $temp_array['expire_time'] = do_shortcode( '[futureaction type=date dateformat="U"]');
+            $sponsor_array[] = $temp_array;
+            endwhile;
+        endif;
+            // wp_reset_postdata(  );
+		// error_log('sponsors');
+			// error_log(var_dump($sponsor_array));
+		// $sponsors = unserialize($sponsors);
+		// echo $placeFilter;
+		// echo $orderbyFilter;
+		// echo 'status is '.$statusFilter;
+		// $filtered_sponsors = array();
+		// $ordered_sponsors = array();
+		// foreach ($sponsors as $key => $value) {
+		// 	// echo '<br />status is '.$value['status'].' filter is '.$statusFilter;
+		// 	if ($statusFilter && statusFilter != 'all') {
+		// 		if ($statusFilter == $value['status']) {
+		// 			$filtered_sponsors[] = $value;
+		// 		}
+		// 	}
+		// }
+		// error_log('status filter is '.$statusFilter);
+		// $filtered_sponsors = $sponsors;
+		// $filtered_sponsors = array_filter($sponsors, function($sp)  {
+		// 	// global $statusFilter;
+		// 	// if ($statusFilter) {
+		// 		// return true;
+		// 	// }
+		// 	// if ($statusFilter == 'publish') {
+		// 	// 	return $sp->status != 'draft';
+		// 	// }
+		// 	// if ($statusFilter == 'draft') {
+		// 	// 	return $sp->status != 'publish';
+		// 	// } 
+		// 	// if ($placeFilter) {
+		// 	// 	return $sp['place'] == $placeFilter;
+		// 	// }
+		// });
+		// if ($statusFilter ) {
+		// 	// $temp_array = array();
+		// 	error_log('has status filter');
+		// 	foreach ($sponsors as $key => $value) {
+		// 		error_log($value['status']);
+		// 		if ($value['status'] == $statusFilter ) {
+		// 			$filtered_sponsors[] = $value;
+		// 		}
+		// 	}
+
+		// }
+		// $filtered_sponsors[] = array('my key' => 'my value');
+		
+		// error_log('sponsors');
+		// error_log(var_dump($sponsors));
+		// error_log('filtered sponsors');
+		// error_log(print_r($filtered_sponsors, true));
+		// if ($orderbyFilter) {
+		// 	switch($orderbyFilter) {
+		// 		case 'publish-desc': 
+		// 			// echo 'just testing';
+		// 			// error_log('just testing');
+		// 			$ordered_sponsors = array_reverse($filtered_sponsors);
+		// 		break;
+		// 		case 'sponsor-asc':
+		// 			$ordered_sponsors = usort($filtered_sponsors, function($a, $b) use ($orderbyFilter){
+		// 				if ($a['sponsor_name'] == $b['sponsor_name']) {
+		// 					return 0;
+		// 				}
+		// 				return ($a['sponsor_name'] < $b['sponsor_name']) ? -1 : 1;
+		// 			});
+		// 			// $filtered_sponsors = $ordered_sponsors;
+		// 		break;
+		// 		case 'sponsor-desc':
+		// 			$ordered_sponsors = usort($filtered_sponsors, function($a, $b) use ($orderbyFilter) {
+		// 				if ($a['sponsor_name'] == $b['sponsor_name']) {
+		// 					return 0;
+		// 				}
+		// 				return ($a['sponsor_name'] > $b['sponsor_name']) ? -1 : 1;
+		// 			});
+		// 		break;
+		// 		case 'place-asc':
+		// 			$ordered_sponsors = usort($filtered_sponsors, function($a, $b) {
+		// 				if ($a['place_name'] == $b['place_name']) {
+		// 					return 0;
+		// 				}
+		// 				return ($a['place_name'] < $b['place_name']) ? -1 : 1;
+		// 			});
+					
+		// 		break;
+		// 		case 'place-desc':
+		// 			$ordered_sponsors = usort($filtered_sponsors, function($a, $b) {
+		// 				if ($a['place_name'] == $b['place_name']) {
+		// 					return 0;
+		// 				}
+		// 				return ($a['place_name'] > $b['place_name']) ? -1 : 1;
+		// 			});
+					
+		// 		break;
+		// 		case 'expire-asc':
+		// 			$ordered_sponsors = usort($filtered_sponsors, function($a, $b) {
+		// 				if ($a['expire_time'] == $b['expire_time']) {
+		// 					return 0;
+		// 				}
+		// 				return ($a['expire_time'] < $b['expire_time']) ? -1 : 1;
+		// 			});
+					
+		// 		break;
+		// 		case 'expire-desc':
+		// 			$ordered_sponsors = usort($filtered_sponsors, function($a, $b) {
+		// 				if ($a['expire_time'] == $b['expire_time']) {
+		// 					return 0;
+		// 				}
+		// 				return ($a['expire_time'] > $b['expire_time']) ? -1 : 1;
+		// 			});
+					
+		// 		break;
+		// 		default: 
+		// 		$filtered_sponsors = $ordered_sponsors;
+		// 	}
+		// }
+
+		// error_log(var_dump($ordered_sponsors));
+		// error_log(var_dump($filtered_sponsors));
+		// $response = json_encode($sponsors);
+		// echo $response;
+		// echo json_encode($ordered_sponsors);
+		// echo wp_send_json($sponsors);
+		// wp_send_json( $sponsors );
+		// echo json_encode($sponsor_array);
+		wp_send_json( $sponsor_array);
+		// echo $ordered_sponsors;
+		wp_die();
+
+	}
+
+	add_action('wp_ajax_filterSponsors', 'filter_sponsors');
+	add_action('wp_ajax_nopriv_filterSponsors', 'filter_sponsors');
+
 	function filter_grid_sponsors() {
 		$statusFilter = $_POST['status'];
 		$placeFilter = $_POST['place'];
 		$orderbyFilter = $_POST['orderby'];
 		$sponsor_args = array(
             'post_type'			=> 'post',
-            'posts_per_page'	=> -1,
+            'posts_per_page'	=> 50,
 			'meta_query'		=> array(
 				array(
 					'meta_key'	=> 'sponsored',
@@ -2490,7 +2659,7 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 		$orderbyFilter = $_POST['orderby'];
 		$sponsor_args = array(
             'post_type'			=> 'post',
-            'posts_per_page'	=> -1,
+            'posts_per_page'	=> 50,
 			'meta_query'		=> array(
 				array(
 					'meta_key'	=> 'sponsored',

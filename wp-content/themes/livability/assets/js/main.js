@@ -1340,29 +1340,69 @@ function filterSponsors() {
       place: placeID,
       status: status,
       orderby: orderby,
-      action: 'filterGridSponsors'
+      action: 'filterSponsors'
     }, 
     type: "POST",
-    dataType: "html",
+    dataType: "json",
     success: function(response) {
-      console.log(response);
-      $('.sponsor-grid-container').html(response);
-    }
+      console.log('response ',response);
+      let gridFragment = $('<div>');
+      let listFragment = $('<div>');
+      let expireFormatted;
+      let sponserString;
+      
+      $(response).each(function(i,e){
+        console.log(e)
+        let place = e.place_name.length > 1 ? `<p>${e.place_name}</p>` : ''; 
+        let pubDate = new Date(e.post_time * 1000);
+        let pubDateFormatted = pubDate.toDateString();
+        if (e.expire_time.length) {
+          let expireDate = new Date(e.expire_time * 1000);
+          let expireFormatted = `<p>Expires ${expireDate.toDateString()}</p>`;
+        } else {
+          let expireFormatted = '';
+        }
+        if (e.sponsor_name.length) {
+          let sponserString = `<p>Sponsor: <a href="${e.sponsor_url}" target="_blank">${e.sponsor_name}</a></p>`;
+        } else {
+          let sponserString = '';
+        }
+        // let html = `<p>${e.title}</p>`;
+        let html = `<div class="sponsor-grid__card">
+        <a href="${e.permalink}">
+        <div class="sp-img sponsor-grid__img" style="background-image: url(${e.thumb_url}); height: 200px; width: 100%;"></div>
+        <div class="sma-title sponsor-grid__text-container">
+        <h4 class="sponsor-grid__title"><a href="${e.permalink}">${e.title}</a></h4>
+        ${place}
+        <p>Status: ${e.status}</p>
+       
+        ${e.sponsor_name}
+        </div></a></div>
+        `;
+        gridFragment.append(html);
+      });
+
+      $('.sponsor-grid-container').html(gridFragment.contents());
+    },
+    // error: function(response) {
+    //   console.error(response);
+    // }
   });
-  $.ajax({
-    url: params.ajaxurl,
-    data: {
-      place: placeID,
-      status: status,
-      action: 'filterListSponsors'
-    }, 
-    type: "POST",
-    dataType: "html",
-    success: function(response) {
-      // console.log(response);
-      $('.sponsor-list-container').html(response);
-    }
-  });
+
+  // $.ajax({
+  //   url: params.ajaxurl,
+  //   data: {
+  //     place: placeID,
+  //     status: status,
+  //     action: 'filterListSponsors'
+  //   }, 
+  //   type: "POST",
+  //   dataType: "html",
+  //   success: function(response) {
+  //     // console.log(response);
+  //     $('.sponsor-list-container').html(response);
+  //   }
+  // });
 }
 
 

@@ -9,10 +9,8 @@
  * @subpackage Twenty_Twenty_One
  * @since Twenty Twenty-One 1.0
  */
-
+session_start();
 get_header();
-
-
 
 
 /* Start the Loop */
