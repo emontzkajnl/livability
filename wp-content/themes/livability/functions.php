@@ -2255,7 +2255,7 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
             'post_type'			=> 'post',
             'meta_key'			=> 'sponsored',
             'meta_value'		=> true,
-            'posts_per_page'	=> 20,
+            'posts_per_page'	=> -1,
             'post_status'		=> array('publish', 'draft')
         );
         $sponsor_query = new WP_Query($sponsor_args);
@@ -2280,114 +2280,9 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 	add_action('wp_ajax_createSponsorList', 'return_sponsor_list');
 	add_action('wp_ajax_nopriv_createSponsorList', 'return_sponsor_list');
 
-	// function filter_sponsors() {
-	// 	// error_log("POST Data: " . print_r($_POST, true));
 
-	// 	$statusFilter = $_POST['status'];
-	// 	$placeFilter = $_POST['place'];
-	// 	// error_log('place filter is '.$placeFilter, true);
-	// 	$listHtml = '';
-	// 	$gridHtml = '';
-	// 	$sponsor_args = array(
-    //         'post_type'			=> 'post',
-    //         'meta_key'			=> 'sponsored',
-    //         'meta_value'		=> true,
-    //         'posts_per_page'	=> -1,
-    //     );
-	// 	if ($statusFilter == 'all') {
-	// 		$sponsor_args['post_status'] = array('publish', 'draft');
-	// 	} elseif($statusFilter == 'publish') {
-	// 		$sponsor_args['post_status'] = 'publish';
-	// 	} else {
-	// 		$sponsor_args['post_status'] = 'draft';
-	// 	}
-	// 	if ($placeFilter) {
-	// 		$sponsor_args['meta_query'] = array( array( 'key' => 'place_relationship', 'value' => '"'.$placeFilter.'"', 'compare' => 'LIKE'));
-	// 	}
-    //     $sponsor_query = new WP_Query($sponsor_args);
-	// 	if ($sponsor_query->have_posts()) {
-	// 		while ($sponsor_query->have_posts()) {
-	// 			$sponsor_query->the_post();
 
-	// 			$ID = get_the_ID(  ); 
-	// 			$status = get_post_status();
-	// 			$place = get_field('place_relationship');
-	// 			$sponsor_name = get_field('sponsor_name');
-	// 			$sponsor_url = get_field('sponsor_url') ? get_field('sponsor_url') : '' ;
-	// 			$expire_date = do_shortcode( '[futureaction type=date dateformat="F j, Y"]');
 
-	// 			// GRID
-	// 			$gridHtml .= '<div class="sponsor-grid__card" >';
-	// 			$gridHtml .= '<a href="'.get_the_permalink().'">';
-	// 			$gridHtml .= '<div class="sp-img sponsor-grid__img" style="background-image: url("'.stripslashes(get_the_post_thumbnail_url($ID, 'rel_article')).'"); height: 200px; width: 100%;"></div>';
-	// 			$gridHtml .= '<div class="sma-title sponsor-grid__text-container">';
-	// 			$gridHtml .= '<h4 class="sponsor-grid__title"><a href="'.get_the_permalink().'">'.get_the_title().'</a></h4>';
-	// 			$gridHtml .= '<p>'.get_the_title($place[0]).'</p>';
-	// 			$gridHtml .= '<p>Status: '.$status.'</p>';
-	// 			$gridHtml .= '<p>Published '.get_the_date('F j, Y').'</p>';
-	// 			if ($expire_date) {
-	// 				$gridHtml .= '<p>Expires '.$expire_date.'</p>';
-	// 			} 
-	// 			if ($sponsor_name) {
-	// 				$gridHtml .= '<p>Sponsor: <a href="'.$sponsor_url.'" target="_blank">'.$sponsor_name.'</a></p>';
-	// 			}
-	// 			$gridHtml .= '</div></a></div>';
-
-	// 			// LIST
-	// 			$listHtml .= '<tr>';
-	// 			$listHtml .= '<td style="max-width: 100px;">'.get_the_post_thumbnail( 'thumb').'</td>';
-	// 			$listHtml .= '<td>'.get_the_title($place[0]).'</td>';
-	// 			$listHtml .= '<td style="max-width: 300px;"><a class="unstyle-link" href="'.get_the_permalink().'">'.get_the_title(  ).'</a></td>';
-	// 			$listHtml .= '<td>'.get_post_status().'</td><td>';
-	// 			$listHtml .= $sponsor_name ? '<a class="unstyle-link" href="'.$sponsor_url.'">'.$sponsor_name.'</a>' : 'no sponsor name';
-	// 			$listHtml .= '</td><td>Published '.get_the_date().'</td><td>';
-	// 			$listHtml .= $expire_date ? 'Expires: '.$expire_date : 'No Expiration';
-	// 			$listHtml .= '</td></tr>';
-				
-	// 		} //end while
-	// 		error_log('print grid html');
-	// 		error_log(print_r($gridHtml, true));
-	// 		$res = array(
-	// 			"html1"		=> $gridHtml, 
-	// 			"html2"		=> $listHtml
-	// 		);
-	// 		// echo  $res;
-	// 		// error_log("response Data: " . print_r($gridHtml, true));
-	// 		wp_send_json_success($res);
-	// 		// wp_die();
-	// 	} // end if
-	// }
-
-	// add_action('wp_ajax_filterSponsors', 'filter_sponsors');
-	// add_action('wp_ajax_nopriv_filterSponsors', 'filter_sponsors');
-
-	function compare($a, $b) {
-		// echo print_r($a->ID);
-		$placeA = get_post_meta( $a->ID, 'place_relationship', true );
-		$placeB = get_post_meta( $b->ID, 'place_relationship', true );
-		$num = strcmp(get_the_title($placeA[0]), get_the_title($placeB[0]));
-		if ($num == 0) {
-			return 0;
-		} elseif($num > 0) {
-			return 1;
-		} else {
-			return -1;
-		}
-	}
-
-	function reverseCompare($a, $b) {
-		// echo print_r($a->ID);
-		$placeA = get_post_meta( $a->ID, 'place_relationship', true );
-		$placeB = get_post_meta( $b->ID, 'place_relationship', true );
-		$num = strcmp(get_the_title($placeA[0]), get_the_title($placeB[0]));
-		if ($num == 0) {
-			return 0;
-		} elseif($num < 0) {
-			return 1;
-		} else {
-			return -1;
-		}
-	}
 
 	function filter_sponsors() {
 		$statusFilter = $_POST['status'];
@@ -2425,14 +2320,8 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
             $sponsor_array[] = $temp_array;
             endwhile;
         endif;
-            // wp_reset_postdata(  );
-		// error_log('sponsors');
-			// error_log(var_dump($sponsor_array));
-		// $sponsors = unserialize($sponsors);
-		// echo $placeFilter;
-		// echo $orderbyFilter;
-		// echo 'status is '.$statusFilter;
-		// $filtered_sponsors = array();
+		
+		$filtered_sponsors = array();
 		// $ordered_sponsors = array();
 		// foreach ($sponsors as $key => $value) {
 		// 	// echo '<br />status is '.$value['status'].' filter is '.$statusFilter;
@@ -2443,114 +2332,92 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 		// 	}
 		// }
 		// error_log('status filter is '.$statusFilter);
-		// $filtered_sponsors = $sponsors;
-		// $filtered_sponsors = array_filter($sponsors, function($sp)  {
-		// 	// global $statusFilter;
-		// 	// if ($statusFilter) {
-		// 		// return true;
-		// 	// }
-		// 	// if ($statusFilter == 'publish') {
-		// 	// 	return $sp->status != 'draft';
-		// 	// }
-		// 	// if ($statusFilter == 'draft') {
-		// 	// 	return $sp->status != 'publish';
-		// 	// } 
-		// 	// if ($placeFilter) {
-		// 	// 	return $sp['place'] == $placeFilter;
-		// 	// }
-		// });
-		// if ($statusFilter ) {
-		// 	// $temp_array = array();
-		// 	error_log('has status filter');
-		// 	foreach ($sponsors as $key => $value) {
-		// 		error_log($value['status']);
-		// 		if ($value['status'] == $statusFilter ) {
-		// 			$filtered_sponsors[] = $value;
-		// 		}
-		// 	}
 
-		// }
+		
+		$temp_array = array();
+	
+		foreach ($sponsor_array as $key => $value) {
+			$selected = true;
+			if ($statusFilter && $statusFilter != 'all') {
+				$statusFilter != $value['status'] ? $selected = false : ''; 
+			}
+			if ($placeFilter) {
+				$placeFilter != $value['place'] ? $selected = false :'' ;
+			}
+			if ($selected) {$filtered_sponsors[] = $value;}
+		}
+		
 		// $filtered_sponsors[] = array('my key' => 'my value');
 		
 		// error_log('sponsors');
 		// error_log(var_dump($sponsors));
 		// error_log('filtered sponsors');
 		// error_log(print_r($filtered_sponsors, true));
-		// if ($orderbyFilter) {
-		// 	switch($orderbyFilter) {
-		// 		case 'publish-desc': 
-		// 			// echo 'just testing';
-		// 			// error_log('just testing');
-		// 			$ordered_sponsors = array_reverse($filtered_sponsors);
-		// 		break;
-		// 		case 'sponsor-asc':
-		// 			$ordered_sponsors = usort($filtered_sponsors, function($a, $b) use ($orderbyFilter){
-		// 				if ($a['sponsor_name'] == $b['sponsor_name']) {
-		// 					return 0;
-		// 				}
-		// 				return ($a['sponsor_name'] < $b['sponsor_name']) ? -1 : 1;
-		// 			});
-		// 			// $filtered_sponsors = $ordered_sponsors;
-		// 		break;
-		// 		case 'sponsor-desc':
-		// 			$ordered_sponsors = usort($filtered_sponsors, function($a, $b) use ($orderbyFilter) {
-		// 				if ($a['sponsor_name'] == $b['sponsor_name']) {
-		// 					return 0;
-		// 				}
-		// 				return ($a['sponsor_name'] > $b['sponsor_name']) ? -1 : 1;
-		// 			});
-		// 		break;
-		// 		case 'place-asc':
-		// 			$ordered_sponsors = usort($filtered_sponsors, function($a, $b) {
-		// 				if ($a['place_name'] == $b['place_name']) {
-		// 					return 0;
-		// 				}
-		// 				return ($a['place_name'] < $b['place_name']) ? -1 : 1;
-		// 			});
+		if ($orderbyFilter) {
+			switch($orderbyFilter) {
+				case 'publish-desc': 
+					$filtered_sponsors = array_reverse($filtered_sponsors);
+				break;
+				case 'sponsor-asc':
+					usort($filtered_sponsors, function($a, $b) use ($orderbyFilter){
+						if ($a['sponsor_name'] == $b['sponsor_name']) {
+							return 0;
+						}
+						return ($a['sponsor_name'] < $b['sponsor_name']) ? -1 : 1;
+					});
+					// $filtered_sponsors = $ordered_sponsors;
+				break;
+				case 'sponsor-desc':
+					usort($filtered_sponsors, function($a, $b) use ($orderbyFilter) {
+						if ($a['sponsor_name'] == $b['sponsor_name']) {
+							return 0;
+						}
+						return ($a['sponsor_name'] > $b['sponsor_name']) ? -1 : 1;
+					});
+				break;
+				case 'place-asc':
+					usort($filtered_sponsors, function($a, $b) {
+						if ($a['place_name'] == $b['place_name']) {
+							return 0;
+						}
+						return ($a['place_name'] < $b['place_name']) ? -1 : 1;
+					});
 					
-		// 		break;
-		// 		case 'place-desc':
-		// 			$ordered_sponsors = usort($filtered_sponsors, function($a, $b) {
-		// 				if ($a['place_name'] == $b['place_name']) {
-		// 					return 0;
-		// 				}
-		// 				return ($a['place_name'] > $b['place_name']) ? -1 : 1;
-		// 			});
+				break;
+				case 'place-desc':
+					usort($filtered_sponsors, function($a, $b) {
+						if ($a['place_name'] == $b['place_name']) {
+							return 0;
+						}
+						return ($a['place_name'] > $b['place_name']) ? -1 : 1;
+					});
 					
-		// 		break;
-		// 		case 'expire-asc':
-		// 			$ordered_sponsors = usort($filtered_sponsors, function($a, $b) {
-		// 				if ($a['expire_time'] == $b['expire_time']) {
-		// 					return 0;
-		// 				}
-		// 				return ($a['expire_time'] < $b['expire_time']) ? -1 : 1;
-		// 			});
+				break;
+				case 'expire-asc':
+					usort($filtered_sponsors, function($a, $b) {
+						if ($a['expire_time'] == $b['expire_time']) {
+							return 0;
+						}
+						return ($a['expire_time'] < $b['expire_time']) ? -1 : 1;
+					});
 					
-		// 		break;
-		// 		case 'expire-desc':
-		// 			$ordered_sponsors = usort($filtered_sponsors, function($a, $b) {
-		// 				if ($a['expire_time'] == $b['expire_time']) {
-		// 					return 0;
-		// 				}
-		// 				return ($a['expire_time'] > $b['expire_time']) ? -1 : 1;
-		// 			});
+				break;
+				case 'expire-desc':
+					usort($filtered_sponsors, function($a, $b) {
+						if ($a['expire_time'] == $b['expire_time']) {
+							return 0;
+						}
+						return ($a['expire_time'] > $b['expire_time']) ? -1 : 1;
+					});
 					
-		// 		break;
-		// 		default: 
-		// 		$filtered_sponsors = $ordered_sponsors;
-		// 	}
-		// }
+				break;
+				default: 
+				
+			}
+		}
 
-		// error_log(var_dump($ordered_sponsors));
-		// error_log(var_dump($filtered_sponsors));
-		// $response = json_encode($sponsors);
-		// echo $response;
-		// echo json_encode($ordered_sponsors);
-		// echo wp_send_json($sponsors);
-		// wp_send_json( $sponsors );
-		// echo json_encode($sponsor_array);
-		wp_send_json( $sponsor_array);
-		// echo $ordered_sponsors;
+	
+		wp_send_json( $filtered_sponsors);
 		wp_die();
 
 	}

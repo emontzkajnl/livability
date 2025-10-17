@@ -78,7 +78,7 @@
             'post_type'			=> 'post',
             'meta_key'			=> 'sponsored',
             'meta_value'		=> true,
-            'posts_per_page'	=> 20,
+            'posts_per_page'	=> -1,
             'post_status'		=> array('publish', 'draft')
         );
         $sponsor_query = new WP_Query($sponsor_args); 

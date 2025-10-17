@@ -1348,41 +1348,38 @@ function filterSponsors() {
       console.log('response ',response);
       let gridFragment = $('<div>');
       let listFragment = $('<div>');
-      let expireFormatted;
-      let sponserString;
       
       $(response).each(function(i,e){
-        console.log(e)
-        let place = e.place_name.length > 1 ? `<p>${e.place_name}</p>` : ''; 
-        let pubDate = new Date(e.post_time * 1000);
-        let pubDateFormatted = pubDate.toDateString();
-        if (e.expire_time.length) {
-          let expireDate = new Date(e.expire_time * 1000);
-          let expireFormatted = `<p>Expires ${expireDate.toDateString()}</p>`;
-        } else {
-          let expireFormatted = '';
-        }
-        if (e.sponsor_name.length) {
-          let sponserString = `<p>Sponsor: <a href="${e.sponsor_url}" target="_blank">${e.sponsor_name}</a></p>`;
-        } else {
-          let sponserString = '';
-        }
-        // let html = `<p>${e.title}</p>`;
-        let html = `<div class="sponsor-grid__card">
+      
+        let gridHtml = `<div class="sponsor-grid__card">
         <a href="${e.permalink}">
         <div class="sp-img sponsor-grid__img" style="background-image: url(${e.thumb_url}); height: 200px; width: 100%;"></div>
         <div class="sma-title sponsor-grid__text-container">
         <h4 class="sponsor-grid__title"><a href="${e.permalink}">${e.title}</a></h4>
-        ${place}
+        ${e.place_name ? `<p>${e.place_name}</p>` : ''}
         <p>Status: ${e.status}</p>
-       
-        ${e.sponsor_name}
+       <p>Published ${new Date(e.post_time * 1000).toDateString()}</p>
+       ${e.expire_time ? '<p>Expires ' + new Date(e.expire_time * 1000).toDateString() + '</p>' : ''}
+        ${e.sponsor_name ? `<p>Sponsor: <a href="${e.sponsor_url}" target="_blank">${e.sponsor_name}</a></p>` : ''}
         </div></a></div>
         `;
-        gridFragment.append(html);
+        gridFragment.append(gridHtml);
+
+        let listHtml = `<tr>
+        <td style="max-width: 100px;">${e.thumb}</td>
+        <td>${e.place_name ? `<p>${e.place_name}</p>` : ''}</td>
+        <td style="max-width: 300px;"><a class="unstyle-link" href="${e.permalink}">${e.title}</a></td>
+        <td>${e.status}</td>
+        <td>${e.sponsor_name ? `<a class="unstyle-link" href="${e.sponsor_url}" target="_blank">${e.sponsor_name}</a>` : ''}</td>
+        <td>${new Date(e.post_time * 1000).toDateString()}</td>
+        <td>${e.expire_time ? new Date(e.expire_time * 1000).toDateString() : ''}</td>
+        </tr>`;
+        listFragment.append(listHtml);
+
       });
 
       $('.sponsor-grid-container').html(gridFragment.contents());
+      $('.sponsor-list-container').html(listFragment.contents());
     },
     // error: function(response) {
     //   console.error(response);
@@ -1409,7 +1406,7 @@ function filterSponsors() {
 
 $( "#autocomplete" ).on("change", function(){
   if ($(this).val() === "") {
-    $("#hidden-autocomplete").val(null);
+    $("#hidden-autocomplete").val('');
     filterSponsors();
   }
 });
