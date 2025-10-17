@@ -1,12 +1,17 @@
 <?php  
 if (get_post_type() == 'liv_place') {
     $meta_value = get_the_ID();
+    $place_title = get_field('place_type') == 'city' ? substr(get_the_title($meta_value), 0, -4) : get_the_title($meta_value); 
 } elseif (get_post_type() == 'place_category_page') {
     $pr = get_field('place_relationship');
     $meta_value = $pr[0];
+    $place_title = get_field('place_type', $meta_value) == 'city' ? substr(get_the_title($meta_value), 0, -4) : get_the_title($meta_value); 
 } else {
     $meta_value = null;
 } 
+
+// lop off last four characters to remove state from city pages
+
 
 $args = array(
     'post_type'         => 'place_category_page', 
@@ -38,7 +43,7 @@ if ($place_category_pages->have_posts()) {
 
     <?php } // end while
     $html = '<div class="category-nav">';
-    $html .= '<a href="'.get_the_permalink($meta_value).'">'.get_the_title($meta_value).'</a>';
+    $html .= '<a href="'.get_the_permalink($meta_value).'">'.$place_title.'</a>';
     foreach ($catorder as $co) {
         foreach ($catnavholder as $index => $cnh) {
             if ($co ==  $index) {
