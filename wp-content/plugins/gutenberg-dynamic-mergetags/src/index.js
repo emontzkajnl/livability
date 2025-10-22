@@ -20,8 +20,8 @@ const withMergeTagToolbar = createHigherOrderComponent((BlockEdit) => {
 
         // Function to construct and insert the shortcode string
         const insertMergeTag = (tag) => {
-            const { type, value } = tag;
-            const shortcode = `[liv_data type="${type}" field="${value}"]`;
+            const { value } = tag;
+            const shortcode = `[liv_data field="${value}"]`;
             const content = attributes.content;
             
             setAttributes({
