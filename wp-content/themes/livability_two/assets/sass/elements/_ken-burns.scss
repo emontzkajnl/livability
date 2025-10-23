@@ -1,0 +1,132 @@
+
+  @keyframes right {
+    from {
+        transform: translateX(-4%);
+    }
+    to {
+        transform: translateX(0);
+    }
+  }
+
+  
+  @keyframes left {
+    from {
+      transform: translateX(0);
+    }
+    to {
+        transform: translateX(-4%);
+    }
+  }
+
+  
+  @keyframes down {
+    from {
+        transform: translateY(-8%);
+    }
+    to {
+        transform: translateY(0);
+    }
+  }
+  
+  @keyframes up {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-8%);
+    }
+  }
+  
+  @keyframes out {
+    from {
+      -webkit-transform: scale(1.15);
+      transform: scale(1.15);
+    }
+    to {
+      -webkit-transform: scale(1);
+      transform: scale(1);
+    }
+  }
+
+  
+  @keyframes in {
+    from {
+      -webkit-transform: scale(1);
+      transform: scale(1);
+    }
+    to {
+      -webkit-transform: scale(1.15);
+      transform: scale(1.15);
+    }
+  }
+  
+#kb-slide-container {
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    .kb-slide {
+        -webkit-animation-fill-mode: forwards;
+        animation-fill-mode: forwards;
+        -webkit-animation-timing-function: linear;
+        animation-timing-function: linear;
+        animation-duration: 7000ms;
+        &.down {
+            height: 120%;
+            bottom: 0;
+            animation-name: down;
+        }
+        &.up {
+            height: 120%;
+            top: 0;
+            animation-name: up;
+        }
+        &.in {
+            animation-name: in;
+        }
+        &.out {
+            animation-name: out;
+        }
+        &.right {
+            width: 120%;
+            animation-name: right;
+        }
+        &.left {
+            width: 120%;
+            animation-name: left;
+        }
+    }
+
+}
+.kb-slide {
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    // &.fade-in {
+    //     transition: opacity 1s;
+    //     opacity: 1;
+    // }
+    // &.fade-out {
+    //     transition: opacity 1s;
+    //     opacity: 0;
+    // }
+}
+
+#slide-reserve {
+    position: fixed;
+    width: 1px;
+    height: 1px;
+    left: -9999px;
+}

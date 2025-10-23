@@ -1,0 +1,79 @@
+@import "overrides";
+@import "fonts";
+@import "typography";
+@import "layout";
+@import "buttons";
+
+.container {
+  width: 100%;
+  padding: 0 15px;
+}
+.absolute-container {
+  width: 100%;
+  padding: 0 15px;
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  height: 30px;
+}
+a:hover {
+  text-decoration-style: solid;
+}
+.site a:focus:not(.wp-block-button__link):not(.wp-block-file__button) {
+  text-decoration-style: solid;
+}
+.site-main {
+  padding-top: 0;
+  // overflow-x: hidden;
+}
+.text-overlay {
+  background-image: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 50%,
+      rgba(0, 0, 0, 1) 100%
+    ),
+    url();
+}
+.hidden {
+  display: none !important;
+}
+
+//fix scroll position anchor tags
+// *[id^="h-"] {
+//   scroll-margin-top: 100px;
+// }
+
+div, h1, h2, h3, h4, h5, .ez-toc-section {
+  scroll-margin-top: 100px;
+}
+
+.object-fit-image {
+  position: relative;
+  img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      right: 0;
+  }
+}
+
+@media all and (min-width: 1390px) {
+  .container {
+    padding: 0;
+  }
+  .absolute-container {
+    padding: 0;
+    width: 1366px;
+    left: calc(50% - 683px);
+  }
+}
+
+.unstyle-link {
+  color: inherit;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}

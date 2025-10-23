@@ -1,0 +1,13 @@
+.jci-content-card-block {
+  width: 100%;
+  min-height: 420px;
+  background-color: darkgray;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: $white;
+  padding: 20px;
+}

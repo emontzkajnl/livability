@@ -1,0 +1,48 @@
+{
+    "key": "group_63f53c09a0bed",
+    "title": "State",
+    "fields": [
+        {
+            "key": "field_63f53c0acede2",
+            "label": "State",
+            "name": "state",
+            "aria-label": "",
+            "type": "post_object",
+            "instructions": "State to get connected communities posts from",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "liv_place"
+            ],
+            "taxonomy": "",
+            "return_format": "id",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 1
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf\/cc-local-list"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1677018343
+}

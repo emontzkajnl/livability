@@ -1,0 +1,73 @@
+{
+    "key": "group_6427193a1143a",
+    "title": "Options - High Traffic Articles – Internal Promotion",
+    "fields": [
+        {
+            "key": "field_6427193ac6a14",
+            "label": "High Traffic Articles",
+            "name": "high_traffic_articles",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Choose which high-traffic articles display other internally promoted articles and cities in the left sidebar",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "table",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "",
+            "button_label": "Add Row",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_64271daaae6c3",
+                    "label": "Articles",
+                    "name": "ht_article",
+                    "aria-label": "",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "post_type": [
+                        "post"
+                    ],
+                    "taxonomy": "",
+                    "return_format": "id",
+                    "multiple": 0,
+                    "allow_null": 0,
+                    "ui": 1,
+                    "parent_repeater": "field_6427193ac6a14"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "acf-options-int-articles"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Choose which high-traffic articles display other internally promoted articles and cities in the left sidebar",
+    "show_in_rest": 0,
+    "modified": 1687482509
+}

@@ -1,0 +1,23 @@
+:root {
+  --global--font-primary: var(--font-headings, Jost, sans-serif);
+  --global--font-secondary: var(--font-base, serif);
+  --branding--logo--max-width: none;
+  --branding--logo--max-height: 50px;
+}
+
+@media only screen and (min-width: 482px) {
+  :root {
+    --responsive--aligndefault-width: min(
+      calc(100vw - 4 * var(--global--spacing-horizontal)),
+      1366px
+    );
+  }
+}
+@media only screen and (min-width: 822px) {
+  :root {
+    --responsive--aligndefault-width: min(
+      calc(100vw - 8 * var(--global--spacing-horizontal)),
+      1366px
+    );
+  }
+}

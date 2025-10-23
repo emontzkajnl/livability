@@ -1,0 +1,20 @@
+.amount {
+	font-size:32px;
+}
+#advads_selling_option_ad_price li {
+	list-style-type:none;
+}
+#advads_selling_option_ad_price .amount {
+	font-size:1em;
+}
+.single_add_to_cart_button {
+	margin-top:50px;
+}
+.wc-block-components-sale-badge,
+.wc-block-components-product-price__regular{
+	display:none !important;
+}
+.wp-block-woocommerce-cart, 
+.woocommerce-breadcrumb {
+	margin-top:50px !important;
+}

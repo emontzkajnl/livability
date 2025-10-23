@@ -1,0 +1,115 @@
+.newsletter {
+    background-color: $blurple;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    margin-top: 100px;
+}
+.nl-inner-container {
+    // width: 81%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    color: white;
+}
+.nl-text-area {
+margin-left: 0;
+margin-bottom: 0;
+text-align: center;
+font-size: 1.25rem;
+font-weight: 400;
+line-height: 27px;
+    h3 {
+        font-size: 2.5rem;
+        font-weight: 500;
+        margin-top: 0;
+    }
+    br {
+        display: none;
+    }
+}
+.nl-phone-image {
+    width: 350px;
+    margin: 0 auto;
+}
+.nl-img-container {
+    margin-bottom: 0;
+}
+
+#gform_wrapper_1 {
+    #gform_1 {
+      display: block;
+      #input_1_1 {
+        // width: 100%;
+        font-family: "Jost";
+        font-weight: 600;
+        font-size: 1.125rem;
+        border: none;
+        // width: 270px;
+        width: 100%;
+        height: 45px;
+        margin-top: 0;
+        width: 450px;
+        text-indent: 20px;
+        &::placeholder {
+            font-weight: 400;
+            color: gray;
+        }
+      }
+      #gform_submit_button_1 {
+        font-family: "Jost";
+        font-weight: 600;
+        font-size: 1.125rem;
+        background-color: $green !important;
+        border: none !important;
+        padding: 5px 30px;
+        // width: 170px;
+        width: 100%;
+        height: 45px;
+        max-width: 250px;
+        color: white !important;
+        &:hover {
+            color: white;
+        }
+
+      }
+      .gform_footer {
+        margin-top: 0;
+        text-align: center;
+    }
+    }
+}
+@media all and (min-width: 992px) {
+    .newsletter {
+        // padding-top: 0;
+    }
+    .nl-inner-container {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .nl-text-area {
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-top: 0;
+        .gform_legacy_markup_wrapper {
+            margin-bottom: 0;
+        }
+        h3 {
+            margin-top: 0;
+        }
+        br {
+            display: inline;
+        }
+    }
+    #gform_wrapper_1 {
+        #gform_1 {
+            display: flex;
+            .gform_footer {
+                text-align: left;
+            }
+        }
+    }
+}

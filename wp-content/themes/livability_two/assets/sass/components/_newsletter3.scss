@@ -1,0 +1,55 @@
+.html-newsletter {
+    display: block;
+    margin: 16px auto;
+    label {
+        display: none;
+    }
+    &__email {
+        padding-right: 16px;
+        input {
+        font-family: "Jost";
+        font-weight: 600;
+        font-size: 1.125rem;
+        border: none;
+        width: 100%;
+        height: 45px;
+        margin-top: 0;
+        width: 450px;
+        text-indent: 20px;
+        &::placeholder {
+            font-weight: 400;
+            color: gray;
+        }
+        }
+    }
+    &__submit {
+        padding: 0 0 10px 0;
+        
+        display: flex;
+        justify-content: center;
+        margin-top: 16px;
+        input {
+            font-family: "Jost";
+            font-weight: 600;
+            font-size: 1.125rem;
+            background-color: #6CC24A !important;
+            border: none !important;
+            padding: 5px 30px;
+            width: 100%;
+            height: 45px;
+            max-width: 250px;
+            color: #fff !important;
+            text-transform: uppercase;
+        }
+    }
+}
+
+@media all and (min-width: 992px) {
+    .html-newsletter {
+        display: flex;
+        &__submit {
+            margin: 0;
+        }
+    }
+
+}

@@ -1,0 +1,51 @@
+ul.ez-toc-list.ez-toc-list-level-1 {
+    display: flex;
+    z-index: 1;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: space-between;
+    max-height: 225px;
+    justify-content: space-evenly;
+}
+div#ez-toc-container p.ez-toc-title {
+   font-family: "Jost",Arial,Helvetica,sans-serif;
+   font-size: 1.425rem;
+   font-weight: 600;
+}
+#ez-toc-container a {
+    color: #6CC24A;
+    box-shadow: none;
+    text-decoration: none;
+    text-shadow: none;
+    font-family: 'Jost';
+    font-size: 60%;
+}
+.ez-toc-counter nav ul li a::before {
+    content: "•";
+    display: inline-block;
+    counter-increment: item;
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin-right: 0.2em;
+    float: left;
+}
+div#ez-toc-container {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+.ez-toc-title-container {
+    display: table;
+    width: 100%;
+    border-bottom: 2px solid #7ec244;
+    margin-bottom: 1rem;
+}
+#ez-toc-container nav {
+    border-bottom: 2px solid #7ec244;
+    padding-bottom: 1rem;
+}
+#ez-toc-container a.ez-toc-toggle {
+   visibility: hidden;
+}

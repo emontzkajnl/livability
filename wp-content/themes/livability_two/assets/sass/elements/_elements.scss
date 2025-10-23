@@ -1,0 +1,124 @@
+@import "site-header";
+@import "site-footer";
+@import "search";
+@import "hero";
+@import "blocks";
+@import "horizontal";
+@import "iframe";
+@import "ken-burns";
+@import "table-of-contents";
+@import "woocommerce";
+
+.green-circle {
+  color: white;
+  background-color: $green;
+  padding: 10px;
+  border-radius: 50%;
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 1.4rem;
+  line-height: 2.5rem;
+  height: 60px;
+  width: 60px;
+  text-align: center;
+  &.with-border {
+    border: 10px solid white;
+    padding: 0;
+  }
+}
+
+// .img_byline {
+//   font-style: italic;
+//   // margin-top: -20px !important;
+//   // font-size: 16px;
+//   p {
+//     margin-top: 0;
+//   }
+//   a, a:visited, a:hover, a:focus {
+//     color: white;
+//   }
+// }
+
+// float image data over inline images
+
+.img-container {
+  position: relative;
+  display: inline-block;
+}
+.livability-image-meta {
+  // height: 100%;
+  // animation: img-meta .3s ease-out .3s 1;
+  font-style: italic;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: white;
+  background: black;
+  padding: 5px;
+  font-size: .875rem;
+  // display: none;
+  a, a:visited, a:hover, a:focus {
+    color: white;
+  }
+}
+.bp23-thumb {
+  .livability-image-meta {
+    bottom: 10px;
+    left: 10px;
+    right: auto;
+    p {
+      margin-top: 0;
+    }
+  }
+}
+
+.liv-bottom-adhesive {
+  display: flex;
+justify-content: center;
+}
+
+
+.livbox {
+  background-color: $green;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  font-family: 'Jost', sans-serif;
+  padding: 20px;
+  max-width: 910px !important;
+  border: 10px double $white;
+  h3 {
+    text-transform: uppercase;
+    color: $white;
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+  ul {
+    padding-left: 0;
+  }
+  li {
+    list-style: none;
+    font-family: 'Jost', sans-serif;
+  }
+  > div {
+    padding: 0 20px 20px 20px;
+    margin-top: 20px;
+    &:first-child {
+      flex-basis: 2;
+    }
+    &:last-child {
+      flex-basis: 1;
+      border-left: none;
+    }
+  }
+}
+@media all and (min-width: 920px) {
+  .livbox {
+    flex-direction: row;
+    > div {
+      &:last-child {
+        border-left: 1px solid $white;;
+      }
+    }
+  }
+}

@@ -1,0 +1,127 @@
+.site-header {
+  padding: 0;
+  position: fixed;
+  height: 100px;
+  left: 0;
+  right: 0;
+  width: 100% !important;
+  max-width: none;
+  background: #fff;
+  display: block;
+  box-shadow: #aaa 5px 0px 10px;
+  //   background-color: pink;
+  z-index: 10;
+  transition: height 0.2s;
+  .site-branding {
+    margin-top: 0;
+  }
+  .site-logo {
+    margin: 0;
+    .custom-logo {
+      // max-width: 178px;
+      width: 250px;
+      margin-top: -8px;
+    }
+  }
+  &.headroom--pinned {
+    height: 100px;
+    z-index: 10;
+  }
+  &.headroom--unpinned {
+    height: 70px;
+  }
+  > .container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    height: 100%;
+  }
+  .bp-sponsor-container {
+    display: none;
+  }
+}
+
+.body-mega-hero {
+  .entry-content {
+    // margin-top: 0;
+  }
+  #search-form-1 {
+    background-color: transparent;
+    color: white;
+  }
+  .search-form .search-submit {
+    background-color: transparent !important;
+    color: white;
+    .fa {
+      color: white;
+      &:before {
+        color: white;
+      }
+    }
+  }
+  .site-header {
+    background: rgba(0,0,0,0.3);
+    box-shadow: none !important;
+  }
+  // .site-content
+  #mega-menu-wrap-primary {
+    background: transparent;
+  }
+  #mega-menu-wrap-primary #mega-menu-primary > li.mega-menu-item > a.mega-menu-link {
+    color: white;
+  }
+
+}
+.mega-hero {
+  margin-top: -130px !important;
+}
+
+.hide-bp-sponsor {
+  .site-header {
+    box-shadow: none !important;
+    .bp-sponsor-container {
+      display: block;
+    }
+    
+  }
+}
+
+
+
+#mega-menu-wrap-primary
+  #mega-menu-primary[data-effect="fade_up"]
+  li.mega-menu-item.mega-menu-megamenu
+  > ul.mega-sub-menu,
+#mega-menu-wrap-primary
+  #mega-menu-primary[data-effect="fade_up"]
+  li.mega-menu-item.mega-menu-flyout
+  ul.mega-sub-menu {
+  box-shadow: 0 0 10px #aaa;
+  clip-path: inset(0px -15px -15px -15px);
+  background: linear-gradient(to bottom, #dedede 0, #ffffff 7px, #ffffff 100%);
+}
+
+#mega-menu-wrap-primary
+  #mega-menu-primary
+  > li.mega-menu-megamenu
+  > ul.mega-sub-menu
+  > li.mega-menu-item
+  h4.mega-block-title,
+#mega-menu-wrap-primary
+  #mega-menu-primary
+  > li.mega-menu-megamenu
+  > ul.mega-sub-menu
+  li.mega-menu-column
+  > ul.mega-sub-menu
+  > li.mega-menu-item
+  h4.mega-block-title {
+  font-weight: 600;
+}
+@media only screen and (max-width: 481px) {
+  .site-header.has-logo:not(.has-title-and-tagline).has-menu .site-logo {
+    top: 0;
+  }
+  .primary-navigation {
+    right: 15px;
+  }
+}

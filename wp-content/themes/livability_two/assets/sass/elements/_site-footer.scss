@@ -1,0 +1,145 @@
+.site-footer {
+  padding-bottom: 100px;
+  .site-name {
+    margin-bottom: 40px;
+  }
+  .site-logo {
+    .custom-logo {
+      max-width: 200px;
+    }
+  }
+}
+.site-footer-info {
+  display: block;
+  padding-bottom: 20px;
+}
+
+
+
+
+.powered-by {
+  text-align: center;
+  font-weight: normal;
+}
+.subfooter-links {
+  ul {
+    padding-left: 0;
+    display: flex;
+    justify-content: center;
+    li {
+      list-style: none;
+      padding: 0 15px;
+      font-family: "Jost", Arial, Helvetica, sans-serif;
+      a {
+        text-decoration: none;
+      }
+    }
+  }
+}
+.footer-navigation-wrapper {
+  flex-direction: column;
+  li {
+    font-size: 1.1rem;
+    a {
+      font-weight: normal;
+      &:hover {
+        text-decoration-style: solid;
+      }
+    }
+  }
+}
+
+.footer-social {
+  margin-bottom: 30px;
+  ul {
+    display: flex;
+    padding-left: 0;
+    li {
+      list-style: none;
+      padding-right: 20px;
+    }
+  }
+  a {
+    color: #c1c1c1;
+    &:hover,
+    &:visited,
+    &:focus {
+      color: #c1c1c1 !important;
+    }
+  }
+}
+
+.footer-menu-area {
+  border-top: 1px solid #bbb;
+}
+.footer-about {
+  padding-bottom: 30px;
+}
+
+//top 100 pop up
+.top-100-popup-container {
+  background-color: rgba(0, 0, 0, 0.9);
+  // z-index: 999;
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity .4s;
+  // display: none;
+  display: flex;
+  z-index: -1;
+  padding: 10%;
+  iframe {
+    object-fit: contain;
+    max-width: 650px;
+
+  }
+  &.open-top-100-popup {
+    z-index: 999;
+    opacity: 1;
+  }
+}
+.map-popup-close {
+  position: absolute;
+  top: 30px;
+  right: 10%;
+  height: 40px;
+  width: 40px;
+  background-color: transparent !important;
+}
+
+@media only screen and (min-width: 768px) {
+  .site-footer-info {
+    display: flex;
+  }
+  .footer-about {
+    flex-basis: 67%;
+    border-right: 1px solid gray;
+    padding-left: 30px;
+    padding-right: 50px;
+    padding-bottom: 0;
+  }
+  .footer-menu-area {
+    flex-basis: 33%;
+    padding-left: 50px;
+    border-top: none;
+  }
+}
+
+// parent override
+@media only screen and (min-width: 822px) {
+  .site-footer > .site-info {
+    text-align: center;
+    .powered-by {
+      margin-right: auto;
+    }
+  }
+}

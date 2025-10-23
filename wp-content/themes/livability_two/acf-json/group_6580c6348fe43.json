@@ -1,0 +1,138 @@
+{
+    "key": "group_6580c6348fe43",
+    "title": "Find Your Best Place To Live",
+    "fields": [
+        {
+            "key": "field_6580c6376bcf7",
+            "label": "Top 100 Text",
+            "name": "top_100_text",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "Displays in top 100 tab",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_6580caa16bcf8",
+            "label": "Region Text",
+            "name": "region_text",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "Text displayed in Region tab",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_65b7df5914e80",
+            "label": "State Text",
+            "name": "state_text",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "Text displayed in Region tab",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_658476f6168d2",
+            "label": "Best Places List",
+            "name": "best_places_list",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "8 curated best places lists to appear inside \"More Best Places\" tab",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "table",
+            "pagination": 0,
+            "min": 1,
+            "max": 8,
+            "collapsed": "",
+            "button_label": "Add Row",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_6584770f168d3",
+                    "label": "Best Place",
+                    "name": "best_place",
+                    "aria-label": "",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "post_type": [
+                        "best_places"
+                    ],
+                    "post_status": [
+                        "publish"
+                    ],
+                    "taxonomy": "",
+                    "return_format": "id",
+                    "multiple": 0,
+                    "allow_null": 0,
+                    "bidirectional": 0,
+                    "ui": 1,
+                    "bidirectional_target": [],
+                    "parent_repeater": "field_658476f6168d2"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf\/find-your-bp-to-live"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1706549110
+}

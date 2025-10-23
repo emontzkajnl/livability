@@ -1,0 +1,45 @@
+{
+    "key": "group_6408ea4d472f6",
+    "title": "Non-Livability Connected Community",
+    "fields": [
+        {
+            "key": "field_6408ea4d95f21",
+            "label": "Non-livability Connected Community",
+            "name": "non-livability_connected_community",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "This is for connected community articles about cities which don't exist on Livablity. Enter the name of the city only, and add a place relationship of the state that it is in. (i.e. put \"Chicago\" here and choose \"Illinois\" place relationship)",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "City Name",
+            "prepend": "",
+            "append": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "post"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "side",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1678306352
+}

@@ -1,0 +1,147 @@
+.search-form {
+  display: none;
+  position: relative;
+  font-size: 1rem;
+  margin: 0 0 0 auto;
+  -webkit-box-shadow: 0px 2px 0 0px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 2px 0 0px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.3);
+  display: none;
+  .search-field {
+    margin: 0;
+    padding: 2px 10px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    &:focus {
+      outline: 1px solid gray;
+      outline-offset: -1px;
+    }
+  }
+  .search-submit {
+    margin-left: 0;
+    margin-top: 0;
+    padding: 0 10px;
+    border: none;
+    background-color: white !important;
+    .fa-search {
+      &:before {
+        color: $gray;
+      }
+    }
+  }
+  label {
+    display: none;
+  }
+}
+
+// mega menu
+.mega-menu-wrap {
+  .search-form {
+    .search-submit {
+      .fa-search:before {
+        color: white;
+      }
+    }
+  }
+}
+
+.mobile-search-form {
+  display: flex;
+  position: relative;
+  padding: 0 20px;
+  max-width: 90%;
+  input[type="search"] {
+    margin: 0;
+    padding: 2px 10px;
+    border: none;
+    border-bottom: 1px solid $lightgreen;
+    border-radius: none;
+    background: transparent;
+    color: white;
+    font-size: 40px;
+    &:focus {
+      outline: none;
+      color: white;
+      box-shadow: none !important;
+    }
+  }
+  ::placeholder {
+      font-style: italic;
+  }
+  label {
+      display: none !important;
+    }
+}
+
+.search-btn {
+  background: #fff;
+  padding: 1em;
+  cursor: pointer;
+  border-color: transparent;
+  font-size: 1.3rem;
+
+  color: $black;
+  &:hover {
+    border-color: #ccc;
+  }
+}
+
+.close-search {
+  position: absolute;
+  top: 30px;
+  right: 10%;
+  // font-size: 60px;
+  height: 40px;
+  width: 40px;
+}
+
+.search-pop-up {
+  background-color: rgba(0, 0, 0, 0.9);
+  // z-index: 999;
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity .4s;
+  // display: none;
+  display: flex;
+  z-index: -1;
+  &.search-open {
+    opacity: 1;
+    z-index: 999;
+    // display: flex;
+  }
+}
+
+.mobile-search-icon {
+  width: 25px;
+  height: 25px;
+  fill: #000;
+  position: absolute;
+  right: 75px;
+  cursor: pointer;
+}
+
+@media only screen and (min-width: 728px) {
+  .mobile-search-icon {
+    position: static;
+  }
+}
+
+
+@media only screen and (min-width: 992px) {
+  .search-form {
+    display: flex;
+  }
+  .mobile-search-icon {
+    display: none;
+  }
+}

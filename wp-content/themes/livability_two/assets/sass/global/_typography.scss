@@ -1,0 +1,225 @@
+html {
+  font-size: 16px;
+}
+body {
+  font-family: "Crimson Text", "Times New Roman", Times, serif;
+  font-size: 1.25rem;
+  line-height: 1.35;
+  color: #000;
+  a {
+    color: $green;
+  }
+}
+.entry-content,
+.entry-summary {
+  font-family: "Crimson Text", "Times New Roman", Times, serif;
+}
+.entry-content {
+  p {
+    margin-top: 1.4rem;
+  }
+  a {
+    text-decoration: none;
+  }
+  h2, .h2, h3, .h3 {
+    margin-top: 30px;
+  }
+}
+h1,
+.h1 {
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  font-size: 1.7rem; //54pt
+  font-weight: 600;
+}
+h2,
+.h2 {
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  font-size: 1.2rem; //30pt
+  font-weight: 600;
+  margin-top: 30px;
+}
+// .single-liv_place h2 {
+//   font-size: 2rem;
+//   font-weight: 400;
+// } 
+h3,
+.h3 {
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  font-size: 1.625rem; //26pt
+  font-weight: 600;
+  margin-top: 30px;
+}
+h4,
+.h4 {
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+h5,
+.h5 {
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.place-section-heading {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 42px !important;
+  h2 {
+    flex-shrink: 1;
+    margin-top: 0;
+    margin-right: 20px;
+    margin-left: 50px;
+    position: relative;
+    padding-left: 8px;
+    &:before {
+      content: '';
+      position: absolute;
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 60px;
+      height: 45px;
+      left: -50px;
+      top: -5px;
+    }
+    &.economy {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/economy.svg');
+      }
+    }
+    &.business {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/business-climate.svg');
+      }
+    }
+    &.location {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/location.svg');
+      }
+    }
+    &.restaurants {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/restaurants.svg');
+      }
+    }
+    &.schools {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/schools.svg');
+      }
+    }
+    &.things {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/things-to-do.svg');
+      }
+    }
+    &.unique {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/unique.svg');
+      }
+    }
+    &.outdoor {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/outdoor.svg');
+      }
+    }
+    &.healthcare {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/healthcare.svg');
+      }
+    }
+    &.live {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/live.svg');
+      }
+    }
+    &.play {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/play.svg');
+      }
+    }
+    &.visit {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/visit.svg');
+      }
+    }
+    &.work {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/work.svg');
+      }
+    }
+    &.weather {
+      &:before {
+        background-image: url('./assets/images/subheading-icons/weather.svg');
+      }
+    }
+  }
+  &__line {
+    display: block;
+    height: 4px;
+    border-top: 4px dotted #ccc;
+    flex-shrink: 0;
+    flex-grow: 1;
+    // position: relative;
+
+    // &::before {
+    //   content: '';
+    //   position: absolute;
+    //   display: block;
+    //   height: 1px;
+    //   border-top: 1px dotted $green;
+    //   background-color: $green;
+    //   width: 2000px;
+    //   right: 10px;
+    //   top: 50%;
+    // }
+  }
+}
+
+.code-font {
+  font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Ubuntu Mono", "Roboto Mono", Menlo, Monaco, Consolas, monospace; 
+  font-size: .8rem;
+  max-width: 768px !important;
+}
+
+
+
+.green-line {
+	color: #111;
+  position: relative;
+  margin-bottom: 70px !important;
+  margin-top: 80px;
+  &:after {
+    content: "";
+    width: 50px;
+    height: 4px;
+    bottom: -25px;
+    left: 0;
+    position: absolute;
+    background-color: $green;
+  }
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+@media all and (min-width: 768px) {
+  h1, .h1 {
+    font-size: 3.375rem;
+  } 
+    h2, .h2 {
+    font-size: 1.6rem; //30pt
+  }
+}
+
+.big-thin-text {
+  font-size: 2.5rem;
+  font-weight: 500;
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  margin-bottom: 30px;
+}
