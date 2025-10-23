@@ -1,3 +1,4 @@
+
 import { __ } from '@wordpress/i18n';
 import { addFilter } from '@wordpress/hooks';
 import { createHigherOrderComponent } from '@wordpress/compose';
@@ -6,6 +7,8 @@ import { BlockControls } from '@wordpress/block-editor';
 import { ToolbarGroup, DropdownMenu } from '@wordpress/components';
 import { shortcode as shortcodeIcon } from '@wordpress/icons';
 
+
+if (window.dynamicDataMergeTags && window.dynamicDataMergeTags.tags) {
 // Retrieve the merge tags passed from PHP via wp_localize_script
 const mergeTags = window.dynamicDataMergeTags.tags;
 
@@ -56,3 +59,4 @@ addFilter(
     'my-plugin/with-merge-tag-toolbar',
     withMergeTagToolbar
 );
+}
