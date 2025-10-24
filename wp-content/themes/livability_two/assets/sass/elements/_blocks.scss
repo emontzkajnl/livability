@@ -2039,6 +2039,7 @@ p.insights-connect-with {
 }
 h2#map {
 	margin-bottom:30px;
+  height: auto !important;
 }
 
 .bp23-thumb {
@@ -2049,6 +2050,7 @@ h2#map {
   img {
     object-fit: cover;
     height: 100% !important;
+    max-width: 100%;
   }
   .nk-awb {
     padding-top: 66%;

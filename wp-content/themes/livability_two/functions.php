@@ -32,7 +32,7 @@ function livability_enqueue_scripts() {
 	wp_enqueue_script( 'headroom', get_stylesheet_directory_uri() . '/assets/js/headroom.js', array('jquery'),null, true );
 	wp_enqueue_script( 'main-theme', get_stylesheet_directory_uri() . '/assets/js/main.js', array('jquery', 'slick', 'waypoints','waypoints-sticky', 'megamenu', 'jquery-ui-autocomplete'), null, true);
 	// wp_enqueue_style( 'style', get_stylesheet_uri(), array('twenty-twenty-one-style'));
-	wp_enqueue_style( 'compressed', get_stylesheet_directory_uri() . '/compressed-style.css', array(), null);
+	wp_enqueue_style( 'compressed', get_stylesheet_directory_uri() . '/compressed-style.css', array('houzez-main'), null);
 	wp_enqueue_script( 'slick', get_stylesheet_directory_uri() . '/assets/js/slick.min.js', array('jquery'), null, true);
 	wp_enqueue_script( 'waypoints', get_stylesheet_directory_uri() . '/assets/js/jquery.waypoints.min.js', array('jquery'), null, true );
 	wp_enqueue_script( 'waypoints-sticky', get_stylesheet_directory_uri() . '/assets/js/sticky.min.js', array('jquery', 'waypoints'), null, true );
@@ -40,8 +40,10 @@ function livability_enqueue_scripts() {
 	wp_enqueue_script( 'navigation', get_stylesheet_directory_uri() . '/assets/js/navigation.js', array('jquery'), null, true );
 	wp_enqueue_style( 'slick-style', get_stylesheet_directory_uri() . '/assets/css/slick.css');
 	wp_enqueue_style( 'slick-theme', get_stylesheet_directory_uri() . '/assets/css/slick-theme.css');
-	wp_dequeue_script('twenty-twenty-one-primary-navigation-script');
-	wp_dequeue_script('twenty-twenty-one-ie11-polyfills');
+	wp_dequeue_style( 'houzez-styling-options-css ' );
+	wp_dequeue_style( 'bootstrap-css' );
+	// wp_dequeue_script('twenty-twenty-one-primary-navigation-script');
+	// wp_dequeue_script('twenty-twenty-one-ie11-polyfills');
 	if (is_page('city-data-iframe')) {
 		wp_enqueue_style( 'city-widget', get_stylesheet_directory_uri() . '/assets/css/city-widget.css');
 	}
