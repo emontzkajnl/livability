@@ -290,7 +290,7 @@ li.AjaxSearchLiteWidget {
         //   position: sticky;
         //   top: 120px;
         // }
-        > div {
+        > div:first-child {
           position: sticky;
           top: 120px;
         }
