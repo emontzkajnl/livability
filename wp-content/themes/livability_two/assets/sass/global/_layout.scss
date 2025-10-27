@@ -286,7 +286,11 @@ li.AjaxSearchLiteWidget {
         top: 100px;
         // align-self: flex-start;
         margin-bottom: 30px;
-        .wp-block-jci-ad-area-two {
+        // .wp-block-jci-ad-area-two {
+        //   position: sticky;
+        //   top: 120px;
+        // }
+        > div {
           position: sticky;
           top: 120px;
         }
