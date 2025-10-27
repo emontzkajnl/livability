@@ -42,6 +42,7 @@ function livability_enqueue_scripts() {
 	wp_enqueue_style( 'slick-theme', get_stylesheet_directory_uri() . '/assets/css/slick-theme.css');
 	wp_dequeue_style( 'houzez-styling-options-css ' );
 	wp_dequeue_style( 'bootstrap-css' );
+	// wp_dequeue_style( 'houzez_custom_styling' );
 	// wp_dequeue_script('twenty-twenty-one-primary-navigation-script');
 	// wp_dequeue_script('twenty-twenty-one-ie11-polyfills');
 	if (is_page('city-data-iframe')) {
