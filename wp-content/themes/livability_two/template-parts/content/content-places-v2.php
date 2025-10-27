@@ -145,7 +145,7 @@ $topic_args = array(
             <!-- </div> -->
             <div class="wp-block-column">
             <?php 
-            echo '<div >';
+            echo '<div style="position: sticky; top: 120px;">';
             get_template_part( 'template-parts/blocks/sidebar-mag-link' );
             get_template_part( 'template-parts/blocks/ad-two' );
             echo '</div>'; ?>
