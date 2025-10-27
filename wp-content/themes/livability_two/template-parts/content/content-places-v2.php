@@ -145,8 +145,10 @@ $topic_args = array(
             <!-- </div> -->
             <div class="wp-block-column">
             <?php 
+            echo '<div style="position: fixed; top: 120px;">';
             get_template_part( 'template-parts/blocks/sidebar-mag-link' );
-            get_template_part( 'template-parts/blocks/ad-two' ); ?>
+            get_template_part( 'template-parts/blocks/ad-two' );
+            echo '</div>'; ?>
             </div>
         </div>
         <div class="wp-block-columns">
