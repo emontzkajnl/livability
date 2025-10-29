@@ -293,15 +293,36 @@ li.AjaxSearchLiteWidget {
           position: sticky;
           top: 120px;
         }
-        // > div:first-child {
-        //   position: sticky;
-        //   top: 120px;
-        // }
+    
+      }
+    }
+  }
+  .single-place_category_page {
+    .wp-block-columns {
+      &.liv-columns {
+        .wp-block-column {
+          &:last-child {
+            .wp-block-jci-ad-area-two {
+              position: sticky;
+              top: 120px;
+            }
+          }
+
+        }
       }
     }
   }
 
 }
+
+// .single-place_category_page .houzez-elementor-map-wrap {
+//   position: sticky !important;
+//   top: 120px;
+//   }
+//   .wp-block-jci-ad-area-two {
+//   position: sticky !important;
+//   top: 100px;
+//   }
 
 @media only screen and (min-width: 1280px) {
   .liv-columns-2 {

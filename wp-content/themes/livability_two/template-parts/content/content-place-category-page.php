@@ -80,10 +80,11 @@
                     </div>
                 </div>
             </div>
-            <div class="wp-block-column">
+            <div class="wp-block-column has-sidebar-ad">
             <?php //get_template_part('template-parts/blocks/ad-two' ); ?>
             <div class="wp-block-jci-ad-area-two">
                 <!-- empty so aa can just target div  -->
+                
             </div>
             </div> 
             </div> <!-- wp-block-columns -->
