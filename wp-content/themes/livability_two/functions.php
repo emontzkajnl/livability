@@ -32,7 +32,8 @@ function livability_enqueue_scripts() {
 	wp_enqueue_script( 'headroom', get_stylesheet_directory_uri() . '/assets/js/headroom.js', array('jquery'),null, true );
 	wp_enqueue_script( 'main-theme', get_stylesheet_directory_uri() . '/assets/js/main.js', array('jquery', 'slick', 'waypoints','waypoints-sticky', 'megamenu', 'jquery-ui-autocomplete'), null, true);
 	// wp_enqueue_style( 'style', get_stylesheet_uri(), array('twenty-twenty-one-style'));
-	wp_enqueue_style( 'compressed', get_stylesheet_directory_uri() . '/compressed-style.css', array('houzez-main'), null);
+	wp_enqueue_style( 'houzez-parent', get_template_directory_uri() . '/style.css' );
+	wp_enqueue_style( 'compressed', get_stylesheet_directory_uri() . '/compressed-style.css', array('houzez-parent'), null);
 	wp_enqueue_script( 'slick', get_stylesheet_directory_uri() . '/assets/js/slick.min.js', array('jquery'), null, true);
 	wp_enqueue_script( 'waypoints', get_stylesheet_directory_uri() . '/assets/js/jquery.waypoints.min.js', array('jquery'), null, true );
 	wp_enqueue_script( 'waypoints-sticky', get_stylesheet_directory_uri() . '/assets/js/sticky.min.js', array('jquery', 'waypoints'), null, true );
