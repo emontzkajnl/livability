@@ -6,6 +6,5 @@ config:
   id: d3fb124c-2593-4e06-9697-1f8b2ba27d9f
   webroot: .
 services:
-  myservice:
-    type: 'php:8.0'
-    via: nginx
+  appserver:
+    type: php:8.3

@@ -199,9 +199,10 @@
                         </figure>
                         <?php endif; ?>
                         <?php the_content(); ?>
+
                         <div class="cm-text-links-<?php echo $ID; ?>"></div>
                     
-                        <?php //get_template_part('template-parts/content/content-author-section'); ?>
+                        <?php get_template_part('template-parts/content/content-author-section'); ?>
                     </div>
                 </div>
             </div>

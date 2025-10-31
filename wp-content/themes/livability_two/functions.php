@@ -33,7 +33,7 @@ function livability_enqueue_scripts() {
 	wp_enqueue_script( 'main-theme', get_stylesheet_directory_uri() . '/assets/js/main.js', array('jquery', 'slick', 'waypoints','waypoints-sticky', 'megamenu', 'jquery-ui-autocomplete'), null, true);
 	// wp_enqueue_style( 'style', get_stylesheet_uri(), array('twenty-twenty-one-style'));
 	wp_enqueue_style( 'houzez-parent', get_template_directory_uri() . '/style.css' );
-	wp_enqueue_style( 'compressed', get_stylesheet_directory_uri() . '/compressed-style.css', array('houzez-parent'), null);
+	wp_enqueue_style( 'compressed', get_stylesheet_directory_uri() . '/compressed-style.css', array(), null);
 	wp_enqueue_script( 'slick', get_stylesheet_directory_uri() . '/assets/js/slick.min.js', array('jquery'), null, true);
 	wp_enqueue_script( 'waypoints', get_stylesheet_directory_uri() . '/assets/js/jquery.waypoints.min.js', array('jquery'), null, true );
 	wp_enqueue_script( 'waypoints-sticky', get_stylesheet_directory_uri() . '/assets/js/sticky.min.js', array('jquery', 'waypoints'), null, true );
@@ -2100,12 +2100,12 @@ function my_custom_canonical_no_slash( $canonical_url ) {
     return $canonical_url;
 }
 
-function wp_rocket_add_purge_posts_to_author() {
-	$role = get_role('advanced_ads_admin');
-	$role->add_cap('rocket_purge_posts', true);
-	$role->add_cap('rocket_purge_cache', true); // Required for purge functionality
-	}
-add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
+// function wp_rocket_add_purge_posts_to_author() {
+// 	$role = get_role('advanced_ads_admin');
+// 	$role->add_cap('rocket_purge_posts', true);
+// 	$role->add_cap('rocket_purge_cache', true); // Required for purge functionality
+// 	}
+// add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 
 	// Register Custom Post Type
 	if ( ! function_exists('place_category_page') ) {
@@ -2438,5 +2438,14 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 	add_action('wp_ajax_filterSponsors', 'filter_sponsors');
 	add_action('wp_ajax_nopriv_filterSponsors', 'filter_sponsors');
 
-
+// override Houzez function
+if(!function_exists('houzez_author_pre_get')) {
+	function houzez_author_pre_get( $query ) {
+	    if ( $query->is_author() && $query->is_main_query() && !is_admin() ) :
+	        // $query->set( 'posts_per_page', houzez_option('num_of_agent_listings', 10) );
+	        // $query->set( 'post_type', array('property') );
+	    endif;
+	}
+	add_action( 'pre_get_posts', 'houzez_author_pre_get' );
+}
 

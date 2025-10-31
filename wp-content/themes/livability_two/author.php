@@ -19,10 +19,10 @@ $author_image = get_field('author_image', 'user_'.$author_id);
 
 ?>
 
-<?php if ( have_posts() ) : ?>
+<?php ?>
 
 	<header class="page-header">
-        <?php get_template_part( 'template-parts/page-hero-section' ); ?>
+        <?php // get_template_part( 'template-parts/page-hero-section' ); ?>
 	</header><!-- .page-header -->
 
     <div class="container">
@@ -31,48 +31,49 @@ $author_image = get_field('author_image', 'user_'.$author_id);
             <?php get_template_part('template-parts/blocks/ad-one' ); ?>
         </div> 
     </div>
+
     <div class="wp-block-columns liv-columns">
             <div class="wp-block-column">
-                <div class="wp-block-columns liv-columns-2">
-                    <div class="wp-block-column">
-                      
-                    </div>
-                    <div class="wp-block-column">
-                        <div id="crumbs">
-                            <?php echo return_breadcrumbs(); ?>
-                        </div>
-                        <h1 class="h2"><?php echo $name; ?></h1>
-                        <div class="author-info-container">
-                            <?php //echo 'id is '.$author_id; 
-                            //print_r($author_image);
-                            // echo 'author id '.$author_id;
-                            // echo wp_get_attachment_image($author_image->ID);
-                            // print_r($author_image);
-                            echo get_avatar( get_the_author_meta( 'ID' ), '300', '', '', array('class' => array('alignright')) );
-                            echo $description; ?>
-                        </div>
-                    </div>
+                <div id="crumbs">
+                    <?php echo return_breadcrumbs(); ?>
                 </div>
-                 
-           
+                <h1 class="h2">Articles by <?php echo $name; ?></h1>
+                <div class="author-info-container">
+                    <?php 
+                    echo get_avatar( get_the_author_meta( 'ID' ), '300', '', '', array('class' => array('alignright')) );
+                    echo $description; ?>
+                </div>
+          
+
+	<?php if ( have_posts() ) : 
+    echo '<ul class="container" style="padding-left: 0;">';
+    while ( have_posts() ) : ?>
+		<?php the_post(); 
+        $cat = get_the_category();
+        $heading = $cat[0]->name; ?>
+        <li class="one-hundred-list-container">
+            <a href="<?php echo get_the_permalink( ); ?>" class="ohl-thumb" style="background-image: url(<?php echo the_post_thumbnail_url(); ?>);"></a>
+            <div class="ohl-text">
+            <h5 class="green-text uppercase"><?php echo $heading; ?></h5>
+            <a href="<?php  echo get_the_permalink( ); ?>">
+            <?php _e(the_title('<h2>','</h2>'), 'livability'); 
+            the_excerpt();
+            ?>
             </div>
+            </a>
+        </li>
+	<?php endwhile; ?>
+    </ul>
+   
+
+<?php else : ?>
+    <h3>no author results</h3>
+	
+<?php endif; ?>
+</div>
             <div class="wp-block-column">
                 <?php get_template_part('template-parts/blocks/ad-two' ); ?>
             </div>
         </div>
-
-        
-        
-
-	<?php while ( have_posts() ) : ?>
-		<?php the_post(); 
-
-        echo do_shortcode( '[ajax_load_more archive="true" repeater="template_1"  post_type="post" button_label="More Articles" posts_per_page="6"]'); ?>
-	<?php endwhile; ?>
-    </div> <!--container-->
-
-<?php else : ?>
-	<?php get_template_part( 'template-parts/content/content-none' ); ?>
-<?php endif; ?>
 
 <?php get_footer(); ?>
