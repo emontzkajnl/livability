@@ -59,6 +59,14 @@ div, h1, h2, h3, h4, h5, .ez-toc-section {
   }
 }
 
+select, input[type="text"], input[type="email"], input[type="url"], input[type="password"], input[type="search"], input[type="number"], input[type="tel"], input[type="date"], input[type="month"], input[type="week"], input[type="time"], input[type="datetime"], input[type="datetime-local"], input[type="color"], .site textarea {
+  border: 1px solid black;
+  &:focus {
+    outline: none;
+    border-color: $green;
+  }
+}
+
 @media all and (min-width: 1390px) {
   .container {
     padding: 0;

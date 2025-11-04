@@ -38,7 +38,7 @@ $author_image = get_field('author_image', 'user_'.$author_id);
                     <?php echo return_breadcrumbs(); ?>
                 </div>
                 <h1 class="h2">Articles by <?php echo $name; ?></h1>
-                <div class="author-info-container">
+                <div class="author-info-container clearfix">
                     <?php 
                     echo get_avatar( get_the_author_meta( 'ID' ), '300', '', '', array('class' => array('alignright')) );
                     echo $description; ?>
