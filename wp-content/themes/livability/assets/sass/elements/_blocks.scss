@@ -1143,8 +1143,10 @@ div[class^="curated-posts-"] {
   display: flex;
   flex-direction: row;
   legend {
-    margin-left: 15px;
+    margin-left: 2rem;
     margin-right: 15px;
+    font-size: 1.125rem;
+    margin-bottom: 0;
   }
   input[type="radio"] + label {
     padding-left: 0;
@@ -1152,18 +1154,32 @@ div[class^="curated-posts-"] {
   }
   #post-status {
     display: flex;
+    align-items: center;
+    .radio-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      label {
+        margin-bottom: 0;
+      }
+    }
   }
 }
 
 .sponsor {
   &__tab-nav { 
     display: flex;
+    align-items: center;
+    margin-bottom: 0;
     li {
       margin-right: 10px;
       list-style: none;
       text-transform: uppercase;
       cursor: pointer;
     }
+  }
+  &__orderby {
+    margin-left: 2rem;
   }
 }
 .sponsor-grid {

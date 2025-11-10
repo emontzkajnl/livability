@@ -67,6 +67,9 @@ select, input[type="text"], input[type="email"], input[type="url"], input[type="
     border-color: $green;
   }
 }
+input[type="radio"] {
+  margin-top: 0;
+}
 input[type=radio]:checked:focus {
   outline: none;
 }
