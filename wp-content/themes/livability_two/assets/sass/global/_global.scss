@@ -68,7 +68,7 @@ select, input[type="text"], input[type="email"], input[type="url"], input[type="
   }
 }
 input[type="radio"] {
-  margin-top: 0;
+  margin-top: 0 !important;
 }
 input[type=radio]:checked:focus {
   outline: none;

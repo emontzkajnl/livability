@@ -36,7 +36,7 @@
 
          <!-- <fieldset id="post-status"> -->
             <div id="post-status">
-        <legend>Post Status</legend>
+        <legend>Post Status:</legend>
         <div class="radio-container">
             <input type="radio" name="post-status" id="allStatus" value="all" checked />
             <label for="allStatus">All</label>
