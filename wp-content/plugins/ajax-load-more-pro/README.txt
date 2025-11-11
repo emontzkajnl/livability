@@ -10,7 +10,7 @@ Stable tag: trunk
 Requires PHP: 7.0
 Homepage: https://connekthq.com/ajax-load-more/
 Donate: https://connekthq.com/donate
-Version: 1.4.1
+Version: 1.4.3
 
 == Copyright ==
 Copyright 2025 Darren Cooney & Connekt Media
@@ -44,6 +44,17 @@ http://connekthq.com/ajax-load-more/pro/
 
 
 == Changelog ==
+
+** 1.4.3 - October 21, 2025 **
+
+Filters - 3.2.0
+- NEW: Updated admin UI for building filters.
+- FIX: Fixed issue with Selected Filters display not rendering < and > characters correctly.
+
+** 1.4.2 - September 17, 2025 **
+
+Filters - 3.1.1
+- FIX: Fixed issue with Facet filtering counts and query updates.
 
 ** 1.4.1 - August 18, 2025 **
 

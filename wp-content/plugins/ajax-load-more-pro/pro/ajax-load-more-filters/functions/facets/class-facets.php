@@ -247,7 +247,6 @@ class ALM_Facets {
 			'ignore_sticky_posts'    => true, // Ignore sticky posts.
 			'update_post_meta_cache' => false, // Don't update post meta cache.
 			'update_post_term_cache' => false, // Don't update post term cache.
-			'cache_results'          => false, // Don't cache results.
 			'fields'                 => 'ids', // Only return post IDs.
 		];
 

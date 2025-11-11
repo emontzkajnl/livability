@@ -9,6 +9,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+function alm_filters_render_whats_this_button() {
+	?>
+	<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
+		<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
+	</a>
+	<?php
+}
+
 /**
  * This function will list all filters.
  *
@@ -132,9 +140,9 @@ function alm_list_all_filters( $pos = 'sidebar' ) {
 						</td>
 						<td class="text-center hide-mobile">
 							<?php if ( $filter['facets'] ) { ?>
-							<i class="fa fa-check-square" aria-hidden="true" style="color: #87c784; font-size: 15px; cursor: help;" aria-label="<?php esc_attr_e( 'This filter contains facets.', 'ajax-load-more-filters' ); ?>" title="<?php esc_attr_e( 'This filter contains facets.', 'ajax-load-more-filters' ); ?>"></i>
+								<svg class="is-active" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M384 32c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96C0 60.7 28.7 32 64 32l320 0zM342 145.7c-10.7-7.8-25.7-5.4-33.5 5.3L189.1 315.2 137 263.1c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l72 72c5 5 11.9 7.5 18.8 7s13.4-4.1 17.5-9.8L347.3 179.2c7.8-10.7 5.4-25.7-5.3-33.5z"/></svg>
 							<?php } else { ?>
-							<i class="fa fa-square" aria-hidden="true" style="opacity:0.2; font-size: 15px; cursor: help;" aria-label="<?php esc_attr_e( 'This filter does not contain facets.', 'ajax-load-more-filters' ); ?>" title="<?php esc_attr_e( 'This filter does not contain facets.', 'ajax-load-more-filters' ); ?>"></i>
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"/></svg>
 							<?php } ?>
 						</td>
 						<td class="text-center hide-mobile">

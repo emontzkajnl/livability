@@ -8,7 +8,7 @@ Requires at least: 5.0
 Tested up to: 6.8
 Stable tag: trunk
 Homepage: https://connekthq.com/
-Version: 3.1.0
+Version: 3.2.0
 
 == Copyright ==
 Copyright 2025 Darren Cooney & Connekt Media
@@ -44,6 +44,13 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/filters/
 5. Activate the plugin in the WP plugin dashboard.
 
 == Changelog ==
+
+= 3.2.0 - October 21, 2025 =
+* NEW: Updated admin UI for building filters.
+* FIX: Fixed issue with Selected Filters display not rendering < and > characters correctly.
+
+= 3.1.1 - September 17, 2025 =
+* FIX: Fixed issue with Facet filtering counts and query updates.
 
 = 3.1.0 - August 18, 2025 =
 * NEW: Added new Filter element theme colors.

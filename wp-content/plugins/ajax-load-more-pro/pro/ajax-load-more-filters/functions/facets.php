@@ -53,15 +53,17 @@ function alm_filters_get_facet( $args = [], $facet_id = '' ) {
 		return [];
 	}
 
-	// Add the facet ID to the args.
-	$args['alm_facet_id'] = $facet_id;
-
 	// Override ALM query $args for the facet query.
+	$args['alm_facet_id']   = $facet_id; // Add the facet ID to the args.
+	$args['posts_per_page'] = apply_filters( 'alm_filters_facets_query_posts_per_page', PHP_INT_MAX ); // Get all posts.
+
+	// Reset the offset because PHP_INT_MAX is used. IF we were to use -1, WP_Query would ignore the offset.
+	$args['offset'] = isset( $args['original_offset'] ) ? $args['original_offset'] : 0;
+
 	$args['fields']                 = 'ids'; // Return only post IDs.
 	$args['update_post_meta_cache'] = false; // Don't update post meta cache.
 	$args['update_post_term_cache'] = false; // Don't update post term cache.
-	$args['cache_results']          = false; // Don't cache results.
-	$args['posts_per_page']         = apply_filters( 'alm_filters_facets_query_posts_per_page', PHP_INT_MAX ); // Get all posts.
+	$args['no_found_rows']          = true; // Don't need pagination.
 
 	// Supported query keys.
 	$supported_keys = [
@@ -85,7 +87,8 @@ function alm_filters_get_facet( $args = [], $facet_id = '' ) {
 	}
 
 	// Get all posts from the query.
-	$posts = get_posts( apply_filters( 'alm_filters_facet_query_args_' . $facet_id, $args ) );
+	$query = new WP_Query( apply_filters( 'alm_filters_facet_query_args_' . $facet_id, $args ) );
+	$posts = $query->posts;
 
 	// Get the facet index from the options table.
 	$facet = ALMFilters::get_facet_index_by_id( $facet_id );

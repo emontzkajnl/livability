@@ -15,9 +15,7 @@
 
 	<!-- Author -->
 	<div class="alm-instructions whatsthis" v-show="filter.key === 'author'">
-		<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
-			<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
-		</a>
+		<?php alm_filters_render_whats_this_button(); ?>
 		<div class="alm-instructions--copy">
 			<p><?php _e( 'The <span>author</span> query parameter will filter posts by Author.', 'ajax-load-more-filters' ); ?></p>
 			<p class="how-to">
@@ -30,9 +28,7 @@
 
 	<!-- Meta Query -->
 	<div class="alm-instructions whatsthis" v-show="filter.key === 'meta'">
-		<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
-			<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
-		</a>
+		<?php alm_filters_render_whats_this_button(); ?>
 		<div class="alm-instructions--copy">
 			<p><?php _e( 'The <span>meta_query</span> query parameter will filter posts by custom field value.', 'ajax-load-more-filters' ); ?></p>
 			<p class="how-to">
@@ -45,9 +41,7 @@
 
 	<!-- Post Type -->
 	<div class="alm-instructions whatsthis" v-show="filter.key === 'post_type'">
-		<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
-			<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
-		</a>
+		<?php alm_filters_render_whats_this_button(); ?>
 		<div class="alm-instructions--copy">
 			<p><?php _e( 'The <span>post_type</span> query parameter will filter posts by Post Type.', 'ajax-load-more-filters' ); ?></p>
 			<p class="how-to">
@@ -60,9 +54,7 @@
 
 	<!-- Search -->
 	<div class="alm-instructions whatsthis" v-show="filter.key === 'search'">
-		<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
-			<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
-		</a>
+		<?php alm_filters_render_whats_this_button(); ?>
 		<div class="alm-instructions--copy">
 			<p><?php _e( 'The <span>search</span> query parameter will filter posts by search term.', 'ajax-load-more-filters' ); ?></p>
 			<p class="how-to">
@@ -75,9 +67,7 @@
 
 	<!-- Posts Per Page -->
 	<div class="alm-instructions whatsthis" v-show="filter.key === 'per_page'">
-		<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
-			<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
-		</a>
+		<?php alm_filters_render_whats_this_button(); ?>
 		<div class="alm-instructions--copy">
 			<p><?php _e( 'The <span>per_page</span> query parameter adjust the posts per page returned from Ajax Load More.', 'ajax-load-more-filters' ); ?></p>
 			<p class="how-to">
@@ -90,9 +80,7 @@
 
 	<!-- Taxonomy -->
 	<div class="alm-instructions whatsthis" v-show="filter.key === 'taxonomy'">
-		<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
-			<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
-		</a>
+		<?php alm_filters_render_whats_this_button(); ?>
 		<div class="alm-instructions--copy">
 			<p><?php _e( 'The <span>taxonomy</span> query parameter will filter posts by taxonomy term slug.', 'ajax-load-more-filters' ); ?></p>
 			<p class="how-to">
@@ -105,9 +93,7 @@
 
 	<!-- Category -->
 	<div class="alm-instructions whatsthis" v-show="filter.key === 'category'">
-		<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
-			<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
-		</a>
+		<?php alm_filters_render_whats_this_button(); ?>
 		<div class="alm-instructions--copy">
 			<p><?php _e( 'The <span>category</span> query parameter will filter posts (by slug) that are tagged with <u>any</u> of the chosen filters.', 'ajax-load-more-filters' ); ?></p>
 			<p class="how-to">
@@ -120,9 +106,7 @@
 
 	<!-- Category AND -->
 	<div class="alm-instructions whatsthis" v-show="filter.key === 'category__and'">
-		<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
-			<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
-		</a>
+		<?php alm_filters_render_whats_this_button(); ?>
 		<div class="alm-instructions--copy">
 			<p><?php _e( 'The <span>category__and</span> query parameter will filter posts (by ID) that have been tagged with <u>all</u> of the chosen filters.', 'ajax-load-more-filters' ); ?></p>
 			<p class="how-to">
@@ -135,9 +119,7 @@
 
 	<!-- Tag -->
 	<div class="alm-instructions whatsthis" v-show="filter.key === 'tag'">
-		<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
-			<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
-		</a>
+		<?php alm_filters_render_whats_this_button(); ?>
 		<div class="alm-instructions--copy">
 			<p><?php _e( 'The <span>tag</span> query parameter will filter posts (by slug) that are tagged with <u>any</u> of the chosen filters.', 'ajax-load-more-filters' ); ?></p>
 			<p class="how-to">
@@ -150,9 +132,7 @@
 
 	<!-- Tag AND -->
 	<div class="alm-instructions whatsthis" v-show="filter.key === 'tag__and'">
-		<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
-			<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
-		</a>
+		<?php alm_filters_render_whats_this_button(); ?>
 		<div class="alm-instructions--copy">
 			<p><?php _e( 'The <span>tag__and</span> query parameter will filter posts (by ID) that have been tagged with <u>all</u> of the chosen filters.', 'ajax-load-more-filters' ); ?></p>
 			<p class="how-to">
@@ -165,9 +145,7 @@
 
 	<!-- Order -->
 	<div class="alm-instructions whatsthis" v-show="filter.key === 'order'">
-		<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
-			<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
-		</a>
+		<?php alm_filters_render_whats_this_button(); ?>
 		<div class="alm-instructions--copy">
 			<p><?php _e( 'The <span>order</span> query parameter designates the ascending or descending order of the `orderby` parameter. The value of this filter can only be `ASC` or `DESC` as shown in the <a href="https://developer.wordpress.org/reference/classes/wp_query/#order-orderby-parameters" target="_blank">Docs</a>.', 'ajax-load-more-filters' ); ?></p>
 			<p class="how-to">
@@ -180,9 +158,7 @@
 
 	<!-- Orderby -->
 	<div class="alm-instructions whatsthis" v-show="filter.key === 'orderby'">
-		<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
-			<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
-		</a>
+		<?php alm_filters_render_whats_this_button(); ?>
 		<div class="alm-instructions--copy">
 			<p><?php _e( 'The <span>orderby</span> query parameter will order posts by the selected value. All `orderby` parameters found in the <a href="https://developer.wordpress.org/reference/classes/wp_query/#order-orderby-parameters" target="_blank">Docs</a> can be used as the value for this.', 'ajax-load-more-filters' ); ?></p>
 			<p class="how-to">
@@ -195,9 +171,7 @@
 
 	<!-- Sort -->
 	<div class="alm-instructions whatsthis" v-show="filter.key === 'sort'">
-		<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
-			<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
-		</a>
+		<?php alm_filters_render_whats_this_button(); ?>
 		<div class="alm-instructions--copy">
 			<p>
 				<?php _e( 'The <span>sort</span> query parameter requires both an <strong>Order</strong> and <strong>Orderby</strong> value to be present - sort values must be colon separated.', 'ajax-load-more-filters' ); ?>
@@ -222,9 +196,7 @@
 
 	<!-- Day -->
 	<div class="alm-instructions whatsthis" v-show="filter.key === 'day'">
-		<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
-			<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
-		</a>
+		<?php alm_filters_render_whats_this_button(); ?>
 		<div class="alm-instructions--copy">
 			<p><?php _e( 'The <span>day</span> query parameter will filter content by a day of the month.', 'ajax-load-more-filters' ); ?></p>
 			<p class="how-to">
@@ -237,9 +209,7 @@
 
 	<!-- Month -->
 	<div class="alm-instructions whatsthis" v-show="filter.key === 'month'">
-		<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
-			<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
-		</a>
+		<?php alm_filters_render_whats_this_button(); ?>
 		<div class="alm-instructions--copy">
 			<p><?php _e( 'The <span>month</span> query parameter will filter content by the month of the year.', 'ajax-load-more-filters' ); ?></p>
 			<p class="how-to">
@@ -252,9 +222,7 @@
 
 	<!-- Year -->
 	<div class="alm-instructions whatsthis" v-show="filter.key === 'year'">
-		<a class="alm-instructions--toggle" href="javascript: void(0);" v-on:click="toggleInstructions($event)">
-			<?php _e( 'What\'s This?', 'ajax-load-more-filters' ); ?>
-		</a>
+		<?php alm_filters_render_whats_this_button(); ?>
 		<div class="alm-instructions--copy">
 			<p><?php _e( 'The <span>year</span> query parameter will filter content by the year of the post.', 'ajax-load-more-filters' ); ?></p>
 			<p class="how-to">

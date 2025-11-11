@@ -11124,17 +11124,17 @@ Object.defineProperty(exports, "__esModule", {
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-var _ParseQuerystring = __webpack_require__(/*! ./ParseQuerystring */ "./src/js/frontend/modules/ParseQuerystring.js");
+var _Variables = __webpack_require__(/*! ../global/Variables */ "./src/js/frontend/global/Variables.js");
 
-var _ParseQuerystring2 = _interopRequireDefault(_ParseQuerystring);
+var _Variables2 = _interopRequireDefault(_Variables);
 
 var _getKeyValue = __webpack_require__(/*! ../modules/currentFilters/getKeyValue */ "./src/js/frontend/modules/currentFilters/getKeyValue.js");
 
 var _getKeyValue2 = _interopRequireDefault(_getKeyValue);
 
-var _Variables = __webpack_require__(/*! ../global/Variables */ "./src/js/frontend/global/Variables.js");
+var _ParseQuerystring = __webpack_require__(/*! ./ParseQuerystring */ "./src/js/frontend/modules/ParseQuerystring.js");
 
-var _Variables2 = _interopRequireDefault(_Variables);
+var _ParseQuerystring2 = _interopRequireDefault(_ParseQuerystring);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11146,7 +11146,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 var setCurrentFilters = function setCurrentFilters(url) {
 	var selected_filters_wrap = document.getElementById('alm-selected-filters');
-
 	var almInstances = _Variables2.default.alm_core;
 
 	// Exit if not exist or multiple AL core instances.
@@ -11155,19 +11154,15 @@ var setCurrentFilters = function setCurrentFilters(url) {
 	}
 
 	if (url && url.indexOf('?') !== -1) {
-		// Confirm URL contains a querystring
-		var selected_filters = currentFilters(url);
+		var selected_filters = currentFilters(url); // Confirm URL contains a querystring
 
 		if (selected_filters) {
-			// Set selected filters
-			selected_filters_wrap.innerHTML = selected_filters;
+			selected_filters_wrap.innerHTML = selected_filters; // Set selected filters.
 		} else {
-			// Clear filters
-			selected_filters_wrap.innerHTML = '';
+			selected_filters_wrap.innerHTML = ''; // Clear filters.
 		}
 	} else {
-		// Clear filters
-		selected_filters_wrap.innerHTML = '';
+		selected_filters_wrap.innerHTML = ''; // Default, clear filters.
 	}
 
 	// Append total filters as a data attribute.
@@ -11176,7 +11171,6 @@ var setCurrentFilters = function setCurrentFilters(url) {
 	/**
   * Selected Filters Callback function
   * Dispatched when a filter change event is triggered.
-  *
   */
 	if (typeof window.almFiltersSelected === 'function') {
 		window.almFiltersSelected(selected_filters_wrap);
@@ -11243,9 +11237,9 @@ function buildSelections(obj) {
 					}
 
 					// Strip all remaining HTML tags -> https://stackoverflow.com/a/5002161/921927.
-					_value = _value.replace(/<\/?[^>]+(>|$)/g, '');
+					_value = _value.replace('<', '&lt;').replace('>', '&gt;'); // Escape < and >.
 					items += '<li>';
-					items += '<div onclick="window.removeSelectedFilter(this);" onkeyup="window.removeSelectedFilterEnter(event);" data-key="' + key + '" data-value="' + values[n] + '" tabindex="0" aria-label="' + window.alm_filters_localize.remove_active_filter + '' + values[n] + '">';
+					items += '<div role="button" onclick="window.removeSelectedFilter(this);" onkeyup="window.removeSelectedFilterEnter(event);" data-key="' + key + '" data-value="' + values[n] + '" tabindex="0" aria-label="' + window.alm_filters_localize.remove_active_filter + '' + values[n] + '">';
 					items += _value;
 					items += '</a>';
 					items += '</li>';

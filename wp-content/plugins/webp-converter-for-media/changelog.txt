@@ -1,5 +1,16 @@
 == Changelog ==
 
+= 6.3.1 (2025-11-09) =
+* `[Fixed]` Support for Bunny CDN and BunnyCDN plugin
+* `[Fixed]` Support for QUIC.cloud CDN
+
+= 6.3.0 (2025-10-28) =
+* `[Changed]` Message about rewrites_uploads_blocked server configuration error
+* `[Added]` Support for WordPress 6.9
+
+= 6.2.4 (2025-09-09) =
+* `[Fixed]` Deprecated notice for implicitly nullable parameter when converting images
+
 = 6.2.3 (2025-09-02) =
 * `[Fixed]` Unknown error when converting images when file is unavailable or file size verification failed
 
