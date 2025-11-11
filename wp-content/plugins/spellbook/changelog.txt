@@ -1,6 +1,15 @@
 
 # Changelog
 
+## 3.0.16 | October 29, 2025
+
+- Fixed an issue where product-specific 'Buy License' links directed users to wrong pricing pages.
+
+## 3.0.15 | September 17, 2025
+
+- Fixed some styling issues with plugin cards in the Spellbook UI.
+- Fixed inline warning not showing in the plugin row if Gravity Forms was not activated.
+
 ## 3.0.14 | September 3, 2025
 
 - Fixed an issue where registration button would incorrectly show for GS Product Configurator with valid Gravity Shop license.

@@ -177,7 +177,7 @@ final class PYS extends Settings implements Plugin {
                 if (!isset($_GET['_wpnonce_template_logs']) || !wp_verify_nonce($_GET['_wpnonce_template_logs'], 'download_template_nonce')) {
                     wp_die(__('Invalid nonce', 'pixelyoursite'));
                 }
-                $this->containers->downloadLogFile($_GET[ 'download_container' ]);
+                $this->containers->downloadContainerFile($_GET[ 'download_container' ]);
             }
         }
 
@@ -230,10 +230,15 @@ final class PYS extends Settings implements Plugin {
         $eventsFormFactory = apply_filters("pys_form_event_factory",[]);
         if(!$eventsFormFactory)
         {
-            $options = array(
-                'enable_success_send_form'     => false
-            );
-            PYS()->updateOptions($options);
+            // Check current option value before updating to avoid unnecessary database updates
+            $current_value = $this->getOption('enable_success_send_form');
+            if($current_value !== false)
+            {
+                $options = array(
+                    'enable_success_send_form'     => false
+                );
+                PYS()->updateOptions($options);
+            }
         }
 
         if (isRealCookieBannerPluginActivated()) {
@@ -480,12 +485,18 @@ final class PYS extends Settings implements Plugin {
         if (is_admin() || is_customize_preview() || is_preview()) {
             return;
         }
-        if ($this->is_user_agent_bot() && !$this->isCachePreload()) {
-            if (!defined('DONOTCACHEPAGE')) {
-                define('DONOTCACHEPAGE', true);
-            }
-            return;
-        }
+
+        // Note: We intentionally DON'T disable Events Manager for bots
+        // Reasons:
+        // 1. Bots don't execute JavaScript, so no actual tracking happens for them
+        // 2. If we disable Events Manager for bots, cached pages won't have tracking scripts
+        // 3. Real users would then get cached pages WITHOUT tracking (critical issue!)
+        // 4. It's better to include tracking scripts in HTML (even for bots) to ensure
+        //    cached pages always have tracking for real users
+        // 5. The minimal overhead of including scripts in HTML for bots is acceptable
+        //    compared to the risk of breaking tracking for real users
+
+
         // disable Events Manager on Elementor editor
         if (did_action('elementor/preview/init')
             || did_action('elementor/editor/init')
@@ -636,6 +647,8 @@ final class PYS extends Settings implements Plugin {
             array( $this, 'adminPageMain' ), PYS_FREE_URL . '/dist/images/favicon.png' );
         add_submenu_page( 'pixelyoursite', 'Global Settings', 'Global Settings',
             'manage_pys', 'pixelyoursite_settings', array( $this, 'adminSinglePage' ) );
+        add_submenu_page('pixelyoursite',__('Queue Settings PRO', 'pixelyoursite'),__('Queue Settings PRO', 'pixelyoursite'),
+            'manage_options','pixelyoursite_queue_settings',array($this, 'adminSinglePage'),3);
         $addons = $this->registeredPlugins;
 
         if ( $addons['head_footer'] ) {
@@ -667,6 +680,7 @@ final class PYS extends Settings implements Plugin {
         $this->adminPagesSlugs = array(
             'pixelyoursite',
             'pixelyoursite_settings',
+            'pixelyoursite_queue_settings',
             'pixelyoursite_licenses',
             'pixelyoursite_report',
             'pixelyoursite_woo_reports',
@@ -693,6 +707,7 @@ final class PYS extends Settings implements Plugin {
             wp_register_style( 'select2_css', PYS_FREE_URL . '/dist/styles/select2.min.css' );
             wp_enqueue_script( 'select2_js', PYS_FREE_URL . '/dist/scripts/select2.min.js',
                 array( 'jquery' ) );
+            wp_enqueue_style( 'font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css', array(), '4.7.0' );
 
             wp_enqueue_script( 'popper', PYS_FREE_URL . '/dist/scripts/popper.min.js', 'jquery' );
             wp_enqueue_script( 'tippy', PYS_FREE_URL . '/dist/scripts/tippy.min.js', 'jquery' );
@@ -1000,7 +1015,10 @@ final class PYS extends Settings implements Plugin {
         if ( ! $this->adminSecurityCheck() ) {
             return;
         }
-        
+	    // Verify nonce specifically for GDPR AJAX action
+	    if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'pys_enable_gdpr_ajax' ) ) {
+		    return;
+	    }
         if ( isset( $_REQUEST['pys']['enable_gdpr_ajax'] ) ) {
             $this->updateOptions( array(
                 'gdpr_ajax_enabled' => true,

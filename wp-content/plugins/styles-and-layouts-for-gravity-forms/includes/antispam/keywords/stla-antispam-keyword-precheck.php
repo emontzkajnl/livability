@@ -99,8 +99,10 @@ class Stla_Antispam_Kyeword_Precheck {
 		$radio_types    = Stla_Antispam_Common_Helpers::get_radio_types();
 		$checkbox_types = Stla_Antispam_Common_Helpers::get_checkbox_types();
 		$email_types    = Stla_Antispam_Common_Helpers::get_email_types();
+		$select_types   = Stla_Antispam_Common_Helpers::get_select_types();
+		$file_types     = Stla_Antispam_Common_Helpers::get_file_types();
 
-		$exclude_fields = array_merge( $radio_types, $checkbox_types, $email_types );
+		$exclude_fields = array_merge( $radio_types, $checkbox_types, $email_types, $select_types, $file_types );
 
 		foreach ( $form['fields'] as $index => $field ) {
 			// Skip admin-only fields or unsupported input types.

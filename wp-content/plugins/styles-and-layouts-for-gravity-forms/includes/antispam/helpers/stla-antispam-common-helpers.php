@@ -31,6 +31,24 @@ class Stla_Antispam_Common_Helpers {
 	}
 
 	/**
+	 * Retrieves an array of field types that are considered select fields.
+	 *
+	 * @return array List of select field types in Gravity Forms.
+	 */
+	public static function get_select_types() {
+		return array( 'select', 'post_tags', 'post_custom_field', 'post_category', 'quantity', 'option', 'shipping', 'product' );
+	}
+
+	/**
+	 * Retrieves an array of field types that are considered file upload fields.
+	 *
+	 * @return array List of file upload field types in Gravity Forms.
+	 */
+	public static function get_file_types() {
+		return array( 'fileupload', 'post_image' );
+	}
+
+	/**
 	 * Retrieves an array of field types that are considered email fields.
 	 *
 	 * @return array List of email field types in Gravity Forms.

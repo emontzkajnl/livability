@@ -109,7 +109,7 @@ class GravityPerks {
 			add_filter( 'gform_addon_navigation', array( 'GWPerks', 'add_menu_item' ) );
 
 			// show various plugin messages after the plugin row
-			add_action( 'after_plugin_row_' . self::$basename, array( 'GWPerks', 'after_plugin_row' ), 10, 2 );
+			add_action( 'after_plugin_row_spellbook/spellbook.php', array( 'GWPerks', 'after_plugin_row' ), 10, 2 );
 			add_action( 'after_plugin_row', array( 'GWPerks', 'after_product_plugin_row' ), 10, 2 );
 
 			if ( self::is_gravity_perks_page() ) {

@@ -102,7 +102,7 @@ class Stla_Admin_Fetch_Anispam {
 		}
 
 		$form_id           = isset( $_POST['formId'] ) ? sanitize_text_field( wp_unslash( $_POST['formId'] ) ) : '';
-		$antispam_settings = isset( $_POST['antiSpamSettings'] ) ? sanitize_text_field( wp_unslash( $_POST['antiSpamSettings'] ) ) : '';
+		$antispam_settings = isset( $_POST['antiSpamSettings'] ) ? wp_unslash( $_POST['antiSpamSettings'] ) : '';
 
 		if ( empty( $antispam_settings ) || empty( $form_id ) ) {
 			wp_send_json_error( 'Invalid anti-spam settings' );
@@ -111,7 +111,7 @@ class Stla_Admin_Fetch_Anispam {
 		$antispam_settings = json_decode( $antispam_settings, true );
 
 		if ( json_last_error() !== JSON_ERROR_NONE ) {
-			wp_send_json_error( 'Invalid anti-spam settings' );
+			wp_send_json_error( 'Error decoding the anti-spam settings JSON' );
 		}
 
 		$has_uploaded = update_option( 'gf_stla_antispam_settings_' . $form_id, $antispam_settings );

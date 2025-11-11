@@ -51,6 +51,10 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		return esc_html__( 'Post', 'gp-populate-anything' );
 	}
 
+	public function supported_operators() {
+		return array_merge( gp_populate_anything()->get_default_operators(), array( 'is_in', 'is_not_in' ) );
+	}
+
 	public function get_default_templates() {
 		return array(
 			'value' => 'ID',
@@ -62,15 +66,11 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		return array(
 			'taxonomies' => array(
 				'label'     => esc_html__( 'Post Taxonomies', 'gp-populate-anything' ),
-				'operators' => array(
-					'is',
-					'isnot',
-					'is_in',
-					'is_not_in',
-				),
+				'operators' => $this->supported_operators(),
 			),
 			'meta'       => array(
-				'label' => esc_html__( 'Post Meta', 'gp-populate-anything' ),
+				'label'     => esc_html__( 'Post Meta', 'gp-populate-anything' ),
+				'operators' => $this->supported_operators(),
 			),
 		);
 	}
@@ -109,28 +109,36 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/** @var string|string[] */
+		/** @var null|string|string[] */
 		$filter_value = null;
 
-		/** @var array */
+		/** @var null|array */
 		$filter = null;
 
-		/** @var array */
+		/** @var null|array */
 		$filter_group = null;
 
-		/** @var int */
+		/** @var null|int */
 		$filter_group_index = null;
 
-		/** @var string */
+		/** @var null|string */
 		$property = null;
 
-		/** @var string */
+		/** @var null|string */
 		$property_id = null;
 
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
-		$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), $filter['operator'], $filter_value );
+		// Escape filter value to prevent issues with quotes or ampersands in string values.
+		if ( is_scalar( $filter_value ) ) {
+			$where_raw     = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), $filter['operator'], $filter_value );
+			$where_escaped = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), $filter['operator'], htmlspecialchars( $filter_value, ENT_NOQUOTES, 'UTF-8' ) );
+			// Use OR between raw and escaped value
+			$query_builder_args['where'][ $filter_group_index ][] = '(' . $where_raw . ' OR ' . $where_escaped . ')';
+		} else {
+			$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), $filter['operator'], $filter_value );
+		}
 
 		return $query_builder_args;
 
@@ -143,22 +151,22 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/** @var string|string[] */
+		/** @var null|string|string[] */
 		$filter_value = null;
 
-		/** @var array */
+		/** @var null|array */
 		$filter = null;
 
-		/** @var array */
+		/** @var null|array */
 		$filter_group = null;
 
-		/** @var int */
+		/** @var null|int */
 		$filter_group_index = null;
 
-		/** @var string */
+		/** @var null|string */
 		$property = null;
 
-		/** @var string */
+		/** @var null|string */
 		$property_id = null;
 
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
@@ -201,22 +209,22 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/** @var string|string[] */
+		/** @var null|string|string[] */
 		$filter_value = null;
 
-		/** @var array */
+		/** @var null|array */
 		$filter = null;
 
-		/** @var array */
+		/** @var null|array */
 		$filter_group = null;
 
-		/** @var int */
+		/** @var null|int */
 		$filter_group_index = null;
 
-		/** @var string */
+		/** @var null|string */
 		$property = null;
 
-		/** @var string */
+		/** @var null|string */
 		$property_id = null;
 
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
@@ -227,10 +235,17 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		$meta_value         = $this->get_sql_value( $filter['operator'], $filter_value );
 
 		$this->meta_query_counter++;
-		$as_table = 'mq' . $this->meta_query_counter;
+		$as_table = esc_sql( 'mq' . $this->meta_query_counter );
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
-		$query_builder_args['where'][ $filter_group_index ][] = $wpdb->prepare( "( {$as_table}.meta_key = %s AND {$as_table}.meta_value {$meta_operator} {$meta_specification} )", rgar( $property, 'value' ), $meta_value );
+		$prepare_args = array_merge(
+			array( rgar( $property, 'value' ) ),
+			is_array( $meta_value ) ? $meta_value : array( $meta_value )
+		);
+
+		$where_clause = "( {$as_table}.meta_key = %s AND {$as_table}.meta_value {$meta_operator} {$meta_specification} )";
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlace
+		$query_builder_args['where'][ $filter_group_index ][] = $wpdb->prepare( $where_clause, $prepare_args );
 		$query_builder_args['joins'][ $as_table ]             = "LEFT JOIN {$wpdb->postmeta} AS {$as_table} ON ( {$wpdb->posts}.ID = {$as_table}.post_id )";
 
 		return $query_builder_args;
@@ -241,22 +256,22 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/** @var string|string[] */
+		/** @var null|string|string[] */
 		$filter_value = null;
 
-		/** @var array */
+		/** @var null|array */
 		$filter = null;
 
-		/** @var array */
+		/** @var null|array */
 		$filter_group = null;
 
-		/** @var int */
+		/** @var null|int */
 		$filter_group_index = null;
 
-		/** @var string */
+		/** @var null|string */
 		$property = null;
 
-		/** @var string */
+		/** @var null|string */
 		$property_id = null;
 
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
@@ -310,7 +325,11 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		 * Convert single filter_value to array to add support for is_in and is_not_in
 		 */
 		if ( ! is_array( $filter_value ) ) {
-			$filter_value = array( $filter_value );
+			if ( in_array( $filter['operator'], array( 'is_in', 'is_not_in' ) ) ) {
+				$filter_value = $this->get_sql_value( $filter['operator'], $filter_value );
+			} else {
+				$filter_value = array( $filter_value );
+			}
 		}
 
 		$term_taxonomy_ids = array();
@@ -358,34 +377,34 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 
 		global $wpdb;
 
-		/** @var string */
+		/** @var null|string */
 		$populate = null;
 
-		/** @var array */
+		/** @var null|array */
 		$filter_groups = null;
 
-		/** @var array */
+		/** @var null|array */
 		$ordering = null;
 
-		/** @var array */
+		/** @var null|array */
 		$templates = null;
 
-		/** @var string */
+		/** @var null|string */
 		$primary_property_value = null;
 
-		/** @var array */
+		/** @var null|array */
 		$field_values = null;
 
-		/** @var GF_Field */
+		/** @var null|GF_Field */
 		$field = null;
 
-		/** @var boolean */
+		/** @var null|boolean */
 		$unique = null;
 
 		/** @var int|null */
 		$page = null;
 
-		/** @var int */
+		/** @var null|int */
 		$limit = null;
 
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
@@ -463,21 +482,7 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 					'callable'  => array( $this, 'get_col_rows' ),
 					'args'      => array( $wpdb->posts, 'post_title' ),
 					'orderby'   => true,
-					'operators' => array(
-						'is',
-						'isnot',
-						'>',
-						'>=',
-						'<',
-						'<=',
-						'contains',
-						'does_not_contain',
-						'starts_with',
-						'ends_with',
-						'like',
-						'is_in',
-						'is_not_in',
-					),
+					'operators' => $this->supported_operators(),
 				),
 				'post_content'       => array(
 					'label'    => esc_html__( 'Post Content', 'gp-populate-anything' ),
@@ -505,21 +510,7 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 					'callable'  => array( $this, 'get_col_rows' ),
 					'args'      => array( $wpdb->posts, 'ID' ),
 					'orderby'   => true,
-					'operators' => array(
-						'is',
-						'isnot',
-						'>',
-						'>=',
-						'<',
-						'<=',
-						'contains',
-						'does_not_contain',
-						'starts_with',
-						'ends_with',
-						'like',
-						'is_in',
-						'is_not_in',
-					),
+					'operators' => $this->supported_operators(),
 				),
 				'post_type'          => array(
 					'label'    => esc_html__( 'Post Type', 'gp-populate-anything' ),
@@ -719,34 +710,34 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 
 		global $wpdb;
 
-		/** @var string */
+		/** @var null|string */
 		$populate = null;
 
-		/** @var array */
+		/** @var null|array */
 		$filter_groups = null;
 
-		/** @var array */
+		/** @var null|array */
 		$ordering = null;
 
-		/** @var array */
+		/** @var null|array */
 		$templates = null;
 
-		/** @var string */
+		/** @var null|string */
 		$primary_property_value = null;
 
-		/** @var array */
+		/** @var null|array */
 		$field_values = null;
 
-		/** @var GF_Field */
+		/** @var null|GF_Field */
 		$field = null;
 
-		/** @var boolean */
+		/** @var null|boolean */
 		$unique = null;
 
-		/** @var int|null */
+		/** @var null|int */
 		$page = null;
 
-		/** @var int */
+		/** @var null|int */
 		$limit = null;
 
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract

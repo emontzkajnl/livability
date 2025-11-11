@@ -143,6 +143,9 @@ class GP_Populate_Anything extends GP_Plugin {
 		/* Form Submission */
 		add_action( 'gform_save_field_value', array( $this, 'maybe_save_choice_label' ), 10, 4 );
 
+		/* Resend Notifications */
+		add_filter( 'gform_before_resend_notifications', array( $this, 'modify_submitted_form_object' ), 9 );
+
 		/* Field Value Parsing */
 		add_filter( 'gppa_modify_field_value_date', array( $this, 'modify_field_values_date' ), 10, 2 );
 		add_filter( 'gppa_modify_field_value_time', array( $this, 'modify_field_values_time' ), 10, 2 );
@@ -249,6 +252,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		$nested_form = gp_populate_anything()->populate_form( $nested_form );
 
 		// Clear the form cache to prevent issues with prepopulation. Available since GF 2.6, but adding check to be safe.
+		// @phpstan-ignore-next-line function.alreadyNarrowedType (PHPStan will be discovering GF >2.6)
 		if ( method_exists( 'GFFormsModel', 'flush_current_form' ) && rgar( $nested_form, 'id' ) ) {
 			// GFFormsModel::get_form_cache_key is in 2.7+.
 			$cache_key = get_current_blog_id() . '_' . $nested_form['id'];
@@ -757,6 +761,7 @@ class GP_Populate_Anything extends GP_Plugin {
 
 			$filter_groups = array_merge( rgar( $field, 'gppa-choices-filter-groups', array() ), rgar( $field, 'gppa-values-filter-groups', array() ) );
 
+			// @phpstan-ignore-next-line function.alreadyNarrowedType (Safety check, the field could be misconfigured)
 			if ( ! is_array( $filter_groups ) || ! count( $filter_groups ) ) {
 				continue;
 			}
@@ -1134,7 +1139,30 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		// Check if we need to start with a non-unique query.
 		if ( ! isset( $this->_field_objects_cache[ $query_cache_hash ] ) ) {
-			$this->_field_objects_cache[ $query_cache_hash ] = $object_type_instance->query( $args, $field );
+			/**
+			 * Filter the objects returned from the object type's query method.
+			 *
+			 * @param array $objects The objects returned from the object type's query method.
+			 * @param GPPA_Object_Type $object_type_instance The current GPPA object type instance
+			 * @param array{
+			 *   populate: string, // What is being populated. Either 'choices', 'values'.
+			 *   filter_groups: array, // Filters for querying/fetching the objects.
+			 *   ordering: array, // Ordering settings for querying/fetching (includes 'orderby' and 'order').
+			 *   templates: array, // Templates to determine how choices/values will utilize the returned objects.
+			 *   primary_property_value?: string, // Current primary property value used for querying the objects. (Not all object types use primary properties.)
+			 *   field_values?: string, // Current field values used in query.
+			 *   field: GF_Field, // Current field.
+			 *   unique: bool, // Return only unique results.
+			 *   page?: int, // Which page of results to query.
+			 *   limit?: int, // Maximum number of results to return.
+			 * } $args Query arguments array.
+			 */
+			$this->_field_objects_cache[ $query_cache_hash ] = apply_filters(
+				'gppa_object_type_query_results',
+				$object_type_instance->query( $args, $field ),
+				$object_type_instance,
+				$args
+			);
 		}
 
 		// If we're not returning unique results, we can just return the results.
@@ -1399,6 +1427,11 @@ class GP_Populate_Anything extends GP_Plugin {
 			return $template_value;
 		}
 
+		// Use GFFormsModel::get_input_type() so array-based settings from AJAX previews still resolve to "list".
+		if ( $populate === 'values' && GFFormsModel::get_input_type( $field ) === 'list' ) {
+			return $template_value;
+		}
+
 		if ( self::is_json( $template_value ) ) {
 			return apply_filters( 'gppa_array_value_to_text', $template_value, json_decode( $template_value, ARRAY_A ), $field, $object, $object_type, $objects, $template );
 		}
@@ -1433,6 +1466,7 @@ class GP_Populate_Anything extends GP_Plugin {
 			return '';
 		}
 
+		// @phpstan-ignore-next-line function.alreadyNarrowedType (Safety check, the field could be misconfigured)
 		if ( ! is_a( $field, 'GF_Field_MultiSelect' ) || ! method_exists( $field, 'to_array' ) ) {
 			return $template_value;
 		}
@@ -2458,6 +2492,7 @@ class GP_Populate_Anything extends GP_Plugin {
 				}
 			}
 
+			// @phpstan-ignore-next-line function.alreadyNarrowedType (Safety check)
 			if ( isset( $values ) && is_array( $values ) ) {
 				return apply_filters( 'gppa_array_value_to_text', $values, $values, $field, $objects_in_value, $this->get_object_type( $object_type_split[0] ), $objects, rgar( $templates, $template ) );
 			}
@@ -3018,6 +3053,8 @@ class GP_Populate_Anything extends GP_Plugin {
 
 			// Only set preselected value if there is no posted value for this field
 			$has_posted_value = false;
+
+			// @phpstan-ignore-next-line function.alreadyNarrowedType (Safety check)
 			if ( is_array( $field_values ) && ! $field->allowsPrepopulate ) {
 				// For checkboxes, check if any input for this field has a value
 				foreach ( $field_values as $key => $val ) {
@@ -3735,6 +3772,20 @@ class GP_Populate_Anything extends GP_Plugin {
 
 	}
 
+	public function modify_submitted_form_object( $form ) {
+		if ( ! is_array( $form['fields'] ) ) {
+			return $form;
+		}
+
+		foreach ( $form['fields'] as &$field ) {
+			if ( rgar( $field, 'gppa-choices-enabled' ) ) {
+				$field->choices = $this->get_input_choices( $field );
+			}
+		}
+
+		return $form;
+	}
+
 	/**
 	 * @param $form
 	 * @param $ajax
@@ -4016,6 +4067,7 @@ class GP_Populate_Anything extends GP_Plugin {
 			return $form;
 		}
 
+		// @phpstan-ignore-next-line function.alreadyNarrowedType (Safety check)
 		if ( ! is_array( $form ) ) {
 			return $form;
 		}
@@ -4028,6 +4080,7 @@ class GP_Populate_Anything extends GP_Plugin {
 			$GLOBALS['gppa-field-values'][ $form['id'] ] = array();
 		}
 
+		// @phpstan-ignore-next-line function.alreadyNarrowedType (Safety check)
 		if ( ! empty( $field_values ) && is_array( $field_values ) ) {
 			$this->prepopulate_fields_values[ $form['id'] ] = $field_values;
 			$GLOBALS['gppa-field-values'][ $form['id'] ]    = $field_values;
@@ -4133,7 +4186,7 @@ class GP_Populate_Anything extends GP_Plugin {
 				foreach ( $hydrated_value as $input_id => $input_value ) {
 					$GLOBALS['gppa-field-values'][ $field->formId ][ $input_id ] = $input_value;
 				}
-			} else {
+			} elseif ( $hydrated_value ) {
 				$GLOBALS['gppa-field-values'][ $field->formId ][ $field->id ] = $hydrated_value;
 			}
 

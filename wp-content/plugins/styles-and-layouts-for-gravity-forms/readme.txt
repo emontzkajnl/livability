@@ -1,10 +1,10 @@
-=== Gravity Booster - Styles & Layouts for Gravity Forms - Best Gravity Forms Styler, Designer ===
+=== Gravity Booster - Styles & Layouts for Gravity Forms ===
 Contributors: wpmonks
 Donate link: https://www.paypal.me/wpmonks
-Tags: Gravity Forms CSS, gravity forms themes, gravity forms styler, Gravity Forms Design, Gravity Forms Material Design, Gravity Forms Tooltips
+Tags: Gravity Forms CSS, gravity forms styler, Gravity Forms Design, Gravity Forms Tooltips
 Requires at least: 4.0
 Tested up to: 6.8
-Stable tag: 5.25
+Stable tag: 5.26
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -141,9 +141,14 @@ Yes, Gravity Forms embedded in Divi themes is also supported. Please check the t
 4. Options in settings
 
 == Changelog ==
+
+
+= 5.26 (25th September 2025) =
+* Minor fixes related to antispam.
+
 = 5.25 (2nd July 2025) =
 * Fixed issue with autofocus customizer url
-* Exlucded email, checkbox, radio from anti spam keyword protection.
+* Excluded email, checkbox, radio from anti spam keyword protection.
 
 = 5.24 (29th June 2025) =
 * Added support for Anti spam plugin
