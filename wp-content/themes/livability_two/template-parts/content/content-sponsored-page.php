@@ -27,7 +27,7 @@
 <div class="sponsor-filter-container">
 <div>
 <label for="autocomplete">Filter by Location: </label>
-<input type="text" id="autocomplete" placeholder="Enter city or state">
+<input type="text" id="autocomplete" placeholder="Enter city or state" style="border: 1px solid black;">
 <input type="hidden" name="hidden-autocomplete" id="hidden-autocomplete" value="" >
 </div>
  
