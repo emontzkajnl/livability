@@ -8,7 +8,7 @@
     } ?>
     <div class="author-bio-content">
     <h2 class="author-title">About <?php echo get_author_name( ); ?></h2>
-    <p class="author-description"><?php echo limitWordsAndAddEllipsis(get_the_author_meta('description')); ?></p>
+    <p class="author-description"><?php echo limitWordsAndAddEllipsis(get_the_author_meta('description'), 40); ?></p>
     <p><a href="<?php echo get_author_posts_url(get_the_author_meta('ID')); ?>"><button>Read Full Bio</button></a></p>
     </div>
 </div>
