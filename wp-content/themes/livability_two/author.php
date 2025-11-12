@@ -16,10 +16,20 @@ $name = get_the_author_meta('display_name');
 $author = get_queried_object();
 $author_id = $author->ID;
 $author_image = get_field('author_image', 'user_'.$author_id);
+$user_meta = get_user_meta($author_id);
+$company = '';
+$title = '';
+if ($user_meta['wpseo_user_schema']) {
+    $schema = unserialize($user_meta['wpseo_user_schema'][0]);
+    $company = $schema['worksFor'] ? $schema['worksFor'] : '';
+    $title = $schema['jobTitle'] ? $schema['jobTitle'] : '';
+} 
 
 ?>
 
-<?php ?>
+
+
+
 
 	<header class="page-header">
         <?php // get_template_part( 'template-parts/page-hero-section' ); ?>
@@ -31,17 +41,42 @@ $author_image = get_field('author_image', 'user_'.$author_id);
             <?php get_template_part('template-parts/blocks/ad-one' ); ?>
         </div> 
     </div>
+<?php
+// echo '<pre>';
+// print_r(get_user_meta($author_id));
+// print_r(unserialize($user_meta['wpseo_user_schema'][0]));
+
+// echo '</pre>'; 
+
+// foreach (unserialize($user_meta['wpseo_user_schema'][0]) as $key => $value) {
+//     echo 'key '.$key.' value '.$value.'<br />';
+//     # code...
+// }
+// $test = unserialize($user_meta['wpseo_user_schema'][0]);
+
+// echo 'test: '.$test['worksFor'];
+?>
 
     <div class="wp-block-columns liv-columns">
             <div class="wp-block-column">
                 <div id="crumbs">
                     <?php echo return_breadcrumbs(); ?>
                 </div>
-                <h1 class="h2">Articles by <?php echo $name; ?></h1>
+                <h1 class="h2"><?php echo $name; ?></h1>
+                <h4><?php echo  $title.' '.$company; ?></h4>
                 <div class="author-info-container clearfix">
                     <?php 
-                    echo get_avatar( get_the_author_meta( 'ID' ), '300', '', '', array('class' => array('alignright')) );
-                    echo $description; ?>
+                    // print_r($author_image['ID'] );
+                    if ($author_image) {
+                        echo wp_get_attachment_image( $author_image['ID'], 'medium', '', array("class" => "alignright ")  );
+                        // echo wp_get_attachment_image( $author_image['ID'], 'medium');
+                    } else {
+                        echo get_avatar( get_the_author_meta( 'ID' ), '300', '', '', array('class' => array('alignright')) );
+                    }
+                    
+                    
+                    echo $description;
+                    // echo limitWordsAndAddEllipsis($description, 40); ?>
                 </div>
           
 

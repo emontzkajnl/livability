@@ -2449,3 +2449,20 @@ if(!function_exists('houzez_author_pre_get')) {
 	add_action( 'pre_get_posts', 'houzez_author_pre_get' );
 }
 
+function limitWordsAndAddEllipsis($text, $wordLimit, $ellipsis = '...') {
+    // Split the text into an array of words
+    $words = explode(' ', $text);
+
+    // Check if the number of words exceeds the limit
+    if (count($words) > $wordLimit) {
+        // Truncate the array of words to the specified limit
+        $limitedWords = array_slice($words, 0, $wordLimit);
+        
+        // Join the limited words back into a string and append the ellipsis
+        return implode(' ', $limitedWords) . $ellipsis;
+    } else {
+        // If the word count is within the limit, return the original text
+        return $text;
+    }
+}
+
