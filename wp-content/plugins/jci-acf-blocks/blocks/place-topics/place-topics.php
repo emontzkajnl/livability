@@ -29,6 +29,15 @@ $post_count = 1;
 
 // $test = get_field('place_relationship');
 // echo 'place is '.$place;
+
+if (get_post_type(  ) == 'place_category_page') {
+    $pr_array = get_field('place_relationship', get_the_ID());
+    $pr_id = $pr_array[0];
+} else {
+    $pr_id = '"' . get_the_ID() . '"';
+}
+
+
 $args = array(  
     'category_name'     => $cat->slug,
     'posts_per_page'    => -1,
@@ -37,7 +46,7 @@ $args = array(
     'meta_query'        => array(
         array( 
             'key'       => 'place_relationship',
-            'value'     => '"' . get_the_ID() . '"',
+            'value'     => $pr_id,
             'compare'   => 'LIKE'
         ),
         array(
@@ -83,6 +92,7 @@ $loop_count = min($count_posts, 3);
 
 <h2 class="green-line"><?php echo $cat->name; ?></h2>
 <?php
+
 if ($sponsor) {
     // print_r($sponsor);
     foreach($sponsor as $S) {
@@ -136,7 +146,7 @@ window['<?php echo $blockId; ?>'] = {};
 Object.assign(window['<?php echo $blockId; ?>'], {current_page: '1'});
 // Object.assign(window['<?php //echo $blockId; ?>'], {current_page: 2});
 Object.assign(window['<?php echo $blockId; ?>'], {category: '<?php echo $cat->slug; ?>'});
-Object.assign(window['<?php echo $blockId; ?>'], {relationship_id: '<?php echo '"' . get_the_ID() . '"'; ?>'});
+Object.assign(window['<?php echo $blockId; ?>'], {relationship_id: '<?php echo $pr_id; ?>'});
 Object.assign(window['<?php echo $blockId; ?>'], {max_page: '<?php echo $topics->max_num_pages; ?>'});
 </script>
 </div>

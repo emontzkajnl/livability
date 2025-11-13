@@ -59,7 +59,7 @@ if ($place_category_pages->have_posts()) {
          .site-content {padding-top:0px;}
          .single-place_category_page .site-content {padding-top:25px;}
          .category-nav {display:none;}
-         .category-nav-top {width:100%; background:#eee; position: sticky; top: 0; .z-index:99999;}
+         .category-nav-top {width:100%; background:#eee; position: sticky; top: 0; z-index:9;}
          .category-nav-menu {max-width:1360px; margin:0 auto; padding:12px 0px; text-align:center;}
          .category-nav-menu a {padding:12px 16px; color:#111;}
          .site-header.headroom--unpinned {height:0;}
