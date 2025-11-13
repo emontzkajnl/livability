@@ -24,6 +24,11 @@ if ($user_meta['wpseo_user_schema']) {
     $company = $schema['worksFor'] ? $schema['worksFor'] : '';
     $title = $schema['jobTitle'] ? $schema['jobTitle'] : '';
 } 
+$facebook = $user_meta['facebook'];
+$isntagram = $user_meta['isntagram'];
+$pinterest = $user_meta['pinterest'];
+$linkedin = $user_meta['linkedin'];
+$youtube = $user_meta['youtube'];
 
 ?>
 
@@ -41,29 +46,24 @@ if ($user_meta['wpseo_user_schema']) {
             <?php get_template_part('template-parts/blocks/ad-one' ); ?>
         </div> 
     </div>
-<?php
-// echo '<pre>';
-// print_r(get_user_meta($author_id));
-// print_r(unserialize($user_meta['wpseo_user_schema'][0]));
-
-// echo '</pre>'; 
-
-// foreach (unserialize($user_meta['wpseo_user_schema'][0]) as $key => $value) {
-//     echo 'key '.$key.' value '.$value.'<br />';
-//     # code...
-// }
-// $test = unserialize($user_meta['wpseo_user_schema'][0]);
-
-// echo 'test: '.$test['worksFor'];
-?>
 
     <div class="wp-block-columns liv-columns">
             <div class="wp-block-column">
                 <div id="crumbs">
                     <?php echo return_breadcrumbs(); ?>
                 </div>
+               
                 <h1 class="h2"><?php echo $name; ?></h1>
                 <h4><?php echo  $title.' '.$company; ?></h4>
+                <ul class="author-social">
+                    <?php 
+                    echo $facebook ? '<li><a href="'.esc_url($facebook[0]).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/social-icons/facebook.svg"/></a></li>' : '';
+                    echo $instagram ? '<li><a href="'.esc_url($instagram[0]).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/social-icons/instagram.svg"/></a></li>' : '';
+                    echo $pinterest ? '<li><a href="'.esc_url($pinterest[0]).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/social-icons/pinterest.svg"/></a></li>' : '';
+                    echo $linkedin ? '<li><a href="'.esc_url($linkedin[0]).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/social-icons/linkedin.svg"/></a></li>' : '';
+                    echo $youtube ? '<li><a href="'.esc_url($youtube[0]).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/social-icons/youtube.svg"/></a></li>' : '';
+                    ?>
+                </ul>
                 <div class="author-info-container clearfix">
                     <?php 
                     // print_r($author_image['ID'] );
@@ -75,8 +75,7 @@ if ($user_meta['wpseo_user_schema']) {
                     }
                     
                     
-                    echo $description;
-                    // echo limitWordsAndAddEllipsis($description, 40); ?>
+                    echo $description; ?>
                 </div>
           
 
