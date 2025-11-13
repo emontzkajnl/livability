@@ -24,6 +24,7 @@ if ($user_meta['wpseo_user_schema']) {
     $company = $schema['worksFor'] ? $schema['worksFor'] : '';
     $title = $schema['jobTitle'] ? $schema['jobTitle'] : '';
 } 
+$seperator = $company && $title ? ' - ' : '';
 $facebook = $user_meta['facebook'];
 $isntagram = $user_meta['isntagram'];
 $pinterest = $user_meta['pinterest'];
@@ -53,8 +54,8 @@ $youtube = $user_meta['youtube'];
                     <?php echo return_breadcrumbs(); ?>
                 </div>
                
-                <h1 class="h2"><?php echo $name; ?></h1>
-                <h4><?php echo  $title.' '.$company; ?></h4>
+                <h1 class="h2" style="margin-bottom: 10px;"><?php echo $name; ?></h1>
+                <h4 style="margin-top: 10px;"><?php echo  $title.$seperator.$company; ?></h4>
                 <ul class="author-social">
                     <?php 
                     echo $facebook ? '<li><a href="'.esc_url($facebook[0]).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/social-icons/facebook.svg"/></a></li>' : '';

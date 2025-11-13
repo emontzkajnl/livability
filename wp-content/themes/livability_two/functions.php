@@ -1017,7 +1017,7 @@ add_filter( 'alm_debug', '__return_true' );
 
 
 function get_topic_sponsors() {
-	if (get_post_type() == 'liv_place') {
+	if (get_post_type() == 'liv_place' || get_post_type() == 'place_category_page') {
 		$ID = get_the_ID();
 		$sponsors = get_field('sponsorships', 'options');
 		$sponsor_array = array();
