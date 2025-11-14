@@ -1,14 +1,21 @@
 <div class="author-bio">
     <?php $author_ID = get_the_author_meta( 'ID' );
     $author_image = get_field('author_image', 'user_'.$author_ID);
+    $user_meta = get_user_meta($author_ID);
+    $title = '';
+    if ($user_meta['wpseo_user_schema']) {
+        $schema = unserialize($user_meta['wpseo_user_schema'][0]);
+        $title = $schema['jobTitle'] ? $schema['jobTitle'] : '';
+    } 
     if ($author_image) {
-        echo wp_get_attachment_image( $author_image, 'three_hundred_wide');
+        echo wp_get_attachment_image( $author_image['ID'], 'three_hundred_wide');
     } else {
         echo get_avatar( get_the_author_meta( 'ID' ), '130' );
     } ?>
     <div class="author-bio-content">
-    <h2 class="author-title">About the Author</h2>
-    <p class="author-description"><?php echo get_the_author_meta('description'); ?></p>
-    <p><a href="<?php echo get_author_posts_url(get_the_author_meta('ID')); ?>"><button>More</button></a></p>
+    <h2 class="author-title">About <?php echo get_author_name( ); ?></h2>
+    <?php echo $title ? '<h4 style="font-size: 1.125rem;">'.$title.'</h4>' : '';  ?>
+    <p class="author-description"><?php echo limitWordsAndAddEllipsis(get_the_author_meta('description'), 40); ?></p>
+    <p><a href="<?php echo get_author_posts_url(get_the_author_meta('ID')); ?>"><button>Read Full Bio</button></a></p>
     </div>
 </div>

@@ -2349,12 +2349,6 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 			if ($selected) {$filtered_sponsors[] = $value;}
 		}
 		
-		// $filtered_sponsors[] = array('my key' => 'my value');
-		
-		// error_log('sponsors');
-		// error_log(var_dump($sponsors));
-		// error_log('filtered sponsors');
-		// error_log(print_r($filtered_sponsors, true));
 		if ($orderbyFilter) {
 			switch($orderbyFilter) {
 				case 'publish-desc': 

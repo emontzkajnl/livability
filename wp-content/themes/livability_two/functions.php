@@ -2360,12 +2360,6 @@ function my_custom_canonical_no_slash( $canonical_url ) {
 			if ($selected) {$filtered_sponsors[] = $value;}
 		}
 		
-		// $filtered_sponsors[] = array('my key' => 'my value');
-		
-		// error_log('sponsors');
-		// error_log(var_dump($sponsors));
-		// error_log('filtered sponsors');
-		// error_log(print_r($filtered_sponsors, true));
 		if ($orderbyFilter) {
 			switch($orderbyFilter) {
 				case 'publish-desc': 
@@ -2450,18 +2444,13 @@ if(!function_exists('houzez_author_pre_get')) {
 }
 
 function limitWordsAndAddEllipsis($text, $wordLimit, $ellipsis = '...') {
-    // Split the text into an array of words
+
     $words = explode(' ', $text);
 
-    // Check if the number of words exceeds the limit
     if (count($words) > $wordLimit) {
-        // Truncate the array of words to the specified limit
         $limitedWords = array_slice($words, 0, $wordLimit);
-        
-        // Join the limited words back into a string and append the ellipsis
         return implode(' ', $limitedWords) . $ellipsis;
     } else {
-        // If the word count is within the limit, return the original text
         return $text;
     }
 }
