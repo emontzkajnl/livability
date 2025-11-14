@@ -44,7 +44,7 @@ if ($place_category_pages->have_posts()) {
     <?php } // end while
     $html = '<div class="category-nav-top">';
     $html .= '<div class="category-nav-menu">';
-    $html .= '<img  src="'.get_stylesheet_directory_uri().'/assets/images/livability-icon.svg" style="height: 26px; padding: 0 24px; margin-top: 7px;"/>';
+    $html .= '<img  src="'.get_stylesheet_directory_uri().'/assets/images/livability-icon.svg" style="height: 26px; padding: 0 24px; margin-top: -7px; display: inline;"/>';
     $html .= '<a href="'.get_the_permalink($meta_value).'">'.$place_title.'</a>';
     foreach ($catorder as $co) {
         foreach ($catnavholder as $index => $cnh) {
