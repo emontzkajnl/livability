@@ -19,10 +19,12 @@ $author_image = get_field('author_image', 'user_'.$author_id);
 $user_meta = get_user_meta($author_id);
 $company = '';
 $title = '';
+$expertise = '';
 if ($user_meta['wpseo_user_schema']) {
     $schema = unserialize($user_meta['wpseo_user_schema'][0]);
     $company = $schema['worksFor'] ? $schema['worksFor'] : '';
     $title = $schema['jobTitle'] ? $schema['jobTitle'] : '';
+    $expertise = $schema['knowsAbout'] ? '<p style="font-weight: bold;">Expertise: '.implode(', ', $schema['knowsAbout']).'</p>' : '';
 } 
 $seperator = $company && $title ? ' - ' : '';
 $facebook = $user_meta['facebook'];
@@ -53,7 +55,9 @@ $youtube = $user_meta['youtube'];
                 <div id="crumbs">
                     <?php echo return_breadcrumbs(); ?>
                 </div>
-               
+               <?php 
+           
+               ?>
                 <h1 class="h2" style="margin-bottom: 10px;"><?php echo $name; ?></h1>
                 <h4 style="margin-top: 10px;"><?php echo  $title.$seperator.$company; ?></h4>
                 <ul class="author-social">
@@ -66,7 +70,9 @@ $youtube = $user_meta['youtube'];
                     ?>
                 </ul>
                 <div class="author-info-container clearfix">
+                <h2 class="author-title">About <?php echo get_author_name( ); ?></h2>
                     <?php 
+                    echo $expertise;
                     // print_r($author_image['ID'] );
                     if ($author_image) {
                         echo wp_get_attachment_image( $author_image['ID'], 'medium', '', array("class" => "alignright ")  );
@@ -81,6 +87,7 @@ $youtube = $user_meta['youtube'];
           
 
 	<?php if ( have_posts() ) : 
+    echo '<h2>Articles by '.get_author_name( ).'</h2>';
     echo '<ul class="container" style="padding-left: 0;">';
     while ( have_posts() ) : ?>
 		<?php the_post(); 
