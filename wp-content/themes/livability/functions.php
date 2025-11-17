@@ -2421,5 +2421,15 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 	add_action('wp_ajax_filterSponsors', 'filter_sponsors');
 	add_action('wp_ajax_nopriv_filterSponsors', 'filter_sponsors');
 
+	function limitWordsAndAddEllipsis($text, $wordLimit, $ellipsis = '...') {
 
+		$words = explode(' ', $text);
+	
+		if (count($words) > $wordLimit) {
+			$limitedWords = array_slice($words, 0, $wordLimit);
+			return implode(' ', $limitedWords) . $ellipsis;
+		} else {
+			return $text;
+		}
+	}
 

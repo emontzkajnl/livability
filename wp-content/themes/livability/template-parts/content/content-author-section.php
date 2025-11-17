@@ -1,13 +1,16 @@
-<div class="author-bio">
-    <?php $author_ID = get_the_author_meta( 'ID' );
-    $author_image = get_field('author_image', 'user_'.$author_ID);
+
+    <?php 
+    $author_ID = get_the_author_meta( 'ID' );
     $user_meta = get_user_meta($author_ID);
+    if (!$user_meta['wpseo_noindex_author']) { // only display author link if not noindexed
+        $author_image = get_field('author_image', 'user_'.$author_ID);
     $title = '';
     if ($user_meta['wpseo_user_schema']) {
         $schema = unserialize($user_meta['wpseo_user_schema'][0]);
         $title = $schema['jobTitle'] ? $schema['jobTitle'] : '';
-    } 
-    if ($author_image) {
+    } ?>
+<div class="author-bio">
+    <?php if ($author_image) {
         echo wp_get_attachment_image( $author_image['ID'], 'three_hundred_wide');
     } else {
         echo get_avatar( get_the_author_meta( 'ID' ), '130' );
@@ -19,3 +22,4 @@
     <p><a href="<?php echo get_author_posts_url(get_the_author_meta('ID')); ?>"><button>Read Full Bio</button></a></p>
     </div>
 </div>
+<?php } ?> 
