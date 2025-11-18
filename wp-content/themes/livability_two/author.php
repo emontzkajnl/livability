@@ -76,7 +76,7 @@ $youtube = $user_meta['youtube'];
                     echo $expertise;
                     // print_r($author_image['ID'] );
                     if ($author_image) {
-                        echo wp_get_attachment_image( $author_image['ID'], 'medium', '', array("class" => "alignright ")  );
+                        echo wp_get_attachment_image( $author_image['ID'], 'medium', '', array("class" => "alignright ", "style" => "max-width: 400px; height: auto;")  );
                         // echo wp_get_attachment_image( $author_image['ID'], 'medium');
                     } else {
                         echo get_avatar( get_the_author_meta( 'ID' ), '300', '', '', array('class' => array('alignright')) );

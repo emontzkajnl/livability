@@ -28,7 +28,7 @@ if ($user_meta['wpseo_user_schema']) {
 } 
 $seperator = $company && $title ? '<br />' : '';
 $facebook = $user_meta['facebook'];
-$isntagram = $user_meta['isntagram'];
+$instagram = $user_meta['instagram'];
 $pinterest = $user_meta['pinterest'];
 $linkedin = $user_meta['linkedin'];
 $youtube = $user_meta['youtube'];
@@ -74,6 +74,7 @@ $youtube = $user_meta['youtube'];
                 <h2 class="author-title">About <?php echo get_author_name( ); ?></h2>
                     <?php 
                     echo $expertise;
+                    echo '<div class="alignright" style="max-width: 400px;">';
                     // print_r($author_image['ID'] );
                     if ($author_image) {
                         echo wp_get_attachment_image( $author_image['ID'], 'medium', '', array("class" => "alignright ")  );
@@ -81,7 +82,7 @@ $youtube = $user_meta['youtube'];
                     } else {
                         echo get_avatar( get_the_author_meta( 'ID' ), '300', '', '', array('class' => array('alignright')) );
                     }
-                    
+                    echo '</div>';
                     
                     echo $description; ?>
                 </div>
