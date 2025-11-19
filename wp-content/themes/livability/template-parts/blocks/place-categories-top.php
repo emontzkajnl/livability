@@ -1,4 +1,5 @@
 <?php  
+
 if (get_post_type() == 'liv_place') {
     $meta_value = get_the_ID();
     $place_title = get_field('place_type') == 'city' ? substr(get_the_title($meta_value), 0,) : get_the_title($meta_value); 
@@ -7,7 +8,7 @@ if (get_post_type() == 'liv_place') {
     $meta_value = $pr[0];
     $place_title = get_field('place_type', $meta_value) == 'city' ? substr(get_the_title($meta_value), 0,) : get_the_title($meta_value); 
 } else {
-    $meta_value = null;
+    $meta_value = 99999999;
 } 
 
 // lop off last four characters to remove state from city pages
@@ -26,6 +27,9 @@ $args = array(
     'posts_per_page'    => 20
 );
 $place_category_pages = new WP_Query($args);
+echo '<pre>';
+print_r($place_category_pages->posts, true);
+echo '</pre>';
 
 if ($place_category_pages->have_posts()) {
     $catnavholder = array();
@@ -60,6 +64,7 @@ if ($place_category_pages->have_posts()) {
          .single-place_category_page .site-content {padding-top:25px;}
          .site-header.headroom--unpinned {height:0;}
          .site-header {position:relative;}
+         .site-content {padding-top: 0;}
          </style>';
     echo $html;
 
