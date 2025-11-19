@@ -28,7 +28,7 @@ $wrapper_classes .= has_nav_menu( 'primary' ) ? ' has-menu' : '';
 </header>
 <?php 
 // Check if the URI *starts with* /nc/charlotte/
-if ( strpos( $_SERVER['REQUEST_URI'], '/nc/charlotte/' ) === 0 ) {
+// if ( strpos( $_SERVER['REQUEST_URI'], '/nc/charlotte/' ) === 0 ) {
   	get_template_part( 'template-parts/blocks/place-categories-top');
-} ?>
+// } ?>
 <!-- #masthead -->

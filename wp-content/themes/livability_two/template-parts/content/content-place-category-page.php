@@ -43,7 +43,8 @@
                         </div>
                        
                         <h1 class="h2"><?php echo the_title(); ?></h1>
-                        <?php get_template_part( 'template-parts/blocks/place-categories'); ?> 
+                        <div class="author">By <?php echo esc_html__( get_the_author(), 'livibility' ).' on '.esc_html( get_the_date() ); ?></div>
+                        
                         <?php echo do_shortcode( '[addtoany]' ); ?> 
                      
                     <!-- </div> -->

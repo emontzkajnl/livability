@@ -2455,3 +2455,11 @@ function limitWordsAndAddEllipsis($text, $wordLimit, $ellipsis = '...') {
     }
 }
 
+/**
+ * Stop WordPress from stripping out HTML tags (as it does on the default bio)
+ */
+function my_custom_user_bio_visual_editor_unfiltered() {
+    remove_all_filters('pre_user_description');
+    add_filter( 'pre_user_description', 'wp_filter_post_kses' );
+}
+add_action('admin_init', 'my_custom_user_bio_visual_editor_unfiltered');

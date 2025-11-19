@@ -2433,3 +2433,11 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 		}
 	}
 
+/**
+ * Stop WordPress from stripping out HTML tags (as it does on the default bio)
+ */
+function my_custom_user_bio_visual_editor_unfiltered() {
+    remove_all_filters('pre_user_description');
+    add_filter( 'pre_user_description', 'wp_filter_post_kses' );
+}
+add_action('admin_init', 'my_custom_user_bio_visual_editor_unfiltered');

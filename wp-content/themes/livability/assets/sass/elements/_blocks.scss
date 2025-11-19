@@ -1532,7 +1532,7 @@ div[class^="curated-posts-"] {
   background-color: $white2;
   padding: 40px 50px;
   display: flex;
-  align-items: center;
+  align-items: start;
   img {
     border-radius: 0;
     height: 130px;
@@ -1969,37 +1969,17 @@ p.insights-connect-with {
 //   font-family: 'Jost', arial, sans-serif;
 // }
 
-.category-nav {
-  padding: 0px;
-  background: #fff;
-  width: 100%;
-  position: sticky;
-  top: 70px;
-  z-index: 9;
-  display: flex;
-  flex-wrap: wrap;
-  background-color: #2c5a99;
-  a {
-    padding: 8px 24px;
-    background: #2c5a99;
-    color: #fff;
-    font-family: "Jost", Arial, Helvetica, sans-serif;
-    text-decoration: none;
-    display: inline-block;
-    margin: 0;
-    &:hover {
-      background: #1b365d;
-    }
-    &.active {
-      background: #1b365d;
-    }
-  }
-}
+
 .category-nav-top {
   max-width: 1360px;
   margin: 0 auto;
   padding: 12px 0;
   text-align: center;
+  width: 100%;
+  background: #eee;
+  position: sticky;
+  top: 0;
+  z-index: 9;
 }
 .category-nav-menu {
   max-width:1360px; 
