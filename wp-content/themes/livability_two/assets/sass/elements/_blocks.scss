@@ -1529,19 +1529,35 @@ div[class^="curated-posts-"] {
 }
 
 .author-bio {
-  background-color: $white2;
-  padding: 40px 50px;
+  background-color: #f7f7f7;
+  padding: 20px;
   display: flex;
   align-items: start;
+  border-top: #6cc24a 1px solid;
   img {
     border-radius: 0;
-    height: 130px;
-    width: 130px;
+    height: 120px;
+    width: auto;
     // padding-right: 20px;
   }
 }
 .author-bio-content {
   padding-left: 40px;
+  button {
+    min-height:25px;
+    padding:5px 8px;
+    font-size:12px;
+    float:left;
+  }
+  h2, h4 {
+    color: #333;
+    font-size: 1em !important;
+  }
+}
+
+.author-description {
+  font-size:12px !important;
+	color:#333;
 }
 
 .author-social {
@@ -1562,6 +1578,9 @@ div[class^="curated-posts-"] {
       height: 100%;
     }
   }
+}
+.author-info-container img {
+	max-width:300px !important;
 }
 
 .wp-block-jci-blocks-blockquote-section {

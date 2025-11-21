@@ -42,7 +42,7 @@
                             } ?>
                         </div>
                        
-                        <h1 class="h2"><?php echo the_title(); ?></h1>
+                        <h1 ><?php echo the_title(); ?></h1>
                         <div class="author">By <?php echo esc_html__( get_the_author(), 'livibility' ).' on '.esc_html( get_the_date() ); ?></div>
                         
                         <?php echo do_shortcode( '[addtoany]' ); ?> 
