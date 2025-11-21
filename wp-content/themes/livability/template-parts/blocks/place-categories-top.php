@@ -16,7 +16,7 @@ if (get_post_type() == 'liv_place') {
 
 $args = array(
     'post_type'         => 'place_category_page', 
-    'post_status'       => array('publish', 'draft'),
+    'post_status'       => array('publish'),
     'meta_query'        => array(
         array( 
             'key'       => 'place_relationship',
