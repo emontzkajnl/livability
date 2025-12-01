@@ -7,7 +7,7 @@ if (get_post_type() == 'liv_place') {
     $meta_value = $pr[0];
     $place_title = get_field('place_type', $meta_value) == 'city' ? substr(get_the_title($meta_value), 0,) : get_the_title($meta_value); 
 } else {
-    $meta_value = null;
+    $meta_value = 99999999;
 } 
 
 // lop off last four characters to remove state from city pages
@@ -15,7 +15,7 @@ if (get_post_type() == 'liv_place') {
 
 $args = array(
     'post_type'         => 'place_category_page', 
-    'post_status'       => array('publish', 'draft'),
+    'post_status'       => array('publish'),
     'meta_query'        => array(
         array( 
             'key'       => 'place_relationship',

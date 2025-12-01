@@ -28,7 +28,7 @@ $wrapper_classes .= has_nav_menu( 'primary' ) ? ' has-menu' : '';
 </header><!-- #masthead -->
 <?php 
 // Check if the URI *starts with* /nc/charlotte/
-if ( get_post_type() == 'liv_place' || get_post_type() == 'place_category_page') {
+//if ( get_post_type() == 'liv_place' || get_post_type() == 'place_category_page') {
 
   	get_template_part( 'template-parts/blocks/place-categories-top');
- } ?>
+ //} ?>

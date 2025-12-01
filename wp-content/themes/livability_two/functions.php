@@ -2243,10 +2243,26 @@ function my_custom_canonical_no_slash( $canonical_url ) {
 		foreach ($all_cats as $cat) {
 			// $cat_id = $cat->term_id;
 			if ( array_key_exists( $cat->slug, $_POST ) ) {
+				switch ($cat->slug) {
+					case 'things-to-do':
+						$new_title = $cat->name.' in '.get_the_title($post_id);
+						break;
+					case 'love-where-you-live':
+						$new_title = $cat->name.' in '.get_the_title($post_id);
+						break;
+					case 'where-to-live-now':
+						$new_title = $cat->name.' in '.get_the_title($post_id);
+						break;
+					
+					default:
+						$new_title = 'Best '.get_the_title($post_id).', '.$cat->name;
+						break;
+				}
+			
 				$insert_args = array(
 					'post_category'		=> array($cat->term_id),
 					'post_type'			=> 'place_category_page',
-					'post_title'		=> get_the_title($post_id).', '.$cat->name, 
+					'post_title'		=> $new_title, 
 					// 'post_name'			=> get_the_title($post_id).' '.$cat->name, 
 					'post_status'		=> 'draft',  
 					'meta_input'		=> array('place_relationship' => $post_id) 

@@ -27,9 +27,9 @@ $args = array(
     'posts_per_page'    => 20
 );
 $place_category_pages = new WP_Query($args);
-echo '<pre>';
-print_r($place_category_pages->posts, true);
-echo '</pre>';
+// echo '<pre>';
+// print_r($place_category_pages->posts, true);
+// echo '</pre>';
 
 if ($place_category_pages->have_posts()) {
     $catnavholder = array();
