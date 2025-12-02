@@ -163,7 +163,13 @@
                             <div class="article-excerpt"><?php echo wp_strip_all_tags(get_the_excerpt()); ?></div>
                         <?php endif; ?>
                       
-                        <div class="author">By <?php echo esc_html__( get_the_author(), 'livibility' ).' on '.esc_html( get_the_date() ); ?></div>
+                        <?php 
+                      if (get_field('original_publish_date')) {
+                        echo '<div class="author">By '.esc_html__( get_the_author(), 'livibility' ).' on '.get_field('original_publish_date').'<br />Updated '.esc_html( get_the_date() ).'</div>';
+                      } else {
+                        echo '<div class="author">By '.esc_html__( get_the_author(), 'livibility' ).' on '.esc_html( get_the_date() ).'</div>';
+                      }
+                      ?>
                         <?php if (get_field('sponsored')): 
                             $sponsor_text = get_field('sponsor_text') ? get_field('sponsor_text') : 'Sponsored by';
                             $name = get_field('sponsor_name');

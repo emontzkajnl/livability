@@ -43,7 +43,13 @@
                         </div>
                        
                         <h1 ><?php echo the_title(); ?></h1>
-                        <div class="author">By <?php echo esc_html__( get_the_author(), 'livibility' ).' on '.esc_html( get_the_date() ); ?></div>
+                        <?php 
+                        if (get_field('original_publish_date')) {
+                            echo '<div class="author">By '.esc_html__( get_the_author(), 'livibility' ).' on '.get_field('original_publish_date').'<br />Updated '.esc_html( get_the_date() ).'</div>';
+                        } else {
+                            echo '<div class="author">By '.esc_html__( get_the_author(), 'livibility' ).' on '.esc_html( get_the_date() ).'</div>';
+                        }
+                        ?>
                         
                         <?php echo do_shortcode( '[addtoany]' ); ?> 
                      
