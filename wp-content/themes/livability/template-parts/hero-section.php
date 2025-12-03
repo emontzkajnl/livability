@@ -102,14 +102,13 @@ if (have_rows('hero_section')):
 <?php endif; ?>
 
 <div class="container hero-flex">
-  <?php if ($title && $text) { ?>
 <div class="hero-text">
    
   <?php the_title( '<h5>', '</h5>' ); ?>  
 <?php if ($title) echo '<h2 class="h1">'.__($title, 'livability').'</h2>'; ?>
 <?php if ($text) echo '<p>'.__($text, 'livability').'</p>'; ?>
 </div>
-<?php } ?>
+
 <div class="hero-links">
 <?php if (have_rows('links')): 
 echo '<ul>';
