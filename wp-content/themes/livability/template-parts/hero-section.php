@@ -3,6 +3,7 @@
 $postId = get_the_ID();
 if (have_rows('hero_section')):
     while (have_rows('hero_section')): the_row();
+    $hideHero = get_field('hide_hero');
     $title = get_sub_field('hero_title');
     $text = get_sub_field('hero_subtitle');
     $hero_video = get_sub_field('hero_video');
@@ -15,10 +16,11 @@ if (have_rows('hero_section')):
     $img_byline = get_field('img_byline', $thumbId);
     $img_place_name = get_field('img_place_name', $thumbId);
  endif; 
+ 
  ?>
 
 <div class="hero-section alignfull">
-<?php if (!$ken_burns && !$has_hero_video) {
+<?php if (!$ken_burns && !$has_hero_video && has_post_thumbnail()) {
   echo get_the_post_thumbnail();
 } ?>
 <!-- <iframe id="yt-player" src="https://www.youtube.com/embed/14XxolEJloE?autoplay=1&modestbranding=1&controls=0&loop=1&showinfo=0&rel=0&enablejsapi=1&version=3&loop=0&playerapiid=ytplayer&allowfullscreen=true&wmode=transparent&iv_load_policy=3&html5=1&disablekb=true" frameborder="0"></iframe> -->
@@ -100,12 +102,14 @@ if (have_rows('hero_section')):
 <?php endif; ?>
 
 <div class="container hero-flex">
+  <?php if ($title && $text) { ?>
 <div class="hero-text">
    
   <?php the_title( '<h5>', '</h5>' ); ?>  
 <?php if ($title) echo '<h2 class="h1">'.__($title, 'livability').'</h2>'; ?>
 <?php if ($text) echo '<p>'.__($text, 'livability').'</p>'; ?>
 </div>
+<?php } ?>
 <div class="hero-links">
 <?php if (have_rows('links')): 
 echo '<ul>';
@@ -135,12 +139,11 @@ endif; ?>
 </div>
 </div> 
 <?php //endif; // if !hide_hero ?>
-<?php endwhile; else: ?>
+<?php endwhile; else: 
+  if (has_post_thumbnail(  )): ?>
     <div class="hero-section alignfull" >
-    <div class="container">
-        <div class="hero-text">
-    <?php the_title( '<h5>', '</h5>' ); ?>  
-    </div>
+   <?php echo get_the_post_thumbnail(); ?>
     </div>
 </div>
-<?php endif; ?>
+<?php endif; //has post thumbnail
+endif; // has hero rows ?>

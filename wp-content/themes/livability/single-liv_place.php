@@ -21,10 +21,11 @@ while ( have_posts() ) :
 		$is_2024 = has_term('2024', 'best_places_years');
 		$is_2025 = has_term('2025', 'best_places_years');
 		$heading = get_field('override_place_title') ? 'h2' : 'h1' ; 
+		$hero  = get_field('hero_section');
 		if ($is_2024 || $is_2025) { 
 			$parent_id = wp_get_post_parent_id();
  			$byline =  get_field('img_byline',get_post_thumbnail_id());
-			$hero  = get_field('hero_section');
+			// $hero  = get_field('hero_section');
 			
 			?>
 			<div class="wp-block-columns">
@@ -62,8 +63,13 @@ while ( have_posts() ) :
                 </div>
             </div>
         </div> <!--wp-block-columns-->
-		<?php } elseif (get_field('client_place'))  {
-			get_template_part( 'template-parts/hero-section' );
+		<?php 
+		} else {
+			
+			if (!$hero['hide_hero']) {
+				get_template_part( 'template-parts/hero-section' );
+			} 
+			
 		}
 		// content part for both client and non-client: 
 		get_template_part( 'template-parts/content/content-places-v2' );

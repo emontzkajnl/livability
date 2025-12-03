@@ -2150,7 +2150,7 @@ function my_custom_canonical_no_slash( $canonical_url ) {
 			'label'                 => __( 'Place Category Page', 'text_domain' ),
 			'description'           => __( 'Category page for places', 'text_domain' ),
 			'labels'                => $labels,
-			'supports'              => array( 'title', 'editor', 'thumbnail', 'revisions', 'page-attributes'),
+			'supports'              => array( 'title', 'editor', 'thumbnail', 'revisions', 'page-attributes','author'),
 			'hierarchical'          => false,
 			'public'                => true,
 			'show_ui'               => true,

@@ -2139,7 +2139,7 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 			'label'                 => __( 'Place Category Page', 'text_domain' ),
 			'description'           => __( 'Category page for places', 'text_domain' ),
 			'labels'                => $labels,
-			'supports'              => array( 'title', 'editor', 'thumbnail', 'revisions', 'page-attributes'),
+			'supports'              => array( 'title', 'editor', 'thumbnail', 'revisions', 'page-attributes','author'),
 			'hierarchical'          => false,
 			'public'                => true,
 			'show_ui'               => true,
