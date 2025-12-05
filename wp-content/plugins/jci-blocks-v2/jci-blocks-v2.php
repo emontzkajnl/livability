@@ -322,18 +322,18 @@ function return_breadcrumbs() {
         // if (!$diversityIndex && !$householdIncome && !$propTax && !$homeValue) { return NULL;}
         $html .= '<div class="quick-facts-2-block"><h3 class="qf-title">Quick Facts about '.get_the_title().'</h3><dl>';
         if (!$is_child) {
-        $html .= $householdIncome ? '<div class="avg-inc"><dt>Average Household Income</dt><dd>$'.number_format($householdIncome).'</dd></div>' : '';
+        $html .= $householdIncome ? '<div class="avg-inc"><dt>Median Household Income</dt><dd>$'.number_format($householdIncome).'</dd></div>' : '';
         $html .= $propTax ? '<div class="prop-tax"><dt>Average Property Tax</dt><dd>$'.$propTax.'</dd></div>' : '';
         $html .= $statePop ? '<div class="city-pop"><dt>State Population</dt><dd>'.number_format($statePop).'</dd></div>' : '';
         // $html .= $stateSun ? '<div><dt>Average Property Tax</dt><dd>$'.$stateSun.'</dd></div>' : '';
         if (isset($salesTax) && $salesTax != '') {
-           $html .=  '<div class="state-sales"><dt>Sales Tax</dt><dd>'.$salesTax.'%</dd></div>';
+           $html .=  '<div class="state-sales"><dt>Sales Tax Rate</dt><dd>'.$salesTax.'%</dd></div>';
         }
         if (isset($incomeTax) && $incomeTax != '') {
             $html .= '<div class="state-inc"><dt>State Income Tax</dt><dd>'.$incomeTax.'%</dd></div>';
         }
 
-        $html .= $stateRent ? '<div class="avg-rent"><dt>Median Monthly Rent</dt><dd>'.$stateRent.'</dd></div>' : '';
+        $html .= $stateRent ? '<div class="avg-rent"><dt>Median Monthly Rent</dt><dd>$'.$stateRent.'</dd></div>' : '';
         } else {
         $html .= $commute ? '<div class="avg-com"><dt>Average Commute</dt><dd>'.$commute.' minutes</dd></div>' : '';
         $html .= $cityHomeValue ? '<div class="prop-tax"><dt>Median Home Value</dt><dd>$'.number_format($cityHomeValue).'</dd></div>' : '';
