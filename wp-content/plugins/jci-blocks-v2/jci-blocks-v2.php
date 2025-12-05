@@ -333,7 +333,7 @@ function return_breadcrumbs() {
             $html .= '<div class="state-inc"><dt>State Income Tax</dt><dd>'.$incomeTax.'%</dd></div>';
         }
 
-        $html .= $stateRent ? '<div class="avg-rent"><dt>Median Monthly Rent</dt><dd>$'.$stateRent.'</dd></div>' : '';
+        $html .= $stateRent ? '<div class="avg-rent"><dt>Median Monthly Rent</dt><dd>$'.number_format($stateRent).'</dd></div>' : '';
         } else {
         $html .= $commute ? '<div class="avg-com"><dt>Average Commute</dt><dd>'.$commute.' minutes</dd></div>' : '';
         $html .= $cityHomeValue ? '<div class="prop-tax"><dt>Median Home Value</dt><dd>$'.number_format($cityHomeValue).'</dd></div>' : '';
