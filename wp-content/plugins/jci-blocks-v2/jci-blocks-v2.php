@@ -320,7 +320,7 @@ function return_breadcrumbs() {
        
 
         // if (!$diversityIndex && !$householdIncome && !$propTax && !$homeValue) { return NULL;}
-        $html .= '<div class="quick-facts-2-block"><h3 class="qf-title">Quick Facts about '.get_the_title().'</h3><dl>';
+        $html .= '<div class="quick-facts-2-block"><h3 class="qf-title">Quick Facts About '.get_the_title().'</h3><dl>';
         if (!$is_child) {
         $html .= $householdIncome ? '<div class="avg-inc"><dt>Median Household Income</dt><dd>$'.number_format($householdIncome).'</dd></div>' : '';
         $html .= $propTax ? '<div class="prop-tax"><dt>Average Property Tax</dt><dd>$'.$propTax.'</dd></div>' : '';
