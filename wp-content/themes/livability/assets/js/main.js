@@ -1440,5 +1440,34 @@ $('.sponsor__grid-tab, .sponsor__list-tab').on("click", function(e){
 //     // console.log(p);
 //   // }
 // }
+
+  // Select the input field by its ID
+  $("#post-autocomplete-search").autocomplete({
+    // The source is a function that performs the AJAX request
+    source: function(request, response) {
+        $.ajax({
+            url: myAutocomplete.ajaxurl, // WordPress AJAX endpoint
+            dataType: "json",
+            data: {
+                action: 'my_autocomplete_search', // The AJAX action defined in PHP
+                term: request.term              // The search term entered by the user
+            },
+            success: function(data) {
+                // Pass the data received from the server to the Autocomplete widget
+                response(data);
+            }
+        });
+    },
+    minLength: 1, // Minimum characters before the search fires
+    delay: 300    // Delay in milliseconds before search fires
+    
+    // Optional: Add a select event to perform an action when an item is chosen
+    /*
+    select: function(event, ui) {
+        // Example: Redirect to the selected post's URL (requires returning the URL from PHP)
+        // console.log("Selected: " + ui.item.label);
+    }
+    */
+  });
   
 })(jQuery);

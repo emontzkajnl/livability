@@ -11,20 +11,21 @@
 
 get_header();
 
-$description = get_the_archive_description();
+$description = wpautop(get_the_archive_description());
 $name = get_the_author_meta('display_name');
 $author = get_queried_object();
 $author_id = $author->ID;
 $author_image = get_field('author_image', 'user_'.$author_id);
 $user_meta = get_user_meta($author_id);
 $company = '';
-$title = '';
+$jobTitle = '';
 $expertise = '';
 if ($user_meta['wpseo_user_schema']) {
     $schema = unserialize($user_meta['wpseo_user_schema'][0]);
     $company = $schema['worksFor'] ? $schema['worksFor'] : '';
-    $title = $schema['jobTitle'] ? $schema['jobTitle'] : '';
-    $expertise = $schema['knowsAbout'] ? '<p style="font-weight: bold;">Expertise: '.implode(', ', $schema['knowsAbout']).'</p>' : '';
+    $jobTitle = $schema['jobTitle'] ? $schema['jobTitle'] : '';
+    // $expertise = $schema['knowsAbout'] ? '<p style="font-weight: bold;">Expertise: '.implode(', ', $schema['knowsAbout']).'</p>' : '';
+    $expertise = $schema['knowsAbout'] ? $schema['knowsAbout'] : '';
 } 
 $seperator = $company && $title ? '<br />' : '';
 $facebook = $user_meta['facebook'];
@@ -55,40 +56,40 @@ $youtube = $user_meta['youtube'];
                 <div id="crumbs">
                     <?php echo return_breadcrumbs(); ?>
                 </div>
-               <?php 
-           
-               ?>
-                <h1 class="h2" style="margin-bottom: 10px;"><?php echo $name; ?></h1>
-                <h4 style="margin-top: 10px;"><?php echo  $title.$seperator.$company; ?></h4>
-                
-                <ul class="author-social">
-                    <?php 
-                    echo $facebook ? '<li><a href="'.esc_url($facebook[0]).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/social-icons/facebook.svg"/></a></li>' : '';
-                    echo $instagram ? '<li><a href="'.esc_url($instagram[0]).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/social-icons/instagram.svg"/></a></li>' : '';
-                    echo $pinterest ? '<li><a href="'.esc_url($pinterest[0]).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/social-icons/pinterest.svg"/></a></li>' : '';
-                    echo $linkedin ? '<li><a href="'.esc_url($linkedin[0]).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/social-icons/linkedin.svg"/></a></li>' : '';
-                    echo $youtube ? '<li><a href="'.esc_url($youtube[0]).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/social-icons/youtube.svg"/></a></li>' : '';
-                    ?>
-                </ul>
-                <div class="author-info-container clearfix">
-                <h2 class="author-title">About <?php echo get_author_name( ); ?></h2>
-                    <?php 
-                    echo $expertise;
-                    echo '<div class="alignright" style="max-width: 400px;">';
-                    // print_r($author_image['ID'] );
-                    if ($author_image) {
-                        echo wp_get_attachment_image( $author_image['ID'], 'medium', '', array("class" => "alignright ")  );
+               
+               <div class="author-info-container clearfix">
+               <?php if ($author_image) {
+                        echo wp_get_attachment_image( $author_image['ID'], 'medium', '', array("class" => "author-info-container__image ")  );
                         // echo wp_get_attachment_image( $author_image['ID'], 'medium');
                     } else {
-                        echo get_avatar( get_the_author_meta( 'ID' ), '300', '', '', array('class' => array('alignright')) );
-                    }
-                    echo '</div>';
-                    
-                    echo $description; ?>
+                        echo get_avatar( get_the_author_meta( 'ID' ), '300', '', '', array('class' => array('author-info-container__image')) );
+                    } ?>
+                    <div>
+                <h1 class="author-info-container__title" ><?php echo $name; ?></h1>
+                <?php
+                echo $jobTitle ? '<h4 class="author-info-container__jobtitle">'.$jobTitle.'</h4>' : '';
+                echo $company ? '<h4 class="author-info-container__company">'.$company.'</h4>' : '';
+                 ?>
+                <ul class="author-social">
+                    <?php 
+                    echo $facebook ? '<li><a href="'.esc_url($facebook[0]).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/black-social-icons/facebook.svg"/></a></li>' : '';
+                    echo $instagram ? '<li><a href="'.esc_url($instagram[0]).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/black-social-icons/instagram.svg"/></a></li>' : '';
+                    echo $pinterest ? '<li><a href="'.esc_url($pinterest[0]).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/black-social-icons/pinterest.svg"/></a></li>' : '';
+                    echo $linkedin ? '<li><a href="'.esc_url($linkedin[0]).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/black-social-icons/linkedin.svg"/></a></li>' : '';
+                    echo $youtube ? '<li><a href="'.esc_url($youtube[0]).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/black-social-icons/youtube.svg"/></a></li>' : '';
+                    ?>
+                </ul>
+                </div>
+                </div> <!-- author-info-container -->
+                
+                <h2 class="author-title">About <?php echo get_author_name( ); ?></h2>
+                <div>
+                    <?php echo $description; ?>
                 </div>
           
 
-	<?php if ( have_posts() ) : 
+	<?php
+     if ( have_posts() ) : 
     echo '<h2>Articles by '.get_author_name( ).'</h2>';
     echo '<ul class="container" style="padding-left: 0;">';
     while ( have_posts() ) : ?>

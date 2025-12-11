@@ -2471,9 +2471,56 @@ function limitWordsAndAddEllipsis($text, $wordLimit, $ellipsis = '...') {
     }
 }
 
-/**
- * Stop WordPress from stripping out HTML tags (as it does on the default bio)
- */
+function limitWords($text, $wordLimit) {
+
+    $words = explode(' ', $text);
+
+    if (count($words) > $wordLimit) {
+        $limitedWords = array_slice($words, 0, $wordLimit);
+        return implode(' ', $limitedWords);
+    } else {
+        return $text;
+    }
+}
+
+// Add TinyMCE editor to the "Biographical Info" field
+function my_custom_user_bio_visual_editor( $user ) {
+    // Check if wp_editor function exists
+    if ( ! function_exists('wp_editor') ) {
+        return;
+    }
+
+    $description = get_user_meta( $user->ID, 'description', true );
+    ?>
+    <script type="text/javascript">
+        (function($){
+            // Remove the default textarea
+            $('#description').parents('tr').remove();
+        })(jQuery);
+    </script>
+    <table class="form-table">
+        <tr>
+            <th><label for="description"><?php _e('Biographical Info'); ?></label></th>
+            <td>
+                <?php
+                // Output the visual editor (TinyMCE)
+                wp_editor( $description, 'description', array(
+                    'textarea_name' => 'description',
+                    'textarea_rows' => 10,
+                    'media_buttons' => false,
+                ) );
+                ?>
+                <p class="description"><?php _e('Share a little biographical information to fill out your profile. This may be shown publicly.'); ?></p>
+            </td>
+        </tr>
+    </table>
+    <?php
+}
+add_action('show_user_profile', 'my_custom_user_bio_visual_editor');
+add_action('edit_user_profile', 'my_custom_user_bio_visual_editor');
+
+
+// Stop WordPress from stripping out HTML tags (as it does on the default bio)
 function my_custom_user_bio_visual_editor_unfiltered() {
     remove_all_filters('pre_user_description');
     add_filter( 'pre_user_description', 'wp_filter_post_kses' );

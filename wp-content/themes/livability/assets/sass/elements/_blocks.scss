@@ -1529,6 +1529,7 @@ div[class^="curated-posts-"] {
 }
 
 .author-bio {
+  width: 100%;
   background-color: #f7f7f7;
   padding: 20px;
   display: flex;
@@ -1536,8 +1537,8 @@ div[class^="curated-posts-"] {
   border-top: #6cc24a 1px solid;
   img {
     border-radius: 0;
-    height: 120px;
-    width: auto;
+    height: 120px !important;
+    width: auto !important;
     // padding-right: 20px;
   }
 }
@@ -1569,18 +1570,49 @@ div[class^="curated-posts-"] {
     // height: 30px;
     padding-right: 30px;
     a {
-      display: block;
+      display: flex;
+      width: auto;
+      height: 40px;
+      width: 40px;
+      background-color: white;;
+      border-radius: 7px;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid black;
+    }
+    img {
       width: auto;
       height: 20px;
     }
-    img {
-      width: 100%;
-      height: 100%;
-    }
   }
 }
-.author-info-container img {
-	max-width:300px !important;
+.author-info-container {
+  display: flex;
+  flex-direction: row;
+  background-color: $white2;
+  border-top: 2px solid $lightgreen;
+  border-bottom: 2px solid $lightgreen;
+  padding: 50px;
+  &__title {
+    font-size: 2.5rem;
+  }
+  &__company {
+    font-weight: 400;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+  &__jobtitle {
+    font-weight: 400;
+    font-size: 2.3rem;
+  }
+  &__image {
+    max-width:300px !important;
+    margin-bottom: 0;
+    margin-right: 30px;
+    margin-left: 0;
+  }
+ 
 }
 
 .wp-block-jci-blocks-blockquote-section {

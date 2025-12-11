@@ -2446,13 +2446,123 @@ add_action('init', 'wp_rocket_add_purge_posts_to_author', 12);
 		} else {
 			return $text;
 		}
+	} 
+
+	function limitWords($text, $wordLimit) {
+
+		$words = explode(' ', $text);
+	
+		if (count($words) > $wordLimit) {
+			$limitedWords = array_slice($words, 0, $wordLimit);
+			return implode(' ', $limitedWords);
+		} else {
+			return $text;
+		}
 	}
 
-/**
- * Stop WordPress from stripping out HTML tags (as it does on the default bio)
- */
+// Add TinyMCE editor to the "Biographical Info" field
+function my_custom_user_bio_visual_editor( $user ) {
+    // Check if wp_editor function exists
+    if ( ! function_exists('wp_editor') ) {
+        return;
+    }
+
+    $description = get_user_meta( $user->ID, 'description', true );
+    ?>
+    <script type="text/javascript">
+        (function($){
+            // Remove the default textarea
+            $('#description').parents('tr').remove();
+        })(jQuery);
+    </script>
+    <table class="form-table">
+        <tr>
+            <th><label for="description"><?php _e('Biographical Info'); ?></label></th>
+            <td>
+                <?php
+                // Output the visual editor (TinyMCE)
+                wp_editor( $description, 'description', array(
+                    'textarea_name' => 'description',
+                    'textarea_rows' => 15,
+                    // 'media_buttons' => false,
+					'wpautop'		=> true
+                ) );
+                ?>
+                <p class="description"><?php _e('Share a little biographical information to fill out your profile. This may be shown publicly.'); ?></p>
+            </td>
+        </tr>
+    </table>
+    <?php
+}
+add_action('show_user_profile', 'my_custom_user_bio_visual_editor');
+add_action('edit_user_profile', 'my_custom_user_bio_visual_editor');
+
+
+// Stop WordPress from stripping out HTML tags (as it does on the default bio)
 function my_custom_user_bio_visual_editor_unfiltered() {
     remove_all_filters('pre_user_description');
     add_filter( 'pre_user_description', 'wp_filter_post_kses' );
 }
 add_action('admin_init', 'my_custom_user_bio_visual_editor_unfiltered');
+
+
+/**
+ * Enqueue scripts and styles for Autocomplete
+ */
+function my_autocomplete_enqueue_scripts() {
+    // Enqueue jQuery UI Autocomplete script
+    wp_enqueue_script( 'jquery-ui-autocomplete' );
+
+    // Enqueue jQuery UI CSS (use a reliable CDN or copy the file locally)
+    wp_enqueue_style( 'jquery-ui-css', 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css', array(), '1.12.1' );
+
+    // Enqueue your custom script
+    wp_enqueue_script( 'my-autocomplete-script', get_template_directory_uri() . '/js/autocomplete-search.js', array('jquery', 'jquery-ui-autocomplete'), '1.0', true );
+
+    // Localize the script to pass the AJAX URL to JavaScript
+    wp_localize_script( 'my-autocomplete-script', 'myAutocomplete', array(
+        'ajaxurl' => admin_url( 'admin-ajax.php' )
+    ) );
+}
+add_action( 'wp_enqueue_scripts', 'my_autocomplete_enqueue_scripts' );
+
+/**
+ * AJAX handler to search for post titles and return suggestions
+ */
+function my_autocomplete_search() {
+    // Check for the search term
+    if ( empty( $_GET['term'] ) ) {
+        wp_send_json( [] );
+    }
+
+    $search_term = sanitize_text_field( $_GET['term'] );
+    $suggestions = [];
+
+    // Query WordPress posts
+    $args = array(
+        'post_type'      => 'liv_place', // Adjust post type as needed ('post', 'page', 'any')
+        'post_status'    => 'publish',
+        's'              => $search_term, // WordPress's built-in search term
+        'posts_per_page' => 20, // Limit to 20 results as requested
+        'fields'         => 'titles', // Only retrieve the post titles for efficiency
+        'no_found_rows'  => true, // Optimization for this type of query
+    );
+
+    $posts = get_posts( $args );
+
+    // Format results for jQuery UI Autocomplete
+    foreach ( $posts as $post ) {
+        $suggestions[] = array(
+            'label' => $post->post_title, // The text to display in the menu
+            'value' => $post->post_title  // The value to insert into the input field
+        );
+    }
+
+    // Return the JSON response
+    wp_send_json( $suggestions );
+}
+
+// Hook the function for logged-in users
+add_action( 'wp_ajax_my_autocomplete_search', 'my_autocomplete_search' );
+// Hook the function for non-logged-in users
+add_action( 'wp_ajax_nopriv_my_autocomplete_search', 'my_autocomplete_search' );
