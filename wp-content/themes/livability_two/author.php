@@ -58,7 +58,7 @@ $youtube = $user_meta['youtube'];
                 </div>
                
                <div class="author-info-container clearfix">
-                <div class="object-fit-image author-info-container__image-containeer" >
+                <div class="object-fit-image author-info-container__image-container" >
                <?php if ($author_image) {
                         echo wp_get_attachment_image( $author_image['ID'], 'medium', '', array("class" => "author-info-container__image ", "style" => "width: 100%; height: 100%;")  );
                         // echo wp_get_attachment_image( $author_image['ID'], 'medium');
