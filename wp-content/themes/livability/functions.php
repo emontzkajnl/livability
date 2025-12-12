@@ -2483,7 +2483,7 @@ function my_custom_user_bio_visual_editor( $user ) {
                 // Output the visual editor (TinyMCE)
                 wp_editor( $description, 'description', array(
                     'textarea_name' => 'description',
-                    'textarea_rows' => 15,
+                    'textarea_rows' => 20,
                     // 'media_buttons' => false,
 					'wpautop'		=> true
                 ) );

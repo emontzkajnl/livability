@@ -292,7 +292,7 @@
 
 .author {
   font-size: 1rem;
-  margin-top: 10px;
+
 }
 
 .schema-faq-section {
@@ -1589,10 +1589,11 @@ div[class^="curated-posts-"] {
 .author-info-container {
   display: flex;
   flex-direction: row;
+  align-items: center;
   background-color: $white2;
   border-top: 2px solid $lightgreen;
   border-bottom: 2px solid $lightgreen;
-  padding: 50px;
+  padding: 20px;
   &__title {
     font-size: 2.5rem;
   }
@@ -1605,6 +1606,11 @@ div[class^="curated-posts-"] {
   &__jobtitle {
     font-weight: 400;
     font-size: 2.3rem;
+  }
+  &__image-container {
+    height: 200px; 
+    width: 200px; 
+    margin-right: 30px;
   }
   &__image {
     max-width:300px !important;

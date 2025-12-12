@@ -44,7 +44,7 @@ $youtube = $user_meta['youtube'];
         <?php // get_template_part( 'template-parts/page-hero-section' ); ?>
 	</header><!-- .page-header -->
 
-    <div class="container">
+    <div class="container entry-content">
     <div class="wp-block-columns full-width-off-white">
         <div class="wp-block-column">
             <?php get_template_part('template-parts/blocks/ad-one' ); ?>
@@ -58,12 +58,14 @@ $youtube = $user_meta['youtube'];
                 </div>
                
                <div class="author-info-container clearfix">
+                <div class="object-fit-image author-info-container__image-containeer" >
                <?php if ($author_image) {
-                        echo wp_get_attachment_image( $author_image['ID'], 'medium', '', array("class" => "author-info-container__image ")  );
+                        echo wp_get_attachment_image( $author_image['ID'], 'medium', '', array("class" => "author-info-container__image ", "style" => "width: 100%; height: 100%;")  );
                         // echo wp_get_attachment_image( $author_image['ID'], 'medium');
                     } else {
-                        echo get_avatar( get_the_author_meta( 'ID' ), '300', '', '', array('class' => array('author-info-container__image')) );
+                        echo get_avatar( get_the_author_meta( 'ID' ), '300', '', '', array("class" => array("author-info-container__image", "style" => "width: 100%; height: 100%;")) );
                     } ?>
+                    </div>
                     <div>
                 <h1 class="author-info-container__title" ><?php echo $name; ?></h1>
                 <?php
