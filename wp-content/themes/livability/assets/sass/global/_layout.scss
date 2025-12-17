@@ -24,6 +24,10 @@
   margin-bottom: 0;
 }
 
+.wp-block-columns {
+  display: flex;
+}
+
 .liv-columns {
   // display: flex;
   flex-direction: column;
