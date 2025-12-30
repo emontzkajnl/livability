@@ -22,3 +22,11 @@ button,
   display: inline-block;
   padding: 10px 30px;
 }
+.mce-container-body {
+  .mce-container {
+    button {
+      background-color: transparent !important;
+      color: #595959 !important;
+    }
+  }
+}

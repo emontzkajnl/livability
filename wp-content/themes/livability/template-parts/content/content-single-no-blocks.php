@@ -18,16 +18,20 @@
     global $wp_query;
     $wp_query->is_single = true;
     $wp_query->is_singular = true;
-    $wp_query->in_the_loop = true;?>
+    $wp_query->in_the_loop = true;
+    $author_ID = get_the_author_meta( 'ID' );
+    $user_meta = get_user_meta($author_ID);
+    if ($user_meta['wpseo_noindex_author']) {
+        $display_author = false;
+        $author_link = esc_html__( get_the_author(), 'livibility' );
+    } else {
+        $display_author = true;
+        $author_link = '<a href="'.get_author_posts_url($author_ID).'">'.esc_html__( get_the_author($author_ID), 'livibility' ).'</a>';
+    }
+    
+    ?>
 
-    <!-- <script>
-        cmWrapper.que.push(function() {
-            cmWrapper.ads.define("ROS_ATF_300x600", "<?php //echo $ID; ?>-3");
-            cmWrapper.ads.define("ROS_ATF_970x250","<?php //echo $ID; ?>-1" );
-            // cmWrapper.ads.define("ROS_BTF_300x600", "<?php //echo $ID; ?>-2");
-            cmWrapper.ads.requestUnits();
-        });
-    </script> -->
+
         
 
 	<div class="entry-content">
@@ -165,9 +169,9 @@
                       
                         <?php 
                       if (get_field('original_publish_date')) {
-                        echo '<div class="author">By '.esc_html__( get_the_author(), 'livibility' ).' on '.get_field('original_publish_date').'<br />Updated '.esc_html( get_the_date() ).'</div>';
+                        echo '<div class="author">By '.$author_link.' on '.get_field('original_publish_date').'<br />Updated '.esc_html( get_the_date() ).'</div>';
                       } else {
-                        echo '<div class="author">By '.esc_html__( get_the_author(), 'livibility' ).' on '.esc_html( get_the_date() ).'</div>';
+                        echo '<div class="author">By '.$author_link.' on '.esc_html( get_the_date() ).'</div>';
                       }
                       ?>
                         <?php if (get_field('sponsored')): 
@@ -207,7 +211,10 @@
                         <?php the_content(); ?>
                         <div class="cm-text-links-<?php echo $ID; ?>"></div>
                     
-                        <?php get_template_part('template-parts/content/content-author-section'); ?>
+                        <?php if ($display_author) {
+                            get_template_part('template-parts/content/content-author-section');
+                        }
+                         ?>
                     </div>
                 </div>
             </div>
