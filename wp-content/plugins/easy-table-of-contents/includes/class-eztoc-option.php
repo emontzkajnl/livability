@@ -98,12 +98,14 @@ if ( ! class_exists( 'ezTOC_Option' ) ) {
 			//phpcs:ignore WordPress.Security.NonceVerification.Missing -- Reason : Nonce is already verified in the settings page
 			if(isset($_FILES['eztoc_import_backup'])){
 				//phpcs:ignore WordPress.Security.NonceVerification.Missing -- Reason : Nonce is already verified in the settings page
-		    	$fileInfo = wp_check_filetype(basename($_FILES['eztoc_import_backup']['name']));
+				$eztoc_import_backup_name = isset($_FILES['eztoc_import_backup']['name']) ?esc_url_raw(wp_unslash($_FILES["eztoc_import_backup"]["name"])):'';
+		    	$fileInfo = wp_check_filetype(basename($eztoc_import_backup_name));
 		        if (!empty($fileInfo['ext']) && $fileInfo['ext'] == 'json') {
 					//phpcs:ignore WordPress.Security.NonceVerification.Missing -- Reason : Nonce is already verified in the settings page
-		            if(!empty($_FILES["eztoc_import_backup"]["tmp_name"])){
+					$eztoc_import_backup_tmpname = isset($_FILES['eztoc_import_backup']['tmp_name']) ?esc_url_raw(wp_unslash($_FILES["eztoc_import_backup"]["tmp_name"])):'';
+		            if(!empty($eztoc_import_backup_tmpname)){
 						//phpcs:ignore WordPress.Security.NonceVerification.Missing -- Reason : Nonce is already verified in the settings page
-		            	$uploaded_file_settings = json_decode(eztoc_read_file_contents($_FILES["eztoc_import_backup"]["tmp_name"]), true);	
+		            	$uploaded_file_settings = json_decode(eztoc_read_file_contents($eztoc_import_backup_tmpname), true);	
 		           }
 		        }
 		    }
@@ -142,7 +144,11 @@ if ( ! class_exists( 'ezTOC_Option' ) ) {
 			foreach ( $registered as $sectionID => $sectionOptions ) {
 
 				$input = $input ? $input : array();
-				$input = apply_filters( 'ez_toc_settings_' . $sectionID . '_sanitize', $input );
+				//This is legacy filter hook,it will be removed in future versions.
+				$input = apply_filters( 'ez_toc_settings_' . $sectionID . '_sanitize', $input ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+
+				//This is the new filter hook , it should be used instead of the legacy one.
+				$input = apply_filters( 'eztoc_settings_' . $sectionID . '_sanitize', $input );
 
 				// Loop through each setting being saved and pass it through a sanitization filter
 				foreach ( $input as $key => $value ) {
@@ -153,11 +159,19 @@ if ( ! class_exists( 'ezTOC_Option' ) ) {
 					if ( $type ) {
 
 						// Field type specific filter
-						$input[ $key ] = apply_filters( 'ez_toc_settings_sanitize_' . $type, $value, $key );
+						//This is legacy filter hook,it will be removed in future versions.
+						$input[ $key ] = apply_filters( 'ez_toc_settings_sanitize_' . $type, $value, $key ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+
+						//This is the new filter hook , it should be used instead of the legacy one.
+						$input[ $key ] = apply_filters( 'eztoc_settings_sanitize_' . $type, $input[ $key ], $key );
 					}
 
 					// General filter
-					$input[ $key ] = apply_filters( 'ez_toc_settings_sanitize', $input[ $key ], $key );
+					//This is legacy filter hook,it will be removed in future versions.
+					$input[ $key ] = apply_filters( 'ez_toc_settings_sanitize', $input[ $key ], $key ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+
+					//This is the new filter hook , it should be used instead of the legacy one.
+					$input[ $key ] = apply_filters( 'eztoc_settings_sanitize', $input[ $key ], $key );
 				}
 
 				// Loop through the registered options.
@@ -202,8 +216,12 @@ if ( ! class_exists( 'ezTOC_Option' ) ) {
 												
 			$options = array(
 				'general' => apply_filters(
-					'ez_toc_settings_general',
-					array(
+					//This is the new filter hook , it should be used instead of the legacy one.
+					'eztoc_settings_general',
+					apply_filters(
+						//This is legacy filter hook,it will be removed in future versions.
+						'ez_toc_settings_general', //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+						array(
 						'enabled_post_types' => array(
 							'id' => 'enabled_post_types',
 							'name' => esc_html__( 'Enable Support', 'easy-table-of-contents' ),
@@ -268,6 +286,15 @@ if ( ! class_exists( 'ezTOC_Option' ) ) {
 							'options' => array_combine( range( 1, 10 ), range( 1, 10 ) ),
 							'default' => 2,
 						),
+						'word_count_limit' => array(
+							'id' => 'word_count_limit',
+							'name' => esc_html__( 'Word Count Limit', 'easy-table-of-contents' ),
+							'desc' => '<br>'.esc_html__( 'Minimum word count to display TOC. Set to 0 for unlimited words (default).', 'easy-table-of-contents' ),
+							'type' => 'number',
+							'default' => 0,
+							'min' => 0,
+							'step' => 100,
+						),
 						'show_heading_text' => array(
 							'id' => 'show_heading_text',
 							'name' => esc_html__( 'Display Header Label', 'easy-table-of-contents' ),
@@ -300,6 +327,13 @@ if ( ! class_exists( 'ezTOC_Option' ) ) {
 								'label' => esc_html__( 'label', 'easy-table-of-contents' ),
 							),
 							'default' => 'p',
+						),
+						'box_title' => array(
+							'id' => 'box_title',
+							'name' => esc_html__( 'Box Title', 'easy-table-of-contents' ),
+							'desc' => '<br>'.esc_html__( 'Custom title text to display above the table of contents like legend (e.g., "IN THIS ARTICLE", "TABLE OF CONTENTS").', 'easy-table-of-contents' ),
+							'type' => 'text',
+							'default' => '',
 						),
 						'visibility' => array(
 							'id' => 'visibility',
@@ -376,9 +410,14 @@ if ( ! class_exists( 'ezTOC_Option' ) ) {
 							'default' => 'Off',
 						),
 					)
+					)
 				),
 				'appearance' => apply_filters(
-					'ez_toc_settings_appearance',
+					//This is the new filter hook , it should be used instead of the legacy one.
+					'eztoc_settings_appearance',
+					apply_filters(
+						//This is legacy filter hook,it will be removed in future versions.
+						'ez_toc_settings_appearance', //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
 					array(
 						'width' => array(
 							'id' => 'width',
@@ -454,6 +493,19 @@ if ( ! class_exists( 'ezTOC_Option' ) ) {
 							'name'    => esc_html__( 'Enable Wrapping', 'easy-table-of-contents' ),
 							'type'    => 'checkbox',
 							'default' => false,
+						),
+						'toc_columns' => array(
+							'id' => 'toc_columns',
+							'name' => esc_html__( 'TOC Columns', 'easy-table-of-contents' ),
+							'desc' => '<br>'.esc_html__( 'Display table of contents links in multiple columns. Columns will stack on mobile/tablet screens.', 'easy-table-of-contents' ),
+							'type' => 'select',
+							'options' => array(
+								'1' => esc_html__( '1 Column (Default)', 'easy-table-of-contents' ),
+								'2' => esc_html__( '2 Columns', 'easy-table-of-contents' ),
+								'3' => esc_html__( '3 Columns', 'easy-table-of-contents' ),
+								'4' => esc_html__( '4 Columns', 'easy-table-of-contents' ),
+							),
+							'default' => '1',
 						),
 						'headings-padding'                   => array(
 							'id'      => 'headings-padding',
@@ -604,10 +656,22 @@ if ( ! class_exists( 'ezTOC_Option' ) ) {
 							'type' => 'color',
 							'default' => '#428bca',
 						),
+						'list_prefix_colour' => array(
+							'id' => 'list_prefix_colour',
+							'name' => esc_html__( 'List Style Color', 'easy-table-of-contents' ),
+							'desc' => '<br>'.esc_html__( 'Color for the numbers or bullets before each TOC item. Leave empty for default color.', 'easy-table-of-contents' ),
+							'type' => 'color',
+							'default' => '',
+						),
+					)
 					)
 				),
 				'advanced' => apply_filters(
-					'ez_toc_settings_advanced',
+					//This is the new filter hook , it should be used instead of the legacy one.
+					'eztoc_settings_advanced',
+					apply_filters(
+						//This is legacy filter hook,it will be removed in future versions.
+						'ez_toc_settings_advanced', //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
 					array(
 						'lowercase' => array(
 							'id' => 'lowercase',
@@ -923,10 +987,15 @@ text
 							'default' => true,
 						),
 					)
+					)
 				),
                 'shortcode' => apply_filters(
-                    'Copy shortcode  ',
-                    array(
+                    //This is the new filter hook , it should be used instead of the legacy one.
+                    'eztoc_settings_shortcode',
+                    apply_filters(
+                        //This is legacy filter hook,it will be removed in future versions.
+                        'Copy shortcode  ', //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+                        array(
                         'shortcode-first-paragraph'      => array(
                             'id'   => 'shortcode-first-paragraph',
                             'name' => esc_html__( 'Manual Adding the shortcode', 'easy-table-of-contents' ),
@@ -1363,9 +1432,14 @@ text
                             'type' => 'descriptive_text',
                         ),
                     )
+					)
                 ),
 				'sticky' => apply_filters(
-                    'ez_toc_settings_sticky',
+					//This is the new filter hook , it should be used instead of the legacy one.
+                    'eztoc_settings_sticky',
+                    apply_filters(
+                        //This is legacy filter hook,it will be removed in future versions.
+                        'ez_toc_settings_sticky', //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
                     array(
 						'sticky-toggle'                   => array(
 							'id'      => 'sticky-toggle',
@@ -1522,9 +1596,14 @@ text
 text
 /featured/'),
                     )
+					)
                 ),
                 'compatibility' => apply_filters(
-                    'ez_toc_settings_compatibility',
+					//This is the new filter hook , it should be used instead of the legacy one.
+                    'eztoc_settings_compatibility',
+                    apply_filters(
+                        //This is legacy filter hook,it will be removed in future versions.
+                        'ez_toc_settings_compatibility', //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
                     array(
                         'mediavine-create' => array(
 							'id' => 'mediavine-create',
@@ -1546,13 +1625,30 @@ text
 							'type' => 'checkbox',
 							'default' => false,
 						),
+						'seedprod-pro' => array(
+							'id' => 'seedprod-pro',
+							'name' => esc_html__( 'SeedProd Pro', 'easy-table-of-contents' ),
+							'desc' => esc_html__( 'It enable to compatibility if the page template is created with SeedProd Pro.', 'easy-table-of-contents' ),
+							'type' => 'checkbox',
+							'default' => false,
+						),
+						'beaver-builder' => array(
+							'id' => 'beaver-builder',
+							'name' => esc_html__( 'Beaver Builder', 'easy-table-of-contents' ),
+							'desc' => esc_html__( 'It enable to compatibility if the page template is created with Beaver Builder.', 'easy-table-of-contents' ),
+							'type' => 'checkbox',
+							'default' => false,
+						),
                     )
+					)
                 ),
 				'prosettings' => apply_filters(
-					'ez_toc_settings_prosettings', array()
+					//This is the new filter hook , it should be used instead of the legacy one.
+					'eztoc_settings_prosettings',
+					 array()  
 				),
 				'import_export' => apply_filters(
-					'ez_toc_settings_import_export', array(
+					'ez_toc_settings_import_export', array(  //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Pro plugin hook for compatibility.
 						'delete-data-on-uninstall' => array(
 							'id' 		=> 'delete-data-on-uninstall',
 							'name' 		=> esc_html__( 'Delete Data on Uninstall', 'easy-table-of-contents' ),
@@ -1564,7 +1660,12 @@ text
 				),
 			);
 
-			return apply_filters( 'ez_toc_registered_settings', $options );
+			//This is legacy filter hook,it will be removed in future versions.
+			$options = apply_filters( 'ez_toc_registered_settings', $options ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+			//This is the new filter hook , it should be used instead of the legacy one.
+			$options = apply_filters( 'eztoc_registered_settings', $options );
+			
+			return $options;
 		}
 
         /**
@@ -1702,6 +1803,8 @@ text
 				'fragment_prefix'                    => 'i',
 				'position'                           => 'before',
 				'start'                              => 2,
+				'word_count_limit'                   => 0,
+				'box_title'                          => '',
 				'show_heading_text'                  => true,
 				'heading_text'                       => 'Table of Contents',
 				'heading_text_tag'                   => 'p',
@@ -1725,6 +1828,8 @@ text
 				'width_custom_units'                 => 'px',
 				'wrapping'                           => 'none',
 				'toc_wrapping'                       => false,
+				'toc_columns'                        => 1,
+				'list_prefix_colour'                 => '',
 				'headings-padding'                   => false,
 				'headings-padding-top'               => 0,
 				'headings-padding-bottom'            => 0,
@@ -1744,6 +1849,7 @@ text
 				'custom_link_colour'                 => '#428bca',
 				'custom_link_hover_colour'           => '#2a6496',
 				'custom_link_visited_colour'         => '#428bca',
+				'custom_list_prefix_colour'          => '#428bca',
 				'lowercase'                          => false,
 				'hyphenate'                          => false,
 				'include_homepage'                   => false,
@@ -1766,6 +1872,8 @@ text
 				'add_self_reference_link'             => false,
 				'mediavine-create'                    => 0,
 				'molongui-authorship'                 => false,
+				'seedprod-pro'         			      => false,
+				'beaver-builder'         			      => false,
 				'custom_para_number'                  => 1,
 				'blockqoute_checkbox'                  => false,
 				'disable_in_restapi'                  => false,
@@ -1782,7 +1890,11 @@ text
 				'show-toc-toolbar-classic'            => true,
 			);
 
-			return apply_filters( 'ez_toc_get_default_options', $defaults );
+			//This is legacy filter hook,it will be removed in future versions.
+			$defaults = apply_filters( 'ez_toc_get_default_options', $defaults ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+
+			//This is the new filter hook , it should be used instead of the legacy one.
+			return apply_filters( 'eztoc_get_default_options', $defaults );
 		}
 
 		/**
@@ -1799,7 +1911,11 @@ text
 			$defaults = self::getDefaults();
 			$options  = get_option( 'ez-toc-settings', $defaults );
 
-			return apply_filters( 'ez_toc_get_options', $options );
+			//This is legacy filter hook,it will be removed in future versions.
+			$options = apply_filters( 'ez_toc_get_options', $options ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+
+			//This is the new filter hook , it should be used instead of the legacy one.
+			return apply_filters( 'eztoc_get_options', $options );
 		}
 
 		/**
@@ -1819,9 +1935,17 @@ text
 			$options = (array) self::getOptions();
 
 			$value = array_key_exists( $key, $options ) ? $options[ $key ] : $default;
-			$value = apply_filters( 'ez_toc_get_option', $value, $key, $default );
+			//This is legacy filter hook,it will be removed in future versions.
+			$value = apply_filters( 'ez_toc_get_option', $value, $key, $default ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
 
-			return apply_filters( 'ez_toc_get_option_' . $key, $value, $key, $default );
+			//This is the new filter hook , it should be used instead of the legacy one.
+			$value = apply_filters( 'eztoc_get_option', $value, $key, $default );
+
+			//This is legacy filter hook,it will be removed in future versions.
+			$value = apply_filters( 'ez_toc_get_option_' . $key, $value, $key, $default ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+
+			//This is the new filter hook , it should be used instead of the legacy one.
+			return apply_filters( 'eztoc_get_option_' . $key, $value, $key, $default );
 		}
 
 		/**
@@ -1847,7 +1971,11 @@ text
 
 			$options = self::getOptions();
 
-			$options[ $key ] = apply_filters( 'ez_toc_update_option', $value, $key );
+			//This is legacy filter hook,it will be removed in future versions.
+			$options[ $key ] = apply_filters( 'ez_toc_update_option', $value, $key ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+
+			//This is the new filter hook , it should be used instead of the legacy one.
+			$options[ $key ] = apply_filters( 'eztoc_update_option', $options[ $key ], $key );
 
 			return update_option( 'ez-toc-settings', $options );
 		}
@@ -1933,7 +2061,11 @@ text
 		 */
 		public static function getPostTypes() {
 
-			$exclude    = apply_filters( 'ez_toc_exclude_post_types', array( 'attachment', 'revision', 'nav_menu_item', 'safecss' ) );
+			//This is legacy filter hook,it will be removed in future versions.
+			$exclude    = apply_filters( 'ez_toc_exclude_post_types', array( 'attachment', 'revision', 'nav_menu_item', 'safecss' ) ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+
+			//This is the new filter hook , it should be used instead of the legacy one.
+			$exclude    = apply_filters( 'eztoc_exclude_post_types', $exclude );
 			$registered = get_post_types( array(), 'objects' );
 			$types      = array();
 
@@ -2587,7 +2719,7 @@ public static function child_font_size( $args ) {
          * @return bool|string
         */
         public static function eztoc_reset_options_to_default() {
-            if( !wp_verify_nonce( sanitize_text_field( $_POST['eztoc_security_nonce'] ), 'eztoc_ajax_check_nonce' ) )
+            if( isset($_POST['eztoc_security_nonce']) && !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['eztoc_security_nonce'] ) ), 'eztoc_ajax_check_nonce' ) )
             {
                 return esc_html__('Security Alert: nonce not verified!', 'easy-table-of-contents' );
             }
@@ -2606,8 +2738,8 @@ public static function child_font_size( $args ) {
 
 }
 
-add_filter("ez_toc_settings_sticky", "ez_toc_settings_sticky_func_nonpro");
-function ez_toc_settings_sticky_func_nonpro($settings)
+add_filter("ez_toc_settings_sticky", "eztoc_settings_sticky_func_nonpro");
+function eztoc_settings_sticky_func_nonpro($settings)
 {
 	if(function_exists('is_plugin_active') && !is_plugin_active('easy-table-of-contents-pro/easy-table-of-contents-pro.php')){
 			$sticky_pro_settings = array(

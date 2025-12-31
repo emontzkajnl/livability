@@ -3,7 +3,7 @@
  * Plugin Name: Easy Table of Contents
  * Plugin URI: https://tocwp.com/
  * Description: Adds a user friendly and fully automatic way to create and display a table of contents generated from the page content.
- * Version: 2.0.76
+ * Version: 2.0.80
  * Author: Magazine3
  * Author URI: https://tocwp.com/
  * Text Domain: easy-table-of-contents
@@ -28,13 +28,13 @@
  * @package  Easy Table of Contents
  * @category Plugin
  * @author   Magazine3
- * @version  2.0.76
+ * @version  2.0.80
  */
 
-use Easy_Plugins\Table_Of_Contents\Debug;
-use function Easy_Plugins\Table_Of_Contents\Cord\insertElementByPTag;
-use function Easy_Plugins\Table_Of_Contents\Cord\insertElementByImgTag;
-use function Easy_Plugins\Table_Of_Contents\Cord\mb_find_replace;
+use Eztoc\Table_Of_Contents\Debug;
+use function Eztoc\Table_Of_Contents\Cord\insertElementByPTag;
+use function Eztoc\Table_Of_Contents\Cord\insertElementByImgTag;
+use function Eztoc\Table_Of_Contents\Cord\mb_find_replace;
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -52,7 +52,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 		 * @since 1.0
 		 * @var string
 		 */
-		const VERSION = '2.0.76';
+		const VERSION = '2.0.80';
 
 		/**
 		 * Stores the instance of this class.
@@ -178,15 +178,27 @@ if ( ! class_exists( 'ezTOC' ) ) {
 				}
 				add_filter( 'term_description',  array( __CLASS__, 'toc_term_content_filter' ), 99,2);
 				add_filter( 'woocommerce_taxonomy_archive_description_raw',  array( __CLASS__, 'toc_category_content_filter_woocommerce' ), 99,2);
-				add_shortcode( 'ez-toc', array( __CLASS__, 'shortcode' ) );                                    
-				add_shortcode( apply_filters( 'ez_toc_shortcode', 'toc' ), array( __CLASS__, 'shortcode' ) );
+				add_shortcode( 'ez-toc', array( __CLASS__, 'shortcode' ) );  
+				//This is legacy hook,it will be removed in future versions.  
+				$eztoc_shortcode =  apply_filters( 'ez_toc_shortcode', 'toc' ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+				//This is the new hook , it should be used instead of the legacy one.
+				$eztoc_shortcode =  apply_filters( 'eztoc_shortcode', 'toc' );
+				add_shortcode( $eztoc_shortcode, array( __CLASS__, 'shortcode' ) );
 				add_shortcode( 'ez-toc-widget-sticky', array( __CLASS__, 'ez_toc_widget_sticky_shortcode' ) );
 				add_action( 'wp_footer', array(__CLASS__, 'sticky_toggle_content' ) );
 				add_filter( 'wpseo_schema_graph', array( __CLASS__, 'ez_toc_schema_sitenav_yoast_compat'), 10, 1 );
 				add_filter( 'get_the_archive_description', array( __CLASS__, 'toc_get_the_archive_description' ), 10,1);
+				/*
+				* Fix for toc not links not working if the page template created with SeedProd Pro builder & beaver builder	
+				*/				
+				if ( ezTOC_Option::get( 'seedprod-pro' ) || ezTOC_Option::get( 'beaver-builder' ) ) {				    
+				    add_action( 'template_redirect', array( __CLASS__, 'ez_toc_buffer_start' ), 1 );				    
+				    remove_filter( 'the_content', array( __CLASS__, 'the_content' ), 100 );
+				}				
 
 			}
-		}
+
+		}		
 	
 		/**
 		 * is_sidebar_hastoc function
@@ -230,8 +242,12 @@ if ( ! class_exists( 'ezTOC' ) ) {
 				}
 
 			}
-			
-			return apply_filters( 'ez_toc_sidebar_has_toc_filter', $status );
+			//This is legacy hook,it will be removed in future versions.
+			$eztoc_sidebar_has_toc_filter =  apply_filters( 'ez_toc_sidebar_has_toc_filter', $status ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+			//This is the new hook , it should be used instead of the legacy one.
+			$eztoc_sidebar_has_toc_filter =  apply_filters( 'eztoc_sidebar_has_toc_filter', $status );
+
+			return $eztoc_sidebar_has_toc_filter;
 		}
                 
         /**
@@ -286,10 +302,13 @@ if ( ! class_exists( 'ezTOC' ) ) {
 			$domain = 'easy-table-of-contents';
 
 			// Set filter for plugin's languages directory
-			$languagesDirectory = apply_filters( "ez_{$domain}_languages_directory", EZ_TOC_DIR_NAME . '/languages/' );
+			//This is legacy hook,it will be removed in future versions.
+			$languagesDirectory = apply_filters( "ez_{$domain}_languages_directory", EZ_TOC_DIR_NAME . '/languages/' ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+			//This is the new hook , it should be used instead of the legacy one.
+			$languagesDirectory = apply_filters( "eztoc_{$domain}_languages_directory", EZ_TOC_DIR_NAME . '/languages/' );
 
 			// Traditional WordPress plugin locale filter
-			$locale   = apply_filters( 'plugin_locale', get_locale(), $domain );
+			$locale   = apply_filters( 'plugin_locale', get_locale(), $domain ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Using WP Core hook
 			$fileName = sprintf( '%1$s-%2$s.mo', $domain, $locale );
 
 			// Setup paths to current locale file
@@ -309,6 +328,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 			} else {
 
 				// Load the default language files
+				// phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Using for compatibility.
 				load_plugin_textdomain( $domain, false, $languagesDirectory );
 			}
 		}
@@ -492,7 +512,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 				// If SCRIPT_DEBUG is set and TRUE load the non-minified JS files, otherwise, load the minified files.
 				$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';				
 
-				if ( in_array( 'js_composer_salient/js_composer.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {					
+				if ( eztoc_is_plugin_active( 'js_composer_salient/js_composer.php') ) {					
 					$postMetaContent = get_post_meta( $eztoc_post_id, '_nectar_portfolio_extra_content',true );
 					if( !empty( $postMetaContent ) ){
 						update_option( 'ez-toc-post-meta-content', array( $eztoc_post_id => do_shortcode( $postMetaContent ) ) );
@@ -512,14 +532,18 @@ if ( ! class_exists( 'ezTOC' ) ) {
 				wp_register_script( 'ez-toc-js-cookie', EZ_TOC_URL . "vendor/js-cookie/js.cookie{$min}.js", array(), '2.2.1', $in_footer );
 				wp_register_script( 'ez-toc-jquery-sticky-kit', EZ_TOC_URL . "vendor/sticky-kit/jquery.sticky-kit{$min}.js", array( 'jquery' ), '1.9.2', $in_footer );                        			
 				wp_register_script( 'ez-toc-js', EZ_TOC_URL . "assets/js/front{$min}.js", array( 'jquery', 'ez-toc-js-cookie', 'ez-toc-jquery-sticky-kit' ), ezTOC::VERSION . '-' . filemtime( EZ_TOC_PATH . "/assets/js/front{$min}.js" ), $in_footer );
-				wp_register_script( 'ez-toc-scroll-scriptjs', apply_filters('ez_toc_smscroll_jsfile_filter',EZ_TOC_URL . "assets/js/smooth_scroll{$min}.js"), array( 'jquery' ), ezTOC::VERSION, $in_footer );
+				//This is legacy hook,it will be removed in future versions.
+				$eztoc_smscroll_jsfile_filter =  apply_filters('ez_toc_smscroll_jsfile_filter',EZ_TOC_URL . "assets/js/smooth_scroll{$min}.js"); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+				//This is the new hook , it should be used instead of the legacy one.
+				$eztoc_smscroll_jsfile_filter =  apply_filters('eztoc_smscroll_jsfile_filter',EZ_TOC_URL . "assets/js/smooth_scroll{$min}.js");
+				wp_register_script( 'ez-toc-scroll-scriptjs', $eztoc_smscroll_jsfile_filter, array( 'jquery' ), ezTOC::VERSION, $in_footer );
 				self::localize_scripts();
 																													
 				if ( self::is_enqueue_scripts_eligible() ) {
 					self::enqueue_registered_script();	
 					self::enqueue_registered_style();	
 					self::inline_main_counting_css();
-					if ( in_array( 'js_composer/js_composer.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+					if ( eztoc_is_plugin_active( 'js_composer/js_composer.php') ) {
 						self::inline_wp_bakery_js();
 					}												
 				}											
@@ -530,6 +554,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 					self::inline_main_counting_sticky_css();					
 				}
 				
+				$eztoc_current_theme = wp_get_theme();
 
 				/**
 				 * Foodie Pro Theme Compatibility
@@ -537,7 +562,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 				 * in right way
 				 * @since 2.0.39
 				 */
-				if ( 'Foodie Pro' == apply_filters( 'current_theme', get_option( 'current_theme' ) ) ) {
+				if ( 'Foodie Pro' == $eztoc_current_theme->get( 'Name' ) ) {
 
 					wp_register_style( 'ez-toc-foodie-pro', EZ_TOC_URL . "assets/css/foodie-pro{$min}.css",array(), ezTOC::VERSION );
 					wp_enqueue_style( 'ez-toc-foodie-pro' );
@@ -550,7 +575,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 				 * on links of our Easy TOC container
 				 * @since 2.0.38
 				 */
-				if ( 'Thrive Theme Builder' == apply_filters( 'current_theme', get_option( 'current_theme' ) ) ) {
+				if ( 'Thrive Theme Builder' == $eztoc_current_theme->get( 'Name' ) ) {
 
 					wp_register_style( 'ez-toc-thrive-theme-builder', EZ_TOC_URL . "assets/css/thrive-theme-builder{$min}.css",array(), ezTOC::VERSION );
 					wp_enqueue_style( 'ez-toc-thrive-theme-builder' );
@@ -570,10 +595,10 @@ if ( ! class_exists( 'ezTOC' ) ) {
          *
          */
 		public static function localize_scripts(){
-				global $ez_toc_shortcode_attr;				
+				global $eztoc_shortcode_attr;				
 			    $eztoc_post_id = get_the_ID();
 				$js_vars = array();
-
+				$eztoc_current_theme = wp_get_theme();
 				if ( ezTOC_Option::get( 'smooth_scroll' ) ) {
 					$js_vars['smooth_scroll'] = true;
 				}else{
@@ -610,7 +635,10 @@ if ( ! class_exists( 'ezTOC' ) ) {
 				if (ezTOC_Option::get( 'toc_loading' ) != 'css') {
 					$icon = ezTOC::get_toc_toggle_icon();
 					if( function_exists( 'ez_toc_pro_activation_link' ) ) {
-							$icon = apply_filters('ez_toc_modify_icon',$icon);
+						//This is legacy hook,it will be removed in future versions.
+						$icon = apply_filters('ez_toc_modify_icon',$icon); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+						//This is the new hook , it should be used instead of the legacy one.
+						$icon = apply_filters('eztoc_modify_icon',$icon);
 					}
 					$js_vars['fallbackIcon'] = $icon;
 				}
@@ -623,7 +651,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 					$js_vars['ajax_toggle'] = true;
 				}
 
-				if(isset($ez_toc_shortcode_attr['initial_view']) && $ez_toc_shortcode_attr['initial_view'] == 'show'){
+				if(isset($eztoc_shortcode_attr['initial_view']) && $eztoc_shortcode_attr['initial_view'] == 'show'){
 					$js_vars['visibility_hide_by_default'] = false;
 				}
 
@@ -641,7 +669,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 				 * If Chamomile theme is active then remove hamburger div from content
 				 * @since 2.0.53
 				 * */
-				if ( 'Chamomile' == apply_filters( 'current_theme', get_option( 'current_theme' ) ) ) {
+				if ( 'Chamomile' == $eztoc_current_theme->get( 'Name' ) ) {
 					$js_vars['chamomile_theme_is_on'] = true;
 				}else{
 					$js_vars['chamomile_theme_is_on'] = false;
@@ -811,8 +839,8 @@ if ( ! class_exists( 'ezTOC' ) ) {
 		public static function inline_css() {
 
 			$css = '';
-
-			if('Chamomile' == apply_filters( 'current_theme', get_option( 'current_theme' ) )){
+			$eztoc_current_theme = wp_get_theme();
+			if('Chamomile' == $eztoc_current_theme->get( 'Name' )){
 				$css .= '@media screen and (max-width: 1000px) {
 				          #ez-toc-container nav{
 				            display: block;        
@@ -862,16 +890,26 @@ if ( ! class_exists( 'ezTOC' ) ) {
 					$css .= 'div#ez-toc-container ul.ez-toc-list a {color: ' . esc_attr( ezTOC_Option::get( 'custom_link_colour' ) ) . ';}';
 					$css .= 'div#ez-toc-container ul.ez-toc-list a:hover {color: ' . esc_attr( ezTOC_Option::get( 'custom_link_hover_colour' ) ) . ';}';
 					$css .= 'div#ez-toc-container ul.ez-toc-list a:visited {color: ' . esc_attr( ezTOC_Option::get( 'custom_link_visited_colour' ) ) . ';}';
+					$css .= '.ez-toc-counter nav ul li a::before {color: ' . esc_attr( ezTOC_Option::get( 'custom_list_prefix_colour' ) ) . ';}';
 					
 				}
+
+				// List Style Color (works with any theme)
+				$list_prefix_colour = ezTOC_Option::get( 'list_prefix_colour', '' );
+				if ( ! empty( $list_prefix_colour ) ) {
+					$css .= '.ez-toc-counter nav ul li a::before {color: ' . esc_attr( $list_prefix_colour ) . ';}';
+				}
+
+				// Box title styling
+				$css .= '.ez-toc-box-title {font-weight: bold; margin-bottom: 10px; text-align: center; text-transform: uppercase; letter-spacing: 1px; color: #666; padding-bottom: 5px;position:absolute;top:-4%;left:5%;background-color: inherit;transition: top 0.3s ease;}';
+				$css .= '.ez-toc-box-title.toc-closed {top:-25%;}';
 
 				if(ezTOC_Option::get( 'headings-padding' )){
 					$css .= self::inline_headings_padding_css();	
 				}
                                 
 			}
-
-			return apply_filters('ez_toc_pro_inline_css',$css);
+			return apply_filters('eztoc_pro_inline_css',$css);
 			
 		}
 
@@ -942,9 +980,9 @@ if ( ! class_exists( 'ezTOC' ) ) {
 					$marginCSS = 'margin-left: .2em;';
 					$floatPosition = 'float: right;';
 				}
-		
+				$eztoc_current_theme = wp_get_theme();
 				$importantItem = '';
-				if ( 'Edition Child' == apply_filters( 'current_theme', get_option( 'current_theme' ) ) ) {
+				if ( 'Edition Child' == $eztoc_current_theme->get( 'Name' ) ) {
 					$importantItem = ' !important';
 				}
 		
@@ -1167,8 +1205,11 @@ if ( ! class_exists( 'ezTOC' ) ) {
 			$stickyAddlCss="";
 			$stickyHeadTxtWeight =600;
 			$stickyHeadTxtSize =18;
-		
-			$stickyAddlCss = apply_filters('ez_toc_sticky_pro_css', $stickyAddlCss );
+			
+			//This is legacy hook,it will be removed in future versions.
+			$stickyAddlCss = apply_filters('ez_toc_sticky_pro_css', $stickyAddlCss ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+			//This is the new hook , it should be used instead of the legacy one.
+			$stickyAddlCss = apply_filters('eztoc_sticky_pro_css', $stickyAddlCss );
 
             $inline_sticky_css = ".ez-toc-sticky-fixed{position: fixed;top: 0;left: 0;z-index: 999999;width: auto;max-width: 100%;} .ez-toc-sticky-fixed .ez-toc-sidebar {position: relative;top: auto;{$custom_width};box-shadow: 1px 1px 10px 3px rgb(0 0 0 / 20%);box-sizing: border-box;padding: 20px 30px;background: {$stickyBgColor};margin-left: 0 !important; {$custom_height} overflow-y: auto;overflow-x: hidden;} .ez-toc-sticky-fixed .ez-toc-sidebar #ez-toc-sticky-container { padding: 0px;border: none;margin-bottom: 0;margin-top: {$topMarginStickyContainer};} #ez-toc-sticky-container a { color: #000;} .ez-toc-sticky-fixed .ez-toc-sidebar .ez-toc-sticky-title-container {border-bottom-color: #EEEEEE;background-color: {$stickyHeadBgColor};padding:15px;border-bottom: 1px solid #e5e5e5;width: 100%;position: absolute;height: auto;top: 0;left: 0;z-index: 99999999;} .ez-toc-sticky-fixed .ez-toc-sidebar .ez-toc-sticky-title-container .ez-toc-sticky-title {font-weight: {$stickyHeadTxtWeight};font-size: {$stickyHeadTxtSize}px;color: {$stickyHeadTxtColor};} .ez-toc-sticky-fixed .ez-toc-close-icon {-webkit-appearance: none;padding: 0;cursor: pointer;background: 0 0;border: 0;float: right;font-size: 30px;font-weight: 600;line-height: 1;position: relative;color: {$stickyHeadTxtColor};top: -2px;text-decoration: none;} .ez-toc-open-icon {position: fixed;left: 0px;top:{$stickyToggleAlignTop};text-decoration: none;font-weight: bold;padding: 5px 10px 15px 10px;box-shadow: 1px -5px 10px 5px rgb(0 0 0 / 10%);background-color: {$stickyHeadBgColor};color:{$stickyHeadTxtColor};display: inline-grid;line-height: 1.4;border-radius: 0px 10px 10px 0px;z-index: 999999;} .ez-toc-sticky-fixed.hide {-webkit-transition: opacity 0.3s linear, left 0.3s cubic-bezier(0.4, 0, 1, 1);-ms-transition: opacity 0.3s linear, left 0.3s cubic-bezier(0.4, 0, 1, 1);-o-transition: opacity 0.3s linear, left 0.3s cubic-bezier(0.4, 0, 1, 1);transition: opacity 0.3s linear, left 0.3s cubic-bezier(0.4, 0, 1, 1);left: -100%;} .ez-toc-sticky-fixed.show {-webkit-transition: left 0.3s linear, left 0.3s easy-out;-moz-transition: left 0.3s linear;-o-transition: left 0.3s linear;transition: left 0.3s linear;left: 0;} .ez-toc-open-icon span.arrow { font-size: 18px; } .ez-toc-open-icon span.text {font-size: 13px;writing-mode: vertical-rl;text-orientation: mixed;} @media screen  and (max-device-width: 640px) {.ez-toc-sticky-fixed .ez-toc-sidebar {min-width: auto;} .ez-toc-sticky-fixed .ez-toc-sidebar.show { padding-top: 35px; } .ez-toc-sticky-fixed .ez-toc-sidebar #ez-toc-sticky-container { min-width: 100%; } }{$stickyAddlCss}";
 			
@@ -1181,7 +1222,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 				
 		public static function is_enqueue_scripts_sticky_eligible() {
 
-			return ez_toc_stikcy_enable_support_status();
+			return eztoc_stikcy_enable_support_status();
 
 		}
 		public static function is_enqueue_scripts_eligible() {
@@ -1189,7 +1230,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 			$isEligible = self::is_eligible( get_post() );
 
 			if($isEligible){
-				if(!ez_toc_auto_device_target_status()){
+				if(!eztoc_auto_device_target_status()){
 					$isEligible = false;
 				}
 			}
@@ -1227,7 +1268,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 			 * Easy TOC Run On Amp Pages Check
 			 * @since 2.0.46
 			 */
-			if ( ( ezTOC_Option::get( 'toc-run-on-amp-pages', 1 ) !== false && 0 == ezTOC_Option::get( 'toc-run-on-amp-pages', 1 ) || '0' == ezTOC_Option::get( 'toc-run-on-amp-pages', 1 ) || false == ezTOC_Option::get( 'toc-run-on-amp-pages', 1 ) ) && !ez_toc_non_amp() ) {
+			if ( ( ezTOC_Option::get( 'toc-run-on-amp-pages', 1 ) !== false && 0 == ezTOC_Option::get( 'toc-run-on-amp-pages', 1 ) || '0' == ezTOC_Option::get( 'toc-run-on-amp-pages', 1 ) || false == ezTOC_Option::get( 'toc-run-on-amp-pages', 1 ) ) && !eztoc_non_amp() ) {
 				Debug::log( 'non_amp', 'Is frontpage, TOC is not enabled.', false );
 				return false;                            
 			}
@@ -1242,15 +1283,18 @@ if ( ! class_exists( 'ezTOC' ) ) {
 				$urls_arr = explode(PHP_EOL, $all_urls);
 				if(is_array($urls_arr)){
 					foreach ($urls_arr as $url_arr) {
-						if ( isset($_SERVER['REQUEST_URI']) && false !== strpos( $_SERVER['REQUEST_URI'], trim($url_arr) ) ) {
+						if ( isset($_SERVER['REQUEST_URI']) && false !== strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), trim($url_arr) ) ) {
 							Debug::log( 'is_restricted_path', 'In restricted path, post not eligible.', ezTOC_Option::get( 'restrict_path' ) );
 							return false;
 						}
 					}
 				}
 			}
-						
-			if ( has_shortcode( $post->post_content, apply_filters( 'ez_toc_shortcode', 'toc' ) ) || has_shortcode( $post->post_content, 'ez-toc' ) ) {
+			//This is legacy hook,it will be removed in future versions.
+			$eztoc_shortcode = apply_filters( 'ez_toc_shortcode', 'toc' ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+			//This is the new hook , it should be used instead of the legacy one.
+			$eztoc_shortcode = apply_filters( 'eztoc_shortcode', 'toc' );			
+			if ( has_shortcode( $post->post_content, $eztoc_shortcode ) || has_shortcode( $post->post_content, 'ez-toc' ) ) {
 				Debug::log( 'has_ez_toc_shortcode', 'Has instance of shortcode.', true );
 				return true;
 			}
@@ -1282,7 +1326,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 					/**
 					 * @link https://wordpress.org/support/topic/restrict-path-logic-does-not-work-correctly?
 					 */
-					if ( isset($_SERVER['REQUEST_URI']) && false !== strpos( ezTOC_Option::get( 'restrict_path' ), $_SERVER['REQUEST_URI'] ) ) {
+					if ( isset($_SERVER['REQUEST_URI']) && false !== strpos( ezTOC_Option::get( 'restrict_path' ), sanitize_text_field(wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) ) {
 
 						Debug::log( 'is_restricted_path', 'In restricted path, post not eligible.', ezTOC_Option::get( 'restrict_path' ) );
 						return false;
@@ -1340,7 +1384,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 
 			$post = null;
 
-			if ( isset( self::$store[ $id ] ) && self::$store[ $id ] instanceof ezTOC_Post && !in_array( 'js_composer_salient/js_composer.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+			if ( isset( self::$store[ $id ] ) && self::$store[ $id ] instanceof ezTOC_Post && !eztoc_is_plugin_active( 'js_composer_salient/js_composer.php' ) ) {
 
 				$post = self::$store[ $id ];
 			} else {
@@ -1478,14 +1522,14 @@ if ( ! class_exists( 'ezTOC' ) ) {
 		 * @return string
 		 */
 		public static function shortcode( $atts, $content, $tag ) {
-				global $ez_toc_shortcode_attr;
-				$ez_toc_shortcode_attr = $atts;
+				global $eztoc_shortcode_attr;
+				$eztoc_shortcode_attr = $atts;
 				$html = '';
 				
-				if(!ez_toc_shortcode_enable_support_status($atts)){
+				if(!eztoc_shortcode_enable_support_status($atts)){
 					return $html;
 				}
-				if( ( ezTOC_Option::get( 'toc-run-on-amp-pages', 1 ) !== false && 0 == ezTOC_Option::get( 'toc-run-on-amp-pages', 1 ) || '0' == ezTOC_Option::get( 'toc-run-on-amp-pages', 1 ) || false == ezTOC_Option::get( 'toc-run-on-amp-pages', 1 ) ) && !ez_toc_non_amp() ){
+				if( ( ezTOC_Option::get( 'toc-run-on-amp-pages', 1 ) !== false && 0 == ezTOC_Option::get( 'toc-run-on-amp-pages', 1 ) || '0' == ezTOC_Option::get( 'toc-run-on-amp-pages', 1 ) || false == ezTOC_Option::get( 'toc-run-on-amp-pages', 1 ) ) && !eztoc_non_amp() ){
 					return $html;
 				}
 				//Enqueue css and styles if that has not been added by wp_enqueue_scripts			
@@ -1569,6 +1613,15 @@ if ( ! class_exists( 'ezTOC' ) ) {
 				if(isset($atts["wrapping"]) && $atts["wrapping"] != ''){
 					$options['wrapping'] = $atts["wrapping"];
 				}
+				if(isset($atts["columns"]) && $atts["columns"] != ''){
+					$options['columns'] = absint( $atts["columns"] );
+				}
+				if(isset($atts["word_count_limit"]) && $atts["word_count_limit"] != ''){
+					$options['word_count_limit'] = $atts["word_count_limit"];
+				}
+				if(isset($atts["box_title"]) && $atts["box_title"] != ''){
+					$options['box_title'] = $atts["box_title"];
+				}
 				$html = count($options) > 0 ? $post->getTOC($options) : $post->getTOC();	
 			
 				return apply_filters( 'eztoc_shortcode_final_toc_html', $html );
@@ -1634,8 +1687,12 @@ if ( ! class_exists( 'ezTOC' ) ) {
 			 * @since 2.0
 			 *
 			 * @param bool $apply
-			 */			
-			return apply_filters( 'ez_toc_maybe_apply_the_content_filter', $apply );
+			 */
+			//This is legacy hook,it will be removed in future versions.
+			$eztoc_maybe_apply_the_content_filter = apply_filters( 'ez_toc_maybe_apply_the_content_filter', $apply ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+			//This is the new hook , it should be used instead of the legacy one.
+			$eztoc_maybe_apply_the_content_filter = apply_filters( 'eztoc_maybe_apply_the_content_filter', $apply );	 		
+			return $eztoc_maybe_apply_the_content_filter;
 		}
 
 		/**
@@ -1669,9 +1726,9 @@ if ( ! class_exists( 'ezTOC' ) ) {
 			}
 			// Fix for getting current page id when sub-queries are used on the page
 			$ez_toc_current_post_id = function_exists('get_queried_object_id')?get_queried_object_id():get_the_ID();
-
+			$eztoc_current_theme = wp_get_theme();
 			// Bail if post not eligible and widget is not active.
-			if(apply_filters( 'current_theme', get_option( 'current_theme' ) ) == 'MicrojobEngine Child' || class_exists( 'Timber' ) ){
+			if('MicrojobEngine Child' == $eztoc_current_theme->get( 'Name' ) || class_exists( 'Timber' ) ){
 				$isEligible = self::is_eligible( get_post($ez_toc_current_post_id) );
 			}else{
 				$isEligible = self::is_eligible( get_post() );
@@ -1693,7 +1750,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 			$isEligible = apply_filters('eztoc_do_shortcode',$isEligible);
 
 			if($isEligible){
-				if(!ez_toc_auto_device_target_status()){
+				if(!eztoc_auto_device_target_status()){
 					$isEligible = false;
 				}
 			}
@@ -1710,8 +1767,8 @@ if ( ! class_exists( 'ezTOC' ) ) {
 			if ( ! $isEligible ) {
 				return Debug::log()->appendTo( $content );
 			}
-			
-			if(apply_filters( 'current_theme', get_option( 'current_theme' ) ) == 'MicrojobEngine Child'  || class_exists( 'Timber' ) ){
+			$eztoc_current_theme = wp_get_theme();
+			if($eztoc_current_theme->get('Name') == 'MicrojobEngine Child'  || class_exists( 'Timber' ) ){
 				$post = self::get( $ez_toc_current_post_id );
 			}else{
 				$post = self::get( get_the_ID());
@@ -1797,13 +1854,13 @@ if ( ! class_exists( 'ezTOC' ) ) {
 					if($exc_blkqt == true){
 						preg_match_all("/<blockquote(.*?)>(.*?)<\/blockquote>/s", $content, $blockquotes);
 						if(!empty($blockquotes)){
-					    	$content = ez_toc_para_blockquote_replace($blockquotes, $content, 1);
+					    	$content = eztoc_para_blockquote_replace($blockquotes, $content, 1);
 					   	}
 					}
 					$content = insertElementByPTag( mb_find_replace( $find, $replace, $content ), $toc );
 					//add blockqoute back
 					if($exc_blkqt == true && !empty($blockquotes)){
-					    $content = ez_toc_para_blockquote_replace($blockquotes, $content, 2);
+					    $content = eztoc_para_blockquote_replace($blockquotes, $content, 2);
 				    }
 					break;
 				case 'aftercustompara':
@@ -1816,7 +1873,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 					if($exc_blkqt == true){
 						preg_match_all("/<blockquote(.*?)>(.*?)<\/blockquote>/s", $content, $blockquotes);
 						if(!empty($blockquotes)){
-					    	$content = ez_toc_para_blockquote_replace($blockquotes, $content, 1);
+					    	$content = eztoc_para_blockquote_replace($blockquotes, $content, 1);
 					   	}
 					}
 					$paragraph_index  = get_post_meta( get_the_ID(), '_ez-toc-s_custom_para_number', true );
@@ -1849,7 +1906,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 					}
 					//add blockqoute back
 					if($exc_blkqt == true && !empty($blockquotes)){
-					    $content = ez_toc_para_blockquote_replace($blockquotes, $content, 2);
+					    $content = eztoc_para_blockquote_replace($blockquotes, $content, 2);
 				    }
 					break;	
 				case 'aftercustomimg':
@@ -2123,7 +2180,7 @@ if ( ! class_exists( 'ezTOC' ) ) {
 		$isEligible = apply_filters('eztoc_do_shortcode',$isEligible);
 		
 		if($isEligible){
-			if(!ez_toc_auto_device_target_status()){
+			if(!eztoc_auto_device_target_status()){
 				$isEligible = false;
 			}
 		}
@@ -2158,14 +2215,51 @@ if ( ! class_exists( 'ezTOC' ) ) {
 		
 		}
 
+
+		/**
+		 * Start output buffering to catch final HTML.
+		 * SeedProd bypasses the_content, so we must filter later.
+		 */
+		public static function ez_toc_buffer_start() {
+			// Only run if the post is eligible
+			if ( self::is_eligible( get_post() ) && !is_admin() ) {
+				ob_start( array( __CLASS__, 'ez_toc_buffer_end' ) );
+			}
+		}
+
+		/**
+		 * Process the final HTML output buffer.
+		 * This is where we inject the spans.
+		 */
+		public static function ez_toc_buffer_end( $buffer ) {
+			
+			// Get the post object for the current page
+			$post_obj = self::get( get_the_ID() );
+
+			if ( ! $post_obj instanceof ezTOC_Post || ! $post_obj->hasTOCItems() || ezTOC_Option::get( 'disable_toc_links' ,false ) ) {
+				return $buffer; // No items or disabled, return original HTML
+			}
+
+			// Get headings to find and headings with anchors to replace
+			$find    = $post_obj->getHeadings();
+			$replace = $post_obj->getHeadingsWithAnchors();
+
+			if ( empty($find) || empty($replace) ) {
+				return $buffer;
+			}
+
+			// Use mb_find_replace to inject spans into the final HTML buffer
+			return mb_find_replace( $find, $replace, $buffer );
+		}
+
 		/**
 		 * Add TOC in product category description when using Kadence theme
 		 * @param mixed $description
 		 * @return mixed
 		 */
 		public static function toc_get_the_archive_description( $description ) {
-			$current_theme = wp_get_theme();
-			if (  ( $current_theme->get( 'Name' ) === 'Kadence' || $current_theme->get( 'Template' ) === 'kadence' ) && function_exists('is_product_category') && is_product_category() ) {
+			$eztoc_current_theme = wp_get_theme();
+			if (  ( $eztoc_current_theme->get( 'Name' ) === 'Kadence' || $eztoc_current_theme->get( 'Template' ) === 'kadence' ) && function_exists('is_product_category') && is_product_category() ) {
 				if( true == ezTOC_Option::get( 'include_product_category', false) ) {
 					if(!is_admin() && !empty($description)){
 						return self::the_content($description);
@@ -2199,8 +2293,8 @@ if ( ! class_exists( 'ezTOC' ) ) {
 	add_action( 'plugins_loaded', 'ezTOC' );
 }
 
-register_activation_hook(__FILE__, 'ez_toc_activate');
-function ez_toc_activate($network_wide) {
+register_activation_hook(__FILE__, 'eztoc_activate');
+function eztoc_activate($network_wide) {
 	if ( !( is_multisite() && $network_wide ) ) {
     	add_option('ez_toc_do_activation_redirect', true);
 	}

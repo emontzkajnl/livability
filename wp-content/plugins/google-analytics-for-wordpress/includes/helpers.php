@@ -1062,11 +1062,8 @@ function monsterinsights_get_licensing_url() {
  * @since 6.0.0
  */
 function monsterinsights_perform_remote_request( $action, $body = array(), $headers = array(), $return_format = 'json' ) {
-	$key = '';
-	if ( class_exists( 'MonsterInsights' ) && MonsterInsights() && isset( MonsterInsights()->license ) ) {
-		$key = is_network_admin() ? MonsterInsights()->license->get_network_license_key() : MonsterInsights()->license->get_site_license_key();
-	}
 
+	$key = is_network_admin() ? MonsterInsights()->license->get_network_license_key() : MonsterInsights()->license->get_site_license_key();
 	// Build the body of the request.
 	$query_params = wp_parse_args(
 		$body,
@@ -1082,7 +1079,6 @@ function monsterinsights_perform_remote_request( $action, $body = array(), $head
 	$args = [
 		'headers' => $headers,
 	];
-	// echo add_query_arg( $query_params, monsterinsights_get_licensing_url() ); die;
 	// Perform the query and retrieve the response.
 	$response      = wp_remote_get( add_query_arg( $query_params, monsterinsights_get_licensing_url() ), $args );
 	$response_code = wp_remote_retrieve_response_code( $response );

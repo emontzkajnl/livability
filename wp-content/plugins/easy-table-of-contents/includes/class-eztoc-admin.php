@@ -106,7 +106,7 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
             $data = array(
                 'ajax_url'      		       => admin_url( 'admin-ajax.php' ),
                 'eztoc_security_nonce'         => wp_create_nonce('eztoc_ajax_check_nonce'),
-				'is_amp_activated'			   => (function_exists('ez_toc_is_amp_activated') && ez_toc_is_amp_activated())?1:0
+				'is_amp_activated'			   => (function_exists('eztoc_is_amp_activated') && eztoc_is_amp_activated())?1:0
             );
 
             $data = apply_filters( 'eztoc_localize_filter', $data, 'eztoc_admin_data' );
@@ -160,7 +160,12 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
 		 * @static
 		 */
 		public function registerMetaboxes() {
-			if(apply_filters('ez_toc_register_metaboxes_flag', true)){
+			//This is legacy hook,it will be removed in future versions.
+			$eztoc_register_metaboxes_flag = apply_filters('ez_toc_register_metaboxes_flag', true); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy hook name.
+			//This is the new hook , it should be used instead of the legacy one.
+			$eztoc_register_metaboxes_flag = apply_filters('eztoc_register_metaboxes_flag', true);
+
+			if($eztoc_register_metaboxes_flag){
 			foreach ( get_post_types() as $type ) {
 
 				if ( in_array( $type, ezTOC_Option::get( 'enabled_post_types', array() ) ) ) {
@@ -218,6 +223,8 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
 			$blockqoute_checkbox  = get_post_meta( $post->ID, '_ez-toc-s_blockqoute_checkbox', true );		
 
 			$custom_img_number  = get_post_meta( $post->ID, '_ez-toc-s_custom_img_number', true );
+
+			$word_count_limit  = get_post_meta( $post->ID, '_ez-toc-word_count_limit', true );
 
 			if ( ! is_array( $headings ) ) {
 
@@ -348,6 +355,27 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
 								'default' => false,
 							),
 								$blockqoute_checkbox
+							);
+						?>
+					</td>
+				</tr>
+
+				<tr>
+					<th scope="row"><?php esc_html_e( 'Word Count Limit', 'easy-table-of-contents' ); ?></th>
+					<td>
+						<?php
+							ezTOC_Option::number(
+								array(
+									'id' => 'word_count_limit',
+									'name' =>esc_html__( 'Word Count Limit', 'easy-table-of-contents' ),
+									'desc' =>esc_html__( 'Minimum word count to display TOC. Set to 0 for unlimited words (default).', 'easy-table-of-contents' ),
+									'type' => 'number',
+									'size' => 'small',
+									'min' => 0,
+									'step' => 100,
+									'default' => $word_count_limit,
+							),
+								$word_count_limit
 							);
 						?>
 					</td>
@@ -576,7 +604,7 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
 
 			if ( current_user_can( 'edit_post', $post_id ) &&
 			     isset( $_REQUEST['_ez_toc_nonce'] ) &&
-			     wp_verify_nonce( $_REQUEST['_ez_toc_nonce'], 'ez_toc_save' )
+			     wp_verify_nonce( wp_unslash( $_REQUEST['_ez_toc_nonce'] ), 'ez_toc_save' ) //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			) {
 
 				// Checkboxes are present if checked, absent if not.
@@ -600,7 +628,7 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
 				}
 
 				if ( isset( $_REQUEST['ez-toc-settings']['header-label'] )) {
-					$header_label = sanitize_text_field( $_REQUEST['ez-toc-settings']['header-label'] );					
+					$header_label = sanitize_text_field( wp_unslash( $_REQUEST['ez-toc-settings']['header-label'] ) );					
 					update_post_meta( $post_id, '_ez-toc-header-label', $header_label );
 				} 
 
@@ -610,7 +638,7 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
 				                        'mobile',
 				                        'desktop'
 				                    );
-				    $device_target = sanitize_text_field( $_REQUEST['ez-toc-settings']['device-target'] );					
+				    $device_target = sanitize_text_field( wp_unslash( $_REQUEST['ez-toc-settings']['device-target'] ) );					
 				    if( in_array( $device_target, $align_values ) ) {
 				        update_post_meta( $post_id, '_ez-toc-device-target', $device_target );
 				    }
@@ -623,7 +651,7 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
 				                        'right',
 				                        'center'
 				                    );
-				    $alignment = sanitize_text_field( $_REQUEST['ez-toc-settings']['toc-alignment'] );					
+				    $alignment = sanitize_text_field( wp_unslash( $_REQUEST['ez-toc-settings']['toc-alignment'] ) );					
 				    if( in_array( $alignment, $align_values ) ) {
 				        update_post_meta( $post_id, '_ez-toc-alignment', $alignment );
 				    }
@@ -633,7 +661,7 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
 
 					if ( is_array( $_REQUEST['ez-toc-settings']['heading-levels'] ) ) {
 
-						$headings = array_map( 'absint', $_REQUEST['ez-toc-settings']['heading-levels'] );
+						$headings = array_map( 'absint', wp_unslash( $_REQUEST['ez-toc-settings']['heading-levels'] ) );
 
 					} else {
 
@@ -647,22 +675,20 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
 					update_post_meta( $post_id, '_ez-toc-heading-levels', array() );
 				}
 
-				if ( isset( $_REQUEST['ez-toc-settings']['alttext'] ) && ! empty( $_REQUEST['ez-toc-settings']['alttext'] ) ) {
+				if ( isset( $_REQUEST['ez-toc-settings']['alttext'] ) && '' !== trim( sanitize_text_field( wp_unslash( $_REQUEST['ez-toc-settings']['alttext'] ) ) ) ) {
 
 					$alttext = '';
-					
-					if ( is_string( $_REQUEST['ez-toc-settings']['alttext'] ) ) {
-
-						$alttext = trim( $_REQUEST['ez-toc-settings']['alttext'] );
-
-							/*
+					$alttext_setting = $this->eztoc_sanitize_textarea_field( wp_unslash( $_REQUEST['ez-toc-settings']['alttext'] ) ); //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitization done using custom function.
+					if ( is_string( $alttext_setting ) ) {
+						$alttext = trim( $alttext_setting );
+						/*
 						* This is basically `esc_html()` but does not encode quotes.
 						* This is to allow angle brackets and such which `wp_kses_post` would strip as "evil" scripts.
 						*/
 						$alttext = wp_check_invalid_utf8( $alttext );
 						$alttext = _wp_specialchars( $alttext, ENT_NOQUOTES );
 
-					} 					
+					}
 
 					update_post_meta( $post_id, '_ez-toc-alttext', wp_kses_post( $alttext ) );
 
@@ -692,9 +718,10 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
 				if ( isset( $_REQUEST['ez-toc-settings']['exclude'] ) && ! empty( $_REQUEST['ez-toc-settings']['exclude'] ) ) {
 
 					$exclude = '';
-					if ( is_string( $_REQUEST['ez-toc-settings']['exclude'] ) ) {
+					$exclude_request = sanitize_text_field( wp_unslash( $_REQUEST['ez-toc-settings']['exclude'] ) );
+					if ( is_string( $exclude_request ) ) {
 
-						$exclude = trim( $_REQUEST['ez-toc-settings']['exclude'] );
+						$exclude = trim( $exclude_request );
 
 							/*
 						* This is basically `esc_html()` but does not encode quotes.
@@ -712,6 +739,16 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
 					update_post_meta( $post_id, '_ez-toc-exclude', '' );
 				}
 
+				if ( isset( $_REQUEST['ez-toc-settings']['word_count_limit'] ) && ! empty( $_REQUEST['ez-toc-settings']['word_count_limit'] ) ) {
+
+					$word_count_limit = absint( $_REQUEST['ez-toc-settings']['word_count_limit'] );
+					update_post_meta( $post_id, '_ez-toc-word_count_limit', $word_count_limit );
+
+				} else {
+
+					update_post_meta( $post_id, '_ez-toc-word_count_limit', 0 );
+				}
+
 				if ( isset( $_REQUEST['ez-toc-settings']['position-specific'] ) ) {
 				    $align_values = array(
 						'',
@@ -723,7 +760,7 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
 						'top',
 						'bottom',
 					);
-				    $position = sanitize_text_field( $_REQUEST['ez-toc-settings']['position-specific'] );					
+				    $position = sanitize_text_field( wp_unslash( $_REQUEST['ez-toc-settings']['position-specific'] ) );					
 				    if( in_array( $position, $align_values ) ) {
 				        update_post_meta( $post_id, '_ez-toc-position-specific', $position );
 				    }
@@ -739,14 +776,14 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
 
 				    if($position == 'aftercustompara' ) {	
 						if (isset($_REQUEST['ez-toc-settings']['s_custom_para_number'])) {	
-						$s_custom_para_number = sanitize_text_field( $_REQUEST['ez-toc-settings']['s_custom_para_number'] );			
+						$s_custom_para_number = sanitize_text_field( wp_unslash( $_REQUEST['ez-toc-settings']['s_custom_para_number'] ) );			
 				        update_post_meta( $post_id, '_ez-toc-s_custom_para_number', $s_custom_para_number );
 						}
 				    }
 
 				    if($position == 'aftercustomimg' ) {
 						if (isset($_REQUEST['ez-toc-settings']['s_custom_img_number'])) {	
-						$s_custom_img_number = sanitize_text_field( $_REQUEST['ez-toc-settings']['s_custom_img_number'] );					
+						$s_custom_img_number = sanitize_text_field( wp_unslash( $_REQUEST['ez-toc-settings']['s_custom_img_number'] ) );					
 				        update_post_meta( $post_id, '_ez-toc-s_custom_img_number', $s_custom_img_number );
 						}
 				    }
@@ -794,14 +831,14 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
 		        if ( ! isset( $_POST['eztoc_security_nonce'] ) ){
 		           return; 
 		        }
-		        if ( !wp_verify_nonce( $_POST['eztoc_security_nonce'], 'eztoc_ajax_check_nonce' ) ){
+		        if ( !wp_verify_nonce( wp_unslash( $_POST['eztoc_security_nonce'] ), 'eztoc_ajax_check_nonce' ) ){ //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		           return;  
 		        }   
 				if ( !current_user_can( 'manage_options' ) ) {
 					return;  					
 				}
-		        $message        = $this->eztoc_sanitize_textarea_field($_POST['message']); 
-		        $email          = sanitize_email($_POST['email']);
+		        $message        = isset($_POST['message']) ? $this->eztoc_sanitize_textarea_field(wp_unslash( $_POST['message'] )) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		        $email          = isset($_POST['email']) ? sanitize_email(wp_unslash( $_POST['email'])) : '';
 		                                
 		        if(function_exists('wp_get_current_user')){
 
@@ -953,6 +990,7 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
 				'bullet_spacing'                     => false,
 				'include_homepage'                   => false,
 				'exclude_css'                        => false,
+				//phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude
 				'exclude'                            => '',
 				'heading_levels'                     => [ 1, 2, 3, 4, 5, 6 ],
 				'restrict_path'                      => '',
@@ -1130,6 +1168,7 @@ if ( ! class_exists( 'ezTOC_Admin' ) ) {
 			}
 
 			if( isset( $options['exclude'] )){
+				//phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude
 				$options_to_update['exclude'] = $options['exclude'];
 			}
 

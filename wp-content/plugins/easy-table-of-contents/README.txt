@@ -3,9 +3,9 @@ Contributors: magazine3
 Donate link: https://tocwp.com/
 Tags: table of contents, toc
 Requires at least: 5.0
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 5.6.20
-Stable tag: 2.0.76
+Stable tag: 2.0.80
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -100,7 +100,7 @@ Bug reports for Easy Table of Contents are [welcomed on GitHub](https://github.c
 
 Easy Table Contents is a fork of the excellent [Table of Contents Plus](https://wordpress.org/plugins/table-of-contents-plus/) plugin by [Michael Tran](http://dublue.com/plugins/toc/).
 
-### Screenshots 
+== Screenshots ==
 
 1. The General section of the settings.
 2. The Appearance section of the settings.
@@ -134,6 +134,37 @@ Easy Table Contents is a fork of the excellent [Table of Contents Plus](https://
 4. Activate the plugin on the Plugins admin page.
 
 == Changelog ==
+= 2.0.80 31/12/2025 =
+* Fixed: Alternate heading option is not working #932
+* Fixed: View more is not working properly #933
+* Fixed: Headings not showing in TOC when using captial H2 #916
+* Fixed: Title is not redirecting correctly (user-specific issue) #934
+* Fixed: Read Time option is not working properly #935
+* Fixed: Export Setting option is not working as expected. #936
+
+= 2.0.79.2 09/12/2025 =
+* Fixed: Pro settings are not visible #931
+
+= 2.0.79.1 09/12/2025 =
+* Fixed: Error in v2.0.79 - White Screen of Death #930
+
+= 2.0.79 08/12/2025 =
+* Fixed: Vulnerability Authenticated (Contributor+) Stored Cross-Site Scripting reported by Wordfence (Jack Taylor)
+* Improvement: Code Improvement #928
+* Test: Tested upto WordPress 6.9
+
+= 2.0.78 27/11/2025 =
+* Added: Promotion Banner BFCM #926
+* Compatibility Added: Need to make a compatible with the SeedProd builder. #922
+* Improvement: ETOC not working with Beaver theme #920
+
+= 2.0.77 15/11/2025 =
+* Improvement: Added hook/filter to modify product_category HTML content before rendering #911
+* Improvement: Make two/three responsive columns easy table of contents #670
+* Feature: Option to show TOC only when certain word count is present #912
+* Feature: Create box title or legend for toc container #913
+* Compatibility: Need to make a compatible with the SeedProd builder. #922
+
 = 2.0.76 20/08/2025 =
 * Bug: Heading not highlighting when using shortcode #900
 * Bug: Conflict issue with GP Premium 2.4.1 Version. #901
@@ -241,15 +272,6 @@ Easy Table Contents is a fork of the excellent [Table of Contents Plus](https://
 
 = 2.0.66.1 15/05/2024 =
 * Bug: ETOC version 2.0.66 giving **Fatal error**: Uncaught TypeError: method_exists() #752
-
-= 2.0.66 15/05/2024 =
-* Bug: Multiple warnings showing when ACF support is enabled in TOC #738
-* Bug: Conflict issue with Avada child theme. #740
-* Bug: The editing/updating of the post/page is slowing down if the plugin is activated with Block based themes #741
-* Bug: Positions & Alignment is not being changed globally #743
-* New: Option for showing promt if no headings available #654
-* New: Option or shortcode like [initial_view="Show"] for specific pages/post. #732
-* Fix: Patched Stored XSS Vulnerability disclosed by Dmitrii Ignatyev from cleantalk.org
 
 
 Full changelog available at [changelog.txt](https://plugins.svn.wordpress.org/easy-table-of-contents/trunk/changelog.txt)

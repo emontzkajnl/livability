@@ -221,6 +221,18 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	 * @return array
 	 */
 	public function flatten_multi_dimensional_array_to_index_array( $array ) {
+		if ( has_filter( 'gppa_flatten_multi_dimensional_array_to_index_array' ) ) {
+			/**
+			 * Filter to use custom logic when flattening of multi-dimensional arrays. Used when populating what Live
+			 * Merge Tags are allowed in a form.
+			 *
+			 * @param array $array The multi-dimensional array to be flattened.
+			 *
+			 * @since 2.1.54
+			 */
+			return apply_filters( 'gppa_flatten_multi_dimensional_array_to_index_array', $array );
+		}
+
 		$return = array();
 
 		foreach ( $array as $key => $value ) {
@@ -353,7 +365,6 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		}
 
 		return $form_string;
-
 	}
 
 	public function replace_live_merge_tag_attr( $form_string, $form ) {
@@ -1014,7 +1025,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 				}
 
 				// Convert array values to comma-separated strings.
-				if ( is_array( $entry_value ) ) {
+				if ( is_array( $entry_value ) && count( $entry_value ) > 0 && count( array_filter( $entry_value, 'is_array' ) ) === 0 ) {
 					$entry_values[ $input_id ] = implode( ', ', $entry_value );
 				}
 
