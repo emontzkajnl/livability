@@ -3,8 +3,8 @@ Contributors: PixelYourSite
 Tags: Meta Pixel, Meta Conversion API, Google Analytics 4, Google Tag Manager, Google Consent Mode V2
 Requires at least: 3.0.1
 Requires PHP: 5.4
-Tested up to: 6.8
-Stable tag: 11.1.3
+Tested up to: 6.9
+Stable tag: 11.1.5.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -13,7 +13,7 @@ Add Meta Pixel with Conversion API, Google Analytics (GA4) + Consent Mode, Googl
 == Description ==
 **PixelYourSite Free Version: Complete Tracking Solution for the Meta Pixel, Google Analytics 4, and Google Tag Manager.**
 
-Easily integrate Meta Pixel with full Conversion API support, Google Analytics 4, and Google Tag Manager into your WordPress site. Plus, use our simple Head and Footer script option to add any custom script you need for advanced tracking and optimization. The Pinterest Tag can be implemented via this [paid add-on](https://www.pixelyoursite.com/pinterest-tag). Similar paid add-on for the [Bing tag](https://www.pixelyoursite.com/plugins/pixelyoursite-professional/bing-tag-add-on)
+Easily integrate Meta Pixel with full Conversion API support, Google Analytics 4, and Google Tag Manager into your WordPress site. Plus, use our simple Head and Footer script option to add any custom script you need for advanced tracking and optimization. The Pinterest Tag can be implemented via this [paid add-on](https://www.pixelyoursite.com/pinterest-tag). Similar paid add-ons for the [Bing tag](https://www.pixelyoursite.com/plugins/pixelyoursite-professional/bing-tag-add-on) and for the [Reddit Pixel](https://www.pixelyoursite.com/plugins/pixelyoursite-professional/reddit-wordpress-plugin).
 
 **Free training:** 
 
@@ -387,6 +387,53 @@ NO, absolutely not! We don't track any type of data about your website. We simpl
 
 
 == Changelog ==
+
+= PixelYourSite 11.1.5.1 =
+
+December 20, 2025
+
+* Additional improvements the way we handle the API logs.
+
+
+= PixelYourSite 11.1.5 =
+
+December 10, 2025
+
+* Improving the way we handle the API logs.
+
+
+= PixelYourSite 11.1.4.2 =
+
+December 8, 2025
+
+* WordPress 6.9 compatibility check. 
+
+* Fixing an issue with Google Analytics debug mode option.
+
+* Video links and messages updates.
+
+* Fixing deprecated and Fatal PHP error on custom events.
+
+
+= PixelYourSite 11.1.4.1 =
+
+December 1, 2025
+
+* The Google Tags first_party_collection option has been moved to a more visible location, and its default is ON.
+
+* Fix for a possible warning Uncaught Error: Undefined constant PixelYourSite PYS_URL.
+
+
+= PixelYourSite 11.1.4 =
+
+November 24, 2025
+
+* Support for our dedicated Reddit Pixel add-on.
+
+* Fixing some warnings and deprecation notices.
+
+* Small code changes and improvements. 
+
 
 = PixelYourSite 11.1.3 =
 

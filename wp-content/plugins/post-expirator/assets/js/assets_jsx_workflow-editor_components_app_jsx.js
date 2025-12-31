@@ -212,7 +212,12 @@ var isNumber = function isNumber(value) {
   return !isNaN(value);
 };
 function stripTags(string) {
-  return string.replace(/<[^>]*>?/gm, '');
+  if (typeof string !== 'string') {
+    return '';
+  }
+  var div = document.createElement('div');
+  div.textContent = string;
+  return div.innerHTML;
 }
 
 /***/ }),
@@ -1329,7 +1334,7 @@ var ValueExpressionBuilder = function ValueExpressionBuilder(_ref) {
     }
     setCompleters(newCompleters);
   }, [variableDataType]);
-  if (rule.operator === 'null' || rule.operator === 'notNull') {
+  if (rule.operator === 'null' || rule.operator === 'notNull' || rule.operator === 'isEmpty' || rule.operator === 'isNotEmpty') {
     return /*#__PURE__*/React.createElement("div", null);
   }
   return /*#__PURE__*/React.createElement(_conditional_expression_builder__WEBPACK_IMPORTED_MODULE_2__.ConditionalExpressionBuilder, {
@@ -1419,6 +1424,28 @@ var useConditionalLogic = function useConditionalLogic(_ref) {
     formatValue: function formatValue(_field, value) {
       return "'".concat(value, "'");
     }
+  }, {
+    name: 'isEmpty',
+    value: 'isEmpty',
+    label: 'is empty',
+    jsonLogic: function jsonLogic(field) {
+      return {
+        isEmpty: [{
+          var: field
+        }]
+      };
+    }
+  }, {
+    name: 'isNotEmpty',
+    value: 'isNotEmpty',
+    label: 'is not empty',
+    jsonLogic: function jsonLogic(field) {
+      return {
+        isNotEmpty: [{
+          var: field
+        }]
+      };
+    }
   }]);
 
   /**
@@ -1450,6 +1477,24 @@ var useConditionalLogic = function useConditionalLogic(_ref) {
           value: value
         };
       }
+    },
+    // Handle "isEmpty" => { isEmpty: [{ var: field }] }
+    isEmpty: function isEmpty(_ref4) {
+      var _ref5 = _slicedToArray(_ref4, 1),
+        field = _ref5[0];
+      return {
+        field: field.var,
+        operator: 'isEmpty'
+      };
+    },
+    // Handle "isNotEmpty" => { isNotEmpty: [{ var: field }] }
+    isNotEmpty: function isNotEmpty(_ref6) {
+      var _ref7 = _slicedToArray(_ref6, 1),
+        field = _ref7[0];
+      return {
+        field: field.var,
+        operator: 'isNotEmpty'
+      };
     }
   };
 
@@ -1468,6 +1513,10 @@ var useConditionalLogic = function useConditionalLogic(_ref) {
       return "".concat(fieldLabel, " does not have ").concat(formattedValue);
     } else if (rule.operator === 'has') {
       return "".concat(fieldLabel, " has ").concat(formattedValue);
+    } else if (rule.operator === 'isEmpty') {
+      return "".concat(fieldLabel, " is empty");
+    } else if (rule.operator === 'isNotEmpty') {
+      return "".concat(fieldLabel, " is not empty");
     }
     return (0,react_querybuilder__WEBPACK_IMPORTED_MODULE_1__.defaultRuleProcessorNL)(rule, options);
   }, []);
@@ -2938,7 +2987,7 @@ var ExpressionBuilder = function ExpressionBuilder(_ref) {
       showGutter: !singleVariableOnly,
       highlightActiveLine: !singleVariableOnly
     },
-    height: singleVariableOnly ? '30px' : '200px',
+    height: singleVariableOnly ? '30px' : '35px',
     width: "100%",
     placeholder: placeholder
   }), /*#__PURE__*/React.createElement("div", {
@@ -3719,7 +3768,8 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 var _window$futureWorkflo = window.futureWorkflowEditor,
   apiUrl = _window$futureWorkflo.apiUrl,
-  nonce = _window$futureWorkflo.nonce;
+  nonce = _window$futureWorkflo.nonce,
+  workflowNonce = _window$futureWorkflo.workflowNonce;
 var authorsPromise = null;
 var cachedAuthors = null;
 var getAuthors = function getAuthors() {
@@ -3730,7 +3780,8 @@ var getAuthors = function getAuthors() {
     authorsPromise = (0,_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__["default"])({
       path: "".concat(apiUrl, "/authors"),
       headers: {
-        'X-WP-Nonce': nonce
+        'X-WP-Nonce': nonce,
+        'X-PP-Workflow-Nonce': workflowNonce
       }
     }).then(function (response) {
       cachedAuthors = response;
@@ -3743,7 +3794,7 @@ var getAuthorOptions = function getAuthorOptions(authors) {
   return authors.map(function (author) {
     return {
       value: author.id,
-      label: author.name + ' (' + author.email + ')'
+      label: author.name
     };
   });
 };
@@ -5605,7 +5656,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 
 function UserQuery(_ref) {
-  var _defaultValue, _settings$labels, _defaultValue2, _defaultValue3, _defaultValue4;
+  var _defaultValue, _settings$labels, _settings$labels2, _defaultValue2, _defaultValue3, _defaultValue4, _defaultValue5;
   var name = _ref.name,
     label = _ref.label,
     defaultValue = _ref.defaultValue,
@@ -5632,6 +5683,7 @@ function UserQuery(_ref) {
       defaultValue = {
         userSource: defaultUserSource,
         userRole: [],
+        userRoleAfter: [],
         userId: []
       };
       onChangeSetting({
@@ -5642,8 +5694,10 @@ function UserQuery(_ref) {
   }, []);
   var userRoleFieldLabel = (settings === null || settings === void 0 || (_settings$labels = settings.labels) === null || _settings$labels === void 0 ? void 0 : _settings$labels.userRole) || (0,_publishpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('User Role', 'post-expirator');
   userRoleFieldLabel = isUserRoleRequired ? userRoleFieldLabel + ' *' : userRoleFieldLabel;
+  var userRoleAfterFieldLabel = (settings === null || settings === void 0 || (_settings$labels2 = settings.labels) === null || _settings$labels2 === void 0 ? void 0 : _settings$labels2.userRoleAfter) || null;
   var descriptions = {
     userRole: (settings === null || settings === void 0 ? void 0 : settings.userRoleDescription) || null,
+    userRoleAfter: (settings === null || settings === void 0 ? void 0 : settings.userRoleAfterDescription) || null,
     userId: (settings === null || settings === void 0 ? void 0 : settings.userIdDescription) || null
   };
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.__experimentalVStack, null, acceptsInput && /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.RadioControl, {
@@ -5676,9 +5730,23 @@ function UserQuery(_ref) {
     }
   }), (descriptions === null || descriptions === void 0 ? void 0 : descriptions.userRole) && /*#__PURE__*/React.createElement("p", {
     className: "description"
-  }, descriptions.userRole), /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FormTokenField, {
+  }, descriptions.userRole), userRoleAfterFieldLabel && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_inline_multi_select__WEBPACK_IMPORTED_MODULE_3__.InlineMultiSelect, {
+    label: userRoleAfterFieldLabel,
+    value: ((_defaultValue4 = defaultValue) === null || _defaultValue4 === void 0 ? void 0 : _defaultValue4.userRoleAfter) || [],
+    suggestions: userRoles,
+    expandOnFocus: true,
+    autoSelectFirstMatch: true,
+    onChange: function onChange(value) {
+      return onChangeSetting({
+        settingName: "userRoleAfter",
+        value: value
+      });
+    }
+  }), (descriptions === null || descriptions === void 0 ? void 0 : descriptions.userRoleAfter) && /*#__PURE__*/React.createElement("p", {
+    className: "description"
+  }, descriptions.userRoleAfter)), /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FormTokenField, {
     label: (0,_publishpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('User ID', 'post-expirator'),
-    value: ((_defaultValue4 = defaultValue) === null || _defaultValue4 === void 0 ? void 0 : _defaultValue4.userId) || [],
+    value: ((_defaultValue5 = defaultValue) === null || _defaultValue5 === void 0 ? void 0 : _defaultValue5.userId) || [],
     onChange: function onChange(value) {
       return onChangeSetting({
         settingName: "userId",
@@ -12110,6 +12178,16 @@ function NodeValidator(_ref) {
                 addNodeError(node.id, "".concat(fieldName, "-validOptions"), optionsValidation.error, optionsValidation.details);
               }
               break;
+            case 'hasVariableSyntax':
+              if (!settingValue || settingValue === '') {
+                break;
+              }
+              var trimmedValue = settingValue.trim();
+              var hasProperSyntax = trimmedValue.startsWith('{{') && trimmedValue.endsWith('}}');
+              if (!hasProperSyntax) {
+                addNodeError(node.id, "".concat(fieldName, "-hasVariableSyntax"), (0,_publishpress_i18n__WEBPACK_IMPORTED_MODULE_4__.sprintf)((0,_publishpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Invalid variable.', 'post-expirator'), fieldLabel), (0,_publishpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Please use the variable picker to select valid expression.', 'post-expirator'));
+              }
+              break;
           }
         });
       }
@@ -14794,7 +14872,8 @@ var _marked = /*#__PURE__*/_regeneratorRuntime().mark(setupEditor),
 
 var _window$futureWorkflo = window.futureWorkflowEditor,
   apiUrl = _window$futureWorkflo.apiUrl,
-  nonce = _window$futureWorkflo.nonce;
+  nonce = _window$futureWorkflo.nonce,
+  workflowNonce = _window$futureWorkflo.workflowNonce;
 var editableAttributes = ['title', 'description', 'flow', 'status', 'debugRayShowQueries', 'debugRayShowEmails', 'debugRayShowWordPressErrors', 'debugRayShowCurrentRunningStep'];
 function setupEditor(workflowId) {
   var workflow, _workflow;
@@ -14822,7 +14901,8 @@ function setupEditor(workflowId) {
           path: "".concat(apiUrl, "/workflows"),
           method: 'POST',
           headers: {
-            'X-WP-Nonce': nonce
+            'X-WP-Nonce': nonce,
+            'X-PP-Workflow-Nonce': workflowNonce
           }
         });
       case 9:
@@ -14854,7 +14934,8 @@ function setupEditor(workflowId) {
         return (0,_wordpress_data_controls__WEBPACK_IMPORTED_MODULE_1__.apiFetch)({
           path: "".concat(apiUrl, "/workflows/").concat(workflowId),
           headers: {
-            'X-WP-Nonce': nonce
+            'X-WP-Nonce': nonce,
+            'X-PP-Workflow-Nonce': workflowNonce
           }
         });
       case 23:
@@ -14915,7 +14996,8 @@ function saveAsDraft() {
           path: "".concat(apiUrl, "/workflows/").concat(parseInt(editedWorkflow.id)),
           method: 'PUT',
           headers: {
-            'X-WP-Nonce': nonce
+            'X-WP-Nonce': nonce,
+            'X-PP-Workflow-Nonce': workflowNonce
           },
           body: JSON.stringify(workflowToSave)
         });
@@ -14989,7 +15071,8 @@ function saveAsCurrentStatus() {
           path: "".concat(apiUrl, "/workflows/").concat(parseInt(_editedWorkflow.id)),
           method: 'PUT',
           headers: {
-            'X-WP-Nonce': nonce
+            'X-WP-Nonce': nonce,
+            'X-PP-Workflow-Nonce': workflowNonce
           },
           body: JSON.stringify(workflowToSave)
         });
@@ -15052,7 +15135,8 @@ function publishWorkflow() {
           path: "".concat(apiUrl, "/workflows/").concat(parseInt(editedWorkflow.id)),
           method: 'PUT',
           headers: {
-            'X-WP-Nonce': nonce
+            'X-WP-Nonce': nonce,
+            'X-PP-Workflow-Nonce': workflowNonce
           },
           body: JSON.stringify(workflowToSave)
         });
@@ -15115,7 +15199,8 @@ function switchToDraft() {
           path: "".concat(apiUrl, "/workflows/").concat(parseInt(editedWorkflow.id)),
           method: 'PUT',
           headers: {
-            'X-WP-Nonce': nonce
+            'X-WP-Nonce': nonce,
+            'X-PP-Workflow-Nonce': workflowNonce
           },
           body: JSON.stringify(workflowToSave)
         });
@@ -15230,7 +15315,8 @@ function deleteWorkflow() {
           path: "".concat(apiUrl, "/workflows/").concat(parseInt(editedWorkflow.id)),
           method: 'DELETE',
           headers: {
-            'X-WP-Nonce': nonce
+            'X-WP-Nonce': nonce,
+            'X-PP-Workflow-Nonce': workflowNonce
           }
         });
       case 8:
@@ -15303,7 +15389,8 @@ function fetchTaxonomyTerms(taxonomy) {
         return (0,_wordpress_data_controls__WEBPACK_IMPORTED_MODULE_1__.apiFetch)({
           path: "".concat(apiUrl, "/terms/").concat(taxonomy),
           headers: {
-            'X-WP-Nonce': nonce
+            'X-WP-Nonce': nonce,
+            'X-PP-Workflow-Nonce': workflowNonce
           }
         });
       case 5:

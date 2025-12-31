@@ -38,7 +38,7 @@ class Permalink_Manager_URI_Functions_Tax {
 					add_action( "{$tax}_add_form_fields", array( $this, 'edit_uri_box' ), 10, 1 );
 					add_action( "{$tax}_edit_form_fields", array( $this, 'edit_uri_box' ), 10, 1 );
 					add_filter( "manage_edit-{$tax}_columns", array( $this, 'quick_edit_column' ) );
-					add_filter( "manage_{$tax}_custom_column", array( $this, 'quick_edit_column_content' ), 10, 3 );
+					add_filter( "manage_{$tax}_custom_column", array( $this, 'quick_edit_column_content' ), 20, 3 );
 				}
 			}
 		}
@@ -85,7 +85,7 @@ class Permalink_Manager_URI_Functions_Tax {
 
 		if ( isset( $permalink_manager_uris["tax-{$term_id}"] ) ) {
 			// Start with homepage URL
-			$permalink = Permalink_Manager_Helper_Functions::get_permalink_base( $term );
+			$permalink = Permalink_Manager_Permastructure_Functions::get_permalink_base( $term );
 
 			// Encode URI?
 			if ( ! empty( $permalink_manager_options['general']['decode_uris'] ) ) {
@@ -212,7 +212,7 @@ class Permalink_Manager_URI_Functions_Tax {
 
 			// 3B. Get the full slug
 			$term_slug        = Permalink_Manager_Helper_Functions::remove_slashes( $term_slug );
-			$custom_slug      = $full_custom_slug = Permalink_Manager_Helper_Functions::force_custom_slugs( $term_slug, $term );
+			$custom_slug      = $full_custom_slug = Permalink_Manager_Helper_Functions::force_custom_slugs( $term_slug, $term, true, null, false );
 			$term_title_slug  = Permalink_Manager_Helper_Functions::force_custom_slugs( $term_slug, $term, true, 1 );
 			$full_native_slug = $term_slug;
 
@@ -363,9 +363,10 @@ class Permalink_Manager_URI_Functions_Tax {
 				$this_term = get_term( $row['term_id'] );
 
 				// Get default & native URL
-				$native_uri  = self::get_default_term_uri( $this_term, true );
-				$default_uri = self::get_default_term_uri( $this_term );
-				$old_uri     = Permalink_Manager_URI_Functions::get_single_uri( $row['term_id'], true, false, true );
+				$native_uri     = self::get_default_term_uri( $this_term, true );
+				$default_uri    = self::get_default_term_uri( $this_term );
+				$old_custom_uri = Permalink_Manager_URI_Functions::get_single_uri( $row['term_id'], true, true, true );
+				$old_uri        = ( ! empty( $old_custom_uri ) ) ? $old_custom_uri : $native_uri;
 
 				$old_term_name = $row['slug'];
 
@@ -391,8 +392,8 @@ class Permalink_Manager_URI_Functions_Tax {
 
 				$new_uri = apply_filters( 'permalink_manager_pre_update_term_uri', $new_uri, $row['term_id'], $old_uri, $native_uri, $default_uri );
 
-				if ( ! ( empty( $new_uri ) ) && ( $old_uri !== $new_uri ) || ( $old_term_name !== $new_term_name ) ) {
-					if ( ! $preview_mode && ( $old_uri !== $new_uri ) ) {
+				if ( ! ( empty( $new_uri ) ) && ( $old_custom_uri !== $new_uri ) || ( $old_term_name !== $new_term_name ) ) {
+					if ( ! $preview_mode && ( $old_custom_uri !== $new_uri ) ) {
 						Permalink_Manager_URI_Functions::save_single_uri( $row['term_id'], $new_uri, true, false );
 						do_action( 'permalink_manager_updated_term_uri', $row['term_id'], $new_uri, $old_uri, $native_uri, $default_uri );
 					}
@@ -630,7 +631,7 @@ class Permalink_Manager_URI_Functions_Tax {
 
 		if ( ! empty( $new_uri ) && $auto_update_uri != 1 ) {
 			$new_uri = Permalink_Manager_Helper_Functions::sanitize_title( $new_uri, true );
-		} else if ( $is_new_term || $auto_update_uri == 1 || ( empty( $new_uri ) && empty( $old_uri ) ) || is_null( $new_uri ) ) {
+		} else if ( $is_new_term || $auto_update_uri == 1 || empty( $new_uri ) ) {
 			$new_uri = $default_uri;
 		} else {
 			$new_uri = '';

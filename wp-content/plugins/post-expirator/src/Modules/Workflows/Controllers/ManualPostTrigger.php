@@ -231,6 +231,7 @@ class ManualPostTrigger implements InitializableInterface
                 "futureWorkflowManualSelection",
                 [
                     "nonce" => wp_create_nonce("wp_rest"),
+                    "workflowNonce" => wp_create_nonce("pp_workflow_action"),
                     "apiUrl" => rest_url("publishpress-future/v1"),
                 ]
             );
@@ -273,6 +274,7 @@ class ManualPostTrigger implements InitializableInterface
                 "futureWorkflowManualSelection",
                 [
                     "nonce" => wp_create_nonce("wp_rest"),
+                    "workflowNonce" => wp_create_nonce("pp_workflow_action"),
                     "apiUrl" => rest_url("publishpress-future/v1"),
                     "postType" => get_post_type(),
                 ]
@@ -328,6 +330,7 @@ class ManualPostTrigger implements InitializableInterface
                 "futureWorkflowManualSelection",
                 [
                     "nonce" => wp_create_nonce("wp_rest"),
+                    "workflowNonce" => wp_create_nonce("pp_workflow_action"),
                     "apiUrl" => rest_url("publishpress-future/v1"),
                     "postId" => $post->ID,
                 ]
@@ -498,6 +501,8 @@ class ManualPostTrigger implements InitializableInterface
                 return;
             }
 
+            check_ajax_referer('__future_action', '_future_action_nonce');
+
             // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
             $manuallyEnabledWorkflows = $_POST['future_workflow_manual_trigger'] ?? [];
             $manuallyEnabledWorkflows = array_map('intval', $manuallyEnabledWorkflows);
@@ -554,6 +559,7 @@ class ManualPostTrigger implements InitializableInterface
                 "futureWorkflowManualSelection",
                 [
                     "nonce" => wp_create_nonce("wp_rest"),
+                    "workflowNonce" => wp_create_nonce("pp_workflow_action"),
                     "apiUrl" => rest_url("publishpress-future/v1"),
                     "postId" => $post->ID,
                 ]
@@ -610,6 +616,10 @@ class ManualPostTrigger implements InitializableInterface
 
         foreach ($postIds as $postId) {
             $postId = (int)$postId;
+
+            if (! $this->currentUserModel->userCanEditPost($postId)) {
+                continue;
+            }
 
             $loaded = $postModel->load($postId);
 

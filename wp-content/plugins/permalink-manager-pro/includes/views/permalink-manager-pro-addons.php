@@ -81,20 +81,20 @@ class Permalink_Manager_Pro_Addons {
 	 * @return array
 	 */
 	public function filter_settings_fields( $fields ) {
-		// Network licence key (multisite)
-		$license_key     = Permalink_Manager_Pro_Functions::get_license_key();
-		$expiration_info = Permalink_Manager_Pro_Functions::get_expiration_date();
+		// Network license key (multisite)
+		$license_key     = Permalink_Manager_Pro_License::get_license_key();
+		$expiration_info = Permalink_Manager_Pro_License::get_expiration_date();
 
-		// 1. licence key
+		// 1. license key
 		$fields['licence'] = array(
-			'section_name' => __( 'Licence', 'permalink-manager' ),
+			'section_name' => __( 'License', 'permalink-manager' ),
 			'container'    => 'row',
 			'fields'       => array(
 				'licence_key' => array(
 					'type'              => 'text',
 					'value'             => $license_key,
-					'label'             => __( 'Licence key', 'permalink-manager' ),
-					'after_description' => sprintf( '<p class="field-description description licence-info">%s</p><p class="field-description description"><a href="%s" id="pm_get_exp_date" class="mute">%s</a> | <a href="https://permalinkmanager.pro/license-info/%s" target="_blank" class="mute">%s</a></p>', $expiration_info, "#", __( 'Reload the expiration date', 'permalink-manager' ), $license_key, __( 'Get license information', 'permalink-manager' ) )
+					'label'             => __( 'License key', 'permalink-manager' ),
+					'after_description' => sprintf( '<p class="field-description description licence-info">%1$s</p><p class="field-description description"><a href="#" id="pm_get_exp_date" class="mute">%2$s</a> | <a href="%3$s" target="_blank" class="mute">%4$s</a></p>', $expiration_info, __( 'Reload the expiration date', 'permalink-manager' ), Permalink_Manager_Pro_License::get_license_info_link( $license_key ), __( 'Get license information', 'permalink-manager' ) )
 				)
 			)
 		);
@@ -224,9 +224,9 @@ class Permalink_Manager_Pro_Addons {
 	public function support_output() {
 		$output = sprintf( "<h3>%s</h3>", __( "Technical support", "permalink-manager" ) );
 		/* translators: %s: Support section heading */
-		$output .= wpautop( sprintf( __( 'To find the answers on frequently asked questions and information about how to deal with the most common issues please go to the <strong>Knowledge Base</strong> using <a target="_blank" href="%s">this link</a>.', 'permalink-manager' ), 'https://permalinkmanager.pro/knowledge-base/' ) );
+		$output .= wpautop( sprintf( __( 'To find the answers on frequently asked questions and information about how to deal with the most common issues please go to the <strong>Knowledge Base</strong> using <a target="_blank" href="%s">this link</a>.', 'permalink-manager' ), 'https://permalinkmanager.pro/docs/' ) );
 		$output .= wpautop( __( 'If you still did not find the answer to your question, please send us your question or a detailed description of your problem/issue to <a href="mailto:support@permalinkmanager.pro">support@permalinkmanager.pro</a>.', 'permalink-manager' ) );
-		$output .= wpautop( __( 'To reduce the response time, please attach your licence key and if possible also: URL address of your website and screenshots explaining the issue.', 'permalink-manager' ) );
+		$output .= wpautop( __( 'To reduce the response time, please attach your license key and if possible also: URL address of your website and screenshots explaining the issue.', 'permalink-manager' ) );
 
 		/* translators: %s: Support section heading */
 		$output .= sprintf( "<h3>%s</h3>", __( "Suggestions/feedback", "permalink-manager" ) );
