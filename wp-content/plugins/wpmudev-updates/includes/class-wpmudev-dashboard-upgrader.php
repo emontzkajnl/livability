@@ -1447,7 +1447,7 @@ class WPMUDEV_Dashboard_Upgrader {
 		}
 
 		if ( $upgrader->is_vcs_checkout( ABSPATH ) ) {
-			$this->set_error( 'core', 'is_vcs_checkout', __( 'Automatic core updates are disabled when WordPress is checked out from version control.', 'wpmudev' ) );
+			$this->set_error( 'core', 'is_vcs_checkout', __( 'Automatic core updates are disabled when WordPress is checked out from version control.', 'wpmudev' ) );	    	   		 	 				   
 
 			return false;
 		}

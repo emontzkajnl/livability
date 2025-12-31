@@ -90,6 +90,8 @@ class LangEN_CA {
                         'AllInOneSeoFields' => 'All In One Seo Fields',
                         'MetaBoxFields' => 'Meta Box Fields',
                         'YoastSeoFields' => 'Yoast Seo Fields',
+'SlimSeoFields' => 'Slim SEO Fields',
+'ListeoFields' => 'Listeo Fields',
                         'JetEngineFields' => 'Jet Engine Fields',
                         'JetEngineRFFields' => 'Jet Engine Repeater Fields',
                         'JetEngineCPTFields' => 'Jet Engine CPT Fields',

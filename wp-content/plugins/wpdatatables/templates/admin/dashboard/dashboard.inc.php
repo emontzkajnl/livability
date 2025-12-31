@@ -134,6 +134,7 @@ $tableChartsCount = (int)WDTTools::getTablesCount('chart');
                         $lastTableData = WDTTools::getLastTableData('table');
                         $tableType = WDTTools::getConvertedTableType($lastTableData->table_type);
                         $simpleType = $lastTableData->table_type == 'simple' ? '&simple': '';
+                        $ivyType = $lastTableData->table_type == 'ivyforms' ? '=ivyforms': '';
 
                         ?>
                         <div class="card-body wpdt-flex card-padding">
@@ -142,7 +143,7 @@ $tableChartsCount = (int)WDTTools::getTablesCount('chart');
                                 <p><?php esc_html_e('Created', 'wpdatatables'); ?></p>
                             </div>
                             <div class="wdt-table-last-created">
-                                <a href="admin.php?page=wpdatatables-constructor&source<?php echo $simpleType ?>&table_id=<?php echo (int)$lastTableData->id; ?>"
+                                <a href="admin.php?page=wpdatatables-constructor&source<?php echo $simpleType . $ivyType ?>&table_id=<?php echo (int)$lastTableData->id; ?>"
                                    class="wdt-table-link">
                                     <?php echo esc_html($lastTableData->title) ?>
                                 </a>
@@ -342,7 +343,6 @@ $tableChartsCount = (int)WDTTools::getTablesCount('chart');
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li>Removed unnecessary CSS.</li>
                                 <li>Minor CSS fixes.</li>
                                 <li>Other small bug fixes and stability improvements.</li>
                             </ul>

@@ -95,6 +95,8 @@ class LangEN_GB {
                         'AllInOneSeoFields' => 'All In One Seo Fields',
                         'MetaBoxFields' => 'Meta Box Fields',
                         'YoastSeoFields' => 'Yoast Seo Fields',
+'SlimSeoFields' => 'Slim SEO Fields',
+'ListeoFields' => 'Listeo Fields',
                         'WPMLFields' => 'WPML Fields',
                         'JetEngineFields' => 'Jet Engine Fields',
                         'JetEngineRFFields' => 'Jet Engine Repeater Fields',

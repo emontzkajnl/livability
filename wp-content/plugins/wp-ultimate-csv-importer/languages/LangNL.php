@@ -96,6 +96,8 @@ class LangNL {
                         'AllInOneSeoFields' => 'Alles in één SEO-velden',
                         'MetaBoxFields' => 'MetaBox-velden',
                         'YoastSeoFields' => 'Yoast Seo Fields',
+'SlimSeoFields' => 'Slim SEO Fields',
+'ListeoFields' => 'Listeo Fields',
                         'WPMLFields' => 'WPML-velden',
                         'RankMathFields'=>'Rank Math Fields',
                         'RankMathProFields'=>'Rank Math Pro Fields',

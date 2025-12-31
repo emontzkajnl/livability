@@ -38,6 +38,10 @@ class SaveMapping
 		add_action('wp_ajax_PauseImport', array($this, 'pause_import'));
 		add_action('wp_ajax_ResumeImport', array($this, 'resume_import'));
 		add_action('wp_ajax_DeactivateMail', array($this, 'deactivate_mail'));
+		add_action('wp_ajax_smackuci_check_review_popup', array($this, 'smackuci_check_review_popup'));
+add_action('wp_ajax_nopriv_smackuci_check_review_popup', array($this, 'smackuci_check_review_popup'));
+
+
 	}
 
 	public static function getInstance()
@@ -50,6 +54,42 @@ class SaveMapping
 		}
 		return SaveMapping::$instance;
 	}
+
+public function smackuci_check_review_popup() {
+	check_ajax_referer('smack-ultimate-csv-importer', 'securekey');
+
+    global $wpdb;
+
+    $table = $wpdb->prefix . "smackuci_events";
+
+    $dont_show = get_option('smackuci_dont_show_again', false);
+
+    if (isset($_POST['Later']) && $_POST['Later'] === "true") {
+        $import_count = (int) $wpdb->get_var("SELECT COUNT(*) FROM $table");
+
+        update_option('smackuci_last_feedback_check', $import_count);
+
+        wp_send_json_success(['reset' => true]);
+    }
+
+    if (isset($_POST['DontNotopen']) && $_POST['DontNotopen'] === "true") {
+        update_option('smackuci_dont_show_again', true);
+        wp_send_json_success(['dont_show' => true]);
+    }
+
+    $import_count = (int) $wpdb->get_var("SELECT COUNT(*) FROM $table");
+
+    $last_shown_at = (int) get_option('smackuci_last_feedback_check', 0);
+
+    if ($import_count >= ($last_shown_at + 10) && !$dont_show) {
+        update_option('smackuci_last_feedback_check', $import_count);
+        wp_send_json_success(['show_popup' => true]);
+    }
+
+    wp_send_json_error(['show_popup' => false]);
+}
+
+
 
 	public function handle_close_notification_action() {
 		check_ajax_referer('smack-ultimate-csv-importer', 'securekey');
@@ -1905,6 +1945,23 @@ class SaveMapping
 						$bundle_type = 'BUNDLEMETA';
 						$uci_woocomm_meta->set_product_meta_values($header_array, $value_array, $map['BUNDLEMETA'], $post_id, '', $bundle_type, $line_number, $get_mode, $hash_key);
 						break;
+
+					case 'EVENTS':
+							if (is_plugin_active('events-manager/events-manager.php') && $selected_type == 'event') {
+							$merge = [];
+							$merge = array_merge($map['CORE'], $map['EVENTS']);
+							$map['TERMS'] = isset($map['TERMS']) ? $map['TERMS'] : '';
+							$events_instance = EventsManagerImport::getInstance();
+							$events_instance->set_events_values($header_array, $value_array, $merge, $post_id, $selected_type, $get_mode, $map['TERMS'], $gmode);
+							break;
+							}elseif (is_plugin_active('the-events-calendar/the-events-calendar.php') && $selected_type == 'tribe_events') {
+							$merge = [];
+							$merge = array_merge($map['CORE'], $map['EVENTS']);
+							$map['TERMS'] = isset($map['TERMS']) ? $map['TERMS'] : '';
+							$events_instance = EventCalendarImport::getInstance();
+							$events_instance->set_events_values($header_array, $value_array, $merge, $post_id, $selected_type, $get_mode, $map['TERMS'], $gmode);
+							break;
+							}
 	
 					case 'JECCT':
 						$jet_engine_cct_instance = JetEngineCCTImport::getInstance();
@@ -2062,6 +2119,35 @@ class SaveMapping
 						$fifu_instance = FIFUImport::getInstance();
 						$fifu_instance->set_fifu_values($header_array, $value_array, $map['FIFUCUSTOMPOST'], $post_id, $selected_type, $get_mode);
 						break;
+					case 'SLIMSEO':
+        $slimseo_instance = SlimSeoImport::getInstance();
+        $slimseo_instance->set_slimseo_values(
+            $header_array,
+            $value_array,
+            $map['SLIMSEO'],
+            $post_id,
+            $selected_type,
+            $hash_key,
+            $gmode,
+            $templatekey,
+            $line_number
+        );
+        break;
+case 'LISTEO':
+    $listeo_instance = ListeoImport::getInstance();
+    $listeo_instance->set_listeo_values(
+        $header_array,
+        $value_array,
+        $map['LISTEO'],
+        $post_id,
+        $selected_type,
+        $hash_key,
+        $gmode,
+        $templatekey,
+        $line_number
+    );
+    break;
+
 					case 'YOASTSEO':
 						$yoast_instance = YoastSeoImport::getInstance();
 						$yoast_instance->set_yoast_values($line_number, $header_array, $value_array, $map['YOASTSEO'], $post_id, $selected_type, $hash_key, $gmode, $templatekey);

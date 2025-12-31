@@ -68,11 +68,31 @@ class SendPassword {
 		wp_die();
 	}
 	}
-	public function showsetting(){
-		$result['setting'] = get_option('openAI_settings');
-		echo wp_json_encode($result);
+
+	public function showsetting() {
+
+		// Nonce verification (CSRF protection)
+		if ( empty( $_POST['securekey'] ) || 
+			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['securekey'] ) ), 'smack-ultimate-csv-importer' ) ) {
+			wp_die( __( 'Security check failed.', 'wp-ultimate-csv-importer' ) );
+		}
+
+		// Capability check (authorization)
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( __( 'You do not have sufficient permissions to access this page.', 'wp-ultimate-csv-importer' ) );
+		}
+
+		// Fetch settings safely
+		$result['setting'] = get_option( 'openAI_settings' );
+
+		// Return as proper JSON response
+		wp_send_json_success( $result );
+
+		// End execution safely
 		wp_die();
+
 	}
+
 
 	/**
 	 * Function for show settings options

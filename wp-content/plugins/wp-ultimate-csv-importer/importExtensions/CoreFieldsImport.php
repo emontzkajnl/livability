@@ -668,47 +668,45 @@ class CoreFieldsImport {
 					if($media_handle['media_settings']['media_handle_option'] == 'true' 
 					&& isset($media_handle['media_settings']['enable_postcontent_image'])
 					&& $media_handle['media_settings']['enable_postcontent_image'] == 'true'){
-						if(preg_match("/<img/", $post_values['post_content'])) {
+					if(preg_match("/<img/", $post_values['post_content'])) {
 
-							$content = "<p>".$post_values['post_content']."</p>";
-							$doc = new \DOMDocument();
-							if(function_exists('mb_convert_encoding')) {
-								@$doc->loadHTML( mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' ), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
-							}else{
-								@$doc->loadHTML( $content);
-							}
-							$xpath = new \DOMXPath($doc);
-							$searchNode = $xpath->query('//img[@src]');
-							if ( ! empty( $searchNode ) ) {
-								foreach ( $searchNode as $searchNodes ) {
-									$orig_img_src[] = $searchNodes->getAttribute( 'src' ); 
-								}
-												
-								$media_dir = wp_get_upload_dir();
-								$names = $media_dir['url'];
-								if(isset($orig_img_src)){
-									$shortcode_table = $wpdb->prefix . "ultimate_csv_importer_shortcode_manager";
-									$indexs = 0;
-									foreach ($orig_img_src as $img_val){
-										$shortcode  = 'inline';
-										CoreFieldsImport::$media_instance->store_image_ids($i=1);
-										$attach_id = CoreFieldsImport::$media_instance->image_meta_table_entry($line_number,$post_values,$post_id ,'',$img_val, $hash_key ,$shortcode,$get_import_type,'','',$header_array,$value_array,'','',$indexs);
-										$indexs++;																			
+						$content = "<p>".$post_values['post_content']."</p>";
+						$doc = new \DOMDocument();
+						if(function_exists('mb_convert_encoding')) {
+							@$doc->loadHTML( mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' ), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+						} else {
+							@$doc->loadHTML( $content );
+						}
+
+						$xpath = new \DOMXPath($doc);
+						$searchNode = $xpath->query('//img[@src]');
+						if ( ! empty( $searchNode ) ) {
+							$indexs = 0; 
+							foreach ( $searchNode as $searchNodes ) {
+								$img_val = $searchNodes->getAttribute('src');
+								CoreFieldsImport::$media_instance->store_image_ids(1);
+								$attach_id = CoreFieldsImport::$media_instance->image_meta_table_entry(
+									$line_number, $post_values, $post_id, '', $img_val, $hash_key,
+									'inline', $get_import_type, '', '', $header_array, $value_array, '', '', $indexs
+								);
+								$indexs++;
+
+								if ( $attach_id ) {
+									$new_url = wp_get_attachment_url( $attach_id );
+									if ( $new_url ) {
+										$searchNodes->setAttribute( 'src', $new_url );
 									}
 								}
-								$image_name = pathinfo($img_val);
-								$fimg_name = $image_name['basename'];
-								$temp_img = $wpdb->get_var("SELECT guid FROM {$wpdb->prefix}posts where guid like '%$fimg_name%'");
-								$searchNodes->setAttribute( 'src', $temp_img);
-								$post_content              = $doc->saveHTML();
-								$update_content = [
-									'ID'           => $post_id,
-									'post_content' => html_entity_decode($post_content, ENT_QUOTES, 'UTF-8')
-								];
-								wp_update_post($update_content);
 							}
+
+							$post_content = $doc->saveHTML();
+							$update_content = [
+								'ID'           => $post_id,
+								'post_content' => html_entity_decode( $post_content, ENT_QUOTES, 'UTF-8' )
+							];
+							wp_update_post( $update_content );
 						}
-						
+					}	
 					}
 					if($media_handle['media_settings']['media_handle_option'] == 'true' && !empty($post_values['post_content']) && $media_handle['media_settings']['enable_postcontent_image'] == 'false' && preg_match("/<img/", $post_values['post_content'])) {
 						$dom = new \DOMDocument();

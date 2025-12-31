@@ -57,6 +57,20 @@ class UrlUpload implements Uploads{
 		check_ajax_referer('smack-ultimate-csv-importer', 'securekey');
 		$file_url = esc_url_raw($_POST['url']);
 		$file_url = wp_http_validate_url($file_url);
+$host = wp_parse_url($file_url, PHP_URL_HOST);
+$ip   = gethostbyname($host);
+
+if (!filter_var(
+    $ip,
+    FILTER_VALIDATE_IP,
+    FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+)) {
+    $response['success'] = false;
+    $response['message'] = 'Download Failed. Invalid or restricted URL destination.';
+    echo wp_json_encode($response);
+    die();
+}
+
 		$media_type = '';
         if (isset($_POST['MediaType'])) {
             $media_type = sanitize_key($_POST['MediaType']);
@@ -70,9 +84,33 @@ class UrlUpload implements Uploads{
 		$response = [];
 		global $wpdb;
 		$file_table_name = $wpdb->prefix ."smackcsv_file_events";			
-			if(strstr($file_url, 'https://bit.ly/')){
-				$file_url = $this->unshorten_bitly_url($file_url);
-			}
+			if (strstr($file_url, 'https://bit.ly/')) {
+
+    $file_url = $this->unshorten_bitly_url($file_url);
+
+    $file_url = wp_http_validate_url($file_url);
+    if (!$file_url) {
+        $response['success'] = false;
+        $response['message'] = 'Download Failed. Resolved URL is not valid.';
+        echo wp_json_encode($response);
+        die();
+    }
+
+    $host = wp_parse_url($file_url, PHP_URL_HOST);
+    $ip   = gethostbyname($host);
+
+    if (!filter_var(
+        $ip,
+        FILTER_VALIDATE_IP,
+        FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+    )) {
+        $response['success'] = false;
+        $response['message'] = 'Download Failed. Invalid or restricted URL destination.';
+        echo wp_json_encode($response);
+        die();
+    }
+}
+
 
 			$pub = substr($file_url, strrpos($file_url, '/') + 1);
                /*Added support for google addon & dropbox*/
