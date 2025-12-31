@@ -107,6 +107,9 @@
 var almSinglePosts = {};
 
 (function () {
+
+	var delay = 250;
+
 	/**
   * Initial function loaded on page load.
   *
@@ -118,7 +121,6 @@ var almSinglePosts = {};
 		almSinglePosts.titleTemplate = "";
 		almSinglePosts.pageview = true;
 		almSinglePosts.animating = false;
-		almSinglePosts.scroll = true;
 		almSinglePosts.offset = 30;
 		almSinglePosts.popstate = false;
 		almSinglePosts.is_disqus = false;
@@ -158,27 +160,27 @@ var almSinglePosts = {};
 
 			// Get the data attributes of the current element
 			var currentPost = current[current.length - 1];
-			var id = currentPost ? currentPost.dataset.id : undefined;
+			var _id = currentPost ? currentPost.dataset.id : undefined;
 			var permalink = currentPost ? currentPost.dataset.url : "";
 			var title = currentPost ? currentPost.dataset.title : "";
 			var page = currentPost ? currentPost.dataset.page : "";
 
 			// If ID undefined, use the first post data.
-			if (id === undefined) {
+			if (_id === undefined) {
 				currentPost = almSinglePosts.first;
-				id = currentPost.dataset.id;
+				_id = currentPost.dataset.id;
 				permalink = currentPost.dataset.url;
 				title = currentPost.dataset.title;
 			}
 
 			// Set the reading progress bar.
 			if (almSinglePosts.showProgressBar) {
-				almSinglePosts.almSetProgressBar(id);
+				almSinglePosts.almSetProgressBar(_id);
 			}
 
 			// Set URL, if applicible.
 			if (url !== permalink && !hasNextPageAddon()) {
-				almSinglePosts.setURL(id, permalink, title, page, currentPost);
+				almSinglePosts.setURL(_id, permalink, title, page, currentPost);
 			}
 		}
 	};
@@ -274,11 +276,9 @@ var almSinglePosts = {};
 			// On init.
 			almSinglePosts.siteTitle = alm.addons.single_post_siteTitle; // Site Title
 			almSinglePosts.siteTagline = alm.addons.single_post_siteTagline; // Site Tagline
-			almSinglePosts.scroll = alm.addons.single_post_scroll; // Scroll
 			almSinglePosts.offset = parseInt(alm.addons.single_post_scroll_top); // Scroll Top
 			almSinglePosts.controls = alm.addons.single_post_controls; // Enable back/fwd button controls
 			almSinglePosts.controls = almSinglePosts.controls === "1" ? true : false;
-			almSinglePosts.scroll = almSinglePosts.scroll === "true" ? true : false;
 			almSinglePosts.target = alm.addons.single_post_target !== "" ? alm.addons.single_post_target : false;
 			almSinglePosts.progress_bar = alm.addons.single_post_progress_bar; // Progress Bar
 
@@ -305,15 +305,10 @@ var almSinglePosts = {};
 					}
 				}
 			}
-			// Initiate Progress Bar
+			// Initiate Progress Bar.
 			if (almSinglePosts.progress_bar !== "") {
 				almSinglePosts.almCreateProgressBar(almSinglePosts.progress_bar);
 			}
-		}
-
-		// Move to post
-		if (almSinglePosts.scroll && !almSinglePosts.init) {
-			almSinglePosts.scrollToPost(id);
 		}
 
 		almSinglePosts.init = false;
@@ -431,7 +426,7 @@ var almSinglePosts = {};
 		// Fade In
 		setTimeout(function () {
 			almSinglePosts.progressWrap.style.opacity = "1";
-		}, 250);
+		}, delay);
 
 		// Set flag
 		almSinglePosts.showProgressBar = true;
@@ -446,7 +441,7 @@ var almSinglePosts = {};
 	almSinglePosts.onpopstate = function (event) {
 		almSinglePosts.disableOnScroll = true;
 
-		// Exit potstate functions if window has hash - this would likely mean an achor link was clicked.
+		// Exit popstate functions if window has hash - this would likely mean an anchor link was clicked.
 		if (window.location.hash) {
 			almSinglePosts.disableOnScroll = false;
 			return false;
@@ -454,20 +449,19 @@ var almSinglePosts = {};
 
 		if (!almSinglePosts.init && almSinglePosts.active) {
 			almSinglePosts.popstate = true;
-			var id;
-			if (event.state) {
-				// State
-				id = event.state.postID;
+			var _id2 = void 0;
+			if (event.state && event.state.title) {
+				// State.
+				_id2 = event.state.postID;
 				almSinglePosts.setPageTitle(event.state.title);
 			} else {
-				// Null State
-				id = almSinglePosts.first.dataset.id;
+				// Null State.
+				_id2 = almSinglePosts.first.dataset.id;
 				document.title = almSinglePosts.initPageTitle;
 			}
 
-			// Move to post
 			almSinglePosts.popstate = true;
-			almSinglePosts.scrollToPost(id);
+			almSinglePosts.scrollToPost(_id2); // Move user to post.
 		}
 
 		almSinglePosts.disableOnScroll = false;
@@ -492,19 +486,19 @@ var almSinglePosts = {};
   * Set the browser URL to current permalink.
   *
   * @since 1.0
-  * @param {string} id        The current ID.
+  * @param {string} postID    The current ID.
   * @param {string} permalink The permalink.
   * @param {string} title     The page title.
   * @param {string} page      Current page #.
   * @param {Element} element  The current HTML element.
   */
-	almSinglePosts.setURL = function (id, permalink, title, page, element) {
+	almSinglePosts.setURL = function (postID, permalink, title, page, element) {
 		// If pushstate & not IE10 is enabled
 		if (typeof window.history.pushState === "function") {
 			var nested = element && element.classList.contains("alm-nextpage") ? true : false;
 
 			var state = {
-				postID: id,
+				postID: postID,
 				permalink: permalink,
 				title: title
 			};
@@ -516,18 +510,16 @@ var almSinglePosts = {};
 				history.replaceState(state, title, permalink);
 			}
 
-			// Set page title.
-			almSinglePosts.setPageTitle(title);
+			almSinglePosts.setPageTitle(title); // Set page title.
 
-			// Trigger analytics.
+
 			if (typeof ajaxloadmore.analytics === "function") {
-				ajaxloadmore.analytics("single-posts");
+				ajaxloadmore.analytics("single-posts"); // Trigger analytics.
 			}
 		}
 
-		// Disqus comments
 		if (almSinglePosts.is_disqus) {
-			almSinglePosts.disqusLoad(id, permalink, title, page);
+			almSinglePosts.disqusLoad(id, permalink, title, page); // Disqus comments
 		}
 	};
 
@@ -539,41 +531,41 @@ var almSinglePosts = {};
   */
 	almSinglePosts.scrollToPost = function (id) {
 		var target = document.querySelector(".alm-single-post.post-" + id);
-		if (target) {
-			// Confirm target has children, if not move to top of page. (offset fix_
-			target = target.hasChildNodes() ? target : document.querySelector("body");
-
-			var offset = typeof ajaxloadmore.getOffset === "function" ? ajaxloadmore.getOffset(target).top : target.offsetTop;
-			var top = offset - almSinglePosts.offset + 1;
-			if (!top) {
-				return false;
-			}
-
-			// Scroll window to position
-
-			if (almSinglePosts.popstate) {
-				// From Popstate
-				setTimeout(function () {
-					// Delay fixes browser popstate issues
-					window.scrollTo(0, top);
-				}, 5);
-			} else {
-				// Standard Scroll
-				if (typeof ajaxloadmore.almScroll === "function") {
-					ajaxloadmore.almScroll(top);
-				} else {
-					window.scrollTo({
-						top: top,
-						behavior: "smooth"
-					});
-				}
-			}
-
-			// Set popstate flag to false after transition is done
-			setTimeout(function () {
-				almSinglePosts.popstate = false;
-			}, 250);
+		if (!target) {
+			return; // Exit if target not found
 		}
+
+		// Confirm target has children, if not move to top of page.
+		target = target.hasChildNodes() ? target : document.querySelector("body");
+
+		var offset = typeof ajaxloadmore.getOffset === "function" ? ajaxloadmore.getOffset(target).top : target.offsetTop;
+		var top = offset - almSinglePosts.offset + 1;
+
+		if (!top) {
+			return; // Exit if top is not defined
+		}
+
+		if (almSinglePosts.popstate) {
+			// From Popstate.
+			setTimeout(function () {
+				window.scrollTo(0, top); // Delay fixes browser popstate issues.
+			}, 15);
+		} else {
+			// Standard Scroll.
+			if (typeof ajaxloadmore.almScroll === "function") {
+				ajaxloadmore.almScroll(top);
+			} else {
+				window.scrollTo({
+					top: top,
+					behavior: "smooth"
+				});
+			}
+		}
+
+		// Set popstate flag to false after transition is done
+		setTimeout(function () {
+			almSinglePosts.popstate = false;
+		}, delay);
 	};
 
 	/**

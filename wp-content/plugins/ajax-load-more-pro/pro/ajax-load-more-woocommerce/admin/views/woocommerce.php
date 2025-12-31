@@ -35,7 +35,11 @@ $alm_admin_heading = __( 'WooCommerce', 'alm-woocommerce' );
 						<h2><?php esc_attr_e( 'Shop, Product Archives & Search', 'alm-woocommerce' ); ?></h2>
 						<p class="lg"><?php esc_attr_e( 'Ajax Load More integrates directly into your WooCommerce shop and search templates.', 'alm-woocommerce' ); ?></p>
 						<p><?php _e( sprintf( 'To enable Ajax Load More on shop and archive templates visit the WooCommerce <a href="%s">panel</a> of the WordPress Customizer.', 'customize.php?autofocus[panel]=woocommerce' ), 'alm-woocommerce' ); ?></p>
-						<p><a class="button" href="customize.php?autofocus[panel]=woocommerce&autofocus[section]=woocommerce_alm"><?php _e( 'Edit in Customizer</a>', 'alm-woocommerce' ); ?></p>
+						<p>
+							<a class="button" href="customize.php?autofocus[panel]=woocommerce&autofocus[section]=woocommerce_alm">
+								<?php _e( 'Edit in Customizer', 'alm-woocommerce' ); ?>
+							</a>
+						</p>
 					</div>
 				</div>
 				<div class="woocommerce-help--item">

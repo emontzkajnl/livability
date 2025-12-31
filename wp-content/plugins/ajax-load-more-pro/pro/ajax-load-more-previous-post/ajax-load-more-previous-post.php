@@ -6,7 +6,7 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.7.3
+ * Version: 1.8.0
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
  * Requires Plugins: ajax-load-more
@@ -20,14 +20,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_PREV_POST_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_PREV_POST_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_PREV_POST_VERSION', '1.7.3' );
-define( 'ALM_PREV_POST_RELEASE', 'August 18, 2025' );
+define( 'ALM_PREV_POST_VERSION', '1.8.0' );
+define( 'ALM_PREV_POST_RELEASE', 'December 11, 2025' );
 
-if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
+if ( ! class_exists( 'ALM_Single_Post' ) ) :
 	/**
 	 * Initiate the class.
 	 */
-	class ALM_SINGLEPOST {
+	class ALM_Single_Post {
 
 		/**
 		 * Construct class function.
@@ -35,9 +35,13 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		public function __construct() {
 			add_action( 'alm_prev_post_installed', [ $this, 'alm_prev_post_installed' ] );
 			add_action( 'alm_single_post_installed', [ $this, 'alm_single_post_installed' ] );
-			add_action( 'wp_ajax_alm_get_single', [ $this, 'alm_get_single_post' ] );
-			add_action( 'wp_ajax_nopriv_alm_get_single', [ $this, 'alm_get_single_post' ] );
-			add_action( 'alm_prev_post_settings', [ $this, 'alm_prev_post_settings' ] );
+
+			// Admin Ajax and REST API.
+			add_action( 'rest_api_init', [ $this, 'alm_single_post_register_route' ] );
+			add_action( 'wp_ajax_alm_get_single', [ $this, 'alm_get_single_post' ] ); // Deprecated.
+			add_action( 'wp_ajax_nopriv_alm_get_single', [ $this, 'alm_get_single_post' ] ); // Deprecated.
+
+			add_action( 'alm_prev_post_settings', [ $this, 'alm_single_post_settings' ] );
 			add_action( 'wp_enqueue_scripts', [ $this, 'alm_single_post_enqueue_scripts' ] );
 			add_action( 'posts_where', [ $this, 'alm_single_query_where' ], 10, 2 );
 			add_action( 'init', [ $this, 'init' ] );
@@ -45,6 +49,35 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 			add_filter( 'alm_single_post_inc', [ $this, 'alm_single_post_inc' ], 10, 5 );
 			add_filter( 'alm_single_post_args', [ $this, 'alm_single_post_args' ], 10, 2 );
 			add_filter( 'alm_single_post_shortcode', [ $this, 'alm_single_post_shortcode' ], 10, 10 );
+		}
+
+		/**
+		 * Get the REST API route for single post retrieval.
+		 *
+		 * @return string
+		 */
+		public static function alm_single_post_get_route() {
+			return esc_url_raw( rest_url( 'ajax-load-more/single-posts/next-post' ) );
+		}
+
+		/**
+		 * Register REST API route for single post retrieval.
+		 *
+		 * @return void
+		 */
+		public function alm_single_post_register_route() {
+			register_rest_route(
+				'ajax-load-more/single-posts/',
+				'next-post',
+				[
+					'methods'             => 'GET',
+					'callback'            => [ $this, 'alm_get_single_rest_request' ],
+					'args'                => [],
+					'permission_callback' => function () {
+						return true;
+					},
+				]
+			);
 		}
 
 		/**
@@ -57,47 +90,23 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		}
 
 		/**
-		 * Set WP Query params using `posts_where` clause.
-		 * Force is_single() and is_singular() to be true in the ajax call.
-		 *
-		 * @see https://developer.wordpress.org/reference/hooks/posts_where/
-		 *
-		 * @param string   $where The WHERE clause of the query.
-		 * @param WP_Query $query The WP_Query instance (passed by reference).
-		 * @since 1.3.3
-		 */
-		public function alm_single_query_where( $where, $query ) {
-			$alm_single_query = $query->get( 'alm_query' );
-			if ( $alm_single_query && $alm_single_query === 'single_posts' ) {
-				global $wp_query;
-				$wp_query->is_single   = true;
-				$wp_query->is_feed     = true;
-				$wp_query->is_singular = true;
-				$wp_query->in_the_loop = true;
-
-				error_reporting( 0 ); // phpcs:ignore
-			}
-			return $where;
-		}
-
-		/**
 		 * Enqueue Single Post scripts.
 		 *
-		 * @since 1.0
+		 * @return void
 		 */
 		public function alm_single_post_enqueue_scripts() {
-			$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 			wp_register_script( 'alm-single-posts', plugins_url( '/dist/js/alm-single-posts' . $suffix . '.js', __FILE__ ), [ 'ajax-load-more' ], ALM_PREV_POST_VERSION, true );
 		}
 
 		/**
-		 * Get the post id and return the next post ID via Ajax.
+		 * Get single post params from request.
 		 *
+		 * @param array $params The request params.
+		 * @return array
 		 * @since 1.0
-		 * @return void
 		 */
-		public function alm_get_single_post() {
-			$params          = filter_input_array( INPUT_GET );
+		public function alm_get_single_post_params( $params ) {
 			$init            = isset( $params['init'] ) ? $params['init'] : false;
 			$id              = isset( $params['id'] ) ? $params['id'] : '';
 			$exclude_post_id = isset( $params['initial_id'] ) ? $params['initial_id'] : '';
@@ -119,46 +128,63 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 				'order'           => $order,
 			];
 
-			$hash      = md5( serialize( $array ) ); // Create a hash of the array to use as a transient key.
+			$hash      = md5( wp_json_encode( $array ) ); // Create a hash of the array to use as a transient key.
 			$transient = get_transient( 'alm_single_post_' . $hash );
 			if ( $transient ) {
-				wp_send_json( $transient ); // Use transient data.
+				return $transient;
 			}
 
 			$data = $this->alm_get_single_posts_data( $array );
 			set_transient( 'alm_single_post_' . $hash, $data, apply_filters( 'alm_single_post_transient_expiration', MINUTE_IN_SECONDS ) );
-			wp_send_json( $data );
+			return $data;
+		}
+
+		/**
+		 * Fetch next post data via REST API.
+		 *
+		 * @param WP_REST_Request $request Rest request object.
+		 * @return void
+		 */
+		public function alm_get_single_rest_request( WP_REST_Request $request ) {
+			wp_send_json( $this->alm_get_single_post_params( $request->get_params() ) );
+		}
+
+		/**
+		 * Fetch next post data via admin-ajax.php.
+		 *
+		 * @deprecated 2.0 Use REST API route instead.
+		 * @return void
+		 */
+		public function alm_get_single_post() {
+			$params = filter_input_array( INPUT_GET );
+			wp_send_json( $this->alm_get_single_post_params( $params ) );
 		}
 
 		/**
 		 * Get single post data.
 		 *
-		 * @param array $array The array containing query data.
+		 * @param array $data Array containing query data.
 		 * @return array
 		 */
-		public function alm_get_single_posts_data( $array ) {
-			if ( $array && $array['id'] ) {
+		public function alm_get_single_posts_data( $data ) {
+			if ( $data && $data['id'] ) {
 
-				switch ( $array['order'] ) {
-					// Get the latest (newest) post.
+				switch ( $data['order'] ) {
 					case 'latest':
-						$data = self::alm_get_latest_post( $array['exclude_post_id'], $array['post_type'], $array['tax'], $array['exclude_terms'] );
-						return $data;
+						// Get the latest (newest) post.
+						return self::alm_get_latest_post( $data['exclude_post_id'], $data['post_type'], $data['tax'], $data['exclude_terms'] );
 
-					// Get next post ordered by date.
 					case 'next':
-						$data = self::alm_get_next_post( $array['id'], $array['tax'], $array['exclude_terms'], $array['exclude_post_id'] );
-						return $data;
+						// Get next post ordered by date.
+						return self::alm_get_next_post( $data['id'], $data['tax'], $data['exclude_terms'], $data['exclude_post_id'] );
 
-					// Get previous post ordered by date.
 					case 'previous':
-						$data = self::alm_get_previous_post( $array['id'], $array['tax'], $array['exclude_terms'], $array['exclude_post_id'] );
-						return $data;
+						// Get previous post ordered by date.
+						return self::alm_get_previous_post( $data['id'], $data['tax'], $data['exclude_terms'], $data['exclude_post_id'] );
 
-					// Get post ID array (use as default for ease).
 					default:
-						$data = self::alm_get_post_in_array( $array['id'], $array['order'] );
-						return $data;
+						// Get post ID array (use as default for ease).
+						return self::alm_get_post_in_array( $data['id'], $data['order'] );
 				}
 			}
 		}
@@ -168,9 +194,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 *
 		 * @param string $id    Post ID.
 		 * @param array  $array The array of post IDs.
-		 * @return JSON
-		 * @since 1.0
-		 * @updated 1.3
+		 * @return array
 		 */
 		public static function alm_get_post_in_array( $id, $array ) {
 			global $post;
@@ -211,8 +235,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 * @param  string $tax             The taxonomy slug.
 		 * @param  string $exclude_terms   A comma separated list of term IDs.
 		 * @param  string $exclude_post_id The post ID to exclude.
-		 * @return JSON
-		 * @since 1.3
+		 * @return array
 		 */
 		public static function alm_get_previous_post( $id, $tax, $exclude_terms, $exclude_post_id ) {
 			global $post;
@@ -248,8 +271,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 * @param  string $tax             The taxonomy slug.
 		 * @param  string $exclude_terms   A comma separated list of term IDs.
 		 * @param  string $exclude_post_id The post ID to exclude.
-		 * @return JSON
-		 * @since 1.3
+		 * @return array
 		 */
 		public static function alm_get_next_post( $id, $tax, $exclude_terms, $exclude_post_id ) {
 			global $post;
@@ -285,8 +307,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 * @param  string $post_type     The post type.
 		 * @param  string $taxonomy      The taxonomy slug.
 		 * @param  string $exclude_terms A comma separated list of term IDs.
-		 * @return JSON
-		 * @since 1.3
+		 * @return array
 		 */
 		public static function alm_get_latest_post( $id, $post_type, $taxonomy, $exclude_terms ) {
 			global $post;
@@ -314,7 +335,6 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 * @param  string $taxonomy      The taxonomy slug.
 		 * @param  string $exclude_terms A comma separated list of term IDs.
 		 * @return string                The post ID.
-		 * @since 1.3
 		 */
 		public static function alm_query_latest_post_id( $id, $post_type, $taxonomy, $exclude_terms ) {
 			// Get latest post not including the current.
@@ -377,22 +397,23 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 *
 		 * @param string $id The post ID.
 		 * @param object $previous_post The post object.
-		 * @since 1.3
+		 * @return array
 		 */
 		public static function alm_build_data_object( $id, $previous_post ) {
 			$data = [];
+
 			if ( $previous_post ) {
 				$data['has_previous_post'] = true;
 				$data['prev_id']           = $previous_post->ID;
 				$data['prev_slug']         = $previous_post->post_name;
 				$data['prev_permalink']    = get_permalink( $previous_post->ID );
-
-				$title = '';
+				$title                     = '';
 
 				// Yoast SEO Title.
 				if ( function_exists( 'wpseo_replace_vars' ) ) {
 					$title = self::alm_convert_yoast_title( $previous_post );
 				}
+
 				if ( empty( $title ) ) {
 					$title = strip_tags( html_entity_decode( get_the_title( $previous_post->ID ) ) ); // phpcs:ignore
 				}
@@ -401,7 +422,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 
 			} else {
 				$data['has_previous_post'] = false;
-
+				return $data;
 			}
 
 			$data['current_id'] = (int) $id;
@@ -415,7 +436,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 * Get the Yoast page title.
 		 *
 		 * @param object $post The post object.
-		 * @since 1.4.4
+		 * @return string The Yoast title.
 		 */
 		public static function alm_convert_yoast_title( $post ) {
 			$yoast_title = get_post_meta( $post->ID, '_yoast_wpseo_title', true );
@@ -432,7 +453,6 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 *  @param int   $id The current post ID.
 		 *  @param array $post_type The post type.
 		 *  @return array The post args.
-		 *  @since 1.0
 		 */
 		public function alm_single_post_args( $id, $post_type ) {
 			$args = [
@@ -449,7 +469,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		 * @param string $repeater       The Repeater Template name.
 		 * @param string $type           The Repeater type.
 		 * @param string $theme_repeater The Theme Repeater name.
-		 * @since 1.0
+		 * @return void
 		 */
 		public function alm_single_post_inc( $repeater, $type, $theme_repeater ) {
 			ob_start();
@@ -464,9 +484,42 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		}
 
 		/**
-		 *  Build Next Post shortcode params and send back to core ALM.
+		 * Set WP Query params using `posts_where` clause.
+		 * Force is_single() and is_singular() to be true in the ajax call.
 		 *
-		 *  @since 1.0
+		 * @see https://developer.wordpress.org/reference/hooks/posts_where/
+		 *
+		 * @param string   $where The WHERE clause of the query.
+		 * @param WP_Query $query The WP_Query instance (passed by reference).
+		 */
+		public function alm_single_query_where( $where, $query ) {
+			$alm_single_query = $query->get( 'alm_query' );
+			if ( $alm_single_query && $alm_single_query === 'single_posts' ) {
+				global $wp_query;
+				$wp_query->is_single   = true;
+				$wp_query->is_feed     = true;
+				$wp_query->is_singular = true;
+				$wp_query->in_the_loop = true;
+
+				error_reporting( 0 ); // phpcs:ignore
+			}
+			return $where;
+		}
+
+		/**
+		 * Build Next Post shortcode params and send back to core ALM.
+		 *
+		 * @param string $id The post ID.
+		 * @param string $order The post order.
+		 * @param string $tax The taxonomy.
+		 * @param string $excluded The excluded terms.
+		 * @param string $progress_bar The progress bar settings.
+		 * @param array  $options The ALM options array.
+		 * @param string $target The target selector.
+		 * @param string $query_order The custom query order.
+		 * @param string $query_args The custom query args.
+		 * @param string $preview The preview settings.
+		 * @return string The shortcode params.
 		 */
 		public function alm_single_post_shortcode( $id, $order, $tax, $excluded, $progress_bar, $options, $target, $query_order, $query_args, $preview ) {
 			$return  = ' data-single-post="true"';
@@ -510,19 +563,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 
 			// Set scrolltop.
 			$single_post_scrolltop = '30';
-
-			// Update settings.
 			$single_post_scrolltop = isset( $options['_alm_prev_post_scrolltop'] ) ? $options['_alm_prev_post_scrolltop'] : $single_post_scrolltop;
-
-			// Enable Scrolling.
-			$single_post_enable_scroll = isset( $options['_alm_prev_post_scroll'] ) ? $options['_alm_prev_post_scroll'] : 'false';
-			if ( ! isset( $single_post_enable_scroll ) ) {
-				$single_post_enable_scroll = 'false';
-			} elseif ( $single_post_enable_scroll === '1' ) {
-					$single_post_enable_scroll = 'true';
-			} else {
-				$single_post_enable_scroll = 'false';
-			}
 
 			$single_post_controls = '1';
 			if ( isset( $options['_alm_prev_post_browser_controls'] ) ) {
@@ -538,7 +579,6 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 			$return .= ' data-single-post-title-template="' . $single_post_title_template . '"';
 			$return .= ' data-single-post-site-title="' . get_bloginfo( 'name' ) . '"';
 			$return .= ' data-single-post-site-tagline="' . get_bloginfo( 'description' ) . '"';
-			$return .= ' data-single-post-scroll="' . $single_post_enable_scroll . '"';
 			$return .= ' data-single-post-scrolltop="' . $single_post_scrolltop . '"';
 			$return .= ' data-single-post-controls="' . $single_post_controls . '"';
 			$return .= ' data-single-post-progress-bar="' . $progress_bar . '"';
@@ -605,7 +645,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		/**
 		 * An empty function to determine if Previous Post is active.
 		 *
-		 * @since 1.0
+		 * @return void
 		 */
 		public function alm_prev_post_installed() {
 			// Empty.
@@ -614,44 +654,43 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		/**
 		 * An empty function to determine if Single Posts is active.
 		 *
-		 * @since 1.0
+		 * @return void
 		 */
 		public function alm_single_post_installed() {
 			// Empty.
 		}
 
 		/**
-		 * Create the Previous Post settings panel.
+		 * Create the Single Post settings panel.
 		 *
-		 * @since 1.2
+		 * @return void
 		 */
-		public function alm_prev_post_settings() {
-
+		public function alm_single_post_settings() {
 			register_setting(
 				'alm_prev_post_license',
 				'alm_prev_post_license_key',
-				'alm_prev_post_sanitize_license'
+				'alm_single_post_sanitize_license'
 			);
 
 			add_settings_section(
 				'alm_prev_post_settings',
 				'Single Post Settings',
-				'alm_prev_post_callback',
+				'alm_single_post_callback',
 				'ajax-load-more'
 			);
 
 			add_settings_field(
 				'_alm_prev_post_title',
 				__( 'Page Title Template', 'ajax-load-more-single-post' ),
-				'alm_prev_post_title_callback',
+				'alm_single_post_title_callback',
 				'ajax-load-more',
 				'alm_prev_post_settings'
 			);
 
 			add_settings_field(
-				'_alm_prev_post_scroll',
-				__( 'Scroll to Post', 'ajax-load-more-single-post' ),
-				'alm_prev_post_scroll_callback',
+				'_alm_prev_post_browser_controls',
+				__( 'Fwd/Back Buttons', 'ajax-load-more-single-post' ),
+				'alm_single_post_browser_controls_callback',
 				'ajax-load-more',
 				'alm_prev_post_settings'
 			);
@@ -659,14 +698,7 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 			add_settings_field(
 				'_alm_prev_post_scrolltop',
 				__( 'Scroll Top', 'ajax-load-more-single-post' ),
-				'alm_prev_post_scrolltop_callback',
-				'ajax-load-more',
-				'alm_prev_post_settings'
-			);
-			add_settings_field(
-				'_alm_prev_post_browser_controls',
-				__( 'Back/Fwd Buttons', 'ajax-load-more-single-post' ),
-				'alm_prev_post_browser_controls_callback',
+				'alm_single_post_scrolltop_callback',
 				'ajax-load-more',
 				'alm_prev_post_settings'
 			);
@@ -677,9 +709,9 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 	 * Sanitize license activation.
 	 *
 	 * @param string $key The new license key.
-	 * @since 1.0.0
+	 * @return string The license key.
 	 */
-	function alm_prev_post_sanitize_license( $key ) {
+	function alm_single_post_sanitize_license( $key ) {
 		$old = get_option( 'alm_prev_post_license_key' );
 		if ( $old && $old !== $key ) {
 			delete_option( 'alm_prev_post_license_status' );
@@ -687,61 +719,56 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 		return $key;
 	}
 
-	/* Next Post Settings (Displayed in ALM Core) */
-
 	/**
-	 * Next Post Setting Heading.
+	 * Single Post settings header.
 	 *
-	 * @since 1.0
+	 * @return void
 	 */
-	function alm_prev_post_callback() {
-		$html = '<p>' . __( 'Customize your installation of the <a href="http://connekthq.com/plugins/ajax-load-more/add-ons/single-post/">Single Post</a> add-on.', 'ajax-load-more-single-post' ) . '</p>';
-
-		echo $html; // phpcs:ignore
+	function alm_single_post_callback() {
+		// Translators: 1: opening anchor tag, 2: closing anchor tag.
+		echo '<p>' . sprintf( esc_html__( 'Customize your installation of the %1$sSingle Post%2$s add-on.', 'ajax-load-more-single-post' ), '<a href="http://connekthq.com/plugins/ajax-load-more/add-ons/single-post/">', '</a>' ) . '</p>';
 	}
 
 	/**
 	 * Update the page title
 	 *
-	 * @since 1.0
+	 * @return void
 	 */
-	function alm_prev_post_title_callback() {
+	function alm_single_post_title_callback() {
 		$options = get_option( 'alm_settings' );
 		if ( ! isset( $options['_alm_prev_post_title'] ) ) {
 			$options['_alm_prev_post_title'] = '';
 		}
 
 		$html  = '<label for="_alm_prev_post_title">';
-		$html .= __( 'The page title template is used to update the browser title each time a new post is loaded.', 'ajax-load-more-single-post' );
-		$html .= '<br/><span>' . __( 'If empty the page title will <u>NOT</u> be updated', 'ajax-load-more-single-post' ) . '</span></label><br/>';
+		$html .= esc_html__( 'The page title template is used to update the browser title each time a new post is loaded.', 'ajax-load-more-single-post' );
+		$html .= '<br/><span>' . esc_html__( 'If empty the page title will NOT be updated.', 'ajax-load-more-single-post' ) . '</span></label>';
 		$html .= '<input type="text" class="full" id="_alm_prev_post_title" name="alm_settings[_alm_prev_post_title]" value="' . $options['_alm_prev_post_title'] . '" placeholder="{post-title} - {site-title}" /> ';
-		$html .= '<div class="template-tags"><h4>' . __( 'Template Tags', 'ajax-load-more-single-post' ) . '</h4>';
+		$html .= '<div class="template-tags"><h4>' . esc_html__( 'Template Tags', 'ajax-load-more-single-post' ) . '</h4>';
 		$html .= '<ul>';
-		$html .= '<li><pre>{post-title}</pre> ' . __( 'Title of Post', 'ajax-load-more-single-post' ) . '</li>';
-		$html .= '<li><pre>{site-title}</pre> ' . __( 'Site Title', 'ajax-load-more-single-post' ) . '</li>';
-		$html .= '<li><pre>{tagline}</pre> ' . __( 'Site Tagline', 'ajax-load-more-single-post' ) . '</li>';
+		$html .= '<li><pre>{post-title}</pre> ' . esc_html__( 'Title of Post', 'ajax-load-more-single-post' ) . '</li>';
+		$html .= '<li><pre>{site-title}</pre> ' . esc_html__( 'Site Title', 'ajax-load-more-single-post' ) . '</li>';
+		$html .= '<li><pre>{tagline}</pre> ' . esc_html__( 'Site Tagline', 'ajax-load-more-single-post' ) . '</li>';
 		$html .= '</ul>';
 
 		echo $html; // phpcs:ignore
 	}
 
 	/**
-	 * Allow window scrolling
+	 * Disable back/fwd button when URLs updated (uses replaceState vs pushState).
 	 *
-	 * @since 1.0
+	 * @return void
 	 */
-	function alm_prev_post_scroll_callback() {
+	function alm_single_post_browser_controls_callback() {
 		$options = get_option( 'alm_settings' );
-		if ( ! isset( $options['_alm_prev_post_scroll'] ) ) {
-			$options['_alm_prev_post_scroll'] = '0';
+		if ( ! isset( $options['_alm_prev_post_browser_controls'] ) ) {
+			$options['_alm_prev_post_browser_controls'] = '1';
 		}
 
-		$html  = '<input type="hidden" name="alm_settings[_alm_prev_post_scroll]" value="0" />';
-		$html .= '<input type="checkbox" name="alm_settings[_alm_prev_post_scroll]" id="alm_prev_scroll_page" value="1"' . ( ( $options['_alm_prev_post_scroll'] ) ? ' checked="checked"' : '' ) . ' />';
-
-		$html .= '<label for="alm_prev_scroll_page">';
-		$html .= __( 'Enable Window Scrolling.', 'ajax-load-more-single-post' );
-		$html .= '<span>' . __( 'If scrolling is enabled, the users window will scroll to the current page on \'Load More\' action.</span>', 'ajax-load-more-single-post' ) . '</span>';
+		$html  = '<input type="hidden" name="alm_settings[_alm_prev_post_browser_controls]" value="0" />';
+		$html .= '<input type="checkbox" id="_alm_prev_post_browser_controls" name="alm_settings[_alm_prev_post_browser_controls]" value="1"' . ( ( $options['_alm_prev_post_browser_controls'] ) ? ' checked="checked"' : '' ) . ' />';
+		$html .= '<label for="_alm_prev_post_browser_controls">' . esc_html__( 'Enable Fwd/Back Browser Buttons.', 'ajax-load-more-single-post' );
+		$html .= '<span>' . esc_html__( 'Allow users to navigate Ajax generated content using the back and forward browser buttons.', 'ajax-load-more-single-post' ) . '</span>';
 		$html .= '</label>';
 
 		echo $html; // phpcs:ignore
@@ -750,38 +777,19 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 	/**
 	 * Set the scrolltop value
 	 *
-	 * @since 1.0
+	 * @return void
 	 */
-	function alm_prev_post_scrolltop_callback() {
+	function alm_single_post_scrolltop_callback() {
 		$options = get_option( 'alm_settings' );
 		if ( ! isset( $options['_alm_prev_post_scrolltop'] ) ) {
 			$options['_alm_prev_post_scrolltop'] = '30';
 		}
 
 		$html  = '<label for="alm_settings[_alm_prev_post_scrolltop]">';
-		$html .= __( 'Set the scrolltop position of the window when scrolling to a post.', 'ajax-load-more-single-post' );
-		$html .= '</label><br/>';
-		$html .= '<input type="number" class="sm" id="alm_settings[_alm_prev_post_scrolltop]" name="alm_settings[_alm_prev_post_scrolltop]" step="1" min="0" value="' . $options['_alm_prev_post_scrolltop'] . '" placeholder="30" /> ';
-
-		echo $html; // phpcs:ignore
-	}
-
-	/**
-	 * Disable back/fwd button when URLs updated (uses replaceState vs pushState).
-	 *
-	 * @since 1.2.2
-	 */
-	function alm_prev_post_browser_controls_callback() {
-		$options = get_option( 'alm_settings' );
-		if ( ! isset( $options['_alm_prev_post_browser_controls'] ) ) {
-			$options['_alm_prev_post_browser_controls'] = '1';
-		}
-
-		$html  = '<input type="hidden" name="alm_settings[_alm_prev_post_browser_controls]" value="0" />';
-		$html .= '<input type="checkbox" id="_alm_prev_post_browser_controls" name="alm_settings[_alm_prev_post_browser_controls]" value="1"' . ( ( $options['_alm_prev_post_browser_controls'] ) ? ' checked="checked"' : '' ) . ' />';
-		$html .= '<label for="_alm_prev_post_browser_controls">' . __( 'Enable Back/Fwd Browser Buttons.', 'ajax-load-more-single-post' );
-		$html .= '<span>' . __( 'Allow users to navigate Ajax generated content using the back and forward browser buttons.', 'ajax-load-more-single-post' ) . '</span>';
+		$html .= esc_html__( 'The position of the window (in px) when scrolling to a post.', 'ajax-load-more-single-post' );
+		$html .= '<br/><span>' . esc_html__( 'This value is used as the trigger for URL updates.', 'ajax-load-more-single-post' ) . '</span>';
 		$html .= '</label>';
+		$html .= '<input type="number" class="sm" id="alm_settings[_alm_prev_post_scrolltop]" name="alm_settings[_alm_prev_post_scrolltop]" step="1" min="0" value="' . $options['_alm_prev_post_scrolltop'] . '" placeholder="30" /> ';
 
 		echo $html; // phpcs:ignore
 	}
@@ -789,12 +797,12 @@ if ( ! class_exists( 'ALM_SINGLEPOST' ) ) :
 	/**
 	 * The main function responsible for returning Ajax Load More Single Post.
 	 *
-	 * @since 1.0
+	 * @return ALM_Single_Post
 	 */
 	function alm_single_post() {
 		global $alm_single_post;
 		if ( ! isset( $alm_single_post ) ) {
-			$alm_single_post = new ALM_SINGLEPOST();
+			$alm_single_post = new ALM_Single_Post();
 		}
 		return $alm_single_post;
 	}
@@ -806,7 +814,7 @@ endif;
 /**
  * Software Licensing.
  *
- * @since 1.0
+ * @return void
  */
 function alm_single_post_updater() {
 	if ( ! has_action( 'alm_pro_installed' ) && class_exists( 'EDD_SL_Plugin_Updater' ) ) {

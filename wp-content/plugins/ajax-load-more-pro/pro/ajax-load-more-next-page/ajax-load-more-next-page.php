@@ -6,7 +6,7 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.8.2
+ * Version: 1.9.0
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
  * Requires Plugins: ajax-load-more
@@ -20,8 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_NEXTPAGE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_NEXTPAGE_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_NEXTPAGE_VERSION', '1.8.2' );
-define( 'ALM_NEXTPAGE_RELEASE', 'June 9, 2025' );
+define( 'ALM_NEXTPAGE_VERSION', '1.9.0' );
+define( 'ALM_NEXTPAGE_RELEASE', 'November 13, 2025' );
 
 if ( ! class_exists( 'ALM_Nextpage_Plugin' ) ) :
 
@@ -122,7 +122,6 @@ if ( ! class_exists( 'ALM_Nextpage_Plugin' ) ) :
 				// Post Types & Post Slugs.
 				if ( in_array( $post_type, $selected_post_types, true ) || in_array( $post_name, $post_slugs_array, true ) ) {
 					$this->init = false;
-					$do_display = true;
 					$shortcode  = isset( $options[ $post_type_opt ] ) && isset( $options[ $post_type_opt ]['shortcodes'] ) && isset( $options[ $post_type_opt ]['shortcodes'][ $post_type ] ) && ! empty( $options[ $post_type_opt ]['shortcodes'][ $post_type ] ) ? $options[ $post_type_opt ]['shortcodes'][ $post_type ] : '[ajax_load_more nextpage="true"]';
 
 					// Parse shortcode to determine if shortcode should be rendered by specific term.
@@ -215,18 +214,11 @@ if ( ! class_exists( 'ALM_Nextpage_Plugin' ) ) :
 				return false;
 			}
 
-			$query_type    = isset( $params['query_type'] ) ? $params['query_type'] : 'standard';
-			$page          = isset( $params['page'] ) ? $params['page'] : 1;
-			$id            = isset( $params['id'] ) ? $params['id'] : '';
-			$data          = isset( $params['nextpage'] ) ? $params['nextpage'] : '';
-			$paging        = isset( $params['paging'] ) ? $params['paging'] : 'false';
-			$canonical_url = isset( $params['canonical_url'] ) ? $params['canonical_url'] : $_SERVER['HTTP_REFERER'];
-
-			// Cache Add-on.
-			$cache_id        = isset( $params['cache_id'] ) ? $params['cache_id'] : '';
-			$cache_slug      = isset( $params['cache_slug'] ) && $params['cache_slug'] ? $params['cache_slug'] : '';
-			$cache_logged_in = isset( $params['cache_logged_in'] ) ? $params['cache_logged_in'] : false;
-			$do_create_cache = $cache_logged_in === 'true' && is_user_logged_in() ? false : true;
+			$query_type = isset( $params['query_type'] ) ? $params['query_type'] : 'standard';
+			$page       = isset( $params['page'] ) ? $params['page'] : 1;
+			$id         = isset( $params['id'] ) ? $params['id'] : '';
+			$data       = isset( $params['nextpage'] ) ? $params['nextpage'] : '';
+			$paging     = isset( $params['paging'] ) ? $params['paging'] : 'false';
 
 			// Paging Add-on.
 			$paging = 'false' === $paging ? false : $paging;
@@ -239,8 +231,8 @@ if ( ! class_exists( 'ALM_Nextpage_Plugin' ) ) :
 				// Set global for use in filters/shortcodes etc.
 				$GLOBALS['alm_nextpage_post_id'] = $post_id;
 
-				if ( 'totalpages' === $query_type ) {
-					// Get totalpages for Paging Add-on.
+				if ( $query_type === 'totalpages' ) {
+					// Combined Preloaded & Nextpage add-ons.
 					wp_send_json(
 						[
 							'totalpages' => $this->alm_nextpage_get_total_pages( $post_id, $id ),
@@ -296,13 +288,6 @@ if ( ! class_exists( 'ALM_Nextpage_Plugin' ) ) :
 									],
 								];
 
-								/**
-								 * Cache Add-on.
-								 * Create the cache file.
-								 */
-								if ( $cache_id && method_exists( 'ALMCache', 'create_cache_file' ) && $do_create_cache ) {
-									ALMCache::create_cache_file( $cache_id, $cache_slug, $canonical_url, $html, 1, $totalposts );
-								}
 							} else {
 								$return = [
 									'html' => '',

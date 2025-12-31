@@ -129,32 +129,22 @@ class Email {
 	 * @return array
 	 */
 	public static function get_aggergated_stats_by_ad( $impressions, $clicks ) {
-		$results  = [];
-		$ad_names = [];
-		foreach ( $impressions as $stats ) {
-			foreach ( $stats as $id => $count ) {
-				$post_object = get_post( $id );
-				if ( null === $post_object ) {
-					continue;
-				}
+		$results = [];
 
-				$ad_names[ $id ] = $post_object->post_title;
-				if ( ! isset( $results[ $ad_names[ $id ] ] ) ) {
-					$results[ $ad_names[ $id ] ] = [
-						'impressions' => 0,
-						'clicks'      => 0,
-					];
-				}
-				$results[ $ad_names[ $id ] ]['impressions'] += (int) $count;
-			}
-		}
-		foreach ( $clicks as $stats ) {
-			foreach ( $stats as $id => $count ) {
-				$results[ $ad_names[ $id ] ]['clicks'] += (int) $count;
-			}
-		}
-		foreach ( $results as $name => $stats ) {
-			$results[ $name ]['ctr'] = 0 !== $stats['impressions'] ? number_format( 100 * $stats['clicks'] / $stats['impressions'], 2 ) . '%' : '0.00%';
+		self::process_stats_data( $impressions, $results, 'impressions' );
+		self::process_stats_data( $clicks, $results, 'clicks' );
+
+		foreach ( $results as $id => &$stats ) {
+			$impressions = (int) $stats['impressions'];
+			$clicks      = (int) $stats['clicks'];
+
+			$stats['ctr'] = $impressions > 0
+				? number_format( ( 100 * $clicks ) / $impressions, 2 ) . '%'
+				: '0.00%';
+
+			// Add tracking status indicators (pass ID; utility resolves object internally).
+			$stats['impression_tracking'] = \AdvancedAds\Tracking\Utilities\Tracking::has_ad_tracking_enabled( $id, 'impression', 'view' );
+			$stats['click_tracking']      = \AdvancedAds\Tracking\Utilities\Tracking::has_ad_tracking_enabled( $id, 'click', 'view' );
 		}
 
 		return $results;
@@ -270,5 +260,32 @@ class Email {
 		ob_start();
 		include AA_TRACKING_ABSPATH . 'views/emails/email-report-body.php';
 		return ob_get_clean();
+	}
+
+	/**
+	 * Process stats data and aggregate by ad ID.
+	 *
+	 * @param array  $stats_data Array of stats data to process.
+	 * @param array  $results    Results array to populate (passed by reference).
+	 * @param string $field      Field name to increment ('impressions' or 'clicks').
+	 */
+	private static function process_stats_data( $stats_data, &$results, $field ) {
+		foreach ( $stats_data as $stats ) {
+			foreach ( $stats as $id => $count ) {
+				$title = get_the_title( $id );
+				if ( '' === $title || null === $title ) {
+					continue;
+				}
+
+				if ( ! isset( $results[ $id ] ) ) {
+					$results[ $id ] = [
+						'name'        => $title,
+						'impressions' => 0,
+						'clicks'      => 0,
+					];
+				}
+				$results[ $id ][ $field ] += (int) $count;
+			}
+		}
 	}
 }

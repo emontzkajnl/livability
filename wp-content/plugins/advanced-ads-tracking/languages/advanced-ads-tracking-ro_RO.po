@@ -1,17 +1,20 @@
+# Translation of Ad Tracking in Romanian
+# This file is distributed under the same license as the Ad Tracking package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ad Tracking\n"
-"Report-Msgid-Bugs-To: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2023-05-08 12:36:18+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-11T15:37:32+00:00\n"
-"PO-Revision-Date: 2023-05-08 12:36:18+0000\n"
-"Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);\n"
 "X-Generator: GlotPress/4.0.1\n"
+"Language: ro\n"
+"Project-Id-Version: Ad Tracking\n"
+
+#. Author of the plugin
+#: tracking.php
+msgid "Advanced Ads"
+msgstr ""
 
 #: views/admin/ads/bulk-edit.php:10
 msgid "— No Change —"
@@ -52,13 +55,11 @@ msgstr ""
 msgid "The %s constant is no longer supported."
 msgstr ""
 
-#: views/admin/ads/bulk-edit.php:47
-#: views/admin/ads/quick-edit.php:34
+#: views/admin/ads/bulk-edit.php:47 views/admin/ads/quick-edit.php:34
 msgid "Target window"
 msgstr ""
 
-#: views/admin/ads/bulk-edit.php:83
-#: views/admin/ads/quick-edit.php:67
+#: views/admin/ads/bulk-edit.php:83 views/admin/ads/quick-edit.php:67
 msgid "Report recipient"
 msgstr ""
 
@@ -69,8 +70,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: includes/class-bootstrap.php:129
-#: includes/class-bootstrap.php:152
+#: includes/class-bootstrap.php:129 includes/class-bootstrap.php:152
 msgid "Important Notice"
 msgstr ""
 
@@ -86,13 +86,11 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
-#: includes/rest/class-quick-edit.php:49
-#: views/admin/ads/bulk-edit.php:19
+#: includes/rest/class-quick-edit.php:49 views/admin/ads/bulk-edit.php:19
 msgid "default (impressions & clicks)"
 msgstr ""
 
-#: views/admin/ads/bulk-edit.php:36
-#: views/admin/ads/quick-edit.php:29
+#: views/admin/ads/bulk-edit.php:36 views/admin/ads/quick-edit.php:29
 msgid "Cloak link"
 msgstr ""
 
@@ -107,8 +105,7 @@ msgstr[2] ""
 msgid "Addons listed below requires the <strong><a href=\"https://wpadvancedads.com/?utm_source=advanced-ads&utm_medium=link&utm_campaign=activate-tracking\" target=\"_blank\">Advanced Ads</a></strong> plugin to be installed and activated on your site."
 msgstr ""
 
-#: views/admin/ads/bulk-edit.php:71
-#: views/admin/ads/quick-edit.php:56
+#: views/admin/ads/bulk-edit.php:71 views/admin/ads/quick-edit.php:56
 msgid "Add \"sponsored\""
 msgstr ""
 
@@ -175,8 +172,7 @@ msgstr ""
 msgid " <a href=\"https://wpadvancedads.com/share-custom-reports-google-analytics/?utm_source=advanced-ads&utm_medium=link&utm_campaign=settings-reports-google-analytics\" target=\"_blank\">How to share Google Analytics ad reports with your customers.</a>"
 msgstr ""
 
-#: views/admin/ads/ad-tracking-params.php:44
-#: views/admin/ads/bulk-edit.php:29
+#: views/admin/ads/ad-tracking-params.php:44 views/admin/ads/bulk-edit.php:29
 #: views/admin/ads/quick-edit.php:23
 msgid "Target URL"
 msgstr "URL țintă"
@@ -455,11 +451,6 @@ msgstr ""
 msgid "The selected tracking method is not compatible with the TCF 2.0 integration."
 msgstr ""
 
-#. Author of the plugin
-#: tracking.php
-msgid "Advanced Ads GmbH"
-msgstr ""
-
 #: includes/admin/class-settings.php:297
 msgid "Database Management"
 msgstr ""
@@ -513,8 +504,7 @@ msgstr ""
 msgid "Generate a new sharable link"
 msgstr ""
 
-#: includes/admin/class-metaboxes.php:152
-#: includes/rest/class-quick-edit.php:51
+#: includes/admin/class-metaboxes.php:152 includes/rest/class-quick-edit.php:51
 msgid "enabled"
 msgstr ""
 
@@ -534,9 +524,7 @@ msgid "Track ad impressions and clicks."
 msgstr ""
 
 #. Plugin Name of the plugin
-#: tracking.php
-#: includes/class-bootstrap.php:71
-#: includes/class-bootstrap.php:78
+#: tracking.php includes/class-bootstrap.php:71 includes/class-bootstrap.php:78
 msgid "Advanced Ads – Tracking"
 msgstr ""
 
@@ -589,8 +577,7 @@ msgstr ""
 msgid "File"
 msgstr ""
 
-#: views/admin/page-stats.php:165
-#: views/admin/settings/setting-method.php:36
+#: views/admin/page-stats.php:165 views/admin/settings/setting-method.php:36
 msgid "Database"
 msgstr ""
 
@@ -602,8 +589,7 @@ msgstr ""
 msgid "latest month"
 msgstr ""
 
-#: views/admin/page-stats.php:133
-#: views/admin/page-stats.php:149
+#: views/admin/page-stats.php:133 views/admin/page-stats.php:149
 msgid "load stats"
 msgstr ""
 
@@ -615,8 +601,7 @@ msgstr ""
 msgid "Group by:"
 msgstr ""
 
-#: views/admin/page-stats.php:109
-#: views/frontend/public-stats.php:52
+#: views/admin/page-stats.php:109 views/frontend/public-stats.php:52
 msgid "Period"
 msgstr ""
 
@@ -864,10 +849,8 @@ msgstr ""
 #: views/admin/ads/ad-tracking-params.php:158
 #: views/admin/ads/ad-tracking-params.php:173
 #: views/admin/ads/ad-tracking-params.php:193
-#: views/admin/ads/ad-tracking-params.php:209
-#: views/admin/ads/bulk-edit.php:64
-#: views/admin/ads/bulk-edit.php:76
-#: views/admin/ads/quick-edit.php:49
+#: views/admin/ads/ad-tracking-params.php:209 views/admin/ads/bulk-edit.php:64
+#: views/admin/ads/bulk-edit.php:76 views/admin/ads/quick-edit.php:49
 #: views/admin/ads/quick-edit.php:60
 msgid "no"
 msgstr ""
@@ -875,10 +858,8 @@ msgstr ""
 #: views/admin/ads/ad-tracking-params.php:154
 #: views/admin/ads/ad-tracking-params.php:172
 #: views/admin/ads/ad-tracking-params.php:189
-#: views/admin/ads/ad-tracking-params.php:208
-#: views/admin/ads/bulk-edit.php:63
-#: views/admin/ads/bulk-edit.php:75
-#: views/admin/ads/quick-edit.php:48
+#: views/admin/ads/ad-tracking-params.php:208 views/admin/ads/bulk-edit.php:63
+#: views/admin/ads/bulk-edit.php:75 views/admin/ads/quick-edit.php:48
 #: views/admin/ads/quick-edit.php:59
 msgid "yes"
 msgstr ""
@@ -893,15 +874,13 @@ msgid "Where to open the link (if present)."
 msgstr ""
 
 #: views/admin/ads/ad-tracking-params.php:127
-#: views/admin/ads/ad-tracking-params.php:138
-#: views/admin/ads/bulk-edit.php:52
+#: views/admin/ads/ad-tracking-params.php:138 views/admin/ads/bulk-edit.php:52
 #: views/admin/ads/quick-edit.php:38
 msgid "new window"
 msgstr ""
 
 #: views/admin/ads/ad-tracking-params.php:123
-#: views/admin/ads/ad-tracking-params.php:139
-#: views/admin/ads/bulk-edit.php:51
+#: views/admin/ads/ad-tracking-params.php:139 views/admin/ads/bulk-edit.php:51
 #: views/admin/ads/quick-edit.php:37
 msgid "same window"
 msgstr ""
@@ -941,8 +920,7 @@ msgstr ""
 msgid "View the live statistics"
 msgstr ""
 
-#: views/emails/email-report-body.php:99
-#: views/frontend/public-stats.php:322
+#: views/emails/email-report-body.php:99 views/frontend/public-stats.php:322
 msgid "Total"
 msgstr ""
 
@@ -950,13 +928,11 @@ msgstr ""
 #: includes/admin/class-ad-list-table.php:120
 #: includes/class-assets-registry.php:184
 #: views/admin/ads/ad-list-stats-column.php:61
-#: views/emails/email-report-body.php:56
-#: views/emails/email-report-body.php:121
+#: views/emails/email-report-body.php:56 views/emails/email-report-body.php:121
 msgid "CTR"
 msgstr ""
 
-#: views/emails/email-report-body.php:55
-#: views/emails/email-report-body.php:120
+#: views/emails/email-report-body.php:55 views/emails/email-report-body.php:120
 msgid "click through rate"
 msgstr ""
 
@@ -986,20 +962,17 @@ msgstr ""
 msgid " the last 30 days"
 msgstr ""
 
-#: includes/class-db-operations.php:751
-#: views/admin/page-stats.php:132
+#: includes/class-db-operations.php:751 views/admin/page-stats.php:132
 #: views/frontend/public-stats.php:67
 msgid "to"
 msgstr ""
 
-#: includes/class-db-operations.php:750
-#: views/admin/page-stats.php:131
+#: includes/class-db-operations.php:750 views/admin/page-stats.php:131
 #: views/frontend/public-stats.php:66
 msgid "from"
 msgstr ""
 
-#: includes/class-db-operations.php:70
-#: includes/class-db-operations.php:731
+#: includes/class-db-operations.php:70 includes/class-db-operations.php:731
 #: includes/crons/class-reporting-emails.php:220
 #: views/admin/metaboxes/metabox-ad.php:119
 #: views/admin/settings/setting-email-report-stats-period.php:16
@@ -1007,13 +980,11 @@ msgstr ""
 msgid "last 12 months"
 msgstr ""
 
-#: includes/class-db-operations.php:66
-#: includes/class-db-operations.php:74
+#: includes/class-db-operations.php:66 includes/class-db-operations.php:74
 msgid "first 6 months"
 msgstr ""
 
-#: includes/class-db-operations.php:65
-#: includes/class-db-operations.php:73
+#: includes/class-db-operations.php:65 includes/class-db-operations.php:73
 msgid "everything before this year"
 msgstr ""
 
@@ -1034,8 +1005,7 @@ msgid "This base name collides with an existing WordPress content (blog post, pa
 msgstr ""
 
 #. translators: %b: month, %#d: day
-#: includes/class-ajax.php:416
-#: includes/class-ajax.php:817
+#: includes/class-ajax.php:416 includes/class-ajax.php:817
 msgctxt "format for week group in stats table"
 msgid "from %b&nbsp;%#d"
 msgstr ""
@@ -1053,49 +1023,41 @@ msgstr ""
 msgid "All impressions and clicks removed."
 msgstr ""
 
-#: includes/admin/class-page-stats.php:97
-#: includes/class-ajax.php:285
+#: includes/admin/class-page-stats.php:97 includes/class-ajax.php:285
 msgctxt "date format on stats page"
 msgid "Y-m"
 msgstr ""
 
-#: includes/admin/class-page-stats.php:97
-#: includes/class-ajax.php:285
+#: includes/admin/class-page-stats.php:97 includes/class-ajax.php:285
 msgid "month"
 msgstr ""
 
-#: includes/admin/class-page-stats.php:96
-#: includes/class-ajax.php:284
+#: includes/admin/class-page-stats.php:96 includes/class-ajax.php:284
 msgid "week"
 msgstr ""
 
 #: includes/admin/class-page-stats.php:95
-#: includes/admin/class-page-stats.php:96
-#: includes/class-ajax.php:283
+#: includes/admin/class-page-stats.php:96 includes/class-ajax.php:283
 #: includes/class-ajax.php:284
 msgctxt "date format on stats page"
 msgid "Y-m-d"
 msgstr ""
 
-#: includes/admin/class-page-stats.php:95
-#: includes/class-ajax.php:283
+#: includes/admin/class-page-stats.php:95 includes/class-ajax.php:283
 msgid "day"
 msgstr ""
 
-#: includes/class-db-operations.php:747
-#: includes/utilities/class-data.php:201
+#: includes/class-db-operations.php:747 includes/utilities/class-data.php:201
 #: views/frontend/public-stats.php:57
 msgid "custom"
 msgstr ""
 
-#: includes/class-db-operations.php:71
-#: includes/class-db-operations.php:732
+#: includes/class-db-operations.php:71 includes/class-db-operations.php:732
 #: includes/utilities/class-data.php:199
 msgid "last year"
 msgstr ""
 
-#: includes/class-db-operations.php:72
-#: includes/class-db-operations.php:733
+#: includes/class-db-operations.php:72 includes/class-db-operations.php:733
 #: includes/utilities/class-data.php:198
 msgid "this year"
 msgstr ""
@@ -1127,54 +1089,41 @@ msgstr ""
 msgid "Add <code>target=\"_blank\"</code> to the ad code in order to open it in a new window. E.g. <code>&lt;a href=\"%link%\" target=\"_blank\"&gt;</code>"
 msgstr ""
 
-#: includes/admin/class-metaboxes.php:148
-#: includes/class-helpers.php:205
-#: includes/rest/class-quick-edit.php:58
-#: views/admin/ads/bulk-edit.php:21
+#: includes/admin/class-metaboxes.php:148 includes/class-helpers.php:205
+#: includes/rest/class-quick-edit.php:58 views/admin/ads/bulk-edit.php:21
 #: views/admin/settings/setting-everything.php:17
 msgid "clicks only"
 msgstr ""
 
-#: includes/admin/class-metaboxes.php:149
-#: includes/class-helpers.php:204
-#: includes/rest/class-quick-edit.php:59
-#: views/admin/ads/bulk-edit.php:22
+#: includes/admin/class-metaboxes.php:149 includes/class-helpers.php:204
+#: includes/rest/class-quick-edit.php:59 views/admin/ads/bulk-edit.php:22
 #: views/admin/settings/setting-everything.php:16
 msgid "impressions only"
 msgstr ""
 
-#: includes/admin/class-metaboxes.php:150
-#: includes/class-helpers.php:206
-#: includes/rest/class-quick-edit.php:60
-#: views/admin/ads/bulk-edit.php:23
+#: includes/admin/class-metaboxes.php:150 includes/class-helpers.php:206
+#: includes/rest/class-quick-edit.php:60 views/admin/ads/bulk-edit.php:23
 #: views/admin/settings/setting-everything.php:14
 msgid "impressions & clicks"
 msgstr ""
 
-#: includes/admin/class-metaboxes.php:144
-#: includes/class-helpers.php:199
-#: includes/class-helpers.php:210
-#: includes/rest/class-quick-edit.php:50
-#: views/admin/ads/ad-list-stats-column.php:52
-#: views/admin/ads/bulk-edit.php:20
+#: includes/admin/class-metaboxes.php:144 includes/class-helpers.php:199
+#: includes/class-helpers.php:210 includes/rest/class-quick-edit.php:50
+#: views/admin/ads/ad-list-stats-column.php:52 views/admin/ads/bulk-edit.php:20
 msgid "disabled"
 msgstr ""
 
 #: includes/admin/class-metaboxes.php:143
 #: views/admin/ads/ad-tracking-params.php:119
 #: views/admin/ads/ad-tracking-params.php:150
-#: views/admin/ads/ad-tracking-params.php:185
-#: views/admin/ads/bulk-edit.php:50
-#: views/admin/ads/bulk-edit.php:62
-#: views/admin/ads/bulk-edit.php:74
-#: views/admin/ads/quick-edit.php:36
-#: views/admin/ads/quick-edit.php:47
+#: views/admin/ads/ad-tracking-params.php:185 views/admin/ads/bulk-edit.php:50
+#: views/admin/ads/bulk-edit.php:62 views/admin/ads/bulk-edit.php:74
+#: views/admin/ads/quick-edit.php:36 views/admin/ads/quick-edit.php:47
 #: views/admin/ads/quick-edit.php:58
 msgid "default"
 msgstr ""
 
-#: includes/admin/class-settings.php:370
-#: includes/admin/class-settings.php:561
+#: includes/admin/class-settings.php:370 includes/admin/class-settings.php:561
 msgid "Ads Statistics"
 msgstr ""
 
@@ -1218,8 +1167,7 @@ msgstr ""
 msgid "Link base for public reports"
 msgstr ""
 
-#: views/admin/ads/bulk-edit.php:59
-#: views/admin/ads/quick-edit.php:45
+#: views/admin/ads/bulk-edit.php:59 views/admin/ads/quick-edit.php:45
 msgid "Add \"nofollow\""
 msgstr ""
 
@@ -1244,11 +1192,9 @@ msgstr ""
 msgid "Email Reports"
 msgstr ""
 
-#: includes/admin/class-settings.php:67
-#: includes/admin/class-settings.php:96
+#: includes/admin/class-settings.php:67 includes/admin/class-settings.php:96
 #: includes/admin/class-settings.php:130
-#: views/admin/ads/ad-tracking-params.php:23
-#: views/admin/ads/bulk-edit.php:16
+#: views/admin/ads/ad-tracking-params.php:23 views/admin/ads/bulk-edit.php:16
 #: views/admin/ads/quick-edit.php:15
 msgid "Tracking"
 msgstr ""
@@ -1311,8 +1257,7 @@ msgstr ""
 msgid "group"
 msgstr ""
 
-#: includes/class-assets-registry.php:194
-#: views/admin/page-stats.php:174
+#: includes/class-assets-registry.php:194 views/admin/page-stats.php:174
 msgid "no file selected"
 msgstr ""
 
@@ -1343,8 +1288,7 @@ msgstr ""
 msgid "%1$s to %2$s"
 msgstr ""
 
-#: includes/class-assets-registry.php:186
-#: views/emails/email-report-body.php:51
+#: includes/class-assets-registry.php:186 views/emails/email-report-body.php:51
 #: views/frontend/public-stats.php:272
 msgid "date"
 msgstr ""
@@ -1415,8 +1359,7 @@ msgid "previous day"
 msgstr "ziua precedentă"
 
 #: includes/admin/class-ad-list-table.php:77
-#: includes/admin/class-ad-list-table.php:118
-#: includes/class-amp.php:244
+#: includes/admin/class-ad-list-table.php:118 includes/class-amp.php:244
 #: includes/class-assets-registry.php:166
 #: views/admin/ads/ad-list-stats-column.php:28
 msgid "Impressions"
@@ -1452,14 +1395,10 @@ msgstr "Selectează fișierul"
 #: views/admin/metaboxes/metabox-ad-limiter.php:55
 #: views/admin/metaboxes/metabox-ad-limiter.php:86
 #: views/admin/page-database/db-operations.php:56
-#: views/admin/page-stats.php:241
-#: views/emails/email-report-body.php:53
-#: views/emails/email-report-body.php:118
-#: views/frontend/public-stats.php:202
-#: views/frontend/public-stats.php:240
-#: views/frontend/public-stats.php:246
-#: views/frontend/public-stats.php:266
-#: views/frontend/public-stats.php:274
+#: views/admin/page-stats.php:241 views/emails/email-report-body.php:53
+#: views/emails/email-report-body.php:118 views/frontend/public-stats.php:202
+#: views/frontend/public-stats.php:240 views/frontend/public-stats.php:246
+#: views/frontend/public-stats.php:266 views/frontend/public-stats.php:274
 msgid "clicks"
 msgstr "clickuri"
 
@@ -1468,20 +1407,15 @@ msgstr "clickuri"
 #: views/admin/metaboxes/metabox-ad-limiter.php:44
 #: views/admin/metaboxes/metabox-ad-limiter.php:81
 #: views/admin/page-database/db-operations.php:50
-#: views/admin/page-stats.php:236
-#: views/emails/email-report-body.php:52
-#: views/emails/email-report-body.php:117
-#: views/frontend/public-stats.php:196
-#: views/frontend/public-stats.php:230
-#: views/frontend/public-stats.php:235
-#: views/frontend/public-stats.php:262
-#: views/frontend/public-stats.php:273
+#: views/admin/page-stats.php:236 views/emails/email-report-body.php:52
+#: views/emails/email-report-body.php:117 views/frontend/public-stats.php:196
+#: views/frontend/public-stats.php:230 views/frontend/public-stats.php:235
+#: views/frontend/public-stats.php:262 views/frontend/public-stats.php:273
 msgid "impressions"
 msgstr "impresii"
 
 #: includes/admin/class-ad-list-table.php:76
-#: includes/admin/class-metaboxes.php:49
-#: includes/admin/class-page-stats.php:51
+#: includes/admin/class-metaboxes.php:49 includes/admin/class-page-stats.php:51
 #: includes/admin/class-page-stats.php:52
 msgid "Statistics"
 msgstr "Statistici"

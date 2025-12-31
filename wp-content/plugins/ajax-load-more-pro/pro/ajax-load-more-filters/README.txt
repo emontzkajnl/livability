@@ -8,7 +8,7 @@ Requires at least: 5.0
 Tested up to: 6.8
 Stable tag: trunk
 Homepage: https://connekthq.com/
-Version: 3.2.0
+Version: 3.2.1
 
 == Copyright ==
 Copyright 2025 Darren Cooney & Connekt Media
@@ -44,6 +44,10 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/filters/
 5. Activate the plugin in the WP plugin dashboard.
 
 == Changelog ==
+
+= 3.2.1 - November 13, 2025 =
+* FIX: Fixed issue with hitting paged URL and user not being scrolled to the current page.
+* UPDATE: Various code cleanup and refactoring.
 
 = 3.2.0 - October 21, 2025 =
 * NEW: Updated admin UI for building filters.

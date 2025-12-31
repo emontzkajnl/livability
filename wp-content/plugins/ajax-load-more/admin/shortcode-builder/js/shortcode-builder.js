@@ -188,6 +188,13 @@ jQuery(document).ready(function ($) {
 			output += ' css_classes="' + container_classes + '"';
 
 		// ---------------------------
+		// - Prefetch Data
+		// ---------------------------
+
+		var prefetch_data = $('.alm-prefetch-data input[name=prefetch]:checked').val();
+		if (prefetch_data === 't') output += ' prefetch="true"';
+
+		// ---------------------------
 		// - Advanced Custom Fields
 		// ---------------------------
 
@@ -223,14 +230,7 @@ jQuery(document).ready(function ($) {
 
 		var cache = $('#alm-cache input[name=cache]:checked').val();
 		if (cache !== 'false' && cache !== undefined) {
-			$('.cache_id').slideDown(250, 'alm_easeInOutQuad');
 			output += ' cache="' + cache + '"';
-			var cache_id = $('input#cache-id').val();
-			if (cache_id) {
-				output += ' cache_id="' + cache_id + '"';
-			}
-		} else {
-			$('.cache_id').slideUp(250, 'alm_easeInOutQuad');
 		}
 
 		// ---------------------------
@@ -1532,7 +1532,7 @@ jQuery(document).ready(function ($) {
 					scrollTop: $('#' + pos).offset().top - ($('.intro').height() - 20),
 				},
 				200,
-				'alm_easeInOutQuad'
+				'alm_easeInOutQuad',
 			);
 		}
 	});
@@ -1552,7 +1552,7 @@ jQuery(document).ready(function ($) {
 					scrollTop: $('#' + pos).offset().top - 120,
 				},
 				500,
-				'alm_easeInOutQuad'
+				'alm_easeInOutQuad',
 			);
 		}
 	});
@@ -1659,7 +1659,7 @@ jQuery(document).ready(function ($) {
 								function () {
 									// Set focus on the element scrolled to.
 									target.get(0).focus({ preventScroll: true });
-								}
+								},
 							);
 						}
 					});

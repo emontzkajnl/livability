@@ -8,7 +8,7 @@ Requires at least: 4.0
 Tested up to: 6.8
 Stable tag: trunk
 Homepage: https://connekthq.com/ajax-load-more/
-Version: 1.8.2
+Version: 1.9.0
 
 == Copyright ==
 Copyright 2025 Connekt Media
@@ -43,6 +43,9 @@ The Next Page add-on for Ajax Load More works by using <!-‒nextpage‒-> Quick
 5. Activate the plugin in the Plugin dashboard.
 
 == Changelog ==
+= 1.9.0 - November 13, 2025 =
+* NEW: Added support for Ajax Load More Cache 3.0.
+* UPDATE: Various code cleanups and organization.
 
 = 1.8.2 - June 9, 2025 =
 * UPDATE: Updated load_text_domain action to remove PHP warning.

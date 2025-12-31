@@ -58,13 +58,13 @@ class Assets_Registry extends Framework\Assets_Registry {
 
 		// Backend.
 		$this->register_style( 'jquery-ui', 'assets/vendors/jquery-ui/jquery-ui.min.css', [], '1.11.4' );
-		$this->register_style( 'wp-dashboard', 'assets/css/admin/wp-dashboard.css', [ $this->prefix_it( 'jquery-ui' ) ], $this->get_version() );
-		$this->register_style( 'screen-ads-listing-tracking', 'assets/css/admin/screen-ads-listing.css', [], $this->get_version() );
-		$this->register_style( 'admin-styles', 'assets/css/admin/admin.css', [], $this->get_version() );
+		$this->register_style( 'wp-dashboard', 'assets/dist/wp-dashboard.css', [ $this->prefix_it( 'jquery-ui' ) ], $this->get_version() );
+		$this->register_style( 'screen-ads-listing-tracking', 'assets/dist/screen-ads-listing.css', [], $this->get_version() );
+		$this->register_style( 'admin-styles', 'assets/dist/admin.css', [], $this->get_version() );
 		$this->register_style( 'jqplot', 'assets/vendors/jqplot/jquery.jqplot.min.css' );
 		$this->register_style( 'datatables', 'assets/vendors/datatables/css/datatables.min.css' );
-		$this->register_style( 'screen-settings', 'assets/css/settings.css', [], AAT_VERSION );
-		$this->register_style( 'public-stats', 'assets/css/public-stats.css', [], AAT_VERSION );
+		$this->register_style( 'screen-settings', 'assets/dist/settings.css', [], AAT_VERSION );
+		$this->register_style( 'public-stats', 'assets/dist/public-stats.css', [], AAT_VERSION );
 	}
 
 	/**
@@ -74,7 +74,7 @@ class Assets_Registry extends Framework\Assets_Registry {
 	 */
 	public function register_scripts(): void {
 		// Frontend.
-		$src  = 'assets/' . ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? 'src/frontend/public-stats.js' : 'js/frontend/public-stats.js' );
+		$src  = 'assets/dist/public-stats.js';
 		$deps = [
 			'jquery',
 			'jquery-ui-datepicker',

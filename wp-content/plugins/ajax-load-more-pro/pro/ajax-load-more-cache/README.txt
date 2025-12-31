@@ -4,11 +4,11 @@ Contributors: dcooney
 Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/cache/
-Requires at least: 4.0.0
-Tested up to: 6.7
+Requires at least: 6.0
+Tested up to: 6.9
 Stable tag: trunk
 Homepage: https://connekthq.com/ajax-load-more/
-Version: 2.0.5
+Version: 3.1.1
 
 == Copyright ==
 Copyright 2025 Darren Cooney & Connekt Media
@@ -44,6 +44,26 @@ https://connekthq.com/plugins/ajax-load-more/add-ons/cache/
 5. Activate the plugin in the WP plugin dashboard.
 
 == Changelog ==
+
+= 3.1.1 - December 11, 2025 =
+* FIX: Fixed issue with PHP `scandir` function.
+* UPDATE: Updated the `alm_cache_path` hook to return with a trailing slash, always.
+
+= 3.1.0 - November 14, 2025 =
+* NEW: Revert change in Cache 3.0 where the cache was updated to use WordPress Transients. We're back to using static JSON files 😄
+* UPDATE: Removed `alm_cache_url` hook as it's no longer needed.
+* UPDATE: Removed all Transient related functions and filters.
+* UPDATE: Updated unistaller hook.
+* UPDATE: Various code cleanups and organization.
+
+= 3.0.0 - November 13, 2025 =
+* NEW: ALM Cache is now stored as Transient data vs files on the server. This improves performance and reliability. This is a major improvement and change to the way the cache is stored and managed going forward.
+* NEW: Cache now supports ALL Ajax Load More functionality and add-ons including Filters, Next Page, WooCommerce, Elementor, ACF, Single Posts, Query Loop etc.
+* NEW: Transient data is stored for 1 hour by default. This can be modified with the `alm_cache_expiration` filter. See documentation for details.
+* NEW: Removed Cache admin page. Cache can now be managed from the main Ajax Load More admin settings page or the admin bar menu.
+* UPDATE: Removed `cache_id` parameter as it is no longer needed with the new cache configuration. Cache ID is now a dynamically generated hash based on query params, url, and settings.
+* NEW: Added new `alm_cache_created` and `alm_cache_deleted` hooks that are fired after creating and deleting the cache.
+* NEW: Updated unistaller hook to clear up all data on unistall.
 
 = 2.0.5 - June 9, 2025 =
 * UPDATE: Updated load_text_domain action to remove PHP warning.
@@ -119,8 +139,8 @@ https://connekthq.com/plugins/ajax-load-more/add-ons/cache/
 * Update - Admin UI/UX updates
 
 = 1.5.2 - April 17, 2018 =
-* NEW - Added new `alm_cache_deleted` action dispatched after Ajax Load More cache is deleted and created.
-* NEW - Added new `alm_custom_user_role` filter that allows developers to define the [user role](https://codex.wordpress.org/Roles_and_Capabilities) for access to view and delete the Ajax Load More cache. Default is [edit_theme_options](https://codex.wordpress.org/Roles_and_Capabilities#edit_theme_options).
+* NEW - Added new `alm_cache_deleted` action dispatched after Ajax Load More Cache is deleted and created.
+* NEW - Added new `alm_user_role` filter that allows developers to define the [user role](https://codex.wordpress.org/Roles_and_Capabilities) for access to view and delete the Ajax Load More Cache. Default is [edit_theme_options](https://codex.wordpress.org/Roles_and_Capabilities#edit_theme_options).
 * NEW - Added new language file for localization.
 * UPDATE - Code clean up.
 

@@ -164,13 +164,13 @@ if ( ! class_exists( 'ALM_SHORTCODE' ) ) :
 						'seo'                          => 'false',
 						'seo_offset'                   => false,
 						'template'                     => '',
-						'repeater'                     => 'default', // Deprecated
-						'theme_repeater'               => 'null', // Deprecated
+						'repeater'                     => 'default', // Deprecated.
+						'theme_repeater'               => 'null', // Deprecated.
 						'cta'                          => false,
 						'cta_position'                 => 'before:1',
 						'cta_template'                 => '',
-						'cta_repeater'                 => '', // Deprecated
-						'cta_theme_repeater'           => '', // Deprecated
+						'cta_repeater'                 => '', // Deprecated.
+						'cta_theme_repeater'           => '', // Deprecated.
 						'masonry'                      => '',
 						'post_type'                    => 'post',
 						'sticky_posts'                 => false,
@@ -187,8 +187,8 @@ if ( ! class_exists( 'ALM_SHORTCODE' ) ) :
 						'taxonomy_relation'            => '',
 						'taxonomy_include_children'    => '',
 						'sort_key'                     => '',
-						'meta_key'                     => '',
-						'meta_value'                   => '',
+						'meta_key'                     => '', // phpcs:ignore
+						'meta_value'                   => '', // phpcs:ignore
 						'meta_compare'                 => '',
 						'meta_relation'                => '',
 						'meta_type'                    => '',
@@ -231,6 +231,7 @@ if ( ! class_exists( 'ALM_SHORTCODE' ) ) :
 						'masonry_horizontalorder'      => '',
 						'progress_bar'                 => 'false',
 						'progress_bar_color'           => 'ed7070',
+						'prefetch'                     => 'false',
 						'images_loaded'                => 'false',
 						'button_label'                 => AjaxLoadMore::alm_default_button_label(),
 						'button_done_label'            => '',
@@ -822,8 +823,8 @@ if ( ! class_exists( 'ALM_SHORTCODE' ) ) :
 				'taxonomy_operator'         => $taxonomy_operator,
 				'taxonomy_include_children' => $taxonomy_include_children,
 				'taxonomy_relation'         => $taxonomy_relation,
-				'sort_key'                  => $sort_key,
-				'meta_key'                  => $meta_key,
+				'sort_key'                  => $sort_key, // phpcs:ignore
+				'meta_key'                  => $meta_key, // phpcs:ignore
 				'meta_value'                => $meta_value,
 				'meta_compare'              => $meta_compare,
 				'meta_relation'             => $meta_relation,
@@ -890,18 +891,13 @@ if ( ! class_exists( 'ALM_SHORTCODE' ) ) :
 			}
 
 			// Cache Add-on.
-			if ( has_action( 'alm_cache_installed' ) && $cache === 'true' ) {
-				// Confirm cache version is 2.0 or greater.
-				$cache_version_check = defined( 'ALM_CACHE_VERSION' ) && version_compare( ALM_CACHE_VERSION, '2.0', '>=' );
-				if ( $cache_version_check ) {
-					$cache_return   = apply_filters(
-						'alm_cache_shortcode',
-						$cache,
-						$cache_id,
-						$options
-					);
+			if ( has_action( 'alm_cache_installed' ) && defined( 'ALM_CACHE_VERSION' ) && $cache === 'true' ) {
+				// Confirm Cache version is 3.0 or greater. Otherwise, do not use the Cache add-on.
+				if ( version_compare( ALM_CACHE_VERSION, '3.0', '>=' ) ) {
+					$cache_return   = apply_filters( 'alm_cache_shortcode', $options );
 					$alm_auto_cache = isset( $_GET['alm_auto_cache'] );
-					$paging         = $alm_auto_cache ? false : $paging;    // Disable paging if auto generate cache active.
+					$paging         = $alm_auto_cache ? false : $paging; // Disable paging if auto generate cache active.
+					$pause          = $alm_auto_cache ? 'true' : $pause; // Disable pause if auto generate cache active.
 					$ajaxloadmore  .= wp_kses_post( $cache_return );
 				}
 			}
@@ -1279,6 +1275,9 @@ if ( ! class_exists( 'ALM_SHORTCODE' ) ) :
 				$ajaxloadmore  .= ' data-masonry-config="' . htmlspecialchars( wp_json_encode( $masonry_config ), ENT_QUOTES, 'UTF-8' ) . '"';
 			}
 
+			// Prefetch.
+			$ajaxloadmore .= $prefetch !== 'false' ? ' data-prefetch="' . esc_attr( $prefetch ) . '"' : '';
+
 			// Images Loaded.
 			$ajaxloadmore .= $images_loaded !== 'false' ? ' data-images-loaded="' . esc_attr( $images_loaded ) . '"' : '';
 
@@ -1313,8 +1312,8 @@ if ( ! class_exists( 'ALM_SHORTCODE' ) ) :
 
 				// Get current permalink - (including querystring).
 				$single_post_permanlink = get_permalink( $single_post_id );
-				if ( $_SERVER['QUERY_STRING'] && apply_filters( 'alm_single_post_querystring', true ) ) {
-					$single_post_permanlink = $single_post_permanlink . '?' . esc_attr( $_SERVER['QUERY_STRING'] );
+				if ( $_SERVER['QUERY_STRING'] && apply_filters( 'alm_single_post_querystring', true ) ) {  // phpcs:ignore
+					$single_post_permanlink = $single_post_permanlink . '?' . esc_attr( $_SERVER['QUERY_STRING'] );  // phpcs:ignore
 				}
 
 				// Get previous post include, build output from the next post filter.

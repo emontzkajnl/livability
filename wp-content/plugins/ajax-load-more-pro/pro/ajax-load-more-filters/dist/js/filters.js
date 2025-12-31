@@ -10664,14 +10664,28 @@ window.almFiltersOnload = function () {
 	// Delay to give posts time to load
 	setTimeout(function () {
 		var page = parseInt(alm.page) + 1;
+		var poll = 0;
 		if (page > 1) {
-			var target = alm.listing.querySelector('.alm-filters[data-page="' + page + '"]');
-			if (target) {
-				var offset = typeof ajaxloadmore.getOffset === 'function' ? ajaxloadmore.getOffset(target).top : target.offsetTop;
-				var scrolltop = alm.addons.filters_scrolltop ? parseInt(alm.addons.filters_scrolltop) : 30;
-				var top = offset - scrolltop + 1;
-				window.scrollTo(0, top);
-			}
+			// Recursive polling function to find target element.
+			var scrollToPage = function scrollToPage() {
+				if (poll > 5) {
+					return;
+				}
+				var target = alm.listing.querySelector('.alm-filters[data-page="' + page + '"]');
+				if (target) {
+					var offset = typeof ajaxloadmore.getOffset === 'function' ? ajaxloadmore.getOffset(target).top : target.offsetTop;
+					var scrolltop = alm.addons.filters_scrolltop ? parseInt(alm.addons.filters_scrolltop) : 30;
+					var top = offset - scrolltop + 1;
+					window.scrollTo(0, top);
+				} else {
+					setTimeout(function () {
+						poll++;
+						scrollToPage();
+					}, 250);
+				}
+			};
+
+			scrollToPage();
 		}
 	}, _Variables2.default.delay);
 };

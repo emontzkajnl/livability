@@ -43,7 +43,7 @@ $extra_fields                = [ 'delete-debug-nonce' ];
 $method                      = '';
 
 echo '<style type="text/css">';
-include AA_TRACKING_ABSPATH . 'assets/css/filesystem-form.css';
+include AA_TRACKING_ABSPATH . 'assets/dist/filesystem-form.css';
 echo '</style>';
 
 $creds = request_filesystem_credentials( $delete_debug_link, $method, false, false, $extra_fields );

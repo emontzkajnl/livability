@@ -1,14 +1,14 @@
 === Ajax Load More: Elementor ===
 
-Contributors: dcooney, connekthq;Contributors
+Contributors: dcooney, connekthq
 Author: Connekt Media
 Author; URI: https://connekthq.com/
-Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/woocommerce/
+Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/elementor/
 Requires at least: 4.0
 Tested up to: 6.8
 Stable tag: trunk
 Homepage: https://connekthq.com/
-Version: 1.2.4
+Version: 1.3.0
 
 Infinite scroll Elementor widget content with Ajax Load More.
 
@@ -44,6 +44,11 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/elementor/
 5. Activate the plugin in the WP plugin dashboard.
 
 == Changelog == 
+
+= 1.3.0 - November 13, 2025 =
+* NEW: Added support for Ajax Load More Cache.
+* UPDATE: Updated Elementor tested up to versioning for better update support.
+* UPDATE: Various code cleanups and organization.
 
 = 1.2.4 - June 9, 2025 =
 * UPDATE: Updated load_text_domain action to remove PHP warning.

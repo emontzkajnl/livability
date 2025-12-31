@@ -10,6 +10,7 @@
 namespace AdvancedAds\Tracking\Frontend;
 
 use AdvancedAds\Tracking\Helpers;
+use AdvancedAds\Utilities\Conditional;
 use AdvancedAds\Framework\Interfaces\Integration_Interface;
 
 defined( 'ABSPATH' ) || exit;
@@ -44,9 +45,8 @@ class Tracking implements Integration_Interface {
 		}
 
 		$method = Helpers::get_tracking_method();
-		$is_amp = function_exists( 'advads_is_amp' ) && advads_is_amp();
 
-		if ( $is_amp && 'onrequest' === $method ) {
+		if ( Conditional::is_amp() && 'onrequest' === $method ) {
 			( new Database_Tracking() )->hooks();
 			return;
 		}

@@ -5,10 +5,10 @@ Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/ajax-load-more/add-ons/single-post/
 Requires at least: 4.0
-Tested up to: 6.8
+Tested up to: 6.9
 Stable tag: trunk
 Homepage: https://connekthq.com/ajax-load-more/
-Version: 1.7.3
+Version: 1.8.0
 
 == Copyright ==
 Copyright 2025 Connekt Media
@@ -42,6 +42,12 @@ http://connekthq.com/plugins/ajax-load-more/single-post/
 5. Activate the plugin in the Plugin dashboard.
 
 == Changelog ==
+
+= 1.8.0 - December 11, 2025 =
+* NEW: Added new REST API endpoint for single post retrieval.
+* NEW: Added `alm_single_posts_use_rest_api` hook for disbaling the REST API usage. `add_filter('alm_single_posts_use_rest_api', '__return_false');`
+* UPDATE: Removed deprecated functionality to scroll user to post after load more action.
+* UPDATE: Code cleanup and optimizations.
 
 = 1.7.3 - August 18, 2025 =
 * UPDATE: Improved caching mechanism for initial single post requests.

@@ -10,6 +10,7 @@
 namespace AdvancedAds\Tracking;
 
 use AdvancedAds\Abstracts\Ad;
+use AdvancedAds\Utilities\Conditional;
 use AdvancedAds\Framework\Utilities\Params;
 use AdvancedAds\Tracking\Utilities\Tracking;
 use AdvancedAds\Framework\Interfaces\Integration_Interface;
@@ -44,7 +45,7 @@ class AMP implements Integration_Interface {
 	 */
 	public function register_actions(): void {
 		// Check if is amp.
-		if ( ! function_exists( 'advads_is_amp' ) || ! advads_is_amp() ) {
+		if ( ! Conditional::is_amp() ) {
 			return;
 		}
 

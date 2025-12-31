@@ -3,6 +3,7 @@
  * Custom /test route to text REST API access.
  *
  * @package ajax-load-more-cache
+ * @deprecated 3.0
  * @version 2.0
  */
 
@@ -14,13 +15,13 @@ add_action(
 		register_rest_route(
 			$my_namespace,
 			$my_endpoint,
-			array(
+			[
 				'methods'             => 'POST',
 				'callback'            => 'alm_cache_test',
 				'permission_callback' => function () {
 					return true;
 				},
-			)
+			]
 		);
 	}
 );
@@ -28,9 +29,9 @@ add_action(
 /**
  * Test REST API access
  *
- * @param WP_REST_Request $request API request.
+ * @return mixed JSON response.
  */
-function alm_cache_test( WP_REST_Request $request ) {
+function alm_cache_test() {
 	// Access is enable, send the response.
 	$response = [ 'success' => true ];
 

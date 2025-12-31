@@ -124,11 +124,23 @@ $click_sum = 0;
 			</tr>
 			</thead>
 			<tbody>
-			<?php foreach ( Email::get_aggergated_stats_by_ad( $impr_stats, $click_stats ) as $ad => $stats ) : ?>
+			<?php foreach ( Email::get_aggergated_stats_by_ad( $impr_stats, $click_stats ) as $ad_id => $stats ) : ?>
 				<tr>
-					<td style="<?php echo esc_attr( $cell_style ); ?>"><?php echo esc_html( $ad ); ?></td>
-					<td style="<?php echo esc_attr( $cell_style ); ?>"><?php echo esc_html( $stats['impressions'] ); ?></td>
-					<td style="<?php echo esc_attr( $cell_style ); ?>"><?php echo esc_html( $stats['clicks'] ); ?></td>
+					<td style="<?php echo esc_attr( $cell_style ); ?>"><?php echo esc_html( $stats['name'] ); ?></td>
+					<td style="<?php echo esc_attr( $cell_style ); ?>">
+						<?php if ( $stats['impression_tracking'] ) : ?>
+							<?php echo esc_html( $stats['impressions'] ); ?>
+						<?php else : ?>
+							<?php esc_html_e( 'disabled', 'advanced-ads-tracking' ); ?>
+						<?php endif; ?>
+					</td>
+					<td style="<?php echo esc_attr( $cell_style ); ?>">
+						<?php if ( $stats['click_tracking'] ) : ?>
+							<?php echo esc_html( $stats['clicks'] ); ?>
+						<?php else : ?>
+							<?php esc_html_e( 'disabled', 'advanced-ads-tracking' ); ?>
+						<?php endif; ?>
+					</td>
 					<td style="<?php echo esc_attr( $cell_style ); ?>"><?php echo esc_html( $stats['ctr'] ); ?></td>
 				</tr>
 			<?php endforeach; ?>

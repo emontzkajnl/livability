@@ -8,7 +8,7 @@ Requires at least: 5.0
 Tested up to: 6.8
 Stable tag: trunk
 Homepage: https://connekthq.com/
-Version: 1.2.4
+Version: 1.3.0
 
 == Copyright ==
 Copyright 2025 Darren Cooney & Connekt Media
@@ -44,6 +44,11 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/comments/
 5. Activate the plugin in the WP plugin dashboard.
 
 == Changelog ==
+
+= 1.3.0 - November 13, 2025 =
+* NEW: Added support for Ajax Load More Cache 3.0.
+* UPDATE: Various code cleanups and organization.
+* UPDATE: Updated WP compatibility.
 
 = 1.2.4 - June 9, 2025 =
 * UPDATE: Updated load_text_domain action to remove PHP warning.

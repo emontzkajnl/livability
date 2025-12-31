@@ -21,6 +21,11 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class database operations.
+ *
+ * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+ * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
  */
 class Db_Operations {
 	/**
@@ -61,19 +66,6 @@ class Db_Operations {
 	 * The constructor.
 	 */
 	private function __construct() {
-		$this->remove_periods = [
-			'beforethisyear' => __( 'everything before this year', 'advanced-ads-tracking' ),
-			'first6months'   => __( 'first 6 months', 'advanced-ads-tracking' ),
-		];
-
-		$this->export_periods = [
-			'last12months'   => __( 'last 12 months', 'advanced-ads-tracking' ),
-			'lastyear'       => __( 'last year', 'advanced-ads-tracking' ),
-			'thisyear'       => __( 'this year', 'advanced-ads-tracking' ),
-			'beforethisyear' => __( 'everything before this year', 'advanced-ads-tracking' ),
-			'first6months'   => __( 'first 6 months', 'advanced-ads-tracking' ),
-		];
-
 		add_filter( 'advanced-ads-tracking-get-period-bounds', [ $this, 'add_remove_periods_bounds' ], 25, 2 );
 
 		// AJAX ACTION.
@@ -199,12 +191,12 @@ class Db_Operations {
 
 		if ( ! empty( $deleted_ads['impressions'] ) ) {
 			$table = Database::get_impression_table();
-			$wpdb->query( "DELETE FROM $table WHERE `ad_id` IN (" . implode( ',', $deleted_ads['impressions'] ) . ')' ); // phpcs:ignore
+			$wpdb->query( "DELETE FROM $table WHERE `ad_id` IN (" . implode( ',', $deleted_ads['impressions'] ) . ')' );
 		}
 
 		if ( ! empty( $deleted_ads['clicks'] ) ) {
 			$table = Database::get_click_table();
-			$wpdb->query( "DELETE FROM $table WHERE `ad_id` IN (" . implode( ',', $deleted_ads['clicks'] ) . ')' ); // phpcs:ignore
+			$wpdb->query( "DELETE FROM $table WHERE `ad_id` IN (" . implode( ',', $deleted_ads['clicks'] ) . ')' );
 		}
 
 		return true;
@@ -238,14 +230,13 @@ class Db_Operations {
 
 		// Reset the whole table if all stats should be removed.
 		if ( 'all-ads' === $ad_id ) {
-			$wpdb->query( 'TRUNCATE TABLE ' . Database::get_impression_table() ); // phpcs:ignore
-			$wpdb->query( 'TRUNCATE TABLE ' . Database::get_click_table() ); // phpcs:ignore
+			$wpdb->query( 'TRUNCATE TABLE ' . Database::get_impression_table() );
+			$wpdb->query( 'TRUNCATE TABLE ' . Database::get_click_table() );
 
 			return 1;
 		}
 
 		// Reset stats for individual ad.
-		// phpcs:disable
 		$ad_id = (int) $ad_id;
 		if ( $ad_id > 0 ) {
 			// Remove impressions.
@@ -262,7 +253,6 @@ class Db_Operations {
 
 			return $affected_rows > 0 ? 0 : -1;
 		}
-		// phpcs:enable
 
 		return -1;
 	}
@@ -371,7 +361,10 @@ class Db_Operations {
 	 * @return array
 	 */
 	public function get_remove_periods(): array {
-		return $this->remove_periods;
+		return [
+			'beforethisyear' => __( 'everything before this year', 'advanced-ads-tracking' ),
+			'first6months'   => __( 'first 6 months', 'advanced-ads-tracking' ),
+		];
 	}
 
 	/**
@@ -380,7 +373,13 @@ class Db_Operations {
 	 * @return array
 	 */
 	public function get_export_periods(): array {
-		return $this->export_periods;
+		return [
+			'last12months'   => __( 'last 12 months', 'advanced-ads-tracking' ),
+			'lastyear'       => __( 'last year', 'advanced-ads-tracking' ),
+			'thisyear'       => __( 'this year', 'advanced-ads-tracking' ),
+			'beforethisyear' => __( 'everything before this year', 'advanced-ads-tracking' ),
+			'first6months'   => __( 'first 6 months', 'advanced-ads-tracking' ),
+		];
 	}
 
 	/**
@@ -472,8 +471,7 @@ class Db_Operations {
 		global $wpdb;
 
 		$impressions_table = Database::get_impression_table();
-		// phpcs:ignore WordPress.DB.PreparedSQL -- we can't prepare the table names.
-		$result = $wpdb->get_results( "SELECT `timestamp` FROM {$impressions_table} ORDER BY `timestamp` ASC LIMIT 1" );
+		$result            = $wpdb->get_results( "SELECT `timestamp` FROM {$impressions_table} ORDER BY `timestamp` ASC LIMIT 1" );
 		if ( ! $result ) {
 			return '';
 		}
@@ -536,7 +534,7 @@ class Db_Operations {
 	private function remove( $period ): array {
 		global $wpdb;
 
-		if ( ! array_key_exists( $period, $this->remove_periods ) ) {
+		if ( ! array_key_exists( $period, $this->get_remove_periods() ) ) {
 			return [
 				'status' => false,
 				'msg'    => 'invalid period',
@@ -556,7 +554,7 @@ class Db_Operations {
 
 		$query = "DELETE $click_table, $impression_table FROM $click_table, $impression_table WHERE $click_table.timestamp BETWEEN $start_ts AND $end_ts AND $impression_table.timestamp BETWEEN $start_ts AND $end_ts";
 
-		$result = $wpdb->query( $query ); // phpcs:ignore
+		$result = $wpdb->query( $query );
 		if ( false === $result ) {
 			return [ 'status' => false ];
 		} else {
@@ -564,8 +562,8 @@ class Db_Operations {
 			$o1 = "OPTIMIZE TABLE $impression_table";
 			$o2 = "OPTIMIZE TABLE $click_table";
 
-			$ro1    = $wpdb->query( $o1 ); // phpcs:ignore
-			$ro2    = $wpdb->query( $o2 ); // phpcs:ignore
+			$ro1    = $wpdb->query( $o1 );
+			$ro2    = $wpdb->query( $o2 );
 			$return = [ 'status' => true ];
 			if ( false === $ro1 || false === $ro2 ) {
 				$return['alt-msg'] = 'optimize-failure';
@@ -588,8 +586,8 @@ class Db_Operations {
 		$q1                = "SELECT round(((data_length + index_length) / 1024), 2) AS `size` FROM information_schema.TABLES WHERE table_schema = '" . DB_NAME . "' AND table_name = '$clicks_table'";
 		$q2                = "SELECT round(((data_length + index_length) / 1024), 2) AS `size` FROM information_schema.TABLES WHERE table_schema = '" . DB_NAME . "' AND table_name = '$impressions_table'";
 
-		$clicks_size_results      = $wpdb->get_results( $q1 );// phpcs:ignore
-		$impressions_size_results = $wpdb->get_results( $q2 );// phpcs:ignore
+		$clicks_size_results      = $wpdb->get_results( $q1 );
+		$impressions_size_results = $wpdb->get_results( $q2 );
 
 		$impression_size = '0';
 		$click_size      = '0';
@@ -603,8 +601,8 @@ class Db_Operations {
 		$q3 = "SELECT COUNT(*) AS count FROM $clicks_table";
 		$q4 = "SELECT COUNT(*) AS count FROM $impressions_table";
 
-		$clicks_count_results      = $wpdb->get_results( $q3 );// phpcs:ignore
-		$impressions_count_results = $wpdb->get_results( $q4 );// phpcs:ignore
+		$clicks_count_results      = $wpdb->get_results( $q3 );
+		$impressions_count_results = $wpdb->get_results( $q4 );
 
 		$clicks_row_count      = 0;
 		$impressions_row_count = 0;
@@ -622,8 +620,8 @@ class Db_Operations {
 		$oldest_click      = null;
 		$oldest_impression = null;
 
-		$old_click_result      = $wpdb->get_results( $q5 ); // phpcs:ignore
-		$old_impression_result = $wpdb->get_results( $q6 ); // phpcs:ignore
+		$old_click_result      = $wpdb->get_results( $q5 );
+		$old_impression_result = $wpdb->get_results( $q6 );
 		if ( $old_click_result ) {
 			$oldest_click  = Helpers::get_date_from_db( $old_click_result[0]->timestamp, 'Y-m-d' );
 			$_oldest_click = date_create( $oldest_click );
@@ -656,22 +654,21 @@ class Db_Operations {
 		$impressions_table = Database::get_impression_table();
 		$clicks_table      = Database::get_click_table();
 
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- we can't add table names as placeholders.
 		$imp = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT ad_id FROM {$impressions_table} WHERE ad_id NOT IN ( SELECT ID from {$wpdb->posts} WHERE post_type = %s ) GROUP BY ad_id",
+				"SELECT ad_id FROM %s WHERE ad_id NOT IN ( SELECT ID from {$wpdb->posts} WHERE post_type = %s ) GROUP BY ad_id",
+				$impressions_table,
 				Constants::POST_TYPE_AD
 			)
 		);
 
 		$clk = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT ad_id FROM {$clicks_table} WHERE ad_id NOT IN ( SELECT ID from {$wpdb->posts} WHERE post_type = %s ) GROUP BY ad_id",
+				"SELECT ad_id FROM %s WHERE ad_id NOT IN ( SELECT ID from {$wpdb->posts} WHERE post_type = %s ) GROUP BY ad_id",
+				$clicks_table,
 				Constants::POST_TYPE_AD
 			)
 		);
-
-		// phpcs:enable
 
 		return [
 			'impressions' => array_map( 'absint', $imp ),
@@ -739,16 +736,16 @@ class Db_Operations {
 		}
 		?>
 		<span class="advads-period-inputs">
-		<select <?php echo ( ! empty( $_args['period'][0] ) ) ? 'id="' . $_args['period'][0] . '"' : ''; ?> class="<?php echo $_args['period'][1]; ?> advads-period">
+		<select <?php echo ( ! empty( $_args['period'][0] ) ) ? 'id="' . $_args['period'][0] . '"' : ''; // phpcs:ignore ?> class="<?php echo esc_attr( $_args['period'][1] ); ?> advads-period">
 		<?php foreach ( $_args['period-options'] as $value => $readable ) : ?>
-			<option value="<?php echo esc_attr( $value ); ?>"><?php echo wp_strip_all_tags( $readable ); ?></option>
+			<option value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $readable ); ?></option>
 		<?php endforeach; ?>
 			<?php if ( $_args['custom'] ) : ?>
 				<option value="custom"><?php esc_html_e( 'custom', 'advanced-ads-tracking' ); ?></option>
 			<?php endif; ?>
 		</select>
-		<input style="display:none;width:auto;" type="text" <?php echo ( $_args['from'][0] ) ? 'id="' . $_args['from'][0] . '"' : ''; ?> class="<?php echo $_args['from'][1]; ?> advads-from advads-datepicker" value="" autocomplete="off" size="10" maxlength="10" placeholder="<?php esc_html_e( 'from', 'advanced-ads-tracking' ); ?>"/>
-		<input style="display:none;width:auto;" type="text" <?php echo ( $_args['to'][0] ) ? 'id="' . $_args['to'][0] . '"' : ''; ?> class="<?php echo $_args['to'][1]; ?> advads-to advads-datepicker" value="" autocomplete="off" size="10" maxlength="10" placeholder="<?php esc_html_e( 'to', 'advanced-ads-tracking' ); ?>"/>
+		<input style="display:none;width:auto;" type="text" <?php echo ( $_args['from'][0] ) ? 'id="' . $_args['from'][0] . '"' : ''; // phpcs:ignore ?> class="<?php echo $_args['from'][1]; ?> advads-from advads-datepicker" value="" autocomplete="off" size="10" maxlength="10" placeholder="<?php esc_html_e( 'from', 'advanced-ads-tracking' ); ?>"/>
+		<input style="display:none;width:auto;" type="text" <?php echo ( $_args['to'][0] ) ? 'id="' . $_args['to'][0] . '"' : ''; // phpcs:ignore ?> class="<?php echo $_args['to'][1]; ?> advads-to advads-datepicker" value="" autocomplete="off" size="10" maxlength="10" placeholder="<?php esc_html_e( 'to', 'advanced-ads-tracking' ); ?>"/>
 		</span>
 		<?php
 	}

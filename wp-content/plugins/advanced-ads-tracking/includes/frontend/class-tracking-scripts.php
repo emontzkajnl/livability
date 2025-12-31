@@ -12,6 +12,7 @@ namespace AdvancedAds\Tracking\Frontend;
 use AdvancedAds\Abstracts\Ad;
 use AdvancedAds\Tracking\Helpers;
 use AdvancedAds\Tracking\Constants;
+use AdvancedAds\Utilities\Conditional;
 use AdvancedAds\Framework\Utilities\Str;
 use AdvancedAds\Tracking\Utilities\Data;
 use AdvancedAds\Tracking\Utilities\Tracking;
@@ -58,43 +59,21 @@ class Tracking_Scripts implements Integration_Interface {
 	 * @return void
 	 */
 	public function enqueue_scripts(): void {
-		if ( function_exists( 'advads_is_amp' ) && advads_is_amp() ) {
+		if ( Conditional::is_amp() ) {
 			return;
 		}
 
-		$deps            = [];
-		$is_script_debug = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
-		$is_ga_tracking  = Helpers::is_tracking_method( 'ga' ) || is_multisite() || Helpers::is_forced_analytics();
+		$deps           = [];
+		$is_ga_tracking = Helpers::is_tracking_method( 'ga' ) || is_multisite() || Helpers::is_forced_analytics();
 
 		if ( wp_script_is( 'advanced-ads-pro/cache_busting' ) ) {
 			$deps[] = 'advanced-ads-pro/cache_busting';
-
-			if ( $is_script_debug ) {
-				wp_enqueue_script( 'advadsTrackingPro', AA_TRACKING_BASE_URL . 'assets/src/frontend/pro.js', array_merge( $deps, [ 'advadsTrackingScript', 'advadsClickTracking' ] ), AAT_VERSION, true );
-			}
 		}
 
-		if ( $is_script_debug ) {
-			wp_register_script( 'advadsTrackingUtils', AA_TRACKING_BASE_URL . 'assets/src/frontend/tracking-util.js', [], AAT_VERSION, true );
-			$deps[] = 'advadsTrackingUtils';
-
-			// Google Analytics instances store and tracking script.
-			if ( $is_ga_tracking ) {
-				wp_enqueue_script( 'advadsInventoryScript', AA_TRACKING_BASE_URL . 'assets/src/frontend/ga-instances.js', $deps, AAT_VERSION, true );
-				$deps[] = 'advadsInventoryScript';
-
-				wp_enqueue_script( 'advadsTrackingGAFront', AA_TRACKING_BASE_URL . 'assets/src/frontend/ga-tracking.js', $deps, AAT_VERSION, true );
-			}
-
-			wp_enqueue_script( 'advadsTrackingScript', AA_TRACKING_BASE_URL . 'assets/src/frontend/impressions.js', $deps, AAT_VERSION, true );
-			$deps[] = 'advadsTrackingScript';
-			wp_enqueue_script( 'advadsClickTracking', AA_TRACKING_BASE_URL . 'assets/src/frontend/clicks.js', $deps, AAT_VERSION, true );
-		} else {
-			wp_enqueue_script( 'advadsTrackingScript', AA_TRACKING_BASE_URL . 'assets/js/frontend/tracking.js', $deps, AAT_VERSION, true );
-			$deps[] = 'advadsTrackingScript';
-			if ( $is_ga_tracking ) {
-				wp_enqueue_script( 'advadsTrackingGAFront', AA_TRACKING_BASE_URL . 'assets/js/frontend/ga-tracking.js', $deps, AAT_VERSION, true );
-			}
+		wp_enqueue_script( 'advadsTrackingScript', AA_TRACKING_BASE_URL . 'assets/dist/tracking.js', $deps, AAT_VERSION, true );
+		$deps[] = 'advadsTrackingScript';
+		if ( $is_ga_tracking ) {
+			wp_enqueue_script( 'advadsTrackingGAFront', AA_TRACKING_BASE_URL . 'assets/dist/ga-tracking.js', $deps, AAT_VERSION, true );
 		}
 
 		// Pass ajax_action name to script.
@@ -135,7 +114,7 @@ class Tracking_Scripts implements Integration_Interface {
 
 		// Delayed ads add-ons are available.
 		if ( Helpers::has_delayed_ads() ) {
-			wp_enqueue_script( 'advadsTrackingDelayed', AA_TRACKING_BASE_URL . 'assets/' . ( $is_script_debug ? 'src/frontend/delayed.js' : 'js/frontend/delayed.js' ), array_merge( $deps, [ 'jquery' ] ), AAT_VERSION, true );
+			wp_enqueue_script( 'advadsTrackingDelayed', AA_TRACKING_BASE_URL . 'assets/dist/delayed.js', array_merge( $deps, [ 'jquery' ] ), AAT_VERSION, true );
 		}
 	}
 
@@ -232,7 +211,7 @@ class Tracking_Scripts implements Integration_Interface {
 	 * @return void
 	 */
 	public function output_ad_ids(): void {
-		if ( function_exists( 'advads_is_amp' ) && advads_is_amp() ) {
+		if ( Conditional::is_amp() ) {
 			return;
 		}
 

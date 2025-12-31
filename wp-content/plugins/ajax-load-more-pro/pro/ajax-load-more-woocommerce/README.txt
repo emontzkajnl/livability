@@ -8,7 +8,7 @@ Requires at least: 5.0
 Tested up to: 6.8
 Stable tag: trunk
 Homepage: https://connekthq.com/
-Version: 1.2.6
+Version: 1.3.0
 
 == Copyright ==
 Copyright 2025 Connekt Media
@@ -42,6 +42,12 @@ http://connekthq.com/plugins/ajax-load-more/add-ons/woocommerce/
 5. Activate the plugin in the WP plugin dashboard.
 
 == Changelog == 
+
+= 1.3.0 - November 13, 2025 =
+* NEW: Added support for Ajax Load More Cache 3.0.
+* FIX: Fixed issue with WooCommerce taxonomies and archives setting.
+* UPDATE: Various code cleanups and organization.
+
 = 1.2.6 - June 9, 2025 =
 * UPDATE: Updated load_text_domain action to remove PHP warning.
 * UPDATE: Added `ajax-load-more` as a required plugin and removed activation hooks/notices.

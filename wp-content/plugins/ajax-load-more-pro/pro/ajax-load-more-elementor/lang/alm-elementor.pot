@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ajax Load More WooCommerce\n"
-"POT-Creation-Date: 2023-06-11 09:53-0400\n"
+"POT-Creation-Date: 2025-11-12 14:14-0500\n"
 "PO-Revision-Date: 2018-06-20 13:05-0500\n"
 "Last-Translator: Darren Cooney <darren@connekthq.com>\n"
 "Language-Team: \n"
@@ -13,33 +13,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.2.2\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-KeywordsList: __;_e;esc_attr__;esc_attr_e;esc_html_e;esc_html__\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: core/src\n"
 "X-Poedit-SearchPathExcluded-1: admin/src\n"
-
-#: ajax-load-more-elementor.php:54
-msgid ""
-"You must install and activate the core Ajax Load More plugin before using "
-"the Ajax Load More Elementor Add-on."
-msgstr ""
-
-#: ajax-load-more-elementor.php:55
-msgid "Install Ajax Load More Now"
-msgstr ""
-
-#: ajax-load-more-elementor.php:65
-msgid ""
-"Elementor Pro must be installed and activated to use the Ajax Load More "
-"Elementor Add-on"
-msgstr ""
 
 #: module/widget.php:47
 msgid "Elementor Widget Connector"
 msgstr ""
 
 #: module/widget.php:99
-msgid "Shortcode Builder"
+msgid "Ajax Load More Settings"
 msgstr ""
 
 #: module/widget.php:106
@@ -189,17 +173,17 @@ msgid ""
 msgstr ""
 
 #: module/widget.php:232
-msgid "Previous Posts Link Label"
+msgid "Previous Posts Button"
 msgstr ""
 
 #: module/widget.php:234
 msgid ""
-"The text displayed when the previous posts link is rendered. Leave empty to "
-"not render component."
+"On paged URLs, show a Previous Posts button to load posts in a reverse load "
+"more order. Leave empty to not render component."
 msgstr ""
 
-#: module/widget.php:235 module/widget.php:236
-msgid "← Previous Posts"
+#: module/widget.php:235
+msgid "Previous Posts"
 msgstr ""
 
 #: module/widget.php:248
@@ -222,30 +206,41 @@ msgid ""
 "which point the URL will update while scrolling through Ajax loaded pages."
 msgstr ""
 
-#: module/widget.php:279
+#: module/widget.php:276
 msgid "Integrations"
 msgstr ""
 
-#: module/widget.php:285
+#: module/widget.php:284
 msgid "Cache"
 msgstr ""
 
-#: module/widget.php:287
+#: module/widget.php:286
 msgid "Enable Ajax Load More Cache on this instance."
 msgstr ""
 
-#: module/widget.php:291
+#: module/widget.php:290
 msgid "False"
 msgstr ""
 
-#: module/widget.php:292
+#: module/widget.php:291
 msgid "True"
 msgstr ""
 
-#: module/widget.php:382
+#: module/widget.php:303
+msgid "Ajax Load More Cache"
+msgstr ""
+
+#: module/widget.php:304
+msgid ""
+"Improve website performance by caching the results of Ajax server requests."
+"<br/><br/><a href=\"https://connekthq.com/plugins/ajax-load-more/add-ons/"
+"cache/\" target=\"_blank\">Learn More</a>"
+msgstr ""
+
+#: module/widget.php:364 module/widget.php:390
 msgid "Elementor Widget Connector for Ajax Load More"
 msgstr ""
 
-#: module/widget.php:385
+#: module/widget.php:366 module/widget.php:393
 msgid "Preview or launch the live URL to view Ajax Load More content."
 msgstr ""

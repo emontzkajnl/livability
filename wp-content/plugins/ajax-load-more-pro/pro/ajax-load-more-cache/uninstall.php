@@ -13,8 +13,6 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-alm_delete_cache_files( $path );
-
 /**
  * Loop directories and remove files.
  */
@@ -22,7 +20,22 @@ function alm_delete_cache_files() {
 	$upload_dir = wp_upload_dir();
 	$path       = apply_filters( 'alm_cache_path', $upload_dir['basedir'] . '/alm-cache/' );
 
-	// Loop all cached directories.
+	$files = scandir( $path );
+	foreach ( $files as $file ) {
+		if ( $file === '.' || $file === '..' ) {
+			continue;
+		}
+		$file_path = $path . '/' . $file;
+		if ( is_file( $file_path ) ) {
+			$extension = pathinfo( $file_path, PATHINFO_EXTENSION );
+			if ( $extension !== 'json' ) {
+				continue; // Only delete .json cache files.
+			}
+			unlink( $file_path ); // phpcs:ignore
+		}
+	}
+
+	// Now, loop all cached directories.
 	foreach ( new DirectoryIterator( $path ) as $directory ) {
 		if ( $directory->isDot() ) {
 			continue;
@@ -35,6 +48,7 @@ function alm_delete_cache_files() {
 
 	rmdir( $path ); // Delete main cache directory.
 }
+alm_delete_cache_files();
 
 /**
  * Delete all files and parent directory.
@@ -42,7 +56,7 @@ function alm_delete_cache_files() {
  * @param string $directory Path to directory.
  */
 function alm_cache_rmdir( $directory ) {
-	if ( current_user_can( apply_filters( 'alm_custom_user_role', 'edit_theme_options' ) ) ) {
+	if ( current_user_can( apply_filters( 'alm_user_role', 'edit_theme_options' ) ) ) {
 		if ( is_dir( $directory ) ) {
 			foreach ( glob( $directory . '/*.*' ) as $filename ) {
 				if ( is_file( $filename ) ) {

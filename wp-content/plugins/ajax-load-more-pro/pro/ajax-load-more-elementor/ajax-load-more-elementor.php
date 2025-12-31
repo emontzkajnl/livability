@@ -7,9 +7,9 @@
  * Twitter: @KaptonKaos
  * Author URI: http://connekthq.com
  * Copyright: Darren Cooney & Connekt Media
- * Version: 1.2.4
- * Elementor tested up to: 3.29.2
- * Elementor Pro tested up to: 3.29.2
+ * Version: 1.3.0
+ * Elementor tested up to: 3.33.0
+ * Elementor Pro tested up to: 3.33.0
  * Requires Plugins: ajax-load-more, elementor
  *
  * @package ALMElementor
@@ -19,8 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ALM_ELEMENTOR_VERSION', '1.2.4' );
-define( 'ALM_ELEMENTOR_RELEASE', 'June 9, 2025' );
+define( 'ALM_ELEMENTOR_VERSION', '1.3.0' );
+define( 'ALM_ELEMENTOR_RELEASE', 'November 13, 2025' );
 
 if ( ! class_exists( 'ALMElementor' ) ) :
 

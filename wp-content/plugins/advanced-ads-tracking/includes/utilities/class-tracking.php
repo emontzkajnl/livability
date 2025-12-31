@@ -27,8 +27,8 @@ class Tracking {
 	/**
 	 * Check, whether to track a specific ad or not
 	 *
-	 * @param Ad     $ad   Ad instance.
-	 * @param string $what What to track. default value 'impression'. 'min_one' if you want to check if atleast one method is activated.
+	 * @param Ad|int $ad      Ad instance or Ad ID.
+	 * @param string $what    What to track. default value 'impression'. 'min_one' if you want to check if atleast one method is activated.
 	 * @param string $context To skip role based checking for view. Default value is empty.
 	 *
 	 * @return bool
@@ -41,6 +41,10 @@ class Tracking {
 
 		if ( ! is_an_ad( $ad ) ) {
 			$ad = wp_advads_get_ad( $ad );
+		}
+
+		if ( ! $ad ) {
+			return false;
 		}
 
 		// Early exit if ad is of type 'yieldscale'.
@@ -199,7 +203,7 @@ class Tracking {
 
 		$the_ad = wp_advads_get_ad( $ad_id );
 		// Do not track expired ads click.
-		if ( $the_ad->is_expired() ) {
+		if ( ! is_an_ad( $the_ad ) || $the_ad->is_expired() ) {
 			return false;
 		}
 

@@ -2,7 +2,7 @@
 Requires at least: 5.7
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.0.7
+Stable tag: 3.0.8
 
 Advanced Ads Pro is for those who want to perform magic on their ads.
 
@@ -80,6 +80,13 @@ You can use Advanced Ads along with any other ad management plugin and don’t n
 
 == Changelog ==
 
+= 3.0.8 (September 23, 2025) =
+
+- Improvement: add undefined translations
+- Improvement: adblocker countermeasures class with cleaner structure and validation
+- Fix: prevent adblocker countermeasures cookie set on backend
+- Fix: adblocker countermeasures cookie headers already sent warning
+
 = 3.0.7 (August 27, 2025) =
 
 - Improvement: add undefined translations
@@ -141,4 +148,4 @@ You can use Advanced Ads along with any other ad management plugin and don’t n
 - Improvement: optimize AJAX cache busting rotation to conserve server resources
 - Improvement: disable elements in WP-admin bar
 
-Build: 2025-09-cb46c626
+Build: 2025-12-cd98bc41

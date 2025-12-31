@@ -1,7 +1,7 @@
 === Advanced Ads – Tracking ===
 Requires at least: 5.7
-Tested up to: 6.7
-Stable tag: 3.0.3
+Tested up to: 6.8
+Stable tag: 3.0.8
 Requires PHP: 7.4
 
 Track ad impressions and clicks.
@@ -62,6 +62,41 @@ The Tracking add-on is based on the Advanced Ads plugin, a simple and powerful a
 
 == Changelog ==
 
+= 3.0.8 (September 23, 2025) =
+
+- Improvement: add undefined translations
+- Improvement: show "disabled" in email report when impression or click tracking is turned off
+- Fix: prevent impression divide by zero error in email reports
+
+= 3.0.7 (September 1, 2025) =
+
+- Improvement: add undefined translations
+- Fix: resolve an error when processing tracking links
+
+= 3.0.6 (August 28, 2025) =
+
+- Improvement: add undefined translations
+- Improvement: ajax handler will run with better performance and security
+- Fix: remove `mb_convert_encoding` deprecation notice
+- Fix: "advancedAdsGAInstances is not defined" JavaScript error
+- Fix: Google Analytics tracking ID will correctly record impressions and clicks for ad placements
+- Fix: prevent PHP DateRangeError on timestamp handling
+
+= 3.0.5 (July 28, 2025) =
+
+- Improvement: add undefined translations
+- Improvement: prevent fatal error when tracking on invalid or non-ad entries
+- Fix: resolve incorrect loading of tracking JS files
+
+= 3.0.4 (June 25, 2025) =
+
+- Improvement: add undefined translations
+- Improvement: type safety in class-ad-limiter.php
+- Improvement: Test plugin compatibility with WordPress 6.8.
+- Fix: source URL tracking for cloaked links in debug logs
+- Fix: add safety check in data handling
+- Fix: the_ad_clicks shortcode render as plain text
+
 = 3.0.3 (April 9, 2025) =
 
 - Improvement: public report url rewriting with backward compatibility
@@ -84,4 +119,4 @@ The Tracking add-on is based on the Advanced Ads plugin, a simple and powerful a
 - Feature: add best performing ads widget
 - Improvement: add quick & bulk edit for tracking options
 
-Build: 2025-06-a7906858
+Build: 2025-12-db556662

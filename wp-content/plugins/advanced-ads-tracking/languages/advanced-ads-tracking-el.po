@@ -1,118 +1,115 @@
+# Translation of Ad Tracking in Greek
+# This file is distributed under the same license as the Ad Tracking package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ad Tracking\n"
-"Report-Msgid-Bugs-To: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2025-04-08 15:49:11+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-11T15:37:32+00:00\n"
-"PO-Revision-Date: 2024-10-02 14:32:12+0000\n"
-"Language: el_GR\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: GlotPress/4.0.1\n"
+"Language: el_GR\n"
+"Project-Id-Version: Ad Tracking\n"
+
+#. Author of the plugin
+#: tracking.php
+msgid "Advanced Ads"
+msgstr "Προηγμένες Διαφημίσεις"
 
 #: views/admin/ads/bulk-edit.php:10
 msgid "— No Change —"
-msgstr ""
+msgstr "— Καμία αλλαγή —"
 
 #. translators: %s: Plugin name
 #: includes/class-bootstrap.php:155
 msgid "Your versions of the Advanced Ads addons listed below are incompatible with <strong>Advanced Ads %s</strong> and have been deactivated. Please update the plugin to the latest version."
-msgstr ""
+msgstr "Οι εκδόσεις των πρόσθετων των Προηγμένων Διαφημίσεων που αναφέρονται παρακάτω δεν είναι συμβατές με τις <strong>Σύνθετες διαφημίσεις %s</strong> και έχουν απενεργοποιηθεί. Ενημερώστε τα πρόσθετα στην πιο πρόσφατη έκδοση."
 
 #. translators: %s: Plugin name
 #: includes/class-bootstrap.php:109
 msgid "Your version of <strong>Advanced Ads – Tracking</strong> is incompatible with <strong>Advanced Ads %s</strong> and has been deactivated. Please update the plugin to the latest version."
-msgstr ""
+msgstr "Η έκδοση του <strong>Προηγμένες Διαφημίσεις – Παρακολούθηση</strong> δεν είναι συμβατή με τις <strong>Προηγμένες Διαφημίσεις %s</strong> και έχει απενεργοποιηθεί. Ενημερώστε το πρόσθετο στην πιο πρόσφατη έκδοση."
 
 #. translators: 1: is a link to a support document. 2: closing link
 #: includes/class-autoloader.php:113
 msgid "Your installation of Advanced Ads is incomplete. If you installed Advanced Ads from GitHub, %1$s please refer to this document%2$s to set up your development environment."
-msgstr ""
+msgstr "Η εγκατάσταση των Προηγμένων Διαφημίσεων δεν έχει ολοκληρωθεί. Εάν εγκαταστήσατε τις Προηγμένες Διαφημίσεις από το GitHub, %1$s, ανατρέξτε σε αυτό το έγγραφο%2$s για να ρυθμίσετε το περιβάλλον ανάπτυξής σας."
 
 #: views/admin/widgets/wordpress-dashboard/performing-ads.php:16
 msgid "There is no record for this period."
-msgstr ""
+msgstr "Δεν υπάρχει αρχείο για αυτήν την περίοδο."
 
 #. translators: 1: <code>wp-content/ajax-handler.php</code> 2:
 #. <code>wp-admin/admin-ajax.php</code> 3: <a> 4: </a> 5:
 #. <code>ajax-handler.php</code>
 #: includes/installation/class-tracking-installer.php:362
 msgid "The frontend tracking uses a swift AJAX call to %1$s for fetching ad IDs after page load. The creation of this Advanced Ads AJAX drop-in caused an issue and the file was removed. Now, the plugin employs %2$s as a reliable alternative. Please %3$scheck the documentation%4$s for more information on resolving your issue with %5$s and the fallback method."
-msgstr ""
+msgstr "Η παρακολούθηση διεπαφής χρησιμοποιεί μια γρήγορη κλήση AJAX στο %1$s για την ανάκτηση αναγνωριστικών διαφημίσεων μετά τη φόρτωση της σελίδας. Η δημιουργία αυτού του αναπτυσσόμενου μενού Προηγμένες Διαφημίσεις AJAX προκάλεσε πρόβλημα και το αρχείο καταργήθηκε. Τώρα, η προσθήκη χρησιμοποιεί το %2$s ως αξιόπιστη εναλλακτική λύση. %3$sΕλέγξτε την τεκμηρίωση%4$s για περισσότερες πληροφορίες σχετικά με την επίλυση του προβλήματος με το %5$s και την εναλλακτική μέθοδο."
 
 #: includes/class-bootstrap.php:180
 msgid "The following addons are affected:"
-msgstr ""
+msgstr "Επηρεάζονται τα ακόλουθα πρόσθετα:"
 
 #. translators: %s: WP_ENVIRONMENT_TYPES
 #: includes/class-autoloader.php:157
 msgid "The %s constant is no longer supported."
-msgstr ""
+msgstr "Η σταθερά %s δεν υποστηρίζεται πλέον."
 
-#: views/admin/ads/bulk-edit.php:47
-#: views/admin/ads/quick-edit.php:34
+#: views/admin/ads/bulk-edit.php:47 views/admin/ads/quick-edit.php:34
 msgid "Target window"
-msgstr ""
+msgstr "Παράθυρο στόχου"
 
-#: views/admin/ads/bulk-edit.php:83
-#: views/admin/ads/quick-edit.php:67
+#: views/admin/ads/bulk-edit.php:83 views/admin/ads/quick-edit.php:67
 msgid "Report recipient"
-msgstr ""
+msgstr "Αναφορά παραλήπτη"
 
 #: views/admin/widgets/wordpress-dashboard/performing-ads.php:41
 msgid "Impression"
 msgid_plural "Impressions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Εμφάνιση"
+msgstr[1] "Εμφανίσεις"
 
-#: includes/class-bootstrap.php:129
-#: includes/class-bootstrap.php:152
+#: includes/class-bootstrap.php:129 includes/class-bootstrap.php:152
 msgid "Important Notice"
-msgstr ""
+msgstr "Σημαντική Σημείωση"
 
 #: includes/installation/class-tracking-installer.php:371
 msgid "Error message:"
-msgstr ""
+msgstr "Μήνυμα σφάλματος:"
 
 #: views/admin/ads/bulk-edit.php:39
 msgid "Enabled"
-msgstr ""
+msgstr "Ενεργοποιημένο"
 
 #: views/admin/ads/bulk-edit.php:40
 msgid "Disabled"
-msgstr ""
+msgstr "Απενεργοποιημένο"
 
-#: includes/rest/class-quick-edit.php:49
-#: views/admin/ads/bulk-edit.php:19
+#: includes/rest/class-quick-edit.php:49 views/admin/ads/bulk-edit.php:19
 msgid "default (impressions & clicks)"
-msgstr ""
+msgstr "προεπιλογή (εμφανίσεις και κλικς)"
 
-#: views/admin/ads/bulk-edit.php:36
-#: views/admin/ads/quick-edit.php:29
+#: views/admin/ads/bulk-edit.php:36 views/admin/ads/quick-edit.php:29
 msgid "Cloak link"
-msgstr ""
+msgstr "Σύνδεσμος μανδύα"
 
 #: views/admin/widgets/wordpress-dashboard/performing-ads.php:43
 msgid "Click"
 msgid_plural "Clicks"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Κλικ"
+msgstr[1] "Κλικς"
 
 #: includes/class-bootstrap.php:130
 msgid "Addons listed below requires the <strong><a href=\"https://wpadvancedads.com/?utm_source=advanced-ads&utm_medium=link&utm_campaign=activate-tracking\" target=\"_blank\">Advanced Ads</a></strong> plugin to be installed and activated on your site."
-msgstr ""
+msgstr "Τα πρόσθετα που αναφέρονται παρακάτω απαιτούν την εγκατάσταση και την ενεργοποίηση της προσθήκης <strong><a href=\"https://wpadvancedads.com/?utm_source=advanced-ads&utm_medium=link&utm_campaign=activate-tracking\" target=\"_blank\">Προηγμένες διαφημίσεις</a></strong> στον ιστότοπό σας."
 
-#: views/admin/ads/bulk-edit.php:71
-#: views/admin/ads/quick-edit.php:56
+#: views/admin/ads/bulk-edit.php:71 views/admin/ads/quick-edit.php:56
 msgid "Add \"sponsored\""
-msgstr ""
+msgstr "Προσθήκη \"με χορηγία\""
 
 #: includes/class-bootstrap.php:95
 msgid "<strong>Advanced Ads – Tracking</strong> requires the <strong>Advanced Ads free</strong> plugin to be installed and activated on your site."
-msgstr ""
+msgstr "Για τις <strong>Προηγμένες Διαφημίσεις – Παρακολούθηση</strong> απαιτείται η εγκατάσταση και η ενεργοποίηση της προσθήκης <strong>Προηγμένες Διαφημίσεις Δωρεάν</strong> στον ιστότοπό σας."
 
 #. translators: 1: opening a-tag with link to manual 2: closing a-tag
 #: includes/admin/class-admin.php:286
@@ -173,8 +170,7 @@ msgstr "<a href=\"https://wpadvancedads.com/share-custom-reports-google-analytic
 msgid " <a href=\"https://wpadvancedads.com/share-custom-reports-google-analytics/?utm_source=advanced-ads&utm_medium=link&utm_campaign=settings-reports-google-analytics\" target=\"_blank\">How to share Google Analytics ad reports with your customers.</a>"
 msgstr " <a href=\"https://wpadvancedads.com/share-custom-reports-google-analytics/?utm_source=advanced-ads&utm_medium=link&utm_campaign=settings-reports-google-analytics\" target=\"_blank\">Πώς να μοιράζεστε τις αναφορές διαφημίσεων του Google Analytics με τους πελάτες σας.</a>"
 
-#: views/admin/ads/ad-tracking-params.php:44
-#: views/admin/ads/bulk-edit.php:29
+#: views/admin/ads/ad-tracking-params.php:44 views/admin/ads/bulk-edit.php:29
 #: views/admin/ads/quick-edit.php:23
 msgid "Target URL"
 msgstr "Στόχος URL"
@@ -195,7 +191,7 @@ msgstr "Αυτήν τη στιγμή παρακολουθείτε διαφημί
 #. translators: %s is an inline code snippet
 #: views/admin/ads/ad-tracking-params.php:53
 msgid "If you enable the link cloaking option, please replace the links you want to track in the ad code with the tracking placeholder (%s). Otherwise, Advanced Ads will not record clicks on this ad."
-msgstr "Εάν ενεργοποιήσετε την επιλογή απόκρυψης συνδέσμων, αντικαταστήστε τους συνδέσμους που θέλετε να παρακολουθήσετε στον κώδικα διαφήμισης με το σύμβολο κράτησης θέσης παρακολούθησης (%s). Διαφορετικά, το Advanced Ads δεν θα καταγράφει κλικ σε αυτήν τη διαφήμιση."
+msgstr "Εάν ενεργοποιήσετε την επιλογή απόκρυψης συνδέσμων, αντικαταστήστε τους συνδέσμους που θέλετε να παρακολουθήσετε στον κώδικα διαφήμισης με το σύμβολο κράτησης θέσης παρακολούθησης (%s). Διαφορετικά, οι Προηγμένες Διαφημίσεις δεν θα καταγράφουν κλικς σε αυτήν τη διαφήμιση."
 
 #: views/admin/ads/ad-tracking-params.php:49
 msgid "Based on your configuration, it seems that you do not need to specify an external link. You can leave the URL field empty."
@@ -451,11 +447,6 @@ msgstr "Επιλέξτε είτε τη μέθοδο Frontend είτε τη μέ�
 msgid "The selected tracking method is not compatible with the TCF 2.0 integration."
 msgstr "Η επιλεγμένη μέθοδος παρακολούθησης δεν είναι συμβατή με την ενσωμάτωση TCF 2.0."
 
-#. Author of the plugin
-#: tracking.php
-msgid "Advanced Ads GmbH"
-msgstr "Advanced Ads GmbH"
-
 #: includes/admin/class-settings.php:297
 msgid "Database Management"
 msgstr "Διαχείρηση βάσης δεδομένων"
@@ -509,8 +500,7 @@ msgstr "Αποθηκεύστε τη διαφήμιση για να επιβεβ�
 msgid "Generate a new sharable link"
 msgstr "Δημιουργήστε έναν νέο σύνδεσμο με δυνατότητα κοινής χρήσης"
 
-#: includes/admin/class-metaboxes.php:152
-#: includes/rest/class-quick-edit.php:51
+#: includes/admin/class-metaboxes.php:152 includes/rest/class-quick-edit.php:51
 msgid "enabled"
 msgstr "ενεργοποιημένη"
 
@@ -530,11 +520,9 @@ msgid "Track ad impressions and clicks."
 msgstr "Παρακολουθήστε τις εμφανίσεις και τα κλικ των διαφημίσεων."
 
 #. Plugin Name of the plugin
-#: tracking.php
-#: includes/class-bootstrap.php:71
-#: includes/class-bootstrap.php:78
+#: tracking.php includes/class-bootstrap.php:71 includes/class-bootstrap.php:78
 msgid "Advanced Ads – Tracking"
-msgstr "Advanced Ads – Tracking"
+msgstr "Προηγμένες Διαφημίσεις - Παρακολούθηση"
 
 #: views/frontend/public-stats.php:68
 msgid "Load"
@@ -585,8 +573,7 @@ msgstr "επιλέξτε αρχείο"
 msgid "File"
 msgstr "Αρχείο"
 
-#: views/admin/page-stats.php:165
-#: views/admin/settings/setting-method.php:36
+#: views/admin/page-stats.php:165 views/admin/settings/setting-method.php:36
 msgid "Database"
 msgstr "Βάση δεδομένων"
 
@@ -598,8 +585,7 @@ msgstr "πρώτο μήνα"
 msgid "latest month"
 msgstr "τελευταίο μήνα"
 
-#: views/admin/page-stats.php:133
-#: views/admin/page-stats.php:149
+#: views/admin/page-stats.php:133 views/admin/page-stats.php:149
 msgid "load stats"
 msgstr "στατιστικά φόρτωσης"
 
@@ -611,8 +597,7 @@ msgstr "Πηγή δεδομένων:"
 msgid "Group by:"
 msgstr "Ομάδα κατά:"
 
-#: views/admin/page-stats.php:109
-#: views/frontend/public-stats.php:52
+#: views/admin/page-stats.php:109 views/frontend/public-stats.php:52
 msgid "Period"
 msgstr "Περίοδος"
 
@@ -860,10 +845,8 @@ msgstr "Προσθήκη %s σε συνδέσμους παρακολούθηση
 #: views/admin/ads/ad-tracking-params.php:158
 #: views/admin/ads/ad-tracking-params.php:173
 #: views/admin/ads/ad-tracking-params.php:193
-#: views/admin/ads/ad-tracking-params.php:209
-#: views/admin/ads/bulk-edit.php:64
-#: views/admin/ads/bulk-edit.php:76
-#: views/admin/ads/quick-edit.php:49
+#: views/admin/ads/ad-tracking-params.php:209 views/admin/ads/bulk-edit.php:64
+#: views/admin/ads/bulk-edit.php:76 views/admin/ads/quick-edit.php:49
 #: views/admin/ads/quick-edit.php:60
 msgid "no"
 msgstr "όχι"
@@ -871,10 +854,8 @@ msgstr "όχι"
 #: views/admin/ads/ad-tracking-params.php:154
 #: views/admin/ads/ad-tracking-params.php:172
 #: views/admin/ads/ad-tracking-params.php:189
-#: views/admin/ads/ad-tracking-params.php:208
-#: views/admin/ads/bulk-edit.php:63
-#: views/admin/ads/bulk-edit.php:75
-#: views/admin/ads/quick-edit.php:48
+#: views/admin/ads/ad-tracking-params.php:208 views/admin/ads/bulk-edit.php:63
+#: views/admin/ads/bulk-edit.php:75 views/admin/ads/quick-edit.php:48
 #: views/admin/ads/quick-edit.php:59
 msgid "yes"
 msgstr "ναι"
@@ -889,15 +870,13 @@ msgid "Where to open the link (if present)."
 msgstr "Που να ανοίξετε τον σύνδεσμο (εάν υπάρχει)."
 
 #: views/admin/ads/ad-tracking-params.php:127
-#: views/admin/ads/ad-tracking-params.php:138
-#: views/admin/ads/bulk-edit.php:52
+#: views/admin/ads/ad-tracking-params.php:138 views/admin/ads/bulk-edit.php:52
 #: views/admin/ads/quick-edit.php:38
 msgid "new window"
 msgstr "νέο παράθυρο"
 
 #: views/admin/ads/ad-tracking-params.php:123
-#: views/admin/ads/ad-tracking-params.php:139
-#: views/admin/ads/bulk-edit.php:51
+#: views/admin/ads/ad-tracking-params.php:139 views/admin/ads/bulk-edit.php:51
 #: views/admin/ads/quick-edit.php:37
 msgid "same window"
 msgstr "ίδιο παράθυρο"
@@ -937,8 +916,7 @@ msgstr "τις τελευταίες 30 ημέρες"
 msgid "View the live statistics"
 msgstr "Δείτε τα ζωντανά στατιστικά"
 
-#: views/emails/email-report-body.php:99
-#: views/frontend/public-stats.php:322
+#: views/emails/email-report-body.php:99 views/frontend/public-stats.php:322
 msgid "Total"
 msgstr "Σύνολο"
 
@@ -946,13 +924,11 @@ msgstr "Σύνολο"
 #: includes/admin/class-ad-list-table.php:120
 #: includes/class-assets-registry.php:184
 #: views/admin/ads/ad-list-stats-column.php:61
-#: views/emails/email-report-body.php:56
-#: views/emails/email-report-body.php:121
+#: views/emails/email-report-body.php:56 views/emails/email-report-body.php:121
 msgid "CTR"
 msgstr "CTR"
 
-#: views/emails/email-report-body.php:55
-#: views/emails/email-report-body.php:120
+#: views/emails/email-report-body.php:55 views/emails/email-report-body.php:120
 msgid "click through rate"
 msgstr "αναλογία κλικ προς αριθμό εμφανίσεων"
 
@@ -982,20 +958,17 @@ msgstr "τον προηγούμενο μήνα"
 msgid " the last 30 days"
 msgstr "τις τελευταίες 30 ημέρες"
 
-#: includes/class-db-operations.php:751
-#: views/admin/page-stats.php:132
+#: includes/class-db-operations.php:751 views/admin/page-stats.php:132
 #: views/frontend/public-stats.php:67
 msgid "to"
 msgstr "προς την"
 
-#: includes/class-db-operations.php:750
-#: views/admin/page-stats.php:131
+#: includes/class-db-operations.php:750 views/admin/page-stats.php:131
 #: views/frontend/public-stats.php:66
 msgid "from"
 msgstr "από"
 
-#: includes/class-db-operations.php:70
-#: includes/class-db-operations.php:731
+#: includes/class-db-operations.php:70 includes/class-db-operations.php:731
 #: includes/crons/class-reporting-emails.php:220
 #: views/admin/metaboxes/metabox-ad.php:119
 #: views/admin/settings/setting-email-report-stats-period.php:16
@@ -1003,13 +976,11 @@ msgstr "από"
 msgid "last 12 months"
 msgstr "τελευταίους 12 μήνες"
 
-#: includes/class-db-operations.php:66
-#: includes/class-db-operations.php:74
+#: includes/class-db-operations.php:66 includes/class-db-operations.php:74
 msgid "first 6 months"
 msgstr "πρώτοι 6 μήνες"
 
-#: includes/class-db-operations.php:65
-#: includes/class-db-operations.php:73
+#: includes/class-db-operations.php:65 includes/class-db-operations.php:73
 msgid "everything before this year"
 msgstr "όλα πριν από φέτος"
 
@@ -1030,8 +1001,7 @@ msgid "This base name collides with an existing WordPress content (blog post, pa
 msgstr "Αυτό το όνομα βάσης συγκρούεται με ένα υπάρχον περιεχόμενο WordPress (ανάρτηση ιστολογίου, σελίδα ή οποιοδήποτε δημόσιο προσαρμοσμένο περιεχόμενο)"
 
 #. translators: %b: month, %#d: day
-#: includes/class-ajax.php:416
-#: includes/class-ajax.php:817
+#: includes/class-ajax.php:416 includes/class-ajax.php:817
 msgctxt "format for week group in stats table"
 msgid "from %b&nbsp;%#d"
 msgstr "από %b&nbsp;%#d"
@@ -1049,49 +1019,41 @@ msgstr "Δεν καταργήθηκαν στατιστικά στοιχεία."
 msgid "All impressions and clicks removed."
 msgstr "Καταργήθηκαν όλες οι εμφανίσεις και τα κλικ."
 
-#: includes/admin/class-page-stats.php:97
-#: includes/class-ajax.php:285
+#: includes/admin/class-page-stats.php:97 includes/class-ajax.php:285
 msgctxt "date format on stats page"
 msgid "Y-m"
 msgstr "Y-m"
 
-#: includes/admin/class-page-stats.php:97
-#: includes/class-ajax.php:285
+#: includes/admin/class-page-stats.php:97 includes/class-ajax.php:285
 msgid "month"
 msgstr "μήνας"
 
-#: includes/admin/class-page-stats.php:96
-#: includes/class-ajax.php:284
+#: includes/admin/class-page-stats.php:96 includes/class-ajax.php:284
 msgid "week"
 msgstr "εβδομάδα"
 
 #: includes/admin/class-page-stats.php:95
-#: includes/admin/class-page-stats.php:96
-#: includes/class-ajax.php:283
+#: includes/admin/class-page-stats.php:96 includes/class-ajax.php:283
 #: includes/class-ajax.php:284
 msgctxt "date format on stats page"
 msgid "Y-m-d"
 msgstr "Y-m-d"
 
-#: includes/admin/class-page-stats.php:95
-#: includes/class-ajax.php:283
+#: includes/admin/class-page-stats.php:95 includes/class-ajax.php:283
 msgid "day"
 msgstr "ημέρα"
 
-#: includes/class-db-operations.php:747
-#: includes/utilities/class-data.php:201
+#: includes/class-db-operations.php:747 includes/utilities/class-data.php:201
 #: views/frontend/public-stats.php:57
 msgid "custom"
 msgstr "προσαρμογή"
 
-#: includes/class-db-operations.php:71
-#: includes/class-db-operations.php:732
+#: includes/class-db-operations.php:71 includes/class-db-operations.php:732
 #: includes/utilities/class-data.php:199
 msgid "last year"
 msgstr "πέρυσι"
 
-#: includes/class-db-operations.php:72
-#: includes/class-db-operations.php:733
+#: includes/class-db-operations.php:72 includes/class-db-operations.php:733
 #: includes/utilities/class-data.php:198
 msgid "this year"
 msgstr "Αυτή την χρονιά"
@@ -1123,54 +1085,41 @@ msgstr "σήμερα"
 msgid "Add <code>target=\"_blank\"</code> to the ad code in order to open it in a new window. E.g. <code>&lt;a href=\"%link%\" target=\"_blank\"&gt;</code>"
 msgstr "Προσθέστε <code>target=\"_blank\"</code> στον κώδικα διαφήμισης για να τον ανοίξετε σε νέο παράθυρο. Π.χ. <code>&lt;a href=\"%link%\" target=\"_blank\"&gt;</code>"
 
-#: includes/admin/class-metaboxes.php:148
-#: includes/class-helpers.php:205
-#: includes/rest/class-quick-edit.php:58
-#: views/admin/ads/bulk-edit.php:21
+#: includes/admin/class-metaboxes.php:148 includes/class-helpers.php:205
+#: includes/rest/class-quick-edit.php:58 views/admin/ads/bulk-edit.php:21
 #: views/admin/settings/setting-everything.php:17
 msgid "clicks only"
 msgstr "μόνο κλικς"
 
-#: includes/admin/class-metaboxes.php:149
-#: includes/class-helpers.php:204
-#: includes/rest/class-quick-edit.php:59
-#: views/admin/ads/bulk-edit.php:22
+#: includes/admin/class-metaboxes.php:149 includes/class-helpers.php:204
+#: includes/rest/class-quick-edit.php:59 views/admin/ads/bulk-edit.php:22
 #: views/admin/settings/setting-everything.php:16
 msgid "impressions only"
 msgstr "μόνο εμφανίσεις"
 
-#: includes/admin/class-metaboxes.php:150
-#: includes/class-helpers.php:206
-#: includes/rest/class-quick-edit.php:60
-#: views/admin/ads/bulk-edit.php:23
+#: includes/admin/class-metaboxes.php:150 includes/class-helpers.php:206
+#: includes/rest/class-quick-edit.php:60 views/admin/ads/bulk-edit.php:23
 #: views/admin/settings/setting-everything.php:14
 msgid "impressions & clicks"
 msgstr "εμφανίσεις & κλικς"
 
-#: includes/admin/class-metaboxes.php:144
-#: includes/class-helpers.php:199
-#: includes/class-helpers.php:210
-#: includes/rest/class-quick-edit.php:50
-#: views/admin/ads/ad-list-stats-column.php:52
-#: views/admin/ads/bulk-edit.php:20
+#: includes/admin/class-metaboxes.php:144 includes/class-helpers.php:199
+#: includes/class-helpers.php:210 includes/rest/class-quick-edit.php:50
+#: views/admin/ads/ad-list-stats-column.php:52 views/admin/ads/bulk-edit.php:20
 msgid "disabled"
 msgstr "απενεργοποιημένο"
 
 #: includes/admin/class-metaboxes.php:143
 #: views/admin/ads/ad-tracking-params.php:119
 #: views/admin/ads/ad-tracking-params.php:150
-#: views/admin/ads/ad-tracking-params.php:185
-#: views/admin/ads/bulk-edit.php:50
-#: views/admin/ads/bulk-edit.php:62
-#: views/admin/ads/bulk-edit.php:74
-#: views/admin/ads/quick-edit.php:36
-#: views/admin/ads/quick-edit.php:47
+#: views/admin/ads/ad-tracking-params.php:185 views/admin/ads/bulk-edit.php:50
+#: views/admin/ads/bulk-edit.php:62 views/admin/ads/bulk-edit.php:74
+#: views/admin/ads/quick-edit.php:36 views/admin/ads/quick-edit.php:47
 #: views/admin/ads/quick-edit.php:58
 msgid "default"
 msgstr "προεπιλογή"
 
-#: includes/admin/class-settings.php:370
-#: includes/admin/class-settings.php:561
+#: includes/admin/class-settings.php:370 includes/admin/class-settings.php:561
 msgid "Ads Statistics"
 msgstr "Στατιστικά διαφημίσεων"
 
@@ -1214,10 +1163,9 @@ msgstr "Παρακολούθηση ρομπότ"
 msgid "Link base for public reports"
 msgstr "Βάση συνδέσμων για δημόσιες αναφορές"
 
-#: views/admin/ads/bulk-edit.php:59
-#: views/admin/ads/quick-edit.php:45
+#: views/admin/ads/bulk-edit.php:59 views/admin/ads/quick-edit.php:45
 msgid "Add \"nofollow\""
-msgstr ""
+msgstr "Προσθήκη \"nofollow\""
 
 #: includes/admin/class-settings.php:306
 msgid "Click-link base"
@@ -1240,11 +1188,9 @@ msgstr "Επιλέξτε μέθοδο παρακολούθησης"
 msgid "Email Reports"
 msgstr "Αναφορές ηλεκτρονικού ταχυδρομείου"
 
-#: includes/admin/class-settings.php:67
-#: includes/admin/class-settings.php:96
+#: includes/admin/class-settings.php:67 includes/admin/class-settings.php:96
 #: includes/admin/class-settings.php:130
-#: views/admin/ads/ad-tracking-params.php:23
-#: views/admin/ads/bulk-edit.php:16
+#: views/admin/ads/ad-tracking-params.php:23 views/admin/ads/bulk-edit.php:16
 #: views/admin/ads/quick-edit.php:15
 msgid "Tracking"
 msgstr "Παρακολούθηση"
@@ -1307,8 +1253,7 @@ msgstr "Προέκυψε ένα μη αναμενόμενο σφάλμα."
 msgid "group"
 msgstr "ομάδα"
 
-#: includes/class-assets-registry.php:194
-#: views/admin/page-stats.php:174
+#: includes/class-assets-registry.php:194 views/admin/page-stats.php:174
 msgid "no file selected"
 msgstr "κανένα επιλεγμένο αρχείο"
 
@@ -1339,8 +1284,7 @@ msgstr "σύνολο"
 msgid "%1$s to %2$s"
 msgstr "%1$s έως %2$s"
 
-#: includes/class-assets-registry.php:186
-#: views/emails/email-report-body.php:51
+#: includes/class-assets-registry.php:186 views/emails/email-report-body.php:51
 #: views/frontend/public-stats.php:272
 msgid "date"
 msgstr "ημερομηνία"
@@ -1411,8 +1355,7 @@ msgid "previous day"
 msgstr "προηγούμενη ημέρα"
 
 #: includes/admin/class-ad-list-table.php:77
-#: includes/admin/class-ad-list-table.php:118
-#: includes/class-amp.php:244
+#: includes/admin/class-ad-list-table.php:118 includes/class-amp.php:244
 #: includes/class-assets-registry.php:166
 #: views/admin/ads/ad-list-stats-column.php:28
 msgid "Impressions"
@@ -1448,14 +1391,10 @@ msgstr "Επιλέξτε αρχείο"
 #: views/admin/metaboxes/metabox-ad-limiter.php:55
 #: views/admin/metaboxes/metabox-ad-limiter.php:86
 #: views/admin/page-database/db-operations.php:56
-#: views/admin/page-stats.php:241
-#: views/emails/email-report-body.php:53
-#: views/emails/email-report-body.php:118
-#: views/frontend/public-stats.php:202
-#: views/frontend/public-stats.php:240
-#: views/frontend/public-stats.php:246
-#: views/frontend/public-stats.php:266
-#: views/frontend/public-stats.php:274
+#: views/admin/page-stats.php:241 views/emails/email-report-body.php:53
+#: views/emails/email-report-body.php:118 views/frontend/public-stats.php:202
+#: views/frontend/public-stats.php:240 views/frontend/public-stats.php:246
+#: views/frontend/public-stats.php:266 views/frontend/public-stats.php:274
 msgid "clicks"
 msgstr "κλικς"
 
@@ -1464,20 +1403,15 @@ msgstr "κλικς"
 #: views/admin/metaboxes/metabox-ad-limiter.php:44
 #: views/admin/metaboxes/metabox-ad-limiter.php:81
 #: views/admin/page-database/db-operations.php:50
-#: views/admin/page-stats.php:236
-#: views/emails/email-report-body.php:52
-#: views/emails/email-report-body.php:117
-#: views/frontend/public-stats.php:196
-#: views/frontend/public-stats.php:230
-#: views/frontend/public-stats.php:235
-#: views/frontend/public-stats.php:262
-#: views/frontend/public-stats.php:273
+#: views/admin/page-stats.php:236 views/emails/email-report-body.php:52
+#: views/emails/email-report-body.php:117 views/frontend/public-stats.php:196
+#: views/frontend/public-stats.php:230 views/frontend/public-stats.php:235
+#: views/frontend/public-stats.php:262 views/frontend/public-stats.php:273
 msgid "impressions"
 msgstr "εμφανίσεις"
 
 #: includes/admin/class-ad-list-table.php:76
-#: includes/admin/class-metaboxes.php:49
-#: includes/admin/class-page-stats.php:51
+#: includes/admin/class-metaboxes.php:49 includes/admin/class-page-stats.php:51
 #: includes/admin/class-page-stats.php:52
 msgid "Statistics"
 msgstr "Στατιστικά"

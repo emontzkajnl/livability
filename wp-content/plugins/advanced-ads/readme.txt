@@ -4,7 +4,7 @@ Tags: ads, adsense, amazon, affiliate, ad manager
 Requires at least: 5.7
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.0.11
+Stable tag: 2.0.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -359,6 +359,33 @@ Yes. You can use plenty of [hooks](https://wpadvancedads.com/codex/) to customiz
 10. Convert AdSense ads into AMP automatically (AMP Ads add-on)
 
 == Changelog ==
+
+= 2.0.16 (December 30, 2025) =
+
+- Improvement: PHP 8+ compatibility for the ad expiration cron event
+- Improvement: security by allowing only valid sorting options when loading placements
+
+= 2.0.15 (December 25, 2025) =
+
+- Improvement: prevent any PHP execution in shortcode rendered ads to enhance security
+- Improvement: handle IP visitor condition by removing extra spaces and line breaks
+- Improvement: enhance security by permission check when updating placement item
+- Fix: show hierarchical groups metabox in edit ad page
+
+= 2.0.14 (November 18, 2025) =
+
+- Feature: pagination for Groups and Rotations
+- Fix: Groups page screen options spacing
+
+= 2.0.13 (October 20, 2025) =
+
+- Fix: Enhance protection against potential unauthorized access in certain frontend requests
+
+= 2.0.12 (September 23, 2025) =
+
+- Improvement: prevent quotation marks in ad codes being escaped with ACF enabled
+- Fix: groups now correctly inject ads in header placements
+- Fix: remove placements from WPML translation options
 
 = 2.0.11 (August 27, 2025) =
 

@@ -61,7 +61,7 @@ function alm_woo_is_shop_enabled() {
  */
 function alm_woo_is_shop_archive_enabled() {
 	$show = ( null === get_option( ALM_WOO_PREFIX . 'shop_archives' ) || empty( get_option( ALM_WOO_PREFIX . 'shop_archives' ) ) ) ? false : true;
-	if ( ( is_product_category() || is_product_tag() ) && ! $show ) {
+	if ( ! is_shop() && is_archive() && ! $show ) {
 		return false;
 	} else {
 		return true;

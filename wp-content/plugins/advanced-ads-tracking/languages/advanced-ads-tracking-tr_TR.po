@@ -1,118 +1,115 @@
+# Translation of Ad Tracking in Turkish
+# This file is distributed under the same license as the Ad Tracking package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ad Tracking\n"
-"Report-Msgid-Bugs-To: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2025-05-17 10:11:22+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-11T15:37:32+00:00\n"
-"PO-Revision-Date: 2024-05-12 11:01:32+0000\n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: GlotPress/4.0.1\n"
+"Language: tr\n"
+"Project-Id-Version: Ad Tracking\n"
+
+#. Author of the plugin
+#: tracking.php
+msgid "Advanced Ads"
+msgstr "Advanced Ads"
 
 #: views/admin/ads/bulk-edit.php:10
 msgid "— No Change —"
-msgstr ""
+msgstr "-- Değişiklik yok --"
 
 #. translators: %s: Plugin name
 #: includes/class-bootstrap.php:155
 msgid "Your versions of the Advanced Ads addons listed below are incompatible with <strong>Advanced Ads %s</strong> and have been deactivated. Please update the plugin to the latest version."
-msgstr ""
+msgstr "Aşağıda listelenen Advanced Ads eklentilerinizin sürümleri <strong>Advanced Ads %s</strong> ile uyumlu değildir ve devre dışı bırakılmıştır. Lütfen eklentiyi en son sürüme güncelleyin."
 
 #. translators: %s: Plugin name
 #: includes/class-bootstrap.php:109
 msgid "Your version of <strong>Advanced Ads – Tracking</strong> is incompatible with <strong>Advanced Ads %s</strong> and has been deactivated. Please update the plugin to the latest version."
-msgstr ""
+msgstr "<strong>Advanced Ads – Tracking</strong> sürümünüz <strong>Advanced Ads %s</strong> ile uyumlu değil ve devre dışı bırakıldı. Lütfen eklentiyi en son sürüme güncelleyin."
 
 #. translators: 1: is a link to a support document. 2: closing link
 #: includes/class-autoloader.php:113
 msgid "Your installation of Advanced Ads is incomplete. If you installed Advanced Ads from GitHub, %1$s please refer to this document%2$s to set up your development environment."
-msgstr ""
+msgstr "Advanced Ads kurulumunuz tamamlanmadı. Advanced Ads'i GitHub'dan yüklediyseniz, %1$s lütfen geliştirme ortamınızı kurmak için bu belgeye%2$s bakın."
 
 #: views/admin/widgets/wordpress-dashboard/performing-ads.php:16
 msgid "There is no record for this period."
-msgstr ""
+msgstr "Bu döneme ait kayıt bulunmamaktadır."
 
 #. translators: 1: <code>wp-content/ajax-handler.php</code> 2:
 #. <code>wp-admin/admin-ajax.php</code> 3: <a> 4: </a> 5:
 #. <code>ajax-handler.php</code>
 #: includes/installation/class-tracking-installer.php:362
 msgid "The frontend tracking uses a swift AJAX call to %1$s for fetching ad IDs after page load. The creation of this Advanced Ads AJAX drop-in caused an issue and the file was removed. Now, the plugin employs %2$s as a reliable alternative. Please %3$scheck the documentation%4$s for more information on resolving your issue with %5$s and the fallback method."
-msgstr ""
+msgstr "Ön taraf izleme, sayfa yüklendikten sonra reklam kimliklerini almak için %1$s'e hızlı bir AJAX çağrısı kullanır. Bu Advanced Ads AJAX drop-in'inin oluşturulması bir soruna neden oldu ve dosya kaldırıldı. Şimdi, eklenti güvenilir bir alternatif olarak %2$s'yi kullanıyor. Lütfen %5$s ve alternatif yöntemle ilgili sorununuzu çözme hakkında daha fazla bilgi için %3$sbelgeleri kontrol edin%4$s."
 
 #: includes/class-bootstrap.php:180
 msgid "The following addons are affected:"
-msgstr ""
+msgstr "Aşağıdaki eklentiler etkileniyor:"
 
 #. translators: %s: WP_ENVIRONMENT_TYPES
 #: includes/class-autoloader.php:157
 msgid "The %s constant is no longer supported."
-msgstr ""
+msgstr "%s sabiti artık desteklenmiyor."
 
-#: views/admin/ads/bulk-edit.php:47
-#: views/admin/ads/quick-edit.php:34
+#: views/admin/ads/bulk-edit.php:47 views/admin/ads/quick-edit.php:34
 msgid "Target window"
-msgstr ""
+msgstr "Hedef pencere"
 
-#: views/admin/ads/bulk-edit.php:83
-#: views/admin/ads/quick-edit.php:67
+#: views/admin/ads/bulk-edit.php:83 views/admin/ads/quick-edit.php:67
 msgid "Report recipient"
-msgstr ""
+msgstr "Rapor alıcısı"
 
 #: views/admin/widgets/wordpress-dashboard/performing-ads.php:41
 msgid "Impression"
 msgid_plural "Impressions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Gösterim"
+msgstr[1] "Gösterimler"
 
-#: includes/class-bootstrap.php:129
-#: includes/class-bootstrap.php:152
+#: includes/class-bootstrap.php:129 includes/class-bootstrap.php:152
 msgid "Important Notice"
-msgstr ""
+msgstr "Önemli Bilgilendirme"
 
 #: includes/installation/class-tracking-installer.php:371
 msgid "Error message:"
-msgstr ""
+msgstr "Hata mesajı:"
 
 #: views/admin/ads/bulk-edit.php:39
 msgid "Enabled"
-msgstr ""
+msgstr "Etkin"
 
 #: views/admin/ads/bulk-edit.php:40
 msgid "Disabled"
-msgstr ""
+msgstr "Devre dışı"
 
-#: includes/rest/class-quick-edit.php:49
-#: views/admin/ads/bulk-edit.php:19
+#: includes/rest/class-quick-edit.php:49 views/admin/ads/bulk-edit.php:19
 msgid "default (impressions & clicks)"
-msgstr ""
+msgstr "varsayılan (gösterimler ve tıklamalar)"
 
-#: views/admin/ads/bulk-edit.php:36
-#: views/admin/ads/quick-edit.php:29
+#: views/admin/ads/bulk-edit.php:36 views/admin/ads/quick-edit.php:29
 msgid "Cloak link"
-msgstr ""
+msgstr "Gizli bağlantı"
 
 #: views/admin/widgets/wordpress-dashboard/performing-ads.php:43
 msgid "Click"
 msgid_plural "Clicks"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Tıklama"
+msgstr[1] "Tıklamalar"
 
 #: includes/class-bootstrap.php:130
 msgid "Addons listed below requires the <strong><a href=\"https://wpadvancedads.com/?utm_source=advanced-ads&utm_medium=link&utm_campaign=activate-tracking\" target=\"_blank\">Advanced Ads</a></strong> plugin to be installed and activated on your site."
-msgstr ""
+msgstr "Aşağıda listelenen eklentiler, sitenize <strong><a href=\"https://wpadvancedads.com/?utm_source=advanced-ads&utm_medium=link&utm_campaign=activate-tracking\" target=\"_blank\">Advanced Ads</a></strong> eklentisinin kurulmasını ve etkinleştirilmesini gerektirir."
 
-#: views/admin/ads/bulk-edit.php:71
-#: views/admin/ads/quick-edit.php:56
+#: views/admin/ads/bulk-edit.php:71 views/admin/ads/quick-edit.php:56
 msgid "Add \"sponsored\""
-msgstr ""
+msgstr "\"Sponsorlu\" ekleyin"
 
 #: includes/class-bootstrap.php:95
 msgid "<strong>Advanced Ads – Tracking</strong> requires the <strong>Advanced Ads free</strong> plugin to be installed and activated on your site."
-msgstr ""
+msgstr "<strong>Advanced Ads – Tracking</strong>, sitenize <strong>Advanced Ads free</strong> eklentisinin kurulmasını ve etkinleştirilmesini gerektirir."
 
 #. translators: 1: opening a-tag with link to manual 2: closing a-tag
 #: includes/admin/class-admin.php:286
@@ -173,8 +170,7 @@ msgstr "<a href=\"https://wpadvancedads.com/share-custom-reports-google-analytic
 msgid " <a href=\"https://wpadvancedads.com/share-custom-reports-google-analytics/?utm_source=advanced-ads&utm_medium=link&utm_campaign=settings-reports-google-analytics\" target=\"_blank\">How to share Google Analytics ad reports with your customers.</a>"
 msgstr " <a href=\"https://wpadvancedads.com/share-custom-reports-google-analytics/?utm_source=advanced-ads&utm_medium=link&utm_campaign=settings-reports-google-analytics\" target=\"_blank\">Google Analytics reklam raporlarını müşterilerinizle nasıl paylaşabilirsiniz?</a>"
 
-#: views/admin/ads/ad-tracking-params.php:44
-#: views/admin/ads/bulk-edit.php:29
+#: views/admin/ads/ad-tracking-params.php:44 views/admin/ads/bulk-edit.php:29
 #: views/admin/ads/quick-edit.php:23
 msgid "Target URL"
 msgstr "Hedef URL"
@@ -451,11 +447,6 @@ msgstr "Lütfen Ön Uç veya Google Analytics yöntemini seçin."
 msgid "The selected tracking method is not compatible with the TCF 2.0 integration."
 msgstr "Seçilen izleme yöntemi TCF 2.0 entegrasyonuyla uyumlu değil."
 
-#. Author of the plugin
-#: tracking.php
-msgid "Advanced Ads GmbH"
-msgstr "Advanced Ads GmbH"
-
 #: includes/admin/class-settings.php:297
 msgid "Database Management"
 msgstr "Veri tabanı Yönetimi"
@@ -509,8 +500,7 @@ msgstr "Değişikliği onaylamak için reklamı kaydedin"
 msgid "Generate a new sharable link"
 msgstr "Yeni bir paylaşılabilir bağlantı oluşturun"
 
-#: includes/admin/class-metaboxes.php:152
-#: includes/rest/class-quick-edit.php:51
+#: includes/admin/class-metaboxes.php:152 includes/rest/class-quick-edit.php:51
 msgid "enabled"
 msgstr "etkinleştirilmiş"
 
@@ -530,9 +520,7 @@ msgid "Track ad impressions and clicks."
 msgstr "Reklam gösterimlerini ve tıklamalarını izleyin."
 
 #. Plugin Name of the plugin
-#: tracking.php
-#: includes/class-bootstrap.php:71
-#: includes/class-bootstrap.php:78
+#: tracking.php includes/class-bootstrap.php:71 includes/class-bootstrap.php:78
 msgid "Advanced Ads – Tracking"
 msgstr "Advanced Ads – İzleme"
 
@@ -585,8 +573,7 @@ msgstr "dosya seç"
 msgid "File"
 msgstr "Dosya"
 
-#: views/admin/page-stats.php:165
-#: views/admin/settings/setting-method.php:36
+#: views/admin/page-stats.php:165 views/admin/settings/setting-method.php:36
 msgid "Database"
 msgstr "Veri tabanı"
 
@@ -598,8 +585,7 @@ msgstr "ilk ay"
 msgid "latest month"
 msgstr "en son ay"
 
-#: views/admin/page-stats.php:133
-#: views/admin/page-stats.php:149
+#: views/admin/page-stats.php:133 views/admin/page-stats.php:149
 msgid "load stats"
 msgstr "istatistikleri yükle"
 
@@ -611,8 +597,7 @@ msgstr "Veri kaynağı:"
 msgid "Group by:"
 msgstr "Gruplama:"
 
-#: views/admin/page-stats.php:109
-#: views/frontend/public-stats.php:52
+#: views/admin/page-stats.php:109 views/frontend/public-stats.php:52
 msgid "Period"
 msgstr "Periyot"
 
@@ -860,10 +845,8 @@ msgstr "İzleme bağlantılarına %s ekleyin."
 #: views/admin/ads/ad-tracking-params.php:158
 #: views/admin/ads/ad-tracking-params.php:173
 #: views/admin/ads/ad-tracking-params.php:193
-#: views/admin/ads/ad-tracking-params.php:209
-#: views/admin/ads/bulk-edit.php:64
-#: views/admin/ads/bulk-edit.php:76
-#: views/admin/ads/quick-edit.php:49
+#: views/admin/ads/ad-tracking-params.php:209 views/admin/ads/bulk-edit.php:64
+#: views/admin/ads/bulk-edit.php:76 views/admin/ads/quick-edit.php:49
 #: views/admin/ads/quick-edit.php:60
 msgid "no"
 msgstr "hayır"
@@ -871,10 +854,8 @@ msgstr "hayır"
 #: views/admin/ads/ad-tracking-params.php:154
 #: views/admin/ads/ad-tracking-params.php:172
 #: views/admin/ads/ad-tracking-params.php:189
-#: views/admin/ads/ad-tracking-params.php:208
-#: views/admin/ads/bulk-edit.php:63
-#: views/admin/ads/bulk-edit.php:75
-#: views/admin/ads/quick-edit.php:48
+#: views/admin/ads/ad-tracking-params.php:208 views/admin/ads/bulk-edit.php:63
+#: views/admin/ads/bulk-edit.php:75 views/admin/ads/quick-edit.php:48
 #: views/admin/ads/quick-edit.php:59
 msgid "yes"
 msgstr "evet"
@@ -889,15 +870,13 @@ msgid "Where to open the link (if present)."
 msgstr "Bağlantının nerede açılacağı (varsa)."
 
 #: views/admin/ads/ad-tracking-params.php:127
-#: views/admin/ads/ad-tracking-params.php:138
-#: views/admin/ads/bulk-edit.php:52
+#: views/admin/ads/ad-tracking-params.php:138 views/admin/ads/bulk-edit.php:52
 #: views/admin/ads/quick-edit.php:38
 msgid "new window"
 msgstr "yeni pencere"
 
 #: views/admin/ads/ad-tracking-params.php:123
-#: views/admin/ads/ad-tracking-params.php:139
-#: views/admin/ads/bulk-edit.php:51
+#: views/admin/ads/ad-tracking-params.php:139 views/admin/ads/bulk-edit.php:51
 #: views/admin/ads/quick-edit.php:37
 msgid "same window"
 msgstr "aynı pencere"
@@ -937,8 +916,7 @@ msgstr "son 30 gun"
 msgid "View the live statistics"
 msgstr "Canlı istatistikleri gör"
 
-#: views/emails/email-report-body.php:99
-#: views/frontend/public-stats.php:322
+#: views/emails/email-report-body.php:99 views/frontend/public-stats.php:322
 msgid "Total"
 msgstr "Toplam"
 
@@ -946,13 +924,11 @@ msgstr "Toplam"
 #: includes/admin/class-ad-list-table.php:120
 #: includes/class-assets-registry.php:184
 #: views/admin/ads/ad-list-stats-column.php:61
-#: views/emails/email-report-body.php:56
-#: views/emails/email-report-body.php:121
+#: views/emails/email-report-body.php:56 views/emails/email-report-body.php:121
 msgid "CTR"
 msgstr "CTR"
 
-#: views/emails/email-report-body.php:55
-#: views/emails/email-report-body.php:120
+#: views/emails/email-report-body.php:55 views/emails/email-report-body.php:120
 msgid "click through rate"
 msgstr "tıklama oranı"
 
@@ -982,20 +958,17 @@ msgstr " son ay"
 msgid " the last 30 days"
 msgstr " son 30 gün"
 
-#: includes/class-db-operations.php:751
-#: views/admin/page-stats.php:132
+#: includes/class-db-operations.php:751 views/admin/page-stats.php:132
 #: views/frontend/public-stats.php:67
 msgid "to"
 msgstr "şuna:"
 
-#: includes/class-db-operations.php:750
-#: views/admin/page-stats.php:131
+#: includes/class-db-operations.php:750 views/admin/page-stats.php:131
 #: views/frontend/public-stats.php:66
 msgid "from"
 msgstr "şundan:"
 
-#: includes/class-db-operations.php:70
-#: includes/class-db-operations.php:731
+#: includes/class-db-operations.php:70 includes/class-db-operations.php:731
 #: includes/crons/class-reporting-emails.php:220
 #: views/admin/metaboxes/metabox-ad.php:119
 #: views/admin/settings/setting-email-report-stats-period.php:16
@@ -1003,13 +976,11 @@ msgstr "şundan:"
 msgid "last 12 months"
 msgstr "son 12 ay"
 
-#: includes/class-db-operations.php:66
-#: includes/class-db-operations.php:74
+#: includes/class-db-operations.php:66 includes/class-db-operations.php:74
 msgid "first 6 months"
 msgstr "ilk 6 ay"
 
-#: includes/class-db-operations.php:65
-#: includes/class-db-operations.php:73
+#: includes/class-db-operations.php:65 includes/class-db-operations.php:73
 msgid "everything before this year"
 msgstr "bu yıldan önceki her şey"
 
@@ -1030,8 +1001,7 @@ msgid "This base name collides with an existing WordPress content (blog post, pa
 msgstr "Bu temel ad mevcut bir WordPress içeriğiyle (blog yazısı, sayfa veya herhangi bir genel özel içerik) çakışıyor"
 
 #. translators: %b: month, %#d: day
-#: includes/class-ajax.php:416
-#: includes/class-ajax.php:817
+#: includes/class-ajax.php:416 includes/class-ajax.php:817
 msgctxt "format for week group in stats table"
 msgid "from %b&nbsp;%#d"
 msgstr "%b&nbsp;%#d'den"
@@ -1049,49 +1019,41 @@ msgstr "Hiçbir istatistik kaldırılmadı."
 msgid "All impressions and clicks removed."
 msgstr "Tüm gösterimler ve tıklamalar kaldırıldı."
 
-#: includes/admin/class-page-stats.php:97
-#: includes/class-ajax.php:285
+#: includes/admin/class-page-stats.php:97 includes/class-ajax.php:285
 msgctxt "date format on stats page"
 msgid "Y-m"
 msgstr "Y-m"
 
-#: includes/admin/class-page-stats.php:97
-#: includes/class-ajax.php:285
+#: includes/admin/class-page-stats.php:97 includes/class-ajax.php:285
 msgid "month"
 msgstr "ay"
 
-#: includes/admin/class-page-stats.php:96
-#: includes/class-ajax.php:284
+#: includes/admin/class-page-stats.php:96 includes/class-ajax.php:284
 msgid "week"
 msgstr "hafta"
 
 #: includes/admin/class-page-stats.php:95
-#: includes/admin/class-page-stats.php:96
-#: includes/class-ajax.php:283
+#: includes/admin/class-page-stats.php:96 includes/class-ajax.php:283
 #: includes/class-ajax.php:284
 msgctxt "date format on stats page"
 msgid "Y-m-d"
 msgstr "Y-m-d"
 
-#: includes/admin/class-page-stats.php:95
-#: includes/class-ajax.php:283
+#: includes/admin/class-page-stats.php:95 includes/class-ajax.php:283
 msgid "day"
 msgstr "gün"
 
-#: includes/class-db-operations.php:747
-#: includes/utilities/class-data.php:201
+#: includes/class-db-operations.php:747 includes/utilities/class-data.php:201
 #: views/frontend/public-stats.php:57
 msgid "custom"
 msgstr "özel"
 
-#: includes/class-db-operations.php:71
-#: includes/class-db-operations.php:732
+#: includes/class-db-operations.php:71 includes/class-db-operations.php:732
 #: includes/utilities/class-data.php:199
 msgid "last year"
 msgstr "geçen yıl"
 
-#: includes/class-db-operations.php:72
-#: includes/class-db-operations.php:733
+#: includes/class-db-operations.php:72 includes/class-db-operations.php:733
 #: includes/utilities/class-data.php:198
 msgid "this year"
 msgstr "bu yıl"
@@ -1123,54 +1085,41 @@ msgstr "bugün"
 msgid "Add <code>target=\"_blank\"</code> to the ad code in order to open it in a new window. E.g. <code>&lt;a href=\"%link%\" target=\"_blank\"&gt;</code>"
 msgstr "Yeni bir pencerede açmak için reklam koduna <code>target=\"_blank\"</code> ekleyin. Örneğin. <code>&lt;a href=\"%link%\" target=\"_blank\"&gt;</code>"
 
-#: includes/admin/class-metaboxes.php:148
-#: includes/class-helpers.php:205
-#: includes/rest/class-quick-edit.php:58
-#: views/admin/ads/bulk-edit.php:21
+#: includes/admin/class-metaboxes.php:148 includes/class-helpers.php:205
+#: includes/rest/class-quick-edit.php:58 views/admin/ads/bulk-edit.php:21
 #: views/admin/settings/setting-everything.php:17
 msgid "clicks only"
 msgstr "sadece tıklamalar"
 
-#: includes/admin/class-metaboxes.php:149
-#: includes/class-helpers.php:204
-#: includes/rest/class-quick-edit.php:59
-#: views/admin/ads/bulk-edit.php:22
+#: includes/admin/class-metaboxes.php:149 includes/class-helpers.php:204
+#: includes/rest/class-quick-edit.php:59 views/admin/ads/bulk-edit.php:22
 #: views/admin/settings/setting-everything.php:16
 msgid "impressions only"
 msgstr "sadece gösterimler"
 
-#: includes/admin/class-metaboxes.php:150
-#: includes/class-helpers.php:206
-#: includes/rest/class-quick-edit.php:60
-#: views/admin/ads/bulk-edit.php:23
+#: includes/admin/class-metaboxes.php:150 includes/class-helpers.php:206
+#: includes/rest/class-quick-edit.php:60 views/admin/ads/bulk-edit.php:23
 #: views/admin/settings/setting-everything.php:14
 msgid "impressions & clicks"
 msgstr "gösterimler ve tıklamalar"
 
-#: includes/admin/class-metaboxes.php:144
-#: includes/class-helpers.php:199
-#: includes/class-helpers.php:210
-#: includes/rest/class-quick-edit.php:50
-#: views/admin/ads/ad-list-stats-column.php:52
-#: views/admin/ads/bulk-edit.php:20
+#: includes/admin/class-metaboxes.php:144 includes/class-helpers.php:199
+#: includes/class-helpers.php:210 includes/rest/class-quick-edit.php:50
+#: views/admin/ads/ad-list-stats-column.php:52 views/admin/ads/bulk-edit.php:20
 msgid "disabled"
 msgstr "devredışı"
 
 #: includes/admin/class-metaboxes.php:143
 #: views/admin/ads/ad-tracking-params.php:119
 #: views/admin/ads/ad-tracking-params.php:150
-#: views/admin/ads/ad-tracking-params.php:185
-#: views/admin/ads/bulk-edit.php:50
-#: views/admin/ads/bulk-edit.php:62
-#: views/admin/ads/bulk-edit.php:74
-#: views/admin/ads/quick-edit.php:36
-#: views/admin/ads/quick-edit.php:47
+#: views/admin/ads/ad-tracking-params.php:185 views/admin/ads/bulk-edit.php:50
+#: views/admin/ads/bulk-edit.php:62 views/admin/ads/bulk-edit.php:74
+#: views/admin/ads/quick-edit.php:36 views/admin/ads/quick-edit.php:47
 #: views/admin/ads/quick-edit.php:58
 msgid "default"
 msgstr "varsayılan"
 
-#: includes/admin/class-settings.php:370
-#: includes/admin/class-settings.php:561
+#: includes/admin/class-settings.php:370 includes/admin/class-settings.php:561
 msgid "Ads Statistics"
 msgstr "Reklam İstatistikleri"
 
@@ -1214,10 +1163,9 @@ msgstr "Bot'ları takip et"
 msgid "Link base for public reports"
 msgstr "Herkese açık raporlar için bağlantı temeli"
 
-#: views/admin/ads/bulk-edit.php:59
-#: views/admin/ads/quick-edit.php:45
+#: views/admin/ads/bulk-edit.php:59 views/admin/ads/quick-edit.php:45
 msgid "Add \"nofollow\""
-msgstr ""
+msgstr "\"nofollow\" ekleyin"
 
 #: includes/admin/class-settings.php:306
 msgid "Click-link base"
@@ -1240,11 +1188,9 @@ msgstr "İzleme yöntemi seç"
 msgid "Email Reports"
 msgstr "E-posta Raporları"
 
-#: includes/admin/class-settings.php:67
-#: includes/admin/class-settings.php:96
+#: includes/admin/class-settings.php:67 includes/admin/class-settings.php:96
 #: includes/admin/class-settings.php:130
-#: views/admin/ads/ad-tracking-params.php:23
-#: views/admin/ads/bulk-edit.php:16
+#: views/admin/ads/ad-tracking-params.php:23 views/admin/ads/bulk-edit.php:16
 #: views/admin/ads/quick-edit.php:15
 msgid "Tracking"
 msgstr "İzleme"
@@ -1307,8 +1253,7 @@ msgstr "Beklenmedik bir hata oluştu."
 msgid "group"
 msgstr "grup"
 
-#: includes/class-assets-registry.php:194
-#: views/admin/page-stats.php:174
+#: includes/class-assets-registry.php:194 views/admin/page-stats.php:174
 msgid "no file selected"
 msgstr "dosya seçilmedi"
 
@@ -1339,8 +1284,7 @@ msgstr "toplam"
 msgid "%1$s to %2$s"
 msgstr "%1$s ile %2$s arası"
 
-#: includes/class-assets-registry.php:186
-#: views/emails/email-report-body.php:51
+#: includes/class-assets-registry.php:186 views/emails/email-report-body.php:51
 #: views/frontend/public-stats.php:272
 msgid "date"
 msgstr "tarih"
@@ -1411,8 +1355,7 @@ msgid "previous day"
 msgstr "önceki gün"
 
 #: includes/admin/class-ad-list-table.php:77
-#: includes/admin/class-ad-list-table.php:118
-#: includes/class-amp.php:244
+#: includes/admin/class-ad-list-table.php:118 includes/class-amp.php:244
 #: includes/class-assets-registry.php:166
 #: views/admin/ads/ad-list-stats-column.php:28
 msgid "Impressions"
@@ -1448,14 +1391,10 @@ msgstr "Dosya Seç"
 #: views/admin/metaboxes/metabox-ad-limiter.php:55
 #: views/admin/metaboxes/metabox-ad-limiter.php:86
 #: views/admin/page-database/db-operations.php:56
-#: views/admin/page-stats.php:241
-#: views/emails/email-report-body.php:53
-#: views/emails/email-report-body.php:118
-#: views/frontend/public-stats.php:202
-#: views/frontend/public-stats.php:240
-#: views/frontend/public-stats.php:246
-#: views/frontend/public-stats.php:266
-#: views/frontend/public-stats.php:274
+#: views/admin/page-stats.php:241 views/emails/email-report-body.php:53
+#: views/emails/email-report-body.php:118 views/frontend/public-stats.php:202
+#: views/frontend/public-stats.php:240 views/frontend/public-stats.php:246
+#: views/frontend/public-stats.php:266 views/frontend/public-stats.php:274
 msgid "clicks"
 msgstr "tıklamalar"
 
@@ -1464,20 +1403,15 @@ msgstr "tıklamalar"
 #: views/admin/metaboxes/metabox-ad-limiter.php:44
 #: views/admin/metaboxes/metabox-ad-limiter.php:81
 #: views/admin/page-database/db-operations.php:50
-#: views/admin/page-stats.php:236
-#: views/emails/email-report-body.php:52
-#: views/emails/email-report-body.php:117
-#: views/frontend/public-stats.php:196
-#: views/frontend/public-stats.php:230
-#: views/frontend/public-stats.php:235
-#: views/frontend/public-stats.php:262
-#: views/frontend/public-stats.php:273
+#: views/admin/page-stats.php:236 views/emails/email-report-body.php:52
+#: views/emails/email-report-body.php:117 views/frontend/public-stats.php:196
+#: views/frontend/public-stats.php:230 views/frontend/public-stats.php:235
+#: views/frontend/public-stats.php:262 views/frontend/public-stats.php:273
 msgid "impressions"
 msgstr "gösterimler"
 
 #: includes/admin/class-ad-list-table.php:76
-#: includes/admin/class-metaboxes.php:49
-#: includes/admin/class-page-stats.php:51
+#: includes/admin/class-metaboxes.php:49 includes/admin/class-page-stats.php:51
 #: includes/admin/class-page-stats.php:52
 msgid "Statistics"
 msgstr "İstatistikler"

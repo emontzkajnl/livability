@@ -38,12 +38,10 @@ add_action(
  * @param WP_REST_Request $request Rest request object.
  */
 function alm_cache_get( WP_REST_Request $request ) {
-	$cache_id   = $request->get_param( 'id' );
-	$cache_slug = $request->get_param( 'name' );
-
-	if ( ! $cache_id || ! $cache_slug ) {
+	$cache_id = $request->get_param( 'id' );
+	if ( ! $cache_id ) {
 		return false;
 	}
 
-	return json_decode( ALMCache::get_cache_file( $cache_id, $cache_slug ) );
+	return json_decode( ALMCache::get_cache( $cache_id ), true );
 }

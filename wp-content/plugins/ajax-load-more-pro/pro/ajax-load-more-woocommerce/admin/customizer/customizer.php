@@ -546,7 +546,6 @@ function alm_woocommerce_customizer_add_scripts() {
 					}, 1000);
 				}
 				value.bind(function (state) {
-					console.log(state);
 					if(!state){
 						wp.customize.control('alm_woo_shop_cache').toggle(false);
 					} else {
@@ -565,7 +564,6 @@ function alm_woocommerce_customizer_add_scripts() {
 					}, 1000);
 				}
 				value.bind(function (state) {
-					console.log(state);
 					if(!state){
 						wp.customize.control('alm_woo_shop_archives_cache').toggle(false);
 					} else {

@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Ajax Load More: WooCommerce
  * Plugin URI: https://connekthq.com/plugins/ajax-load-more/add-ons/woocommerce/
- * Description: Ajax Load More addon for integration with WooCommerce shop and archive pages.
+ * Description: Ajax Load More addon for integration with WooCommerce shop, archives, and search pages.
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: http://connekthq.com
  * Copyright: Darren Cooney & Connekt Media
- * Version: 1.2.6
+ * Version: 1.3.0
  * WC requires at least: 5.0
- * WC tested up to: 9.9.3
+ * WC tested up to: 10.3.5
  * Requires Plugins: ajax-load-more, woocommerce
  *
  * @package ALMWooCommerce
@@ -19,8 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ALM_WOO_VERSION', '1.2.6' );
-define( 'ALM_WOO_RELEASE', 'June 9, 2025' );
+define( 'ALM_WOO_VERSION', '1.3.0' );
+define( 'ALM_WOO_RELEASE', 'November 13, 2025' );
 
 if ( ! class_exists( 'ALMWooCommerce' ) ) :
 	/**
@@ -151,15 +151,13 @@ if ( ! class_exists( 'ALMWooCommerce' ) ) :
 				// Main Shop.
 				if ( is_shop() && ! is_product_category() && ! is_product_tag() ) {
 					if ( alm_woo_is_shop_cache() ) {
-						$args['cache']    = 'true';
-						$args['cache_id'] = $this::alm_woocommerce_get_cache_id();
+						$args['cache'] = 'true';
 					}
 				}
 				// Archives.
 				if ( is_product_category() || is_product_tag() ) {
 					if ( alm_woo_is_shop_archive_cache() ) {
-						$args['cache']    = 'true';
-						$args['cache_id'] = $this::alm_woocommerce_get_cache_id();
+						$args['cache'] = 'true';
 					}
 				}
 			}
@@ -209,34 +207,6 @@ if ( ! class_exists( 'ALMWooCommerce' ) ) :
 
 			// Render ALM.
 			alm_render( $args );
-		}
-
-		/**
-		 * Create a cache ID based on current page and querystrings.
-		 *
-		 * @since 1.1
-		 */
-		public static function alm_woocommerce_get_cache_id() {
-			$cache_id = 'woo-shop'; // Default ID.
-
-			if ( is_product_category() || is_product_tag() ) {
-				// Shop Archives.
-				$obj = get_queried_object();
-				if ( isset( $obj->taxonomy ) && isset( $obj->slug ) ) {
-					$taxonomy = $obj->taxonomy;
-					$cache_id = 'woo-' . $obj->taxonomy . '-' . $obj->slug;
-				}
-			}
-
-			// Get Querystring and parse into string.
-			$qs = $_SERVER['QUERY_STRING'];
-			if ( $qs ) {
-				$qs       = str_replace( '=', '-', $qs );
-				$qs       = str_replace( '&', '-', $qs );
-				$cache_id = $cache_id . '--' . $qs;
-			}
-
-			return $cache_id;
 		}
 
 		/**

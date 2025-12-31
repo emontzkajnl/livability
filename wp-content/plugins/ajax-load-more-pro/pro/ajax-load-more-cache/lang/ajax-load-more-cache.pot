@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ajax Load More Cache\n"
-"POT-Creation-Date: 2023-06-12 10:14-0400\n"
+"POT-Creation-Date: 2025-11-14 10:13-0500\n"
 "PO-Revision-Date: 2018-04-16 12:58-0500\n"
 "Last-Translator: Darren Cooney <darren@connekthq.com>\n"
 "Language-Team: \n"
@@ -13,161 +13,170 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.2.2\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-KeywordsList: __;_e;esc_html_e;esc_html__;esc_attr_e;esc_attr__\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: node_modules\n"
 "X-Poedit-SearchPathExcluded-1: build\n"
 "X-Poedit-SearchPathExcluded-2: src\n"
 "X-Poedit-SearchPathExcluded-3: _out\n"
 
-#: admin/views/auto-generate.php:28
-msgid "View Cache"
+#: admin/includes/auto-generate.php:14
+msgid "Building cache, this could take a little while."
 msgstr ""
 
-#: admin/views/auto-generate.php:55
+#: admin/includes/auto-generate.php:17
+msgid "Cache paused."
+msgstr ""
+
+#: admin/includes/auto-generate.php:20
+msgid "Cache generation complete."
+msgstr ""
+
+#: admin/includes/auto-generate.php:37
+msgid "Pause"
+msgstr ""
+
+#: admin/includes/auto-generate.php:40
+msgid "Resume"
+msgstr ""
+
+#: admin/includes/auto-generate.php:43
+msgid "Rebuild Cache"
+msgstr ""
+
+#: admin/includes/auto-generate.php:46
+msgid "Elapsed time:"
+msgstr ""
+
+#: admin/includes/auto-generate.php:48
+msgid "Note: Stay on this page until the build process is complete."
+msgstr ""
+
+#: admin/includes/auto-generate.php:51
+msgid "No Ajax Load More Cache instances found."
+msgstr ""
+
+#: admin/includes/upgrade-notification.php:12
 msgid ""
-"<strong>Note</strong>: The time required to build the entire cache depends "
-"on the amount of pages needed to complete the process. If you leave this "
-"page, the cache build process will stop."
+"Incompatible <strong>Ajax Load More</strong> version: Update to version "
+"7.7.0 or greater to continue using the Cache add-on"
 msgstr ""
 
-#: admin/views/cache.php:25 ajax-load-more-cache.php:478
-msgid "Cache deleted successfully"
+#: admin/includes/upgrade-notification.php:12
+msgid "Update Plugin"
 msgstr ""
 
-#: admin/views/cache.php:115 admin/views/cache.php:120
-msgid "Cached"
+#: ajax-load-more-cache.php:104
+msgid "Ajax Load More Cache has been deleted successfully."
 msgstr ""
 
-#: admin/views/cache.php:140
+#: ajax-load-more-cache.php:255
 msgid ""
-"You have enabled auto-generation of the Ajax Load More cache. Click the "
-"<strong>Generate Cache</strong> below to start the process."
+"Unable to create cache file. Please contact your hosting administrator."
 msgstr ""
 
-#: admin/views/file-listing.php:18
-msgid ""
-"All cached files in your Ajax Load More cache are listed below - the listing "
-"is grouped by the <strong>Cache ID</strong> assigned when your <a "
-"href=\"admin.php?page=ajax-load-more-shortcode-builder\">Shortcode</a> was "
-"created."
-msgstr ""
-
-#: admin/views/file-listing.php:30
-msgid "Search cache by ID or URL "
-msgstr ""
-
-#: admin/views/includes/rest-api-test.php:11
-msgid ""
-"The Cache add-on is unable to access the WordPress REST API. The REST API is "
-"by default buyt sometimes other plugins or a security plugin may block "
-"access."
-msgstr ""
-
-#: admin/views/includes/upgrade-notification.php:12
-msgid ""
-" Incompatible <strong>Ajax Load More</strong> version: Update to version 6.0 "
-"or greater to continue using the Cache add-on"
-msgstr ""
-
-#: ajax-load-more-cache.php:35
-msgid ""
-"You must install and activate the core Ajax Load More plugin before using "
-"the Ajax Load More Cache Add-on."
-msgstr ""
-
-#: ajax-load-more-cache.php:36
-msgid "Install Ajax Load More Now"
-msgstr ""
-
-#: ajax-load-more-cache.php:201
-msgid "Cache URL"
-msgstr ""
-
-#: ajax-load-more-cache.php:204
-msgid "Date Created:"
-msgstr ""
-
-#: ajax-load-more-cache.php:207
-msgid "Cache Path:"
-msgstr ""
-
-#: ajax-load-more-cache.php:208
-msgid "Show Full Cache Path"
-msgstr ""
-
-#: ajax-load-more-cache.php:404
-msgid "Error - Cache directory does not exist."
-msgstr ""
-
-#: ajax-load-more-cache.php:536
+#: ajax-load-more-cache.php:427
 msgid ""
 "Are you sure you want to delete the following Ajax Load More Cache and all "
 "of it's contents?"
 msgstr ""
 
-#: ajax-load-more-cache.php:537
+#: ajax-load-more-cache.php:428
 msgid "Are you sure you want to delete the entire Ajax Load More Cache?"
 msgstr ""
 
-#: ajax-load-more-cache.php:582
+#: ajax-load-more-cache.php:448
+msgid ""
+"Ajax Load More Cache requires Ajax Load More version 7.7 or greater. Please "
+"update Ajax Load More to the latest version to use Ajax Load More Cache."
+msgstr ""
+
+#: ajax-load-more-cache.php:476
 msgid "Cache Settings"
 msgstr ""
 
-#: ajax-load-more-cache.php:588
-msgid "Published Posts"
-msgstr ""
-
-#: ajax-load-more-cache.php:595
-msgid "Known Users"
-msgstr ""
-
-#: ajax-load-more-cache.php:641
-msgid "Ajax Load More Cache"
-msgstr ""
-
-#: ajax-load-more-cache.php:649 ajax-load-more-cache.php:652
+#: ajax-load-more-cache.php:482 ajax-load-more-cache.php:562
+#: ajax-load-more-cache.php:565 ajax-load-more-cache.php:698
 msgid "Delete Cache"
 msgstr ""
 
-#: ajax-load-more-cache.php:663
-msgid "Auto-Generate Cache"
-msgstr ""
-
-#: ajax-load-more-cache.php:666
+#: ajax-load-more-cache.php:491 ajax-load-more-cache.php:583
+#: ajax-load-more-cache.php:586
 msgid "Generate Cache"
 msgstr ""
 
-#: ajax-load-more-cache.php:681
+#: ajax-load-more-cache.php:499
+msgid "Published Posts"
+msgstr ""
+
+#: ajax-load-more-cache.php:506
+msgid "Known Users"
+msgstr ""
+
+#: ajax-load-more-cache.php:552
+msgid "Ajax Load More Cache"
+msgstr ""
+
+#: ajax-load-more-cache.php:629
+#, php-format
+msgid "Customize your installation of the %1$sCache%2$s add-on."
+msgstr ""
+
+#: ajax-load-more-cache.php:644
+msgid "Delete Cache When Posts are Published."
+msgstr ""
+
+#: ajax-load-more-cache.php:645
 msgid ""
-"Customize your installation of the <a href=\"http://connekthq.com/plugins/"
-"ajax-load-more/cache/\">Cache</a> add-on."
+"The Ajax Load More Cache will be fully cleared when a post, page or custom "
+"post type is published or modified."
+msgstr ""
+
+#: ajax-load-more-cache.php:661
+msgid "Disable Cache for Logged In Users"
+msgstr ""
+
+#: ajax-load-more-cache.php:662
+msgid ""
+"Logged in users will retrieve content from the database and will not view "
+"any cached Ajax content."
+msgstr ""
+
+#: ajax-load-more-cache.php:677
+msgid "The Ajax Load More Cache is empty."
 msgstr ""
 
 #: ajax-load-more-cache.php:696
-msgid "Delete cache when new posts are published."
+#, php-format
+msgid "The Ajax Load More Cache contains %1$s cached %2$s."
 msgstr ""
 
-#: ajax-load-more-cache.php:697
+#: ajax-load-more-cache.php:696
+msgid "results"
+msgstr ""
+
+#: ajax-load-more-cache.php:696
+msgid "result"
+msgstr ""
+
+#: ajax-load-more-cache.php:719
 msgid ""
-"Ajax Load More Cache will be fully cleared whenever a post, page or Custom "
-"Post Type is published or modified."
+"You have enabled auto-generation of the Ajax Load More Cache. Click the "
+"Build Cache below to start the process."
 msgstr ""
 
-#: ajax-load-more-cache.php:713
-msgid "Don't cache files for logged in users."
+#: ajax-load-more-cache.php:721
+msgid "Build Cache"
 msgstr ""
 
-#: ajax-load-more-cache.php:714
-msgid ""
-"Logged in users will retrieve content directly from the database and will "
-"not view any cached content."
+#: ajax-load-more-cache.php:722
+msgid "Documentation"
 msgstr ""
 
-#: api/create.php:63
-msgid "An error has occurred while creating the Ajax Load More cache."
-msgstr ""
-
-#: api/create.php:76
+#: api/create.php:61 api/create.php:100
 msgid "Cache created successfully for:"
+msgstr ""
+
+#: api/create.php:72
+msgid "An error has occurred while creating the Ajax Load More Cache."
 msgstr ""

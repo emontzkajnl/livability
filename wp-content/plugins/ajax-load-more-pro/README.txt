@@ -10,7 +10,7 @@ Stable tag: trunk
 Requires PHP: 7.0
 Homepage: https://connekthq.com/ajax-load-more/
 Donate: https://connekthq.com/donate
-Version: 1.4.3
+Version: 1.4.6
 
 == Copyright ==
 Copyright 2025 Darren Cooney & Connekt Media
@@ -44,6 +44,63 @@ http://connekthq.com/ajax-load-more/pro/
 
 
 == Changelog ==
+
+**	1.4.6 - December 11, 2025 **
+
+Single Posts - 1.8.1
+* NEW: Added new REST API endpoint for single post retrieval.
+* NEW: Added `alm_single_posts_use_rest_api` hook for disbaling the REST API usage. `add_filter('alm_single_posts_use_rest_api', '__return_false');`
+* UPDATE: Removed deprecated functionality to scroll user to post after load more action.
+* UPDATE: Code cleanup and optimizations.
+
+Cache - 3.1.1
+* FIX: Fixed issue with PHP `scandir` function.
+* UPDATE: Updated the `alm_cache_path` hook to return with a trailing slash, always.
+
+** 1.4.5 - November 14, 2025 **
+
+UPGRADE NOTICE: Updating ALM Pro requires updating Ajax Load More core plugin to 7.7.0 or greater or the Cache will not function.
+
+Cache - 3.1.0
+* NEW: Revert change in Cache 3.0 where the cache was updated to use WordPress Transients. We're back to using static JSON files 😄
+* UPDATE: Removed `alm_cache_url` hook as it's no longer needed.
+* UPDATE: Removed all Transient related functions and filters.
+* UPDATE: Updated unistaller hook.
+* UPDATE: Various code cleanups and organization.
+
+** 1.4.4 - November 13, 2025 **
+
+Cache - 3.0.0
+- NEW: Cache now supports ALL Ajax Load More functionality and add-ons including Filters, Next Page, WooCommerce, Elementor, ACF, Single Posts, Query Loop etc.
+- NEW: ALM Cache is now stored in WordPress Transients vs files on the server. This improves performance and reliability. This is a major improvement and change to the way the cache is stored and managed going forward.
+- NEW: Transient data is stored for 1 hour by default. This can be modified with the `alm_cache_expiration` filter. See documentation for details.
+- NEW: Removed Cache admin page. Cache can now be managed from the main Ajax Load More admin settings page or the admin bar menu.
+- UPDATE: Removed `cache_id` parameter as it is no longer needed with the new cache configuration. Cache ID is now a dynamically generated hash based on query params, url, and settings.
+- NEW: Added new `alm_cache_created` and `alm_cache_deleted` hooks that are fired after creating and deleting the cache.
+- NEW: Updated unistaller hook to clear up all data on unistall.
+
+Filters - 3.2.1
+- FIX: Fixed issue with hitting paged URL and user not being scrolled to the current page.
+
+NextPage - 1.9.0
+- NEW: Added support for Ajax Load More Cache 3.0.
+- UPDATE: Various code cleanups and organization.
+
+Comments - 1.3.0
+- NEW: Added support for Ajax Load More Cache 3.0.
+- UPDATE: Various code cleanups and organization.
+- UPDATE: Updated WP compatibility.
+
+Elementor - 1.3.0
+- NEW: Added support for Ajax Load More Cache.
+- UPDATE: Updated Elementor tested up to versioning for better update support.
+- UPDATE: Various code cleanups and organization.
+
+WooCommerce - 1.3.0
+- NEW: Added support for Ajax Load More Cache 3.0.
+- NEW: Add new hooks for disabling integration functions.
+- FIX: Fixed issue with WooCommerce taxonomies and archives setting.
+
 
 ** 1.4.3 - October 21, 2025 **
 
@@ -80,7 +137,7 @@ Single Posts - 1.7.3
 ** 1.4.0 - July 23, 2025 **
 
 * UPGRADE NOTICE: This Ajax Load More Pro update combines the Custom Repeaters and Theme Repeaters add-ons into a single add-on called "Templates". It's recommended to update the Ajax Load More plugin to 7.5.0 or greater before updating this add-on.
-* UPDATE: Code cleanup and organization.
+- UPDATE: Code cleanup and organization.
 
 ** 1.3.2 - June 10, 2025 **
 
@@ -105,15 +162,15 @@ WooCommerce - 1.2.6
 Other updates include:
 
 Filters - 3.0.1
-* FIX: Fixed issue with Filters add-on (Tax and Meta Query) leaving unused data attributes on the ALM instance after filtering.
-* FIX: Fixed issue with PHP generation function in the Filter builder tool.
-* UPDATE: Added support for using wp_cache instead of transients for chacking facet data
-* UPDATE: Improve performance of facet indexing.
-* UPDATE: Added `ajax-load-more` as a required plugin and removed activation hooks/notices.
-* UPDATE: Various code cleanup and refactoring.
+- FIX: Fixed issue with Filters add-on (Tax and Meta Query) leaving unused data attributes on the ALM instance after filtering.
+- FIX: Fixed issue with PHP generation function in the Filter builder tool.
+- UPDATE: Added support for using wp_cache instead of transients for chacking facet data
+- UPDATE: Improve performance of facet indexing.
+- UPDATE: Added `ajax-load-more` as a required plugin and removed activation hooks/notices.
+- UPDATE: Various code cleanup and refactoring.
 
 Single Posts - 1.7.2
-* UPDATE: Added support for `alm_retain_querystring` hook to retain query string parameters as you load additional posts.
+- UPDATE: Added support for `alm_retain_querystring` hook to retain query string parameters as you load additional posts.
 
 
 ** 1.3.1 - May 25, 2025 **

@@ -6,7 +6,7 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.2.4
+ * Version: 1.3.0
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
  * Requires Plugins: ajax-load-more
@@ -20,8 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ALM_COMMENTS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALM_COMMENTS_URL', plugins_url( '', __FILE__ ) );
-define( 'ALM_COMMENTS_VERSION', '1.2.4' );
-define( 'ALM_COMMENTS_RELEASE', 'June 9, 2025' );
+define( 'ALM_COMMENTS_VERSION', '1.3.0' );
+define( 'ALM_COMMENTS_RELEASE', 'November 13, 2025' );
 
 $GLOBALS['alm_comment_repeater']      = '';
 $GLOBALS['alm_comment_repeater_type'] = '';
@@ -109,24 +109,17 @@ if ( ! class_exists( 'ALM_Comments' ) ) :
 		 * @since 1.0
 		 */
 		public function alm_comments_query() {
-			$form_data = filter_input_array( INPUT_GET );
-			if ( ! isset( $form_data ) ) {
+			$params = filter_input_array( INPUT_GET );
+			if ( ! isset( $params ) ) {
 				return;
 			}
 
-			$query_type    = isset( $form_data['query_type'] ) ? $form_data['query_type'] : 'standard';
-			$data          = isset( $form_data['comments'] ) ? $form_data['comments'] : '';
-			$offset        = isset( $form_data['offset'] ) ? $form_data['offset'] : 0;
-			$orderby       = isset( $form_data['orderby'] ) ? $form_data['orderby'] : 'date';
-			$order         = isset( $form_data['order'] ) ? $form_data['order'] : 'DESC';
-			$canonical_url = isset( $form_data['canonical_url'] ) ? $form_data['canonical_url'] : $_SERVER['HTTP_REFERER'];
-			$preloaded     = isset( $form_data['preloaded'] ) ? $form_data['preloaded'] : false;
-
-			// Cache Add-on.
-			$cache_id        = isset( $form_data['cache_id'] ) ? $form_data['cache_id'] : '';
-			$cache_slug      = isset( $form_data['cache_slug'] ) && $form_data['cache_slug'] ? $form_data['cache_slug'] : '';
-			$cache_logged_in = isset( $form_data['cache_logged_in'] ) ? $form_data['cache_logged_in'] : false;
-			$do_create_cache = $cache_logged_in === 'true' && is_user_logged_in() ? false : true;
+			$query_type = isset( $params['query_type'] ) ? $params['query_type'] : 'standard';
+			$data       = isset( $params['comments'] ) ? $params['comments'] : '';
+			$offset     = isset( $params['offset'] ) ? $params['offset'] : 0;
+			$orderby    = isset( $params['orderby'] ) ? $params['orderby'] : 'date';
+			$order      = isset( $params['order'] ) ? $params['order'] : 'DESC';
+			$preloaded  = isset( $params['preloaded'] ) ? $params['preloaded'] : false;
 
 			if ( $data ) {
 				$comments                             = isset( $data['comments'] ) ? $data['comments'] : false;
@@ -136,7 +129,7 @@ if ( ! class_exists( 'ALM_Comments' ) ) :
 				$comments_template_type               = preg_split( '/(?=\d)/', $comments_template, 2 );
 				$comments_template_type               = $comments_template_type[0];
 				$GLOBALS['alm_comment_repeater_type'] = $comments_template_type;
-				$page                                 = isset( $form_data['page'] ) ? $form_data['page'] : 0;
+				$page                                 = isset( $params['page'] ) ? $params['page'] : 0;
 
 				$comments_post_id  = isset( $data['post_id'] ) ? $data['post_id'] : 'null';
 				$comments_per_page = isset( $data['per_page'] ) ? $data['per_page'] : '5';
@@ -144,7 +137,7 @@ if ( ! class_exists( 'ALM_Comments' ) ) :
 				$comments_style    = isset( $data['style'] ) ? $data['style'] : 'ul';
 
 				// Paging Add-on.
-				$paging = isset( $form_data['paging'] ) ? $form_data['paging'] : 'false';
+				$paging = isset( $params['paging'] ) ? $params['paging'] : 'false';
 
 				$page = $paging === 'true' && $preloaded === 'true' ? $page = $page - 1 : $page;
 
@@ -184,8 +177,12 @@ if ( ! class_exists( 'ALM_Comments' ) ) :
 					}
 
 					if ( $query_type === 'totalposts' ) {
-						// Paging add-on.
-						wp_send_json( [ 'totalposts' => $comment_count ] );
+						// Combined Preloaded & Paging add-ons.
+						wp_send_json(
+							[
+								'totalposts' => $comment_count,
+							]
+						);
 
 					} else {
 						// Standard ALM.
@@ -204,13 +201,6 @@ if ( ! class_exists( 'ALM_Comments' ) ) :
 						$comment_data = ob_get_clean();
 
 						if ( $comment_data ) {
-							/**
-							 * Cache Add-on.
-							 * Create the cache file.
-							 */
-							if ( $cache_id && method_exists( 'ALMCache', 'create_cache_file' ) && $do_create_cache ) {
-								ALMCache::create_cache_file( $cache_id, $cache_slug, $canonical_url, $comment_data, intval( $comments_per_page ), $comment_count );
-							}
 
 							$return = [
 								'html' => $comment_data,

@@ -34,46 +34,70 @@ add_action(
 );
 
 /**
- * Create Cache from HTML data.
+ * Create Cache from Ajax/HTML data.
  *
  * @param WP_REST_Request $request Rest request object.
  */
 function alm_cache_create( WP_REST_Request $request ) {
-	$form_data = $request->get_params();
+	$params     = $request->get_params(); // Pluck data from request.
+	$cache_id   = isset( $params['cache_id'] ) ? $params['cache_id'] : '';
+	$html       = isset( $params['html'] ) ? trim( stripcslashes( $params['html'] ) ) : false;
+	$facets     = isset( $params['facets'] ) ? $params['facets'] : [];
+	$postcount  = isset( $params['postcount'] ) ? $params['postcount'] : 1;
+	$totalposts = isset( $params['totalposts'] ) ? $params['totalposts'] : 1;
+	$paging     = isset( $params['paging'] ) ? $params['paging'] : false;
 
-	// Pluck data from request.
-	$html            = isset( $form_data['html'] ) ? trim( stripcslashes( $form_data['html'] ) ) : false;
-	$cache_id        = isset( $form_data['cache_id'] ) ? $form_data['cache_id'] : '';
-	$cache_logged_in = isset( $form_data['cache_logged_in'] ) ? $form_data['cache_logged_in'] : false;
-	$do_create_cache = $cache_logged_in === 'true' && is_user_logged_in() ? false : true;
-	$canonical_url   = isset( $form_data['canonical_url'] ) ? $form_data['canonical_url'] : $_SERVER['HTTP_REFERER'];
-	$name            = isset( $form_data['name'] ) ? $form_data['name'] : 0;
-	$postcount       = isset( $form_data['postcount'] ) ? $form_data['postcount'] : 1;
-	$totalposts      = isset( $form_data['totalposts'] ) ? $form_data['totalposts'] : 1;
+	// Paging cache creation.
+	if ( $paging ) {
+		ALMCache::create_cache(
+			$cache_id,
+			$paging
+		);
 
-	if ( ! has_action( 'alm_cache_installed' ) || ! $do_create_cache ) {
-		return false;
+		// Send the response.
+		return new WP_REST_Response(
+			[
+				'success' => true,
+				'msg'     => __( 'Cache created successfully for:', 'ajax-load-more-cache' ) . ' ' . $cache_id,
+			],
+			200
+		);
 	}
 
 	// Handle missing data.
-	if ( ! $cache_id || ! $name || ! $html ) {
+	if ( ! $cache_id || ! $html ) {
 		return new WP_REST_Response(
 			[
 				'success' => false,
-				'msg'     => __( 'An error has occurred while creating the Ajax Load More cache.', 'ajax-load-more-cache' ),
+				'msg'     => __( 'An error has occurred while creating the Ajax Load More Cache.', 'ajax-load-more-cache' ),
 			],
 			401
 		);
 	}
 
-	// Create cache file.
-	ALMCache::create_cache_file( $cache_id, $name, $canonical_url, $html, $postcount, $totalposts );
+	$data = [
+		'html' => $html,
+		'meta' => [
+			'postcount'  => $postcount,
+			'totalposts' => $totalposts,
+		],
+	];
+
+	// Include facets if present.
+	if ( ! empty( $facets ) ) {
+		$data['facets'] = $facets;
+	}
+
+	ALMCache::create_cache(
+		$cache_id,
+		$data
+	);
 
 	// Send the response.
 	return new WP_REST_Response(
 		[
 			'success' => true,
-			'msg'     => __( 'Cache created successfully for:', 'ajax-load-more-cache' ) . ' ' . $name,
+			'msg'     => __( 'Cache created successfully for:', 'ajax-load-more-cache' ) . ' ' . $cache_id,
 		],
 		200
 	);

@@ -9,7 +9,9 @@
 
 namespace AdvancedAds\Tracking;
 
+use AdvancedAds\Options;
 use AdvancedAds\Tracking\Helpers;
+use AdvancedAds\Utilities\Conditional;
 use AdvancedAds\Framework\Utilities\Params;
 
 /**
@@ -236,29 +238,34 @@ class Debugger {
 	 */
 	private static function get_url() {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		static $url;
+		static $url = null;
 
-		if ( ! is_null( $url ) ) {
+		if ( null !== $url ) {
 			return $url;
 		}
 
+		// Use the HTTP referer if it's a linkout link.
+		if ( self::is_linkout( Options::instance()->get( 'tracking.linkbase', '' ) ) ) {
+			$url = wp_parse_url( Params::server( 'HTTP_REFERER' ), PHP_URL_PATH );
+		}
+
 		if ( self::is_cache_busting() ) {
-			$args = json_decode( stripslashes( $_REQUEST['deferedAds'][0]['ad_args'] ) ); // phpcs:ignore
-			if ( isset( $args->url_parameter ) ) {
-				$url = $args->url_parameter;
-			}
+			$args = json_decode( stripslashes( $_REQUEST['deferedAds'][0]['ad_args'] ) );  // phpcs:ignore
+			$url  = $args->url_parameter ?? null;
 		} elseif ( ! empty( Params::request( 'referrer' ) ) ) {
 			$url = urldecode( Params::request( 'referrer' ) );
 		}
 
-		$uri = Params::server( 'REQUEST_URI', '' );
-		$url = empty( $url ) && $uri ? $uri : $url;
-		$url = rtrim( $url, '/' );
+		// Fallback to the request URI if no URL is set.
 		if ( empty( $url ) ) {
-			$url = '/';
+			$url = Params::server( 'REQUEST_URI', '/' );
 		}
 
-		return filter_var( $url, FILTER_SANITIZE_URL );
+		// Sanitize and normalize the URL.
+		$url = rtrim( $url, '/' );
+		$url = empty( $url ) ? '/' : filter_var( $url, FILTER_SANITIZE_URL );
+
+		return $url;
 	}
 
 	/**
@@ -379,7 +386,7 @@ class Debugger {
 		}
 
 		if ( 'onrequest' === $method ) {
-			if ( function_exists( 'advads_is_amp' ) && advads_is_amp() ) {
+			if ( Conditional::is_amp() ) {
 				return 'Database on AMP';
 			}
 
@@ -387,5 +394,18 @@ class Debugger {
 		}
 
 		return $method;
+	}
+
+	/**
+	 * Check if the URL is a valid linkout URL.
+	 *
+	 * @param string $linkbase The link base to validate against.
+	 *
+	 * @return bool
+	 */
+	private static function is_linkout( $linkbase ): bool {
+		$pattern = '#/' . preg_quote( $linkbase, '#' ) . '/\d+$#';
+
+		return preg_match( $pattern, Params::server( 'REQUEST_URI' ) ) === 1;
 	}
 }

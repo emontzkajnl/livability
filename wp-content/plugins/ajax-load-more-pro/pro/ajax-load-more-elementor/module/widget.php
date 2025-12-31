@@ -96,7 +96,7 @@ class ALMElementorPosts extends Widget_Base {
 		$this->start_controls_section(
 			'section_content',
 			[
-				'label' => __( 'Shortcode Builder', 'alm-elementor' ),
+				'label' => __( 'Ajax Load More Settings', 'alm-elementor' ),
 			]
 		);
 
@@ -262,12 +262,49 @@ class ALMElementorPosts extends Widget_Base {
 				'type'        => Controls_Manager::NUMBER,
 				'description' => __( 'Set the offset top position of the window. The scroll offset determines at which point the URL will update while scrolling through Ajax loaded pages.', 'alm-elementor' ),
 				'default'     => '50',
-				'separator'   => 'after',
 				'condition'   => [
 					'url' => 'yes',
 				],
 			]
 		);
+
+		$this->end_controls_section();
+
+			$this->start_controls_section(
+				'integrations',
+				[
+					'label' => __( 'Integrations', 'alm-elementor' ),
+				]
+			);
+
+		if ( has_action( 'alm_cache_installed' ) ) {
+			$this->add_control(
+				'cache',
+				[
+					'label'       => __( 'Cache', 'alm-elementor' ),
+					'type'        => Controls_Manager::TEXT,
+					'description' => __( 'Enable Ajax Load More Cache on this instance.', 'alm-elementor' ),
+					'type'        => Controls_Manager::SELECT,
+					'options'     =>
+						[
+							'false' => __( 'False', 'alm-elementor' ),
+							'true'  => __( 'True', 'alm-elementor' ),
+						],
+					'default'     => 'false',
+				]
+			);
+		} else {
+			$this->add_control(
+				'cache_notice',
+				[
+					'type'        => Controls_Manager::NOTICE,
+					'notice_type' => 'info',
+					'dismissible' => false,
+					'heading'     => esc_html__( 'Ajax Load More Cache', 'alm-elementor' ),
+					'content'     => __( 'Improve website performance by caching the results of Ajax server requests.<br/><br/><a href="https://connekthq.com/plugins/ajax-load-more/add-ons/cache/" target="_blank">Learn More</a>', 'alm-elementor' ),
+				]
+			);
+		}
 
 		$this->end_controls_section();
 	}
@@ -295,7 +332,7 @@ class ALMElementorPosts extends Widget_Base {
 		$scroll               = $settings['scroll'];
 		$scroll_distance      = $settings['scroll_distance'];
 		$pause_override       = $settings['pause_override'];
-		$cache                = isset( $settings['cache'] ) && $settings['cache'] === 'true' ? true : false;
+		$cache                = isset( $settings['cache'] ) && $settings['cache'] === 'true';
 
 		$shortcode  = '[ajax_load_more';
 		$shortcode .= ' elementor="posts"';
@@ -315,10 +352,8 @@ class ALMElementorPosts extends Widget_Base {
 		$shortcode .= $pause_override === 'yes' && $scroll === 'yes' ? ' pause_override="true"' : '';
 		$shortcode .= $scroll === 'yes' ? ' scroll_distance="' . $scroll_distance . '"' : '';
 
-		if ( $cache ) { // Cache.
-			$cache_id   = str_replace( '#', '', $target );
-			$cache_id   = str_replace( '.', '', $cache_id );
-			$shortcode .= ' cache="true" cache_id="elementor-' . strtolower( $cache_id ) . '"';
+		if ( $cache ) {
+			$shortcode .= ' cache="true"'; // Cache.
 		}
 
 		$shortcode .= ']';

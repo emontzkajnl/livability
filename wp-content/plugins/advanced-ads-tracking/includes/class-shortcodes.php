@@ -56,7 +56,7 @@ class Shortcodes implements Integration_Interface {
 	 *
 	 * @return string
 	 */
-	public function click_shortcode( array $atts ): string {
+	public function ad_clicks( array $atts ): string {
 		$atts = shortcode_atts( [ 'id' => 0 ], $atts, 'the_ad_clicks' );
 		$id   = absint( $atts['id'] );
 		if ( ! $id ) {

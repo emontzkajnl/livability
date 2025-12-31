@@ -155,6 +155,10 @@ class Data {
 			foreach ( $ads as $ad_id ) {
 				$ad = wp_advads_get_ad( $ad_id );
 
+				if ( ! $ad ) {
+					continue;
+				}
+
 				$blog_data['allads'][ $blog_id ][ (string) $ad_id ] = [
 					'title'      => $ad->get_title(),
 					'target'     => Helpers::get_ad_link( $ad ),
